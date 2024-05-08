@@ -2,73 +2,88 @@
   id: totrans-0
   prefs: []
   type: TYPE_NORMAL
+  zh: <!--yml
 - en: 'category: COT 专栏'
   id: totrans-1
   prefs: []
   type: TYPE_NORMAL
+  zh: 类别：COT 专栏
 - en: 'date: 2024-05-08 11:02:34'
   id: totrans-2
   prefs: []
   type: TYPE_NORMAL
+  zh: 日期：2024-05-08 11:02:34
 - en: -->
   id: totrans-3
   prefs: []
   type: TYPE_NORMAL
+  zh: -->
 - en: What Can Language Models Actually Do?
   id: totrans-4
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
+  zh: 语言模型实际上能做什么？
 - en: 来源：[https://every.to/chain-of-thought/what-can-language-models-actually-do](https://every.to/chain-of-thought/what-can-language-models-actually-do)
   id: totrans-5
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 来源：[https://every.to/chain-of-thought/what-can-language-models-actually-do](https://every.to/chain-of-thought/what-can-language-models-actually-do)
 - en: '*This is the first of a five-part series I''m writing about redefining human
     creativity in the age of AI.*'
   id: totrans-6
   prefs: []
   type: TYPE_NORMAL
+  zh: '*这是我写的关于在人工智能时代重新定义人类创造力的五篇系列文章中的第一篇。*'
 - en: '* * *'
   id: totrans-7
   prefs: []
   type: TYPE_NORMAL
+  zh: '* * *'
 - en: I want to help save our idea of human creativity.
   id: totrans-8
   prefs: []
   type: TYPE_NORMAL
+  zh: 我想要帮助拯救我们对人类创造力的理解。
 - en: Artificial intelligence can write, illustrate, design, code, and much more.
     But rather than eliminating the need for human creativity, these new powers can
     help us redefine and expand it.
   id: totrans-9
   prefs: []
   type: TYPE_NORMAL
+  zh: 人工智能可以写作、插图、设计、编码等等。但是，与其消除人类创造力的需要，这些新能力可以帮助我们重新定义和扩展它。
 - en: We need to do a [technological dissection](https://every.to/chain-of-thought/chatgpt-and-the-future-of-the-human-mind)
     of language models, defining what they can do well—and what they can’t. By doing
     so, we can isolate our own role in the creative process.
   id: totrans-10
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们需要对语言模型进行[技术解剖](https://every.to/chain-of-thought/chatgpt-and-the-future-of-the-human-mind)，定义它们擅长做什么，以及它们不能做什么。通过这样做，我们可以分离出创造过程中自己的角色。
 - en: If we can do that, we’ll be able to wield language models for creative work—and
     still call it creativity.
   id: totrans-11
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果我们能做到这一点，我们将能够使用语言模型进行创造性工作，并且仍然称之为创造力。
 - en: To start, let’s talk about what language models *can* do.
   id: totrans-12
   prefs: []
   type: TYPE_NORMAL
+  zh: 首先，让我们谈谈语言模型*能够*做什么。
 - en: The psychology and behavior of language models
   id: totrans-13
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 语言模型的心理和行为
 - en: The current generation of language models is called *transformers*, and in order
     to understand what they do, we need to take that word seriously. What kind of
     *transformations* can transformers do?
   id: totrans-14
   prefs: []
   type: TYPE_NORMAL
+  zh: 当前一代语言模型被称为*transformers*，为了理解它们的功能，我们需要认真对待这个词。transformers能做什么样的*转换*？
 - en: Mathematically, language models are recursive next-token predictors. They are
     given a sequence of text and predict the next bit of text in the sequence. This
     process runs over and over in a loop, building upon its previous outputs self-referentially
@@ -77,59 +92,70 @@
   id: totrans-15
   prefs: []
   type: TYPE_NORMAL
+  zh: 从数学上讲，语言模型是递归的下一个标记预测器。它们接收一系列文本，并预测序列中的下一个文本位。这个过程一遍又一遍地运行，自我引用地建立在其先前的输出之上，直到达到一个停止点。这有点像一个滚动下坡并沿途捡起越来越多雪的雪球。
 - en: But this question is best asked at a higher level than simply mathematical possibility.
     Instead, what are the inputs and outputs we observe from today’s language models?
     And what can we infer about how they think?
   id: totrans-16
   prefs: []
   type: TYPE_NORMAL
+  zh: 但是，这个问题最好是在比单纯的数学可能性更高的层面上提出。相反，我们从今天的语言模型中观察到什么样的输入和输出？以及我们可以从中推断出它们的思维方式？
 - en: In essence, we need to study LLMs’ behavior and psychology, rather than their
     biology and physics.
   id: totrans-17
   prefs: []
   type: TYPE_NORMAL
+  zh: 本质上，我们需要研究语言模型的行为和心理，而不是它们的生物学和物理学。
 - en: This is a sketch based on experience. It’s a framework I’ve built for the purposes
     of doing great creative work with AI.
   id: totrans-18
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是一个基于经验的草图。这是我为了与人工智能一起做出伟大的创造性工作而建立的框架。
 - en: A framework for what language models do
   id: totrans-19
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 语言模型的工作框架
 - en: 'Language models transform text in the following ways:'
   id: totrans-20
   prefs: []
   type: TYPE_NORMAL
+  zh: 语言模型以以下方式转换文本：
 - en: '**Compression:** They compress a big prompt into a short response.'
   id: totrans-21
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**压缩：** 它们将一个大的提示压缩成一个简短的回答。'
 - en: '**Expansion:** They expand a short prompt into a long response.'
   id: totrans-22
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**扩展：** 它们将一个简短的提示扩展成一个长的回答。'
 - en: '**Translation:** They convert a prompt in one form into a response in another
     form.'
   id: totrans-23
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**翻译：** 它们将一个形式的提示转换成另一种形式的回应。'
 - en: 'These are manifestations of their outward behavior. From there, we can infer
     a property of their psychology—the underlying thinking process that creates their
     behavior:'
   id: totrans-24
   prefs: []
   type: TYPE_NORMAL
+  zh: 这些都是它们外在行为的表现。从那里，我们可以推断出它们心理的一个特性——产生它们行为的潜在思维过程：
 - en: '**Remixing:** They mix two or more texts (or learned representations of texts)
     together and interpolate between them.'
   id: totrans-25
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**混合：** 它们将两个或更多文本（或文本的学习表示）混合在一起，并在它们之间进行插值。'
 - en: 'I’m going to break down these elements in successive parts of this series over
     the next few weeks. None of these answers are final, so consider this a public
     exploration that’s open for critique. Today, I want to talk to you about the first
@@ -137,11 +163,13 @@
   id: totrans-26
   prefs: []
   type: TYPE_NORMAL
+  zh: 我将在接下来的几周中，本系列的后续部分中分解这些元素。这些答案都不是最终答案，所以请将其视为一次公开的、可供批评的探索。今天，我想和你谈谈第一个操作：压缩。
 - en: Language models as compressors
   id: totrans-27
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 语言模型作为压缩器
 - en: 'Language models can take any piece of text and make it smaller:'
   id: totrans-28
   prefs: []

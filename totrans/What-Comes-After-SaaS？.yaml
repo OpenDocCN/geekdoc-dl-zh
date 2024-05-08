@@ -1,53 +1,79 @@
 - en: <!--yml
+  id: totrans-0
   prefs: []
   type: TYPE_NORMAL
+  zh: <!--yml
 - en: 'category: COT 专栏'
+  id: totrans-1
   prefs: []
   type: TYPE_NORMAL
+  zh: 分类：COT 专栏
 - en: 'date: 2024-05-08 11:09:06'
+  id: totrans-2
   prefs: []
   type: TYPE_NORMAL
+  zh: 日期：2024-05-08 11:09:06
 - en: -->
+  id: totrans-3
   prefs: []
   type: TYPE_NORMAL
+  zh: -->
 - en: What Comes After SaaS?
+  id: totrans-4
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
+  zh: SaaS 之后会是什么？
 - en: 来源：[https://every.to/chain-of-thought/what-comes-after-saas](https://every.to/chain-of-thought/what-comes-after-saas)
+  id: totrans-5
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 来源：[https://every.to/chain-of-thought/what-comes-after-saas](https://every.to/chain-of-thought/what-comes-after-saas)
 - en: Brought to you by Designing Your Next Career Step
+  id: totrans-6
   prefs:
   - PREF_H4
   type: TYPE_NORMAL
+  zh: 由“设计你的下一个职业步骤”提供
 - en: Embark on a transformative 2-week [**Designing Your Next Career Step Course**](https://maven.com/s/course/215c93d677) led
     by Simone Stolzoff, a leading figure from IDEO and author of 'The Good Enough
     Job'. You’re not just planning a career move; you’re curating it for optimal impact.
+  id: totrans-7
   prefs: []
   type: TYPE_NORMAL
+  zh: 加入一个改变命运的 2 周转型课程[**Designing Your Next Career Step Course**](https://maven.com/s/course/215c93d677)，由
+    IDEO 的领军人物 Simone Stolzoff 主持，他是《The Good Enough Job》的作者。您不仅仅是在规划职业发展，而是在策划最佳影响力。
 - en: Design your career, and create your future. Join our upcoming cohort, Aug 8-17,
     2023.
+  id: totrans-8
   prefs: []
   type: TYPE_NORMAL
+  zh: 设计您的职业，创造您的未来。加入我们即将开始的 2023 年 8 月 8 日至 17 日的小组。
 - en: Operating a SaaS app is like running a one-room hotel that has unlimited occupancy.
     It’s as if you’ve figured out how to rent the same hotel room to many guests at
     a time through some weird tricks of quantum superposition. It is the greatest
     business in the world.
+  id: totrans-9
   prefs: []
   type: TYPE_NORMAL
+  zh: 运营 SaaS 应用程序就像经营一家只有一个房间，但无限入住的酒店。就好像您通过一些奇怪的量子叠加技巧找到了一种方式，能够同时将同一间酒店房间出租给许多客人。这是世界上最伟大的企业。
 - en: 'Customers pay for your hotel room by the month. Each one gets the same basic
     setup: bed, desk, and Wi-Fi that never works when you need it. When you make changes
     to the core room, all guests get the new version. But they can also request customizations
     personal to them, like a wake-up call—5 am for the gym rats, 1 pm for the barflies.
     Guests tend to stay for months or years at a time, paying for the same room as
     everyone else.'
+  id: totrans-10
   prefs: []
   type: TYPE_NORMAL
+  zh: 客户按月支付您的酒店房费。每个客户都会得到相同的基本设置：床、书桌和在您需要时永远不起作用的 Wi-Fi。当您对核心房间进行更改时，所有客人都会得到新版本。但他们也可以请求个性化定制，比如提醒服务——对于健身狂人是早上
+    5 点，对于常客是下午 1 点。客人往往会连续几个月或几年地停留，为相同的房间付费。
 - en: It is an absolute license to print money.
+  id: totrans-11
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是绝对的赚钱许可证。
 - en: Quantum hotel rooms are not all roses and free cash flows though. There are
     two crucial things to know about being the owner/proprietor of a business like
     this. The first is that transitioning from a single-user room to infinite occupancy
@@ -55,386 +81,544 @@
     The second is that the longer you’re in business the more of your time and money
     you’re going to spend enabling “personalizations” for each guest. In the end,
     each guest customizes your hotel room so much that it looks like their own home.
+  id: totrans-12
   prefs: []
   type: TYPE_NORMAL
+  zh: 量子酒店房间并不都是玫瑰花和免费现金流。作为这样一家企业的所有者/经营者，有两件关键的事情需要知道。首先，从单个用户房间过渡到无限入住需要努力。您的量子叠加技术有点复杂。其次，您在业务中的时间和金钱投入越长，您为每个客人提供“个性化”服务的时间和金钱就越多。最终，每位客人都会定制您的酒店房间，使其看起来像是他们自己的家。
 - en: This is very expensive and frustrating to deal with, but you console yourself
     by wiping your tears with stacks of thousand-dollar bills.
+  id: totrans-13
   prefs: []
   type: TYPE_NORMAL
+  zh: 这样做非常昂贵和令人沮丧，但您可以用一叠一千美元的钞票来擦干您的眼泪。
 - en: 'What is true for quantum hotel rooms, is also true for SaaS apps: Everyone
     gets the same basic app. You can host infinitely many users in parallel. People
     tend to stay for months or years at a time.'
+  id: totrans-14
   prefs: []
   type: TYPE_NORMAL
+  zh: 对于量子酒店房间而言，真实情况也适用于 SaaS 应用程序：每个人都使用相同的基本应用程序。您可以同时托管无限多的用户。人们往往会连续几个月或几年地停留。
 - en: But making the app available for many users at once requires a lot of up-front
     effort. You need to build login systems, a database architecture and code that
     accounts for multiple users, you need to deal with keeping user data secure, and
     you need to build lots of settings screens so that customers can configure the
     product. The more time goes on, the more money and effort you’re going to expend
     building customizations for users, instead of building core product improvements.
+  id: totrans-15
   prefs: []
   type: TYPE_NORMAL
+  zh: 但是，要让应用程序同时为许多用户提供服务需要大量的前期工作。您需要构建登录系统、数据库架构和考虑多用户的代码，您需要处理保护用户数据的安全性，还需要构建大量的设置屏幕，以便客户可以配置产品。随着时间的推移，您将花费越来越多的金钱和精力来为用户定制，而不是构建核心产品改进。
 - en: This is the way of the world. It makes SaaS harder for solo developers to build
     products, and it means that the larger you get the less time you can spend on
     fundamental innovation.
+  id: totrans-16
   prefs: []
   type: TYPE_NORMAL
+  zh: 这就是世界的方式。这让独立开发者更难以构建 SaaS 产品，并且这意味着您变得越大，就越少时间可以花在基础创新上。
 - en: 'There are a few converging trends in software that I think might significantly
     shift this dynamic, though:'
+  id: totrans-17
   prefs: []
   type: TYPE_NORMAL
+  zh: 我认为软件领域存在一些趋势，可能会显著改变这种动态，尽管：
 - en: First, web-based development environments that allow you to write, run and deploy
     code from your browser, like [Replit](https://www.replit.com) and [Val.town](https://www.val.town),
     are becoming powerful.
+  id: totrans-18
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 首先，允许您从浏览器编写、运行和部署代码的基于网络的开发环境，如[Replit](https://www.replit.com)和[Val.town](https://www.val.town)，正在变得强大。
 - en: Second, these tools make it easy to duplicate, collaborate on, and remix existing
     apps to fit your own needs.
+  id: totrans-19
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 其次，这些工具使得复制、协作和混合现有应用程序以满足您自己的需求变得轻松。
 - en: Third, AI makes it easy for users to change any app to meet their needs even
     if they don’t know how to code.
+  id: totrans-20
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 第三，人工智能使用户能够轻松地更改任何应用程序，以满足其需求，即使他们不懂编码也可以。
 - en: Rather than having the same users on one app, you can just spin up a new version
     of the app on a new server for a new user at the touch of a button. Then, instead
     of incrementally building customization options for your users you can allow them
     to modify the app however they see fit—using AI. They can do this in a way that
     will never affect other users, and that keeps their data secure.
+  id: totrans-21
   prefs: []
   type: TYPE_NORMAL
+  zh: 与其在一个应用程序上拥有相同的用户，不如一键在新服务器上为新用户生成应用程序的新版本。然后，您可以允许用户根据自己的需求修改应用程序，而不是为用户逐渐构建定制选项—使用人工智能。他们可以以一种永远不会影响其他用户并保持其数据安全的方式进行操作。
 - en: Suddenly, instead of building a single-room quantum hotel, you’re building a
     suburban development. All of the houses on the block are in the same style, and
     you can build a new one for a new renter at the touch of a button. When renters
     move in, they can customize the house themselves without requiring any of your
     time or money—and without affecting any of the other houses.
+  id: totrans-22
   prefs: []
   type: TYPE_NORMAL
+  zh: 突然间，您不再是在建造一个单间的量子酒店，而是在建造一个郊区发展项目。街区上的所有房屋都是同一风格的，您可以一键生成新的房屋供新租客居住。当租户搬进来时，他们可以自己定制房屋，而无需花费您的时间或金钱，也不会影响到其他房屋。
 - en: This vision of software turns traditional SaaS into something far more bespoke,
     customizable, and remixable than the current generation of software allows for.
     The computer science researcher, Geoffrey Litt, who I interviewed [here](https://every.to/superorganizers/action-item-how-to-see-the-future?sid=22846),
     calls this [Malleable Software](https://www.geoffreylitt.com/2023/03/25/llm-end-user-programming.html).
     I’ve been calling it Malleable Source. Malleable source means any app that allows
     you to modify its underlying code with AI. These apps can be open-source or closed.
+  id: totrans-23
   prefs: []
   type: TYPE_NORMAL
+  zh: 软件的这种愿景将传统的SaaS变成了比当前一代软件更加定制、可定制和可混合的东西。我采访过的计算机科学研究员Geoffrey Litt在这里称之为[Malleable
+    Software](https://www.geoffreylitt.com/2023/03/25/llm-end-user-programming.html)。我一直称之为可塑源。可塑源意味着任何允许您使用人工智能修改其基础代码的应用程序。这些应用程序可以是开源的或封闭的。
 - en: It’s clear that this is a new paradigm on the horizon. I know because I stumbled
     into it.
+  id: totrans-24
   prefs: []
   type: TYPE_NORMAL
+  zh: 很明显，这是一个新的地平线范式。我知道，因为我偶然发现了它。
 - en: ''
+  id: totrans-25
   prefs:
   - PREF_H4
   type: TYPE_NORMAL
 - en: Reimagine your career with Simone Stolzoff's 2-week [Designing Your Next Career
     Step](https://maven.com/s/course/215c93d677) Course. You're not just making a
     job switch, you're making decisions for maximal effectiveness.
+  id: totrans-26
   prefs: []
   type: TYPE_NORMAL
+  zh: 通过Simone Stolzoff的为期2周的[设计您的下一个职业步骤](https://maven.com/s/course/215c93d677)课程，重新构想您的职业。您不仅仅是在换工作，您还在为最大效率做决策。
 - en: Utilize Design Thinking's transformative power to sift through career prospects,
     pinpoint your individual goals, and plot a path toward achieving them. Turn aspirations
     into an empowering game plan for your future amidst uncertainty.
+  id: totrans-27
   prefs: []
   type: TYPE_NORMAL
+  zh: 利用设计思维的变革力量来筛选职业前景，准确定位个人目标，并制定通向实现目标的路径。在不确定性中将愿望转化为赋予未来力量的行动计划。
 - en: Unlock your purpose with [this course](https://maven.com/s/course/215c93d677)
     and launch into a sure-headed future brimming with a clear strategy. Engage with
     like-minded professionals, fostering a supportive community extending post-course.
+  id: totrans-28
   prefs: []
   type: TYPE_NORMAL
+  zh: 解锁您的目标与[这门课程](https://maven.com/s/course/215c93d677)，并迈入充满清晰策略的未来。与志同道合的专业人士互动，培养出课程后延伸的支持性社区。
 - en: Craft your career, and shape your future. Be part of the next cohort starting
     Aug 8-17, 2023\. Sign up today!
+  id: totrans-29
   prefs: []
   type: TYPE_NORMAL
+  zh: 打造您的职业，塑造您的未来。成为2023年8月8日至17日开始的下一批学员！立即报名！
 - en: My experience with malleable source
+  id: totrans-30
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 我与可塑源的经历
 - en: 'I built a little app recently to help me map my mind. It shoots me a series
     of texts every few hours that asks me questions about what’s going on: thoughts,
     feelings, emotions. It also sends a follow-up with a big question I’m currently
     wrestling with: “What’s your big goal?” When I get these texts, I dash off a few
     quick responses without thinking about it too much. I want to get as close to
     the snap answers that come to mind, and then move on with my day.'
+  id: totrans-31
   prefs: []
   type: TYPE_NORMAL
+  zh: 我最近制作了一个小应用来帮助我绘制我的思维图。 它每隔几个小时给我发送一系列文本，询问我正在发生什么：想法、感受、情绪。 它还会发送一个跟进问题，问我当前正在思考的一个重要问题：“你的主要目标是什么？”
+    当我收到这些文本时，我会匆忙写下几个快速的回答，不会想得太多。 我希望尽可能接近我脑海中的即时答案，然后继续我的一天。
 - en: The cool thing about the app is that it then uses AI to generate a summary of
     what’s on my mind. It helps me see, day to day, what I’m thinking about and feeling.
     It also tries to condense a definitive answer to big questions I’m wrestling with—taking
     into account all of the different ways I’ve answered it—and provides observations
     about patterns it finds in my answers.
+  id: totrans-32
   prefs: []
   type: TYPE_NORMAL
+  zh: 这个应用程序的很酷的地方在于，它然后使用AI生成我的思维摘要。 它帮助我看到，日复一日，我在思考什么，感受什么。 它还试图压缩我正在思考的重要问题的一个明确答案——考虑到我回答问题的所有不同方式——并提供关于它在我的答案中发现的模式的观察。
 - en: It’s been quite helpful for me.
+  id: totrans-33
   prefs: []
   type: TYPE_NORMAL
+  zh: 这对我很有帮助。
 - en: I was chatting with my friend, Every writer, coach, and fellow psychology nerd
     [Casey Rosengren](https://every.to/@caseyrosengren) about the app recently and
     he asked if he could try it. I tensed up a bit at the amount of work required.
+  id: totrans-34
   prefs: []
   type: TYPE_NORMAL
+  zh: 我最近和我的朋友、作家、教练和同样痴迷心理学的[Casey Rosengren](https://every.to/@caseyrosengren)聊了一下这个应用程序，他问我是否可以试用一下。
+    我有点紧张，因为需要的工作量有点大。
 - en: See, it’s currently very easy to build something like this for one person. But
     making it available for multiple people is a harder problem. In order to do this
     I’d have to implement logins, make the code multiplayer, build an interface to
     let him customize questions, and make sure my data doesn’t get mixed in with his.
     Especially for an app like this, where you’re sharing private thoughts, it’s just
     a bit of a hairball.
+  id: totrans-35
   prefs: []
   type: TYPE_NORMAL
+  zh: 看，目前很容易为一个人构建这样的东西。 但要使其可供多人使用就是一个更难的问题。 为了做到这一点，我必须实现登录，使代码支持多人使用，构建一个界面让他自定义问题，并确保我的数据不会与他的混在一起。
+    尤其是对于这样一个应用程序，您在其中分享私人思想，这只是一个有点复杂的问题。
 - en: But then I had a little brainwave. I had built the app on Replit—so the problem
     was already solved.
+  id: totrans-36
   prefs: []
   type: TYPE_NORMAL
+  zh: 但后来我有了一个小想法。 我已经在Replit上构建了这个应用程序——所以问题已经解决了。
 - en: Replit is an all-in-one browser-based development and deployment environment.
     It allows you to code an app, and press one button to host it live on the internet.
+  id: totrans-37
   prefs: []
   type: TYPE_NORMAL
+  zh: Replit是一个全功能的基于浏览器的开发和部署环境。 它允许您编写一个应用程序，并按一下按钮将其托管在互联网上。
 - en: The interesting thing about Replit is that it allows you to easily make new
     copies of your app. All you have to do is hit “Fork” and it will duplicate your
     codebase and environment. Then you press “Run” and the new copy is live on a new
     URL. It’s pretty magical.
+  id: totrans-38
   prefs: []
   type: TYPE_NORMAL
+  zh: Replit的有趣之处在于它允许您轻松地创建应用程序的新副本。 您所需要做的就是点击“Fork”，它将复制您的代码库和环境。 然后您按“运行”，新副本就会在新URL上实时运行。
+    这相当神奇。
 - en: I realized, if I wanted to let Casey use this app, all I had to do was hit “Fork.”
     Then I just replaced his phone number with mine in the code, and pressed “Run.”
     Suddenly, he was getting texts from the mind-mapping bot, too.
+  id: totrans-39
   prefs: []
   type: TYPE_NORMAL
+  zh: 我意识到，如果我想让Casey使用这个应用程序，我只需点击“Fork”。 然后我只需在代码中用我的电话号码替换他的电话号码，然后按“运行”。 突然间，他也收到了来自思维绘图机器人的短信。
 - en: Best of all, he can make his own modifications to the app. He can head into
     the code and make any edits he wants. If he prefers to be asked different questions,
     it’s a few keystrokes away. If he’d like to see the AI summaries of his answers,
     it’s just a few more lines of code. This is all made easier by the fact that *he
     doesn’t have to write any of the code himself.* He can just use ChatGPT (or Replit’s
     built-in AI tool) and ask it to make modifications.
+  id: totrans-40
   prefs: []
   type: TYPE_NORMAL
+  zh: 最重要的是，他可以对应用程序进行自己的修改。 他可以进入代码并进行任何想要的编辑。 如果他更喜欢被问不同的问题，只需几次按键即可。 如果他想看到他的答案的AI摘要，只需几行代码即可。
+    这一切都变得更加容易，因为*他不必自己编写任何代码*。 他只需使用ChatGPT（或Replit内置的AI工具）并要求其进行修改。
 - en: We’re both using the same basic piece of software. But he can customize his
     version however he wants. His data is in his own database in his own cloud environment.
     And all it required from me was to press “Fork.”
+  id: totrans-41
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们都在使用同一个基本的软件。 但他可以随心所欲地定制他的版本。 他的数据存储在他自己的数据库中，在他自己的云环境中。 而我所需要做的就是按“Fork”。
 - en: Implications for the future of software
+  id: totrans-42
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 软件未来的影响
 - en: I think something like this might be a new future for a certain kind of software.
     It’s enabled by AI and [vertically integrated, browser-based developer environments
     like Replit](https://every.to/chain-of-thought/ai-and-the-future-of-programming).
     It probably doesn’t totally replace SaaS but it does open up new business models
     and opportunities.
+  id: totrans-43
   prefs: []
   type: TYPE_NORMAL
+  zh: 我认为这样的东西可能是某种软件的新未来。它是由人工智能和[Replit](https://every.to/chain-of-thought/ai-and-the-future-of-programming)这样的纵向集成的、基于浏览器的开发环境所启用的。它可能并不完全取代
+    SaaS，但它确实开启了新的商业模式和机会。
 - en: It will make it easier to build small SaaS apps that keep data secure
+  id: totrans-44
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 这将使构建保持数据安全的小型 SaaS 应用程序变得更容易
 - en: It blurs the distinction between developer and user
+  id: totrans-45
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 它模糊了开发者和用户之间的界限
 - en: It makes bespoke software easier to build, therefore more of a reflection of
     your personality—rather than a mass-produced good
+  id: totrans-46
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 它使定制软件更容易构建，因此更能反映你的个性——而不是大规模生产的商品
 - en: Let’s go through these one by one.
+  id: totrans-47
   prefs: []
   type: TYPE_NORMAL
+  zh: 让我们逐一讨论这些。
 - en: '**It’s much easier to build multi-user apps that keep data secure**'
+  id: totrans-48
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: '**构建保持数据安全的多用户应用程序要容易得多**'
 - en: Each app that gets built in this style is used by one person and lives in its
     own environment. This makes dealing with user accounts and logins simpler. It
     also makes data security issues less relevant—each user has their own database
     that’s tied to the new environment, and no data gets mixed.
+  id: totrans-49
   prefs: []
   type: TYPE_NORMAL
+  zh: 每个以这种方式构建的应用程序都由一个人使用，并存在于自己的环境中。这使得处理用户帐户和登录更加简单。它还使得数据安全问题变得不太相关——每个用户都有自己的数据库，与新环境相关联，而且没有数据混合。
 - en: For really early projects, like the one I mentioned above, this saves a lot
     of time in terms of speed to market. You can get going with having multiple users
     of your app without having to build a lot of traditional infrastructure. That’s
     a big deal.
+  id: totrans-50
   prefs: []
   type: TYPE_NORMAL
+  zh: 对于像我上面提到的那种真正早期的项目，这在速度上节省了大量时间。你可以在没有构建大量传统基础设施的情况下开始使用你的应用程序的多个用户。这是一件大事。
 - en: It could mean the rise of more of the indie or micro SaaS apps—that are built
     by small teams without significant funding—that have become popular in the latest
     AI wave—like PhotoAI by [Pieter Levels](https://twitter.com/levelsio?lang=en).
     Or it could mean more businesses and individuals choose to build their own software
     rather than buy from a vendor.
+  id: totrans-51
   prefs: []
   type: TYPE_NORMAL
+  zh: 这可能意味着更多的独立或微型 SaaS 应用程序的崛起——这些应用程序由小团队构建而成，没有重要资金支持，在最新的人工智能浪潮中变得流行——比如[Pieter
+    Levels](https://twitter.com/levelsio?lang=en)的 PhotoAI。或者这可能意味着更多的企业和个人选择构建自己的软件而不是从供应商那里购买。
 - en: '**The distinction between users and developers is blurred**'
+  id: totrans-52
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: '**用户和开发者之间的界限变得模糊**'
 - en: Right now, there’s a hard line between people who use apps and people who build
     them. AI blurs this distinction, as the CEO of Replit, Amjad Massad, noted in
     [a recent talk](https://www.khoslaventures.com/a-new-cloud-is-forming-the-ai-devcloud/).
     The software world could change drastically once everyone has the equivalent of
     a junior developer at their disposal *and* a malleable source app they can customize.
+  id: totrans-53
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在，使用应用程序和构建应用程序的人之间存在着一道硬性界限。正如 Replit 的 CEO Amjad Massad 在[最近的一次演讲](https://www.khoslaventures.com/a-new-cloud-is-forming-the-ai-devcloud/)中指出的那样，人工智能模糊了这种界限。一旦每个人都拥有相当于初级开发人员的人
+    *以及* 一个可以自定义的可塑性源应用程序，软件世界可能会发生 dr ilt
 - en: 'Most software in the world today is the equivalent of a Coke: it’s mass-produced,
     and everyone gets the same thing. The software of tomorrow might be more diverse,
     creative, and bespoke than that. Like fashion or food, your chosen software could
     become a reflection of your who you are rather than a default choice everyone
     is required to make.'
+  id: totrans-54
   prefs: []
   type: TYPE_NORMAL
+  zh: 今天世界上大多数软件都相当于可乐：它是大规模生产的，每个人都得到了同样的东西。明天的软件可能比那更多样化、更有创造力、更具定制性。就像时尚或食物一样，你选择的软件可能成为你是谁的一种反映，而不是每个人都必须做出的默认选择。
 - en: Software as a reflection of who you are already happens to some degree—techies
     use Macbooks with VS Code, and finance bros use Windows loaded with Excel. But
     better, cheaper customizations will accelerate it.
+  id: totrans-55
   prefs: []
   type: TYPE_NORMAL
+  zh: 软件作为你已经是谁的一种反映到某种程度上已经发生了——技术人员使用带有 VS Code 的 MacBook，而金融人士使用加载了 Excel 的 Windows。但更好、更便宜的定制将加速这一过程。
 - en: '**New business models are possible**'
+  id: totrans-56
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: '**新的商业模式是可能的**'
 - en: In a world where anyone can fork a piece of software and make their own modifications
     to it, new business models might become popular.
+  id: totrans-57
   prefs: []
   type: TYPE_NORMAL
+  zh: 在任何人都可以fork一个软件并对其进行修改的世界中，新的商业模式可能会变得流行。
 - en: It might look a lot more like the world of games where modding and customizations
     are quite common, and there are whole economies devoted to making and selling
     mods of popular games. In a world like this, rather than building a new app from
     scratch, individual developers or small teams might choose to start out with an
     already-existing app, fork it, and mod it for a niche to resell it.
+  id: totrans-58
   prefs: []
   type: TYPE_NORMAL
+  zh: 它可能看起来更像是游戏世界，那里修改和定制非常常见，而且整个经济都致力于制作和销售受欢迎游戏的修改版。在这样的世界里，个人开发者或小团队可能选择从已经存在的应用程序开始，对其进行分叉和修改以针对一个利基进行转售，而不是从零开始构建一个新的应用程序。
 - en: Perhaps, whoever made the original version of the software could collect a cut
     of the revenue generated by any modded versions. Or, perhaps, they’d charge a
     services fee for use of the AI needed to customize the software—in the way SaaS
     companies charge large enterprises for custom integrations today.
+  id: totrans-59
   prefs: []
   type: TYPE_NORMAL
+  zh: 或许，制作软件原始版本的人可以收取任何改装版本所产生收入的一部分。或者，他们可能会对定制软件所需的AI收取服务费用——就像SaaS公司今天对大型企业收取定制集成费用一样。
 - en: There are significant challenges inherent in this model as well.
+  id: totrans-60
   prefs: []
   type: TYPE_NORMAL
+  zh: 这种模型本身也存在重大挑战。
 - en: Challenges of malleable software
+  id: totrans-61
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 可塑软件的挑战
 - en: '**AI will break**'
+  id: totrans-62
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: '**AI将会破坏**'
 - en: If you’re shipping a piece of software that doesn’t give users access to the
     code—but does give them the ability to modify the underlying code with AI, your
     AI better be great at coding. GPT-4 is close to this level for some coding tasks—but
     it’s still a dicey proposition.
+  id: totrans-63
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果你正在发布一款不给用户访问代码但却让他们能够通过AI修改底层代码的软件，你的AI最好擅长编码。GPT-4在某些编码任务上已经接近这个水平——但这仍然是一个冒险的主张。
 - en: It’s going to be a serious challenge to build an AI that can modify apps without
     breaking them. It will also be critical for these AIs to impose sensible limits
     on what users can do (for example, refusing to rebrand your SaaS app with a swastika
     would be a sensible limit.) Given how finicky it can be to adequately steer AIs,
     it might take some time to address corner cases. But it will be extremely valuable
     when that challenge is solved.
+  id: totrans-64
   prefs: []
   type: TYPE_NORMAL
+  zh: 构建一个能够修改应用而不破坏它们的AI将是一个严峻的挑战。对于这些AI来说，对用户能做什么施加合理的限制也至关重要（例如，拒绝用纳粹徽标重新打造你的SaaS应用程序就是一个合理的限制）。考虑到适当引导AI可能有多么挑剔，解决边缘情况可能需要一些时间。但是当这个挑战解决时，它将是非常有价值的。
 - en: In the meantime, I think the best use cases for malleable source projects are
     ones where the code is viewable by the user—so if the AI breaks the app, the user
     can debug it.
+  id: totrans-65
   prefs: []
   type: TYPE_NORMAL
+  zh: 与此同时，我认为可塑性源代码项目的最佳用例是代码对用户是可见的——因此如果AI破坏了应用程序，用户可以对其进行调试。
 - en: '**It’s hard to ship updates when everyone has their own version of the code**'
+  id: totrans-66
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: '**当每个人都有自己的代码版本时，要发布更新是很困难的**'
 - en: One of the benefits of SaaS is that if you ship an update to the app, it automatically
     gets shipped to everyone. This is not as easy to do when you have many versions
     of your app, customized by AIs, running in their own environments.
+  id: totrans-67
   prefs: []
   type: TYPE_NORMAL
+  zh: SaaS的一个好处是，如果你发布了应用的更新，它会自动发送给每个人。当你的应用有许多版本，由AI定制，并在它们自己的环境中运行时，这就不那么容易做到了。
 - en: If you ship an update for your app, it’s unclear how that update would get propagated
     to users who have made their own modifications—especially if those modifications
     conflict with your updates. This is a problem faced by the enterprise software
     world all the time, where large organizations make customizations to software
     that they run on their own cloud infrastructure—so it’s solvable. It’s just complicated.
+  id: totrans-68
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果你为你的应用发布了更新，那么如何将这个更新传播给那些已经进行了自己修改的用户就不清楚了——特别是如果这些修改与你的更新相冲突的话。这是企业软件世界一直面临的问题，在那里大型组织对他们在自己的云基础架构上运行的软件进行定制化——所以这是可以解决的。只是很复杂。
 - en: '**Today, malleable software has to be open source**'
+  id: totrans-69
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: '**如今，可塑性软件必须是开源的**'
 - en: One of the big questions for companies building this type of software is whether
     to make it available as open source or not. Closed source is easier to monetize
     because you can control who makes copies and how those copies are used. But if
     you want to try something like this today, it has to be open source.
+  id: totrans-70
   prefs: []
   type: TYPE_NORMAL
+  zh: 对于构建这种类型软件的公司来说，一个重要的问题是是否将其作为开源软件提供。闭源软件更容易实现盈利，因为你可以控制谁复制以及如何使用这些副本。但是如果你想尝试像这样的东西，它必须是开源的。
 - en: The platforms I mentioned at the top of the piece, Replit and Val.Town, that
     enable this kind of functionality are built as developer environments—so any time
     you duplicate a project, you get automatic access to its code. This is the way
     things are going to stay for the foreseeable future—at least until AI is good
     enough to make code changes without oversight.
+  id: totrans-71
   prefs: []
   type: TYPE_NORMAL
+  zh: 我在文中提到的平台，Replit和Val.Town，可以实现这种功能，它们是作为开发者环境构建的。这意味着每当你复制一个项目，你都可以自动获得其代码的访问权。在可预见的未来，至少在AI足够先进以至于能够在没有监督的情况下进行代码更改之前，这种情况将会保持下去。
 - en: This will limit the kind of founders and developers who attempt to build under
     this paradigm, for now.
+  id: totrans-72
   prefs: []
   type: TYPE_NORMAL
+  zh: 目前，这将限制试图在这种范式下构建的创始人和开发者的种类。
 - en: Try it yourself
+  id: totrans-73
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 你自己试试看
 - en: Okay, I’ve spent the 2,000 words waxing poetic about this malleable software
     thing. Now it’s time for me to put my money where my mouth is. I want you to try
     it out for yourself.
+  id: totrans-74
   prefs: []
   type: TYPE_NORMAL
+  zh: 好吧，我花了两千字来吟诗，说说这个可塑软件的东西。现在是我付诸行动的时候了。我希望你亲自试一试。
 - en: 'For this article, I used ChatGPT to build a simple little app on Replit as
     a demo. It’s a web server coded in Python that hosts a web page with a special
     message. You can go see my version live on the internet [here](http://malleable-source-web-app.danshipper1.repl.co/):'
+  id: totrans-75
   prefs: []
   type: TYPE_NORMAL
+  zh: 对于本文，我使用了ChatGPT在Replit上构建了一个简单的小应用程序作为演示。这是用Python编写的一个Web服务器，用于托管一个带有特殊消息的网页。你可以在互联网上看到我的版本[在这里](http://malleable-source-web-app.danshipper1.repl.co/)：
 - en: Now it's your turn. I built this on Replit, and so if you want to run it yourself.
     The steps are pretty simple.
+  id: totrans-76
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在轮到你了。我是在Replit上构建的这个，所以如果你想自己运行它。步骤非常简单。
 - en: '[Click here](https://replit.com/@DanShipper1/Malleable-Source-Web-App?v=1)'
+  id: totrans-77
   prefs: []
   type: TYPE_NORMAL
+  zh: '[点这里](https://replit.com/@DanShipper1/Malleable-Source-Web-App?v=1)'
 - en: 'and press Run:'
+  id: totrans-78
   prefs: []
   type: TYPE_NORMAL
+  zh: 然后点击运行：
 - en: Replit will create an entirely new version of the app, run it, and host it on
     the public internet specifically for you.
+  id: totrans-79
   prefs: []
   type: TYPE_NORMAL
+  zh: Replit将为你创建一个完全新的应用程序版本，运行它，并专门为你在公共互联网上托管它。
 - en: Want to make changes? Just press “Fork”. You’ll be able to get access to the
     app, modify any piece of it, and host it on the public internet yourself just
     by pressing the big green “Play” button at the top of the interface.
+  id: totrans-80
   prefs: []
   type: TYPE_NORMAL
+  zh: 想要做些改变？只需点击“Fork”。你将能够访问该应用程序，修改其中的任何部分，并通过点击界面顶部的大绿色“Play”按钮，自行在公共互联网上进行托管。
 - en: To take this back to my metaphor at the top, doing this is like setting up a
     suburban development. I've built a model house, and now anyone can set up their
     own copy on my block. Best of all, you can do whatever you want with it! Your
     changes won't affect mine, but you can build on top of my progress with very little
     effort.
+  id: totrans-81
   prefs: []
   type: TYPE_NORMAL
+  zh: 转到开头的隐喻，这就像建立一个郊区开发项目。我建了一间模型房子，现在任何人都可以在我的街区上建立他们自己的复制品。最重要的是，你可以随心所欲！你的更改不会影响我的，但你可以毫不费力地在我的基础上建立起自己的东西。
 - en: I can’t tell you how big of a deal this is. Previously, allowing someone to
     run an app and hosted it on the public internet was a hundred-step process that
     was completely inaccessible to non-technical users. Today, all you have to do
     is click one button.
+  id: totrans-82
   prefs: []
   type: TYPE_NORMAL
+  zh: 我无法告诉你这有多重要。以前，让某人运行一个应用程序并在公共互联网上进行托管是一个完全无法接触的非技术用户需要经过上百个步骤的过程。今天，你只需点击一个按钮。
 - en: You can make changes by asking ChatGPT for help—even if you're not a developer.
     The opportunities for customization are endless.
+  id: totrans-83
   prefs: []
   type: TYPE_NORMAL
+  zh: 你可以通过请求ChatGPT的帮助来进行更改，即使你不是开发人员。个性化定制的机会是无穷无尽的。
 - en: If I wanted to monetize this, I could put the link to my Replit behind a paywall.
     Or only share it if you take a course with me—and this is exactly what I do with
     my [chatbot course](https://www.chatbot-course.com).
+  id: totrans-84
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果我想要赚钱，我可以把我在Replit上的链接放在付费墙后面。或者只有在你跟我上课的时候分享给你——这正是我在我的 [聊天机器人课程](https://www.chatbot-course.com)上做的。
 - en: This ability to easily duplicate, remix, and run apps with AI is going to change
     everything about how software works over the next 10 years.
+  id: totrans-85
   prefs: []
   type: TYPE_NORMAL
+  zh: 这种易于复制、混搭和使用人工智能运行应用程序的能力将在未来10年内彻底改变软件运作的所有方式。
 - en: If that doesn’t get you excited about the future, I don’t know what will.
+  id: totrans-86
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果这些不能让你对未来感到兴奋，我也不知道会是什么。
