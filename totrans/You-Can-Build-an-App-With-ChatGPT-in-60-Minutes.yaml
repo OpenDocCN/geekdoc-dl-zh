@@ -1,39 +1,61 @@
 - en: <!--yml
+  id: totrans-0
   prefs: []
   type: TYPE_NORMAL
+  zh: <!--yml
 - en: 'category: COT 专栏'
+  id: totrans-1
   prefs: []
   type: TYPE_NORMAL
+  zh: 分类：COT 专栏
 - en: 'date: 2024-05-08 11:06:53'
+  id: totrans-2
   prefs: []
   type: TYPE_NORMAL
+  zh: 日期：2024年5月8日11:06:53
 - en: -->
+  id: totrans-3
   prefs: []
   type: TYPE_NORMAL
+  zh: -->
 - en: You Can Build an App With ChatGPT in 60 Minutes
+  id: totrans-4
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
+  zh: 用 ChatGPT 在60分钟内构建应用
 - en: 来源：[https://every.to/chain-of-thought/you-can-build-an-app-with-chatgpt-in-60-minutes](https://every.to/chain-of-thought/you-can-build-an-app-with-chatgpt-in-60-minutes)
+  id: totrans-5
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 来源：[https://every.to/chain-of-thought/you-can-build-an-app-with-chatgpt-in-60-minutes](https://every.to/chain-of-thought/you-can-build-an-app-with-chatgpt-in-60-minutes)
 - en: '*TL;DR: Today we’re releasing a new episode of our podcast* How Do You Use
     ChatGPT? *I go in depth with Geoffrey Litt, a researcher at the lab* [*Ink & Switch*](https://www.inkandswitch.com/)*,
     on the future of software and AI. As we talk, we build our own app together in
     60 minutes using ChatGPT and Replit. Watch on* [*X*](https://x.com/danshipper/status/1745088395880050922?s=20)
     *or* [*YouTube*](https://youtu.be/oy7uMpPrGMA)*, or listen on* [*Spotify*](https://open.spotify.com/episode/40j69kgDWY9eXgZD41Afuh?si=JnQMD6WpQeK1FZGvQgjuzw)
     *or* [*Apple Podcasts*](https://podcasts.apple.com/us/podcast/how-do-you-use-chatgpt/id1719789201?i=1000641160825)*.*'
+  id: totrans-6
   prefs: []
   type: TYPE_NORMAL
+  zh: '*TL;DR: 今天我们发布了我们的一个新播客* 你如何使用ChatGPT？ *我和实验室的研究员Geoffrey Litt进行了深入讨论，讨论了软件和人工智能的未来。我们一边聊天一边使用ChatGPT
+    和 Replit 在60分钟内构建了我们自己的应用程序。在* [*X*](https://x.com/danshipper/status/1745088395880050922?s=20)
+    *上观看，或在* [*YouTube*](https://youtu.be/oy7uMpPrGMA)*上观看，或在* [*Spotify*](https://open.spotify.com/episode/40j69kgDWY9eXgZD41Afuh?si=JnQMD6WpQeK1FZGvQgjuzw)
+    *上收听，或在* [*Apple Podcasts*](https://podcasts.apple.com/us/podcast/how-do-you-use-chatgpt/id1719789201?i=1000641160825)
+    *上收听。*'
 - en: '* * *'
+  id: totrans-7
   prefs: []
   type: TYPE_NORMAL
+  zh: '* * *'
 - en: Geoffrey Litt wants you to build software—whoever you are. Not just if you’re
     a seasoned software engineer in San Francisco, but even if you have minimal—or
     zero—coding knowledge.
+  id: totrans-8
   prefs: []
   type: TYPE_NORMAL
+  zh: Geoffrey Litt希望你去构建软件——无论你是谁。不仅是如果你是旧金山的经验丰富的软件工程师，而是即使你的编码知识很少——或者为零。
 - en: He’s a researcher who’s working on creating a future where anyone can make changes
     to the software they use—what he calls [malleable software](https://www.geoffreylitt.com/2023/03/25/llm-end-user-programming.html).
     I’ve been writing about similar topics—like how AI might turn [everyone into a
@@ -41,187 +63,270 @@
     SaaS business models](https://every.to/chain-of-thought/what-comes-after-saas)—for
     a while, and it was great to have Geoffrey on the show to discuss our overlapping
     ideas.
+  id: totrans-9
   prefs: []
   type: TYPE_NORMAL
+  zh: 他是一位研究人员，致力于创造一个任何人都可以对他们使用的软件进行更改的未来——他称之为[malleable software](https://www.geoffreylitt.com/2023/03/25/llm-end-user-programming.html)。我一直在写类似的主题，比如人工智能如何可能使[每个人都成为开发者](https://every.to/chain-of-thought/you-re-a-developer-now)，并且[颠覆SaaS商业模式](https://every.to/chain-of-thought/what-comes-after-saas)，我很高兴能邀请Geoffrey来和我一起讨论我们的重叠想法。
 - en: 'We talked about how ChatGPT enables anyone to build single-use apps and expands
     the horizon of who gets to build things. We even put our money where our mouth
     is: As we talked, we built an app together in ChatGPT and Replit.'
+  id: totrans-10
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们谈论了ChatGPT如何使任何人都能构建单次使用的应用程序，并扩展了能够构建东西的人的范围。谈论的同时，我们一边谈论一边在ChatGPT和Replit中一起构建了一个应用程序。
 - en: It was some of the most fun I’ve ever had recording a podcast episode, and if
     you’re interested at all in the future of software and AI, it’s a must-watch.
+  id: totrans-11
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是我录制播客中最有趣的时刻，如果你对软件和人工智能的未来有兴趣，这是必看的。
 - en: Here’s a taste of what we talk about.
+  id: totrans-12
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下是我们讨论的一些内容。
 - en: '**Coding is getting easier—and much faster.** ChatGPT has the potential to
     make coding possible for novice coders and make coding drastically easier—or more
     efficient—for seasoned pros. “A lot of the time it''s actually faster now for
     me to just make the thing that has the tiny features that I need than to go try
     to Google which one is the best and learn how to use it,” Geoffrey says.'
+  id: totrans-13
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**编码变得更容易——并且更快速。** ChatGPT有潜力使编码对新手编码者变得可能，并且使资深专家的编码工作变得极其容易——或者更有效率。“现在我有时候只需制作我需要的细小功能的东西比去搜索并学习如何使用它更快”，Geoffrey说。'
 - en: '**ChatGPT as a muse, not an oracle.** Geoffrey wants people to treat ChatGPT
     like an in-house consultant: “It''s like a designer or or an engineer—the earlier
     you bring them in, the more they can contribute to the ideas and the more context
     they build up.”'
+  id: totrans-14
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**ChatGPT是灵感来源，而非神谕。** Geoffrey希望人们把ChatGPT当作内部顾问：“就像一个设计师或工程师——你越早把他们请进来，他们就越能为创意做出贡献并积累更多上下文信息。”'
 - en: '**The benefits of a coding plan.** Big projects necessitate ample planning.
     “If I''m going to spend six months on a huge project, I better have a plan when
     I start,” Geoffrey says. That’s true for ChatGPT, too. Providing a plan helps
     clue the chatbot into your ambitions.'
+  id: totrans-15
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**编码计划的好处。** 大型项目需要充分的计划。“如果我将花六个月时间进行一个巨大的项目，我最好在开始时就有一个计划”，Geoffrey说。这对于ChatGPT也是适用的。提供一个计划有助于提示聊天机器人您的目标。'
 - en: '**Don’t waste time reading the code.** Geoffrey says if you’re working off
     ChatGPT code, just run it and see what happens. Don’t bother poring over the code
     until you know if it works or not. “It''s a waste of time,” he says. “I would
     rather just see what it did and use the thing.”'
+  id: totrans-16
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**不要浪费时间阅读代码**。杰弗里说，如果你在使用ChatGPT的代码，只需运行它，看看会发生什么。在确定它是否有效之前，不要费时间细看代码。“这是浪费时间，”他说。“我宁愿只看看它做了什么，并使用它。”'
 - en: '**The future is “modding and mixing.”** If software isn’t doing what you need,
     the answer currently is usually to start from scratch. “Often what I actually
     would prefer is to start with an app that someone else made that''s almost right,
     but I just need to make a small tweak,” Geoffrey says. With malleable software,
     he says tinkering could become the new normal.'
+  id: totrans-17
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**未来是“改编和混合”。**如果软件不能满足你的需求，当前的答案通常是从头开始。杰弗里说：“我通常更喜欢的是从别人做的几乎合适的应用开始，只需要做一个小调整就可以了。”他说，使用可塑软件，调试可能成为新常态。'
 - en: '**“Effortless flow.”** Building an app together was easy and fun. That’s what
     we both want coding experiences to be like. “LLM-based tools are sort of on a
     path to enabling that for way more people in way more situations,” Geoffrey says.'
+  id: totrans-18
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: “毫不费力的流畅。”一起构建应用很容易也很有趣。这正是我们想要编程体验的样子。“基于LLM的工具正在为更多的人在更多的情况中实现这一点，”杰弗里说。
 - en: 'You can check out the episode on Twitter/X, Spotify, Apple Podcasts, or YouTube.
     Links and timestamps are below:'
+  id: totrans-19
   prefs: []
   type: TYPE_NORMAL
+  zh: 你可以在Twitter/X、Spotify、Apple Podcasts或YouTube上观看这一集。链接和时间戳如下：
 - en: '**Timestamps:**'
+  id: totrans-20
   prefs: []
   type: TYPE_NORMAL
+  zh: '**时间戳:**'
 - en: Intro *1:03*
+  id: totrans-21
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 开场 *1:03*
 - en: What is malleable software? *1:36*
+  id: totrans-22
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 什么是可塑软件？ *1:36*
 - en: Who gets to make software on the web *8:06*
+  id: totrans-23
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 谁有权在网络上制作软件 *8:06*
 - en: Deciding what app to build. *14:50*
+  id: totrans-24
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 决定要构建什么应用。 *14:50*
 - en: Starting on our app. *22:06*
+  id: totrans-25
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 开始我们的应用。 *22:06*
 - en: Don’t read the code first. *31:07*
+  id: totrans-26
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 不要先读代码。 *31:07*
 - en: Starting from scratch could soon be a thing of the past. *47:55*
+  id: totrans-27
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 要从零开始可能很快就会成为过去的事了。 *47:55*
 - en: Getting past those final error messages *55:50 *
+  id: totrans-28
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 克服这些最终错误消息 *55:50*
 - en: Voila! An app. *1:03:31*
+  id: totrans-29
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 啊哈！一个应用。 *1:03:31*
 - en: Effortless flow. *1:05:50*
+  id: totrans-30
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 毫不费力的流畅。 *1:05:50*
 - en: What do you use ChatGPT for? Have you found any interesting or surprising use
     cases? We want to hear from you—and we might even interview you. Reply here to
     talk to me!
+  id: totrans-31
   prefs: []
   type: TYPE_NORMAL
+  zh: 你用ChatGPT做了什么？你发现了有趣或令人惊讶的用途吗？我们想听听你的想法——甚至可能采访你。在这里回复我！
 - en: Miss an episode? Catch up on my recent conversations with Waymark founder [Nathan
     Labenz](https://every.to/chain-of-thought/how-to-use-chatgpt-as-a-copilot-for-learning), 
     Notion engineer [Linus Lee](https://every.to/chain-of-thought/how-an-ai-researcher-uses-chatgpt-and-notion-ai),
     writer [Nat Eliason](https://every.to/chain-of-thought/chatgpt-for-writing-and-recommending-books),
     and Gumroad CEO [Sahil Lavingia](https://every.to/news/introducing-how-i-use-chatgpt)
     and learn how *they* use ChatGPT.
+  id: totrans-32
   prefs: []
   type: TYPE_NORMAL
+  zh: 遗漏了一集？赶紧看看我最近与Waymark创始人[Nathan Labenz](https://every.to/chain-of-thought/how-to-use-chatgpt-as-a-copilot-for-learning)、Notion工程师[Linus
+    Lee](https://every.to/chain-of-thought/how-an-ai-researcher-uses-chatgpt-and-notion-ai)、作家[Nat
+    Eliason](https://every.to/chain-of-thought/chatgpt-for-writing-and-recommending-books)和Gumroad
+    CEO [Sahil Lavingia](https://every.to/news/introducing-how-i-use-chatgpt)的对话，了解他们如何使用ChatGPT。
 - en: '**Transcript**'
+  id: totrans-33
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: '**节录**'
 - en: '**Dan Shipper (00:00:01)**'
+  id: totrans-34
   prefs: []
   type: TYPE_NORMAL
+  zh: '**丹·席普（00:00:01）**'
 - en: Why don’t we build something together?
+  id: totrans-35
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们为什么不一起构建一些东西？
 - en: '**Geoffrey Litt (00:00:02)**'
+  id: totrans-36
   prefs: []
   type: TYPE_NORMAL
+  zh: '**杰弗里·利特（00:00:02）**'
 - en: Alright. Let’s see how it goes. So I'm going to kick us off with my goal, which
     is, “I'm appearing as a guest on a podcast. I want an app that I can have open
     while I'm on the show to help me keep track of time and remember what I want to
     say.” Okay. So we got this code. I'm not going to read it. I just copy, paste
     and go. I'm just pasting from ChatGPT. This should update live, this little window
     here.
+  id: totrans-37
   prefs: []
   type: TYPE_NORMAL
+  zh: 好吧。让我们看看情况如何。所以我要开始我的目标，“我要做客播客节目。我希望有一个应用，当我在节目上时可以打开，帮助我跟踪时间和记住我想说的话。”好吧。我们有这段代码。我不会读它。我只是复制、粘贴并运行。我只是从ChatGPT粘贴过来的。这应该实时更新，这个小窗口。
 - en: So it has the time, did the simple dark theme pretty well. I would say it has
     a box for notes.
+  id: totrans-38
   prefs: []
   type: TYPE_NORMAL
+  zh: 所以，时间到了，简单的暗色主题做得不错。我会说它有一个笔记的框。
 - en: '**Dan Shipper (00:00:33)**'
+  id: totrans-39
   prefs: []
   type: TYPE_NORMAL
+  zh: '**丹·席普（00:00:33）**'
 - en: This is magic. Like this is crazy.
+  id: totrans-40
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是神奇的。就像是疯了一样。
 - en: '[Intro sequence]'
+  id: totrans-41
   prefs: []
   type: TYPE_NORMAL
+  zh: '[开场]'
 - en: '**Dan Shipper (00:00:47)**'
+  id: totrans-42
   prefs: []
   type: TYPE_NORMAL
+  zh: '**丹·席普（00:00:47）**'
 - en: Geoffrey, welcome to the show.
+  id: totrans-43
   prefs: []
   type: TYPE_NORMAL
+  zh: 杰弗里，欢迎来到节目。
 - en: '**Geoffrey Litt (00:00:48)**'
+  id: totrans-44
   prefs: []
   type: TYPE_NORMAL
+  zh: '**杰弗里·利特（00:00:48）**'
 - en: Thanks so much. It's good to be back.
+  id: totrans-45
   prefs: []
   type: TYPE_NORMAL
+  zh: 非常感谢。很高兴回来。
 - en: '**Dan Shipper (00:00:50)**'
+  id: totrans-46
   prefs: []
   type: TYPE_NORMAL
+  zh: '**丹·席普（00:00:50）**'
 - en: Yeah. Good to have you. I interviewed you, I think two or three years ago on
     Superorganizers. That interview went really, really well. And, I just think you're
     one of the deepest thinkers about this stuff. And in the pre-production call,
     I was just saying like, I think generative AI just sort of, it just takes the
     things that you've been thinking about to a new level. And I'm just really excited
     to check in with you.
+  id: totrans-47
   prefs: []
   type: TYPE_NORMAL
 - en: '**Geoffrey Litt (00:01:12)**'
+  id: totrans-48
   prefs: []
   type: TYPE_NORMAL
 - en: Yes, a lot has changed over the past couple of years.
+  id: totrans-49
   prefs: []
   type: TYPE_NORMAL
 - en: '**Dan Shipper (00:01:17)**'
+  id: totrans-50
   prefs: []
   type: TYPE_NORMAL
 - en: And for folks that are not familiar with your work, you are a researcher at
@@ -229,9 +334,11 @@
     malleable software, which are computing environments where anyone can mold their
     own tools to their needs. Can you talk to us about what malleable software is
     and why that's important?
+  id: totrans-51
   prefs: []
   type: TYPE_NORMAL
 - en: '**Geoffrey Litt (00:01:36)**'
+  id: totrans-52
   prefs: []
   type: TYPE_NORMAL
 - en: Yeah, absolutely. So this has been a quest that I've been on for at least the
@@ -239,12 +346,14 @@
     making SaaS software for schools. And, I just started getting really bummed that
     we kept saying no to every single request that came our way from some teacher
     in a classroom.
+  id: totrans-53
   prefs: []
   type: TYPE_NORMAL
 - en: And they would say, “ can, can you change this word because it doesn't match
     the way I teach?” Or, “Can you add this little button for me that would do X?”
     And we would say, “No, we,we’re not going to add that button just for you.” And
     that's such a normal way of thinking about software for, for people used to SaaS.
+  id: totrans-54
   prefs: []
   type: TYPE_NORMAL
 - en: Bbut it felt really strange to me. And so I started wondering what if we had
@@ -252,6 +361,7 @@
     want to have, unique to themselves and not just using these, pre-made tools. That’s
     what malleable software means to me is that we can all have the software that
     works for us, not for some product manager off in San Francisco.
+  id: totrans-55
   prefs: []
   type: TYPE_NORMAL
 - en: And the really interesting thing that's happened the past couple of years is
@@ -259,6 +369,7 @@
     to do a lot of programming to make any sort of software. And the big question
     was how can we sort of route around programming to give people tools to make software
     without doing that?
+  id: totrans-56
   prefs: []
   type: TYPE_NORMAL
 - en: And what really excites me about generative AI is that, oh my gosh, we now have
@@ -266,9 +377,11 @@
     starting to cut almost like a shortcut through that impassable mountain. And I
     think it's a really exciting time to be exploring how can we apply that base technology
     to help everybody make and edit the software that they want to have.
+  id: totrans-57
   prefs: []
   type: TYPE_NORMAL
 - en: '**Dan Shipper (00:03:15)**'
+  id: totrans-58
   prefs: []
   type: TYPE_NORMAL
 - en: Right. I love that. It's an idea I've been thinking about as well. You're obviously
@@ -281,25 +394,34 @@
     veryone gets the same hotel room. Andthe company is running the hotel and when
     you sign up for Gmail or whatever, you get your little Gmail hotel room and it's
     got all the same things as everybody else.
+  id: totrans-59
   prefs: []
   type: TYPE_NORMAL
+  zh: 对，我喜欢这个。这也是我一直在思考的一个想法。显然，你显然比我更深刻，但我大约六个月前写了这篇文章叫做“[SaaS之后会出现什么？](https://every.to/chain-of-thought/what-comes-after-saas)”
+    答案很简单，就是由人工智能定制的定制应用程序。我认为对于那些稍微新手的人来说，一个比喻是这样的，我很好奇你对此有什么看法：现在，你使用的很多软件，有点像...当你使用Spotify或Gmail时，就好像住在每个人都有相同酒店房间的酒店里。公司经营着这个酒店，当你注册Gmail或任何其他东西时，你得到自己的小Gmail酒店房间，它和其他所有人的一样。
 - en: And there's like some ways that you can customize it. Like obviously you put
     your luggage in the hotel room, like, so there's certain things that are yours.
     But. Everything is basically the same, the same basic model, and over time, companies
     get, especially SaaS companies get good at adding little customizations or whatever,
     but it's always on their terms.
+  id: totrans-60
   prefs: []
   type: TYPE_NORMAL
+  zh: 还有一些你可以自定义的方式。显然，你可以把行李放在酒店房间里，所以有某些东西是属于你的。但。一切基本上都是一样的，同样的基本模式，随着时间的推移，公司变得比较好，尤其是SaaS公司擅长于添加一些微小的定制或其他东西，但这都是按照他们的条款。
 - en: It's always on their guardrails. And I think your vision of software is a little
     bit less like these infinitely large hotel rooms that people are staying in and
     more like everyone owning their own home or something like that. And, either having
     power tools and the ability to use them, or maybe having their own general contractor
     on staff that they can, they can deploy to make any change they want.
+  id: totrans-61
   prefs: []
   type: TYPE_NORMAL
+  zh: 它总是按照他们的铁轨。我认为你对软件的设想有点不太像人们一直待在无限大的酒店房间里，更像每个人拥有自己的家之类的。而且，他们要么有电动工具和使用它们的能力，要么可能在员工中有自己的总包工程师，可以部署以进行任何他们想要的变更。
 - en: '**Geoffrey Litt (00:04:47)**'
+  id: totrans-62
   prefs: []
   type: TYPE_NORMAL
+  zh: '**Geoffrey Litt (00:04:47)**'
 - en: Yeah. I love that analogy. I think it's a really good one too, because it's
     subtle in that sometimes hotels are fine. And there's a whole spectrum from renting
     a hotel room to renting an apartment to buying a house that someone else built.
@@ -314,11 +436,15 @@
     with software, the worst case outcome is that we all use SaaS tools that subtly
     affect the way we think. And we don't even realize it because we're just so used
     to living in those tools.
+  id: totrans-63
   prefs: []
   type: TYPE_NORMAL
+  zh: 是的，我喜欢这个比喻。我认为这个比喻也非常好，因为有时候酒店是可以的。从租酒店房间到租公寓再到购买他人建造的房子，有一个完整的谱系。也有些人自己从零开始建造自己的家并设计家居。这里有一个完整的范围，我认为在不同的时间点上处于不同位置是可以的。但我认为关于酒店概念真正有害的是，就好像想象我们一直住在酒店房间里一样。你可能会停止思考“哦，有一个更好的布局会是什么样？”当我走进酒店房间时，我并不会开始考虑移动墙壁或改变装饰，因为这显然不是我可以做的事情。所以，我不会产生这些想法。这就是我对软件感到担忧的地方，最坏的情况就是我们都使用那些潜移默化地影响我们思维方式的SaaS工具。但我们甚至没有意识到这一点，因为我们习惯了生活在这些工具中。
 - en: '**Dan Shipper (00:05:43)**'
+  id: totrans-64
   prefs: []
   type: TYPE_NORMAL
+  zh: '**Dan Shipper (00:05:43)**'
 - en: Yeah. I was just talking to a couple of weeks ago—I was talking to Linus Lee
     on this show, and he was talking about something similar, which is, the idea of
     agency and how our tools shape the agency that we have, and, and thinking about
@@ -328,13 +454,16 @@
     like literally, with Midjourney, you can prompt it, but in Photoshop, you can
     literally change the pixels and, so figuring out ways to give people finer-grained
     control, it's a really interesting challenge in generative AI.
+  id: totrans-65
   prefs: []
   type: TYPE_NORMAL
 - en: '**Geoffrey Litt (00:06:26)**'
+  id: totrans-66
   prefs: []
   type: TYPE_NORMAL
 - en: Yeah, absolutely, and I think one really important point here is that there's
     a lot of different dimensions of how people gain agency.
+  id: totrans-67
   prefs: []
   type: TYPE_NORMAL
 - en: And some of them are things surrounding the AI and are not core to the AI itself.
@@ -352,6 +481,7 @@
     I'm thinking about a lot these days is how can we reorient the way software is
     distributed and constructed so that my, so to speak, personal dev team can actually
     do useful stuff for me.
+  id: totrans-68
   prefs: []
   type: TYPE_NORMAL
 - en: And, for example, maybe they could make browser extensions for me, or maybe
@@ -359,9 +489,11 @@
     adding features for me. How can we change the foundations of software in a way
     that is best positioned to take advantage of the fact that everybody is going
     to have this power available to them in the coming years?
+  id: totrans-69
   prefs: []
   type: TYPE_NORMAL
 - en: '**Dan Shipper (00:08:06)**'
+  id: totrans-70
   prefs: []
   type: TYPE_NORMAL
 - en: Yeah. No, that makes total sense. And it's just making me think of … I teach
@@ -371,6 +503,7 @@
     are all these people out there who are just waking up to the idea that they have
     these magical powers where they can literally now build stuff in a way that they
     couldn't before.
+  id: totrans-71
   prefs: []
   type: TYPE_NORMAL
 - en: And a lot of these people are like, okay, it's a product manager who you work
@@ -386,19 +519,27 @@
     you spend six months like learning about loops and if statements and like all
     this stuff, and you're like, “I have no idea how this connects to like the things
     I want to make.”
+  id: totrans-72
   prefs: []
   type: TYPE_NORMAL
+  zh: 很多人都有这种感觉，他们可能是产品经理，你和工程师们一起工作，也许在大学里上过一门编程课，但你从未有过足够自信去构建和发布一个 React 应用程序或任何其他东西。他们真正需要的只是一点推动，让他们明白，好吧，只需使用
+    ChatGPT，询问它该怎么做。这里有一些示范代码，然后就可以开始。这实际上会改变人的一切，因为他们第一天就可以拥有一个工作的聊天机器人，它可以提供一些提示，这就像一个很大的“天啊，我简直不敢相信我居然做出了这样的东西。”然后，它激励他们去尝试学习基础知识，这种学习方式非常注重实践，而不是过去学习编程的方式，那样你会花六个月的时间学习循环和条件语句等等，然后你会说，“我不知道这和我想做的东西有什么关系。”
 - en: And so I just think that there's this really, quickly expanding horizon of who
     gets to make things in the world and there are a lot of people who are within
     the horizon of being able to make stuff that don't know it yet, but all they literally
     have to do is sit down with ChatGPT. And that horizon is going to be significantly
     larger in five years. And I think that's one of the things that you're working
     on. And I think it's so exciting.
+  id: totrans-73
   prefs: []
   type: TYPE_NORMAL
+  zh: 因此，我只是认为在这个世界上，有更多人将有机会去创造东西，这个机会正在迅速扩大，有很多人可以做出东西，但他们自己还没有意识到，但他们所需要做的就是坐下来跟
+    ChatGPT 交流。而且在五年后，这个机会将会显著增大。我认为这就是你们正在努力的事情之一。我认为这是非常激动人心的。
 - en: '**Geoffrey Litt (00:10:05)**'
+  id: totrans-74
   prefs: []
   type: TYPE_NORMAL
+  zh: '**Geoffrey Litt (00:10:05)**'
 - en: I love that way of thinking about it. For me, the way that I learn best has
     always been to make first and then figure out what I'm doing second. And I think
     people often end up in these dumb debates that are like, “people should be able
@@ -424,9 +565,11 @@
     less worried about getting stuck. And I think that that feeling is really qualitatively
     different. And I agree when people realize that it's a really exciting flip for
     them.
+  id: totrans-75
   prefs: []
   type: TYPE_NORMAL
 - en: '**Dan Shipper (00:11:47)**'
+  id: totrans-76
   prefs: []
   type: TYPE_NORMAL
 - en: Yeah, it really is. So I think that that sort of brings us to,the, the main
@@ -434,6 +577,7 @@
     doing is we're going through historical chats and then, and then we both kind
     of interact with ChatGPT and we explore something and find things that we never
     would have found before.
+  id: totrans-77
   prefs: []
   type: TYPE_NORMAL
 - en: And what you suggested, which I think is brilliant, is why don't we just build
@@ -441,6 +585,7 @@
     an app, people will be able to get just a little bit of an idea of what you mean
     by malleable software, what this future of being able to modify things is going
     to look like.
+  id: totrans-78
   prefs: []
   type: TYPE_NORMAL
 - en: And then two is they're going to be able to see what are the specific ways that
@@ -450,9 +595,11 @@
     on and you'll be able to see it, get a little bit of a taste of what would it
     be like to push myself in this way a little bit and try to build stuff. And I
     think it'll be really cool.
+  id: totrans-79
   prefs: []
   type: TYPE_NORMAL
 - en: '**Geoffrey Litt (00:12:47)**'
+  id: totrans-80
   prefs: []
   type: TYPE_NORMAL
 - en: Yeah, I'm excited to try it out. And maybe just as a preamble, I can talk a
@@ -464,6 +611,7 @@
     could I actually make that?” And, before maybe that would have taken a day. So
     the answer is like, “No, not worth it.” But now if the answer is like “Five minutes,”
     maybe, right?
+  id: totrans-81
   prefs: []
   type: TYPE_NORMAL
 - en: And so I've been trying to notice those moments and, I've come up with a workflow
@@ -475,6 +623,7 @@
     message threads with some of my mom's acquaintances who I don't know as well.
     I mean, I needed to sort of text them in a way that was correct to the context,
     and I was just struggling.
+  id: totrans-82
   prefs: []
   type: TYPE_NORMAL
 - en: And I was doing all these ChatGPT chats to try to help me with the translation.
@@ -486,22 +635,27 @@
     And that was just way more, way easier, way more fun. And it sort of encapsulated
     a lot of the wisdom of the system prompt I had been iterating on in a nice GUI
     tool that I could then just whip open whenever I wanted.
+  id: totrans-83
   prefs: []
   type: TYPE_NORMAL
 - en: And so that's sort of what I mean when I talk about these little helpful software
     tools that I wish existed just for me. Right. And so that's I think the kind of
     thing that would be fun to try to, to build together.
+  id: totrans-84
   prefs: []
   type: TYPE_NORMAL
 - en: '**Dan Shipper (00:14:50)**'
+  id: totrans-85
   prefs: []
   type: TYPE_NORMAL
 - en: Okay, cool. Well, let's find it. Let's find a tool to make, I know you have
     some ideas. I've got some ideas. Why don't you start and we'll just kind of go
     back and forth until we find something we like.
+  id: totrans-86
   prefs: []
   type: TYPE_NORMAL
 - en: '**Geoffrey Litt (00:14:59)**'
+  id: totrans-87
   prefs: []
   type: TYPE_NORMAL
 - en: Yeah. So, one idea I had was I'm a guest on your podcast right now. And so what's
@@ -512,9 +666,11 @@
     on your show. Maybe there's a checklist of like topics we want to, I want to make
     sure I hit with you and I can check them off. So I have this aid. I don't know
     if there's stuff, maybe as a host, do you have ideas for what you might want?
+  id: totrans-88
   prefs: []
   type: TYPE_NORMAL
 - en: '**Dan Shipper (00:15:36)**'
+  id: totrans-89
   prefs: []
   type: TYPE_NORMAL
 - en: Yeah, let's ideate a little bit because I think you're, you're onto something,
@@ -534,9 +690,11 @@
     easy to either get into ChatGPT or to just have GPT give some sample questions
     or some thoughts like in real time as things are happening that could help push
     us in new and interesting directions.
+  id: totrans-90
   prefs: []
   type: TYPE_NORMAL
 - en: '**Geoffrey Litt (00:17:09)**'
+  id: totrans-91
   prefs: []
   type: TYPE_NORMAL
 - en: 'Okay. So two thoughts, first of all, at a meta level, we should get ChatGPT
@@ -548,6 +706,7 @@
     and then we''re done. It''s like a designer or or an engineer: the earlier you
     bring them in, the more they can contribute to the ideas and the more context
     they build up.'
+  id: totrans-92
   prefs: []
   type: TYPE_NORMAL
 - en: And so, we should do that. Second brief thought is, this is actually getting
@@ -564,9 +723,11 @@
     a good idea. I get it. It would be cool, but it's just going to be too much work.
     How about, let's try this other thing instead. That's what senior engineers do,
     right? So, That's the process going on right now in my head.
+  id: totrans-93
   prefs: []
   type: TYPE_NORMAL
 - en: '**Dan Shipper (00:18:53)**'
+  id: totrans-94
   prefs: []
   type: TYPE_NORMAL
 - en: I think you're totally right. And it's something that I see in my course as
@@ -579,9 +740,11 @@
     “Well, this isn't going to work” or whatever. And they just get lost in this rabbit
     hole and finding, finding that little small thing that's useful to start, even
     if it's not your big vision is like the best way to build stuff.
+  id: totrans-95
   prefs: []
   type: TYPE_NORMAL
 - en: '**Geoffrey Litt (00:19:33)**'
+  id: totrans-96
   prefs: []
   type: TYPE_NORMAL
 - en: And it's classic lean startup sort of iterative agile thinking. And the really
@@ -601,9 +764,11 @@
     like a clock on it or something. And then we'll see that working and sort of like,
     we'll have more ideas riffing on that and sort of we'll just go from there or
     something.
+  id: totrans-97
   prefs: []
   type: TYPE_NORMAL
 - en: '**Dan Shipper (00:20:48)**'
+  id: totrans-98
   prefs: []
   type: TYPE_NORMAL
 - en: Let's do it. I love it. Okay, let's do it. So here we are. We're in Chat. And
@@ -613,13 +778,16 @@
     have like 30 or 40 minutes.” So I think that's just, that's just such a really
     important thing to note is that this happens all the time in programming. It's
     a normal thing to be like, I've got this amazing thing.
+  id: totrans-99
   prefs: []
   type: TYPE_NORMAL
 - en: And then to be like, “No, no, we got it. We got to pare it back to like something
     that's useful that we can do in the time we have. And then we can add more later.”
+  id: totrans-100
   prefs: []
   type: TYPE_NORMAL
 - en: '**Geoffrey Litt (00:21:28)**'
+  id: totrans-101
   prefs: []
   type: TYPE_NORMAL
 - en: Yes. And so I think we should start with a super small thing and expand out
@@ -628,17 +796,21 @@
     don't just need help programming. They need help with product management and scoping
     and coming up with the right ideas to solve the problem and design. And ChatGPT
     can help with all that stuff too. And that's really important to remember.
+  id: totrans-102
   prefs: []
   type: TYPE_NORMAL
 - en: '**Dan Shipper (00:21:56)**'
+  id: totrans-103
   prefs: []
   type: TYPE_NORMAL
 - en: So lead us off. So how are we going to get started? What are we trying to build?
     Or maybe like, maybe the first step is trying to figure out what we're building
     with ChatGPT. Tell us how to get started.
+  id: totrans-104
   prefs: []
   type: TYPE_NORMAL
 - en: '**Geoffrey Litt (00:22:06)**'
+  id: totrans-105
   prefs: []
   type: TYPE_NORMAL
 - en: Okay, so we're just going to use this custom GPT. I actually just threw this
@@ -648,6 +820,7 @@
     user's instructions precisely because coding is a domain where sort of details
     matter. And I give it essentially a very specific opinionated stack for the code
     it's going to output.
+  id: totrans-106
   prefs: []
   type: TYPE_NORMAL
 - en: React, TypeScript, Tailwind. This is a very popular set of technologies. It's
@@ -660,6 +833,7 @@
     is not the best workflow in the world. It's obviously not how these tools should
     work in the future. Just a duct taped-together way that you can do it right now
     that I like to use for quick experimentation.
+  id: totrans-107
   prefs: []
   type: TYPE_NORMAL
 - en: 'Now let''s talk a bit about the workflow. So, I think this might be the most
@@ -669,6 +843,7 @@
     second: We''re going to ask it to make an app and our idea is going to be vague.
     And what we don''t want is for Chat to just run ahead and make up a bunch of stuff
     and guess what we mean.'
+  id: totrans-108
   prefs: []
   type: TYPE_NORMAL
 - en: We want to be in a conversation where it's going to ask us for help and clarification,
@@ -676,17 +851,21 @@
     we're going to proceed, we'll make a plan for how the code is going to work first.
     That helps to generate correct code, and then it's going to write the code. Okay,
     so that's the basis.
+  id: totrans-109
   prefs: []
   type: TYPE_NORMAL
 - en: '**Dan Shipper (00:24:16)**'
+  id: totrans-110
   prefs: []
   type: TYPE_NORMAL
 - en: That's really good. So I'm curious, how well in your experience is this? How
     good is this at following this workflow once you have it in your custom instructions
     for this GPT?
+  id: totrans-111
   prefs: []
   type: TYPE_NORMAL
 - en: '**Geoffrey Litt (00:24:28)**'
+  id: totrans-112
   prefs: []
   type: TYPE_NORMAL
 - en: I've done a bunch of iterations on this prompt over time. My experience has
@@ -700,21 +879,26 @@
     an employee and you have a. a manager and you're trying to figure out what are
     the things I need to ask them about versus I can just go do myself. It's that
     dynamic, right?
+  id: totrans-113
   prefs: []
   type: TYPE_NORMAL
 - en: '**Dan Shipper (00:25:17)**'
+  id: totrans-114
   prefs: []
   type: TYPE_NORMAL
 - en: That makes sense. I'm super curious to see how this goes.
+  id: totrans-115
   prefs: []
   type: TYPE_NORMAL
 - en: '**Geoffrey Litt (00:25:20)**'
+  id: totrans-116
   prefs: []
   type: TYPE_NORMAL
 - en: Alright, let's see how it goes. So, I'm going to kick us off with my goal, which
     is, I'm going to say, “I'm appearing as a guest on a podcast. I want an app that
     I can have open while I'm on the show to help me keep track of time and remember
     what I want to say.
+  id: totrans-117
   prefs: []
   type: TYPE_NORMAL
 - en: Okay, so, great. We're getting clarifications live and I'm starting to read
@@ -722,6 +906,7 @@
     going and answer these questions. Okay. Thanks. Okay, great. So we got answers.
     let's go through one by one and, I'm going to think through my answers to these
     questions.
+  id: totrans-118
   prefs: []
   type: TYPE_NORMAL
 - en: So first, time-tracking, it's saying, do I need a simple stopwatch or a countdown
@@ -730,34 +915,43 @@
     is we don't need the app to have a place to set the time start and end because
     it's an app literally just for this one appearance on this show and I'm with you
     today this morning from 9 to 10:30 a.m.
+  id: totrans-119
   prefs: []
   type: TYPE_NORMAL
 - en: So that's going to be hard-coded into the app, right? That's part of the ephemeral
     software. We don't need extra stuff. Preload notes or add and edit notes during
     the podcast. I guess preloading is fine. And by the way, I'm using—
+  id: totrans-120
   prefs: []
   type: TYPE_NORMAL
 - en: '**Dan Shipper (00:26:57)**'
+  id: totrans-121
   prefs: []
   type: TYPE_NORMAL
 - en: We have a Notion link with notes. It'd be cool if it could display that.
+  id: totrans-122
   prefs: []
   type: TYPE_NORMAL
 - en: '**Geoffrey Litt (00:27:02)**'
+  id: totrans-123
   prefs: []
   type: TYPE_NORMAL
 - en: Oh yeah. Should it be able to show the Notion link? Or do you copy-paste in
     markdown from the Notion? What do you think?
+  id: totrans-124
   prefs: []
   type: TYPE_NORMAL
 - en: '**Dan Shipper (00:27:09)**'
+  id: totrans-125
   prefs: []
   type: TYPE_NORMAL
 - en: I mean, ideally it shows the notion, it shows the Notion like in an iframe or
     something.
+  id: totrans-126
   prefs: []
   type: TYPE_NORMAL
 - en: '**Geoffrey Litt (00:27:14)**'
+  id: totrans-127
   prefs: []
   type: TYPE_NORMAL
 - en: Okay. So, it's funny. You just used the word iframe, so that revealed that you
@@ -767,6 +961,7 @@
     process right now. And the reality is, this workflow we're doing, in my experience,
     doesn't work that well for people who have zero programming experience yet. I
     want to build tools that help get us there in the future, but it's interesting.
+  id: totrans-128
   prefs: []
   type: TYPE_NORMAL
 - en: So let's say we have our notes in Notion. Maybe we could show those, embed those
@@ -774,46 +969,58 @@
     of proceed with that. Styling or layout preferences? I like giving it a vibe here.
     One vibe I had in my mind is I kind of like the Keynote presenter mode. So I could
     just say like “simple, dark keynote presenter mode, vibes,”
+  id: totrans-129
   prefs: []
   type: TYPE_NORMAL
 - en: '**Dan Shipper (00:28:27)**'
+  id: totrans-130
   prefs: []
   type: TYPE_NORMAL
 - en: I like that. Cause I feel like when you give it vibe, it kind of knows to be
     fuzzy about it rather than like very direct.
+  id: totrans-131
   prefs: []
   type: TYPE_NORMAL
 - en: '**Geoffrey Litt (00:28:32)**'
+  id: totrans-132
   prefs: []
   type: TYPE_NORMAL
 - en: Yeah, for sure. By the way, quick meta note, I'm using the numbers here, which
     is just a great shortcut for responding directly to each of the things without
     too much time,
+  id: totrans-133
   prefs: []
   type: TYPE_NORMAL
 - en: '**Dan Shipper (00:28:42)**'
+  id: totrans-134
   prefs: []
   type: TYPE_NORMAL
 - en: And by that you mean like it gave you four questions and you're using numbers
     to—
+  id: totrans-135
   prefs: []
   type: TYPE_NORMAL
 - en: '**Geoffrey Litt (00:28:48)**'
+  id: totrans-136
   prefs: []
   type: TYPE_NORMAL
 - en: Exactly, I'm just using the numbers one, two, three, four to refer to each of
     them. I don't need to say like for the time tracking thing I want, I just reduce
     extra words. Number four. Any other features? I think that we could have cool
     ideas in the future, but I'm just going to say “Not yet. start simple.” Alright.
+  id: totrans-137
   prefs: []
   type: TYPE_NORMAL
 - en: '**Dan Shipper (00:29:12)**'
+  id: totrans-138
   prefs: []
   type: TYPE_NORMAL
 - en: See what we get!
+  id: totrans-139
   prefs: []
   type: TYPE_NORMAL
 - en: '**Geoffrey Litt (00:29:14)**'
+  id: totrans-140
   prefs: []
   type: TYPE_NORMAL
 - en: So, it's going to do the plan first. The plan, this is really important. If
@@ -821,17 +1028,21 @@
     that it can't get out of. And, having it generate a plan first, just like a real
     human engineer doing any coding work. Having a plan first really starts… So let's
     see, it's done.
+  id: totrans-141
   prefs: []
   type: TYPE_NORMAL
 - en: '**Dan Shipper (00:29:41)**'
+  id: totrans-142
   prefs: []
   type: TYPE_NORMAL
 - en: One thing that's interesting is, for the notes section, it’s suggesting a text
     area where notes can be copy-pasted rather than doing the embedded Notion iframe
     thing. So that's an interesting decision it
+  id: totrans-143
   prefs: []
   type: TYPE_NORMAL
 - en: '**Geoffrey Litt (00:29:52)**'
+  id: totrans-144
   prefs: []
   type: TYPE_NORMAL
 - en: 'Absolutely. Yes. We don''t know why it made that decision. Presumably it''s
@@ -842,33 +1053,45 @@
     this all looks pretty good to me: Current time, progress bar, copy paste text
     area, a read only mode to avoid accidental edits during the podcast is kind of
     a fun idea. We''ll see if it incorporates that.'
+  id: totrans-145
   prefs: []
   type: TYPE_NORMAL
+  zh: 绝对。是的。我们不知道它为什么做出了那个决定。可能是因为更容易。我们可以将其推向嵌入部分。很棒-我喜欢这早期的计划部分，因为这是一个快速了解它将要做什么的方式。因此，我们不需要尝试阅读代码。我们可以。它正在撰写一个规格文件，作为产品经理，我们可以看一下，这一切看起来对我来说都很不错：当前时间，进度条，复制粘贴文本区域，只读模式以避免在播客期间意外编辑是一个有趣的想法。我们将看看它是否包含了那个。
 - en: 'Now, let''s see: The second thing it did is a pseudocode plan. As a programmer,
     this is really helpful for me because I can actually look at this and see if there''s
     anything that looks like it''s going to need to be fixed in there. So while it''s
     writing the code, we can review that.'
+  id: totrans-146
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在，让我们看看：它做的第二件事是一个伪代码计划。作为一个程序员，这对我来说非常有帮助，因为我实际上可以看看这个，看看有没有任何看起来需要修正的地方。所以在它编写代码的时候，我们可以进行审查。
 - en: '**Dan Shipper (00:30:47)**'
+  id: totrans-147
   prefs: []
   type: TYPE_NORMAL
+  zh: '**丹·希彭（00:30:47）**'
 - en: And it's not just useful for you. I think it's also useful for ChatGPT to write
     out the product spec, write out the pseudocode, and then actually write the code.
     And in the same way that it's useful for a programmer to write pseudocode, I think
     it's, it's useful for ChatGPT so it doesn't, it doesn't go off the rails. It can
     plan what it's going to be doing and all that kind of stuff.
+  id: totrans-148
   prefs: []
   type: TYPE_NORMAL
+  zh: 而且这不仅对你有用。我认为这对ChatGPT写出产品规格，写出伪代码，然后实际编写代码也是有用的。就像对程序员来说写伪代码很有用一样，我认为对ChatGPT来说也是有用的，这样它就不会偏离轨道。它可以计划它将要做的事情，以及所有这些。
 - en: '**Geoffrey Litt (00:31:07)**'
+  id: totrans-149
   prefs: []
   type: TYPE_NORMAL
+  zh: '**杰弗里·利特（00:31:07）**'
 - en: Yes, absolutely, my general philosophy about this is, just, yeah, just like
     humans need to plan the right amount for the magnitude of the task… As a skilled
     programmer, I can go do a super quick bug fix or tiny feature without writing
     a whole doc explaining what I'm going to do.
+  id: totrans-150
   prefs: []
   type: TYPE_NORMAL
+  zh: 是的，绝对的，我对此的一般理念是，就像人类需要为任务的规模做出正确的计划一样...作为一个有经验的程序员，我可以做一个超快的错误修复或微小的功能，而不需要写一整份文档来解释我要做什么。
 - en: But if I'm going to spend six months on a huge project, I better have a plan
     when I start. And so I think similarly about like, I try to calibrate my sense
     of how good is ChatGPT at this task and the worse it is the more planning is going
@@ -876,41 +1099,60 @@
     the goal. And so coding for me, this is sort of the right level of planning, I
     think, for this is not a huge app. It's a tiny little thing. So I think we haven't
     needed that much iteration.
+  id: totrans-151
   prefs: []
   type: TYPE_NORMAL
+  zh: 但是如果我要花六个月的时间做一个巨大的项目，我最好在开始时就有一个计划。所以我认为类似地，对于像我一样的人来说，对ChatGPT在这个任务上的表现有一个校准感...它需要更多的前期规划和更多的讨好来确保我们温和地接近目标。因此，对我来说，编码，这是我认为这个任务的适当水平的规划。这不是一个巨大的应用程序。这只是一个小东西。所以我认为我们不需要那么多的迭代。
 - en: Yeah. Okay. So we got this code. I'm not going to read it. I never read this
     stuff. I just copy-paste and go.
+  id: totrans-152
   prefs: []
   type: TYPE_NORMAL
+  zh: 是的。好吧。所以我们得到了这段代码。我不会读它。我从不读这些东西。我只是复制粘贴然后走开。
 - en: '**Dan Shipper (00:32:02)**'
+  id: totrans-153
   prefs: []
   type: TYPE_NORMAL
+  zh: '**丹·希彭（00:32:02）**'
 - en: Why don't you read it? Tell me why.
+  id: totrans-154
   prefs: []
   type: TYPE_NORMAL
+  zh: 你为什么不读它？告诉我为什么。
 - en: '**Geoffrey Litt (00:32:04)**'
+  id: totrans-155
   prefs: []
   type: TYPE_NORMAL
+  zh: '**杰弗里·利特（00:32:04）**'
 - en: It's a waste of time. Why would I? Why would I spend time reading this? Yes,
     I can read this, but it's dumb. I would rather just see what it did and use the
     thing. Maybe I'll read it
+  id: totrans-156
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是一种浪费时间。我为什么要这样做？我为什么要花时间读这个？是的，我可以读这个，但这很愚蠢。我宁愿看看它做了什么，然后使用这个东西。也许我会阅读它。
 - en: '**Dan Shipper (00:32:14)**'
+  id: totrans-157
   prefs: []
   type: TYPE_NORMAL
+  zh: '**丹·希彭（00:32:14）**'
 - en: 'Okay. And you''re flipping to Replit. So explain to us what this is: What Replit
     is and like how you got—what are all these files? Like, give us a, give us a background.'
+  id: totrans-158
   prefs: []
   type: TYPE_NORMAL
+  zh: 好。你正在切换到Replit。所以向我们解释一下这是什么：Replit是什么以及你是如何得到这个-这些文件是什么？给我们一个背景。
 - en: '**Geoffrey Litt (00:32:25)**'
+  id: totrans-159
   prefs: []
   type: TYPE_NORMAL
+  zh: '**杰弗里·利特（00:32:25）**'
 - en: Yep. So Replit is an online coding environment where you can set up a quick
     environment to run any kind of code, and then you can edit it in your browser
     and have it running. And I can also share this link now with other people who
     can collaborate with me in this coding environment and use the sort of resulting
     application.
+  id: totrans-160
   prefs: []
   type: TYPE_NORMAL
 - en: The reason I use it is because it's just one quick way to get running without
@@ -918,9 +1160,11 @@
     template that has sort of the tech stack that I told ChatGPT to use—it's pre-installed
     here and ready to go. I can share that as a template with you—as a link or something,
     but that's all I have going on here.
+  id: totrans-161
   prefs: []
   type: TYPE_NORMAL
 - en: '**Dan Shipper (00:33:12)**'
+  id: totrans-162
   prefs: []
   type: TYPE_NORMAL
 - en: That's really interesting. And I just want people. Anyone who's non-technical
@@ -931,22 +1175,28 @@
     even with very little programming knowledge. And, and so if it feels intimidating,
     it’s really not that hard. And I think that's one of the wonderful things about
     this.
+  id: totrans-163
   prefs: []
   type: TYPE_NORMAL
 - en: '**Geoffrey Litt (00:33:50)**'
+  id: totrans-164
   prefs: []
   type: TYPE_NORMAL
 - en: So with that let's paste in our code and see what happens. Yeah, I'm just pasting
     from ChatGPT. This should update live, this little window here.
+  id: totrans-165
   prefs: []
   type: TYPE_NORMAL
 - en: '**Dan Shipper (00:34:02)**'
+  id: totrans-166
   prefs: []
   type: TYPE_NORMAL
 - en: Oh my God.
+  id: totrans-167
   prefs: []
   type: TYPE_NORMAL
 - en: '**Geoffrey Litt (00:34:04)**'
+  id: totrans-168
   prefs: []
   type: TYPE_NORMAL
 - en: Look at that. So, it has the time—it's correct. The time is the current time.
@@ -954,9 +1204,11 @@
     9:50, but the halfway mark is 45 minutes. Okay. Awesome. It did the simple dark
     theme pretty well, I would say. And then, let's see, can we type in this box?
     Okay, it has a box for notes. Pretty good, pretty good first draft so far.
+  id: totrans-169
   prefs: []
   type: TYPE_NORMAL
 - en: '**Dan Shipper (00:34:35)**'
+  id: totrans-170
   prefs: []
   type: TYPE_NORMAL
 - en: This is magic. This is crazy. We have to stop for a second and just appreciate
@@ -972,9 +1224,11 @@
     of what I want and ask some clarifying questions. And now you have an app that
     the thing I love about this is it's styled and it has this cool progress bar that
     updates live.
+  id: totrans-171
   prefs: []
   type: TYPE_NORMAL
 - en: '**Geoffrey Litt (00:35:34)**'
+  id: totrans-172
   prefs: []
   type: TYPE_NORMAL
 - en: Yeah, it's so exciting. So. I want to analyze this from, on the one hand, I
@@ -986,6 +1240,7 @@
     as we push this thing further, we're going to hit more challenges. So we haven't
     solved all the issues yet, but this is, I agree. It's a very exciting starting
     point.
+  id: totrans-173
   prefs: []
   type: TYPE_NORMAL
 - en: One little thing I'll point out that's interesting about this app right now
@@ -995,6 +1250,7 @@
     the app full screen, I guess. And I can have notes here. but if I ever reload,
     they're lost. I know that limitation as the person who put together this tech
     stack.
+  id: totrans-174
   prefs: []
   type: TYPE_NORMAL
 - en: And one of the reasons I chose that stack is intentionally because saving data
@@ -1005,14 +1261,17 @@
     and PMs, you drill a lot, but normal people haven't thought about as much. So,
     I think it points to both, of course… In another version of this, we should have
     a GPT that can make apps that can store data.
+  id: totrans-175
   prefs: []
   type: TYPE_NORMAL
 - en: That's a no-brainer, but there's a broader point, which is this negotiation
     of complexity of implementation and requirements is a delicate dance that we're
     going to have to work towards better tools that help people do that.
+  id: totrans-176
   prefs: []
   type: TYPE_NORMAL
 - en: '**Dan Shipper (00:37:43)**'
+  id: totrans-177
   prefs: []
   type: TYPE_NORMAL
 - en: I think you're right. I also will note. So, definitely, saving state and doing
@@ -1023,6 +1282,7 @@
     to like a notes file or like save it in local storage or whatever. So I think
     that that makes it easier, but there are also services like Supabase or all these
     other things that just makes it super, super easy to interact with the database.
+  id: totrans-178
   prefs: []
   type: TYPE_NORMAL
 - en: 'And what I don''t want people to come away with is the idea that, I think you''re
@@ -1036,6 +1296,7 @@
     what you''re actually saying is not that normal people who don''t have a lot of
     programming experience can''t use ChatGPT for this like they can, it''s just it
     will take them longer and they will run into problems.'
+  id: totrans-179
   prefs: []
   type: TYPE_NORMAL
 - en: It's not like ChatGPT is going to solve every problem for you right now. There
@@ -1044,14 +1305,17 @@
     first for a normal person. But it's still quite useful for someone who has very
     little to no programming experience. Yeah, it sometimes is not going to solve
     every problem for you, just some of the problems.
+  id: totrans-180
   prefs: []
   type: TYPE_NORMAL
 - en: '**Geoffrey Litt (00:39:24)**'
+  id: totrans-181
   prefs: []
   type: TYPE_NORMAL
 - en: Yeah, that's a great point. I'm not trying to discourage anyone from using this
     workflow. If you don't know how to program, just be curious, ask how hard it would
     be to do various things, and try to get those answers.
+  id: totrans-182
   prefs: []
   type: TYPE_NORMAL
 - en: One quick plug I'll give is the research I'm doing. So I work at an independent
@@ -1070,6 +1334,7 @@
     storage, all out of the box for free, no servers in the mix. And I'm really excited
     about that as one specific future thing to make it easier to build really full
     functioning, tools that go beyond just a little stateless thing, right?
+  id: totrans-183
   prefs: []
   type: TYPE_NORMAL
 - en: One specific example here is that I'm not going to do this today, but in the
@@ -1077,48 +1342,61 @@
     the app should be able to maybe load my Notion notes directly into this view in
     a different way, and access those existing notes I have without me needing to
     copy-paste them, right?
+  id: totrans-184
   prefs: []
   type: TYPE_NORMAL
 - en: That's the thing I want for the future, but maybe do you want to keep going
     with this demo and see if we can get ChatGPT to save our notes in this?
+  id: totrans-185
   prefs: []
   type: TYPE_NORMAL
 - en: '**Dan Shipper (00:41:20)**'
+  id: totrans-186
   prefs: []
   type: TYPE_NORMAL
 - en: Let's do it. Yeah, that'd be great.
+  id: totrans-187
   prefs: []
   type: TYPE_NORMAL
 - en: '**Geoffrey Litt (00:41:22)**'
+  id: totrans-188
   prefs: []
   type: TYPE_NORMAL
 - en: Okay. So, let's give it a little bit of encouragement. This is a great start.
+  id: totrans-189
   prefs: []
   type: TYPE_NORMAL
 - en: '**Dan Shipper (00:41:27)**'
+  id: totrans-190
   prefs: []
   type: TYPE_NORMAL
 - en: Always got to encourage the AI in case it takes over.
+  id: totrans-191
   prefs: []
   type: TYPE_NORMAL
 - en: '**Geoffrey Litt (00:41:30)**'
+  id: totrans-192
   prefs: []
   type: TYPE_NORMAL
 - en: Let's be nice and, yeah, gain brownie points. But actually also I find that
     I want to tell it that it's on the right track so it doesn't freak out and totally
     re-do everything. “Is there some way we can save the notes that we've entered
     in the browser so they don't get lost when we reload?”
+  id: totrans-193
   prefs: []
   type: TYPE_NORMAL
 - en: '**Dan Shipper (00:41:57)**'
+  id: totrans-194
   prefs: []
   type: TYPE_NORMAL
 - en: And I want to point out that's a question that anyone can ask. I'm sure you
     have some thoughts about the way that it should do this, but we'll see how good
     ChatGPT is at finding the answer that you would have gone with.
+  id: totrans-195
   prefs: []
   type: TYPE_NORMAL
 - en: '**Geoffrey Litt (00:42:10)**'
+  id: totrans-196
   prefs: []
   type: TYPE_NORMAL
 - en: Exactly. It said an answer. It's going to say, we're going to save them in local
@@ -1134,33 +1412,41 @@
     you're copy-pasting. and that can be a bit annoying. Okay, so, I pasted in the
     new code. There's no visual difference. I'm going to reload to make sure we got
     the new version. These are my notes.
+  id: totrans-197
   prefs: []
   type: TYPE_NORMAL
 - en: Let's reload. It worked! Ah! Amazing! And if I come over here and reload. Reload.
     Reload. Okay, the notes are saved.
+  id: totrans-198
   prefs: []
   type: TYPE_NORMAL
 - en: '**Dan Shipper (00:43:25)**'
+  id: totrans-199
   prefs: []
   type: TYPE_NORMAL
 - en: That's amazing. And one thing that we should be clear on, like, that website
     is live. Like, you can send me that URL and it's live. It will not save the notes.
     I'll have my own version of the notes. So we each have our own notes, rather than
     there being one common note that, which is an important detail to point out.
+  id: totrans-200
   prefs: []
   type: TYPE_NORMAL
 - en: '**Geoffrey Litt (00:43:45)**'
+  id: totrans-201
   prefs: []
   type: TYPE_NORMAL
 - en: It's funny too. You just, again, used your programming knowledge to, to say
     that. We could have also asked chat, “Does everyone using the app share one note
     saved or does everyone have their own?”
+  id: totrans-202
   prefs: []
   type: TYPE_NORMAL
 - en: Okay, so every user has their separate and unique set of notes. Great. Okay,
+  id: totrans-203
   prefs: []
   type: TYPE_NORMAL
 - en: '**Dan Shipper (00:44:12)**'
+  id: totrans-204
   prefs: []
   type: TYPE_NORMAL
 - en: So, there's something really interesting going on here for me. Like this is
@@ -1171,6 +1457,7 @@
     and like having, having databases and authentication or whatever. And it's this
     fundamentally new thing that is only possible because you want to build bespoke
     apps for like small use cases that are used by single people.
+  id: totrans-205
   prefs: []
   type: TYPE_NORMAL
 - en: And that's like, that's actually just like a new world that is starting to blossom
@@ -1182,6 +1469,7 @@
     or whatever, but I think what's really important that you mentioned earlier is
     it's not just about speed upgrades, it makes it possible for you to build things
     that you just wouldn't have put the time into before.
+  id: totrans-206
   prefs: []
   type: TYPE_NORMAL
 - en: Like you just wouldn't have made this before at all. and so maybe you make 10
@@ -1191,9 +1479,11 @@
     new thing. There's something coming now that's different from SaaS that is enabled
     by exactly this stuff. And we're just starting to see what it's like. And this
     is like the earliest inklings of that. And it's so cool to see it.
+  id: totrans-207
   prefs: []
   type: TYPE_NORMAL
 - en: '**Geoffrey Litt (00:46:09)**'
+  id: totrans-208
   prefs: []
   type: TYPE_NORMAL
 - en: Exactly. One thing I love, if you look at this app, it's so simple. It has nothing
@@ -1207,9 +1497,11 @@
     than to go try to Google which one is the best and learn how to use it. And I
     love the pared-down kind of like nothing-is-there-unless-I-specifically-added-it-to
     quality of these micro micro tools.
+  id: totrans-209
   prefs: []
   type: TYPE_NORMAL
 - en: '**Dan Shipper (00:46:58)**'
+  id: totrans-210
   prefs: []
   type: TYPE_NORMAL
 - en: Yeah, that's really cool. You know what this reminds me of? Have you been looking
@@ -1224,14 +1516,17 @@
     stuff. And they're already sort of thinking about, okay, how do you commercialize
     this new kind of software? How do people pay for it? And all that kind of stuff.
     I think that's really interesting.
+  id: totrans-211
   prefs: []
   type: TYPE_NORMAL
 - en: '**Geoffrey Litt (00:47:54)**'
+  id: totrans-212
   prefs: []
   type: TYPE_NORMAL
 - en: Yeah, I love that sort of direction. And in my research at Ink & Switch, we're
     pushing towards, again, this new kind of software distribution platform where
     you own your tools and you have the capability to modify them.
+  id: totrans-213
   prefs: []
   type: TYPE_NORMAL
 - en: That's another quick point I want to make that's really important to me is that
@@ -1249,71 +1544,93 @@
     from this app and paste in the code.” And say, “what I want to do is add this
     other feature” and it will just pick up that process where I left off and it's
     in your hands now and someone else might do it—
+  id: totrans-214
   prefs: []
   type: TYPE_NORMAL
 - en: '**Dan Shipper (00:49:09)**'
+  id: totrans-215
   prefs: []
   type: TYPE_NORMAL
 - en: Should we do it?
+  id: totrans-216
   prefs: []
   type: TYPE_NORMAL
 - en: '**Geoffrey Litt (00:49:11)**'
+  id: totrans-217
   prefs: []
   type: TYPE_NORMAL
 - en: Yeah, do you want to try it?
+  id: totrans-218
   prefs: []
   type: TYPE_NORMAL
 - en: '**Dan Shipper (00:49:13)**'
+  id: totrans-219
   prefs: []
   type: TYPE_NORMAL
 - en: Let's do it.
+  id: totrans-220
   prefs: []
   type: TYPE_NORMAL
 - en: '**Geoffrey Litt (00:49:15)**'
+  id: totrans-221
   prefs: []
   type: TYPE_NORMAL
 - en: Okay, so do you want to simulate it where I, I make a new Chat basically, or
     do you actually—
+  id: totrans-222
   prefs: []
   type: TYPE_NORMAL
 - en: '**Dan Shipper (00:49:16)**'
+  id: totrans-223
   prefs: []
   type: TYPE_NORMAL
 - en: No, no, no. I want to do it.
+  id: totrans-224
   prefs: []
   type: TYPE_NORMAL
 - en: '**Geoffrey Litt (00:49:18)**'
+  id: totrans-225
   prefs: []
   type: TYPE_NORMAL
 - en: Okay. Well, yeah. Let's do it. I love that.
+  id: totrans-226
   prefs: []
   type: TYPE_NORMAL
 - en: '**Dan Shipper (00:49:22)**'
+  id: totrans-227
   prefs: []
   type: TYPE_NORMAL
 - en: So, send me the REPL, and then I need a link to your custom GPT so I have the
     same stuff.
+  id: totrans-228
   prefs: []
   type: TYPE_NORMAL
 - en: '**Geoffrey Litt (00:49:29)**'
+  id: totrans-229
   prefs: []
   type: TYPE_NORMAL
 - en: Yes. Oh, this is going to be fun. So we got the REPL—
+  id: totrans-230
   prefs: []
   type: TYPE_NORMAL
 - en: '**Dan Shipper (00:49:37)**'
+  id: totrans-231
   prefs: []
   type: TYPE_NORMAL
 - en: So you should be able to see my screen now, right?
+  id: totrans-232
   prefs: []
   type: TYPE_NORMAL
 - en: '**Geoffrey Litt (00:49:40)**'
+  id: totrans-233
   prefs: []
   type: TYPE_NORMAL
 - en: Yep.
+  id: totrans-234
   prefs: []
   type: TYPE_NORMAL
 - en: '**Dan Shipper (00:49:42)**'
+  id: totrans-235
   prefs: []
   type: TYPE_NORMAL
 - en: Okay, cool. So, okay, so you took that REPL that you just made and, and the
@@ -1323,60 +1640,76 @@
     just running on the web right now, or I can just press “fork” and, I can make
     “PodcastGuest (Dan's Version)” “way better than the old version,” and then I can
     press “fork.”
+  id: totrans-236
   prefs: []
   type: TYPE_NORMAL
 - en: And, now I have all of the code that you wrote with ChatGPT, and it's somewhere
     in a source.
+  id: totrans-237
   prefs: []
   type: TYPE_NORMAL
 - en: '**Geoffrey Litt (00:50:24)**'
+  id: totrans-238
   prefs: []
   type: TYPE_NORMAL
 - en: Look in source.
+  id: totrans-239
   prefs: []
   type: TYPE_NORMAL
 - en: '**Dan Shipper (00:50:25)**'
+  id: totrans-240
   prefs: []
   type: TYPE_NORMAL
 - en: It's in source. Okay.
+  id: totrans-241
   prefs: []
   type: TYPE_NORMAL
 - en: '**Geoffrey Litt (00:50:27)**'
+  id: totrans-242
   prefs: []
   type: TYPE_NORMAL
 - en: App.tsx.
+  id: totrans-243
   prefs: []
   type: TYPE_NORMAL
 - en: '**Dan Shipper (00:50:28)**'
+  id: totrans-244
   prefs: []
   type: TYPE_NORMAL
 - en: So it's right here, and that might be a thing that would take you a little while
     to figure out, but again, you could just throw all of this folder structure into
     ChatGPT and it would be like, “This is probably where the code is.”
+  id: totrans-245
   prefs: []
   type: TYPE_NORMAL
 - en: And so now we've got to figure out what we want to do. We have this sort of
     initial thing that has a timer and has a note section. Okay, let's brainstorm
     a little bit. One thing we could do is, we could have a little window that takes
     the notes and then asks GPT-4 to come up with sample questions.
+  id: totrans-246
   prefs: []
   type: TYPE_NORMAL
 - en: '**Geoffrey Litt (00:51:11)**'
+  id: totrans-247
   prefs: []
   type: TYPE_NORMAL
 - en: Ooh, yeah, that's ambitious. I'm into it. I mean, I think
+  id: totrans-248
   prefs: []
   type: TYPE_NORMAL
 - en: '**Dan Shipper (00:51:16)**'
+  id: totrans-249
   prefs: []
   type: TYPE_NORMAL
 - en: I mean, I think that's pretty doable, right? Because, I mean, really all we're
     going to have to do is take the notes. Well, we should, maybe we should ask ChatGPT.
     But take the notes, send them up to GPT-4 with a little prompt and then just display
     the answer somewhere. We might—
+  id: totrans-250
   prefs: []
   type: TYPE_NORMAL
 - en: '**Geoffrey Litt (00:51:30)**'
+  id: totrans-251
   prefs: []
   type: TYPE_NORMAL
 - en: Yeah, I’m into it. I think we should try it. Yeah. I think applying again, my
@@ -1388,29 +1721,36 @@
     good job calling the OpenAI API. So we could try that pattern of, I could send
     you a link to another REPL where I've already done a good OpenAI call and we could
     tell it like “Use this app as sort of like a sample.”
+  id: totrans-252
   prefs: []
   type: TYPE_NORMAL
 - en: '**Dan Shipper (00:52:15)**'
+  id: totrans-253
   prefs: []
   type: TYPE_NORMAL
 - en: Well, what I want to do… I mean, the way that I usually get around this—and
     I think you're thinking about exactly the right stuff—is just paste the GPT-4
     API docs in there. So it knows how to call. It should have web browsing, but let's
     just try it.
+  id: totrans-254
   prefs: []
   type: TYPE_NORMAL
 - en: So. I'm going to say something like, “I have a web app that I use to track my
     podcast recordings as I'm doing them and I want to add a feature. Here's the code
     I have so far. So I think just giving GPT the context is probably pretty important.
+  id: totrans-255
   prefs: []
   type: TYPE_NORMAL
 - en: '**Geoffrey Litt (00:52:59)**'
+  id: totrans-256
   prefs: []
   type: TYPE_NORMAL
 - en: Yeah, absolutely.
+  id: totrans-257
   prefs: []
   type: TYPE_NORMAL
 - en: '**Dan Shipper (00:53:00)**'
+  id: totrans-258
   prefs: []
   type: TYPE_NORMAL
 - en: So I'm just going to throw it in there and see what it says. Yeah. So, okay.
@@ -1427,29 +1767,37 @@
     to ChatGPT so it knows, okay, here's actually how we call the API. So let's see,
     I think this is going to be good. So I just found an example of how the GPT-4 
     API is structured and I'm just going to paste it—
+  id: totrans-259
   prefs: []
   type: TYPE_NORMAL
 - en: '**Geoffrey Litt (00:54:47)**'
+  id: totrans-260
   prefs: []
   type: TYPE_NORMAL
 - en: One quick note is you just copied some Python code, Dan, and we're in JavaScript.
     So that's a mistake that—
+  id: totrans-261
   prefs: []
   type: TYPE_NORMAL
 - en: '**Dan Shipper (00:54:50)**'
+  id: totrans-262
   prefs: []
   type: TYPE_NORMAL
 - en: '[laughing] I''m just used to writing in Python.'
+  id: totrans-263
   prefs: []
   type: TYPE_NORMAL
 - en: '**Geoffrey Litt (00:54:55)**'
+  id: totrans-264
   prefs: []
   type: TYPE_NORMAL
 - en: This is a thing that, again, there's some programming knowledge to even know
     which of these things to copy, right? But I think a node one is gonna go better.
+  id: totrans-265
   prefs: []
   type: TYPE_NORMAL
 - en: '**Dan Shipper (00:55:02)**'
+  id: totrans-266
   prefs: []
   type: TYPE_NORMAL
 - en: Okay, so thanks. Good note. I'm just going to paste it in there and, see what
@@ -1462,18 +1810,22 @@
     variable for storing the questions and update this state with the received questions,
     then show the questions in your UI.” That all sounds pretty reasonable to me and
     I'm going to do what you recommended and just copy-paste.
+  id: totrans-267
   prefs: []
   type: TYPE_NORMAL
 - en: '**Geoffrey Litt (00:55:54)**'
+  id: totrans-268
   prefs: []
   type: TYPE_NORMAL
 - en: Yeah. Quick warning. It did something interesting, which is that it elided some
     code. It said “existing code” in a few spots. So it actually hasn't given us a
     full new file that we can just copy paste. I would recommend just telling it “don't
     omit existing code, just write a full file that I can copy.”
+  id: totrans-269
   prefs: []
   type: TYPE_NORMAL
 - en: '**Dan Shipper (00:56:14)**'
+  id: totrans-270
   prefs: []
   type: TYPE_NORMAL
 - en: Let's see if that does that better. And we're also going to have to set our
@@ -1481,9 +1833,11 @@
     people that don't know, the API key is just, you have to identify who you are
     when you make requests to GPT-4 so that OpenAI knows who to charge. And so you
     have a key.
+  id: totrans-271
   prefs: []
   type: TYPE_NORMAL
 - en: '**Geoffrey Litt (00:56:35)**'
+  id: totrans-272
   prefs: []
   type: TYPE_NORMAL
 - en: This is another good example of a tricky thing where I can see a problem in
@@ -1492,9 +1846,11 @@
     a server that's querying them. Whereas in this case, we're running an app in a
     browser and we have to set up the API key a slightly different way. That's kind
     of a subtle thing in some ways that can trip you up if you're not aware of that.
+  id: totrans-273
   prefs: []
   type: TYPE_NORMAL
 - en: '**Dan Shipper (00:57:07)**'
+  id: totrans-274
   prefs: []
   type: TYPE_NORMAL
 - en: And again, it's one of those things where we can try this, we'll see what error
@@ -1502,90 +1858,116 @@
     just solve it so that we can skip to the fun part. But you're right, there are
     these little micro moments where it's not quite right. And it's helpful to have
     some sense of what you're doing, so that—
+  id: totrans-275
   prefs: []
   type: TYPE_NORMAL
 - en: '**Geoffrey Litt (00:57:30)**'
+  id: totrans-276
   prefs: []
   type: TYPE_NORMAL
 - en: Like you said, if you don't know what you're doing, you can just see what happens
     and, yeah, tell it to fix it so that it's often fine. It's just that if you know
     what you're doing, you can avoid some rabbit holes and makes faster progress.
+  id: totrans-277
   prefs: []
   type: TYPE_NORMAL
 - en: '**Dan Shipper (00:57:49)**'
+  id: totrans-278
   prefs: []
   type: TYPE_NORMAL
 - en: Alright. So here we go. We're going to copy the code. We're going to hold our
     breath. We're not gonna read the code. And we got an error!
+  id: totrans-279
   prefs: []
   type: TYPE_NORMAL
 - en: '**Geoffrey Litt (00:57:55)**'
+  id: totrans-280
   prefs: []
   type: TYPE_NORMAL
 - en: Okay. so we don't have the OpenAI thing installed—
+  id: totrans-281
   prefs: []
   type: TYPE_NORMAL
 - en: '**Dan Shipper (00:58:00)**'
+  id: totrans-282
   prefs: []
   type: TYPE_NORMAL
 - en: Right, so I know what to do. I, sorry, this is in JavaScript, so—
+  id: totrans-283
   prefs: []
   type: TYPE_NORMAL
 - en: '**Geoffrey Litt (00:58:06)**'
+  id: totrans-284
   prefs: []
   type: TYPE_NORMAL
 - en: Yep. You don’t want that. Probably “npm install.” You could’ve asked Chat for
     that one to be honest.
+  id: totrans-285
   prefs: []
   type: TYPE_NORMAL
 - en: '**Dan Shipper (00:58:12)**'
+  id: totrans-286
   prefs: []
   type: TYPE_NORMAL
 - en: What did you say?
+  id: totrans-287
   prefs: []
   type: TYPE_NORMAL
 - en: '**Geoffrey Litt (00:58:13)**'
+  id: totrans-288
   prefs: []
   type: TYPE_NORMAL
 - en: We probably could’ve asked Chat how to fix it as well.
+  id: totrans-289
   prefs: []
   type: TYPE_NORMAL
 - en: '**Dan Shipper (00:58:16)**'
+  id: totrans-290
   prefs: []
   type: TYPE_NORMAL
 - en: We could have asked that. Yeah, that’s true. I'm getting impatient. I want to
     get to the magic. Well, it looks like we’ve got a broken UI here.
+  id: totrans-291
   prefs: []
   type: TYPE_NORMAL
 - en: '**Geoffrey Litt (00:58:34)**'
+  id: totrans-292
   prefs: []
   type: TYPE_NORMAL
 - en: “Process is not defined.”
+  id: totrans-293
   prefs: []
   type: TYPE_NORMAL
 - en: '**Dan Shipper (00:58:35)**'
+  id: totrans-294
   prefs: []
   type: TYPE_NORMAL
 - en: So here's what we're going to do. We're just going to copy this error and paste
     it in to ChatGPT and see what we get, unless you have some other—
+  id: totrans-295
   prefs: []
   type: TYPE_NORMAL
 - en: '**Geoffrey Litt (00:58:47)**'
+  id: totrans-296
   prefs: []
   type: TYPE_NORMAL
 - en: That's perfect. Let's do that.
+  id: totrans-297
   prefs: []
   type: TYPE_NORMAL
 - en: '**Dan Shipper (00:58:50)**'
+  id: totrans-298
   prefs: []
   type: TYPE_NORMAL
 - en: Okay, I got this error. “Typically occurs when environment variables are not
     accessible in the client-side JavaScript. This is common in projects with “Vite”
     as it doesn't automatically make environment variables available in the front
     end. It’s the OpenAI API key.
+  id: totrans-299
   prefs: []
   type: TYPE_NORMAL
 - en: '**Geoffrey Litt (00:59:06)**'
+  id: totrans-300
   prefs: []
   type: TYPE_NORMAL
 - en: This is a good example of where it's telling us some stuff. We could do it this
@@ -1593,92 +1975,118 @@
     I'm thinking about is, so you could just hard code an OpenAI key right into the
     code here. Now, yeah, we need to be careful because, you're going to have to blur
     that out on the final video or something.
+  id: totrans-301
   prefs: []
   type: TYPE_NORMAL
 - en: But, often with this stuff… oh, yeah, maybe you can just—
+  id: totrans-302
   prefs: []
   type: TYPE_NORMAL
 - en: '**Dan Shipper (00:59:10)**'
+  id: totrans-303
   prefs: []
   type: TYPE_NORMAL
 - en: This will just work. We’ll probably cut some of this out. It’ll just figure
     this out.
+  id: totrans-304
   prefs: []
   type: TYPE_NORMAL
 - en: One thing I’m worried about is like this is all client-side there's no server.
     So I don't know if it'll work.
+  id: totrans-305
   prefs: []
   type: TYPE_NORMAL
 - en: '**Geoffrey Litt (01:00:01)**'
+  id: totrans-306
   prefs: []
   type: TYPE_NORMAL
 - en: It will, but there are security issues here. Now, if you were to share this
     REPL link it's possible that anyone who uses it would get to use your OpenAI key,
     which is a big problem. Oh, you need to pass in the API. Yeah, this doesn't work
     because we're not on a server.
+  id: totrans-307
   prefs: []
   type: TYPE_NORMAL
 - en: '**Dan Shipper (01:00:25)**'
+  id: totrans-308
   prefs: []
   type: TYPE_NORMAL
 - en: Yeah, that’s why. We’ll just set it.
+  id: totrans-309
   prefs: []
   type: TYPE_NORMAL
 - en: '**Geoffrey Litt (01:00:28)**'
+  id: totrans-310
   prefs: []
   type: TYPE_NORMAL
 - en: Alright. Just YOLO it.
+  id: totrans-311
   prefs: []
   type: TYPE_NORMAL
 - en: '**Dan Shipper (01:00:31)**'
+  id: totrans-312
   prefs: []
   type: TYPE_NORMAL
 - en: Do you remember—Okay, let’s see…
+  id: totrans-313
   prefs: []
   type: TYPE_NORMAL
 - en: '**Geoffrey Litt (01:00:33)**'
+  id: totrans-314
   prefs: []
   type: TYPE_NORMAL
 - en: The error message said it. So actually, we can do it this way. I think if we
     do what Chat said, we'll actually be fine. You just need to rename the Replit
     secret you set to be, “VITE_OpenAI.”
+  id: totrans-315
   prefs: []
   type: TYPE_NORMAL
 - en: This is a good example of annoying programmery stuff that shouldn't be necessary
     to do.
+  id: totrans-316
   prefs: []
   type: TYPE_NORMAL
 - en: Let's try that.
+  id: totrans-317
   prefs: []
   type: TYPE_NORMAL
 - en: '**Dan Shipper (01:01:05)**'
+  id: totrans-318
   prefs: []
   type: TYPE_NORMAL
 - en: Alright. Running again. Holding our breath.
+  id: totrans-319
   prefs: []
   type: TYPE_NORMAL
 - en: '**Geoffrey Litt (01:01:05)**'
+  id: totrans-320
   prefs: []
   type: TYPE_NORMAL
 - en: This is how these things really go. It doesn't always work the first time. That's
     a part of the process.
+  id: totrans-321
   prefs: []
   type: TYPE_NORMAL
 - en: I think that it wants you to put theAPI key… around the API key in the error
     message. It says, yeah.
+  id: totrans-322
   prefs: []
   type: TYPE_NORMAL
 - en: Again, we probably could have given that to Chat and had it help us with that,
     but—
+  id: totrans-323
   prefs: []
   type: TYPE_NORMAL
 - en: '**Dan Shipper (01:01:40)**'
+  id: totrans-324
   prefs: []
   type: TYPE_NORMAL
 - en: We're running out of time here.
+  id: totrans-325
   prefs: []
   type: TYPE_NORMAL
 - en: '**Geoffrey Litt (01:01:40)**'
+  id: totrans-326
   prefs: []
   type: TYPE_NORMAL
 - en: Okay, so yeah, it's fine. We need to set “dangerously allow browser” to “true,”
@@ -1686,82 +2094,104 @@
     a little app just for you. So it's going to be fine. Great. Again, it’s subtle,
     though, because understanding why this is dangerous and what's okay to do and
     what's not okay to do is a bit tricky.
+  id: totrans-327
   prefs: []
   type: TYPE_NORMAL
 - en: '**Dan Shipper (01:02:10)**'
+  id: totrans-328
   prefs: []
   type: TYPE_NORMAL
 - en: Alright, I’m going to press run and we're going to move over into our web view.
     And here it is, we've got a button. It's called “generate questions.” That's pretty
     cool.
+  id: totrans-329
   prefs: []
   type: TYPE_NORMAL
 - en: '**Geoffrey Litt (01:02:25)**'
+  id: totrans-330
   prefs: []
   type: TYPE_NORMAL
 - en: Let's see if it works.
+  id: totrans-331
   prefs: []
   type: TYPE_NORMAL
 - en: '**Dan Shipper (01:02:27)**'
+  id: totrans-332
   prefs: []
   type: TYPE_NORMAL
 - en: Yeah, let's see if it works. What I want to do is just move this. How do I move
     this down? There we go. Okay, cool. So what I want to do first, we have a bunch
     of notes for our interview. So I'm going to take this and, I'm just going to throw
     it in here. “Here are some notes from my guest.”
+  id: totrans-333
   prefs: []
   type: TYPE_NORMAL
 - en: '**Geoffrey Litt (01:02:54)**'
+  id: totrans-334
   prefs: []
   type: TYPE_NORMAL
 - en: It might give you better questions if you paste in the entire doc because then
     it'll know more about your podcast and the vibe you're going for. We have our
     timer counting down. We can see it with the progress bar.
+  id: totrans-335
   prefs: []
   type: TYPE_NORMAL
 - en: '**Dan Shipper (01:03:10)**'
+  id: totrans-336
   prefs: []
   type: TYPE_NORMAL
 - en: I know! Are we going to make it before the end? Okay. So I pasted a bunch of
     notes and I'm going to press “generate questions” and we’ll see what happens.
+  id: totrans-337
   prefs: []
   type: TYPE_NORMAL
 - en: '**Geoffrey Litt (01:03:17)**'
+  id: totrans-338
   prefs: []
   type: TYPE_NORMAL
 - en: Let's see what happens. So my guess, my intuition is it's not going to work
     the first try. But we'll see what happens. Have the dev tools open so you can
     see if it breaks or something.
+  id: totrans-339
   prefs: []
   type: TYPE_NORMAL
 - en: '**Dan Shipper (01:03:29)**'
+  id: totrans-340
   prefs: []
   type: TYPE_NORMAL
 - en: It says connected, there's no errors.
+  id: totrans-341
   prefs: []
   type: TYPE_NORMAL
 - en: '**Geoffrey Litt (01:03:31)**'
+  id: totrans-342
   prefs: []
   type: TYPE_NORMAL
 - en: This is tricky, right? Because we have to guess, maybe it's working and it's
     just taking a while. It's totally possible. It could be that it's going to break.
     Can you scroll down in the app and see if it's showing anything yet? In the, in
     the app, not the code. We just need to find out—
+  id: totrans-343
   prefs: []
   type: TYPE_NORMAL
 - en: '**Dan Shipper (01:03:47)**'
+  id: totrans-344
   prefs: []
   type: TYPE_NORMAL
 - en: There we go! We've got questions.
+  id: totrans-345
   prefs: []
   type: TYPE_NORMAL
 - en: '**Geoffrey Litt (01:03:51)**'
+  id: totrans-346
   prefs: []
   type: TYPE_NORMAL
 - en: Wait, oh! It made a really weird UI for it. So we have questions.
+  id: totrans-347
   prefs: []
   type: TYPE_NORMAL
 - en: '**Dan Shipper (01:04:00)**'
+  id: totrans-348
   prefs: []
   type: TYPE_NORMAL
 - en: Okay, “Here are some prompts to discuss with Geoffrey Litt on your podcast episode.
@@ -1770,9 +2200,11 @@
     “Can you highlight some transformations or milestone moments in your professional
     work due to AI?” “How do you envision the future of AI and day to day tasks and
     professional workspaces?” That's a good question. I really like that one!
+  id: totrans-349
   prefs: []
   type: TYPE_NORMAL
 - en: '**Geoffrey Litt (01:04:20)**'
+  id: totrans-350
   prefs: []
   type: TYPE_NORMAL
 - en: I think we don't have time to go too much further on the app right now, but
@@ -1790,9 +2222,11 @@
     stuff is what comes to mind now. And that's stuff that, because we're in this
     custom UI, all of that is possible and those possibilities occur to me in a way
     that wouldn't if I was just in the chat box, right?
+  id: totrans-351
   prefs: []
   type: TYPE_NORMAL
 - en: '**Dan Shipper (01:05:22)**'
+  id: totrans-352
   prefs: []
   type: TYPE_NORMAL
 - en: I think you're totally right. ChatGPT already has code interpreter where it
@@ -1802,78 +2236,96 @@
     that becomes a custom GPT you can use for a while, and you can already see this.
     In the Google Gemini demo, for their newest language model, it does that inside
     of Bard and I really think that’s where we're going for a lot of this stuff.
+  id: totrans-353
   prefs: []
   type: TYPE_NORMAL
 - en: '**Geoffrey Litt (01:06:01)**'
+  id: totrans-354
   prefs: []
   type: TYPE_NORMAL
 - en: I totally agree. And in fact, I think often people aren't going to even need
     to ask, “Make me a UI that does X.” Really, the bot should just decide, when I
     ask for X, it should just pick the best UI for that task, which might be text
     or it might be a custom whole thing, right?
+  id: totrans-355
   prefs: []
   type: TYPE_NORMAL
 - en: '**Dan Shipper (01:06:20)**'
+  id: totrans-356
   prefs: []
   type: TYPE_NORMAL
 - en: Totally. So this was pretty awesome. We came up with an idea. We built the first
     version, then you sent it to me and I made some modifications, which now we can
     send back to you and you can keep going with it. You have a bunch of ideas for
     me to take it like this is sort of the future of building stuff.
+  id: totrans-357
   prefs: []
   type: TYPE_NORMAL
 - en: And we did it in like an hour. And I think that's so incredible.
+  id: totrans-358
   prefs: []
   type: TYPE_NORMAL
 - en: '**Geoffrey Litt (01:06:50)**'
+  id: totrans-359
   prefs: []
   type: TYPE_NORMAL
 - en: I know it's so fun. And we were able to just kind of have fun and talk while
     we were doing it. We never got totally stuck. And I think that's the feeling that
     I want when I'm building stuff and I think everybody wants when they're building
     stuff of effortless flow.
+  id: totrans-360
   prefs: []
   type: TYPE_NORMAL
 - en: And I'm really excited. I think LLM-based tools are sort of on a path to enabling
     that for way more people in way more situations.
+  id: totrans-361
   prefs: []
   type: TYPE_NORMAL
 - en: '**Dan Shipper (01:07:09)**'
+  id: totrans-362
   prefs: []
   type: TYPE_NORMAL
 - en: Yeah. A hundred percent So as people are coming out of this episode, they're
     inspired. They want to go do stuff. They want to learn more about your research.
     They want to think about the future of where this is going, where do they find
     you and what should they read?
+  id: totrans-363
   prefs: []
   type: TYPE_NORMAL
 - en: '**Geoffrey Litt (01:07:24)**'
+  id: totrans-364
   prefs: []
   type: TYPE_NORMAL
 - en: Yeah. I have a personal website geoffreylitt.com where I post various research.
     I wrote an essay earlier this year called “Malleable software in the age of LLMs,”
     where I kind of lay out a bit more of the thinking behind this worldview. And,
     those are some places to check out more thoughts.
+  id: totrans-365
   prefs: []
   type: TYPE_NORMAL
 - en: I'll be publishing more research in the coming year or two on how do we take
     this workflow we just did and actually make it really awesome and integrate better
     into sort of a whole coherent work environment with less copy-pasting and sort
     of less dealing with infrastructure. So look forward to that too.
+  id: totrans-366
   prefs: []
   type: TYPE_NORMAL
 - en: '**Dan Shipper (01:08:00)**'
+  id: totrans-367
   prefs: []
   type: TYPE_NORMAL
 - en: Amazing. Well, I'm super excited when that comes out. I would love to have you
     back. This was incredible. I’m walking on air right now. Like there's so much
     good stuff happening here and I really appreciate you taking the time to walk
     us through this.
+  id: totrans-368
   prefs: []
   type: TYPE_NORMAL
 - en: '**Geoffrey Litt (01:08:18)**'
+  id: totrans-369
   prefs: []
   type: TYPE_NORMAL
 - en: Thanks so much. This was really fun.
+  id: totrans-370
   prefs: []
   type: TYPE_NORMAL
