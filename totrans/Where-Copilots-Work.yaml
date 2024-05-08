@@ -120,6 +120,7 @@
   id: totrans-17
   prefs: []
   type: TYPE_NORMAL
+  zh: 正如我在[组织的终结](https://every.to/chain-of-thought/the-end-of-organizing)中所写的，对于这类技术的未来，我感到非常乐观。我发现自己读的纸质书越来越少，记笔记的次数也减少了。我越来越确信，未来一年左右，我所做的每个数字标记都将因这些工具而变得更加有用。
 - en: 'The question for me and other builders like me, is this: Where can these kinds
     of copilot experiences *actually* delivervalue with the technology that’s available
     *today*? And what are the bottlenecks that need to be resolved to make these useful
@@ -127,10 +128,12 @@
   id: totrans-18
   prefs: []
   type: TYPE_NORMAL
+  zh: 对我和其他像我一样的开发者而言，问题是：在当今的技术下，这类副驾驶体验*实际上*能够为哪些领域带来价值？以及需要解决哪些瓶颈，以使其对更多使用案例更有用？
 - en: Let’s take these one at a time.
   id: totrans-19
   prefs: []
   type: TYPE_NORMAL
+  zh: 让我们一一来看这些事项。
 - en: ''
   id: totrans-20
   prefs:
@@ -142,6 +145,7 @@
   id: totrans-21
   prefs: []
   type: TYPE_NORMAL
+  zh: '[Lever](https://www.lever.co/demo/?utm_medium=third_party_email&utm_source=other&utm_campaign=none&utm_content=every_divinations_sponsored_newsletter)是首屈一指的人才获取套件，它让人才团队轻松达成招聘目标，并将公司与顶尖人才联系在一起。'
 - en: With LeverTRM, talent leaders can scale and grow their people pipeline, build
     authentic long-lasting relationships, and source the right people to hire. And,
     thanks to [LeverTRM's](https://www.lever.co/demo/?utm_medium=third_party_email&utm_source=other&utm_campaign=none&utm_content=every_divinations_sponsored_newsletter)
@@ -151,35 +155,42 @@
   id: totrans-22
   prefs: []
   type: TYPE_NORMAL
+  zh: 利用LeverTRM，人才领导者可以扩大和培养他们的人才储备，建立真诚持久的关系，并找到合适的人才来招聘。而且，多亏了[LeverTRM](https://www.lever.co/demo/?utm_medium=third_party_email&utm_source=other&utm_campaign=none&utm_content=every_divinations_sponsored_newsletter)的分析功能，你可以得到定制报告与数据可视化、完成的招聘报价、面试反馈等等——从而可以做出更好、更明智、更战略的招聘决策。
 - en: Where copilots can be built today
   id: totrans-23
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 如今可以构建副驾驶的领域
 - en: AI-based copilots are quite useful with out-of-the-box technology in situations
     where small pieces of lightly transformed boilerplate text provide a lot of value.
   id: totrans-24
   prefs: []
   type: TYPE_NORMAL
+  zh: 基于AI的副驾驶在当前情况下，使用现成的技术在小段轻微转换的样板文本中提供了大量的价值。
 - en: 'This is particularly true in areas where:'
   id: totrans-25
   prefs: []
   type: TYPE_NORMAL
+  zh: 特别是在以下领域：
 - en: Text can be checked for accuracy quickly with little user effort
   id: totrans-26
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 文本可以被快速准确地检查，用户几乎不需要付出太多努力
 - en: The cost of inaccuracies is low
   id: totrans-27
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 不准确所带来的成本很低
 - en: Relevant text can be found reliably with [embeddings search](https://platform.openai.com/docs/guides/embeddings)
   id: totrans-28
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 可以可靠地利用[嵌入搜索](https://platform.openai.com/docs/guides/embeddings)找到相关的文本。
 - en: GitHub CoPilot is a great example of this. But other examples are things like
     [grant writing](https://grantable.co/), [contract writing](https://motionize.io/),
     tax prep, many types of [email replies](https://chrome.google.com/webstore/detail/ellie-your-ai-email-assis/mhcnlcilgicfodlpjcacgglchmpoojcp),
@@ -188,33 +199,39 @@
   id: totrans-29
   prefs: []
   type: TYPE_NORMAL
+  zh: GitHub CoPilot 是一个很好的例子。但其他例子包括像[撰写拨款申请](https://grantable.co/)、[合同撰写](https://motionize.io/)、税收准备、许多类型的[电子邮件回复](https://chrome.google.com/webstore/detail/ellie-your-ai-email-assis/mhcnlcilgicfodlpjcacgglchmpoojcp)、[RFP响应](https://www.userogue.com/)、向医生提供医疗建议等。
 - en: If you’re building a copilot (or thinking of building one), I’ve put together
     a little checklist for you to go through in order to figure out whether it will
     be possible to get good results with today’s technology.
   id: totrans-30
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果你正在构建一个副驾驶（或者考虑构建一个），我准备了一个小清单供你查看，以便确定是否有可能利用当今的技术获得良好的结果。
 - en: Can you build a copilot for it? A checklist.
   id: totrans-31
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 你能为此构建一个副驾驶吗？一个清单。
 - en: 'If you want to build a copilot for a specific domain using today’s technology
     here’s the list of things you need to check off:'
   id: totrans-32
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果你想利用当今的技术为特定领域构建一个副驾驶，这里是你需要考虑的事项清单：
 - en: Is there a corpus of relevant text completions to be used by this copilot?
   id: totrans-33
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 是否有一套相关的文本补全语料库可供这个副驾驶使用？
 - en: Can relevant text for completions be found reliably with embeddings search over
     this text corpus?
   id: totrans-34
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 可以在这个文本语料库中可靠地通过嵌入搜索找到相关的文本补全吗？
 - en: Can those pieces of text, without more context needed, be lightly transformed
     and inserted as an accurate completion?
   id: totrans-35
