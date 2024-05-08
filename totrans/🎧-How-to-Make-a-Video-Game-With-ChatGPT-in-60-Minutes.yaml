@@ -83,6 +83,8 @@
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**扩大谁可以构建东西的视野。** 洛根对 GPT Builder 感到兴奋，因为它赋予不懂编码的人构建自定义 GPT 的能力。“[你实际上可以做出比基本的
+    ChatGPT 本身更有用的东西，而不需要编写一行代码，”他说。'
 - en: '**Learn how to code!** Even though OpenAI is creating tools for people without
     coding know-how, Logan believes that learning to code is “the highest leverage
     thing you can do in your life.” AI is already enabling developers to tackle increasingly
@@ -92,6 +94,7 @@
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**学习编码！** 即使 OpenAI 正在为不懂编码的人创建工具，洛根认为学习编码是“你生活中可以做的最高杠杆的事情。” AI 已经使开发人员能够更快地解决日益复杂的问题，而且更独立，他预计这种情况将随着时间的推移“呈指数级增长”。'
 - en: '**Empowering the next billion coders**. As the benefits of coding grow, Logan
     thinks AI will also teach the next billion people how to code. “[T]here w[ere]
     not enough computer science educators and resources on the planet to teach the
@@ -102,6 +105,8 @@
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**赋予下一个十亿编码人员力量。** 随着编码的好处增加，洛根认为 AI 也会教导下一个十亿人如何编码。“由于地球上没有足够的计算机科学教育者和资源来教导下一个十亿人编码...因为我们有了
+    LLMs，人们实际上可以以一种对他们特别个性化和有力量的方式去做这件事，”他说。'
 - en: '**GPT Builder is trained on the basics of prompt engineering.** We decide to
     build a video game that allows the player to choose a U.S. president and then
     allocate that government’s budget. On Logan’s advice, we don’t instruct GPT Builder
@@ -114,6 +119,9 @@
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**GPT Builder 受过提示工程基础的训练。** 我们决定制作一个视频游戏，允许玩家选择一位美国总统，然后分配该政府的预算。根据洛根的建议，我们没有指示
+    GPT Builder 优化我们的初步提示，因为他解释说，“一旦我们真正得到了[GPT Builder]输出的东西，我们可以对其进行迭代，但[GPT Builder]确实在幕后为我们进行了一些...提示工程的魔法。”我们为我们的视频游戏选择的名称是
+    Allocator，部分受到了我[关于分配经济时代的文章](https://every.to/chain-of-thought/the-knowledge-economy-is-over-welcome-to-the-allocation-economy)的启发。'
 - en: '**SEO-friendly names for custom GPTs.** One more handy GPT Builder tip for
     your custom GPT to go viral: “[N]ame [the custom GPT] something such that people
     will actually be able to find it,” Logan advises. To “own the SEO space,” you
@@ -123,6 +131,8 @@
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**为自定义 GPT 设置 SEO 友好的名称。** 对于你的自定义 GPT 走向病毒式传播，再给你一个方便的 GPT Builder 小贴士：“[给自定义
+    GPT 起]一个人们实际上能够找到的名字，”洛根建议道。要“占据 SEO 领域”，你需要想到一个独特的名称，因为“你让名字越通用...尝试找到它的人就越多，这个领域就越受到污染。”'
 - en: '**Instruct GPT Builder to simulate an expert.** As Logan and I get deeper into
     building our video game, we uncover another prompt engineering nugget. We tell
     GPT Builder to simulate an expert and come up with a framework for gameplay mechanics
@@ -131,6 +141,8 @@
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**指示 GPT Builder 模拟专家。** 当洛根和我深入研究构建我们的视频游戏时，我们发现了另一个提示工程的宝贵信息。我们告诉 GPT Builder
+    模拟一位专家，并提出一个游戏机制框架，因为我们不是游戏的“核心机制”的技术专家。'
 - en: '**Tweaking the instructions underlying GPT Builder.** GPT Builder plows right
     ahead and outputs gameplay mechanics that fill in more gaps than we wanted. To
     limit this, Logan recommends clicking on the Configure tab to “tweak to those
@@ -140,6 +152,7 @@
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**调整 GPT Builder 底层的指令。** GPT Builder 直接前进并输出填补我们想要的空白的游戏机制。为了限制这一点，洛根建议点击“配置”选项卡以“调整这些指令，例如，‘嘿，也许给用户一些输入，然后让他们在一些事情上来回交流。’”'
 - en: '**Make with GPT Builder, refine with ChatGPT**. We still aren’t thrilled with
     the gameplay mechanics we get from GPT Builder, so Logan suggests using ChatGPT
     to refine the custom instructions powering the builder. “Part of the system prompt
@@ -149,6 +162,8 @@
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**使用 GPT Builder 制作，使用 ChatGPT 完善**。我们仍然对 GPT Builder 提供的游戏机制不太满意，所以 Logan
+    建议使用 ChatGPT 完善驱动构建器的自定义说明。“系统提示的一部分是保持这些自定义说明有点短，不要太具体，”他解释道。'
 - en: '**Use ChatGPT to format instructions.** We ask ChatGPT to format these instructions
     so that it’s easy for us to copy and paste them into GPT Builder. Logan’s helpful
     tip is to specifically instruct ChatGPT to output the instructions as “markdown
@@ -157,6 +172,8 @@
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**使用 ChatGPT 格式化说明。** 我们要求 ChatGPT 格式化这些说明，以便我们可以轻松地复制并粘贴到 GPT Builder 中。Logan
+    的有用提示是明确指示 ChatGPT 输出说明为“markdown in a code block”，这将删除项目符号。'
 - en: As Logan and I play the game, we jot down a list of things we want to improve.
     Then we get ChatGPT to refine the instructions and input it back into GPT Builder,
     until we finally got to a version we were happy with. You can [play our game,
@@ -165,72 +182,87 @@
   id: totrans-22
   prefs: []
   type: TYPE_NORMAL
+  zh: 当 Logan 和我玩游戏时，我们会记下我们想要改进的事项清单。然后我们让 ChatGPT 完善说明并将其输入回 GPT Builder，直到我们最终得到一个满意的版本。你可以[玩我们的游戏
+    Allocator](https://chat.openai.com/g/g-oooxUbOkj-allocator)——告诉我们你的想法，我们将根据你的反馈进行第二集直播修改游戏。
 - en: 'You can check out the episode on X, Spotify, Apple Podcasts, or YouTube. Links
     and timestamps are below:'
   id: totrans-23
   prefs: []
   type: TYPE_NORMAL
+  zh: 你可以在 X、Spotify、Apple Podcasts 或 YouTube 上查看该集。链接和时间戳如下：
 - en: 'Timestamps:'
   id: totrans-24
   prefs:
   - PREF_H5
   type: TYPE_NORMAL
+  zh: 时间戳：
 - en: Introduction *00:44*
   id: totrans-25
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 介绍 *00:44*
 - en: Why learning to code is the highest leverage thing you can do *09:18*
   id: totrans-26
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 为什么学习编码是你可以做的最高效的事情 *09:18*
 - en: AI is empowering the next billion coders *13:40*
   id: totrans-27
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: AI 正赋能下一个十亿程序员 *13:40*
 - en: The first prompt in GPT Builder for our video game *35:58*
   id: totrans-28
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 我们视频游戏中的第一个提示 *35:58*
 - en: How to increase the chances for your custom GPT to go viral *39:27 *
   id: totrans-29
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 如何增加你的定制 GPT 被传播的机会 *39:27 *
 - en: Prompt engineering tips while using GPT Builder *43:00*
   id: totrans-30
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 在使用 GPT Builder 时进行提示工程技巧 *43:00*
 - en: How to use ChatGPT in conjunction with GPT Builder *56:13*
   id: totrans-31
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 如何与 GPT Builder 结合使用 ChatGPT *56:13*
 - en: Ready to play our text-based strategy game! *1:06:33*
   id: totrans-32
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 准备好玩我们的基于文本的策略游戏！ *1:06:33*
 - en: How to finetune your custom GPT *1:19:44*
   id: totrans-33
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 如何微调你的定制 GPT *1:19:44*
 - en: Why you should build custom GPTs *1:43:12*
   id: totrans-34
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 为什么你应该构建定制 GPTs *1:43:12*
 - en: What do you use ChatGPT for? Have you found any interesting or surprising use
     cases? We want to hear from you—and we might even interview you. Reply here to
     talk to me!
   id: totrans-35
   prefs: []
   type: TYPE_NORMAL
+  zh: 你使用 ChatGPT 做什么？你发现了什么有趣或令人惊讶的用例吗？我们想听听你的想法——甚至可能采访你。在这里回复与我交谈！
 - en: Miss an episode? Catch up on my recent conversations with clinical psychologist
     [Dr. Gena Gorlin](https://every.to/chain-of-thought/chatgpt-for-radical-self-betterment),
     economist [Tyler Cowen](https://every.to/chain-of-thought/economist-tyler-cowen-on-how-chatgpt-is-changing-your-job),
@@ -244,10 +276,16 @@
   id: totrans-36
   prefs: []
   type: TYPE_NORMAL
+  zh: 错过了一集？赶紧补上我最近与临床心理学家[吉娜·戈林博士](https://every.to/chain-of-thought/chatgpt-for-radical-self-betterment)、经济学家[泰勒·考温](https://every.to/chain-of-thought/economist-tyler-cowen-on-how-chatgpt-is-changing-your-job)、作家兼企业家[大卫·佩雷尔](https://every.to/chain-of-thought/how-david-perell-uses-chatgpt-to-write-for-millions)、软件研究员[杰弗里·利特](https://every.to/chain-of-thought/you-can-build-an-app-with-chatgpt-in-60-minutes)、Waymark
+    创始人[内森·拉本兹](https://every.to/chain-of-thought/how-to-use-chatgpt-as-a-copilot-for-learning)、Notion
+    工程师[林纳斯·李](https://every.to/chain-of-thought/how-an-ai-researcher-uses-chatgpt-and-notion-ai)、作家[纳特·埃里森](https://every.to/chain-of-thought/chatgpt-for-writing-and-recommending-books)以及Gumroad
+    CEO [萨希尔·拉文吉亚](https://every.to/news/introducing-how-i-use-chatgpt)的最近对话，并了解 *他们*
+    如何使用 ChatGPT。
 - en: 'If you’re enjoying my work, here are a few things I recommend:'
   id: totrans-37
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果你喜欢我的工作，这里有几件事我推荐：
 - en: '[**My take on this show and the episode transcript**](https://every.to/chain-of-thought/exclusive-analysis-of-how-do-you-use-chatgpt-with-logan-kilpatrick)
     **is for paying subscribers.**'
   id: totrans-38
