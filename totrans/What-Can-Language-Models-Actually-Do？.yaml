@@ -1,57 +1,72 @@
 - en: <!--yml
+  id: totrans-0
   prefs: []
   type: TYPE_NORMAL
 - en: 'category: COT 专栏'
+  id: totrans-1
   prefs: []
   type: TYPE_NORMAL
 - en: 'date: 2024-05-08 11:02:34'
+  id: totrans-2
   prefs: []
   type: TYPE_NORMAL
 - en: -->
+  id: totrans-3
   prefs: []
   type: TYPE_NORMAL
 - en: What Can Language Models Actually Do?
+  id: totrans-4
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
 - en: 来源：[https://every.to/chain-of-thought/what-can-language-models-actually-do](https://every.to/chain-of-thought/what-can-language-models-actually-do)
+  id: totrans-5
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '*This is the first of a five-part series I''m writing about redefining human
     creativity in the age of AI.*'
+  id: totrans-6
   prefs: []
   type: TYPE_NORMAL
 - en: '* * *'
+  id: totrans-7
   prefs: []
   type: TYPE_NORMAL
 - en: I want to help save our idea of human creativity.
+  id: totrans-8
   prefs: []
   type: TYPE_NORMAL
 - en: Artificial intelligence can write, illustrate, design, code, and much more.
     But rather than eliminating the need for human creativity, these new powers can
     help us redefine and expand it.
+  id: totrans-9
   prefs: []
   type: TYPE_NORMAL
 - en: We need to do a [technological dissection](https://every.to/chain-of-thought/chatgpt-and-the-future-of-the-human-mind)
     of language models, defining what they can do well—and what they can’t. By doing
     so, we can isolate our own role in the creative process.
+  id: totrans-10
   prefs: []
   type: TYPE_NORMAL
 - en: If we can do that, we’ll be able to wield language models for creative work—and
     still call it creativity.
+  id: totrans-11
   prefs: []
   type: TYPE_NORMAL
 - en: To start, let’s talk about what language models *can* do.
+  id: totrans-12
   prefs: []
   type: TYPE_NORMAL
 - en: The psychology and behavior of language models
+  id: totrans-13
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: The current generation of language models is called *transformers*, and in order
     to understand what they do, we need to take that word seriously. What kind of
     *transformations* can transformers do?
+  id: totrans-14
   prefs: []
   type: TYPE_NORMAL
 - en: Mathematically, language models are recursive next-token predictors. They are
@@ -59,48 +74,59 @@
     process runs over and over in a loop, building upon its previous outputs self-referentially
     until it reaches a stopping point. It’s sort of like a snowball rolling downhill
     and picking up more and more snow along the way.
+  id: totrans-15
   prefs: []
   type: TYPE_NORMAL
 - en: But this question is best asked at a higher level than simply mathematical possibility.
     Instead, what are the inputs and outputs we observe from today’s language models?
     And what can we infer about how they think?
+  id: totrans-16
   prefs: []
   type: TYPE_NORMAL
 - en: In essence, we need to study LLMs’ behavior and psychology, rather than their
     biology and physics.
+  id: totrans-17
   prefs: []
   type: TYPE_NORMAL
 - en: This is a sketch based on experience. It’s a framework I’ve built for the purposes
     of doing great creative work with AI.
+  id: totrans-18
   prefs: []
   type: TYPE_NORMAL
 - en: A framework for what language models do
+  id: totrans-19
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: 'Language models transform text in the following ways:'
+  id: totrans-20
   prefs: []
   type: TYPE_NORMAL
 - en: '**Compression:** They compress a big prompt into a short response.'
+  id: totrans-21
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: '**Expansion:** They expand a short prompt into a long response.'
+  id: totrans-22
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: '**Translation:** They convert a prompt in one form into a response in another
     form.'
+  id: totrans-23
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: 'These are manifestations of their outward behavior. From there, we can infer
     a property of their psychology—the underlying thinking process that creates their
     behavior:'
+  id: totrans-24
   prefs: []
   type: TYPE_NORMAL
 - en: '**Remixing:** They mix two or more texts (or learned representations of texts)
     together and interpolate between them.'
+  id: totrans-25
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
@@ -108,343 +134,492 @@
     the next few weeks. None of these answers are final, so consider this a public
     exploration that’s open for critique. Today, I want to talk to you about the first
     operation: compression.'
+  id: totrans-26
   prefs: []
   type: TYPE_NORMAL
 - en: Language models as compressors
+  id: totrans-27
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: 'Language models can take any piece of text and make it smaller:'
+  id: totrans-28
   prefs: []
   type: TYPE_NORMAL
+  zh: 语言模型可以对任何文本进行压缩：
 - en: '*Source: All images courtesy of the author.*'
+  id: totrans-29
   prefs: []
   type: TYPE_NORMAL
+  zh: '*来源：所有图片由作者提供。*'
 - en: This might seem simple, but, in fact, it’s a marvel. Language models can take
     a big chunk of text and smush it down like a foot crushing a can of Coke. Except
     it doesn’t come out crushed—it comes out as a perfectly packaged and proportional
     mini-Coke. And it’s even drinkable! This is a Willy Wonka-esque magic trick, without
     the Oompa Loompas.
+  id: totrans-30
   prefs: []
   type: TYPE_NORMAL
+  zh: 这可能看起来很简单，但实际上，这是一个奇迹。语言模型可以将大段文本压缩成像脚踩扁可乐罐一样。除了它不会被压扁——它会成为一个完美打包和比例的迷你可乐。而且它甚至是可以喝的！这就像是一场威利·旺卡式的魔术表演，没有瓦工小矮人。
 - en: Language model compression comes in many different flavors. A common one is
     what I’ll call *comprehensive* compression, or summarization.
+  id: totrans-31
   prefs: []
   type: TYPE_NORMAL
+  zh: 语言模型压缩有许多不同的风味。其中一种常见的是我称之为*全面*压缩，或者摘要。
 - en: Language models are comprehensive compressors
+  id: totrans-32
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 语言模型是全面的压缩器
 - en: Humans comprehensively compress things all the time—it’s called summarization.
     Language models are good at it in the same way a fifth grader summarizes a children’s
     novel for a book report, or the app [Blinkist](https://www.blinkist.com/en/lp)
     summarizes nonfiction books for busy professionals.
+  id: totrans-33
   prefs: []
   type: TYPE_NORMAL
+  zh: 人类一直在全面压缩事物——这就是摘要。语言模型在这方面表现得很好，就像五年级学生为书面报告总结儿童小说一样，或者应用程序[Blinkist](https://www.blinkist.com/en/lp)为忙碌的专业人士总结非虚构书籍一样。
 - en: 'This kind of summarizing is intended to take a source text, pick out the ideas
     that explain its main points for a general reader, and reconstitute those into
     a compressed form for faster consumption:'
+  id: totrans-34
   prefs: []
   type: TYPE_NORMAL
+  zh: 这种总结旨在从源文本中提取解释其主要观点的思想，并将其重组成压缩形式以供更快地消费：
 - en: These summaries are intended to be both comprehensive (they note all the main
     ideas) and helpful for the average reader (they express the main ideas at a high
     level with little background knowledge assumed).
+  id: totrans-35
   prefs: []
   type: TYPE_NORMAL
+  zh: 这些摘要旨在既全面（它们记录了所有主要观点），又对普通读者有帮助（它们以高水平表达主要观点，几乎不需要背景知识）。
 - en: 'In the same way, a language model like Anthropic’s Claude, given the text of
     the Ursula K. LeGuin classic *A Wizard of Earthsea*, will easily output a comprehensive
     summary of the book’s main plot points:'
+  id: totrans-36
   prefs: []
   type: TYPE_NORMAL
+  zh: 同样，像Anthropic的Claude这样的语言模型，给定Ursula K. LeGuin经典作品《地海巫师》的文本，将轻松输出该书的主要情节的全面摘要：
 - en: But comprehensive compression isn’t the only thing language models can do. You
     can compress text without being comprehensive—which creates room for totally different
     forms of compression.
+  id: totrans-37
   prefs: []
   type: TYPE_NORMAL
+  zh: 但全面压缩并不是语言模型能做的唯一事情。你可以在不全面的情况下压缩文本——这为完全不同形式的压缩留下了空间。
 - en: Language models are engaging compressors
+  id: totrans-38
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 语言模型是引人入胜的压缩器
 - en: 'If we require our compression to be *interesting* instead of comprehensive,
     compressions look less like book reports and more like email subject lines, article
     headlines, book titles, and subtitles. If we graphed them by how much attention
     is required to consume them, it would look like this:'
+  id: totrans-39
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果我们要求我们的压缩是*有趣的*，而不是全面的，压缩看起来不太像书面报告，而更像是电子邮件主题行、文章标题、书名和副标题。如果我们按消耗注意力的程度对它们进行图表化，它看起来会像这样：
 - en: Through this lens, book titles are just as much a
+  id: totrans-40
   prefs: []
   type: TYPE_NORMAL
+  zh: 通过这个视角，书名只是一种
 - en: '*compression*'
+  id: totrans-41
   prefs: []
   type: TYPE_NORMAL
+  zh: '*压缩*'
 - en: as a kid’s book report; they just prioritize different requirements for what
     the compression is trying to capture. Language models excel at this type of compression,
     too.
+  id: totrans-42
   prefs: []
   type: TYPE_NORMAL
+  zh: 就像一个孩子的书面报告一样；他们只是优先考虑压缩尝试捕捉的不同要求。语言模型在这种类型的压缩方面也表现出色。
 - en: 'For example, at Every we use an internal AI tool to help us turn the content
     of our stories into headlines. It’s specifically aimed at interestingness, as
     opposed to comprehensiveness. When I fed it the text of *A Wizard of Earthsea*,
     it suggested these titles:'
+  id: totrans-43
   prefs: []
   type: TYPE_NORMAL
+  zh: 例如，在Every，我们使用内部 AI 工具帮助我们将故事内容转化为标题。它专门针对趣味性，而不是全面性。当我输入《地海》的文本时，它建议了以下标题：
 - en: '*The Shadow''s Name*'
+  id: totrans-44
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '*暗影的名字*'
 - en: '*The Warrior Mage''s Shadow Quest*'
+  id: totrans-45
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '*战士法师的暗影追寻*'
 - en: '*The Shadow Defeated*'
+  id: totrans-46
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '*暗影的失败*'
 - en: These are pretty good! But language model compression doesn’t stop at just these
     two dimensions of compression.
+  id: totrans-47
   prefs: []
   type: TYPE_NORMAL
+  zh: 这些都很不错！但语言模型的压缩不仅局限于这两个压缩维度。
 - en: Language models compress over many different dimensions
+  id: totrans-48
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 语言模型在许多不同的维度上进行压缩
 - en: 'There are many dimensions along which compression can be run. Here are some
     examples of headlines, all written by Claude:'
+  id: totrans-49
   prefs: []
   type: TYPE_NORMAL
+  zh: 压缩可以在许多不同的维度上运行。以下是一些标题的例子，都是由Claude编写的：
 - en: '**Clickbaiting:** "You Won’t Believe What This Young Wizard Discovered on a
     Shadow Isle!"'
+  id: totrans-50
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**Clickbaiting:** “你绝对不会相信这位年轻巫师在影岛上发现了什么！”'
 - en: '**Intrigue:** "Secrets of the Shadowy Mage Isle"'
+  id: totrans-51
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**Intrigue:** “神秘的暗影法师岛的秘密”'
 - en: '**Vibe-y:** "chill wizard explores shady island, finds self"'
+  id: totrans-52
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**Vibe-y:** “冷静的巫师探索阴暗的岛屿，找到自我”'
 - en: '**Alliteration:** "The Wizard’s Winding, Wondrous Wanderings"'
+  id: totrans-53
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**Alliteration:** “巫师的蜿蜒、奇妙的征途”'
 - en: '**Snark:** "Oh, Another ''Chosen One'' Wizard Story Set on an Island, How Original"'
+  id: totrans-54
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**Snark:** “哦，又是一个在岛上设定的‘选中之人’巫师故事，多么原创啊”'
 - en: '**Paranoia:** "They’re Watching: A Wizard’s Harrowing Shadow Odyssey"'
+  id: totrans-55
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**Paranoia:** “他们在观察着：一个巫师的惊心动魄的阴影奥德赛”'
 - en: '**Pessimism:** "The Gloomy Account of a Doomed Mage on Hopeless Shadow Rock"'
+  id: totrans-56
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**Pessimism:** “绝望的影岩上，一个注定失败的法师的阴郁故事”'
 - en: '**Confusion:** "Wait, What''s Happening? A Wizard Goes Somewhere Shadowy, I
     Think?"'
+  id: totrans-57
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**Confusion:** “等等，发生了什么？一个巫师去了一个阴影的地方，我想是吗？”'
 - en: '**Absurdist:** "Schrödinger''s Wizard Simultaneously Visits and Doesn''t Visit
     Shadow Isle"'
+  id: totrans-58
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**Absurdist:** “薛定谔的巫师同时访问和不访问影岛”'
 - en: '**Ironic detachment:** "I Guess This Wizard Goes to Some Dumb Island or Whatever"'
+  id: totrans-59
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**Ironic detachment:** “我猜这个巫师去了某个愚蠢的岛屿或者什么的”'
 - en: '**Gaslighting:** "There Is No Shadow Isle, You''re Just Imagining Things"'
+  id: totrans-60
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**Gaslighting:** “没有影岛，你只是想象出来的”'
 - en: 'When we started talking about compression, we began with this graphic:'
+  id: totrans-61
   prefs: []
   type: TYPE_NORMAL
+  zh: 当我们开始讨论压缩时，我们从这个图表开始：
 - en: 'If we wanted to revise it with our expanded idea of compression along many
     different dimensions, we might do something like this:'
+  id: totrans-62
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果我们想根据我们对多个不同维度压缩的扩展想法进行修订，我们可能会做出类似这样的修改：
 - en: Language model compression doesn’t just turn a large gray rectangle into a small
     gray rectangle. It can turn it into a tiny rectangle, or a red rectangle with
     rounded corners, or an elongated rectangle with a gradient fill.
+  id: totrans-63
   prefs: []
   type: TYPE_NORMAL
+  zh: 语言模型压缩不仅仅是将一个大灰色矩形变成一个小灰色矩形。它可以将其变成一个微小的矩形，或者一个带有圆角的红色矩形，或者一个带有渐变填充的长方形。
 - en: Each of the outputs of compression carry some [family resemblance](https://en.wikipedia.org/wiki/Family_resemblance)
     to the original input. In other words, there’s always some amount of common overlap
     between the prompt and response, but the exact overlap (and the areas of difference)
     is going to depend on the type of compression you’re running.
+  id: totrans-64
   prefs: []
   type: TYPE_NORMAL
+  zh: 每个压缩输出都与原始输入有一定的[家族相似性](https://en.wikipedia.org/wiki/Family_resemblance)。换句话说，提示和回复之间总会有一定程度的共同之处，但确切的重叠程度（以及不同之处）将取决于你运行的压缩类型。
 - en: 'The dimensions of compression can also be arbitrarily specific and combined
     together. Here are some example prompts:'
+  id: totrans-65
   prefs: []
   type: TYPE_NORMAL
+  zh: 压缩的维度也可以是任意具体的，并且可以结合在一起。以下是一些示例提示：
 - en: A tweet in the style of Dan Shipper but with more snark and paranoia
+  id: totrans-66
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 丹·席佩风格的推文，但带有更多的嘲讽和偏执
 - en: Analysis in the style of George Saunders but make it gaslight-y
+  id: totrans-67
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 以乔治·桑德斯的风格进行分析，但让它具有煽动性
 - en: A book summary in the style of a Scott Alexander book review, but make it concise
+  id: totrans-68
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 以斯科特·亚历山大书评风格的书摘，但要简洁明了
 - en: 'For example, using the last prompt as a jumping-off point, here’s a concise
     book summary of *A Wizard of Earthsea* that Claude created in the style of Scott
     Alexander from [Slate Star Codex](https://www.astralcodexten.com/):'
+  id: totrans-69
   prefs: []
   type: TYPE_NORMAL
+  zh: 例如，以最后一个提示作为出发点，这是克劳德用斯科特·亚历山大的风格在[Slate Star Codex](https://www.astralcodexten.com/)上创建的《地海传说》简明书摘：
 - en: “*A Wizard of Earthsea* is about the dangers of power without wisdom.
+  id: totrans-70
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 《地海传说》讲述了权力无智慧的危险。
 - en: The young wizard Ged, in a fit of youthful pride and anger, summons a shadow
     creature from the realm of the dead. This goes about as well as you would expect.
     The shadow hunts Ged across the world and he must flee from it, until finally
     his old master tells him that he can't run away from his own shadow. Ged realizes
     that the only way out is through—he has to turn around, chase down the shadow,
     and reintegrate it into himself.
+  id: totrans-71
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 年轻的巫师盖德，在年轻的骄傲和愤怒中，从死者之境召唤出一只影子生物。结果可想而知。影子在世界各地追逐盖德，他不得不逃避，直到最后他的老师告诉他，他不能逃避自己的影子。盖德意识到唯一的出路是：他必须转身，追逐影子，并将其重新融入自己。
 - en: This is a pretty standard "power corrupts" story, but it's unusually wise in
     depicting Ged's flaw not as a desire for power itself, but as a lack of education
     in how to use power. Ged isn't evil, he's just young and dumb.
+  id: totrans-72
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 这是一个相当标准的“权力腐化”故事，但在描绘盖德的缺陷时异常明智，不是渴望权力本身，而是缺乏如何使用权力的教育。盖德并不邪恶，他只是年轻而愚蠢。
 - en: His eventual victory comes from understanding how the universe works, not from
     overwhelming firepower. The real treasure was the wisdom he gained along the way.
+  id: totrans-73
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 他最终的胜利来自于理解宇宙的运作方式，而不是来自于压倒性的火力。真正的宝藏是他在路上获得的智慧。
 - en: Le Guin once said her books were about ‘the journey that is inward, and not
     the other journey.’
+  id: totrans-74
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 勒·格温曾经说过，她的书是关于“内在之旅，而不是其他旅程”的。
 - en: '*A Wizard of Earthsea* literalizes this, as Ged sails further and further away
     from the known lands in pursuit of his shadow, only to realize he has to integrate
     it back into himself. We all have to take this journey eventually. The shadow
     represents the parts of ourselves we try to deny and push away. But there''s no
     escape—in the end, the only way to grow is to acknowledge your shadow, accept
     it, and become whole.”'
+  id: totrans-75
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: '*地海巫师* 正是如此，当盖德追随他的阴影越来越远离已知的土地时，他将其纳入自己的一部分。我们都必须最终经历这段旅程。阴影代表了我们试图否认和推开的自己的部分。但是没有逃避——最终，成长的唯一途径就是承认你的阴影，接受它，并变得完整。'
 - en: I don’t know if this is *exactly* what Scott Alexander would write about *A
     Wizard of Earthsea*, but it’s certainly in the neighborhood. There are a few things
     it gets right. The first line is a concise, engaging summary of the book’s main
     point, which Alexander does better than almost anyone. And the line, “This is
     a pretty standard ‘power corrupts’ story,” feels very much like his voice.
+  id: totrans-76
   prefs: []
   type: TYPE_NORMAL
+  zh: 我不知道这是否*确切地*是斯科特·亚历山大会写关于*地海巫师*的东西，但它肯定是在附近。它有一些东西是正确的。第一句是对书的主要观点的简洁而引人入胜的摘要，这方面亚历山大比几乎任何人都做得更好。而且这句话，“这是一个相当标准的‘权力腐败’故事”，感觉非常像是他的声音。
 - en: So we’ve made some progress. Our concept of language models as compressors now
     includes the idea that they “compress” text across an arbitrary number of dimensions
     or requirements.
+  id: totrans-77
   prefs: []
   type: TYPE_NORMAL
+  zh: 所以我们取得了一些进展。我们对语言模型的概念现在包括了这样一个想法，即它们在任意数量的维度或要求上“压缩”文本。
 - en: When is that useful in creative work?
+  id: totrans-78
   prefs: []
   type: TYPE_NORMAL
+  zh: 在创意工作中什么时候有用呢？
 - en: Why compression is useful
+  id: totrans-79
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 压缩的有用之处
 - en: 'Let’s start with comprehensive compressions like book reports. If we graphed
     them by the amount of depth they convey and attention they require, they would
     probably be on the bottom-left quadrant of the graph—little depth, little attention
     required:'
+  id: totrans-80
   prefs: []
   type: TYPE_NORMAL
+  zh: 让我们从像书报告这样的全面压缩开始。如果我们通过它们所传达的深度和所需的注意力来绘制它们，它们可能会位于图表的左下象限——深度不够，所需注意力不多：
 - en: 'Things that exist in this bottom-left quadrant have a pejorative connotation
     because they require a low level of engagement with a complex idea:'
+  id: totrans-81
   prefs: []
   type: TYPE_NORMAL
+  zh: 存在于这个左下象限的东西具有贬义含义，因为它们需要对复杂想法进行低水平的参与：
 - en: 'Comprehensive compressions are the McDonald’s french fries of the intellectual
     landscape: ubiquitous, tasty, cheap, and low status.'
+  id: totrans-82
   prefs: []
   type: TYPE_NORMAL
+  zh: 全面的压缩就像是知识领域的麦当劳薯条：无处不在，美味，便宜，地位低下。
 - en: But this kind of summary is an important output of creative work because it
     respects the fundamentally limited attention of human beings. Humans need to roam
     widely over the intellectual landscape before they go deep, and this kind of summary
     allows us to sample ideas that might be useful without a lot of investment. In
     that way, it’s like a mini-advertisement for the idea it contains—like a blooming
     flower is an advertisement for nectar.
+  id: totrans-83
   prefs: []
   type: TYPE_NORMAL
+  zh: 但是这种摘要是创意工作的重要产物，因为它尊重人类的基本有限注意力。人类需要在深入之前广泛地漫游在知识的领域中，而这种摘要允许我们对可能有用的想法进行抽样，而无需太多投入。在这种方式上，它就像是包含其中的想法的迷你广告——就像一朵绽放的花是花蜜的广告一样。
 - en: The trouble is that doing compressions like this is, generally, drudgery. Anyone
     who has had to write a summary of their essay for an X post, or has needed to
     spend a few hours rereading a complex topic so that they could summarize it in
     a few sentences, will know what I mean.
+  id: totrans-84
   prefs: []
   type: TYPE_NORMAL
+  zh: 问题在于像这样做压缩通常是枯燥乏味的。任何不得不为他们的文章写摘要或不得不花几个小时重读复杂话题以便能够用几句话概括的人，都会明白我的意思。
 - en: 'But language models are good at compression that sits more at the bottom of
     the funnel of engagement with ideas, too. They help you go deeper into the nuances
     of an idea instead of just skimming the surface:'
+  id: totrans-85
   prefs: []
   type: TYPE_NORMAL
+  zh: 但是语言模型擅长于更多地处于与想法的交流漏斗的底部的压缩。它们帮助你更深入地理解一个想法的细微差别，而不仅仅是浅尝辄止：
 - en: 'In a needle-in-the-haystack compression, they can find the answer to a difficult
     question in a long piece of text. For example, I’ve long been a fan of Ludwig
     Wittgenstein’s philosophical thinking, but his writing is incredibly dense. I’ve
     fed one of his books into Claude and gotten answers to specific questions—which
     is a compression of the book into a form that’s usable for me:'
+  id: totrans-86
   prefs: []
   type: TYPE_NORMAL
+  zh: 在草堆中找针一般的压缩，他们能在一长段文本中找到困难问题的答案。例如，我一直是鲁德维希·维根斯坦哲学思想的粉丝，但他的著作极其晦涩。我将他的一本书输入到克劳德中，得到了对特定问题的答案——这是将书本压缩成我可以使用的形式：
 - en: Instead of puzzling over the text, I can think up new ideas and create new pieces
     of writing that were previously impossible. There’s too much information to consume,
     and it’s too complicated for me to understand without this kind of support.
+  id: totrans-87
   prefs: []
   type: TYPE_NORMAL
+  zh: 我可以想出新点子，创作以前不可能的新作品，而不是费力去理解文本。信息太多，太复杂，没有这种支持我无法理解。
 - en: Once you start to look at things this way, you’ll see compression everywhere.
     Emails are often compressions of what people said in meetings. Poems are compressions
     of sensory experiences. Good decisions are compressions of the results of previous
     decisions. Basic programming is compressions of Stack Overflow answers.
+  id: totrans-88
   prefs: []
   type: TYPE_NORMAL
+  zh: 一旦你开始以这种方式看待事物，你会发现压缩无处不在。电子邮件通常是会议中人们说的话的压缩。诗歌是对感官体验的压缩。良好的决策是对先前决策结果的压缩。基本编程是对Stack
+    Overflow答案的压缩。
 - en: This view of the world will help you see a significant chunk of the situations
     in which language models can be useful for creative work.
+  id: totrans-89
   prefs: []
   type: TYPE_NORMAL
+  zh: 这种对世界的看法将帮助你看到语言模型在创意工作中可以发挥作用的许多情况。
 - en: As the cognitive scientist Alison Gopnik has written, language models are [cultural
     technologies](https://every.to/chain-of-thought/chatgpt-and-the-future-of-the-human-mind?sid=41918).
     They give us the best of what humanity knows about any topic—in the right form
     for any given context. In that way, language models are an extension of a trend
     that started with writing itself and has extended to the printing press, the internet,
     and finally our present moment with AI.
+  id: totrans-90
   prefs: []
   type: TYPE_NORMAL
+  zh: 认知科学家艾莉森·戈皮克写道，语言模型是[文化技术](https://every.to/chain-of-thought/chatgpt-and-the-future-of-the-human-mind?sid=41918)。它们向我们展示了人类在任何主题上所知的最佳信息——以适当的形式呈现在任何给定的环境中。用这种方式，语言模型是从写作开始延伸的趋势的延伸，一直延伸到印刷机、互联网，最终到我们的现在时刻的人工智能。
 - en: 'This is a superpower for creatives:'
+  id: totrans-91
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是创意工作者的超能力：
 - en: Knowledge can make its way to you—wherever you are, whenever you need it, compressed
     in just the right format for you to use.
+  id: totrans-92
   prefs: []
   type: TYPE_NORMAL
+  zh: 知识可以找到你——无论你在哪里，无论你何时需要，都以适合你使用的形式压缩过来。
 - en: What do you want to make with it?
+  id: totrans-93
   prefs: []
   type: TYPE_NORMAL
+  zh: 你想用它做什么？
 - en: —
+  id: totrans-94
   prefs: []
   type: TYPE_NORMAL
+  zh: —
 - en: 'Next week, we’ll talk about language models’ next operation:'
+  id: totrans-95
   prefs: []
   type: TYPE_NORMAL
+  zh: 下周，我们将讨论语言模型的下一步操作：
 - en: Expansion.
+  id: totrans-96
   prefs: []
   type: TYPE_NORMAL
+  zh: 扩张。
 - en: '* * *'
+  id: totrans-97
   prefs: []
   type: TYPE_NORMAL
+  zh: '* * *'
 - en: '***Dan Shipper*** *is the cofounder and CEO of Every, where he writes the*
     [*Chain of Thought*](https://every.to/chain-of-thought) *column and hosts the
     podcast* [How Do You Use ChatGPT?](https://open.spotify.com/show/5qX1nRTaFsfWdmdj5JWO1G)
     *You can follow him on X at* [*@danshipper*](https://twitter.com/danshipper) *and
     on* [*LinkedIn*](https://www.linkedin.com/in/danshipper/)*, and Every on X at*
     [*@every*](https://twitter.com/every) *and on* [*LinkedIn*](https://www.linkedin.com/company/everyinc/)*.*'
+  id: totrans-98
   prefs: []
   type: TYPE_NORMAL
+  zh: '***丹·希珀*** *是Every公司的联合创始人兼首席执行官，他在那里撰写* [*Chain of Thought*](https://every.to/chain-of-thought)
+    *专栏并主持播客* [你如何使用ChatGPT？](https://open.spotify.com/show/5qX1nRTaFsfWdmdj5JWO1G)
+    *你可以在* [*@danshipper*](https://twitter.com/danshipper) *上关注他，在Every公司* [*@every*](https://twitter.com/every)
+    *上关注，以及在* [*LinkedIn*](https://www.linkedin.com/company/everyinc/) *上关注他，而Every公司在*
+    [*LinkedIn*](https://www.linkedin.com/company/everyinc/) *上关注。*'
