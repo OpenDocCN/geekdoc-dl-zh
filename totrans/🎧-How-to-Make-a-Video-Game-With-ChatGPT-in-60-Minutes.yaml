@@ -2,28 +2,34 @@
   id: totrans-0
   prefs: []
   type: TYPE_NORMAL
+  zh: <!--yml
 - en: 'category: COT 专栏'
   id: totrans-1
   prefs: []
   type: TYPE_NORMAL
+  zh: 'category: COT 专栏'
 - en: 'date: 2024-05-08 11:05:45'
   id: totrans-2
   prefs: []
   type: TYPE_NORMAL
+  zh: 日期：2024年05月08日 11:05:45
 - en: -->
   id: totrans-3
   prefs: []
   type: TYPE_NORMAL
+  zh: -->
 - en: 🎧 How to Make a Video Game With ChatGPT in 60 Minutes
   id: totrans-4
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
+  zh: 🎧 如何在60分钟内使用ChatGPT制作视频游戏
 - en: 来源：[https://every.to/chain-of-thought/how-to-make-a-video-game-with-chatgpt-in-60-minutes](https://every.to/chain-of-thought/how-to-make-a-video-game-with-chatgpt-in-60-minutes)
   id: totrans-5
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 来源：[https://every.to/chain-of-thought/how-to-make-a-video-game-with-chatgpt-in-60-minutes](https://every.to/chain-of-thought/how-to-make-a-video-game-with-chatgpt-in-60-minutes)
 - en: '*TL;DR: Today we’re releasing a new episode of our podcast* How Do You Use
     ChatGPT? *I go in depth with Logan Kilpatrick, OpenAI’s first developer relations
     and advocacy hire. As we talk, we build our own text-based strategy game together
@@ -34,15 +40,22 @@
   id: totrans-6
   prefs: []
   type: TYPE_NORMAL
+  zh: '*TL;DR：今天我们发布了我们的播客* How Do You Use ChatGPT? *的新一集*。我和Logan Kilpatrick深入讨论，他是OpenAI的首位开发者关系和倡导聘用者。当我们交谈时，我们一起使用ChatGPT和GPT
+    Builder在60分钟内构建了自己的基于文本的策略游戏。*观看* [*X*](https://twitter.com/danshipper/status/1755236896114950406)
+    *或* [*YouTube*](https://www.youtube.com/watch?v=3TLORk-eZAw)*，或在* [*Spotify*](https://open.spotify.com/episode/5b03dc9vMHaedvrrNhvps2?si=BfXXlKoqSe6yFU3n70kucw&nd=1&dlsi=d565e17927734b1f)
+    *或* [*Apple Podcasts*](https://podcasts.apple.com/us/podcast/how-to-make-a-video-game-with-chatgpt-in-60-minutes-ep/id1719789201?i=1000644491694)*
+    上收听*。'
 - en: '* * *'
   id: totrans-7
   prefs: []
   type: TYPE_NORMAL
+  zh: '* * *'
 - en: You can make a video game without writing a single line of code. [Logan Kilpatrick](https://twitter.com/OfficialLoganK)
     and I did it together live on my show.
   id: totrans-8
   prefs: []
   type: TYPE_NORMAL
+  zh: 你可以在不写一行代码的情况下制作一款视频游戏。我和[Logan Kilpatrick](https://twitter.com/OfficialLoganK)在我的节目中一起现场完成了这个任务。
 - en: Logan is OpenAI’s first developer relations and advocacy hire. A big part of
     Logan’s job is supporting the community of builders using ChatGPT, DALL-E, and
     the OpenAI API. He’s also deeply invested in growing this community, convinced
@@ -50,6 +63,7 @@
   id: totrans-9
   prefs: []
   type: TYPE_NORMAL
+  zh: Logan是OpenAI的首位开发者关系和倡导聘用者。Logan的工作的一个重要部分是支持使用ChatGPT、DALL-E和OpenAI API的建设者社区。他还深信，AI工具赋予人们更多构建的能力，因此致力于扩大这个社区。
 - en: To prove this point, Logan and I fulfill a childhood dream of ours, to build
     a video game, live on the show. We use GPT Builder and ChatGPT to create [Allocator](https://chat.openai.com/g/g-oooxUbOkj-allocator),
     a text-based strategy game where players step into the shoes of a historical U.S.
@@ -60,6 +74,7 @@
   id: totrans-10
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了证明这一点，我和Logan实现了我们的一个童年梦想，在节目中现场制作了一款视频游戏。我们使用GPT Builder和ChatGPT创建了[Allocator](https://chat.openai.com/g/g-oooxUbOkj-allocator)，一个基于文本的策略游戏，在游戏中，玩家扮演历史上的美国总统，负责管理政府的预算。我们度过了一个美妙的时光，从粗略的想法到一个小时内的功能性视频游戏的迭代过程中，完全没有编写任何代码。这是一个令人难以置信的实验，展示了人工智能如何将我们的创意想法变为现实。
 - en: 'Three months ago, OpenAI released [the application](https://www.engadget.com/gpts-are-the-single-application-mini-chatgpt-models-that-anyone-can-create-203311858.html)
     that made our video game experiment possible: [GPT Builder](https://chat.openai.com/gpts/editor).
     This tool enables people to make custom GPTs tailored for pretty much [anything
@@ -70,11 +85,15 @@
   id: totrans-11
   prefs: []
   type: TYPE_NORMAL
+  zh: 三个月前，OpenAI发布了[应用程序](https://www.engadget.com/gpts-are-the-single-application-mini-chatgpt-models-that-anyone-can-create-203311858.html)，使我们的视频游戏实验成为可能：[GPT
+    Builder](https://chat.openai.com/gpts/editor)。这个工具使人们能够制作定制的GPT，为几乎[他们想要的任何东西](https://openai.com/chatgpt#do-more-with-gpts)。Logan认为，GPT
+    Builder是自ChatGPT发布以来最重大的技术突破。它降低了创新和构建的障碍，尤其是对于不懂编码的人来说。
 - en: 'This episode is a must-watch for anyone who wants to turn their unstructured
     musings into  tangible output. Here’s a taste:'
   id: totrans-12
   prefs: []
   type: TYPE_NORMAL
+  zh: 这一集对于希望将他们的无结构思考转化为具体输出的任何人来说都是必看的。以下是其中的一段描述：
 - en: '**Expanding the horizon of who can build things.** Logan is excited about GPT
     Builder because it empowers people who don’t know how to code to build custom
     GPTs for themselves. “[Y]ou can actually make something that is materially more
