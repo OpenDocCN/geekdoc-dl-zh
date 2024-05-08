@@ -103,6 +103,7 @@
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**学习哲学，成为更好的创始人。**Reid 认为，哲学对企业家是无价的，因为它训练他们思考在建立企业过程中会遇到的关键问题，比如“人类现在是怎样的”以及“随着我们生活的生态系统的变化，人类是怎样的”。他的与众不同之处在于，“哲学背景对于创业比MBA更重要。”'
 - en: '**Broaden the horizons of what you know**. Even outside of business school,
     Reid thinks philosophy is foundational to other areas of study like economics,
     game theory, and political science, and believes there are deep benefits in interdisciplinary
@@ -112,6 +113,7 @@
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**拓展你所知的视野**。即使在商学院之外，Reid 认为哲学是其他领域如经济学、博弈论和政治科学的基础，并且相信跨学科思维有着深刻的益处。“[一些]最有趣的人实际上是在学术界跨学科融合的人，”他解释道。'
 - en: I asked Reid how LLMs weigh into the long-standing debate between essentialism
     and nominalism, the two schools of thought that broadly divide the history of
     philosophy. Before we dive into the details, let me give you some context about
@@ -119,6 +121,7 @@
   id: totrans-19
   prefs: []
   type: TYPE_NORMAL
+  zh: 我问过Reid，LLMs如何参与长期存在的本质主义和名实主义之间的辩论，这两种思想流派在哲学史上大致划分。在我们深入讨论细节之前，让我给你提一些关于我的问题背景的上下文。
 - en: ''
   id: totrans-20
   prefs:
@@ -132,6 +135,7 @@
   id: totrans-21
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在似乎每个公司都在推出聊天机器人，但大多数仍然相当让人讨厌。它们输出冗长的通用答案，比起人类答案，个性化和有用性更差。[CommandBar](https://commandbar.com/copilot)在这里要改变这一点，它更像一个负责任的人类，而不是传统的聊天机器人。
 - en: '[CommandBar](https://commandbar.com/copilot) understands your users'' needs,
     safely accesses account details, and can even co-browse to teach users how the
     UI works. It''s also proactive, offering help and suggestions when your users
@@ -140,11 +144,13 @@
   id: totrans-22
   prefs: []
   type: TYPE_NORMAL
+  zh: '[CommandBar](https://commandbar.com/copilot)了解你的用户需求，安全地访问账户详情，甚至可以共同浏览以教用户UI的工作原理。它还主动提供帮助和建议，当你的用户似乎迷失时，释放你的支持团队去处理更复杂的问题。用CommandBar升级你的产品，释放你的用户。'
 - en: 'To begin with, here are a few pointers about LLMs that are relevant to our
     discussion:'
   id: totrans-23
   prefs: []
   type: TYPE_NORMAL
+  zh: 首先，这里有几点关于LLMs的指南，与我们的讨论相关：
 - en: '**Natural language processing** (NLP) is a field of AI that focuses on helping
     computers understand human language. It''s like teaching a computer to read and
     comprehend words the way you and I do.'
@@ -152,6 +158,7 @@
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**自然语言处理**（NLP）是人工智能的一个领域，专注于帮助计算机理解人类语言。这就像教会计算机以你我一样阅读和理解单词。'
 - en: '**Embeddings** are a technique used in NLP where qualitative data, like words
     or phrases, are converted into a language that computers can understand, like
     numbers. To understand how this is done, imagine mapping the qualitative data
@@ -165,6 +172,7 @@
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**嵌入**是自然语言处理（NLP）中使用的一种技术，其中定性数据，如单词或短语，被转换为计算机能够理解的语言，如数字。要理解这是如何完成的，请想象将定性数据映射到空间中，以尽可能保留原始数据的上下文和含义。例如，出现在类似语境中的单词，如“苹果”和“橙子”，将比无关的单词，如“苹果”和“国王”，更接近。这种相似性是嵌入的力量所在，因为算法现在可以对单词执行数学运算，基本上将它们视为数字。'
 - en: '**Next-token prediction** is a process where, after learning from lots of text,
     the LLM tries to guess the next word in a sentence. It''s similar to when you''re
     texting and your phone suggests the next word you might want to type. The model
@@ -174,11 +182,13 @@
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**下一个标记的预测**是一个过程，在这个过程中，LLM在学习了大量文本后，试图猜测出句子中的下一个词。这类似于当你在发短信时，你的手机建议你可能想要输入的下一个单词。模型计算了许多可能的下一个单词的概率，并选择最有可能的一个。'
 - en: 'Here’s a brief primer on the concepts of philosophy in the context of which
     we discuss LLMs and the way they function:'
   id: totrans-27
   prefs: []
   type: TYPE_NORMAL
+  zh: 下面是在我们讨论LLMs及其运作方式的背景下对哲学概念的简要介绍：
 - en: '**Essentialism** is the idea that things have a set of characteristics that
     make them what they are, and these characteristics are both necessary and inherent
     to their identity. For example, in essentialism, the category of “dog” implies
@@ -190,6 +200,7 @@
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**本质主义**是一种观念，即事物具有一组特征，使它们成为它们自身，并且这些特征既是必要的也是固有的。例如，在本质主义中，“狗”的类别意味着有一些特征——如四条腿和一个尾巴，以及对门铃不停地吠叫——是将某物认定为狗的必要特征。这些特征不仅仅是任意的，而且被认为源自于成为一只狗的本质。'
 - en: '**Nominalism** argues that the categories that give our world logical structure
     are merely names we have agreed upon and do not necessarily reveal any inherent
     truth about the nature of things. To use the same example, the category “dog,”
@@ -200,6 +211,7 @@
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**名实主义**认为，赋予我们世界逻辑结构的类别仅仅是我们达成共识的名称，不一定揭示事物本质的任何内在真理。举同样的例子，类别“狗”仅仅是将具有某些特征的动物方便地归类到一起的一种方式，但并不一定存在所有狗都共享的“狗性”超出我们认为对于我们的分类目的是重要的特征。'
 - en: The mid-20th-century philosopher [Ludwig Wittgenstein](https://plato.stanford.edu/entries/wittgenstein/)
     is usually described as leaning toward essentialism in his early works, while
     adopting nominalism in the later years of his life. We refer to the former as
@@ -208,6 +220,7 @@
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 20世纪中叶的哲学家[路德维希·维特根斯坦](https://plato.stanford.edu/entries/wittgenstein/)通常被描述为在他的早期作品中倾向于本质主义，在他生命的后期采用了名实主义。我们将前者称为**早期维特根斯坦**，后者称为**后期维特根斯坦**。
 - en: 'The main difference between essentialism and nominalism lies in how they view
     the relationship between things and the categories they belong to. Essentialism
     sees categories as reflecting underlying realities, while nominalism views them
@@ -217,6 +230,7 @@
   id: totrans-31
   prefs: []
   type: TYPE_NORMAL
+  zh: 本质主义和名实主义的主要区别在于它们如何看待事物与它们所属类别之间的关系。本质主义认为类别反映了潜在的现实，而名实主义认为它们是没有内在真理的构造物。瑞德认为LLMs没有“解决”本质主义和名实主义之间的辩论，而是“为其增添了观点和色彩”。以下是他对这个话题的一些具体想法：
 - en: '**Next-token prediction aligns with nominalism.** Reid believes that the way
     LLMs operate, particularly next-token prediction, is more compatible with nominalism
     and the views of late Wittgenstein because the models operate based on statistical
@@ -227,6 +241,7 @@
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**下一个标记的预测与名实主义相一致。** 瑞德认为，LLMs的运作方式，特别是下一个标记的预测，更符合名实主义和后期维特根斯坦的观点，因为这些模型是基于统计模式而没有任何对内在含义的理解。然而，他补充说，随着LLMs变得更加先进，它们正被开发成具有“更多本质主义特征”，比如“以真相为基础”和“减少幻觉”。'
 - en: '**LLMs are being developed to be more essentialist.** Going one step deeper,
     Reid explains that LLMs are being developed to “make them much more reliable on
     a truth base.” “[W]e love the creativity and the generativity, but…for a huge
@@ -315,6 +330,7 @@
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**使用 ChatGPT 生成定制答案。** 根据 Reid 的说法，一个渴望学习哲学的学生熟悉基本理论的另一种方法是使用 ChatGPT 生成定制的解释。他推荐的提示包括，“我是一个非数学的大学毕业生，请向我解释哥德尔的定理，”或“我不是物理学家，请向我解释爱因斯坦相对论的思想实验。”'
 - en: '**ChatGPT as a research assistant.** Another actionable use of ChatGPT that
     Reid points to is using the model as an on-demand, personal research assistant
     to help you solve problems better and more efficiently. “An immediate research
@@ -325,72 +341,86 @@
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**ChatGPT 作为研究助理。** Reid 指出 ChatGPT 的另一个可行用途是将模型用作按需、个人的研究助理，帮助你更好、更有效地解决问题。“一个即时的研究助理是显然已经存在的事情之一，如果你认为自己不需要研究助理，那是因为你还没有认真考虑过，”他评论道。'
 - en: 'You can check out the episode on X, Spotify, Apple Podcasts, or YouTube. Links
     and timestamps are below:'
   id: totrans-44
   prefs: []
   type: TYPE_NORMAL
+  zh: 你可以在 X、Spotify、Apple Podcasts 或 YouTube 上查看这一集。链接和时间戳如下：
 - en: 'Timestamps:'
   id: totrans-45
   prefs:
   - PREF_H5
   type: TYPE_NORMAL
+  zh: 时间戳：
 - en: 'Introduction: *00:01:58*'
   id: totrans-46
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 介绍：*00:01:58*
 - en: 'Why philosophy will make you a better founder: *00:04:35*'
   id: totrans-47
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 为什么哲学会让你成为更好的创始人：*00:04:35*
 - en: 'The fundamental problem with “trolley problems”: *00:08:22*'
   id: totrans-48
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: “推车问题”的根本问题：*00:08:22*
 - en: 'How AI is changing the essentialism v. nominalism debate: *00:14:27*'
   id: totrans-49
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 人工智能如何改变本质论与名实论的辩论：*00:14:27*
 - en: 'Why embeddings align with nominalism: *00:29:33*'
   id: totrans-50
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 嵌入式为何与名实论相一致：*00:29:33*
 - en: 'How LLMs are being trained to reason better: *00:34:26*'
   id: totrans-51
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 如何训练 LLMs 更好地进行推理：*00:34:26*
 - en: 'How technology changes the way we see ourselves and the world around us: *00:44:52*'
   id: totrans-52
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 技术如何改变我们看待自己和周围世界的方式：*00:44:52*
 - en: 'Why most psychology literature is wrong: *00:46:24*'
   id: totrans-53
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 为什么大多数心理学文献是错误的：*00:46:24*
 - en: 'Why philosophers didn’t come up with AI: *00:52:46*'
   id: totrans-54
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 为什么哲学家没有提出人工智能：*00:52:46*
 - en: 'How to use ChatGPT to be more philosophically inclined: *00:56:30*'
   id: totrans-55
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 如何使用 ChatGPT 更具哲学倾向：*00:56:30*
 - en: What do you use ChatGPT for? Have you found any interesting or surprising use
     cases? We want to hear from you—and we might even interview you. Reply here to
     talk to me!
   id: totrans-56
   prefs: []
   type: TYPE_NORMAL
+  zh: 你是如何使用 ChatGPT 的？你发现了一些有趣或令人惊讶的用例吗？我们想听听你的想法——我们甚至可能会采访你。在这里回复我！
 - en: Miss an episode? Catch up on my recent conversations with founder and newsletter
     operator [Ben Tossell](https://every.to/chain-of-thought/how-to-run-a-profitable-one-person-internet-business-using-ai),
     *a16z Podcast* host [Steph Smith](https://every.to/chain-of-thought/how-to-find-your-next-big-idea-hiding-on-the-internet),
@@ -401,23 +431,31 @@
   id: totrans-57
   prefs: []
   type: TYPE_NORMAL
+  zh: 错过一集了吗？赶上我最近与创始人和通讯作者[本·托塞尔](https://every.to/chain-of-thought/how-to-run-a-profitable-one-person-internet-business-using-ai)、*a16z
+    Podcast* 主持人[斯蒂芬·史密斯](https://every.to/chain-of-thought/how-to-find-your-next-big-idea-hiding-on-the-internet)、经济学家[泰勒·考温](https://every.to/chain-of-thought/economist-tyler-cowen-on-how-chatgpt-is-changing-your-job)、作家和企业家[大卫·佩雷尔](https://every.to/chain-of-thought/how-david-perell-uses-chatgpt-to-write-for-millions)、Notion
+    工程师[林纳斯·李](https://every.to/chain-of-thought/how-an-ai-researcher-uses-chatgpt-and-notion-ai)等人的对话，并了解
+    *他们* 如何使用 ChatGPT。
 - en: 'If you’re enjoying my work, here are a few things I recommend:'
   id: totrans-58
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果你喜欢我的作品，这里有几件我推荐的事情：
 - en: '**The** [**transcript**](https://every.to/chain-of-thought/transcript-reid-hoffman-on-how-ai-might-answer-our-biggest-questions)
     **of this episode is for paying subscribers.**'
   id: totrans-59
   prefs: []
   type: TYPE_NORMAL
+  zh: '**这一集的[**文字稿**](https://every.to/chain-of-thought/transcript-reid-hoffman-on-how-ai-might-answer-our-biggest-questions)是付费订阅者专享的。**'
 - en: '* * *'
   id: totrans-60
   prefs: []
   type: TYPE_NORMAL
+  zh: '* * *'
 - en: '*Thanks to Rhea Purohit for editorial support.*'
   id: totrans-61
   prefs: []
   type: TYPE_NORMAL
+  zh: '*感谢 Rhea Purohit 的编辑支持。*'
 - en: '***Dan Shipper*** *is the cofounder and CEO of Every, where he writes the*
     [*Chain of Thought*](https://every.to/chain-of-thought) *column and hosts the
     podcast* [How Do You Use ChatGPT?](https://open.spotify.com/show/5qX1nRTaFsfWdmdj5JWO1G)
