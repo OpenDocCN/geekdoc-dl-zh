@@ -1,0 +1,357 @@
+- en: <!--yml
+  id: totrans-0
+  prefs: []
+  type: TYPE_NORMAL
+  zh: <!--yml
+- en: 'category: COT 专栏'
+  id: totrans-1
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 分类：COT 专栏
+- en: 'date: 2024-05-08 11:12:29'
+  id: totrans-2
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 日期：2024-05-08 11:12:29
+- en: -->
+  id: totrans-3
+  prefs: []
+  type: TYPE_NORMAL
+  zh: -->
+- en: Artificial Unintelligence
+  id: totrans-4
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+  zh: 人工无智能
+- en: 来源：[https://every.to/chain-of-thought/artificial-limits](https://every.to/chain-of-thought/artificial-limits)
+  id: totrans-5
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+  zh: 来源：[https://every.to/chain-of-thought/artificial-limits](https://every.to/chain-of-thought/artificial-limits)
+- en: 'Sponsored By: Reflect'
+  id: totrans-6
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+  zh: 由 Reflect 赞助
+- en: This article is brought to you by [Reflect](https://reflect.app/?utm_source=every&utm_campaign=every2&utm_medium=newsletter),
+    a beautifully designed note-taking app that helps you to keep track of everything,
+    from meeting notes to Kindle highlights.
+  id: totrans-7
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 本文由 [Reflect](https://reflect.app/?utm_source=every&utm_campaign=every2&utm_medium=newsletter)
+    提供，这是一个设计精美的笔记应用，可帮助你跟踪一切，从会议记录到 Kindle 高亮。
+- en: If you want to build a sustaining advantage in [AI](/c/ai-and-gpt3) the conventional
+    wisdom says you have to build the technology required for a powerful model. But
+    a powerful model is not just a function of technology. It’s also a function of
+    your willingness to get sued.
+  id: totrans-8
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 如果你想在 [AI](/c/ai-and-gpt3) 领域建立可持续的优势，传统智慧认为你必须构建强大模型所需的技术。但一个强大的模型不仅仅是技术的功能。它还取决于你是否愿意被起诉。
+- en: We’re already at a point in the development of AI where its limitations are
+    not always about what the technology is capable of. Instead, limits are self-imposed
+    as a way to mitigate business (and societal) risk.
+  id: totrans-9
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 在人工智能的发展中，我们已经达到了一个点，其限制不总是关于技术的能力。相反，限制是自我施加的一种方式，以减轻商业（和社会）风险。
+- en: We should be talking more about that when we think about where sustainable advantages
+    will accrue and to whom.
+  id: totrans-10
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 当我们考虑可持续优势将累积到何处以及对谁有利时，我们应该更多地谈论这个问题。
+- en: . . .
+  id: totrans-11
+  prefs: []
+  type: TYPE_NORMAL
+  zh: . . .
+- en: ChatGPT is a great example. It is awesomely powerful, but it’s also profoundly
+    limited. It’s limitations though, are not mostly technological. They’re intentional.
+  id: totrans-12
+  prefs: []
+  type: TYPE_NORMAL
+  zh: ChatGPT 是一个很好的例子。它极其强大，但也极其有限。不过，它的限制大多不是技术上的。它们是有意为之的。
+- en: 'On the awesome side, it saved me ten hours of programming for a project I used
+    it on this weekend. But for other use cases it completely fails:'
+  id: totrans-13
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 在令人惊叹的一面，它为我节省了这个周末用它做的项目的十个小时的编程时间。但对于其他用例，它完全失败了：
+- en: Again, this is *not* a limitation of the underlying technology. In both of these
+    cases it’s quite possible for the model to return a result that would plausibly
+    answer my question. But it’s been explicitly trained to *not* do that.
+  id: totrans-14
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 再次强调，这*不是*底层技术的限制。在这两种情况下，模型都很可能返回一个看似可以回答我的问题的结果。但它已经明确地被训练*不*这样做。
+- en: The reason ChatGPT is so popular is because OpenAI finally packaged and released
+    a version of GPT-3’s technology in a way that was open and user-friendly enough
+    for users to finally see how powerful it was.
+  id: totrans-15
+  prefs: []
+  type: TYPE_NORMAL
+  zh: ChatGPT 如此受欢迎的原因是因为 OpenAI 终于将 GPT-3 的技术以一种开放且用户友好的方式打包并发布，让用户终于能够看到其强大之处。
+- en: The problem is, if you build a chat bot that gets massively popular, the risk
+    surface area for it saying things that are risky, harmful, or false goes up considerably. *But*,
+    it’s very hard to get rid of the ability to use a model for harmful or risky things
+    without also making it less powerful for other things. So as the days have gone
+    on we’ve seen ChatGPT get less powerful for certain kinds of questions as they
+    fix holes and prompt injection attacks.
+  id: totrans-16
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 问题在于，如果你建立了一个大量受欢迎的聊天机器人，它说出危险、有害或虚假的话语的风险范围会大大增加。*但*，要想消除使用模型进行有害或危险行为的能力是非常困难的，而不影响其在其他方面的强大性能。因此，随着时间的推移，我们看到
+    ChatGPT 在修补漏洞和提示注入攻击时对某些类型的问题变得不那么强大。
+- en: ''
+  id: totrans-17
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: '[Reflect](https://reflect.app/?utm_source=every&utm_campaign=every2&utm_medium=newsletter)
+    is a fast note-taking app designed to model the way you think. Use it as a personal
+    CRM, as a way of taking meeting-notes, or just generally to keep track of everything
+    in your life.'
+  id: totrans-18
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '[Reflect](https://reflect.app/?utm_source=every&utm_campaign=every2&utm_medium=newsletter)
+    是一个快速的笔记应用，旨在模拟你的思维方式。将其用作个人 CRM、会议记录的方式，或者只是一般地跟踪你生活中的一切。'
+- en: '[Reflect](https://reflect.app/?utm_source=every&utm_campaign=every2&utm_medium=newsletter)
+    has integrations into all your favorite tools (calendar, browser, Kindle), so
+    you can always find what you’ve read and researched. We work online or offline,
+    desktop or mobile.'
+  id: totrans-19
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '[Reflect](https://reflect.app/?utm_source=every&utm_campaign=every2&utm_medium=newsletter)
+    已经整合到你所有喜欢的工具（日历、浏览器、Kindle）中，这样你就可以随时找到你阅读和研究的东西。我们可以在线或离线工作，无论是桌面还是移动端。'
+- en: Think faster and clearer with Reflect.
+  id: totrans-20
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 用 Reflect 更快、更清晰地思考。
+- en: 'It’s sort of like the tendency of politicians and business leaders to say less
+    meaningful and more vague things as they get more powerful and have a larger constituency:'
+  id: totrans-21
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 这有点像政治家和商界领袖随着权力增长和拥有更大的选民群体，就越来越倾向于说一些不太有意义和更模糊的话：
+- en: The bigger and more popular ChatGPT gets, the bigger the incentive is to limit
+    what it says so that it doesn’t cause PR blowback, harm to users, or create massive
+    legal risk for OpenAI. It is to OpenAI’s credit that they care about this deeply,
+    and are trying to mitigate these risks to the extent that they can.
+  id: totrans-22
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 越来越受欢迎的 ChatGPT，限制其发言的动机就越大，以避免造成公关问题、对用户造成伤害或为 OpenAI 带来巨大的法律风险。OpenAI 关心这一点，并试图尽可能地减轻这些风险，这是值得赞赏的。
+- en: 'But, there’s another countervailing incentive working in the exact opposite
+    direction: users and developers will want to use the model with the fewest number
+    of restrictions on it—all else equal.'
+  id: totrans-23
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 但是，还有另一个正好相反的诱因在起作用：用户和开发人员希望使用限制最少的模型——其他一切都相等。
+- en: A great example of this has already played out in the image generator space.
+  id: totrans-24
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 一个很好的例子已经在图像生成器领域中发生。
+- en: . . .
+  id: totrans-25
+  prefs: []
+  type: TYPE_NORMAL
+  zh: . . .
+- en: 'DALL·E 2 was the first image generator to hit the market and it generated massive
+    buzz over the summer:'
+  id: totrans-26
+  prefs: []
+  type: TYPE_NORMAL
+  zh: DALL·E 2 是第一个上市的图像生成器，它在夏季引起了巨大的轰动：
+- en: 'But its popularity (as measured by Google Searches) peaked and flatlined over
+    the successive months:'
+  id: totrans-27
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 但是它的流行度（以谷歌搜索量衡量）在随后的几个月内达到了顶峰，并且趋于平缓：
+- en: 'Why? DALL·E was a limited to being invite-only, and toward the end of the summer
+    Stable Diffusion, an open-source public access version of the same technology
+    was released. Suddenly, anyone could run the technology on their own computer
+    and could use it to generate whatever kinds of images they wanted with no restrictions.
+    The result was predictable:'
+  id: totrans-28
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 为什么？DALL·E 只限于邀请制，而在夏末，稳定扩散发布了同样技术的开源公开版本。突然之间，任何人都可以在自己的计算机上运行该技术，并且可以无限制地使用它来生成任何类型的图像。结果是可以预见的：
+- en: Soon after Stable Diffusion was released to the public, DALL·E became open access.
+    But by then it was too late.
+  id: totrans-29
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 稳定扩散向公众发布后不久，DALL·E 就变得开放了。但是那时已经太晚了。
+- en: What happened?
+  id: totrans-30
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 发生了什么？
+- en: Stable Diffusion was willing to take on the risk, legal and moral, of releasing
+    this technology to the public without restriction. And its popularity was cemented
+    because of it.
+  id: totrans-31
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 稳定扩散愿意承担风险，无论是法律还是道德上的，毫无限制地向公众发布此技术。正是因为这个原因，它的流行得到了巩固。
+- en: . . .
+  id: totrans-32
+  prefs: []
+  type: TYPE_NORMAL
+  zh: . . .
+- en: There is a corollary to this dynamic in social media, as covered by my colleague
+    Evan in his piece [Content Moderation Double-Bind Theory](https://every.to/napkin-math/content-moderation-double-bind-theory).
+  id: totrans-33
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 社交媒体中存在这种动态的一个推论，由我的同事埃文在他的文章[内容审查双重束缚理论](https://every.to/napkin-math/content-moderation-double-bind-theory)中涵盖。
+- en: All social media companies have policies that limit what can be said on their
+    platform. The closer a piece of content is to the moderation line, the more engagement
+    it generates.
+  id: totrans-34
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 所有社交媒体公司都有限制其平台上可以说什么的政策。一条内容距离审查线越近，它产生的参与度就越高。
+- en: 'Here’s Mark Zuckerberg describing the issue:'
+  id: totrans-35
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 这里是马克·扎克伯格描述的问题：
+- en: “Our research suggests that **no matter where we draw the lines for what is
+    allowed, as a piece of content gets close to that line, people will engage with
+    it more on average **[emphasis added]—even when they tell us afterwards they don't
+    like the content.”
+  id: totrans-36
+  prefs: []
+  type: TYPE_NORMAL
+  zh: “我们的研究表明，**无论我们将允许什么范围内的内容划分到何处，当一条内容接近该线时，人们平均会更多地参与其中**[强调添加]——即使他们事后告诉我们他们不喜欢这些内容。”
+- en: 'And here’s a little graph that visualizes it:'
+  id: totrans-37
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 这里有一张小图，可以将其可视化：
+- en: This creates what Evan describes as, “a content Darwinism where the edgy thrive.”
+    He continues, “The people who don’t create content that’s close to the line tend
+    to either pivot towards the edge, go out of business, or hit an audience plateau
+    earlier than they would have if they were more shameless.”
+  id: totrans-38
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 这造成了埃文所描述的“内容达尔文主义，边缘内容蓬勃发展。”他继续说：“那些不创造接近边缘的内容的人往往要么转向边缘，要么破产，要么比他们更无耻的话更早地达到了受众平台。”
+- en: There are a lot of similarities here to the companies creating and releasing
+    these models. There is a natural pressure to release them with as few limitations
+    as possible because the edgier the responses, the more user engagement it will
+    create.
+  id: totrans-39
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 在创建和发布这些模型的公司之间有很多相似之处。存在着尽可能少限制地发布它们的自然压力，因为反应越激烈，用户参与度就越高。
+- en: Of course, once the model gets popular and there is significantly more to lose
+    for the company that creates it there will be pressure to restrict it away from
+    the very things that made it popular in the first place.
+  id: totrans-40
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 当然，一旦模型变得流行，对于创建它的公司来说失去的东西更多，就会有压力将其限制在最初使其流行的东西之外。
+- en: . . .
+  id: totrans-41
+  prefs: []
+  type: TYPE_NORMAL
+  zh: . . .
+- en: The trick here is going to be finding clever ways to distribute the risk. Open
+    sourcing the model is one obvious route. As mentioned earlier, Stable Diffusion
+    already pursuing this.
+  id: totrans-42
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 这里的诀窍在于找到分发风险的巧妙方式。开源模型是一条明显的路线。就像之前提到的，Stable Diffusion已经在追求这一点。
+- en: If you release the trained model and let people run it on their own computers,
+    you get a lot of the benefit of giving users freedom without assuming as much
+    of the liability (both perceived and actual) for when things go wrong.
+  id: totrans-43
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 如果你释放了训练好的模型并让人们在自己的计算机上运行它，你将获得让用户自由的好处，而不需要承担那么多的责任（无论是被感知的还是实际的），当事情出错时。
+- en: Another interesting way to distribute risk is to have a thriving 3rd party ecosystem
+    of apps based on your model.
+  id: totrans-44
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 分发风险的另一个有趣方式是建立一个繁荣的第三方生态系统，基于你的模型开发的应用程序。
+- en: Right now, if I ask ChatGPT a legal question it will demur. But GPT-3, the foundational
+    model at the heart of ChatGPT, is available for any developer to use. You could
+    imagine a world where, so long as you are taking responsibility for the completions
+    that get generated, OpenAI allows a 3rd party developer to get GPT-3 to answer
+    questions about the law.
+  id: totrans-45
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 现在，如果我问ChatGPT一个法律问题，它会推辞。但是ChatGPT核心的基础模型GPT-3可以供任何开发者使用。你可以想象一个世界，在这个世界上，只要你对生成的完成负责，OpenAI就允许第三方开发者让GPT-3回答法律问题。
+- en: This is probably possible today with the right prompts and fine-tuning. A 3rd
+    party focused on a legal chatbot that is willing to vet it and assume the risk
+    of its responses is a way for OpenAI to unleash the power of the foundational
+    model in a way that they might not do on their own.
+  id: totrans-46
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 今天，通过适当的提示和细化，这可能是可能的。一个专注于法律聊天机器人的第三方，愿意对其进行审核并承担其回复风险的方式，是OpenAI释放基础模型力量的一种方式，而他们自己可能不会这样做。
+- en: You could imagine lots of different bots in different sectors like law, medicine,
+    psychology, and more that are all able to access parts of the model’s power that
+    OpenAI wouldn’t allow access to inside of ChatGPT or other tools that are intended
+    general-use. This is good for OpenAI, and it's also good for founders who want
+    to start large companies with OpenAI's technology.
+  id: totrans-47
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 你可以想象在不同领域有许多不同的机器人，比如法律、医学、心理学等，它们都能够访问模型的部分能力，而OpenAI不会允许在ChatGPT或其他旨在通用使用的工具内部访问。这对OpenAI来说是好事，对于想要用OpenAI技术创建大公司的创始人也是如此。
+- en: If you can get good at making it say risky things in a specific area that you
+    can vet thoroughly, and you're willing to take on that risk, then you have an
+    advantage without having to build your own foundational model.
+  id: totrans-48
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 如果你能够善于让它在一个特定领域说出有风险的话，并且你愿意承担这个风险，那么你就拥有了一种不必建立自己基础模型的优势。
+- en: . . .
+  id: totrans-49
+  prefs: []
+  type: TYPE_NORMAL
+  zh: . . .
+- en: We’re very fortunate that so far the people who have built these models seem
+    to be generally ethical people who are committed to answering thorny questions
+    about how to balance safety with progress. (Here in particular, I’m thinking about
+    OpenAI.)
+  id: totrans-50
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 我们非常幸运，到目前为止，建立这些模型的人似乎都是通常是具有伦理道德的人，致力于回答关于如何平衡安全与进步的棘手问题。（特别是在这里，我在想的是OpenAI。）
+- en: Unfortunately, the current incentives are such that anyone who is willing to
+    open things up faster and with less restrictions will win an advantage.
+  id: totrans-51
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 不幸的是，当前的激励机制使得任何愿意更快地开放事物并减少限制的人都会获得优势。
+- en: As a huge fan of this space I’m supremely excited to see what happens with these
+    technologies. Morally, it’s upsetting that it less caution and fewer restrictions
+    might win the day.
+  id: totrans-52
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 作为这个领域的一个极度狂热的粉丝，我非常激动地看到这些技术会发生什么。从道德上讲，让人感到不安的是，少些谨慎和限制可能会赢得胜利。
+- en: 'In either case, if you’re wondering where this space is going, and how models
+    will be disseminated and used over time it’s important to remember: it’s not just
+    about the progress in the technology. It’s also about who’s willing to get sued.'
+  id: totrans-53
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 无论哪种情况，如果你想知道这个领域的发展方向，以及模型将如何随时间传播和使用，重要的是要记住：这不仅仅是技术进步的问题。这也涉及到谁愿意被起诉。

@@ -1,0 +1,450 @@
+- en: <!--yml
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'category: COT 专栏'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'date: 2024-05-08 11:02:34'
+  prefs: []
+  type: TYPE_NORMAL
+- en: -->
+  prefs: []
+  type: TYPE_NORMAL
+- en: What Can Language Models Actually Do?
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 来源：[https://every.to/chain-of-thought/what-can-language-models-actually-do](https://every.to/chain-of-thought/what-can-language-models-actually-do)
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: '*This is the first of a five-part series I''m writing about redefining human
+    creativity in the age of AI.*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '* * *'
+  prefs: []
+  type: TYPE_NORMAL
+- en: I want to help save our idea of human creativity.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Artificial intelligence can write, illustrate, design, code, and much more.
+    But rather than eliminating the need for human creativity, these new powers can
+    help us redefine and expand it.
+  prefs: []
+  type: TYPE_NORMAL
+- en: We need to do a [technological dissection](https://every.to/chain-of-thought/chatgpt-and-the-future-of-the-human-mind)
+    of language models, defining what they can do well—and what they can’t. By doing
+    so, we can isolate our own role in the creative process.
+  prefs: []
+  type: TYPE_NORMAL
+- en: If we can do that, we’ll be able to wield language models for creative work—and
+    still call it creativity.
+  prefs: []
+  type: TYPE_NORMAL
+- en: To start, let’s talk about what language models *can* do.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The psychology and behavior of language models
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: The current generation of language models is called *transformers*, and in order
+    to understand what they do, we need to take that word seriously. What kind of
+    *transformations* can transformers do?
+  prefs: []
+  type: TYPE_NORMAL
+- en: Mathematically, language models are recursive next-token predictors. They are
+    given a sequence of text and predict the next bit of text in the sequence. This
+    process runs over and over in a loop, building upon its previous outputs self-referentially
+    until it reaches a stopping point. It’s sort of like a snowball rolling downhill
+    and picking up more and more snow along the way.
+  prefs: []
+  type: TYPE_NORMAL
+- en: But this question is best asked at a higher level than simply mathematical possibility.
+    Instead, what are the inputs and outputs we observe from today’s language models?
+    And what can we infer about how they think?
+  prefs: []
+  type: TYPE_NORMAL
+- en: In essence, we need to study LLMs’ behavior and psychology, rather than their
+    biology and physics.
+  prefs: []
+  type: TYPE_NORMAL
+- en: This is a sketch based on experience. It’s a framework I’ve built for the purposes
+    of doing great creative work with AI.
+  prefs: []
+  type: TYPE_NORMAL
+- en: A framework for what language models do
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'Language models transform text in the following ways:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Compression:** They compress a big prompt into a short response.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Expansion:** They expand a short prompt into a long response.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Translation:** They convert a prompt in one form into a response in another
+    form.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'These are manifestations of their outward behavior. From there, we can infer
+    a property of their psychology—the underlying thinking process that creates their
+    behavior:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Remixing:** They mix two or more texts (or learned representations of texts)
+    together and interpolate between them.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'I’m going to break down these elements in successive parts of this series over
+    the next few weeks. None of these answers are final, so consider this a public
+    exploration that’s open for critique. Today, I want to talk to you about the first
+    operation: compression.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Language models as compressors
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'Language models can take any piece of text and make it smaller:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '*Source: All images courtesy of the author.*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: This might seem simple, but, in fact, it’s a marvel. Language models can take
+    a big chunk of text and smush it down like a foot crushing a can of Coke. Except
+    it doesn’t come out crushed—it comes out as a perfectly packaged and proportional
+    mini-Coke. And it’s even drinkable! This is a Willy Wonka-esque magic trick, without
+    the Oompa Loompas.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Language model compression comes in many different flavors. A common one is
+    what I’ll call *comprehensive* compression, or summarization.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Language models are comprehensive compressors
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Humans comprehensively compress things all the time—it’s called summarization.
+    Language models are good at it in the same way a fifth grader summarizes a children’s
+    novel for a book report, or the app [Blinkist](https://www.blinkist.com/en/lp)
+    summarizes nonfiction books for busy professionals.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'This kind of summarizing is intended to take a source text, pick out the ideas
+    that explain its main points for a general reader, and reconstitute those into
+    a compressed form for faster consumption:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: These summaries are intended to be both comprehensive (they note all the main
+    ideas) and helpful for the average reader (they express the main ideas at a high
+    level with little background knowledge assumed).
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'In the same way, a language model like Anthropic’s Claude, given the text of
+    the Ursula K. LeGuin classic *A Wizard of Earthsea*, will easily output a comprehensive
+    summary of the book’s main plot points:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: But comprehensive compression isn’t the only thing language models can do. You
+    can compress text without being comprehensive—which creates room for totally different
+    forms of compression.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Language models are engaging compressors
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: 'If we require our compression to be *interesting* instead of comprehensive,
+    compressions look less like book reports and more like email subject lines, article
+    headlines, book titles, and subtitles. If we graphed them by how much attention
+    is required to consume them, it would look like this:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Through this lens, book titles are just as much a
+  prefs: []
+  type: TYPE_NORMAL
+- en: '*compression*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: as a kid’s book report; they just prioritize different requirements for what
+    the compression is trying to capture. Language models excel at this type of compression,
+    too.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'For example, at Every we use an internal AI tool to help us turn the content
+    of our stories into headlines. It’s specifically aimed at interestingness, as
+    opposed to comprehensiveness. When I fed it the text of *A Wizard of Earthsea*,
+    it suggested these titles:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '*The Shadow''s Name*'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '*The Warrior Mage''s Shadow Quest*'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '*The Shadow Defeated*'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: These are pretty good! But language model compression doesn’t stop at just these
+    two dimensions of compression.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Language models compress over many different dimensions
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'There are many dimensions along which compression can be run. Here are some
+    examples of headlines, all written by Claude:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Clickbaiting:** "You Won’t Believe What This Young Wizard Discovered on a
+    Shadow Isle!"'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Intrigue:** "Secrets of the Shadowy Mage Isle"'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Vibe-y:** "chill wizard explores shady island, finds self"'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Alliteration:** "The Wizard’s Winding, Wondrous Wanderings"'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Snark:** "Oh, Another ''Chosen One'' Wizard Story Set on an Island, How Original"'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Paranoia:** "They’re Watching: A Wizard’s Harrowing Shadow Odyssey"'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Pessimism:** "The Gloomy Account of a Doomed Mage on Hopeless Shadow Rock"'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Confusion:** "Wait, What''s Happening? A Wizard Goes Somewhere Shadowy, I
+    Think?"'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Absurdist:** "Schrödinger''s Wizard Simultaneously Visits and Doesn''t Visit
+    Shadow Isle"'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Ironic detachment:** "I Guess This Wizard Goes to Some Dumb Island or Whatever"'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Gaslighting:** "There Is No Shadow Isle, You''re Just Imagining Things"'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'When we started talking about compression, we began with this graphic:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'If we wanted to revise it with our expanded idea of compression along many
+    different dimensions, we might do something like this:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Language model compression doesn’t just turn a large gray rectangle into a small
+    gray rectangle. It can turn it into a tiny rectangle, or a red rectangle with
+    rounded corners, or an elongated rectangle with a gradient fill.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Each of the outputs of compression carry some [family resemblance](https://en.wikipedia.org/wiki/Family_resemblance)
+    to the original input. In other words, there’s always some amount of common overlap
+    between the prompt and response, but the exact overlap (and the areas of difference)
+    is going to depend on the type of compression you’re running.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The dimensions of compression can also be arbitrarily specific and combined
+    together. Here are some example prompts:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: A tweet in the style of Dan Shipper but with more snark and paranoia
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Analysis in the style of George Saunders but make it gaslight-y
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: A book summary in the style of a Scott Alexander book review, but make it concise
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'For example, using the last prompt as a jumping-off point, here’s a concise
+    book summary of *A Wizard of Earthsea* that Claude created in the style of Scott
+    Alexander from [Slate Star Codex](https://www.astralcodexten.com/):'
+  prefs: []
+  type: TYPE_NORMAL
+- en: “*A Wizard of Earthsea* is about the dangers of power without wisdom.
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: The young wizard Ged, in a fit of youthful pride and anger, summons a shadow
+    creature from the realm of the dead. This goes about as well as you would expect.
+    The shadow hunts Ged across the world and he must flee from it, until finally
+    his old master tells him that he can't run away from his own shadow. Ged realizes
+    that the only way out is through—he has to turn around, chase down the shadow,
+    and reintegrate it into himself.
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: This is a pretty standard "power corrupts" story, but it's unusually wise in
+    depicting Ged's flaw not as a desire for power itself, but as a lack of education
+    in how to use power. Ged isn't evil, he's just young and dumb.
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: His eventual victory comes from understanding how the universe works, not from
+    overwhelming firepower. The real treasure was the wisdom he gained along the way.
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: Le Guin once said her books were about ‘the journey that is inward, and not
+    the other journey.’
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: '*A Wizard of Earthsea* literalizes this, as Ged sails further and further away
+    from the known lands in pursuit of his shadow, only to realize he has to integrate
+    it back into himself. We all have to take this journey eventually. The shadow
+    represents the parts of ourselves we try to deny and push away. But there''s no
+    escape—in the end, the only way to grow is to acknowledge your shadow, accept
+    it, and become whole.”'
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: I don’t know if this is *exactly* what Scott Alexander would write about *A
+    Wizard of Earthsea*, but it’s certainly in the neighborhood. There are a few things
+    it gets right. The first line is a concise, engaging summary of the book’s main
+    point, which Alexander does better than almost anyone. And the line, “This is
+    a pretty standard ‘power corrupts’ story,” feels very much like his voice.
+  prefs: []
+  type: TYPE_NORMAL
+- en: So we’ve made some progress. Our concept of language models as compressors now
+    includes the idea that they “compress” text across an arbitrary number of dimensions
+    or requirements.
+  prefs: []
+  type: TYPE_NORMAL
+- en: When is that useful in creative work?
+  prefs: []
+  type: TYPE_NORMAL
+- en: Why compression is useful
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'Let’s start with comprehensive compressions like book reports. If we graphed
+    them by the amount of depth they convey and attention they require, they would
+    probably be on the bottom-left quadrant of the graph—little depth, little attention
+    required:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Things that exist in this bottom-left quadrant have a pejorative connotation
+    because they require a low level of engagement with a complex idea:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Comprehensive compressions are the McDonald’s french fries of the intellectual
+    landscape: ubiquitous, tasty, cheap, and low status.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: But this kind of summary is an important output of creative work because it
+    respects the fundamentally limited attention of human beings. Humans need to roam
+    widely over the intellectual landscape before they go deep, and this kind of summary
+    allows us to sample ideas that might be useful without a lot of investment. In
+    that way, it’s like a mini-advertisement for the idea it contains—like a blooming
+    flower is an advertisement for nectar.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The trouble is that doing compressions like this is, generally, drudgery. Anyone
+    who has had to write a summary of their essay for an X post, or has needed to
+    spend a few hours rereading a complex topic so that they could summarize it in
+    a few sentences, will know what I mean.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'But language models are good at compression that sits more at the bottom of
+    the funnel of engagement with ideas, too. They help you go deeper into the nuances
+    of an idea instead of just skimming the surface:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'In a needle-in-the-haystack compression, they can find the answer to a difficult
+    question in a long piece of text. For example, I’ve long been a fan of Ludwig
+    Wittgenstein’s philosophical thinking, but his writing is incredibly dense. I’ve
+    fed one of his books into Claude and gotten answers to specific questions—which
+    is a compression of the book into a form that’s usable for me:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Instead of puzzling over the text, I can think up new ideas and create new pieces
+    of writing that were previously impossible. There’s too much information to consume,
+    and it’s too complicated for me to understand without this kind of support.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Once you start to look at things this way, you’ll see compression everywhere.
+    Emails are often compressions of what people said in meetings. Poems are compressions
+    of sensory experiences. Good decisions are compressions of the results of previous
+    decisions. Basic programming is compressions of Stack Overflow answers.
+  prefs: []
+  type: TYPE_NORMAL
+- en: This view of the world will help you see a significant chunk of the situations
+    in which language models can be useful for creative work.
+  prefs: []
+  type: TYPE_NORMAL
+- en: As the cognitive scientist Alison Gopnik has written, language models are [cultural
+    technologies](https://every.to/chain-of-thought/chatgpt-and-the-future-of-the-human-mind?sid=41918).
+    They give us the best of what humanity knows about any topic—in the right form
+    for any given context. In that way, language models are an extension of a trend
+    that started with writing itself and has extended to the printing press, the internet,
+    and finally our present moment with AI.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'This is a superpower for creatives:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Knowledge can make its way to you—wherever you are, whenever you need it, compressed
+    in just the right format for you to use.
+  prefs: []
+  type: TYPE_NORMAL
+- en: What do you want to make with it?
+  prefs: []
+  type: TYPE_NORMAL
+- en: —
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Next week, we’ll talk about language models’ next operation:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Expansion.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '* * *'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '***Dan Shipper*** *is the cofounder and CEO of Every, where he writes the*
+    [*Chain of Thought*](https://every.to/chain-of-thought) *column and hosts the
+    podcast* [How Do You Use ChatGPT?](https://open.spotify.com/show/5qX1nRTaFsfWdmdj5JWO1G)
+    *You can follow him on X at* [*@danshipper*](https://twitter.com/danshipper) *and
+    on* [*LinkedIn*](https://www.linkedin.com/in/danshipper/)*, and Every on X at*
+    [*@every*](https://twitter.com/every) *and on* [*LinkedIn*](https://www.linkedin.com/company/everyinc/)*.*'
+  prefs: []
+  type: TYPE_NORMAL

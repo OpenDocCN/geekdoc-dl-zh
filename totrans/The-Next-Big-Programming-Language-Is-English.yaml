@@ -1,0 +1,346 @@
+- en: <!--yml
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'category: COT 专栏'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'date: 2024-05-08 11:02:17'
+  prefs: []
+  type: TYPE_NORMAL
+- en: -->
+  prefs: []
+  type: TYPE_NORMAL
+- en: The Next Big Programming Language Is English
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 来源：[https://every.to/chain-of-thought/i-spent-24-hours-with-github-copilot-workspaces](https://every.to/chain-of-thought/i-spent-24-hours-with-github-copilot-workspaces)
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: '*Was this newsletter forwarded to you?* [*Sign up*](https://every.to/account)
+    *to get it in your inbox.*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '* * *'
+  prefs: []
+  type: TYPE_NORMAL
+- en: GitHub Copilot is like autocomplete for programmers.
+  prefs: []
+  type: TYPE_NORMAL
+- en: As you type, it guesses what you’re trying to accomplish and suggests the block
+    of code it *thinks* you’re going to write. If it’s right—and very often it is—you
+    press Tab and it’ll fill in the rest for you. Launched in 2021, a year or so before
+    ChatGPT’s arrival, Copilot was the first breakthrough generative AI use case for
+    programming that really took off.
+  prefs: []
+  type: TYPE_NORMAL
+- en: If GitHub Copilot is like autocomplete, [GitHub Copilot Workspace](https://github.blog/2024-04-29-github-copilot-workspace/)—currently
+    in limited technical preview—is like an extremely capable [pair programmer](https://en.wikipedia.org/wiki/Pair_programming#:~:text=Pair%20programming%20is%20a%20software,two%20programmers%20switch%20roles%20frequently.)
+    who never asks for coffee breaks or RSUs.
+  prefs: []
+  type: TYPE_NORMAL
+- en: It’s a tool that lets you code in plain English from start to finish without
+    leaving your browser. If you give it a task to complete, Copilot Workspace will
+    read your existing codebase, construct a step-by-step plan to build it, and then—once
+    you give the green light—it’ll implement the code while you watch.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Put another way, it’s an agent. It’s similar to Devin, the AI agent for programming
+    whose [launch announcement](https://www.cognition-labs.com/introducing-devin)
+    went viral a few months ago, and which was reportedly seeking a [$2 billion valuation](https://www.wsj.com/tech/ai/a-peter-thiel-backed-ai-startup-cognition-labs-seeks-2-billion-valuation-998fa39d)
+    in a new fundraising effort. I haven’t gotten access to that yet (shakes fist
+    in Devin’s general direction!), but I do have access to Copilot Workspace.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Over the past 24 hours, I’ve put Copilot Workspace through some of its paces.
+    I tried to have it build a large, complex feature on its own, but I also asked
+    it to do smaller, better-defined tasks. My goal was to see what I could ask of
+    it, what kinds of tasks it could handle, and when I might choose to use this instead
+    of ChatGPT.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The short answer is: This kind of product is the future of programming. The
+    long answer is below.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: How Copilot Workspace works
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: I’ve been working on an internal tool that we use at Every called Spiral. It
+    allows users to build and share prompts for common AI tasks—but more on that in
+    a future essay. I fashioned an ugly tribal tattoo-looking logo, and I wanted to
+    replace it with a new one created by [Keshav](https://twitter.com/keshavchan),
+    one of our talented designers.
+  prefs: []
+  type: TYPE_NORMAL
+- en: This is one of those changes that isn’t very hard to code, but it’s a little
+    annoying. You have to make sure the logo looks right in context and doesn’t break
+    any of the styles of the elements around it. It’s one of those all-too-simple
+    tasks that I also usually procrastinate doing until I really need to.
+  prefs: []
+  type: TYPE_NORMAL
+- en: So, I figured it was perfect for an AI. I decided to try Copilot Workspace—from
+    here, simply referred to as CW—to see how it would do.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Create a task**'
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: 'First, I opened up CW and created a task. A task is a natural language description
+    of what you want CW to build:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '*Source: Screenshots courtesy of the author.*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: You’ll notice that the task description I gave it has details such as the file
+    I want it to modify, where I want the logo to appear, and the file name of the
+    logo image. I experimented with different prompts (and looked through the GitHub
+    documentation) and learned that giving it more detail should lead to better results.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Once I inputted the task, CW processed it and created a specification: a map
+    of the current state of the codebase, and a set of criteria for what success looks
+    like.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Specifying out your idea of success**'
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: 'CW creates a specification through a process that is sort of like what I do
+    before I leave the house to grab coffee: I tap both of my pants pockets to make
+    sure I have my phone, AirPods, wallet, and keys. In a sense, I am asking my pants,
+    “Do you contain all of the essentials I need in order to leave the house, purchase
+    a coffee, and make sure I don’t get locked out?”'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Depending on how they reply—bear with me—I know whether each item is either
+    present or missing. This helps me to create a plan to gather the things I need
+    to find in order to successfully complete my mission. (Note to self: Your wallet
+    is always wedged in some physics-defying configuration between the couch and the
+    wall. Look there. Not there? Look again.)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: In a sense, CW does this, too. Given the task you assigned it, it attempts to
+    figure out the current state of your codebase (to put it in pants terms, it taps
+    the codebase and finds the wallet and keys are missing). Then it proposes a set
+    of tests for what your codebase *should* look like when the task has been completed
+    properly (the wallet and keys are now safely slotted in their proper pockets).
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'To make it even easier, it does this in normal English:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Plus, you can edit each step of this process and, if you want to, add your own
+    ideas in natural language. Basically, you can give CW your own test criteria for
+    what success should look like so that it will check against it as it writes code.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Once you’re satisfied with the specification, you move on to the plan.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Creating your plan**'
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: 'If the specification stage is about figuring out *what* needs to be done in
+    your codebase, the planning step is *how* it will be done. At this stage, CW gets
+    into the nitty-gritty details of your codebase and writes out the changes it will
+    make to each file:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Again, this all happens in natural language, and you can edit or add anything
+    to the plan if you think CW is missing something. Once you’re satisfied, you hit
+  prefs: []
+  type: TYPE_NORMAL
+- en: '*implement*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: "—and the magic begins.\uFEFF\uFEFF"
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**It codes!**'
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: I’ve been programming with AI for more than a year-and-a-half, and this part
+    is *still* so fun to me. When you hit *implement*, CW will take your plan and
+    write the corresponding code for you inside your codebase.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'You can watch it work in real time, and, at the end, you can see a diff of
+    each file—a way to see highlights of anything that changed:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Normally, when I’m doing this with ChatGPT, I’m constantly hopping back and
+    forth between my browser and my programming environment, copy-pasting code into
+    ChatGPT and vice versa. CW’s experience, by contrast, is fully integrated into
+    your codebase so you can take your fingers off the keyboard and watch.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '*Look, Ma, no hands!*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: If you’re satisfied with the changes CW makes, you can create a *pull request*
+    and instantly have the new feature merged into your codebase. It’s very cool.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'And, indeed, it did create the proper code in the proper file: It swapped out
+    the old logo for the new one—no programming or copy-pasting required.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The question is: How does this kind of programming agent experience compare
+    to using ChatGPT or Claude to accomplish the same thing?'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Is GitHub Copilot Workspace the future of programming?
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'ChatGPT is a fresh, blank notebook: There’s no structure, and you can use it
+    for pretty much anything. But that means there are very few guardrails, so it
+    can be difficult to get the most out of it.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Copilot Workspace is more like a bullet journal: It follows a process to help
+    you get tasks done. It’s purpose-built for programming, so it’s less flexible
+    than ChatGPT, but in some situations it might be more effective.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: While working with CW, I noticed a few things. First, it was slow. I attempted
+    the same update (with the same initial prompt) to our internal Spiral app with
+    CW, ChatGPT, and Claude so that I could compare them side-by-side. Both ChatGPT
+    and Claude returned answers within 10-20 seconds. CW took two to three minutes
+    to return.
+  prefs: []
+  type: TYPE_NORMAL
+- en: I think this is because both ChatGPT and Claude just output the small snippets
+    of code that I needed to change. CW, by contrast, rewrote the entire file, which
+    took more time.
+  prefs: []
+  type: TYPE_NORMAL
+- en: On the plus side, I found the code generation from CW to be higher quality.
+    ChatGPT and Claude both got the answer right, but they made some subtle, pesky
+    mistakes that I would’ve had to clean up by hand. CW took longer, yes, but it
+    got it right on the first go.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'I spent some time trying to hack CW (don’t get mad at me, GitHub, it was very
+    nice hacking!) with various prompt injections to get it to tell me which AI models
+    it was using under the hood, but alas, it declined to reveal its secrets:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Based on my experience with the logo replacement, it’s a fair assumption that
+    CW would be quite good at fixing small issues or minor feature requests that constantly
+    pop up in mature codebases. It may not get everything right the first time, but
+    it’d probably be enough to get an engineer 90 percent of the way for minor tasks.
+    And it’s deeply integrated into GitHub, which makes it easy to manage and merge
+    the changes.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'But what about the holy grail: Can you let it run wild on a big feature request?
+    I tried it out on that as well. I’ve been meaning to create a team-sharing flow
+    for Spiral so it’s easier for Every team members to share spirals with one another.
+    This one yielded more mixed results, but the reason *why* might surprise you.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'To get started, I wrote a short paragraph for how I thought the sharing feature
+    *should* work, and CW built a spec for it:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: But my eyes glazed over looking at the spec. Everything looked basically right,
+    but it was difficult to know whether or not I should let CW proceed to a plan
+    and implementation, or whether I needed to back up a step.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Why? I realized I didn’t have a good understanding of what the feature should
+    be. There are a bunch of different ways to do sharing, and a lot of subtle decisions
+    to be made. CW had taken my nebulous task and made those decisions for me. That
+    could be great in some situations, but it was hard for me to discern which decisions
+    it had made and what their effects would be on the final experience.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Basically, I had a *vague* mental model of what I wanted to be built. CW took
+    that and created a *specific* model of what it thought I meant. But it felt taxing
+    to try to map CW’s design onto the model in my head. The task was too big; I felt
+    like I needed to visualize it somehow.
+  prefs: []
+  type: TYPE_NORMAL
+- en: So despite not totally understanding it, I went ahead and asked it to perform
+    a full implementation, just to see what would happen. And when it started coding,
+    I noticed some issues in the code it was writing. It was writing the code based
+    on the plan it made, but I only saw the issues in the plan once I saw the final
+    code.
+  prefs: []
+  type: TYPE_NORMAL
+- en: I don’t usually have this experience with ChatGPT. I think that’s for two reasons.
+  prefs: []
+  type: TYPE_NORMAL
+- en: First, I often ask ChatGPT to ask me questions about a feature I’m building
+    so I can flesh out anything that’s underspecified before it starts to plan how
+    to build the feature. This helps make my thinking sharper and its plan more likely
+    to be correct. We’re building a shared model of the feature together step-by-step—so
+    we’re both clear on what it should look like at the end.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Second, I’m often working with fast feedback loops between ChatGPT, my code
+    editor, and a local version of whatever app I’m building. I’m picking off a small
+    chunk of a feature, building it, and then seeing the results. So I can quickly
+    see the downstream effects of any code ChatGPT is creating and iterating toward
+    the result I want. I’m not asking ChatGPT to build an entire feature at once like
+    I did with CW.
+  prefs: []
+  type: TYPE_NORMAL
+- en: There are some easy solutions —some on CW’s side and some on mine. On the CW
+    side, it would be awesome if, after I inputted a task, CW initiated a chat session
+    to help expand upon what I actually want before it moves on to a specification.
+    Sometimes I don’t know yet! I only have a vague idea, and I wish it would force
+    me to get more clear so that we build up our understanding of what needs to be
+    done together.
+  prefs: []
+  type: TYPE_NORMAL
+- en: On my end, using a tool like this effectively will involve learning to understand
+    what kinds of tasks it can handle, how hefty an assignment it can handle by itself,
+    and then using it explicitly for that. I need to learn how to be a good [model
+    manager](https://every.to/chain-of-thought/the-knowledge-economy-is-over-welcome-to-the-allocation-economy)
+    for this kind of model.
+  prefs: []
+  type: TYPE_NORMAL
+- en: It’s definitely not yet at a point where I can hand it a vague notion of a complex
+    feature and have it be built end-to-end like I might expect a human programmer
+    to do. But it could dramatically speed up many of the tasks involved in creating
+    that feature, if it’s used properly.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Copilot Workspace is still in technical preview, so I expect some of its shortcomings
+    are growing pains that will be resolved before it’s released more widely.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Putting those quibbles aside, though, CW is a step in the direction of the future.
+    English is becoming a programming language. You’ll still have to understand and
+    use scripting languages like Python or Javascript, or lower-level languages like
+    C.
+  prefs: []
+  type: TYPE_NORMAL
+- en: But most software will probably start as sentences written into an interface
+    like CW’s.
+  prefs: []
+  type: TYPE_NORMAL
+- en: It’s an exciting time to be a programmer.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '* * *'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '***Dan Shipper*** *is the cofounder and CEO of Every, where he writes the*
+    [*Chain of Thought*](https://every.to/chain-of-thought) *column and hosts the
+    podcast* [How Do You Use ChatGPT?](https://open.spotify.com/show/5qX1nRTaFsfWdmdj5JWO1G)
+    *You can follow him on X at* [*@danshipper*](https://twitter.com/danshipper) *and
+    on* [*LinkedIn*](https://www.linkedin.com/in/danshipper/)*, and Every on X at*
+    [*@every*](https://twitter.com/every) *and on* [*LinkedIn*](https://www.linkedin.com/company/everyinc/)*.*'
+  prefs: []
+  type: TYPE_NORMAL

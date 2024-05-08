@@ -1,0 +1,323 @@
+- en: <!--yml
+  id: totrans-0
+  prefs: []
+  type: TYPE_NORMAL
+  zh: <!--yml
+- en: 'category: COT 专栏'
+  id: totrans-1
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 类别：COT专栏
+- en: 'date: 2024-05-08 11:07:13'
+  id: totrans-2
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 日期：2024年5月8日 11:07:13
+- en: -->
+  id: totrans-3
+  prefs: []
+  type: TYPE_NORMAL
+  zh: -->
+- en: ChatGPT for Writing and Recommending Books
+  id: totrans-4
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+  zh: 用于写作和推荐书籍的ChatGPT
+- en: 来源：[https://every.to/chain-of-thought/chatgpt-for-writing-and-recommending-books](https://every.to/chain-of-thought/chatgpt-for-writing-and-recommending-books)
+  id: totrans-5
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+  zh: 来源：[https://every.to/chain-of-thought/chatgpt-for-writing-and-recommending-books](https://every.to/chain-of-thought/chatgpt-for-writing-and-recommending-books)
+- en: 'Sponsored By: Fraction'
+  id: totrans-6
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+  zh: 赞助商：Fraction
+- en: This essay is brought to you by [Fraction](https://hirefraction.com/dev-profiles). The
+    best developers already have jobs, so why not work with them fractionally? If
+    you are looking to scale your startup without breaking the bank, Fraction is here
+    to help. We connect you with fully vetted, US-based senior developers at a fraction
+    of the cost.
+  id: totrans-7
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 此篇文章由[Fraction](https://hirefraction.com/dev-profiles)赞助。最优秀的开发人员已经有了工作，那么为什么不与他们合作？如果您希望扩大您的初创公司规模而不花费太多，Fraction会提供帮助。我们为您连接经过充分审核的美国高级开发人员，成本仅为原价的一小部分。
+- en: '*TL;DR: Today we’re releasing a new episode of our podcast* How Do You Use
+    ChatGPT?, *in which* *I go in-depth with author* [*Nat Eliason*](https://www.nateliason.com/)
+    *on how he uses ChatGPT to write books and discover new ones to read. Watch on*
+    [*X*](https://twitter.com/danshipper/status/1730602528125984900)*,* [*YouTube*](https://www.youtube.com/watch?v=rxG-7a-gmIs)*,
+    or* [*Spotify*](https://open.spotify.com/episode/4e6tdMxpZ92fE5YCr8gtVi?si=p2Yf6AxfRICYclHXk6suGA)*.*'
+  id: totrans-8
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '*TL;DR: 今天我们发布了* How Do You Use ChatGPT? *的新一集播客*，*在其中我深入探讨了作者* [*Nat Eliason*](https://www.nateliason.com/)
+    *如何使用ChatGPT写作书籍并发现新书。在* [*X*](https://twitter.com/danshipper/status/1730602528125984900)*，*
+    [*YouTube*](https://www.youtube.com/watch?v=rxG-7a-gmIs)*，* 或[*Spotify*](https://open.spotify.com/episode/4e6tdMxpZ92fE5YCr8gtVi?si=p2Yf6AxfRICYclHXk6suGA)*观看。*'
+- en: Nat Eliason is a shape-shifter. He’s a writer with a book deal from Random House,
+    a crypto trader, a Roam Research aficionado, a marketer, a book podcaster, a parent,
+    and a [seed oil iconoclast](https://every.to/almanack/oatly-the-new-coke-821556).
+    For years, he’s published relentlessly on the internet—accumulating thousands
+    of newsletter subscribers, 70,000 X followers, and 100,000 TikTok followers.
+  id: totrans-9
+  prefs: []
+  type: TYPE_NORMAL
+  zh: Nat Eliason是一个变形者。他是一位从Random House获得书籍合同的作者，一个加密货币交易者，一个Roam Research爱好者，一个营销人员，一个书籍播客主持人，一个家长，以及一位[种子油叛逆者](https://every.to/almanack/oatly-the-new-coke-821556)。多年来，他在互联网上不懈地发表文章——积累了数千名通讯订阅者、70,000位X追随者和100,000位TikTok追随者。
+- en: 'Nat just finished writing his book—about his journey through crypto—and he’s
+    starting a sci-fi novel. But joining the dead-tree club hasn’t prevented him from
+    exploring the most interesting tool for thought since [Roam fell](https://every.to/superorganizers/the-fall-of-roam):
+    ChatGPT.'
+  id: totrans-10
+  prefs: []
+  type: TYPE_NORMAL
+  zh: Nat刚刚完成了他的书——关于他通过加密货币的旅程——他正在开始一部科幻小说。但加入纸质书俱乐部并没有阻止他探索自[Roam倒下](https://every.to/superorganizers/the-fall-of-roam)以来最有趣的思维工具：ChatGPT。
+- en: 'ChatGPT is now a home-screen app for him—one that he uses every day—and we
+    sat down for a comprehensive interview on how he incorporates it into his routine.
+    Watch him use it to sharpen his ability to describe writing he likes, find new
+    books to read for inspiration, and even outline the story of the new book he’s
+    writing. We also discuss other small but powerful ways that he integrates ChatGPT
+    into his life—from recipe creation to reading the news and settling bar bets.
+    Here’s a taste:'
+  id: totrans-11
+  prefs: []
+  type: TYPE_NORMAL
+  zh: ChatGPT现在是他手机屏幕上的一个应用程序，他每天都会使用它，我们坐下来进行了一次全面的采访，了解他如何将其融入日常生活中。看他如何使用它来提高描述他喜欢的写作的能力，寻找新的启发读物，甚至勾勒出他正在写的新书的故事大纲。我们还讨论了他将ChatGPT整合到生活中的其他一些小而强大的方式——从创作食谱到阅读新闻，甚至解决酒吧赌注。这是一小部分内容：
+- en: '**Recommending books**. Nat is an avid reader and has recently turned to ChatGPT
+    to help him find his next book. We discussed not only describing the kind of book
+    you’re looking for, but also working backward based on books you’ve already read
+    and loved: “So being like, ‘My favorite sci-fi books are *The Three-Body Problem*,
+    *Jurassic Park*, and *The Martian*. Who''s an author that would be a really good
+    intersection of those three?’”'
+  id: totrans-12
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: '**推荐书籍**。Nat是一位狂热的读者，最近开始使用ChatGPT帮助他找到下一本书。我们不仅讨论了描述你正在寻找的书的类型，还根据你已经阅读并喜欢的书籍逆向推理：“所以，要像‘我最喜欢的科幻小说是*三体*、*侏罗纪公园*和*火星救援*。有哪位作者会是这三者的很好的交集呢？’”'
+- en: '**A Google alternative.** As a former SEO expert, Nat is looking for alternatives
+    to traditional search engines. “I also just don’t trust Google results,” he says.
+    “I’m sometimes disappointed when [ChatGPT] just uses search results… Most of the
+    results on Google are not the best answers to a question—they’re the ones that
+    are best engineered to be there.”'
+  id: totrans-13
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: '**谷歌的替代方案。** 作为一名前 SEO 专家，Nat 正在寻找传统搜索引擎的替代方案。“我也不信任 Google 的搜索结果，”他说。“当 [ChatGPT]
+    只是使用搜索结果时，我有时会感到失望...Google 的大多数结果不是对问题的最佳回答——它们是最适合出现在那里的答案。”'
+- en: '**A recipe-generator.** Beyond his reading and writing, Nat has found an everyday
+    use for ChatGPT—in the kitchen: “I have a bunch of ground pork in my freezer because
+    my friend gave me a quarter-pig and I was like, ‘Okay, I want to make something
+    with this, like Asian-style with rice. I also have green onions in the fridge,
+    so give me a recipe.’ And it did—a very simple stir fry.” The results were actually
+    good, he says.'
+  id: totrans-14
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: '**一个食谱生成器。** 除了阅读和写作之外，Nat 在厨房里还找到了 ChatGPT 的日常用途：“我的冰箱里有一大堆碎猪肉，因为我的朋友送了我四分之一的猪，我想，‘好吧，我想做点什么，比如亚洲风格的饭。我冰箱里还有青葱，所以给我一个食谱。’
+    它给了我一个——一个非常简单的炒菜。” 结果他说确实不错。'
+- en: '**Unearthing notes.** Nat is building a custom GPT to go through all of his
+    book-related notes and reviews, so he can easily surface and analyze them. “It
+    goes through all of my 300-notes pages, finds them, and then pulls out the relevant
+    piece from that book and links to that book,” he says.'
+  id: totrans-15
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: '**挖掘笔记。** Nat 正在构建一个自定义的 GPT，以浏览他所有与书籍相关的笔记和评论，这样他就可以轻松地将它们呈现和分析出来。“它会浏览我所有的
+    300 页笔记，找到它们，然后从那本书中提取出相关的片段并链接到那本书，”他说。'
+- en: '**Reading the news.** “I don’t follow any news stuff,” Nat admits, “so I’ll
+    just ask ChatGPT to summarize the information for me.” Instead of seeking out
+    information on news websites, he’ll see what ChatGPT can give him.'
+  id: totrans-16
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: '**阅读新闻。** “我不关注任何新闻，”Nat 承认，“所以我会问 ChatGPT 总结信息给我。” 他不会去新闻网站寻找信息，而是看看 ChatGPT
+    能给他什么。'
+- en: '**Better ways of explaining things.** Sometimes Nat needs different ways to
+    say the same thing. Instead of writing that he has a “sinking feeling” in his
+    stomach five different times, Nat will ask ChatGPT for alternative ways of expressing
+    the same sentiment.'
+  id: totrans-17
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: '**更好地解释事物的方法。** 有时候 Nat 需要用不同的方式来表达同样的意思。他不会五次写下他的肚子“下沉的感觉”，而是会向 ChatGPT 请求表达相同情绪的替代方式。'
+- en: '**Storytelling advice.** Nat gives ChatGPT a story prompt—the plot line of
+    *Fight Club*, as an example—and asks for tips on how to structure an opening scene.
+    “Feed it the hero’s journey. Feed it the seven-part story structure. Feed it the
+    three-act structure. Feed it the five-act structure. You can give it a bunch of
+    them and see what it comes up with.”'
+  id: totrans-18
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: '**讲故事建议。** Nat 给 ChatGPT 一个故事提示——《搏击俱乐部》的情节线作为例子——并询问如何构思开场景。“向它提供英雄之旅。向它提供七部分故事结构。向它提供三幕结构。向它提供五幕结构。你可以给它很多，看看它能想出什么。”'
+- en: 'You can watch the episode on Twitter/X, Spotify, or YouTube. Links and timestamps
+    are below:'
+  id: totrans-19
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 您可以在 Twitter/X、Spotify 或 YouTube 上观看该集。链接和时间戳如下：
+- en: '**Timestamps:**'
+  id: totrans-20
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '**时间戳：**'
+- en: Intro *1:08*
+  id: totrans-21
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+  zh: 导言 *1:08*
+- en: Book recommendations based on genre 3:48
+  id: totrans-22
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+  zh: 根据流派推荐书籍 3:48
+- en: Figuring out your own taste in books 15:27
+  id: totrans-23
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+  zh: 弄清楚你对书的品味 15:27
+- en: Finding recipes for ingredients you already have 19:34
+  id: totrans-24
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+  zh: 查找您已经拥有的食材的食谱 19:34
+- en: How he sifts through his own notes 21:50
+  id: totrans-25
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+  zh: 如何筛选自己的笔记 21:50
+- en: How to reformat data 24:19
+  id: totrans-26
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+  zh: 如何重新格式化数据 24:19
+- en: How to settle bar bets 25:46
+  id: totrans-27
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+  zh: 如何解决酒吧内的打赌 25:46
+- en: Summarizing the news 28:40
+  id: totrans-28
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+  zh: 总结新闻 28:40
+- en: How to phrase something differently 29:54
+  id: totrans-29
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+  zh: 如何以不同方式表达某事物 29:54
+- en: Writing the opening scene of a novel 31:41
+  id: totrans-30
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+  zh: 写小说开场景 31:41
+- en: What do you use ChatGPT for? Have you found any interesting or surprising use
+    cases? We want to hear from you—and we might even interview you. Reply here to
+    talk to me!
+  id: totrans-31
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 您如何使用 ChatGPT？您找到了什么有趣或令人惊讶的用例吗？我们想听听您的想法——我们甚至可能会采访您。在这里回复与我交谈！
+- en: ''
+  id: totrans-32
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: '**Scale Your Startup with Experienced Fractional Developers**'
+  id: totrans-33
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '**与经验丰富的分时开发人员一起扩展您的创业公司**'
+- en: With [Fraction](https://hirefraction.com/dev-profiles), you can tap into a pool
+    of fully vetted US-based senior developers at a fraction of the cost. We bring
+    you the best talent without breaking the bank.
+  id: totrans-34
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 通过[Fraction](https://hirefraction.com/dev-profiles)，您可以以较低的成本利用一群经过全面审核的美国资深开发人员。我们为您带来最优秀的人才，而不会使您破产。
+- en: Our developers are MIT-vetted and experienced in AI and LLM. They're ready to
+    help your business grow, whether you need assistance with coding, software development,
+    or project management.
+  id: totrans-35
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 我们的开发人员经过MIT的审核，具有人工智能和LLM方面的丰富经验。他们随时为您的业务增长提供帮助，无论您需要编码、软件开发还是项目管理的帮助。
+- en: Forget offshore outsourcing - work with top-notch developers right here in the
+    US. With [Fraction](https://hirefraction.com/dev-profiles), you can accelerate
+    your startup's growth and stay ahead of the competition.
+  id: totrans-36
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 忘记海外外包 - 在美国与顶尖开发人员合作。利用[Fraction](https://hirefraction.com/dev-profiles)，您可以加速创业公司的发展并保持领先地位。
+- en: Ready to take your startup to new heights?
+  id: totrans-37
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 准备将您的创业项目推向新的高度吗？
+- en: '* * *'
+  id: totrans-38
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '* * *'
+- en: '**This episode transcript is for paying subscribers.**[Learn more](/)'
+  id: totrans-39
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '**本集文字稿供付费订阅者阅读。**[了解更多](/)'
+- en: This post is for
+  id: totrans-40
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+  zh: 本帖子适用于
+- en: paying subscribers
+  id: totrans-41
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 付费订阅者
+- en: '[Subscribe →](/subscribe?publication=chain-of-thought)'
+  id: totrans-42
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '[订阅 →](/subscribe?publication=chain-of-thought)'
+- en: Or, [login](/login).
+  id: totrans-43
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 或者，[登录](/login)。
+- en: 'Thanks to our Sponsor: Fraction'
+  id: totrans-44
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+  zh: 感谢我们的赞助商：Fraction
+- en: Thanks again to our sponsor [Fraction](https://hirefraction.com/dev-profiles).
+    Forget expensive offshore outsourcing. With Fraction, you can tap into a pool
+    of talented developers right here in the US for a fraction of the cost. Our team
+    specializes in AI, LLM, and more, ensuring you get the expertise you need to succeed.
+  id: totrans-45
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 再次感谢我们的赞助商[Fraction](https://hirefraction.com/dev-profiles)。忘记昂贵的海外外包。利用Fraction，您可以以较低的成本获得美国境内的一流开发人员。我们的团队专注于人工智能、LLM等领域，确保您获得成功所需的专业知识。
+- en: Scale your business quickly and efficiently while saving on costs. Join the
+    ranks of successful startups who have already leveraged the power of [Fraction](https://hirefraction.com/dev-profiles).
+  id: totrans-46
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 在节省成本的同时，快速高效地扩展您的业务。加入已经利用[Fraction](https://hirefraction.com/dev-profiles)的力量取得成功的创业公司行列。

@@ -1,0 +1,341 @@
+- en: <!--yml
+  id: totrans-0
+  prefs: []
+  type: TYPE_NORMAL
+  zh: <!--yml
+- en: 'category: COT 专栏'
+  id: totrans-1
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 类别：COT 专栏
+- en: 'date: 2024-05-08 11:03:10'
+  id: totrans-2
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 日期：2024-05-08 11:03:10
+- en: -->
+  id: totrans-3
+  prefs: []
+  type: TYPE_NORMAL
+  zh: -->
+- en: Capability Blindness and the Future of Creativity
+  id: totrans-4
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+  zh: 能力盲视与创造力的未来
+- en: 来源：[https://every.to/chain-of-thought/capability-blindness-and-the-future-of-creativity](https://every.to/chain-of-thought/capability-blindness-and-the-future-of-creativity)
+  id: totrans-5
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+  zh: 来源：[https://every.to/chain-of-thought/capability-blindness-and-the-future-of-creativity](https://every.to/chain-of-thought/capability-blindness-and-the-future-of-creativity)
+- en: Humans tend to believe that the world is static—that things will be the same
+    tomorrow as they are today, and as they were yesterday.
+  id: totrans-6
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 人类倾向于相信世界是静态的——明天的事情会和今天一样，就像昨天一样。
+- en: We leave no stone unturned in our hunt for opportunity, but we often don’t think
+    to pause before we write something off as useless—and we don’t flip over old stones
+    to see if anything’s changed. For example, the latest Claude model—Claude 3 Opus—is
+    a [*fantastic* writer](https://every.to/napkin-math/claude-3-is-the-most-human-ai-yet).
+    With the right prompt, it can write for short bursts in a voice that genuinely
+    sounds 70-80 percent like me, you, or any other writer.
+  id: totrans-7
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 我们在寻找机会时从不放过任何一块石头，但我们经常不会想到在将某事一笔勾销之前暂停一下——我们也不会翻转旧石头看看有什么变化。例如，最新的克劳德模型——克劳德
+    3 Opus——是一个[*出色的*作家](https://every.to/napkin-math/claude-3-is-the-most-human-ai-yet)。在适当的提示下，它可以以一种听起来真实的声音写短暂的段落，70-80%像我、你或任何其他作家。
+- en: Claude mostly wrote this [tweet](https://twitter.com/danshipper/status/1778033042096902478),
+    for example, though I edited it. I supplied Claude with examples of previous podcast
+    transcripts and tweets, as well as some guidelines about how to adapt one into
+    the other. Claude did the rest, and it did a fantastic job.
+  id: totrans-8
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 例如，克劳德大部分写了这条[tweet](https://twitter.com/danshipper/status/1778033042096902478)，尽管我进行了编辑。我向克劳德提供了以前的播客剧本和推文的示例，以及一些关于如何将一个转换为另一个的指导方针。克劳德做了剩下的事情，而且它做得很出色。
+- en: This may seem like a small feat, but GPT-4 can’t do this. And you’d be surprised
+    how much writing fits this pattern of summarizing content from one form and adapting
+    it for another. As I wrote in a [recent essay](https://every.to/chain-of-thought/chatgpt-and-the-future-of-the-human-mind)
+    on this topic, once you start looking, you see the summarizing everywhere.
+  id: totrans-9
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 这可能看起来是一项小技巧，但 GPT-4 无法做到这一点。你会惊讶于有多少写作符合这种从一种形式摘要内容然后适应另一种形式的模式。正如我在关于这个话题的[最近的文章](https://every.to/chain-of-thought/chatgpt-and-the-future-of-the-human-mind)中所写的，一旦你开始寻找，你会发现摘要无处不在。
+- en: But it seems like no one has noticed this step-change in capabilities.
+  id: totrans-10
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 但似乎没有人注意到这种能力的巨大变化。
+- en: 'That’s understandable. It’s a common mistake we make when evaluating parts
+    of the world that move quickly: I call it capability blindness*.*'
+  id: totrans-11
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 这是可以理解的。当我们评估那些快速发展的世界的部分时，我们经常会犯一个常见错误：我称之为能力盲视*。*
+- en: During the first big generative AI wave, which started last year, many of us
+    grappled with the exciting—or scary—reality that chatbots might be able to mimic
+    our unique voices and writing styles. I tried OpenAI’s GPT-3, then GPT-4, and
+    quickly realized they were *good* but had a particular taint. They could help
+    in the writing process—researching, supplying ideas, editing words—but couldn’t
+    be trusted to write very much on their own. I couldn’t enlist AI as a ghostwriter
+    just yet.
+  id: totrans-12
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 在第一波大规模生成式人工智能浪潮中，这波浪潮始于去年，我们中的许多人都在探讨令人兴奋或可怕的现实，即聊天机器人可能能够模仿我们独特的声音和写作风格。我尝试过
+    OpenAI 的 GPT-3，然后是 GPT-4，并很快意识到它们是*好的*，但有一种特殊的污点。它们可以在写作过程中帮助——研究、提供想法、编辑文字——但不能被信任去独立撰写很多内容。我还不能让人工智能充当幽灵写手。
+- en: 'But over the last year, the newest language models have been noticeably better.
+    Unfortunately, we are often capability blind: We don’t notice what’s new because
+    we’re jaded by our old experiences and feel that it’s a waste of time to try again.'
+  id: totrans-13
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 但在过去的一年中，最新的语言模型明显变得更好了。不幸的是，我们经常对能力变得盲目：我们没有注意到新的东西，因为我们对旧经验感到厌倦，觉得再试一次是浪费时间。
+- en: 'This is not a new phenomenon. In May 2012, after Facebook went public, the
+    *New York Times* opinion columnist Ross Douthat [argued](https://www.nytimes.com/2012/05/27/opinion/sunday/douthat-the-facebook-illusion.html?searchResultPosition=6)
+    that the social network was a bad business:'
+  id: totrans-14
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 这并不是一个新现象。在 2012 年 5 月，Facebook 上市后，《纽约时报》的专栏作家罗斯·道索特 [争论](https://www.nytimes.com/2012/05/27/opinion/sunday/douthat-the-facebook-illusion.html?searchResultPosition=6)称社交网络是一家糟糕的企业：
+- en: “It doesn’t make that much money, and doesn’t have an obvious way to make that
+    much more of it, because (like so many online concerns) it hasn’t figured out
+    how to effectively monetize its million upon millions of users.”
+  id: totrans-15
+  prefs: []
+  type: TYPE_NORMAL
+  zh: “它赚不了多少钱，也没有明显的增加收入的途径，因为（像许多在线关注点一样），它还没有找到如何有效地将其千百万用户变现的方法。”
+- en: At the time, he was right. In 2012, Facebook [generated](https://investor.fb.com/investor-news/press-release-details/2013/Facebook-Reports-Fourth-Quarter-and-Full-Year-2012-Results/default.aspx)
+    $5 billion in revenue and only $53 million in net income. A decade later, Douthat
+    is—obviously—wrong. In 2023, Facebook, now known as Meta, generated roughly $134
+    billion dollars in revenue and $23 billion in net income. What changed? The company
+    figured out how to effectively monetize its massive user base—something that many
+    observers, including Douthat, believed it couldn’t do.
+  id: totrans-16
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 当时他是正确的。2012年，Facebook [创造](https://investor.fb.com/investor-news/press-release-details/2013/Facebook-Reports-Fourth-Quarter-and-Full-Year-2012-Results/default.aspx)
+    了50亿美元的收入，只有5300万美元的净利润。十年后，多赫特显然错了。在2023年，现在被称为Meta的Facebook创造了大约1,340亿美元的收入和230亿美元的净利润。发生了什么变化？该公司找到了如何有效地将其庞大的用户基础变现的方法——这是许多观察家，包括多赫特在内，认为它无法做到的事情。
+- en: My point here isn’t to dunk on Douthat; I am sure some of the things I’ve written
+    will look silly a decade from now. It’s to remind you that the best way to latch
+    onto the future is to think through affirmative possibilities, to remember that
+    the world is in flux, and to keep turning over old stones.
+  id: totrans-17
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 我在这里的观点不是为了嘲笑多赫特；我相信我写的一些东西十年后看起来也会很傻。我的观点是要提醒你，抓住未来的最佳方法是思考肯定的可能性，记住世界正在变化，并继续翻转旧石头。
+- en: This mindset is particularly important with AI. Some of the tasks it struggles
+    with today are going to be child’s play by next year. Like Claude, which has improved
+    leaps and bounds since its last model, and will likely continue in this direction.
+  id: totrans-18
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 这种思维方式在AI中特别重要。今天它遇到困难的一些任务到明年可能就会变得很轻松。就像克劳德一样，它在上一个模型之后有了长足的进步，并且可能会继续朝这个方向发展。
+- en: Now what?
+  id: totrans-19
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 现在呢？
+- en: What’s rare in a world with infinite good writing?
+  id: totrans-20
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+  zh: 在一个拥有无限优质写作的世界中，什么是稀缺的？
+- en: 'If you believe what I wrote above, a good next question is: What becomes rare
+    in a world where it is significantly cheaper to write well? (I’ll admit, I have
+    a dog in this fight.)'
+  id: totrans-21
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 如果你相信我上面写的，一个好的下一个问题是：在写作变得明显更便宜的世界中，什么会变得稀缺？（我承认，我在这场斗争中有一个参与者。）
+- en: First, while Claude 3 Opus can write quite well in my voice, it can’t write
+    *anything* and *everything* in my voice. It’s really good for repetitive tasks
+    that I do often, where I am effectively summarizing one piece of writing into
+    another, and I have examples to provide.
+  id: totrans-22
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 首先，尽管克劳德3 Opus可以很好地用我的声音写作，但它不能用我的声音写作*任何*和*所有*的东西。它非常擅长我经常做的重复任务，在这些任务中我有效地将一篇文章总结为另一篇文章，并且我有提供的例子。
+- en: But Claude still can’t write a good article *as* me—yet. It only works well
+    in circumstances where the length isn’t too long, it has lots of examples to guide
+    it, and it’s clearly summarizing from one form of content and adapting it for
+    another. And I think it will be a long time before it can write great pieces that
+    aren’t summaries of existing content. It’ll be longer still until it can write
+    great long-form pieces. (Complexity scales super-linearly with the length of a
+    piece of text, so longer pieces get harder and harder to output.)
+  id: totrans-23
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 但克劳德仍然不能像我一样写一篇好文章——至少还不行。它只在长度不太长、有大量例子可以指导的情况下运行良好，并且明确地总结了一种内容形式并将其调整为另一种形式。我认为在它能够写出不是现有内容摘要的优秀作品之前，还需要很长时间。直到它能够写出优秀的长篇作品还需要更长的时间。（复杂性随着一篇文章的长度呈超线性增长，因此更长的文章输出起来越来越困难。）
+- en: 'The things that are likely to remain hard to do with AI alone are where the
+    value sits for writing:'
+  id: totrans-24
+  prefs: []
+  type: TYPE_NORMAL
+  zh: AI单独很可能难以完成的任务是写作的价值所在：
+- en: Original research
+  id: totrans-25
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+  zh: 原创研究
+- en: As I [wrote](https://every.to/chain-of-thought/we-re-building-ai-into-our-media-business?sid=40671)
+    a year ago, uncovering new facts is still going to be valuable. Writing them will
+    be much more of a commodity. AI is able to handle 90 percent of the latter, which
+    means reporters in the future will mostly have to be intrepid, with a nose for
+    scoops.
+  id: totrans-26
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 正如我一年前[写的](https://every.to/chain-of-thought/we-re-building-ai-into-our-media-business?sid=40671)，发现新事实仍然是有价值的。写作它们将更多地成为商品。AI能够处理后者的90%，这意味着未来的记者大部分时间都必须是勇敢的，有敏锐的嗅觉来寻找独家新闻。
+- en: Original thinking that is written in long-form
+  id: totrans-27
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+  zh: 长篇原创思考
+- en: Writing that isn’t a summary of someone else’s work will still be difficult
+    for AI to do for a while. Anything outside of a well-defined format that requires
+    original thinking—by which I mean anything that isn’t primarily a summary of someone
+    else’s already available work—is still going to be hard to produce.
+  id: totrans-28
+  prefs: []
+  type: TYPE_NORMAL
+  zh: AI一时还很难做到不是总结他人工作的写作。任何超出明确定义格式的内容，需要原创思维的都将难以产生。
+- en: Novel audience acquisition strategies
+  id: totrans-29
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+  zh: 创新的观众获取策略
+- en: 'Audiences—and acquiring them—will be valuable in a world where anyone can write
+    well. This is already true, and it will become even more true with AI. Every’s
+    Evan Armstrong wrote about this [last year](https://every.to/napkin-math/when-content-creation-goes-to-zero):
+    “More and more power will accrue in those companies that have novel acquisition
+    methods that do not rely on any gatekeeper.” He’s right, and I’d add that having
+    an owned audience to which you can distribute your content will also be important.'
+  id: totrans-30
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 在任何人都能写得很好的世界中，观众及其获取将是宝贵的。这已经是事实，而且随着AI的发展将变得更为真实。Every的埃文·阿姆斯特朗去年写了[“当内容创作减少为零时”](https://every.to/napkin-math/when-content-creation-goes-to-zero)："越来越多的力量将聚集在那些不依赖任何守门人的公司身上。”他说得对，我还要补充一点，拥有自己的观众群体并能向其分发自己的内容也将变得很重要。
+- en: 'But there’s at least one more thing:'
+  id: totrans-31
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 但至少还有一件事：
+- en: Consistency
+  id: totrans-32
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+  zh: 一致性
+- en: Consistently publishing content (whether short- or long-form) is going to be
+    a significant differentiator for creators or brands. If you are consistent, you
+    can take up significant space in the mind of your audience. If you’re not—even
+    if you’re brilliant—no one will remember you. (Think of all of the people who’ve
+    had a few TikToks go viral but have never turned the success into a sustainable
+    career. TikTok is consistent; they are not.)
+  id: totrans-33
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 持续发布内容（无论是短篇还是长篇）对于创作者或品牌来说将是一个重要的特别点。如果你坚持不懈，你可以在听众心目中占据重要位置。如果不是的话，即使你很出色，也没有人会记住你（想想那些视频在TikTok上爆红但从未将成功转化为可持续职业的人们）。TikTok是持续发展的；他们却没有。
+- en: 'Mindshare is hard to build, and it’s a slow process—but once you have it, it’s
+    pretty durable. My Every co-founder Nathan Baschez wrote about this in his 2020
+    piece about [why content is king](https://every.to/divinations/why-content-is-king-26199975).
+    Mindshare comes with several benefits familiar to anyone who thinks about startups:
+    network effects, brand power, and switching costs. These have *always* been factors
+    for creators and media brands. But they’ve also been somewhat overlooked.'
+  id: totrans-34
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 放在心中的地位很难建立，这是一个缓慢的过程—但一旦获得，它是相当持久的。 我的Every合伙人内森·巴谢兹在他2020年的作品中写到了这一点，题为[为什么内容为王](https://every.to/divinations/why-content-is-king-26199975)。在创业公司的人群中有关联效应、品牌影响力和转换成本等好处，这些对创作者和媒体品牌来说一直是因素。
+    但它们也被忽视了。
+- en: 'From sculptor to gardener: the future of creativity'
+  id: totrans-35
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+  zh: 从雕塑家到园丁：创造力的未来
+- en: 'The next question is: What is the future of creative work in this world? Are
+    we looking at a future where no creative work is actually produced by humans?'
+  id: totrans-36
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 下一个问题是：在这个世界中创造性工作的未来是什么？我们是否在期待一个没有人类实际制作创造性工作的未来？
+- en: Previous eras of creativity have mostly looked a bit like sculpting. A sculptor
+    takes a block of material and carves it, slowly but surely, into shape. Nothing
+    happens without her hand. Even when an assistant is involved, the sculptor pores
+    over the project, because their human input is important at every point of the
+    process. So too with writing, or programming, or painting.
+  id: totrans-37
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 以前的创造力时代多半看起来像是雕塑。 雕塑家拿起一块材料，并将其缓慢但确定地雕刻成形。没有她的手就什么也不会发生。即使有助手参与，雕塑家也会细心研究这项项目，因为他们的人为输入在整个过程的每个环节都很重要。写作、编程或绘画也是如此。
+- en: This era of creativity is going to look more like gardening. A gardener doesn’t
+    grow plants directly. Instead, she sets up the conditions for the garden to grow.
+    She takes care of the soil, the water, and the sunlight—and lets the plants do
+    their thing.
+  id: totrans-38
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 这个创造力时代看起来更像是园艺。园丁并不直接种植植物。相反，她为花园创造了生长条件。 她照料土壤、水和阳光，然后让植物自行发展。
+- en: So too with AI. As more of our time is spent being [model managers](https://every.to/chain-of-thought/the-knowledge-economy-is-over-welcome-to-the-allocation-economy?sid=40674),
+    we won’t be directly making as much creative work. That’s like [pulling up a plant
+    to help it grow](https://ymi.today/2015/02/odb-chinese-proverbs/). Instead, we’ll
+    be creating optimal conditions and letting the models do their work.
+  id: totrans-39
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 人工智能也是如此。随着我们更多的时间花在[模型管理](https://every.to/chain-of-thought/the-knowledge-economy-is-over-welcome-to-the-allocation-economy?sid=40674)上，我们将不会直接创造那么多创意作品。那就像是[拔掉一棵植物来帮助它生长](https://ymi.today/2015/02/odb-chinese-proverbs/)一样。相反，我们将创造最佳条件，让模型自己工作。
+- en: There’s one difference, though. A gardener can’t directly modify her plants.
+    She can’t change their DNA by hand. But a skilled model manager can take any output
+    of a model—sentence, code, image, or video—and modify any part of it themselves.
+  id: totrans-40
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 不过有一个区别。一个园艺工不能直接修改她的植物。她不能通过手工改变它们的DNA。但是一个熟练的模型管理者可以接受模型的任何输出——句子、代码、图像或视频——并自行修改其中的任何部分。
+- en: So we won’t have to leave sculpting behind as a creative skill. We’ll just be
+    able to use our chisels and hammers more judiciously—and only when it really matters.
+  id: totrans-41
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 所以我们不必将雕刻作为一种创造性技能抛在脑后。我们只需更加明智地使用我们的凿子和锤子——只在真正重要的时候使用。
+- en: '* * *'
+  id: totrans-42
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '* * *'
+- en: '***Dan Shipper*** *is the cofounder and CEO of Every, where he writes the*
+    [*Chain of Thought*](https://every.to/chain-of-thought) *column and hosts the
+    podcast* [How Do You Use ChatGPT?](https://open.spotify.com/show/5qX1nRTaFsfWdmdj5JWO1G)
+    *You can follow him on X at* [*@danshipper*](https://twitter.com/danshipper) *and
+    on* [*LinkedIn*](https://www.linkedin.com/in/danshipper/)*, and Every on X at*
+    [*@every*](https://twitter.com/every) *and on* [*LinkedIn*](https://www.linkedin.com/company/everyinc/)*.*'
+  id: totrans-43
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '***丹·希珀*** *是 Every 的联合创始人兼首席执行官，他在那里撰写* [*Chain of Thought*](https://every.to/chain-of-thought)
+    *专栏并主持* [你如何使用 ChatGPT？](https://open.spotify.com/show/5qX1nRTaFsfWdmdj5JWO1G)
+    *播客。你可以在 X 上关注他* [*@danshipper*](https://twitter.com/danshipper) *以及在* [*LinkedIn*](https://www.linkedin.com/in/danshipper/)*上，关注
+    Every 在 X 上* [*@every*](https://twitter.com/every) *以及在* [*LinkedIn*](https://www.linkedin.com/company/everyinc/)*上。*'
+- en: '*Was this newsletter forwarded to you?* [*Sign up*](https://every.to/account)
+    *to get it in your inbox.*'
+  id: totrans-44
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '*您是从别人那里转发的此时事通讯吗？* [*注册*](https://every.to/account) *以在您的收件箱中收到。*'
+- en: '* * *'
+  id: totrans-45
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '* * *'
+- en: '*Dan also leads a consulting practice at Every focused on helping mid-to-large
+    sized organizations implement AI and train their workforce to adopt it. Interested?*
+    [*Reach out*](https://every-media.typeform.com/to/FEKkKQZ7)*.*'
+  id: totrans-46
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '*丹还领导着一个专注于帮助中大型组织实施人工智能并培训其员工采用它的咨询实践。感兴趣吗？* [*联系我们*](https://every-media.typeform.com/to/FEKkKQZ7)*。*'

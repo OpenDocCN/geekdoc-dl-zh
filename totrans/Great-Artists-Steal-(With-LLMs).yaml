@@ -1,0 +1,277 @@
+- en: <!--yml
+  id: totrans-0
+  prefs: []
+  type: TYPE_NORMAL
+  zh: <!--yml
+- en: 'category: COT 专栏'
+  id: totrans-1
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 类别：COT 专栏
+- en: 'date: 2024-05-08 11:08:39'
+  id: totrans-2
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 日期：2024-05-08 11:08:39
+- en: -->
+  id: totrans-3
+  prefs: []
+  type: TYPE_NORMAL
+  zh: -->
+- en: Great Artists Steal (With LLMs)
+  id: totrans-4
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+  zh: 伟大的艺术家们偷取（使用LLM）
+- en: 来源：[https://every.to/chain-of-thought/great-artists-steal-with-llms](https://every.to/chain-of-thought/great-artists-steal-with-llms)
+  id: totrans-5
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+  zh: 来源：[https://every.to/chain-of-thought/great-artists-steal-with-llms](https://every.to/chain-of-thought/great-artists-steal-with-llms)
+- en: 'Sponsored By: Scrintal'
+  id: totrans-6
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+  zh: 由Scrintal赞助
+- en: This essay is brought to you by [Scrintal](https://www.scrintal.com/?utm_source=NL&utm_medium=PNS&utm_campaign=A10171&d=EVERY10),
+    the game-changer for knowledge management. It's not just an app, it's a canvas
+    of infinite ideas, offering bi-directional links for a seamless workflow. Perfect
+    for research, project mapping, process formulation, planning, or studying - Scrintal
+    lets you organize and connect all your thoughts in one place. Every subscribers
+    get 10% off when you use the code **EVERY10**.
+  id: totrans-7
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 本篇文章由[Scrintal](https://www.scrintal.com/?utm_source=NL&utm_medium=PNS&utm_campaign=A10171&d=EVERY10)赞助，这是知识管理的改变者。它不仅仅是一款应用，更是一个无限思想的画布，提供双向链接以实现无缝工作流程。完美用于研究、项目绘图、过程制定、规划或学习
+    - Scrintal让你可以将所有思想整理并连接在一个地方。每个订阅者使用代码**EVERY10**时可以享受9折优惠。
+- en: '[Great artists steal](https://austinkleon.com/steal/). But how?'
+  id: totrans-8
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '[伟大的艺术家们偷取](https://austinkleon.com/steal/)。但是如何？'
+- en: In order to steal, you have to find inspiration. Even in the age of the internet,
+    inspiration isn’t cheap.
+  id: totrans-9
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 要偷取别人的创意，你必须找到灵感。即便在互联网时代，灵感也不便宜。
+- en: Social algorithms feed you mass-produced, lowest-common-denominator content.
+    Google surfaces ads and gamified top 10 lists.
+  id: totrans-10
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 社交算法为你提供批量生产的，最普通的内容。谷歌推出广告和赌博式的前10名清单。
+- en: There is still the hard way. Read a lot. Take copious notes. Follow your intellectual
+    curiosity for years until—no matter the situation—you have a reservoir of inspiration
+    to turn to. This method is time-tested and sound, but it takes a lifetime.
+  id: totrans-11
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 还有一条艰难的路。多读书。记下大量笔记。多年来追随你的求知欲，直到—无论情况如何—你有一个灵感的储备可以求助。这种方法经得起时间考验，很好，但需要一生。
+- en: Sometimes, you need help now.
+  id: totrans-12
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 有时，你需要立刻得到帮助。
+- en: What’s more, sometimes you have a situation so specific, a creative problem
+    so well-defined, that you *know* someone out there has already encountered and
+    solved it better than you ever could.
+  id: totrans-13
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 有时，你遇到的情况太具体，创意问题太清晰，你*知道*有人已经遇到并解决了比你更好的问题。
+- en: How do you find those sources? Use an LLM.
+  id: totrans-14
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 如何找到这些资源？使用LLM。
+- en: .    .    .
+  id: totrans-15
+  prefs: []
+  type: TYPE_NORMAL
+  zh: .    .    .
+- en: I had a problem like this last week. I wanted to write a [practical explainer
+    about ChatGPT](https://every.to/chain-of-thought/using-chatgpt-custom-instructions-for-fun-and-profit)
+    but didn’t want it to be boring. I wanted it to feel voicey and personal. I wanted
+    it to be funny and maybe even a little bit poetic.
+  id: totrans-16
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 上周我遇到了这样的问题。我想写篇[关于ChatGPT的实用解释](https://every.to/chain-of-thought/using-chatgpt-custom-instructions-for-fun-and-profit)，但不想让它变得无聊。我希望它有声音，个人化。我想让它有趣，也许甚至稍微有点诗意。
+- en: It’s exciting, as a writer, to be able to frame a problem so specifically like
+    this. [Verbalizing your taste](https://every.to/chain-of-thought/what-i-do-when-i-can-t-sleep)
+    gives you a target at which to aim. But I didn’t know how to achieve the effect
+    I wanted.
+  id: totrans-17
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 作为一个作家，能够把问题这样具体地框定，是令人兴奋的。[口头表达你的品味](https://every.to/chain-of-thought/what-i-do-when-i-can-t-sleep)让你有一个可以追求的目标。但我不知道如何达到我想要的效果。
+- en: Surely, someone else had faced this problem before and solved it better than
+    I could. I knew if I could see an example, it would nudge me in the right direction.
+  id: totrans-18
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 当然，肯定有人比我更好地面对这个问题并解决了。我知道如果我能看到一个例子，它会把我引向正确的方向。
+- en: But there was nothing I could reference to help inspire me. Not many books on
+    my shelf are practical explainers of new technology with an interesting voice.
+    Not many articles in my Readwise app had those qualities, either.
+  id: totrans-19
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 但我找不到能激发灵感的参考资料。我的书架上没多少实用性解释新技术且声音有趣的书籍。我的Readwise应用中也没有这样的文章。
+- en: 'Google results for “best practical and voicey explainers on technical topics”
+    made me want to puke:'
+  id: totrans-20
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 搜“技术话题上最好的实用和有声音解释”给我带来了恶心感：
+- en: 'So, instead, I asked ChatGPT:'
+  id: totrans-21
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 所以，我向ChatGPT请教：
+- en: 'The initial results were pretty good:'
+  id: totrans-22
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 最初的结果还不错：
+- en: They got much better as I refined my prompt. I followed up to ask it to specifically
+    find me internet essays and return pieces that combined a practical bent with
+    an interesting voice. It gave me a wide array of suggestions—some mainstream,
+    some that I hadn’t heard of, and some made up. (ChatGPT is, after all,
+  id: totrans-23
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 随着我改进我的提示，它们变得更好了。我跟进询问它是否能具体找到我互联网文章，并返回结合了实用性和有趣声音的文章。它给了我各种各样的建议——一些是主流的，一些我没听过的，一些是虚构的。（ChatGPT毕竟是，
+- en: '[a reasoning engine, not a knowledge database](https://every.to/chain-of-thought/gpt-4-is-a-reasoning-engine?sid=20916)'
+  id: totrans-24
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '[一个推理引擎，而不是一个知识数据库](https://every.to/chain-of-thought/gpt-4-is-a-reasoning-engine?sid=20916)'
+- en: .)
+  id: totrans-25
+  prefs: []
+  type: TYPE_NORMAL
+  zh: .)
+- en: 'Eventually, it made a recommendation that caught my eye:'
+  id: totrans-26
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 最终，它给出了一个吸引我的建议：
+- en: 'That headline is just so 😘👌! It is the definition of personal and voicey, and
+    it makes a practical, technical promise. And it’s by a writer I love but hadn''t
+    thought of: Joel Spolsky—OG tech internet writer and co-founder of Trello and
+    StackOverflow. He was a major inspiration for me when I was coming up, and'
+  id: totrans-27
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 那个标题就是如此 😘👌！它定义了个性和有声音，它做出了一个实际的、技术上的承诺。而且它是由一个我喜欢但没想到的作家写的：乔尔·斯波尔斯基——OG技术互联网作家和Trello、StackOverflow的联合创始人。他在我起步时对我影响很大，
+- en: '[the article he wrote](https://www.joelonsoftware.com/2003/10/08/the-absolute-minimum-every-software-developer-absolutely-positively-must-know-about-unicode-and-character-sets-no-excuses/)'
+  id: totrans-28
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '[他写的文章](https://www.joelonsoftware.com/2003/10/08/the-absolute-minimum-every-software-developer-absolutely-positively-must-know-about-unicode-and-character-sets-no-excuses/)'
+- en: did
+  id: totrans-29
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 确实
+- en: '*exactly*'
+  id: totrans-30
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '*确实*'
+- en: what I hoped to do, better than I ever could.
+  id: totrans-31
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 我希望能做到的，比我自己能做到的要好。
+- en: 'In 2003, he managed to take a dense technical topic—Unicode—and make you feel
+    like he was sitting beside you, a twinkle in his eye, rendering the topic both
+    compelling and understandable. Here’s the opening:'
+  id: totrans-32
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 2003年，他成功地将一个深奥的技术主题——Unicode——变得让你感觉他就在你身边，眼中有星光，让这个话题既引人入胜又易于理解。以下是开头：
+- en: “Ever wonder about that mysterious Content-Type tag? You know, the one you’re
+    supposed to put in HTML and you never quite know what it should be?
+  id: totrans-33
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+  zh: “曾经想过那个神秘的Content-Type标签吗？你知道，你应该放在HTML中的那个，但你永远不知道它应该是什么？
+- en: Did you ever get an email from your friends in Bulgaria with the subject line
+    “???? ?????? ??? ????”?
+  id: totrans-34
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+  zh: 你有没有收到来自你保加利亚朋友的邮件，主题是“???? ?????? ??? ????”？
+- en: I’ve been dismayed to discover just how many software developers aren’t really
+    completely up to speed on the mysterious world of character sets, encodings, Unicode,
+    all that stuff.”
+  id: totrans-35
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+  zh: 我很失望地发现，有多少软件开发人员实际上并没有完全了解神秘的字符集、编码、Unicode等等。”
+- en: It’s lovely. It has that exact ineffable sparkle, that voice and personality,
+    that I was looking for but couldn’t find.
+  id: totrans-36
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 它很可爱。它有那种精确的难以言喻的闪光，那种声音和个性，我一直在找但找不到的。
+- en: I was standing in line for lunch at a salad spot near my apartment when ChatGPT
+    gave me the suggestion, and I almost screamed, “I KNOW HOW TO WRITE IT” in front
+    of the unsuspecting lettuce lovers arrayed around me. I don’t think my shoes touched
+    the sidewalk as I glided back to my apartment, ideas burning up in my head, Cobb
+    salad in hand.
+  id: totrans-37
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 当我站在公寓附近的沙拉店排队等午餐时，ChatGPT给了我建议，我几乎在毫无戒备的生菜爱好者面前尖叫：“我知道该怎么写了”。我觉得我的鞋子没有触碰到人行道，而是滑向了我的公寓，脑海中充满了思路，手里拿着鸡尾沙拉。
+- en: Once I had the voice, everything else was easy. I wrote the whole thing in an
+    afternoon. It’s one of the most popular pieces I’ve written recently.
+  id: totrans-38
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 一旦我有了声音，其他的就很容易了。我一个下午写完了整个东西。这是我最近写的最受欢迎的作品之一。
+- en: .    .    .
+  id: totrans-39
+  prefs: []
+  type: TYPE_NORMAL
+  zh: .    .    .
+- en: The power of proper inspiration is that it lets you stand on the shoulders of
+    giants.
+  id: totrans-40
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 适当的灵感的力量在于它让你站在巨人的肩膀上。
+- en: Before LLMs, the giants you could find had to fit into—and be at the top of—pre-established
+    mainstream categories. You could Google for top non-fiction writing, but you probably
+    wouldn’t get past Malcolm Gladwell—no search algorithm would ever unearth Sapolsky
+    for you in that context.
+  id: totrans-41
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 在LLMs之前，你能找到的巨人必须符合——并且是在——预先设定的主流类别的顶端。你可以谷歌搜索最佳非虚构写作，但你可能永远也无法找到萨波尔斯基——没有搜索算法会在这个背景下为你找到他。
+- en: Great artists steal, yes. But you can only steal what you can find.
+  id: totrans-42
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 伟大的艺术家偷窃，是的。但你只能偷到你能找到的东西。
+- en: LLMs are different. They let you find the invisible giants—the people who have
+    faced the specific, idiosyncratic creative situation you’re facing.
+  id: totrans-43
+  prefs: []
+  type: TYPE_NORMAL
+  zh: LLMs 是不同的。它们让你找到看不见的巨人——那些面对你正在面对的特定、独特的创造性情境的人。
+- en: Once you find these giants, you can stand on their shoulders. And, take it from
+    me, the view from the top is pretty good.
+  id: totrans-44
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 一旦你找到这些巨人，你就能站在他们的肩膀上。而且，相信我，从顶上看的景色相当不错。

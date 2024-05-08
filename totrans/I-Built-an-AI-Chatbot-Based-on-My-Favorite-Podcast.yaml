@@ -1,0 +1,585 @@
+- en: <!--yml
+  id: totrans-0
+  prefs: []
+  type: TYPE_NORMAL
+  zh: <!--yml
+- en: 'category: COT 专栏'
+  id: totrans-1
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 分类：COT 专栏
+- en: 'date: 2024-05-08 11:12:24'
+  id: totrans-2
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 日期：2024-05-08 11:12:24
+- en: -->
+  id: totrans-3
+  prefs: []
+  type: TYPE_NORMAL
+  zh: -->
+- en: I Built an AI Chatbot Based on My Favorite Podcast
+  id: totrans-4
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+  zh: 我创建了一个基于我最喜欢的播客的 AI 聊天机器人
+- en: 来源：[https://every.to/chain-of-thought/i-trained-a-gpt-3-chatbot-on-every-episode-of-my-favorite-podcast](https://every.to/chain-of-thought/i-trained-a-gpt-3-chatbot-on-every-episode-of-my-favorite-podcast)
+  id: totrans-5
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+  zh: 来源：[https://every.to/chain-of-thought/i-trained-a-gpt-3-chatbot-on-every-episode-of-my-favorite-podcast](https://every.to/chain-of-thought/i-trained-a-gpt-3-chatbot-on-every-episode-of-my-favorite-podcast)
+- en: 'Sponsored By: Reflect'
+  id: totrans-6
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+  zh: 由 Reflect 赞助
+- en: This article is brought to you by [Reflect](https://reflect.app/?utm_source=every&utm_campaign=every2&utm_medium=newsletter),
+    a beautifully designed note-taking app that helps you to keep track of everything,
+    from meeting notes to Kindle highlights.
+  id: totrans-7
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 本文由 [Reflect](https://reflect.app/?utm_source=every&utm_campaign=every2&utm_medium=newsletter)
+    提供，这是一个设计精美的笔记应用程序，可帮助你追踪一切，从会议笔记到 Kindle 上的亮点。
+- en: '*Update: if you want to use the chat bot mentioned in this article, it''s available
+    for Every subscribers here:*'
+  id: totrans-8
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '*更新：如果你想使用本文中提到的聊天机器人，可以在这里找到 Every 订阅者专用的链接：*'
+- en: '* * *'
+  id: totrans-9
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '* * *'
+- en: 'In the future, any time you look up information you’re going to use a [chatbot](/c/ai-and-gpt3).
+    This applies to every piece of information you interact with day to day: personal,
+    organizational, and cultural.'
+  id: totrans-10
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 在未来，无论你查找什么信息，你都会使用[聊天机器人](/c/ai-and-gpt3)。这适用于你日常接触的每一条信息：个人的、组织的和文化的。
+- en: On the personal side, if you're trying to remember an idea from a book you read,
+    or something a colleague said in a meeting, or a restaurant a friend recommended
+    to you, you’re not going to dig through your second brain. Instead, you’re going
+    to ask a chatbot that sits on top of all of your notes, and the chatbot will return
+    the right answer to you.
+  id: totrans-11
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 个人方面，如果你想起了一本书中的一个观点，或者是同事在会议上说的话，或者是朋友推荐给你的餐馆，你不会去查阅你的第二大脑。相反，你会询问一个悬浮在你所有笔记之上的聊天机器人，而聊天机器人会给你返回正确的答案。
+- en: On the organizational side, if you have a question about a new initiative at
+    your company, you’re not going to consult the internal wiki or bother a colleague.
+    You’re going to ask the internal chatbot, and it will return an up-to-date, trustworthy
+    answer to you in seconds.
+  id: totrans-12
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 在组织方面，如果你对公司的一个新倡议有疑问，你不会查阅内部维基或打扰同事。你会问内部聊天机器人，它会在几秒钟内给你返回最新、可信赖的答案。
+- en: On the cultural side, if you want to know what your favorite podcaster says
+    about a specific topic, you’re not going to have to Google them, sort through
+    an episode list, and listen to a two-hour audio file to find the answer. Instead,
+    you’ll just ask a chatbot trained on their content library, and get an answer
+    instantly.
+  id: totrans-13
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 在文化方面，如果你想知道你最喜欢的播客对特定话题的看法，你不必搜索他们，整理一下集数列表，然后听两个小时的音频文件找答案。相反，你只需询问一个根据他们内容库训练过的聊天机器人，立即得到答案。
+- en: This future may seem far out, but it’s actually achievable right now. I know,
+    because I just built a demo over the weekend. And it already works.
+  id: totrans-14
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 这个未来可能看起来遥远，但实际上现在就可以实现。我知道，因为我在周末刚刚构建了一个演示。而且它已经可以使用了。
+- en: .   .   .
+  id: totrans-15
+  prefs: []
+  type: TYPE_NORMAL
+  zh: .   .   .
+- en: ''
+  id: totrans-16
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: '[Reflect](https://reflect.app/?utm_source=every&utm_campaign=every2&utm_medium=newsletter)
+    is a fast note-taking app designed to model the way you think. Use it as a personal
+    CRM, as a way of taking meeting-notes, or just generally to keep track of everything
+    in your life.'
+  id: totrans-17
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '[Reflect](https://reflect.app/?utm_source=every&utm_campaign=every2&utm_medium=newsletter)
+    是一个快速记笔记应用程序，旨在模拟你的思维方式。将其用作个人客户关系管理工具，作为记录会议笔记的方式，或者只是一般地用来追踪你生活中的一切。'
+- en: '[Reflect](https://reflect.app/?utm_source=every&utm_campaign=every2&utm_medium=newsletter)
+    has integrations into all your favorite tools (calendar, browser, Kindle), so
+    you can always find what you’ve read and researched. We work online or offline,
+    desktop or mobile.'
+  id: totrans-18
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '[Reflect](https://reflect.app/?utm_source=every&utm_campaign=every2&utm_medium=newsletter)
+    与你所有喜爱的工具（日历、浏览器、Kindle）都有集成，所以你总是能找到你读过和研究过的东西。我们可以在线或离线使用，桌面或移动端都行。'
+- en: Think faster and clearer with Reflect.
+  id: totrans-19
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 用 Reflect 更快更清晰地思考。
+- en: I love listening to the [*Huberman Lab* podcast](http://hubermanlab.com/), a
+    neuroscience podcast by Stanford neurobiologist Andrew Huberman. It’s got a good
+    mix of interesting science and actionable advice to improve how your brain and
+    body operate.
+  id: totrans-20
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 我喜欢听 [*Huberman Lab* podcast](http://hubermanlab.com/)，这是由斯坦福神经生物学家安德鲁·胡伯曼主持的神经科学播客。它包含了有趣的科学知识和可行的建议，可以改善你的大脑和身体的运作方式。
+- en: Unfortunately, the episodes are also very long—each one averages a few hours.
+    I often have a specific question related to something that he's already covered,
+    but it's a pain to go back and try to find the answer by scrubbing through old
+    episodes.
+  id: totrans-21
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 不幸的是，这些剧集也很长——每一个平均几个小时。我经常会有一个与他已经讨论过的事情相关的具体问题，但是要通过回顾旧剧集来找到答案真是一件令人头疼的事情。
+- en: 'So I made a solution over the weekend: a *Huberman Lab* chatbot using GPT-3.'
+  id: totrans-22
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 所以我在周末做了一个解决方案：一个使用 GPT-3 的 *Huberman 实验室* 聊天机器人。
+- en: It was simple to build, and it can already answer questions plausibly well.
+    I can ask questions about topics that the podcast has covered in the past, and
+    it answers them using transcripts of old episodes as an information source.
+  id: totrans-23
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 构建起来很简单，它已经能够合理地回答问题了。我可以问关于过去播客涵盖的主题的问题，它会使用旧剧集的转录作为信息来源来回答。
+- en: Here’s a quick example. Dr. Huberman recently did an episode on the science
+    of creating and maintaining habits. One of his suggestions is to do “task bracketing”
+    to help create habits—a phrase I’ve had in my head to try since I listened to
+    the episode, but I can’t remember exactly what it means.
+  id: totrans-24
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 这里有一个快速的例子。Huberman 博士最近在科学上做了一个剧集，讨论了创建和保持习惯的科学。他的建议之一是进行“任务分组”，以帮助创建习惯——自从我听了这一集以来，我就一直记在脑海里要试试，但我不记得确切的含义了。
+- en: 'Usually, I’d have to go and re-listen to the episode to answer the question.
+    But instead I asked Huberman bot:'
+  id: totrans-25
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 通常情况下，我会去重新听这一集来回答这个问题。但是我问了 Huberman 机器人：
+- en: '***Me:*** *Can you describe how to do task bracketing?*'
+  id: totrans-26
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+  zh: '***我：*** *你能描述一下如何进行任务分组吗？*'
+- en: '***Huberman bot:*** *Task bracketing involves dividing the 24-hour day into
+    three phases: phase one (0 to 8 hours after waking up), phase two (8 to 16 hours
+    after waking up), and phase three (16 to 24 hours after waking up). Place particular
+    habits at particular phases of the day in order to engage the task-bracketing
+    mechanisms. This will make it more likely that you will be able to regularly engage
+    in these habits and activities over a long period of time. Additionally, positively
+    anticipate the onset and the offset of the session and reward yourself for the
+    entire experience. This will help shift your nervous system toward being able
+    to predict that certain things are going to happen at particular times of day.*'
+  id: totrans-27
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+  zh: '***Huberman 机器人：*** *任务分组涉及将24小时的一天分为三个阶段：第一阶段（起床后0到8小时），第二阶段（起床后8到16小时），和第三阶段（起床后16到24小时）。将特定的习惯安排在一天的特定阶段，以激活任务分组机制。这将使您更有可能长期参与这些习惯和活动。此外，积极预期会话的开始和结束，并为整个经验奖励自己。这将有助于使您的神经系统能够预测某些事情将在特定时间发生。*'
+- en: '***Me:*** *Why do I divide the day into three phases when I''m doing task bracketing?*'
+  id: totrans-28
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+  zh: '***我：*** *当我进行任务分组时，为什么要将一天分为三个阶段？*'
+- en: '***Huberman bot:*** *Dividing the day into three phases when doing task bracketing
+    is useful because it allows you to leverage neural systems in order to help you
+    make it more likely that you''re going to be able to engage and maintain a particular
+    habit. Phase one (0-8 hours after waking) is useful for acquiring certain habits,
+    phase two (9-14/15 hours after waking) is useful for acquiring other types of
+    habits, and phase three (16-24 hours after waking) is useful for calming activities.*'
+  id: totrans-29
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+  zh: '***Huberman 机器人：*** *在进行任务分组时将一天分为三个阶段很有用，因为它允许您利用神经系统来帮助您更有可能参与和维持特定的习惯。第一阶段（起床后0-8小时）适用于获得某些习惯，第二阶段（起床后9-14/15小时）适用于获得其他类型的习惯，而第三阶段（起床后16-24小时）适用于平静的活动。*'
+- en: '***Me:*** *What kinds of habits are better acquired during the first phase
+    of the day?*'
+  id: totrans-30
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+  zh: '***我：*** *一天的第一阶段更适合获得什么样的习惯？*'
+- en: '***Huberman bot:*** *Habits that require a lot of activation energy and override
+    of limbic friction are better for acquired during the first phase of the day.*'
+  id: totrans-31
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+  zh: '***Huberman 机器人：*** *需要大量激活能量和克服边缘摩擦的习惯最好在一天的第一阶段获得。*'
+- en: This is pretty good for a weekend’s worth of work. To be sure, it still leaves
+    a few things to be desired. For one, it gets things subtly wrong. For another,
+    sometimes it’s not specific enough to answer the question, and I have to ask follow-ups
+    to get the right answer.
+  id: totrans-32
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 这对一个周末的工作来说已经相当不错了。当然，它仍然有一些需要改进的地方。首先，它有一些微妙的错误。另外，有时它没有足够的具体性来回答问题，我必须提出后续问题才能得到正确的答案。
+- en: But it’s close enough, and the rate of improvement of this technology is steep
+    enough, that I think we’ll see stuff like this flourish over the next year or
+    so. It’ll be a big change for the way content is produced and consumed—and it
+    presents massive benefits for people who consume content, and massive opportunities
+    for people who create it.
+  id: totrans-33
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 但它已经足够接近了，而且这项技术的改进速度非常快，我认为我们将在接下来的一年左右看到类似这样的东西蓬勃发展。这将是内容生产和消费方式的一大变革，并为消费内容的人们提供巨大的好处，也为创造内容的人们提供了巨大的机会。
+- en: How Huberman Bot works (and when it fails)
+  id: totrans-34
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+  zh: Huberman 机器人是如何工作的（以及何时失败）
+- en: 'The principles behind the Huberman bot are simple:'
+  id: totrans-35
+  prefs: []
+  type: TYPE_NORMAL
+  zh: Huberman 机器人背后的原则很简单：
+- en: It ingests and makes searchable all of the transcripts from the *Huberman Lab*
+    podcasts.
+  id: totrans-36
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: 它摄取并使所有 *Huberman 实验室* 播客的转录可搜索。
+- en: When a user asks a question, it searches through all of the transcripts it has
+    available and finds sections that are relevant to the query.
+  id: totrans-37
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: 当用户提问时，它会搜索所有可用的转录，并找到与查询相关的部分。
+- en: 'Then, it takes those sections of text and sends them to GPT-3 with a prompt
+    that looks something like:'
+  id: totrans-38
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: 然后，它将文本部分发送给 GPT-3，并附上类似以下的提示：
+- en: '*Answer the question as truthfully as possible using the provided context,
+    and if the answer is not contained within the text below, say "I don''t know."*'
+  id: totrans-39
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+  zh: '*以尽可能真实的方式回答问题，使用提供的上下文，如果答案不包含在下面的文本中，请说“我不知道”。*'
+- en: '*[ relevant sections of* Huberman Lab *transcripts ]*'
+  id: totrans-40
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+  zh: '*[ Huberman 实验室 *转录的相关部分 ]*'
+- en: '*Q: What is task bracketing?*'
+  id: totrans-41
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+  zh: '*Q: 什么是任务分组？*'
+- en: '*A:*'
+  id: totrans-42
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+  zh: '*A:*'
+- en: GPT-3 is smart enough, given a question and relevant source material, to answer
+    that question based on the latter. I built it mostly using this [code example](https://github.com/openai/openai-cookbook/blob/main/examples/Question_answering_using_embeddings.ipynb)
+    from OpenAI with a bunch of custom modifications for my use case. It took probably
+    a weekend of effort.
+  id: totrans-43
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 鉴于一个问题和相关的源材料，GPT-3 足够聪明，能够根据后者回答该问题。我主要使用了 OpenAI 的这个 [代码示例](https://github.com/openai/openai-cookbook/blob/main/examples/Question_answering_using_embeddings.ipynb)，并进行了一堆针对我的用例的自定义修改。这可能花了大概一个周末的工作量。
+- en: The problems, though, are obvious.
+  id: totrans-44
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 问题很明显。
+- en: For one, the length of the prompt you can send to the model is capped at 4,000
+    tokens—where a token is roughly equivalent to ¾ of a word. So you’re limited in
+    terms of how much context you can feed into GPT-3 when asking it a question. You
+    have to hope that your search algorithm (in this case a [vector similarity](https://tivadardanka.com/blog/how-the-dot-product-measures-similarity)
+    using OpenAI’s [embeddings search](https://beta.openai.com/docs/guides/embeddings/))
+    found the most relevant pieces of transcript such that the answer to the question
+    exists in what you’re providing to the model.
+  id: totrans-45
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 首先，您可以向模型发送的提示的长度上限为 4,000 个标记—其中标记大致相当于 ¾ 个单词。因此，在向 GPT-3 提问时，您在上下文中可以提供多少内容受到限制。您必须希望您的搜索算法（在本例中是使用
+    OpenAI 的 [嵌入搜索](https://beta.openai.com/docs/guides/embeddings/) 进行的矢量相似度）找到了最相关的转录片段，以便您提供给模型的内容中存在问题的答案。
+- en: 'This often works, but it fails just as frequently. The bot is subtly wrong
+    a lot or is not specific enough to fully answer the question. For example:'
+  id: totrans-46
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 这通常有效，但失败的频率同样频繁。该机器人经常微妙地错误，或者不够具体，无法完全回答问题。例如：
+- en: '***Me:*** *What is reward prediction error?*'
+  id: totrans-47
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+  zh: '***我：*** *什么是奖励预测误差？*'
+- en: '***Huberman bot:*** *Reward prediction error is the way in which people navigate
+    rewards and learning, including habit formation. It is the release of dopamine
+    in the brain and body when something happens that is positive and novel. If you
+    expect a reward and the reward comes, a particular behavior that was associated
+    with generating that reward is more likely to occur again. If you expect a reward
+    and the reward does not come, the pattern of dopamine release will follow a particular
+    trajectory.*'
+  id: totrans-48
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+  zh: '***Huberman 机器人：*** *奖励预测误差是人们导航奖励和学习的方式，包括习惯形成。当发生积极而新奇的事情时，大脑和身体释放多巴胺。如果你期望得到奖励并且奖励确实到来，与生成该奖励相关的特定行为更有可能再次发生。如果你期望得到奖励而奖励没有到来，多巴胺释放的模式将遵循特定的轨迹。*'
+- en: 'This is plausible but wrong in a few ways. For example, it doesn’t directly
+    answer the question because it misses something key about reward prediction error:
+    it’s about the difference between the reward you predicted and the one you received.
+    The greater the difference, the more rewarding (or deflating) the experience is.'
+  id: totrans-49
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 这在某种程度上是可行的，但有几个方面是错误的。例如，它没有直接回答问题，因为它忽略了有关奖励预测误差的关键内容：它是关于你预测的奖励与你收到的奖励之间的差异。差异越大，经历就越有益（或者令人泄气）。
+- en: It’s easy to dismiss this technology given these shortcomings. But most of them
+    are immediately solvable.
+  id: totrans-50
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 鉴于这些缺陷，很容易对这项技术持怀疑态度。但其中大多数问题都是可以立即解决的。
+- en: The answers will get a lot better if I clean up the data used to generate them.
+    Right now, they’re based on raw transcripts of podcast episodes. When humans talk,
+    they don’t tend to talk in crisp sentences so the answers to a lot of the questions
+    I might ask are spread out around the episode and aren’t clearly spelled out in
+    the transcript. If I cleaned up the transcripts to make sure that, for example,
+    every term was clearly defined in a single paragraph of text, it would make for
+    much better answers.
+  id: totrans-51
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 如果我清理用于生成它们的数据，答案会变得更好。现在，它们基于播客剧集的原始转录。当人类交谈时，他们不倾向于用清晰的句子说话，因此我可能提出的许多问题的答案分散在剧集中，并没有在转录中清晰地说明。如果我清理转录，确保例如，每个术语在一段文本中清晰定义，那么答案会更好。
+- en: Another method to try is to chain GPT-3 prompts together in order to check and
+    refine the answer. For example, once I get back a response from the Huberman bot,
+    before returning it to the user I could send it back to GPT-3 saying something
+    like, “Here is a response returned from a chatbot. Write out its argument and
+    find any factual or logical errors. Then correct them.” This could work as a filter
+    for bad answers—and once GPT-3 can access the internet, this type of answer-checking
+    service would become phenomenally good.
+  id: totrans-52
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 另一种尝试的方法是将 GPT-3 的提示连接在一起，以检查和完善答案。例如，一旦我从 Huberman 机器人那里收到了回应，在将其返回给用户之前，我可以将其发送回
+    GPT-3，说一些类似于：“这是从一个聊天机器人返回的响应。写出它的论点并查找任何事实或逻辑错误。然后进行更正。”这可以作为筛选不良答案的过滤器——一旦 GPT-3
+    能够访问互联网，这种类型的答案检查服务将变得异常好。
+- en: Beyond improving the content of the answers, there are tricks you can pull to
+    make the answers useful even if they’re wrong. If every time it answered a question
+    it told me its source—e.g., where in the episode I could go to find more information—it
+    wouldn't matter as much if the answer was vague or slightly wrong because I could
+    check its work. This is eminently achievable with the current technology.
+  id: totrans-53
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 除了改进答案的内容之外，还有一些技巧可以使答案即使是错误的也能够有用。如果每次回答问题时它告诉我它的来源——比如，在剧集中我可以找到更多信息的地方——那么即使答案模糊或略有错误也不那么重要，因为我可以核实它的工作。这在目前的技术条件下是完全可以实现的。
+- en: 'And whatever isn’t solvable in the short term will be solved soon. Case in
+    point: in between building this bot and writing this article, OpenAI released
+    [a new version of its embeddings search](https://openai.com/blog/new-and-improved-embedding-model/)
+    that will significantly improve the results and **lower the cost to get them by
+    99%**. The pace at which all of this is moving is mind-blowing.'
+  id: totrans-54
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 任何在短期内无法解决的问题都将很快解决。例证：在构建这个机器人和撰写本文之间，OpenAI 发布了[其嵌入搜索的新版本](https://openai.com/blog/new-and-improved-embedding-model/)，将显著改善结果，并**将成本降低
+    99%**。所有这些进展的速度令人惊叹。
+- en: I’d like to release the bot publicly, but I want until I improve the quality
+    of responses. Until then, it will be available for Every paid subscribers. If
+    you want to try it out, [become a paid subscriber](https://every.to/subscribe).
+    You’ll get access within the next week.
+  id: totrans-55
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 我想公开发布这个机器人，但我希望在提高响应质量之前进行。在那之前，它将可供所有付费订阅者使用。如果你想试试，[成为付费订阅者](https://every.to/subscribe)。你将在下周内获得访问权限。
+- en: Chatbots as a new content format
+  id: totrans-56
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+  zh: 聊天机器人作为一种新的内容格式
+- en: Being able to easily turn any corpus of text into a reasonably good chat bot
+    is a big deal. for readers and it’s also a huge deal for content creators. It
+    also has significant—and positive—business implications.
+  id: totrans-57
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 能够轻松地将任何文本语料库转换为一个相当好的聊天机器人对于读者来说是一件大事，对于内容创作者来说也是一件重大事件。这也具有重大——和积极的——商业影响。
+- en: To start, it means that there’s a new way to monetize any existing set of intellectual
+    property. You might not pay to access a back catalog of all *Huberman Lab* episodes—but
+    if that back catalog was reformatted to be a chatbot that could instantly answer
+    your science questions, there’s a good bet you’d input your credit card. The same
+    is true for all sorts of writers, podcasters, and YouTubers across the content
+    creation spectrum.
+  id: totrans-58
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 起初，这意味着有一种新的方式来赚取任何现有知识产权。你可能不会为了访问所有*Huberman Lab*的历史剧集而付费，但如果这个历史剧集被重新格式化为一个可以立即回答你的科学问题的聊天机器人，你可能会输入你的信用卡。对于各种作家、播客和YouTuber来说也是如此。
+- en: In the future, anything that’s used as a reference should become a chat bot.
+    Wirecutter, Eater, and more should all be accessible this way so that when I have
+    a product I want to buy, or I’m in need of a restaurant to visit I don’t have
+    to scroll through a list of articles with lots of options. Instead, I can just
+    ask, “What’s a good place to eat in Fort Greene tonight?” and get a response that’s
+    based on the latest Eater reviews in my neighborhood.
+  id: totrans-59
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 在未来，任何用作参考的内容都应该变成一个聊天机器人。Wirecutter、Eater等等都应该以这种方式可访问，这样当我想买产品，或者我需要去餐厅时，我就不必浏览一大堆文章列表了。相反，我可以直接问，“今晚Fort
+    Greene有什么好吃的地方？”然后得到一个基于我附近最新的Eater评论的回答。
+- en: There are hundreds of thousands of copyrighted text, audio, and video corpuses
+    that can be valuable chatbots today—all that’s needed is someone willing to make
+    them. Even if you can’t code, there’s a valuable opportunity to buy the rights
+    to turn this information into chatbots and sell them later to a bidder who can.
+  id: totrans-60
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 现在已经有成千上万的受版权保护的文本、音频和视频语料库可以成为有价值的聊天机器人，只需要有人愿意制作。即使你不懂编程，也有机会购买将这些信息转化为聊天机器人的权利，并将它们后来卖给一个能够的出价者。
+- en: This doesn’t just extend to bodies of text that are intended to be read by the
+    general public. For a long time I’ve been enamored with the idea that every company
+    should have a librarian—someone who is tasked with writing down tacit knowledge
+    in the organization, making sure all documents are up to date, and answering repetitive
+    questions. It would save a lot of time for employees, reduce unnecessary confusion,
+    and enable different parts of the organization to collaborate more effectively.
+  id: totrans-61
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 这不仅限于那些面向大众阅读的文字。我长期以来一直着迷于这样一个想法，即每家公司都应该有一个图书管理员——一个负责记录组织中的隐性知识、确保所有文档都是最新的，并回答重复问题的人。这将为员工节省大量时间，减少不必要的困惑，并使组织的不同部门能够更有效地合作。
+- en: 'Here’s a slide from a deck I built in 2020 with a friend as we were considering
+    whether or not to work on this problem as startup:'
+  id: totrans-62
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 这是2020年我和一个朋友共同制作的一个幻灯片，当时我们正在考虑是否要解决这个问题作为创业项目：
+- en: Back in 2020, the idea was to do the work first with human librarians inside
+    of companies and eventually figure out how to make it AI if it worked. We thought
+    that was achievable, but a pipe dream that would probably happen in 10-15 years.
+  id: totrans-63
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 回到2020年，这个想法是先在公司内部与人类图书管理员合作，并最终想办法使其成为人工智能。我们认为这是可以实现的，但这是一个可能在10-15年内实现的空想。
+- en: It turns out, that’s probably possible right now. You could have a chatbot that
+    answers questions by sourcing information from the right person or document, makes
+    sure documents are up to date, and proactively records tacit knowledge into living
+    documents by periodically interviewing key people about their progress. I’m sure
+    there are smart teams working on this already, and I’m excited to see which ones
+    launch and what kinds of interactions end up working.
+  id: totrans-64
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 结果证明，这种可能性现在可能已经存在。你可以拥有一个聊天机器人，通过向正确的人或文档寻求信息来回答问题，确保文档是最新的，并通过定期采访关键人员，主动记录隐性知识到活性文档中。我相信已经有聪明的团队在研究这个问题了，我很期待看到哪些团队会推出什么样的产品以及最终会产生哪些样式的交互。
+- en: Where power settles in this ecosystem
+  id: totrans-65
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+  zh: 权力在这个生态系统中的分布
+- en: 'One of the questions that arises for me when I think about all of this is:
+    who’s going to win?'
+  id: totrans-66
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 当我考虑到所有这些问题时，我想到的一个问题是：谁会胜出？
+- en: Is the future thousands of different chatbots all sitting on their own websites,
+    all trained on their own text corpuses? Or are we all going to just use ChatGPT?
+    Or is it something else? Where does power sit in an ecosystem like this?
+  id: totrans-67
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 未来是成千上万个不同的聊天机器人都坐在自己的网站上，都是在它们自己的文本语料库上训练吗？还是我们都将只使用ChatGPT？还是其他什么？在这样的生态系统中，权力在哪里？
+- en: 'I think power will settle in at least four places:'
+  id: totrans-68
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 我认为权力将至少分布在四个地方：
+- en: The operating system layer
+  id: totrans-69
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: 操作系统层
+- en: The browser layer
+  id: totrans-70
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: 浏览器层
+- en: The layer of models that are willing to return risky results to users
+  id: totrans-71
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: 愿意向用户返回风险结果的模型层
+- en: The copyright layer
+  id: totrans-72
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: 版权层
+- en: Operating systems and browsers will have a lot of power because they’ll be able
+    to sit between the user and any other interaction with the internet. Once Chrome,
+    Arc, or Mac OS has an intelligent AI assistant that can perform tasks for you
+    given a few sentences about what you want, your desire to go to a website that
+    can do the same thing will go down tremendously. Operating systems and browsers
+    also have the advantage of being run on your computer, so the integration will
+    be more seamless and they’ll have access to lots of data that web-based AI applications
+    aren’t going to have access to—so they’ll likely have better abilities to complete
+    tasks.
+  id: totrans-73
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 操作系统和浏览器将拥有很大的权力，因为它们将能够在用户与互联网的任何其他交互之间进行中介。一旦 Chrome、Arc 或 Mac OS 拥有了一个智能的
+    AI 助手，只需提供几句关于你想要的东西的简短句子，它就可以为你执行任务，你去访问一个能够做同样事情的网站的愿望将大大降低。操作系统和浏览器还有一个优势，即它们在你的计算机上运行，因此集成将会更加无缝，它们将能够获得许多网络应用程序无法获得的数据，因此它们可能具有更好的完成任务能力。
+- en: But the disadvantages of being at the operating system or browser layer is that
+    you’re going to have to serve a large volume of users. As I wrote in "[Artificial
+    Unintelligence](https://every.to/superorganizers/artificial-limits)," this will
+    force these kinds of models to have self-imposed limits about what kinds of tasks
+    they’re willing to perform and what kinds of results they’re willing to return
+    to the user. This creates room for other players that are willing to return answers
+    from corners of the latent space that are riskier (legally, morally, or in terms
+    of brand alignment) than more general models.
+  id: totrans-74
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 但是处于操作系统或浏览器层的劣势是，你将不得不为大量用户提供服务。正如我在《人工非智能》中所写的那样，这将迫使这些模型自我设限，限制它们愿意执行的任务类型以及它们愿意向用户返回的结果类型。这为愿意从潜在空间的风险角落返回答案的其他参与者创造了空间（无论是在法律上、道德上还是品牌方面）。
+- en: Finally, I think there’s going to be a lot of power and opportunity for copyright
+    holders in this new era. For now, people are training AI willy-nilly on lots of
+    copyrighted material. But over time, I think large copyright holders (like Disney)
+    will fight back in the same way the record industry did against Napster. I don’t
+    know where it will net out, but I’d bet on copyright holders benefiting financially
+    when their IP is referenced by these models in a way that still allows developers
+    to build them, and users to benefit from them.
+  id: totrans-75
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 最后，我认为在这个新时代，版权持有者将拥有很大的权力和机会。目前，人们正在随意对大量受版权保护的材料进行 AI 训练。但随着时间的推移，我认为大型版权持有者（比如迪士尼）将像唱片行业对抗
+    Napster 一样进行反击。我不知道最终会如何，但我打赌版权持有者将在这些模型引用它们的知识产权并仍允许开发者构建它们、用户从中受益的情况下从中获得经济利益。
+- en: It’ll be exciting to see how this plays out. In the meantime, it’s incredibly
+    fun to play with projects like the Huberman Bot. I have a bunch of these experiments
+    in the works, and I’ll be writing more about them in the coming weeks and months.
+  id: totrans-76
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 看这个事情如何发展将会很令人兴奋。与此同时，玩弄像 Huberman Bot 这样的项目非常有趣。我正在进行一系列这样的实验，并且在未来的几周和几个月将会写更多关于它们的内容。
+- en: 'Paid subscribers will get access to these before everyone else (and to stuff
+    I won’t end up releasing publicly). So if you''re not one already, make sure to
+    become a paid subscriber:'
+  id: totrans-77
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 付费订阅者将在其他人之前获得这些内容（以及我最终不会公开发布的内容）。因此，如果你还不是其中之一，请确保成为付费订阅者：

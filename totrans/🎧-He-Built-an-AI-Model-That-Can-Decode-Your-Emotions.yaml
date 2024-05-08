@@ -1,0 +1,306 @@
+- en: <!--yml
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'category: COT 专栏'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'date: 2024-05-08 11:02:40'
+  prefs: []
+  type: TYPE_NORMAL
+- en: -->
+  prefs: []
+  type: TYPE_NORMAL
+- en: 🎧 He Built an AI Model That Can Decode Your Emotions
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 来源：[https://every.to/chain-of-thought/inside-the-pod-he-built-an-ai-model-that-can-decode-your-emotions](https://every.to/chain-of-thought/inside-the-pod-he-built-an-ai-model-that-can-decode-your-emotions)
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: '*TL;DR: Today we’re releasing a new episode of our podcast* How Do You Use
+    ChatGPT? *I go in depth with Alan Cowen, the cofounder and CEO of* [*Hume*](https://www.hume.ai/)*,
+    a research laboratory developing an empathetic AI model*. *We dive into the science
+    of emotions and break down how Hume’s AI functions. Watch on* [*X*](https://twitter.com/danshipper/status/1783135249343373815)
+    *or* [*YouTube*](https://www.youtube.com/watch?v=pSX88xKNUzI)*, or listen on*
+    [*Spotify*](https://open.spotify.com/episode/0eSPWSjenVyfjLivrSVu6d) *or* [*Apple
+    Podcasts*](https://podcasts.apple.com/us/podcast/he-built-an-ai-model-that-can-decode-your-emotions/id1719789201?i=1000653459253)*. *'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '* * *'
+  prefs: []
+  type: TYPE_NORMAL
+- en: The future of AI technology isn’t just faster or more powerful—it’s empathetic.
+    My guest for this episode, [Alan Cowen](https://twitter.com/AlanCowen), is leading
+    the charge with the first-ever emotionally intelligent AI.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Alan is the cofounder and CEO of [Hume](https://www.hume.ai/), an AI research
+    laboratory developing models trained to identify and measure expressions of emotion
+    from voice inflections and facial expressions. The best part? Once it understands
+    these emotions, the AI is designed to interact with users in a way that optimizes
+    for human well-being and leaves them with a positive emotional experience.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Previously, Alan—who has a Ph.D. in computational psychology—helped set up Google’s
+    research into affective computing, a field focused on developing technologies
+    that can understand and respond to human emotions. He operates at the intersection
+    of AI and psychology, and I sat down with him to understand the inner workings
+    of Hume’s models. Alan walks me through the shortcomings of traditional theories
+    of emotional science and breaks down how Hume is addressing these challenges.
+    While talking about the potential applications of the models, we also discuss
+    the tricky ethical concerns that come with creating an AI that can interpret human
+    emotions.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'This is a must-watch for anyone interested in the science of emotion and the
+    future of human-AI interactions. Here’s a taste:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Decode what people really want**. Alan believes that emotions are a way through
+    which we can understand people’s hidden desires. “Your preference is whatever
+    is going to make you happier or more awe-inspiring or amused…understanding people''s
+    emotional reactions is really key to learning how to satisfy people''s preferences,”
+    he says.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Learn more from every customer service call**. If emotions can reveal our
+    hidden desires, the way we speak, coupled with the language we use, can reveal
+    our emotions. “So [voice inflexions are] something that just accompanies every
+    single word. In certain situations, it conveys twice as much information to consider
+    the voice versus language alone,” Alan explains.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Recognize our shared human experiences**. People across cultures experience
+    similar underlying emotions, even though they might use different words to describe
+    it. “[L]et''s say that in the U.S., it was more common to say ‘shock’ than ‘fear’
+    or ‘surprise,’ and in the U.K., people said ‘fear’ and ‘surprise’—we wouldn''t
+    say people in the U.S. and U.K. actually experience different emotions, it just
+    turns out that they use different words as their basic vocabulary instinctively,”
+    he says.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: I’m curious to know more about how Hume functions, but before we dive into that,
+    we take a step back to understand how Alan thinks about the theories around emotions.
+    We start by discussing the way science has traditionally divided up emotions into
+    a discrete number of categories or dimensions.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[**Paul Ekman''s theory**](https://www.paulekman.com/about/paul-ekman/#:~:text=What%20is%20Paul%20Ekman''s%20theory,cultures%20by%20universal%20facial%20expressions.)
+    identifies six basic emotions—happiness, sadness, fear, disgust, anger, and surprise—that
+    he proposes are universally experienced and recognized across all human cultures.
+    According to Ekman, these emotions are hardwired into our biology and are expressed
+    through universally consistent facial expressions.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[**Lisa Feldman Barrett''s theory**](https://lisafeldmanbarrett.com/books/how-emotions-are-made/)
+    suggests emotions are built from two dimensions: valence (how pleasant or unpleasant
+    something is) and arousal (the level of energy or activation). Barrett argues
+    that our brain interprets sensory inputs using these dimensions, and then constructs
+    the specific emotions we feel based on the context and our past experiences.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Hume’s research is driven by the belief that both of these theories fail to
+    map the full spectrum of emotional experiences because they are based on presumed
+    categories or dimensions of emotion. For this reason, the Hume team has developed
+    a new approach called the semantic space theory.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[**Semantic space theory**](https://www.hume.ai/blog/what-is-semantic-space-theory)
+    is best understood in the way it is different from the traditional theories discussed
+    earlier. Instead of assuming the existence of certain types of emotions, it examines
+    emotional responses and maps the dimensions of emotional experiences. Alan explains,
+    “The general approach of emotion scientists has been, ‘Let''s posit what emotions
+    are and then study them in a confirmatory way,’ and semantic space theory is doing
+    something different: ‘Let''s posit the kinds of ways we can conceptualize emotions
+    and then derive from the data how many dimensions there are, what the best way
+    to talk about them is, how people refer to them across cultures and so forth.’”'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'In order to study emotions through the lens of semantic space theory, Hume
+    is leveraging technological advances in computing, data collection, and online
+    data storage to measure what people are feeling. Alan shared two methods the company
+    employs to do this:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Labeling emotional states**, or asking people to label how they are feeling
+    in different moments of a voice or video recording, and then finding common patterns
+    or dimensions that explain these feelings across individual data points.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Evaluating facial expressions**, or studying videos of people across different
+    cultures and contexts with the intent of measuring their facial expressions.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Alan and I discuss some of the insights that the Hume team has discovered as
+    they dive deep into the science of emotions:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Identifying similarities across cultures**. While measuring emotion through
+    facial expressions, the team found that there is consistency among the emotional
+    experiences of culturally diverse people. “[W]hen you take out the labels, you
+    realize that there''s more cultural consistency, which implies that expressions
+    have similar meanings and the language actually imposes more cultural differences
+    on how those meanings are interpreted and what''s salient to people depending
+    on what kinds of experiences they''ve had in life,” Alan remarks.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Accounting for individual differences**. The Hume team unearthed similarities
+    among cultures, but their model is also trained to account for individual idiosyncrasies
+    by analyzing subtle behavioral cues. “[I]n order to be able to make good predictions,
+    [the model] appreciate[s] individual differences and resting facial expressions
+    and resting voices and how people modulate their voices over time and so forth,”
+    Alan says.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Alan tells me that his mission for Hume is to develop an empathetic AI that
+    “truly understand[s] what humans want,” “measure the impact” that it would have
+    on people’s emotions, and train it to “optimize for the positive emotions that
+    people can have in life.” Given this context, we discuss some of the ways in which
+    Hume can be used:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**AI that people love talking to**. Since Hume is optimized to give the people
+    it interacts with positive emotional experiences, Alan thinks potential use cases
+    for the model include customer service, a character in a video game, and some
+    version of a therapist app. “[P]eople talk to it in a kind of a way they might
+    talk to a therapist or a friend and really get something out of it because it''s
+    already optimized for people to be satisfied coming out of the conversation, and
+    naturally it does these things that people enjoy,” he explains.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Hume’s potential as an interface**. Hume has many applications because it
+    can be integrated into different products to optimize user experiences. “[I]t''s
+    an interface you can build into anything—products, apps, robots, wearables, refrigerators,
+    whatever you want…the core of what [the] AI is doing is trying to figure out,
+    ‘What bits can I flip to make you happier?’” Alan says.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Not your average AI assistant**.While discussing Hume’s uses as an interface,
+    Alan explains that it’s distinct from an AI assistant because as opposed to carrying
+    out tasks for users, Hume serves as a seamless intermediary between users and
+    the underlying technology. “We''re trying to take the tools that developers are
+    building for an AI to operate and be the interface that the person talks to that
+    deploys those tools,” he explains.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'As we explore Hume’s applications, we also discuss some of Alan’s concerns
+    about the ways in which the AI could be misused:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Align the use of AI with ethical concerns**.To prevent misuse, Alan intends
+    to evaluate the use cases the company pursues against the [guidelines](https://thehumeinitiative.org/guidelines)
+    for AI ethics created by [Hume Initiative](https://thehumeinitiative.org/), the
+    nonprofit associated with the company. “I think there''s ultimately an alignment
+    between the long-term interests of the business, which are obviously to make money,
+    but also the long-term interest of humanity, which is we won''t permit AI to destroy
+    our society,” he says.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**AI that indexes for human well-being, not fragmented attention spans**. Having
+    said that, Alan believes that AI characters designed to maximize engagement is
+    one of the avenues in which Hume could be misused, and wants to select for well-being
+    instead. “[AI characters] should be optimized for somebody''s health and well-being
+    and not for somebody''s engagement because if it''s optimized for engagement,
+    it can manipulate you to be sympathetic to it in ways that are inappropriate,”
+    he explains.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'You can check out the episode on X, Spotify, Apple Podcasts, or YouTube. Links
+    and timestamps are below:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Timestamps:'
+  prefs:
+  - PREF_H5
+  type: TYPE_NORMAL
+- en: 'Dan tells Hume’s empathetic AI model a secret: *00:00:00*'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Introduction: *00:01:13*'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'What traditional psychology tells us about emotions: *00:10:17*'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Alan’s radical approach to studying human emotion: *00:13:46*'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Methods that Hume’s AI model uses to understand emotion: *00:16:46*'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'How the model accounts for individual differences: *00:21:08*'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Dan’s pet theory on why it’s been hard to make progress in psychology: *00:27:19*'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'The ways in which Alan thinks Hume can be used: *00:38:12*'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'How Alan is thinking about the API v. consumer product question: *00:41:22*'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Ethical concerns around developing AI that can interpret human emotion: *00:44:42*'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: What do you use ChatGPT for? Have you found any interesting or surprising use
+    cases? We want to hear from you—and we might even interview you. Reply here to
+    talk to me!
+  prefs: []
+  type: TYPE_NORMAL
+- en: Miss an episode? Catch up on my recent conversations with LinkedIn cofounder
+    [Reid Hoffman](https://every.to/chain-of-thought/reid-hoffman-on-how-ai-might-answer-our-biggest-questions),
+    *a16z Podcast* host [Steph Smith](https://every.to/chain-of-thought/how-to-find-your-next-big-idea-hiding-on-the-internet),
+    economist [Tyler Cowen](https://every.to/chain-of-thought/economist-tyler-cowen-on-how-chatgpt-is-changing-your-job),
+    writer and entrepreneur [David Perell](https://every.to/chain-of-thought/how-david-perell-uses-chatgpt-to-write-for-millions),
+    Notion engineer [Linus Lee](https://every.to/chain-of-thought/how-an-ai-researcher-uses-chatgpt-and-notion-ai),
+    and others, and learn how *they* use ChatGPT.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'If you’re enjoying my work, here are a few things I recommend:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**The** [**transcript**](https://every.to/chain-of-thought/transcript-he-built-an-ai-model-that-can-decode-your-emotions)
+    **of this episode is for paying subscribers.**'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '* * *'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '*Thanks to* ***Rhea Purohit*** *for editorial support.*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '***Dan Shipper*** *is the cofounder and CEO of Every, where he writes the*
+    [*Chain of Thought*](https://every.to/chain-of-thought) *column and hosts the
+    podcast* [How Do You Use ChatGPT?](https://open.spotify.com/show/5qX1nRTaFsfWdmdj5JWO1G)
+    *You can follow him on X at* [*@danshipper*](https://twitter.com/danshipper) *and
+    on* [*LinkedIn*](https://www.linkedin.com/in/danshipper/)*, and Every on X at*
+    [*@every*](https://twitter.com/every) *and on* [*LinkedIn*](https://www.linkedin.com/company/everyinc/)*.*'
+  prefs: []
+  type: TYPE_NORMAL

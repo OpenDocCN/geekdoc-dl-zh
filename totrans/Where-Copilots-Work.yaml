@@ -1,0 +1,403 @@
+- en: <!--yml
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'category: COT 专栏'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'date: 2024-05-08 11:10:56'
+  prefs: []
+  type: TYPE_NORMAL
+- en: -->
+  prefs: []
+  type: TYPE_NORMAL
+- en: Where Copilots Work
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 来源：[https://every.to/chain-of-thought/where-copilots-work](https://every.to/chain-of-thought/where-copilots-work)
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: 'Sponsored By: Lever'
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: 'Hire smarter with [Lever](https://www.lever.co/demo/?utm_medium=third_party_email&utm_source=other&utm_campaign=none&utm_content=every_divinations_sponsored_newsletter)—the
+    only complete hiring solution that provides modern talent acquisition leaders
+    with complete ATS and robust CRM capabilities in one product: LeverTRM'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Luke Skywalker had R2-D2’s whistles and beeps. Maverick had Goose. Bertie had
+    his butler Jeeves, who shimmered in and out of the room to perform tasks well
+    before he’d even been asked to.
+  prefs: []
+  type: TYPE_NORMAL
+- en: These stories are popular because everyone wants a copilot—a partner who makes
+    you better, and who (sometimes) becomes a friend you can lean on when things get
+    hard.
+  prefs: []
+  type: TYPE_NORMAL
+- en: This sort of thing is exactly what a lot of people in AI are building right
+    now.
+  prefs: []
+  type: TYPE_NORMAL
+- en: GitHub CoPilot is the first large-scale AI use case that has significant traction—reportedly
+    writing [40% of the code for developers who use it](https://github.blog/2022-06-21-github-copilot-is-generally-available-to-all-developers/).
+    Reid Hoffman thinks there will be a [copilot for every profession](https://fortune.com/2022/12/07/linkedin-founder-reid-hoffman-on-ai-human-amplification/).
+    Microsoft is building an [AI copilot into Office](https://techcrunch.com/2023/03/06/microsoft-dynamics-copilot/).
+    Diagram is building a [copilot for designers](https://genius.design/). The list
+    goes on.
+  prefs: []
+  type: TYPE_NORMAL
+- en: These systems work like a superpowered autocomplete. They predict what you’re
+    about to do, and then offer that to you before you have a chance to do it yourself.
+    It saves time and effort.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'If you’re a builder hacking away on side projects, you’re probably thinking
+    about building a copilot too. GPT-3 makes this kind of thing pretty easy to pull
+    together over a weekend. I know because I’ve been doing it too:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'I built a little copilot for my mind. I want it to help make me smarter: to
+    make connections between ideas, bring up pieces of supporting evidence for points
+    I’m making, and suggest quotes to use as I’m writing.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: It takes in any chunk of text, and then attempts to complete the chunk using
+    quotes it finds in my [Readwise](https://readwise.io/) database.
+  prefs: []
+  type: TYPE_NORMAL
+- en: It’s a cool demo, but it isn’t anywhere close to being a usable product yet.
+    It doesn’t always pull great quotes for me, and it doesn’t always complete them
+    in a way that actually supports the point I’m trying to make. It also doesn’t
+    demonstrate sufficient understanding of my writing, or the writing of the authors
+    it’s pulling from to be useful.
+  prefs: []
+  type: TYPE_NORMAL
+- en: As I wrote in the [End of Organizing](https://every.to/chain-of-thought/the-end-of-organizing),
+    I’m quite optimistic about the future of technologies like this. I find myself
+    reading fewer and fewer physical books and taking fewer physical notes. I’m increasingly
+    confident that every digital highlight I make will be made 10x more useful by
+    these tools in the next year or so.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The question for me and other builders like me, is this: Where can these kinds
+    of copilot experiences *actually* delivervalue with the technology that’s available
+    *today*? And what are the bottlenecks that need to be resolved to make these useful
+    for more use cases?'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Let’s take these one at a time.
+  prefs: []
+  type: TYPE_NORMAL
+- en: ''
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: '[Lever](https://www.lever.co/demo/?utm_medium=third_party_email&utm_source=other&utm_campaign=none&utm_content=every_divinations_sponsored_newsletter)
+    is the leading Talent Acquisition Suite that makes it easy for talent teams to
+    reach their hiring goals and to connect companies with top talent.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: With LeverTRM, talent leaders can scale and grow their people pipeline, build
+    authentic long-lasting relationships, and source the right people to hire. And,
+    thanks to [LeverTRM's](https://www.lever.co/demo/?utm_medium=third_party_email&utm_source=other&utm_campaign=none&utm_content=every_divinations_sponsored_newsletter)
+    Analytics, you get customized reports with data visualization, offers completed,
+    interview feedback, and much more—so you can make better, more informed, and strategic
+    hiring decisions.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Where copilots can be built today
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: AI-based copilots are quite useful with out-of-the-box technology in situations
+    where small pieces of lightly transformed boilerplate text provide a lot of value.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'This is particularly true in areas where:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Text can be checked for accuracy quickly with little user effort
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: The cost of inaccuracies is low
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Relevant text can be found reliably with [embeddings search](https://platform.openai.com/docs/guides/embeddings)
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: GitHub CoPilot is a great example of this. But other examples are things like
+    [grant writing](https://grantable.co/), [contract writing](https://motionize.io/),
+    tax prep, many types of [email replies](https://chrome.google.com/webstore/detail/ellie-your-ai-email-assis/mhcnlcilgicfodlpjcacgglchmpoojcp),
+    [RFP responses](https://www.userogue.com/), medical recommendations to doctors,
+    and more.
+  prefs: []
+  type: TYPE_NORMAL
+- en: If you’re building a copilot (or thinking of building one), I’ve put together
+    a little checklist for you to go through in order to figure out whether it will
+    be possible to get good results with today’s technology.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Can you build a copilot for it? A checklist.
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'If you want to build a copilot for a specific domain using today’s technology
+    here’s the list of things you need to check off:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Is there a corpus of relevant text completions to be used by this copilot?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Can relevant text for completions be found reliably with embeddings search over
+    this text corpus?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Can those pieces of text, without more context needed, be lightly transformed
+    and inserted as an accurate completion?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Can completions be checked for accuracy with little to no user effort?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**Is there a corpus of relevant text completions to be used by this copilot?**'
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: You want your copilot to be smart and not make things up. It should have access
+    to some source of knowledge that it can bring to the user when they need it. Ideally,
+    this source of knowledge is accurate, up to date, and maybe even personal to the
+    user—for example, it might include all of their emails or their company’s internal
+    wiki.
+  prefs: []
+  type: TYPE_NORMAL
+- en: If you have this, you’re ready to go to the next step.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Can relevant text for completions be found reliably with embeddings search
+    over this text corpus?**'
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: Once you have a knowledge base for your copilot to use, you need the copilot
+    to be able to accurately identify chunks of that knowledge base to return to the
+    user when they need it. For example, in my copilot for thought demo, I needed
+    my copilot to find quotes from my Readwise that were relevant to whatever I was
+    currently writing.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The standard way to do this is to use embeddings search. Embeddings are a condensed
+    mathematical representation of a piece of text. Just like latitude and longitude
+    can help you tell how close two cities are on a map, embeddings do the same kind
+    of thing for text chunks. If you want to know if two pieces of text are similar,
+    calculate the embeddings for them and compare them. Text chunks with embeddings
+    that are “closer” together are similar.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Embeddings are useful because when a user is typing something that the copilot
+    wants to autocomplete, it can just look through its knowledge base to find pieces
+    of text that are “close” to whatever the user is typing.
+  prefs: []
+  type: TYPE_NORMAL
+- en: But embeddings aren’t perfect, and it’s where a lot of copilot use cases fail
+    for now. Your copilot quality is going to be bounded by your ability to find relevant
+    chunks of information in your knowledge base to help the user. If you’re not getting
+    relevant results, completion accuracy will suffer.
+  prefs: []
+  type: TYPE_NORMAL
+- en: If you *can* get relevant results, then you can go to the next step.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Can those pieces of text, without more context needed, be lightly transformed
+    and inserted as an accurate completion?**'
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: Once you can find the most relevant pieces of information in your knowledge
+    base from embeddings search, your copilot is going to need to intelligently package
+    them up as a completion for the user.
+  prefs: []
+  type: TYPE_NORMAL
+- en: This works best if they only need to be slightly transformed before they can
+    be suggested. For example, you’re often going to want to rearrange the text so
+    that it carries the same information but is rephrased so that it completes the
+    user's sentence. This kind of transformation is easy to do with GPT-3, but more
+    advanced transformations are harder to do.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Can completions be checked for accuracy with little to no user effort?**'
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: Once your copilot suggests a completion, it works best if the user knows whether
+    or not the completion is accurate without a lot of work. If the user has to spend
+    a lot of time figuring out if the completion is accurate or not, they’ll just
+    ignore it.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'This is one of the big levers for copilots. If you can make it easy to check
+    a completion without a lot of work, your copilot can return a lot of wrong answers
+    because it doesn’t cost the user much to consider them. I think this is part of
+    why GitHub Copilot is successful: You can just run the code to see if it’s right,
+    so the computer generates the code and then checks it for you.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Other use cases that require more user input will require correspondingly higher
+    rates of accuracy for the user to feel motivated enough to check.
+  prefs: []
+  type: TYPE_NORMAL
+- en: What might change this list?
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: The limits of a copilot are the limits of the AI’s context window. The context
+    window is the amount of tokens you can feed into the AI in the prompt, and the
+    amount of tokens it can give back in a completion.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Because context windows are limited, you have to use embeddings search to find
+    little pieces of information you can feed to your AI for it to generate a copilot
+    completion. This means that while context windows are still small, the quality
+    of your copilot is bounded by the quality of your embeddings search.
+  prefs: []
+  type: TYPE_NORMAL
+- en: GPT-3’s current context window is 4,096 tokens, which is about 3,000 words.
+    OpenAI is rumored to soon be releasing a version of its models that have a 32K
+    token context window—roughly 8x the current size. This, I think, would be a giant
+    step change in the quality of the responses that are returned for copilot use
+    cases.
+  prefs: []
+  type: TYPE_NORMAL
+- en: You’d be able to return far more information for the AI to reason over and turn
+    into a usable response, which would have a direct impact on accuracy.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The other big limiters here are inference cost, inference speed, embedding cost,
+    and access to usable data. I expect cost to go down and speed to go up significantly
+    enough that I’m not worried about them as true bottlenecks. But access to usable
+    data is a big deal.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Right now, I’m using Readwise as my data source. But my completions for my copilot
+    would be a lot better if it had access to the books that I am pulling from. The
+    average number of tokens in a book is on the order of 80,000 tokens. So in order
+    to increase the quality of my responses, I need to figure out how to make that
+    data available to the AI, and also clean it so that it’s easy for it to find relevant
+    passages.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Advice for builders
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'If you’re building or investing in this space, my recommendations for creating
+    better copilot experiences are as follows:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Tighten your feedback loops**'
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: 'You can think of a copilot completion as a sequential chain:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Get user input
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Query for relevant documents
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Prompt model with documents
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Return a result
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: As you’re developing a copilot experience, you’ll want to be able to iterate
+    as quickly as possible on each of these parts of the chain, with as little code
+    as possible. I recommend building tools to help you do this quickly.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'As I was building my notes copilot, I built a little UI to visualize and quickly
+    swamp out each part of the chain:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: This worked well for me, but you should explore your own solutions.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Get creative with embeddings search**'
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: For now, the quality of your completions is limited by the quality of your embeddings
+    search. Because of this, I’d recommend spending time focusing on increasing the
+    quality of your embeddings search.
+  prefs: []
+  type: TYPE_NORMAL
+- en: There are many ways to enhance embeddings search to help you get more relevant
+    documents. For example, check out [HyDE](https://github.com/texttron/hyde) for
+    a creative solution to this problem from the query side. Or, try using GPT-3 to
+    summarize the data in your knowledge base to make it easier for embeddings to
+    find a usable text chunk.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Decrease cost of checking for accuracy**'
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: 'The other big lever here to create a good experience with existing technology
+    is to lower the cost to the user if the accuracy of completions is low. An easy
+    one: Before you display anything to the user, use GPT-3 to check if it thinks
+    the completion is any good. If not, then don’t display it.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'But there are lots of other ways to do this. For example, make sure completions
+    are quite short. Another example: Make sure that all of the context information
+    the user would need to check for accuracy is included in the completion—so they
+    don’t have to do research or think too hard.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Wrapping up
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'This is the ideal copilot in my mind:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Every time you touch your keyboard it brings to bear your entire archive of
+    notes, and everything you’ve ever read, to help you complete your next sentence.
+  prefs: []
+  type: TYPE_NORMAL
+- en: It would help you make connections between ideas, bring up pieces of supporting
+    evidence, and suggest quotes to use. It might also bring up writers you love who
+    disagree with the point you’re making—so you could change your mind, or sharpen
+    your argument in response to theirs.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Ideally, it would do this in a fashion that’s seamless, highly accurate, and
+    easily checked. In other words, usually if it completes something it’s making
+    a good point, and it’s easy for you to tell if the point is good or not, without
+    lots of extra effort.
+  prefs: []
+  type: TYPE_NORMAL
+- en: This is far from the reality today. If we want to advance these kinds of tools
+    beyond just being interesting demos, we’re going to have to build them ourselves.
+  prefs: []
+  type: TYPE_NORMAL
+- en: I hope this post pushes a few of you in that direction. I’ll keep you posted
+    as I keep discovering more.
+  prefs: []
+  type: TYPE_NORMAL

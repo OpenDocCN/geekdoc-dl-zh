@@ -1,0 +1,1017 @@
+- en: <!--yml
+  id: totrans-0
+  prefs: []
+  type: TYPE_NORMAL
+  zh: <!--yml
+- en: 'category: COT 专栏'
+  id: totrans-1
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 'category: COT 专栏'
+- en: 'date: 2024-05-08 11:09:12'
+  id: totrans-2
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 'date: 2024-05-08 11:09:12'
+- en: -->
+  id: totrans-3
+  prefs: []
+  type: TYPE_NORMAL
+  zh: -->
+- en: Can AI and ML Predict Depression?
+  id: totrans-4
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+  zh: 人工智能和机器学习能预测抑郁吗？
+- en: 来源：[https://every.to/chain-of-thought/can-ai-and-ml-predict-depression-and-figure-out-how-to-help](https://every.to/chain-of-thought/can-ai-and-ml-predict-depression-and-figure-out-how-to-help)
+  id: totrans-5
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+  zh: 来源：[https://every.to/chain-of-thought/can-ai-and-ml-predict-depression-and-figure-out-how-to-help](https://every.to/chain-of-thought/can-ai-and-ml-predict-depression-and-figure-out-how-to-help)
+- en: 'If there’s one question I’ve been obsessed with for the past six months, it’s
+    this:'
+  id: totrans-6
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 过去六个月以来，有一个问题一直困扰着我：
+- en: How might AI change the way scientific progress happens? In particular, how
+    might it help us make progress in areas of science where progress has historically
+    been slow, like psychology or other fields of social science?
+  id: totrans-7
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 人工智能可能如何改变科学进展的方式？特别是，在科学进展历史上一直缓慢的领域，如心理学或其他社会科学领域，它可能如何帮助我们取得进展？
+- en: I’m not the only one thinking about this. Demis Hassabis, the founder of DeepMind
+    who is currently leading AI at Google, is [famous for saying](https://techcrunch.com/2021/11/04/isomorphic-labs-is-alphabets-play-in-ai-drug-discovery/?guccounter=1&guce_referrer=aHR0cHM6Ly93d3cuZ29vZ2xlLmNvbS8&guce_referrer_sig=AQAAADF6XUT_vMi779D4xFP5xhjSAD76fxIWKu7HqILiLn3bjZIwIxgOQrjz7rW4_ZgLHk_7r3IUn6cGAi8m_-oR7ju4I-PXJio2AJWvqM1nh6BSpSs1Ad05AxWjls7X5g8Os7VQbPGa9Wnv9LjJ8ORqhVSrI1BVCLM0wHQu71nzqWt-),
+    “Just as mathematics turned out to be the right description language for physics,
+    we think AI will prove to be the right method for understanding biology.”
+  id: totrans-8
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 不只是我在思考这个问题。DeepMind 创始人、目前领导谷歌人工智能的 Demis Hassabis 因“数学被证明是描述物理学的正确语言，我们认为人工智能将证明是理解生物学的正确方法。”而出名。
+- en: I love the idea of AI as a *new* language for describing and solving problems
+    in the world that traditional scientific methods have had a hard time cracking,
+    which I’ve been [writing about](https://every.to/chain-of-thought/against-explanations)
+    a lot lately. AI allows us to predict phenomena in the world before we have scientific
+    explanations for them. For example, there is no unifying scientific theory for
+    depression. But AI and machine learning techniques might be able to predict when
+    someone is going to experience depression, which could help with prevention and
+    treatment. This is a significant advance because we can make progress on the disease
+    without needing to uncover a universal underlying theory for what it is.
+  id: totrans-9
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 我喜欢将人工智能视为描述和解决世界问题的*新*语言，传统科学方法在解决这些问题上一直很困难，我最近写了很多关于这个的内容。人工智能使我们能够在我们对它们有科学解释之前预测世界上的现象。例如，抑郁没有统一的科学理论。但是人工智能和机器学习技术可能能够预测某人何时会经历抑郁，这有助于预防和治疗。这是一个重要的进步，因为我们可以在不需要揭示它是什么的普遍根本理论的情况下对这种疾病取得进展。
+- en: I’ve been looking for researchers who are going down this path—and I found [Eiko
+    Fried](https://twitter.com/EikoFried?ref_src=twsrc%5Egoogle%7Ctwcamp%5Eserp%7Ctwgr%5Eauthor).
+    Dr. Fried is an associate professor in clinical psychology at Leiden University
+    in the Netherlands who works on how to understand, measure, model, and classify
+    mental health problems. His current research is a five-year project called [WARN-D](https://warn-d.eiko-fried.com)
+    that uses statistics and machine learning techniques to try to predict depression
+    before it happens. Eiko and his team have followed 2,000 students living in the
+    Netherlands for two years, using the students’ smartwatches and smartphones to
+    gather moment-by-moment data about them. They hope that once this project is done
+    they’ll be able to more reliably predict when depression might occur—before it
+    does.
+  id: totrans-10
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 我一直在寻找那些走这条路的研究者，我找到了[Eiko Fried](https://twitter.com/EikoFried?ref_src=twsrc%5Egoogle%7Ctwcamp%5Eserp%7Ctwgr%5Eauthor)。Fried
+    博士是荷兰莱顿大学临床心理学副教授，他致力于理解、测量、建模和分类心理健康问题。他目前的研究是一个为期五年的项目，名为[WARN-D](https://warn-d.eiko-fried.com)，该项目使用统计和机器学习技术试图在抑郁发生之前预测抑郁。Eiko
+    和他的团队跟踪了荷兰的 2000 名学生两年，使用学生的智能手表和智能手机实时收集数据。他们希望一旦这个项目完成，他们就能更可靠地预测抑郁可能发生的时间——在它发生之前。
+- en: Dr. Fried’s research focuses on the view that depression and other mental illnesses
+    are complex, dynamical systems, rather than clear-cut categories with simple causes.
+  id: totrans-11
+  prefs: []
+  type: TYPE_NORMAL
+  zh: Fried 博士的研究侧重于抑郁和其他精神疾病是复杂的、动态的系统，而不是有简单原因的明确类别的观点。
+- en: We had a wide-ranging conversation about the role of explanations and predictions
+    in science, why many areas of science—particularly psychology—have struggled to
+    make progress, the role of machine learning and AI in scientific research, and
+    how his research is advancing our ability to both predict—and explain mental illnesses.
+  id: totrans-12
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 我们就科学中解释和预测的作用进行了广泛的讨论，为什么许多科学领域——尤其是心理学——在取得进展方面遇到了困难，机器学习和人工智能在科学研究中的作用，以及他的研究如何推动我们预测和解释心理疾病的能力。
+- en: 'If you want to listen to this interview as a podcast, it’s available here:'
+  id: totrans-13
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 如果您想把这次采访当作播客来收听，可以在这里找到：
+- en: '*This conversation has been lightly edited for clarity.*'
+  id: totrans-14
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '*本次对话已经进行了轻微编辑以增加清晰度。*'
+- en: '* * *'
+  id: totrans-15
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '* * *'
+- en: '**DS: Y**our research is about understanding, measuring, modeling, and classifying
+    what mental disorders are. What are mental illnesses?'
+  id: totrans-16
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '**DS:** 您的研究是关于理解、测量、建模和分类心理障碍是什么。什么是心理疾病？'
+- en: '**EF:** What is the nature of mental illness? [That’s] the holy grail in our
+    field that many scholars have ignored actually to some degree, because it''s probably
+    very tricky to answer. I think mental health problems are emergent. So they come
+    out of systems of things that interact with each other. And these things that
+    interact with each other are complex systems, and the elements are biological,
+    psychological, and social. And I think most folks would agree with it, actually,
+    it''s not necessarily a very controversial idea, but putting this into sort of
+    research or clinical practice is quite tricky because you have all these elements
+    and systems, and then you have all these nonlinear relationships in which these
+    elements interact with each other. And then where do you draw the boundary around
+    the system?'
+  id: totrans-17
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '**EF:** 心理疾病的本质是什么？[那是]我们领域的圣杯，实际上很多学者在某种程度上都忽视了，因为它可能很难回答。我认为心理健康问题是 emergent
+    的。所以它们是由相互作用的系统组成的。这些相互作用的东西是复杂系统，元素包括生物、心理和社会。我认为大多数人都会同意这一点，实际上，这并不是一个非常有争议的观点，但将其纳入研究或临床实践中却相当棘手，因为你有所有这些元素和系统，然后你有所有这些元素相互作用的非线性关系。那么你在系统周围画出的边界在哪里？'
+- en: There's the person system, so to speak, with your thoughts and behaviors and
+    feelings, and your genetic setup and so forth. But there's your partner who influences
+    you and your family history and your folks and life events and stressors, and
+    all of that is part of what I think to be the mental health system of a person
+    and your current state.
+  id: totrans-18
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 有一个人的系统，可以说，有你的思想、行为和感受，还有你的遗传设置等等。但是有你的伴侣会影响你，还有你的家庭史和你的父母和生活事件和压力，所有这些都是我认为是一个人的心理健康系统的一部分，还有你的当前状态。
+- en: '**DS:** That makes sense. It''s so interesting because I think everyone sort
+    of agrees with that story, or not everyone, but a lot of people would say they''re
+    emergent and it''s sort of bio-psychosocial. It''s a combination of all these
+    things, and the combination is probably different for different people.'
+  id: totrans-19
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '**DS:** 那很有道理。这很有趣，因为我认为每个人都或多或少同意这个故事，或者不是每个人，但很多人会说它们是 emergent 的，而且它们在某种程度上是生物
+    - 心理 - 社会的。这是所有这些东西的结合，而且对于不同的人来说，这种结合可能是不同的。'
+- en: If you ask me what the orbits of the moon is, I have an equation. Do you think
+    we'll ever get to a place where we're going to get down to that level, or that
+    there's this very high-level story you can tell and then the details for each
+    individual person are so complicated that having an explanation is going to be
+    hard? An explanation that's compressible is going to be hard to find, or are you
+    looking for that explanation?
+  id: totrans-20
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 如果你问我月球的轨道是什么，我有一个方程式。你认为我们会不会达到一个地步，我们将要达到这个水平，或者说有一个非常高层次的故事，你可以讲述，而每个人的细节都是如此复杂，以至于很难找到一个解释？一个可以压缩的解释会很难找到，还是你在寻找那个解释？
+- en: '**EF:** Right. So I have two answers. They''re quite different answers. The
+    first answer is that there are folks who are working on formal theories of mental
+    health or mental disorders. They don''t take everything into account and they
+    probably will never be like Newton''s theory of gravitation—which also ended up
+    to be false, by the way. So maybe that''s also okay in a way. In addition I think
+    our models or theories are probably going to be useful idealizations. I like to
+    use the map of Rome or the tube map of London as an example, where the map is
+    useful for the purpose that you designed [it] to be, such as navigating the Metro
+    system in London or finding your next Starbucks in Rome. So a good model is one
+    that sort of leaves out unimportant stuff. But, of course, then the question is,
+    what is unimportant to leave out? But the main point is that there is work happening
+    right now on formal theorizing. We have a paper on panic disorder led by [Don
+    Robinaugh](https://robinaugh.weebly.com/), for example, which is basically a system
+    of eight or nine nodes or bio-psychosocial variables that have been shown to be
+    really relevant to panic disorder.'
+  id: totrans-21
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '**EF:** 对，我有两个答案。它们是完全不同的答案。第一个答案是，有一些人正在研究精神健康或精神障碍的正式理论。他们并不考虑一切，而且它们可能永远不会像牛顿的万有引力理论那样——顺便说一句，它最终也被证明是错误的。所以也许从某种意义上来说这也没问题。此外，我认为我们的模型或理论可能会是有用的理想化。我喜欢用罗马地图或伦敦地铁图作为例子，地图对于你设计它的目的来说是有用的，比如在伦敦地铁系统中导航或在罗马找到你的下一个星巴克。所以一个好的模型是那种剔除了不重要的东西的模型。但是，当然，问题是，什么是不重要的需要剔除的？但主要观点是，目前正在进行着关于正式理论化的工作。我们有一篇由[唐·罗宾诺](https://robinaugh.weebly.com/)领导的有关恐慌症的论文，该论文基本上是一个由八九个节点或生物—心理—社会变量组成的系统，这些变量已被证明与恐慌症密切相关。'
+- en: We worked on panic disorder first because if you draw 50 random researchers
+    on panic disorder from around the world to the table, most of them will actually
+    agree on the etiology and phenomenology of panic disorder, which is not the case
+    for some other mental problems. So we started there, and the model is basically
+    a formal theory, a formal model, and their equations. And then you can simulate
+    data from the model. And then you can see if the data you get for a person with
+    panic attacks, for example, corresponds to data we observe in the real world.
+    You can see, [what] does the phenomenology of panic attacks look like? OK, they're
+    brief, check that they should be pretty brief. Panic attacks don't last for half
+    an hour or three hours.
+  id: totrans-22
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 我们首先研究了恐慌症，因为如果你把全球50位随机的恐慌症研究者召集到一起，他们中大多数实际上会就恐慌症的病因学和表现学达成一致，而这对于一些其他精神问题并非如此。因此，我们从那里开始，该模型基本上是一个正式的理论、一个正式的模型以及它们的方程式。然后你可以从模型中模拟数据。然后你可以看看你为患有恐慌发作的人得到的数据是否与我们在现实世界中观察到的数据相对应。你可以看看，恐慌发作的表现学是什么样子的？好的，他们是短暂的，检查一下，他们应该相当短暂。恐慌发作不会持续半个小时或三个小时。
+- en: Can you simulate interventions using behavioral therapy on the system, and panic
+    attacks become less? Yeah, you can actually do that. But we also find, for example,
+    that there are people who have panic attacks without developing panic disorder.
+    And in our model, everybody who gets panic attacks gets panic disorder. So [we’re]
+    showing you that there's also limits to these theories, and it's a very initial
+    model. But in principle, there's work on theorizing using differential equations.
+  id: totrans-23
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 你能否使用行为疗法对系统进行干预，使恐慌发作减少？是的，你实际上可以做到这一点。但我们也发现，例如，有些人患有恐慌发作却没有发展成恐慌症。而在我们的模型中，每个患有恐慌发作的人都会患上恐慌症。因此，我们向你展示了这些理论也存在局限性，并且这是一个非常初步的模型。但原则上，有关使用微分方程进行理论化的工作正在进行中。
+- en: And I think that work is promising, although it is far away from being a Einstein's
+    theory of relativity. I think it is a model to begin with. And it was indeed quite
+    tricky to decide what's in the model, what's not, what is just important enough
+    to warrant modeling. That's my first answer.
+  id: totrans-24
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 而我认为这项工作是有希望的，尽管它远未成为爱因斯坦的相对论。我认为这只是一个起点模型。确实相当棘手的是决定模型中包含什么，什么不包含，什么只是足够重要以值得建模。这是我的第一个回答。
+- en: The second answer is, there's work on dynamic properties of systems. This work
+    argues that it actually doesn't matter too much what particular nodes you assess
+    in your system, as long as all of these nodes tap into the dynamics of the system,
+    because it is measuring the dynamics that give you information about the system
+    and not necessarily all the rest.
+  id: totrans-25
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 第二个答案是，有关系统动态特性的工作。这项工作认为，实际上并不太重要你在系统中评估哪些特定节点，只要所有这些节点都涉及到系统的动态，因为测量动态可以提供有关系统的信息，而不一定是所有其他方面。
+- en: A researcher in our field has a really cool paper talking about the two worlds
+    of psychopathology. In it, he shows that he has a couple dozen people undergoing
+    psychotherapy. They use a system where they ask people once or maybe multiple
+    times a day about their moods, feelings, thoughts, behaviors, and ecological momentary
+    assessment. They track them for multiple weeks. And the cool thing is that every
+    person gets different variables assessed. Everybody's different. They all agree
+    with their own clinician on what is most central to their psychopathology, even
+    if the diagnosis is the same. Some folks sleep too little, some sleep too much,
+    even if they have the same diagnosis. Some people are sad, others are suicidal
+    and so forth. The analysis in the paper shows that you can, independent of the
+    content of the network or the system, use these dynamical principles to see if
+    people are going to get better or not.
+  id: totrans-26
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 我们领域的一位研究人员有一篇非常棒的论文，讨论了心理病理学的两个世界。在这篇论文中，他展示了几十个人正在接受心理治疗。他们使用的是一个系统，在这个系统中，他们一天一次或多次询问人们的情绪、感觉、思想、行为和生态瞬间评估。他们进行多周的跟踪。有趣的是，每个人都会被评估不同的变量。每个人都与自己的临床医生就他们的心理病理学核心问题达成一致，即使诊断相同。有些人睡得太少，有些人睡得太多，即使他们诊断相同。有些人感到悲伤，其他人则有自杀倾向等等。论文中的分析表明，你可以独立于网络或系统的内容使用这些动态原则来判断人们是否会变得更好。
+- en: Now, this needs to be replicated, obviously, and we need better methods and
+    other tools to look into this. But I think [it’s] also a nice approach to look
+    into this general idea of complex dynamics rather than the content of the system.
+  id: totrans-27
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 现在，这显然需要被复制，我们需要更好的方法和其他工具来研究这个问题。但我认为，这也是一个很好的方法来研究这个复杂动态的总体概念，而不是系统的内容。
+- en: '**DS:** That''s really interesting. I hear you on, rather than looking at the
+    content of the nodes, so rather than looking at, for me, maybe I sleep too little.
+    I know that I sleep too little. And if I sleep too little, that increases my symptoms.
+    You''re actually looking at, it sounds like, the relationship between nodes. What
+    are some examples of nodes? And then what are some examples of relationships?
+    How would you look at the relationships independent of the nodes as a way to assess
+    things?'
+  id: totrans-28
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '**DS:** 这真的很有趣。我听你说，并不是看节点的内容，所以，与其说我，也许我睡得太少了。我知道我睡得太少了。如果我睡得太少，那会加重我的症状。你实际上是在看，听起来像是，节点之间的关系。有哪些节点的例子？然后，关系的例子又是什么？如何独立于节点来评估事物的关系？'
+- en: '**EF:** So nodes in the system, such as the ones in the paper, and also the
+    work we do, is thoughts, feelings, behaviors, and mental health-related, usually—affect
+    states, sad mood, anger, sleep problems, activity, maybe even using a smartwatch.
+    [It] doesn''t always have to be smartphone data. It doesn''t have to be self-reported.
+    It can also be somewhat more objective digital phenotyping data. And then you
+    can, in a system, model the relationships between these things. I can see that
+    whenever I sleep really well, I''m relaxed the next morning. Whenever I''m outside
+    or exercise, I''m less active at the next measurement moment. Things like this.
+    You can model contiguous relationships at the moment, but also temporal relationships
+    over time. This works fairly well, using these sort of network psychometric tools
+    that we''ve developed.'
+  id: totrans-29
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '**EF:** 因此，系统中的节点，比如论文中的节点，以及我们所做的工作，通常是思想、情感、行为和与心理健康相关的——情绪状态、悲伤情绪、愤怒、睡眠问题、活动，甚至可能还使用智能手表。[它]
+    不总是必须是智能手机数据。它也不必是自我报告的。它也可以是一些更客观的数字表型数据。然后你可以在系统中模拟这些事物之间的关系。我可以看到，每当我睡得很好，第二天早上我都很放松。每当我在外面或运动时，我在下一次测量时活动较少。诸如此类。你可以在当下建模连续关系，也可以在时间上建模关系。使用我们开发的这些网络心理测量工具，这样做效果相当不错。'
+- en: A good example for these dynamics are an early warning sign called “[critical
+    slowing down](https://iopscience.iop.org/article/10.1209/0295-5075/132/18001#:~:text=Critical%20slowing%20down%20is%20considered,biology%2C%20sociology%2C%20and%20finance.)”
+    in the ecology literature, which has been talked about a bit in psychology, but
+    there haven't been super-convincing studies. There're early studies in small populations,
+    but that's part of the reason I think I got my study funded—to see if this early
+    warning sign can be replicated in a large sample for forecasting depression.
+  id: totrans-30
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 一个很好的例子是生态学文献中的一个早期警告信号叫做“[临界减速](https://iopscience.iop.org/article/10.1209/0295-5075/132/18001#:~:text=Critical%20slowing%20down%20is%20considered,biology%2C%20sociology%2C%20and%20finance.)”，在心理学中已经有一些讨论，但并没有非常有说服力的研究。
+    在小样本中已经有了早期研究，但这也是我认为我得到研究资助的部分原因——看看这种早期预警是否能在大样本中重现，预测抑郁症。
+- en: The way critical slowing down works, without being super-technical about it,
+    is that when a system transitions from one stable state into another stable state,
+    and when this transition is abrupt, this is important. We'll talk about this later,
+    perhaps because there's also slow transitions, and it doesn't really work that
+    well then. But if the transition is abrupt, like a catastrophic shift, then there's
+    evidence in ecology and cancer biology and economics and other climate science,
+    that the elements of the system change their autocorrelations over time. The system
+    becomes more predictable, and the system moves slower, so to speak.
+  id: totrans-31
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 临界减速的工作原理，不需要对此进行太技术性的解释，就是当一个系统从一个稳定状态转变成另一个稳定状态时，而且这个转变是突然的，这就很重要。我们可能会稍后讨论这一点，也许因为也有缓慢的过渡，那时就不会很有效。但如果过渡是突然的，像一个灾难性的转变，那么在生态学、癌症生物学、经济学和其他气候科学中都有证据表明，系统的元素随时间改变了自相关性。系统变得更可预测，系统变得运动更慢，可以这么说。
+- en: That's why you say critical slowing down. So translating this to my mental health
+    example, if I know your current mood or sleepiness or concentration or suicidal
+    state right now, and I see that your state tomorrow will become more and more
+    predictable from your current state, we're talking about critical slowing down,
+    which is an early warning sign for an upcoming transition. This has been shown
+    a couple of times in data with depression, for example, in usually just one particular
+    person. There's other dynamic principles, connectivity, and so forth. But this
+    early warning, critical slowing down, is one of the ones that has been discussed
+    the most. If you think of a system like a river, and you can measure the speed
+    of the river using different types of thermometers, this ideographic argument
+    where the content doesn't really matter, the dynamic principles matter. [That]
+    translates into, well, as long as you put your thermometer somewhere in the river,
+    and you pick up some part of the system, that will give you enough information
+    to pick up on changes, and for example, autocorrelations to tap into critical
+    slowing down. If that works or not, we don't know.
+  id: totrans-32
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 这就是为什么你会说临界减速。所以用我的心理健康例子来解释的话，如果我知道你现在的心情、睡意、注意力或者自杀状态，而我看到明天你的状态将会越来越能从你现在的状态进行预测，我们就在谈论临界减速，这是即将发生转变的一个早期预警信号。比如在抑郁症的数据中已经有几次出现，虽然通常只是在一个特定的人身上。还有其他动态原则、连接性等方面。但这种早期预警，临界减速，是被讨论得最多的。如果你把一个系统想象成一个河流，并且你可以使用不同类型的温度计来测量河流的速度，这种思想法则真的很重要，因为内容并不真的重要，动态原则才是重要的。这就成了，只要你把你的温度计放在河流的某个地方，并且你能找到系统的某一部分，这就能够给你足够的信息来发现变化，比如自相关来发现临界减速。这是否有效，我们不知道。
+- en: '**DS:** That makes a lot of sense. So it sounds like what you''re saying is
+    you have a system of interconnected parts. And what you''ve observed is that there''s
+    an abrupt or catastrophic change from one regime to another in the system. Thereafter,
+    that system will slow down, or it will not change as quickly.'
+  id: totrans-33
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '**DS:** 这非常有道理。所以听起来你是在说你有一个互相连接的部分的系统。你观察到的是这个系统从一个状态突然或灾难性地转变到另一个状态。以后，该系统将会减慢，或者不会那么快地改变。'
+- en: '**EF:** Before.'
+  id: totrans-34
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '**EF:** 以前。'
+- en: '**DS:** Before. I see.'
+  id: totrans-35
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '**DS:** 以前。我明白了。'
+- en: '**EF:** So the goal of our R&D study is to use these markers as a forecast
+    for an upcoming transition.'
+  id: totrans-36
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '**EF:** 所以我们的研发研究的目标是将这些标记作为即将发生转变的预测。'
+- en: '**DS:** I see. So before a big transition, your system won''t change as much—it
+    will start to look more and more stable. Is that what you''re saying? So what
+    is an example of that? Is it something like, before the onset of depression, I
+    will tend to have more trouble sleeping and that will be a very constant thing
+    rather than like, last night I didn''t sleep well, but tonight I''m sleeping okay.
+    And the next night I don''t sleep well, but the next night I''m fine.'
+  id: totrans-37
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '**DS:** 我明白了。所以在一个大的转变发生之前，你的系统不会变化太多 — 它将开始变得越来越稳定。这是你的意思吗？那有一个例子吗？比如，在抑郁症发作前，我将很难入睡，这将是一个非常持久的事情，而不是像，昨晚我睡不好，但今晚我睡得很好。第二天晚上我睡不好，但第二天晚上我很好。'
+- en: '**EF:** Right. So indeed, the cool thing is that this is actually independent
+    of severity, right? You can have lower variation in sleep problems in two ways.
+    Maybe you sleep well every night or you sleep badly every night, but the lack
+    of variability translates into higher auto correlations or lower standard deviation
+    over time. So the system becomes more predictable. And that might signal an upcoming
+    transition. People in my field say forecast rather than predict, because predict
+    has this in 10 days, whereas a forecast test is soonish, like a weather forecast,
+    which tend to be pretty bad in the Netherlands. Still, it''s going to rain perhaps
+    at some point in the next three days. So yeah, we use forecast at the moment.'
+  id: totrans-38
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '**EF:** 是的。所以，事实上，最酷的是，这实际上与疾病的严重程度无关，对吧？你可以以两种方式减少睡眠问题的变异性。也许你每天晚上都睡得很好，或者每天晚上都睡得很差，但变异性的缺乏会转化为随时间的更高自相关性或更低的标准差。所以系统变得更可预测。这可能是一个即将到来的转变的信号。我领域的人说预测而不是预测，因为预测有这个十天内，而预测测试很快就会来，就像天气预报一样，在荷兰往往相当糟糕。不过，可能在接下来的三天内会下雨。所以是的，我们现在使用预测。'
+- en: '**DS:** Okay. So there''s some early data that this might be the case, but
+    we''re not sure yet. It''s not totally clear.'
+  id: totrans-39
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '**DS:** 好的。所以有一些早期数据表明可能是这种情况，但我们还不确定。这还不是完全清楚。'
+- en: '**EF:** There''s a couple of publications where they show that you cannot forecast
+    the ups there. And a transition occurred. We only know this post-hoc, of course,
+    after the transition occurred. There''s a quite famous paper from 2016 where they
+    followed a single participant for over a year every day. It''s an open data set.
+    It''s quite remarkable. And this person tapered their antidepressants—I think
+    they''re a researcher themselves. And they reached out to folks in the Netherlands
+    and said, “Hey, do you want to study me while I taper my antidepressants?” So
+    what they did is they tapered the antidepressant blindly, meaning they didn''t
+    tell the person when exactly they switched out the antidepressant for a placebo.
+    And unfortunately this person on day 200 or something pretty drastically relapses
+    into depression. If you look at the mean severity score, the person has low variability
+    in symptoms, and all of a sudden they go back into severe depression, and you
+    don''t pick this up based on the symptom scores before the transition.'
+  id: totrans-40
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '**EF:** 有几篇发表的论文表明我们不能预测这些波动。发生了转变。当然，我们只能事后知道这一点，转变发生之后。有一篇非常著名的2016年的论文，他们追踪了一个参与者超过一年，每天都进行观察。这是一个公开数据集。非常了不起。这个人逐渐调整了他们的抗抑郁药
+    — 我想他们本身就是研究人员。他们联系到荷兰的人，说：“嘿，当我逐渐停用抗抑郁药的时候，你们想研究我吗？”所以他们是盲目地减少抗抑郁药，意思是他们没有告诉这个人他们什么时候换成了安慰剂。不幸的是，这个人在第200天左右突然严重复发了抑郁症。如果你看平均严重程度分数，这个人的症状变异性很小，突然间他们又陷入了严重的抑郁症，你不会根据过渡前的症状得分来发现这一点。'
+- en: When I talk to journalists about the warranty system we're building, I always
+    say that measuring wind is probably a bad early warning sign for a thunderstorm
+    or a hurricane, because when the wind starts, it's probably too late already.
+    In the same way, measuring symptoms is probably a bad early warning for depression
+    because when the symptoms start, you're probably already in the onset phase of
+    depression. So they cannot forecast based on the severity of symptoms or the symptoms
+    at the mean level, but based on the autocorrelations of the symptom relations
+    or the affect relations over time.
+  id: totrans-41
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 当与记者讨论我们正在构建的保修系统时，我总是说，测风可能是雷暴或飓风的一个不好的预警信号，因为当风起时，可能已经为时已晚。同样，测量症状可能是抑郁症的一个不好的早期预警信号，因为当症状开始时，你可能已经处于抑郁症的发作阶段。所以他们不能基于症状的严重程度或平均水平来进行预测，而是基于症状关系或情感关系的自相关性，或者随时间的自相关性。
+- en: '**DS:** What''s an autocorrelation?'
+  id: totrans-42
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '**DS:** 什么是自相关性？'
+- en: '**EF:** The lag one coefficient of one node in the system to the same node
+    in the system over time. Linear regression of one is univariate. Just one has
+    nothing to do with the system itself per se, just your sleep on your sleep on
+    your sleep over 100 days. If the autocorrelation is extremely high, it means your
+    sleep tomorrow is extremely predictable by your sleep today.'
+  id: totrans-43
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '**EF:** 系统中一个节点到系统中同一节点的延迟系数。线性回归的一个是单变量的。只有一个与系统本身无关，只是你在一百天内的睡眠，你的睡眠。如果自相关非常高，这意味着你明天的睡眠非常容易被今天的睡眠所预测。'
+- en: '**DS:** I see. Meaning that you don''t fluctuate as you should with the environment.
+    Like I''m not stressed every day, but there''s stuff that happens to me sometimes.
+    And if you don''t respond to that stuff with stress, that''s not normal.'
+  id: totrans-44
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '**DS:** 我明白了。意思是你不会像应该的那样随着环境的变化而波动。就像我不是每天都感到压力，但有时会有些事发生在我身上。如果你对那些事情不以压力做出反应，那就不正常。'
+- en: '**EF:** Yeah. In our data, initially we see that a sign for depression might
+    be that people have low mood, independent of the context. We have lots of context
+    data in our data set. Are you with friends, with family at school, at work, traveling
+    in nature? We see that some folks have context-independent, really low mood. That
+    might be a marker for depression, for example.'
+  id: totrans-45
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '**EF:** 是的。在我们的数据中，最初我们发现抑郁的一个迹象可能是人们情绪低落，独立于环境之外。我们的数据集中有大量的上下文数据。你是和朋友在一起，还是和家人在一起，在学校，在工作，在自然中旅行？我们发现一些人的情绪是独立于上下文的，确实很低落。那可能是抑郁的标志，例如。'
+- en: '**DS:** Isn''t that just depression, itself?'
+  id: totrans-46
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '**DS:** 那不就是抑郁症本身吗？'
+- en: '**EF:** Yes. Probably.'
+  id: totrans-47
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '**EF:** 是的。很可能。'
+- en: '**DS:** That''s really interesting. What I''m hearing is one of the things
+    you''re theorizing for depression in particular, but maybe for any mental health
+    issue, is [to] just gather evidence along a bunch of different variables about
+    a particular person—how they''re sleeping, what their heart rate is, what their
+    mood is, what their thoughts are, what their behaviors are. And if you auto-correlate
+    for each of those specific parameters over time before they enter a depressive
+    state, you''ll find that some of them—we don''t know which ones necessarily—but
+    some of them will tend to go into a more stable state. And then that will go into
+    depression.'
+  id: totrans-48
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '**DS:** 这真的很有趣。我听到的其中之一是你为抑郁症特别是理论化的事情之一，但也许适用于任何心理健康问题，就是收集关于一个特定人的许多不同变量的证据——他们的睡眠状况，他们的心率，他们的心情，他们的想法，他们的行为。如果你自相关每一个特定的参数随着时间的推移，在他们进入抑郁状态之前，你会发现其中一些——我们不一定知道是哪些，但其中一些会趋向于进入一个更稳定的状态。然后那就会导致抑郁。'
+- en: '**EF:** Right. This is one of many early warning signals. This all only works
+    if shifts are catastrophic, like for this particular person I talked about before
+    they really relapsed. Some patients talk about it like a black wave falling over
+    them, but it''s very open to question whether depression onset looks like this
+    in most people.'
+  id: totrans-49
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '**EF:** 是的。这是许多早期预警信号之一。这一切只有在转变是灾难性的情况下才起作用，就像我之前谈到的这个特定人之前真的复发了。有些患者谈论它就像一股黑色的波浪笼罩着他们，但是否抑郁症的发作在大多数人身上看起来像这样，这是非常值得怀疑的。'
+- en: There's very little data because we've only now been able to collect these daily
+    data for months and months in folks. One of my graduate students is actually working
+    on the nature of onset at the moment, just phenomenologically to see how people
+    onset depression.
+  id: totrans-50
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 由于我们只能收集了几个月的每日数据，所以数据非常少。我的一个研究生目前正在研究发病的性质，只是从现象学的角度来看人们是如何开始抑郁的。
+- en: '**DS:** One of the things that strikes me about this approach is requires the
+    moment-by-moment data. That seems dramatically easier to gather now. Tell me about
+    that. Everyone''s got a smartwatch. It''s funny that you''re mentioning this because
+    I literally built a little text bot that texts me everyday, every hour with a
+    bunch of different questions about me, and then has a readout of it. I haven''t
+    been doing any statistics on it, but the overall idea is maybe at some point,
+    I don''t know that it generalizes in a scientific way, but it might be helpful
+    for me. I''m curious about it.'
+  id: totrans-51
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '**DS:** 这种方法让我印象深刻的一点是需要时刻关注数据。现在收集数据似乎轻而易举。谈谈这个吧。每个人都有智能手表。你提到这个有趣，因为我实际上建了一个小型文本机器人，每天、每小时给我发一堆关于我的不同问题，然后有一个总结。我还没有对它进行任何统计，但总的想法是也许在某个时候，我不知道它是否以科学的方式概括，但这对我可能有所帮助。我对此很好奇。'
+- en: '**EF:** So folks in our study are doing this for three months and wearing a
+    smartwatch for three months…It''s a pretty basic watch given that I needed to
+    buy a lot of watches from my limited researcher budget, but the watch works.'
+  id: totrans-52
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '**EF：** 所以我们研究中的人进行了三个月的研究，并戴了三个月的智能手表……考虑到我需要用有限的研究经费购买很多手表，这是一个相当基本的手表，但是手表还是好用的。'
+- en: They also fill out questionnaires four times a day. It's a lot actually. They're
+    only two minutes, very short questionnaires. They have like, I don't know, 15,
+    20 questions. They're very short. How happy are you right now? One, two, three,
+    four, five, six, seven, stuff like this. At the end of the day, there are a couple
+    more questions about how was your day? What was the worst thing that happened
+    to you today?
+  id: totrans-53
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 他们还会四次填写问卷调查。实际上挺多的。他们只有两分钟，非常简短的问卷。大概有，我不知道，15，20个问题。非常简短。你现在有多快乐？一，二，三，四，五，六，七，诸如此类。在一天结束时，还有一些关于你的一天过得如何的问题？今天发生的最糟糕的事情是什么？
+- en: Including some qualitative open text fields, people can answer if they want
+    to. They can also opt out, but we do find that people actually like talking about
+    their days quite a bit. We also have a couple of questions on Sunday about reflecting
+    back on the whole week.
+  id: totrans-54
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 包括一些定性的开放文本字段，如果他们愿意，人们可以回答。他们也可以选择退出，但我们发现人们实际上很喜欢谈论他们的一天。我们也在每周日提出了一些关于回顾整个星期的问题。
+- en: I think the biggest insight in our field in the last decade of doing this work
+    is that certain questions lend them.  certain questions lend themselves more to
+    certain timeframes. So I asked about very momentary moods four times a day. And
+    at the end of the week, I asked about global stressors, or how well do you think
+    you can deal with stress next week? People do their own forecasting. It's been
+    much easier to collect these data. Passive data come for free, basically. It's
+    a very low burden to participants, many of whom wear smartwatches already anyway.
+    The EMA, the psychological momentary assessment is a bit disruptive sometimes
+    for some participants. And they tell you so. We also assess burden in our study,
+    which we find quite important. It's very little understood why people participate.
+    So our compliance rate is about, I want to say 70% compliance rate of these 360
+    measurement points in these three months, which is very good for us. But it's
+    unclear to us if that it’s because we pay them a little bit of money or we  have
+    an interactive website with a data report. People can log in after these three
+    months and they can interactively explore their data, including network visualizations.
+    They really liked that. We got very positive feedback on that.
+  id: totrans-55
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 我认为我们领域在过去十年的最大发现是某些问题更适合于某些时间框架。所以我每天询问了四次非常瞬间的心情。在一周结束时，我询问了全球性的压力因素，或者你认为自己下周能应对压力有多好？人们会做自己的预测。收集这些数据变得更容易了。被动数据基本上是免费的。对于参与者来说，这是一种非常低负担的任务，其中许多人已经在戴智能手表了。心理瞬间评估有时对一些参与者来说会有点打扰性。他们会告诉你。我们在研究中也评估了负担，我们认为这非常重要。人们为什么参与很少被理解。所以我们的合规率大约是，我想说这三个月的这
+    360 个测量点的合规率是 70%，对我们来说这非常好。但对我们来说不清楚的是，这是因为我们给了他们一点钱，还是因为我们有一个交互式网站并提供了数据报告。人们在这三个月后可以登录，他们可以交互式地探索他们的数据，包括网络可视化。他们真的很喜欢那个。我们收到了非常积极的反馈。
+- en: We always tell them the more data you give us, the more elaborate and accurate
+    this data report is. So there's ongoing work on this. And we just try to motivate
+    participants based on intuition and the little research out there.
+  id: totrans-56
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 我们总是告诉他们，你给我们的数据越多，这份数据报告就越详细、准确。所以我们正在持续地进行这项工作。我们只是试图根据直觉和少量的研究来激励参与者。
+- en: Sorry, I talked about a lot, but not really your question. So I think we can
+    leverage this for daily observations. As you said, already it's quite cheap to
+    assess for researchers and for participants.
+  id: totrans-57
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 抱歉，我说了很多，但并不是真正回答了你的问题。所以我认为我们可以利用这些进行每日观察。正如你所说，对于研究人员和参与者来说，评估是相当廉价的。
+- en: Some people love it and other people really hate it. This work is done a lot
+    in clinical populations now. And I remember a talk maybe two years ago by a colleague
+    from Maastricht, I believe, who [was] doing a study on rumination, depression
+    with rumination. Part of the rumination CBT [cognitive behavioral therapy] is
+    to tell people not to ruminate. But they were asked four times a day, have you
+    been ruminating right now? To which most clients responded with no, but thank
+    you for reminding me—now I am ruminating again. So it depends a bit on the context
+    in which you do this sort of research. But we're all finding out at the moment—this
+    is all pretty new territory.
+  id: totrans-58
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 有些人喜欢它，其他人真的很讨厌它。现在这项工作在临床人群中做得很多。我记得大概两年前有一个同事来自马斯特里赫特，我相信是那里，他在做一项关于反复思考、抑郁的研究。反复思考的认知行为疗法的一部分是告诉人们不要反复思考。但他们被问了四次一天，你现在在反复思考吗？大多数客户都回答说没有，但谢谢你提醒我——现在我又在反复思考了。所以这在你进行这类研究的背景下有点取决于情境。但我们现在都在发现——这都是相当新的领域。
+- en: '**DS:** What are your thoughts on the pursuit of these scientific models versus
+    just getting a ton of data and using machine learning algorithms to predict the
+    data? Where is each useful? How do they fit together or not?'
+  id: totrans-59
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '**DS:** 你对追求这些科学模型与只是获得大量数据并使用机器学习算法来预测数据有什么想法？每种方法都在哪些方面有用？它们如何配合或者不配合？'
+- en: '**EF:** That ties into the debate I in my field known as explanation versus
+    prediction, or understanding versus prediction, right? I tend to be on the side
+    where fewer people are in the room about the debate. When there are a lot of prediction
+    people in the room around me I do make the point for theorizing and summarizing
+    the point, as the best theory is a true theory or the most useful theory is a
+    true theory. If you really, truly understand the system, it will help you greatly
+    with making predictions, right? So that will be really tricky in psychology, but
+    in principle, I don''t think we''ve done it enough to just give up on it.'
+  id: totrans-60
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '**EF:** 这与在我的领域中被称为解释与预测、理解与预测的辩论有关，对吧？我倾向于站在辩论中人数较少的一边。当我周围有很多预测类的人时，我会提出理论化和总结的观点，因为最好的理论是真理或者最有用的理论。如果你真的、深刻地理解了这个系统，它会极大地帮助你进行预测，对吧？所以在心理学中这将会非常棘手，但原则上，我认为我们还没有做得足够多，就这么放弃了。'
+- en: I saw this on Twitter just two days ago, a screenshot of a, I want to say 1960s
+    or ’70s book where the author argued, yes, many people have said psychology is
+    too complex and we should give up. They always say physics, or I don't know, Einstein
+    or Newton, but he said, remember that we've observed the stars for 5,000 years,
+    very thoroughly—hundreds of scholars, probably more, have made incredibly rich
+    discoveries about the motion of the planets for Newton to come up with his formula,
+    or for Einstein to come up with his. It's not like physics is easy. It's just
+    that it had a head start. So that's one perspective I have.
+  id: totrans-61
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 我两天前在 Twitter 上看到了这个，一个截图，一个，我想说是 1960 年代或70年代的书，作者辩称，是的，很多人说心理学太复杂了，我们应该放弃。他们总是说物理学，或者我不知道，爱因斯坦或牛顿，但是他说，记住，我们已经认真地观察了
+    5000 年的星星——数百名学者，可能更多，已经对行星的运动有了极其丰富的发现，牛顿才提出了他的公式，或者爱因斯坦才提出了他的。物理学并不容易。只是它起步比较早。这是我有的一种看法。
+- en: The other is that accurate prediction can work without understanding. I always
+    use the tides as an example. We understood the regularity of the tides. We could
+    predict the tides really well, centuries, probably thousands of years before we
+    had any understanding about the mechanisms governing the tides, right? So this
+    is certainly possible.
+  id: totrans-62
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 另一个是准确的预测可以在没有理解的情况下工作。我总是用潮汐来作为例子。我们理解了潮汐的规律。我们能够非常好地预测潮汐，比我们对统治潮汐机制有任何了解之前的几个世纪，可能是数千年，对吧？所以这当然是可能的。
+- en: We were lucky to receive this grant on the WARN-D study. I think in part it
+    got funded because I wrote both into my proposal. I'm well equipped to do both
+    the theorizing and using well-known early warning signs from ecology, for example,
+    that we can simply test in our data, which is theory-driven. But in addition to
+    that, I can use all my data and fit machine learning or AI models to see if there
+    are features in the dataset that predict onset better than others, and then find
+    out what these features might be. I think there's a place for both. And I would
+    be sad if psychology or clinical science would give up on either. I think we do
+    much more prediction than we do explanation. I'm not sure that's great, but I
+    personally do both, and I'm really excited about doing both.
+  id: totrans-63
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 我们很幸运地获得了WARN-D研究的这笔资助。我认为部分原因是因为我在我的提案中写了这两方面。我有能力做理论构想并利用生态学中众所周知的早期预警信号，例如我们可以简单地在我们的数据中测试这些理论驱动的信号。但除此之外，我还可以使用所有的数据，并拟合机器学习或人工智能模型，以查看数据集中是否有比其他数据更好地预测发病的特征，然后找出这些特征可能是什么。我认为两者都有其存在的地方。如果心理学或临床科学中的任何一方放弃了其中任何一方，我会感到难过。我认为我们所做的预测比解释要多得多。我不确定这是否好，但我个人两者都做，并且对两者都感到非常兴奋。
+- en: '**DS:** That''s really interesting. You''re the researcher, so you tell me,
+    but I would have thought that in general, we''re doing way more explanation and
+    theorizing than we are doing prediction. If you look at the body of psychology
+    research over the last 100 years, the place it starts is not really scientific
+    or mathematical at all in terms of prediction. It''s just theory. If you go look
+    at your recent blog archives, for example, a lot of what you''re doing is taking
+    psychology research that purports to predict something and saying it actually
+    doesn''t. It''s an interesting test of theory, but the statistics that they''ve
+    gathered don''t adequately predict the thing they think it''s going to predict.'
+  id: totrans-64
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '**DS：** 这真的很有趣。你是研究人员，所以你告诉我，但我本来以为总的来说，我们做的解释和理论要比预测多得多。如果你看看过去100年的心理学研究，它的起点实际上并不是真正科学或数学方面的预测。它只是理论。例如，如果你看一下你最近的博客存档，你会发现，你所做的大部分工作都是基于心理学研究，声称可以预测某些事情，而事实上并不是这样。这是对理论的一个有趣的测试，但他们收集的统计数据并不能充分预测他们认为会预测的事情。'
+- en: '**EF:** I have a different take, but I understand your take. About three or
+    four years ago —actually probably six at this point, it''s 2023 already. I always
+    think, and for some reason, my brain is in 2020, it''s like seven years ago in
+    2013.'
+  id: totrans-65
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '**EF：** 我有不同的看法，但我理解你的观点。大约三四年前——实际上可能已经六年了，现在已经是2023年了。我总是认为，出于某种原因，我的大脑停留在2020年，而实际上，2013年已经过去七年了。'
+- en: '**DS:** I''m a similar way.'
+  id: totrans-66
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '**DS：** 我也是这样。'
+- en: '**EF:** When I started working with Don Robinaugh, who came to Amsterdam, we
+    shared an office for a year, and it was a very rich year, I think for both of
+    us.  We started working on these formal theories and dug ourselves into literature.
+    It quickly became clear that, and I think this is quite widely established among
+    folks who do this sort of work, that I wouldn''t call most psychological theories,
+    theories, actually, they''re sort of these vague, imprecise narrative descriptions,
+    which cannot really be corroborated or rejected.'
+  id: totrans-67
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '**EF：** 当我开始与唐·罗宾诺一起工作时，他来到了阿姆斯特丹，我们在一起共享了一年的办公室，那是一个非常丰富的一年，我认为对我们两个来说都是。我们开始研究这些正式理论并深入研究文献。很快就清楚了，我认为在这方面做工作的人们普遍认为，我不会称大多数心理学理论为理论，实际上，它们是这些模糊的、不精确的叙述描述，这些描述实际上不能被证实或被否定。'
+- en: We have a scholar in our field who was well known for being quite on the nose
+    with his criticism. He famously said that psychological theories don't get rejected
+    or refuted, they just slowly fade away as theorists die—[Paul Meehl](https://en.wikipedia.org/wiki/Paul_E._Meehl).
+    And I think that is true to a large degree. If you look at the most popular theories
+    at the moment in social science, if you try to formalize it, the way we do that
+    with the panic model, it would be impossible very quickly, because the theorists
+    don't really spell out auxiliary assumptions of the theory. And if you don't see
+    that people are testing and trying to falsify these theories in social psych,
+    for example, you can see that the most common rebuttal of a theorist is to say,
+    oh, but that's not what I meant. Then you ask them, what did you mean? And why
+    didn't you say this in your paper in the first place?
+  id: totrans-68
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 我们领域中有一位以批评直言而著称的学者。他有一句名言，即心理学理论不会被拒绝或被驳斥，它们只是随着理论家的逝去而逐渐消失——[保罗·米尔 Paul Meehl](https://en.wikipedia.org/wiki/Paul_E._Meehl)。我认为这在很大程度上是正确的。如果你看一下社会科学目前最流行的理论，如果你试图像我们对恐慌模型那样对它进行形式化，那将很快是不可能的，因为理论家实际上并没有详细说明理论的辅助假设。如果你没有看到人们在社会心理学中试图测试和试图证伪这些理论，例如，你会发现理论家最常见的反驳是说，哦，但这不是我想表达的意思。然后你问他们，你是什么意思？为什么你一开始没有在论文中说这个？
+- en: So that's why I didn't really think of these theories as theories in the way
+    I was talking about them. Hence, I think we're focused much more on prediction,
+    logistic regression, and any sort of statistical model than the phenomena that
+    we try to explain.
+  id: totrans-69
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 所以这就是为什么我并没有真正将这些理论看作是我所谈论的那种理论。因此，我认为我们更关注预测、逻辑回归和任何形式的统计模型，而不是我们试图解释的现象。
+- en: '**DS:** Got it. How does [p-hacking](https://en.wikipedia.org/wiki/Data_dredging)
+    and the replication crisis fit into this, in your view?'
+  id: totrans-70
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '**DS:** 明白了。在你看来，[p-hacking](https://en.wikipedia.org/wiki/Data_dredging)和复制危机如何与此相关？'
+- en: '**EF:** You''re really well informed, I have to say. To become tenured psychology
+    faculty in the U.S., it''s quite important that you have your own theory contribution.
+    But it is mostly like a theory contribution, to be fair. I''m actually writing
+    a paper about this.'
+  id: totrans-71
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '**EF:** 你的消息真是灵通，我不得不承认。在美国成为终身心理学院教师，拥有自己的理论贡献是非常重要的，但大多数情况下更像是理论贡献。实际上，我正在写一篇关于这个的论文。'
+- en: I don't know how to do it, but I've long had the intuition that in psychology,
+    people are more married to their theories than in other fields. I think the reason
+    is that we don't formalize our theories. So with the panic model by Don Robinaugh,
+    this is written up as a differential equation in our code. It's on the website.
+    It's wrong. Because any formal theory, I think in our field will be wrong for
+    the reason that it's incomplete. You never model all the nodes in the system that
+    you truly need, but that's okay for a model. But it is false in the sense that
+    it is incomplete. We call on people to take this code to make it better to add
+    other nodes to reject our model to test it and so forth. That isn't really possible
+    with some of the verbal theories we see in my field. And I think that opens the
+    door to these questionable research practices, replication problems and reproducibility
+    issues that you mentioned before.
+  id: totrans-72
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 我不知道如何做，但我长久以来有一种直觉，即在心理学中，人们对自己的理论更为执着，而不像其他领域那样。我认为原因是我们没有正式地表述我们的理论。因此，通过唐·罗宾诺
+    Don Robinaugh 的恐慌模型，在我们的代码中，这被写成了微分方程。它在网站上。是错误的。因为任何正式的理论，在我们的领域，我认为都会是错误的，因为它是不完整的。你永远也不会模拟出系统中你真正需要的所有节点，但这对于模型来说是可以的。但从不完整的意义上说它是错误的。我们呼吁人们拿起这段代码，使它更好，添加其他节点以拒绝我们的模型来测试它等等。这对我们领域中一些口头理论来说实际上是不可能的。我认为这为前述的这些可疑的研究做法、复制问题和可重复性问题敞开了大门。
+- en: '**DS:** I feel like the introduction of statistics in psychology research was
+    intended to make it feel more scientific. But it feels like in a lot of ways,
+    people use it tojust dress up their narrative theories, but the statistics don''t
+    actually do the thing that they intend them to do. Does that feel that that''s
+    true? Or do you have a different perspective?'
+  id: totrans-73
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '**DS:** 我觉得心理学研究中引入统计学的初衷是为了使其更具科学性。但在很多方面，人们似乎只是用它来装饰他们的叙事理论，但统计数据实际上并没有实现他们打算的那样做事情。你觉得这是真的吗？或者你有不同的看法吗？'
+- en: '**EF:** I wrote two papers on this exact point in the last few years, which
+    took me a long time to write because I got quite deeply into the philosophy of
+    modeling and philosophy of'
+  id: totrans-74
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '**EF:** 过去几年我就这个问题写了两篇论文，写了很长时间，因为我深入研究了建模的哲学和科学的哲学。'
+- en: theory and what the difference is. My take now is that one of the biggest challenges
+    is to try to bring your data to bear on your theory. When I explain this to students,
+    I always use linear regression. I learned as a student that linear regression
+    has an assumption, namely that variables need to be related linearly. But I never
+    really got my head around truly what it means that a model has an assumption.
+    How I think about this now is that if your theory predicts a linear relationship,
+    then you should use a model that imposes a linear relationship on your data that
+    you can then try to bring the data to bear on the theory. That's sort of the circle,
+    but we don't have theories to impose assumptions on data to then bring them to
+    bear on our theory so that people just use statistical models. We use linear regression.
+    There's no justification for it. That's not easy, but I think it's indeed a challenge
+    that we use models. And in my paper, I talk about a couple of areas of psychology,
+    like factor models, for example, that everybody uses, but I rarely see the rationale
+    for why these models are the right models to bring the data to bear on your theory.
+    And if that step isn't taken, things get tricky very quickly.
+  id: totrans-75
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 理论以及它们之间的区别。我现在的看法是，最大的挑战之一是试图将你的数据与你的理论联系起来。当我向学生解释这一点时，我总是用线性回归来举例。作为一个学生，我学到线性回归有一个假设，即变量需要线性相关。但我从未真正理解过一个模型有一个假设意味着什么。现在我是这样想的，如果你的理论预测了一个线性关系，那么你应该使用一个将线性关系强加给你的数据的模型，然后尝试将数据与理论联系起来。这是一个循环，但我们没有理论来对数据做出假设，然后将它们应用于我们的理论，所以人们只是使用统计模型。我们使用线性回归。这并不容易，但我认为使用模型的确是一个挑战。在我的论文中，我谈到了心理学的一些领域，比如因素模型，例如，每个人都在使用，但我很少看到为什么这些模型是正确的模型来将数据应用于你的理论的理由。如果没有这一步，事情很快就会变得棘手起来。
+- en: '**DS:** I''ve read a couple of the things you''ve written, recently. Can you
+    explain what you mean by the terms “equifinality” and “multifinality”?'
+  id: totrans-76
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '**DS:** 我最近读了你写的几篇东西。你能解释一下你所说的“多结局”和“多原因”这两个术语吗？'
+- en: '**EF:** Equifinality is the principle that in open systems, a given end state
+    can breed from many potential starting states. Multifinality means different outcomes
+    from the same start.'
+  id: totrans-77
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '**EF:** 多结局是指在开放系统中，给定的终结状态可以来源于许多潜在的起始状态。多原因意味着从同一个起始点得到不同的结果。'
+- en: '[*Editor’s note*: equifinality means that there may be many different causes
+    of the same end state—like depression. Multifinality means that the same cause
+    could result in different end states. For example, the same childhood trauma may
+    trigger depression in one person, but not another.]'
+  id: totrans-78
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '[*编辑注：* 多结局意味着同一个终结状态可能有许多不同的原因，比如抑郁。多原因意味着同一个原因可能导致不同的终结状态。例如，同样的童年创伤可能在一个人身上触发抑郁，在另一个人身上却没有。]'
+- en: '**DS:** I don''t know if you''re familiar with David Deutsch''s work. He''s
+    doing the philosophy of science. He''s very inspired by Popper, really into falsification
+    and his underlying idea, or what makes something scientific, is A, that you have
+    a theory that''s falsifiable, and B, that your explanation for that theory is
+    hard to vary. So if you change any of the elements of the theory, you get a different
+    result. And one of the things that''s come to mind for me is that may make sense
+    in physics or chemistry. But if you''re working in a system where equifinality
+    or multifinality is in play, them being hard to vary, it''s sort of impossible
+    because you can have the same result from multiple different starting conditions,
+    or you can have a different result from the same starting condition. And I''m
+    curious how you would either square the idea of falsification and hard-to-vary
+    explanations with working with these types of systems or not.'
+  id: totrans-79
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '**DS:** 我不知道你是否熟悉大卫·德沃克的工作。他在做科学哲学。他受波普尔的启发，非常热衷于反证法，他的基本想法，或者说什么使得某事成为科学的，是A，你有一个可以被反证的理论，B，你对那个理论的解释很难变动。所以如果你改变理论的任何元素，你会得到不同的结果。有一件事让我想到了，也许在物理学或化学中是有意义的。但如果你在一个存在多结局或多原因的系统中工作，那么它们很难变动，这是不可能的，因为你可以从多种不同的起始条件得到相同的结果，或者你可以从相同的起始条件得到不同的结果。我很好奇你是如何将反证法和难以变动的解释这一概念与处理这些类型的系统相结合的，或者不结合。'
+- en: '**EF:** That would be such a good exam question. In our exams, we always have
+    this extra question where you need to think really hard. And it''s a good one.
+    That''s a curveball. Very interesting.I wouldn''t know how this would translate
+    to the work we''re doing in complex systems, because I wouldn''t know [what] this
+    variation would look like in particular. I do believe that, of course, people
+    differ from each other.'
+  id: totrans-80
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '**EF：** 那将是一个非常好的考题。在我们的考试中，我们总是有这样一个需要仔细思考的额外问题。这是一个很好的问题。那是一个难题。非常有趣。我不知道这如何转化为我们在复杂系统中正在进行的工作，因为我不知道这种变异在特定情况下会是什么样子。我确信，当然，人们彼此不同。'
+- en: But yeah, a good theory is one where initial parameters of the model shouldn't
+    be varied or would be hard to vary because you would get a different outcome.
+  id: totrans-81
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 但是，一个好的理论是一个初始参数不应该变化或者很难变化，因为你会得到不同的结果。
+- en: '**DS:** It''s an important question because I think it strikes at the heart
+    of— for me, something that''s an interesting question is, does science have to
+    differ for if we''re working in these high-dimensional, multi-variable, complex
+    systems-type cases than it does in the regime of physics, for example? And does
+    that change how we should try to understand and predict and treat mental disorders?
+    So to lay all of my cards on the table. I would love for you to poke holes in
+    this because I know you do the contrarian thing, and I think that that might be
+    where you want to go, and I think I really want to know. Or if you agree, I''m
+    also quite interested.'
+  id: totrans-82
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '**DS：** 这是一个重要的问题，因为我认为它触及了对我而言非常有趣的核心问题——如果我们在这些高维、多变量、复杂系统类型的情况下工作，那么科学是否必须不同于我们在物理学领域工作的情况？这是否改变了我们应该如何理解、预测和治疗心理障碍？所以，我要将我的所有底牌都摊在桌上。我希望你能批评这一点，因为我知道你会采取相反的立场，我认为那可能是你想要去的地方，而我真的想知道。或者如果你同意，我也很感兴趣。'
+- en: The thing that strikes me about this, and maybe some of the work that you're
+    talking about with these differential equations for panic—I haven't looked at
+    that, and that seems really interesting. And as someone who suffers from panic,
+    I want to get in that model. But the thing that strikes me about it is it's totally
+    possible that for something heterogeneous like depression, the explanation or
+    the scientific model that predicts it or that helps us to understand it is so
+    large that it's impossible for us to fit it into our heads.
+  id: totrans-83
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 这件事让我印象深刻的是，也许你提到的与恐慌有关的微分方程工作——我还没有看过，那似乎非常有趣。作为一名患有恐慌症的人，我想了解那个模型。但让我印象深刻的是，对于像抑郁症这样的异质性问题，科学解释或预测它的模型可能是如此庞大，以至于我们无法将其融入我们的头脑中。
+- en: And that rather than looking for that scientific explanation, we should just
+    throw a bunch of data into a machine learning algorithm and then predict it. And
+    what that does is it exchanges a scientific problem for an engineering problem.
+    And it makes it into a very pragmatic thing where it's like, well, we may not
+    be able to fully understand it in the romantic idea of understanding, but if we
+    can build models that predict it, we can change it. That's ultimately one of the
+    key things we're trying to do when we're trying to explain things, is make those
+    predictions. I'm curious how that strikes you and where you think that goes wrong.
+    Because I think if you agreed with it, it really underscores, for example, the
+    importance in psychological research of doing lots of open data studies where
+    you're finding massive, massive, massive data sets and fitting algorithms to those
+    data sets rather than doing lots of small-scale studies that later on you hope
+    to replicate and get more funding for. And I'm really curious about your take
+    on that, as someone who's deeply in the field and probably knows a lot more about
+    it than me, or certainly does. Where does it go wrong? Where is it right? What
+    does it miss? All that kind of stuff.
+  id: totrans-84
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 而且，与其寻找那个科学解释，我们应该只是将一堆数据投入到一个机器学习算法中，然后进行预测。那样做的结果是，它将一个科学问题转化为一个工程问题。它使得这变成了一个非常实用的事情，就像是，好吧，我们可能无法完全以理解的浪漫概念来理解它，但如果我们能建立能预测它的模型，我们就能改变它。这最终是我们试图解释事物时要做的关键事情之一，就是进行这些预测。我很好奇这样的观点对你的触动以及你认为它哪里出错。因为我认为如果你同意，那么它实际上强调了心理学研究中做大量开放数据研究的重要性，你在那里找到大量的，大量的，大量的数据集，并将算法拟合到这些数据集中，而不是进行大量的小规模研究，然后希望能够复制并获得更多的资金支持。我真的很好奇你对此的看法，作为一个深入研究这个领域的人，你可能比我更了解，或者确实了解更多。它哪里错了？哪里对了？它漏掉了什么？所有这些问题。
+- en: '**EF:** I''ll start with the last point. The easiest to answer in our study,
+    so we''re collecting this data for five years, and everything will be open in
+    the end that we are allowed to share. That just simply means I need to remove
+    open text answers and where people might identify themselves. I need to remove
+    data that could be used in the future by very smart AI to identify people in some
+    way. There might be [a] signal [of] neural activity or heart rate. We don''t know
+    that yet, so I''ll go through a thorough protocol.'
+  id: totrans-85
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '**EF：**我会从最后一个问题开始回答。我们的研究最容易回答，所以我们会收集这些数据五年，最后我们可以分享的一切都会被公开。这仅仅意味着我需要删除开放式文本答案以及人们可能识别自己的地方。我需要删除未来可能由非常聪明的
+    AI 用来某种方式识别人们的数据。可能会有[一些]信号[的]神经活动或心率。我们还不知道，所以我将按照严格的协议进行审查。'
+- en: But if our project doesn't work out and we can't forecast depression, I genuinely
+    feel so happy about data collection, because I think it'll be a data set to work
+    on for two decades for a lot of folks in the field. I wish this would be more
+    common. There's certainly people who share their data, but it's rare that these
+    big initiative data sets get shared immediately. So I'm super- looking forward
+    to making this available. We've been spending two years on data collection and
+    documentation, just writing code books to make sure other people can use the data
+    properly and documenting all the changes we made to questionnaires, because some
+    of them talked about fax machines, which might not be the right question anymore.
+    And then do it right. How do we translate this and then so forth.
+  id: totrans-86
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 但是，如果我们的项目失败了，无法预测抑郁症，我对数据收集真的感到非常高兴，因为我认为这将是许多领域的人在未来两十年可以使用的数据集。我希望这种情况会更加普遍。当然有人会分享他们的数据，但是很少有这些大型倡议的数据集会立即被分享。所以我非常期待将这些数据公开。我们花了两年时间进行数据收集和文档编写，只是为了确保其他人能够正确使用数据，并记录我们对问卷所做的所有更改，因为其中一些问卷谈到了传真机，这可能不再是正确的问题了。然后做正确的事情。我们如何翻译这个，然后等等。
+- en: You raised a couple other points before I go to the black-box-machine-learning
+    stuff. In principle, I can see different models being used for different purposes.
+    So there might well be a model for depression. That is the formal theory.
+  id: totrans-87
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 在我讨论黑匣子机器学习之前，您提出了另外一些观点。原则上，我可以看到不同的模型被用于不同的目的。因此，可能会有一个用于抑郁症的模型。那是正式的理论。
+- en: Then there's another model that is different. That is one for forecasting onset.
+    And another model is for diagnosis, for example, or treatment prediction. And
+    they might have different variables in them, and they might work on different
+    patterns. I'm completely okay with this. I'm not looking for the one overarching
+    true model that does everything.
+  id: totrans-88
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 然后还有另一个不同的模型。那就是用于预测发作的模型。还有另一个模型，例如，用于诊断或治疗预测。它们可能包含不同的变量，并且可能基于不同的模式工作。我对此完全没问题。我并不在寻找一个可以做所有事情的普适真模型。
+- en: '**DS:** Just to confirm, are you talking about a theoretical model or a machine
+    learning model?'
+  id: totrans-89
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '**DS：**只是确认一下，您是在谈论理论模型还是机器学习模型？'
+- en: '**EF:** Both. I''m fine with either. So I''m fine if it can be ML as well;
+    it can be black box. And if you were constrained, your machine learning model
+    that you identify to be the best working for predicting diagnosis to the forecasting
+    case, it might not work very well. So I do grant that different models might have
+    different use cases in  the very same way that the Google Maps layers for topography
+    or Starbucks overlay or whatever might be useful for different purposes. I really
+    think of models as tools in that sense.'
+  id: totrans-90
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '**EF：**两者都可以。如果可以是机器学习，我也没问题；它可以是黑匣子。如果您受到限制，您确定的机器学习模型在预测诊断到预测病例方面可能效果不佳。因此，我承认不同的模型可能在同样的方式下有不同的用途，就像谷歌地图的地形图层或星巴克叠加层可能对不同目的有用一样。我真的把模型看作是工具。'
+- en: In our panic model, initial conditions can differ. I thought about this a little
+    more now. So I can make—for some reason, we called the guy Panic Bob early on
+    when we simulated data for his person. So Panic Bob, there's an infinite number
+    of Panic Bobs. I can make Panic Bob that no matter how much I ramp up the stressors
+    of life events, Panic Bob will never get panic attacks because he does not have,
+    or they do not have, I should say, a strong relationship between the vicious cycle
+    of physiological arousal and catastrophic over-interpretation of arousal that
+    leads to onset of panic attacks. If I kill these relationships, then nothing can
+    happen. So I can parameterize all these values for different people, and then
+    see under which conditions who gets panic attacks and what conditions make one
+    most vulnerable, and all of that stuff. That goes back a bit to this idea of David
+    Deutsch, perhaps, but I'd have to think about it more. But in principle, the model
+    is an N of one model, and people can differ from each other in the intercept or
+    the relations of the system.
+  id: totrans-91
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 在我们的恐慌模型中，初始条件可能不同。我现在对此想了一下。所以我可以做出——因为我们在为这个人模拟数据时，早期就称呼这个人为Panic Bob。所以Panic
+    Bob，有无数个Panic Bob。我可以制造出Panic Bob，无论我如何增加生活事件的压力，Panic Bob都不会发生恐慌性的发作，因为他们没有，或者我应该说，他们没有，应该说，强大的关系，恶性生理激活和对激活的灾难性过度解读之间的关系，导致恐慌性发作的发生。如果我杀死这些关系，那么什么也不会发生。所以我可以为不同的人参数化所有这些值，然后看看在什么条件下谁会发生恐慌性发作，什么条件会使某人最脆弱，以及所有这些东西。这有点回到了大卫·德沃奇的想法，也许，但我还需要再思考一下。但原则上，该模型是一个N=1的模型，人们在截距或系统关系上可能有所不同。
+- en: Now, the last point about black box prediction is maybe where the future lies.
+    I think often of Hasock Chang's book, [*Inventing Temperature*](https://www.amazon.com/Inventing-Temperature-Measurement-Scientific-Philosophy/dp/0195337387),
+    where he talks about epistemic iteration, which I hadn't heard about before. We
+    recently wrote a— Don always calls it jokingly my “magnum opus for depression,”
+    because it summarizes 10 years of work and thinking, and views epistemic iteration
+    as an example of why our field has not progressed. So I'm trying to expand this
+    now and why that has importance for your question.
+  id: totrans-92
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 现在，关于黑匣子预测的最后一点或许是未来的方向。我经常想起Hasock Chang的书[*发明温度*](https://www.amazon.com/Inventing-Temperature-Measurement-Scientific-Philosophy/dp/0195337387)，他在书中谈到了认识论迭代，这是我以前没有听说过的。我们最近写了一篇——唐总是开玩笑地称它为我的“抑郁症巨著”，因为它总结了10年的工作和思考，而且认识论迭代是我们领域没有进展的一个例子。所以我现在试图扩展这个，以及为什么对你的问题很重要。
+- en: 'In *Inventing Temperature*, Hasok Chang talks about the tricky situation that
+    we don''t think about today: that people back then had a sense of temperature,
+    but they didn''t know what temperature is, nor did they have a measurement for
+    temperature. So it was really hard. It took many, many smart people, 300, 400
+    years to get thermometers developed, because we didn''t have the theory nor the
+    measurement. And if both are missing, you are in trouble.'
+  id: totrans-93
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 在*发明温度*中，Hasok Chang谈到了我们今天没有考虑到的棘手情况：那时的人们有温度感，但他们不知道温度是什么，也没有温度的测量方法。所以这真的很困难。花了很多很多聪明人，300，400年才开发出温度计，因为我们既没有理论也没有测量方法。如果两者都缺失，那就麻烦了。
+- en: So Hasok Chang talks about epistemic iteration, which is the idea that you make
+    really bad model measurements. And then they inform you about a really bad theory,
+    which helps you improve really bad measures. Then you go back and forth between
+    theory and measurement. I like the example of glasses. He says, well, even with
+    really bad glasses, you can see the world in some shape or form, which can help
+    you make better glasses.
+  id: totrans-94
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 所以Hasok Chang谈到了认识论迭代，这是一个你做出非常糟糕的模型测量的想法。然后他们告诉你一些非常糟糕的理论，这有助于你改进非常糟糕的测量方法。然后你在理论和测量之间来回反复。我喜欢眼镜的例子。他说，即使带着非常糟糕的眼镜，你也能以某种形式看到世界，这可以帮助你制造更好的眼镜。
+- en: In the depression measurement paper, we describe the reason why stuff hasn't
+    progressed in 30 years, and we argue that one of the core reasons is that the
+    measurement tools we use in clinical trials today, the most commonly used scale
+    is from Hamilton in 1960\. That was a great scale in 1960, perhaps, but it really
+    doesn't conform at all to any measurement practices 60 years later. That's not
+    how we would develop a scale today. That's not how we validate a scale. So many
+    things that are part of this measurement instrument are quite irrelevant to what
+    we think depression is today. And yet we still use it. And so the epistemic iteration
+    hasn't really happened. We have learned a lot about the theory of depression,
+    but our measures haven't improved. And this is relevant for the black box stuff,
+    because I would raise the question, but what should we measure? You would say,
+    “Everything,” but I'm like, I don't think that's how it works. So I think the
+    most useful measurement will be a theory-based measurement, and then we can still
+    apply black box models.
+  id: totrans-95
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 在抑郁测量论文中，我们描述了为什么事情在30年内没有进展的原因，我们认为其中一个核心原因是我们今天在临床试验中使用的测量工具，最常用的量表是1960年由汉密尔顿（Hamilton）提出的。也许在1960年，那是一个很棒的量表，但它实际上根本不符合60年后的任何测量实践。那不是我们今天会开发量表的方式。那不是我们如何验证量表的方式。因此，这个测量工具的许多东西与我们今天认为的抑郁症是相当无关的。然而我们仍然在使用它。因此，认知迭代并没有真正发生。我们对抑郁症理论学到了很多，但我们的测量方法并没有改进。对于黑匣子问题，这是相关的，因为我会提出问题，我们应该测量什么？你会说，“一切”，但我认为那不是事实。所以我认为最有用的测量将是基于理论的测量，然后我们仍然可以应用黑匣子模型。
+- en: Actually, we have a protocol paper for the WARN-D study. I think it's the first
+    protocol paper I've read where I spent three pages grappling with the phenotype
+    of depression, the complexities of the phenotype of depression, and then explaining
+    why I chose my very particular measurements, dynamic measurements, for example,
+    to deal with this heterogeneous, multifinal, equifinal, and so forth, all these
+    issues. So black box machine learning is great, but how do you select the data
+    you collect in a study? Because you always need to make a trade-off. In our study,
+    we had, I don't know, nine hours of questionnaires we wanted to give, and we gave
+    90 minutes. This is all theory-driven, of course—the selection of these 90-minute
+    questionnaires in the end.
+  id: totrans-96
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 实际上，我们有一篇关于WARN-D研究的方案论文。我认为这是我读过的第一篇方案论文，在其中我花了三页时间探讨抑郁症表型的复杂性，以及解释我为什么选择了我非常特定的测量方法，比如动态测量，来应对这种异质性、多结局性和等终点等等所有问题。所以黑匣子机器学习是很棒的，但你如何选择研究中收集的数据呢？因为你总是需要权衡。在我们的研究中，我们有，我不知道，九个小时的问卷调查，我们想要给出，但我们只给了90分钟。当然，这一切都是基于理论的——最终选择这90分钟问卷调查的选择。
+- en: '**DS:** We covered a lot of stuff. What did I miss? What should I have asked
+    you that I didn''t?'
+  id: totrans-97
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '**DS:** 我们讨论了很多内容。我漏掉了什么？我应该问你什么问题，但我没有问到？'
+- en: '**EF:** We talked about prediction explanation on Twitter. I think that was
+    what I was going to get into. That''s been really exciting. I got to talk about
+    the project we''re doing a little, which is nice because my grad students worked
+    super-mega-hard on it. I''ve been working on it for three years myself. It''s
+    nice to chat about a little now that the data are actually coming in and our first
+    cohort is actually ending in December. We have two years of data done in the first 500
+    people and the others are still running. I just hired a postdoc to look into the
+    data.'
+  id: totrans-98
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '**EF:** 我们在Twitter上讨论了预测解释。我想这就是我要谈论的内容。这真的很激动人心。我有机会稍微谈论一下我们正在做的项目，这很好，因为我的研究生们非常努力地工作了。我自己已经在这个项目上工作了三年。现在数据实际上已经开始进来了，我们的第一个队列实际上将在12月结束。我们已经完成了前500个人的两年数据，其他人还在继续进行。我刚刚聘请了一名博士后来研究这些数据。'
+- en: This was really insightful because you're also prepared. You knew about the
+    replicability crisis in my field and stuff like this, about mental health, but
+    also about AI and machine learning and David Deutsch and explanation versus prediction.
+    It was really fun to chat.
+  id: totrans-99
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 这真的很有启发性，因为你也做了准备。你知道我领域的可重复性危机以及关于心理健康、人工智能和机器学习以及大卫·德沃夏克（David Deutsch）和解释与预测的问题，这真的很有趣。。
+- en: '**DS:** Thank you very much. I really appreciate your time.'
+  id: totrans-100
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '**DS:** 非常感谢。我非常感谢你的时间。'
+- en: '**EF:** Thanks, Dan.'
+  id: totrans-101
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '**EF:** 谢谢，丹。'
+- en: '* * *'
+  id: totrans-102
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '* * *'
+- en: '*If you liked this interview,* [*follow Dr. Fried on Twitter*](https://twitter.com/EikoFried?ref_src=twsrc%5Egoogle%7Ctwcamp%5Eserp%7Ctwgr%5Eauthor)*.*'
+  id: totrans-103
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '*如果你喜欢这次采访，* [*请关注 Fried 博士的 Twitter*](https://twitter.com/EikoFried?ref_src=twsrc%5Egoogle%7Ctwcamp%5Eserp%7Ctwgr%5Eauthor)*.*'

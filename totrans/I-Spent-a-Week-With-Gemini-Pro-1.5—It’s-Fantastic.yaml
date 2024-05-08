@@ -1,0 +1,506 @@
+- en: <!--yml
+  id: totrans-0
+  prefs: []
+  type: TYPE_NORMAL
+  zh: <!--yml
+- en: 'category: COT 专栏'
+  id: totrans-1
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 类别：COT 专栏
+- en: 'date: 2024-05-08 11:05:01'
+  id: totrans-2
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 日期：2024-05-08 11:05:01
+- en: -->
+  id: totrans-3
+  prefs: []
+  type: TYPE_NORMAL
+  zh: -->
+- en: I Spent a Week With Gemini Pro 1.5—It’s Fantastic
+  id: totrans-4
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+  zh: 我与 Gemini Pro 1.5 共度了一周——它真是太棒了
+- en: 来源：[https://every.to/chain-of-thought/i-spent-a-week-with-gemini-pro-1-5-it-s-fantastic](https://every.to/chain-of-thought/i-spent-a-week-with-gemini-pro-1-5-it-s-fantastic)
+  id: totrans-5
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+  zh: 来源：[https://every.to/chain-of-thought/i-spent-a-week-with-gemini-pro-1-5-it-s-fantastic](https://every.to/chain-of-thought/i-spent-a-week-with-gemini-pro-1-5-it-s-fantastic)
+- en: 'Sponsored By: Destiny'
+  id: totrans-6
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+  zh: 由 Destiny 赞助
+- en: '[![](img/c0f4a61f62fe9e4e871301988d2a842a.png)](https://destiny.xyz/every)'
+  id: totrans-7
+  prefs:
+  - PREF_H5
+  type: TYPE_NORMAL
+  zh: '[![](img/c0f4a61f62fe9e4e871301988d2a842a.png)](https://destiny.xyz/every)'
+- en: Own Game-changing Companies
+  id: totrans-8
+  prefs:
+  - PREF_H5
+  type: TYPE_NORMAL
+  zh: 拥有改变游戏规则的公司
+- en: Venture capital investing has long been limited to a select few—until now.
+  id: totrans-9
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 长期以来，风险投资一直局限于少数精英——直到现在。
+- en: With the [Destiny Tech100 (DXYZ)](https://destiny.xyz/every) , you'll be able
+    to invest in top private companies like OpenAI and SpaceX from the convenience
+    of your brokerage account.
+  id: totrans-10
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 使用 [Destiny Tech100（DXYZ）](https://destiny.xyz/every)，您将能够从您的经纪账户方便地投资于像 OpenAI
+    和 SpaceX 这样的顶级私营公司。
+- en: '[**Claim your free share**](https://destiny.xyz/every) before it lists on the
+    NYSE. Sponsored by Destiny.'
+  id: totrans-11
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '[**免费领取你的股票**](https://destiny.xyz/every) 在纽约证券交易所上市之前。由 Destiny 赞助。'
+- en: I got access to Gemini Pro 1.5 this week, a new private beta LLM from Google
+    that is significantly better than previous models the company has released. (This
+    is not the same as the publicly available version of Gemini that made headlines
+    for [refusing to create pictures of white people](https://www.theverge.com/2024/2/21/24079371/google-ai-gemini-generative-inaccurate-historical).
+    That will be forgotten in a week; this will be relevant for months and years to
+    come.)
+  id: totrans-12
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 本周我获得了 Gemini Pro 1.5 的使用权限，这是谷歌推出的新一代私人测试版 LLM，明显比该公司之前发布的模型要好得多。（这与公开发布的 Gemini
+    版本不同，后者因[拒绝创建白人图片](https://www.theverge.com/2024/2/21/24079371/google-ai-gemini-generative-inaccurate-historical)而成为新闻头条。那将在一周内被遗忘；而这个版本将在未来数月甚至数年内仍然相关。）
+- en: Gemini 1.5 Pro read an entire novel and told me in detail about a scene hidden
+    in the middle of it. It read a whole codebase and suggested a place to insert
+    a new feature—with sample code. It even read through all of my highlights on reading
+    app Readwise and selected one for an essay I’m writing.
+  id: totrans-13
+  prefs: []
+  type: TYPE_NORMAL
+  zh: Gemini 1.5 Pro 阅读了整部小说，并详细告诉我其中隐藏的场景。它阅读了一个完整的代码库，并建议在其中插入一个新功能的位置，并提供了示例代码。它甚至阅读了我在阅读应用
+    Readwise 上的所有摘要，并为我正在写的一篇文章选中了一篇。
+- en: Somehow, Google figured out how to build an AI model that can comfortably accept
+    up to *1 million tokens* with each prompt. For context, you could fit all of Eliezer
+    Yudkowsky’s 1,967-page opus *Harry Potter and the Methods of Rationality* into
+    *every message* you send to Gemini. (Why would you want to do this, you ask? For
+    science, of course.)
+  id: totrans-14
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 不知何故，谷歌找到了一种构建 AI 模型的方法，可以舒适地接受每个提示的 *100 万令牌*。为了方便理解，你可以将 Eliezer Yudkowsky
+    的 1967 页长篇著作 *《哈利·波特与理性方法》* 放入你发送给 Gemini 的 *每条消息* 中。 （你为什么要这样做，你会问？当然是为了科学。）
+- en: 'Gemini Pro 1.5 is a serious achievement for two reasons:'
+  id: totrans-15
+  prefs: []
+  type: TYPE_NORMAL
+  zh: Gemini Pro 1.5 有两个重要成就：
+- en: 1) **Gemini Pro 1.5’s context window is far bigger than the next closest models.**
+    While Gemini Pro 1.5 is comfortably consuming entire works of rationalist doomer
+    fanfiction, GPT-4 Turbo can only accept 128,000 tokens. This is about enough to
+    accept Peter Singer’s comparatively slim 354-page volume *Animal Liberation,*
+    one of the founding texts of the effective altruism movement.
+  id: totrans-16
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 1）**Gemini Pro 1.5 的上下文窗口远远大于其他最接近的模型。**虽然 Gemini Pro 1.5 轻松地消耗整个理性厌世者幻想小说作品，但
+    GPT-4 Turbo 只能接受 128,000 个令牌。这大约足以接受 Peter Singer 相对较瘦的 354 页书 *《动物解放》*，这是有效利他主义运动的奠基之作之一。
+- en: 'Last week GPT-4’s context window seemed big; this week—after using Gemini Pro
+    1.5—it seems like an amount that would curl Derek Zoolander’s hair:'
+  id: totrans-17
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 上周 GPT-4 的上下文窗口似乎很大；但是在使用 Gemini Pro 1.5 后，它看起来就像是会让 Derek Zoolander 的头发卷曲的数量：
+- en: "\uFEFF2)"
+  id: totrans-18
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 2）
+- en: '**Gemini Pro 1.5 can use the whole context window.**'
+  id: totrans-19
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '**Gemini Pro 1.5 可以使用整个上下文窗口。**'
+- en: In my testing, Gemini Pro 1.5 handled huge prompts wonderfully. It’s a big leap
+    forward from current models, whose performance degrades significantly as prompts
+    get bigger. Even though their context windows are smaller, they don’t perform
+    well as prompts approach their size limits. They tend to forget what you said
+    at the beginning of the prompt or miss key information located in the middle.
+    This doesn’t happen with Gemini.
+  id: totrans-20
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 在我的测试中，Gemini Pro 1.5 处理大段提示表现出色。与当前模型相比，这是一个巨大的进步，当前模型的性能随着提示的增大而显著下降。即使它们的上下文窗口较小，但随着提示接近其大小限制，它们的表现也不佳。它们往往会忘记您在提示开头说的内容，或者错过位于中间的关键信息。而
+    Gemini 不会出现这种情况。
+- en: 'These context window improvements are so important because they make the model
+    smarter and easier to work with out of the box. It might be possible to get the
+    same performance from GPT-4, but you’d have to write a lot of extra code in order
+    to do so. I’ll explain why in a moment, but for now you should know: Gemini means
+    you don’t need any of that infrastructure. It just works.'
+  id: totrans-21
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 这些上下文窗口的改进非常重要，因为它们使模型更聪明，更容易使用。 可能可以通过GPT-4获得相同的性能，但是您需要编写大量额外的代码才能做到。 我马上会解释原因，但是现在你应该知道：Gemini意味着你不需要任何基础设施。
+    它只是有效。
+- en: Let’s walk through an example, and then talk about the new use cases that Gemini
+    Pro 1.5 enables.
+  id: totrans-22
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 让我们通过一个例子来走一遍，然后谈谈Gemini Pro 1.5带来的新用例。
+- en: ''
+  id: totrans-23
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: VC investing has traditionally been reserved to a privileged few. But now [Destiny
+    Tech100 (DXYZ)](https://destiny.xyz/every) is changing that. You can own a piece
+    of groundbreaking private companies such as OpenAI and SpaceX, all from the convenience
+    of your brokerage account. Claim your free share before it hits the NYSE. Sponsored
+    by Destiny.
+  id: totrans-24
+  prefs: []
+  type: TYPE_NORMAL
+  zh: VC投资传统上是为少数特权人士保留的。 但现在[Destiny Tech100（DXYZ）](https://destiny.xyz/every)正在改变这一点。
+    你可以拥有突破性的私人公司的一部分，比如OpenAI和SpaceX，所有这些都可以通过你的经纪账户方便地拥有。 在它上市之前索取你的免费股份。 由Destiny赞助。
+- en: Why size matters (when it comes to a context window)
+  id: totrans-25
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+  zh: 当谈到上下文窗口时，大小为何至关重要
+- en: I’ve been reading Chaim Potok’s 1967 novel, *The Chosen.* It features a classic
+    enemies-to-lovers storyline about two Brooklyn Jews who find friendship and personal
+    growth in the midst of a horrible softball accident. (As a Jew, let me say that
+    yes, “horrible softball accident” is the most Jewish inciting incident in a book
+    since Moses parted the Red Sea.)
+  id: totrans-26
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 我一直在阅读Chaim Potok的1967年小说《The Chosen》。 它以两位布鲁克林犹太人之间的经典敌人到恋人的故事线为特色，在一次可怕的橄榄球意外中找到了友谊和个人成长。（作为一个犹太人，让我说是的，“可怕的橄榄球意外”自从摩西分开红海以来就是一本书中最犹太的激发事件。）
+- en: In the book, Reuven Malter and his Orthodox yeshiva softball team are playing
+    against a Hasidic team led by Danny Saunders, the son of the rebbe. In a pivotal
+    early scene, Danny is at bat and full of rage. He hits a line drive toward Reuven,
+    who catches the ball with his face. It smashes his glasses, spraying shards of
+    glass into his eye and nearly blinding him. Despite his injury, Reuven catches
+    the ball. The first thing his teammates care about is not his eye or the traumatic
+    head injury he just suffered—it’s that he made the catch.
+  id: totrans-27
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 在书中，Reuven Malter 和他的正统叶史瓦梨橄榄球队正在与由Danny Saunders领导的Hasidic团队比赛，后者是rebbe的儿子。
+    在一个关键的早期场景中，Danny在打击位置上充满了愤怒。 他朝着Reuven打出一记直线球，Reuven用他的脸接住了球。 眼镜被打碎，玻璃碎片喷进他的眼睛，几乎使他失明。
+    尽管受伤，Reuven还是接住了球。 他的队友们关心的第一件事不是他的眼睛或他刚刚遭受的创伤性头部受伤，而是他接住了球。
+- en: If you’re a writer like me and you’re typing an anecdote like the one I just
+    wrote, you might want to put into your article the quote from one of Reuven’s
+    teammates right after he caught the ball to make it come alive.
+  id: totrans-28
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 如果你像我这样是一个作家，正在输入像我刚才写的那样的轶事，你可能想把Reuven的队友之一在他接住球后的话插入你的文章中，使其生动起来。
+- en: 'If you go to ChatGPT for help, it’s not going to do a good job initially:'
+  id: totrans-29
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 如果你去找ChatGPT求助，它一开始做得不会很好：
+- en: This is wrong. Because, as I said, Sydney Goldberg did not care about Reuven’s
+    injury—he cared about the game! But all is not lost. If you give ChatGPT a plain
+    text version of
+  id: totrans-30
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 这是错误的。 因为，正如我所说，Sydney Goldberg并不关心Reuven的受伤——他关心的是比赛！ 但并非一切都失去了。 如果你给ChatGPT一个纯文本版本
+- en: '*The Chosen*'
+  id: totrans-31
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '*The Chosen*'
+- en: 'and ask the same question, it’ll return a great answer:'
+  id: totrans-32
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 并且问同样的问题，它会给出一个很棒的答案：
+- en: This is correct! (It also confirms for us that Sydney Goldberg has his priorities
+    straight.) So what happened?
+  id: totrans-33
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 这是正确的！（它也为我们确认了Sydney Goldberg的优先事项是正确的。）那么发生了什么事？
+- en: ChatGPT behaved as if I’d given it an open-book test. We can improve ChatGPT’s
+    responses by, when asking it a question, giving it a little notecard with some
+    extra information that it might use to answer it.
+  id: totrans-34
+  prefs: []
+  type: TYPE_NORMAL
+  zh: ChatGPT表现得好像我给了它一个开卷考试。 当我们向它提问问题时，我们可以通过给它一张小纸条，上面写有一些额外信息，让它可能用来回答问题。
+- en: 'In this case we gave it an entire book to read through. But you’ll notice a
+    problem: The entire book can’t fit into ChatGPT’s context window. So how does
+    it work?'
+  id: totrans-35
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 在这种情况下，我们让它阅读整本书。 但是你会注意到一个问题：整本书无法放入ChatGPT的上下文窗口。 那么它是如何工作的呢？
+- en: 'In order to answer my question, there’s a lot of code in ChatGPT that performs
+    **retrieval**: It divides *The Chosen* up into small chunks through which it searches
+    to find ones that seem relevant to the query. The retrieval code passes the original
+    question, “What’s the first thing that Sydney Goldberg says to Reuven after he
+    gets hit in the eye by the baseball?” *and* the most relevant sections of text
+    it can find in the book to GPT-4, which produces an answer. (For a more detailed
+    explanation, [read this piece](https://every.to/chain-of-thought/how-to-build-a-chatbot-with-gpt-3?sid=35036).)'
+  id: totrans-36
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 为了回答我的问题，ChatGPT 中有很多执行**检索**的代码：它将*被选择的*分成小块，通过这些块搜索似乎与查询相关的部分。检索代码将原始问题“悉尼·戈德伯格在被棒球击中眼睛后对鲁文说的第一句话是什么？”*以及*在书中找到的最相关的文本部分传递给
+    GPT-4，后者产生答案。（有关更详细的解释，请[阅读这篇文章](https://every.to/chain-of-thought/how-to-build-a-chatbot-with-gpt-3?sid=35036)。）
+- en: 'Again, we have to pass GPT-4 *chunks* of text—not the whole book—because GPT-4
+    can only fit so much text into its context window. If you’re paying attention,
+    you’ll see the problem: Because the context window is so small, the performance
+    of our model for answering certain kinds of queries is bottle-necked by how good
+    we are at searching for relevant pieces of information to give to the model. (I
+    wrote about this phenomenon about a year ago [in this piece](https://every.to/chain-of-thought/gpt-4-is-a-reasoning-engine).)'
+  id: totrans-37
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 再次强调，我们必须传递给 GPT-4 *文本块*而不是整本书-因为 GPT-4 只能将有限的文本放入其上下文窗口。 如果您注意到，您会看到问题所在：由于上下文窗口太小，我们的模型对于回答某些类型的查询的性能受到我们搜索相关信息块的能力的限制。（我大约一年前在[这篇文章](https://every.to/chain-of-thought/gpt-4-is-a-reasoning-engine)中写了这种现象。）
+- en: If our search functionality doesn’t turn up relevant text chunks, well, GPT-4’s
+    answer won’t be good. It doesn’t matter how smart GPT-4 is—it’s only as good as
+    the chunks we turn up.
+  id: totrans-38
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 如果我们的搜索功能没有找到相关的文本块，那么 GPT-4 的答案就不会好。 GPT-4 有多聪明都无所谓-它只有我们找到的块好。
+- en: 'Let’s say we’re picking up *The Chosen* after a few weeks. We’ve read the first
+    two sections, and before we begin the third we want to get a summary of what’s
+    already happened in the book. We upload it to ChatGPT and ask it to summarize:'
+  id: totrans-39
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 假设我们在几周后继续阅读*被选择*。我们已经读完了前两节，在我们开始第三节之前，我们想要获取书中已经发生的事情的摘要。我们将其上传到 ChatGPT 并要求它进行总结：
+- en: ChatGPT gives us a vague answer that’s correct, but it’s not very detailed because
+    it can’t fit enough of the book into its context window to output a great one.
+  id: totrans-40
+  prefs: []
+  type: TYPE_NORMAL
+  zh: ChatGPT 给了我们一个模糊的答案，正确但不够详细，因为它无法将足够的书籍放入其上下文窗口以输出一个很好的答案。
+- en: 'Let’s see what happens when we don’t have to divide the book up into chunks. 
+    Instead, we use Gemini, which can read through the entire book at once:'
+  id: totrans-41
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 让我们看看当我们不必将书分成块时会发生什么。 相反，我们使用 Gemini，它可以一次阅读整本书：
+- en: You’ll notice that Gemini’s answer is significantly more detailed and provides
+    key plot points from the book that ChatGPT can’t give. (Technically, we could
+    probably get a similar summary out of GPT-4 if we devised a clever system for
+    chunking and summarizing it, but it would take a lot of work, and Gemini makes
+    that work unnecessary.)
+  id: totrans-42
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 您会注意到 Gemini 的答案明显更详细，并提供了 ChatGPT 无法提供的书中的关键情节。 （从技术上讲，如果我们设计了一个聪明的系统来分块和总结它，我们可能会从
+    GPT-4 中得到类似的摘要，但这需要大量工作，而 Gemini 使得这项工作不必要。）
+- en: Gemini’s use cases aren’t limited to reading novels of self-discovery through
+    softball accidents. There are hundreds of others that it unlocks that were previously
+    difficult to do with ChatGPT, or with a custom solution.
+  id: totrans-43
+  prefs: []
+  type: TYPE_NORMAL
+  zh: Gemini 的用例不仅限于通过垒球事故自我发现的小说阅读。 还有数百种其他用例，它解锁了以前使用 ChatGPT 或自定义解决方案难以实现的用例。
+- en: 'For example, at Every, we’re incubating a software product that can help [you
+    organize your files with AI](https://twitter.com/danshipper/status/1735398395752198442).
+    I wrote the original code for the file organizer, and our lead engineer, Avishek,
+    wrote a GPT-4 integration. He wanted to know where to hook the GPT-4 integration
+    into the existing codebase. So we uploaded it to Gemini and asked:'
+  id: totrans-44
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 例如，在 Every，我们正在孵化一个可以帮助[您使用 AI 组织文件](https://twitter.com/danshipper/status/1735398395752198442)的软件产品。我编写了文件组织者的原始代码，我们的首席工程师
+    Avishek 编写了一个 GPT-4 集成。他想知道在现有代码库中的哪里连接 GPT-4 集成。因此，我们将其上传到 Gemini 并问：
+- en: It found the right place in the code and wrote the code Avishek needed in order
+    to complete the integration. This is something just short of magic, dramatically
+    accelerating developer productivity, especially on larger projects.
+  id: totrans-45
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 它找到了代码中的正确位置，并编写了 Avishek 需要完成集成的代码。这几乎就是魔法，极大地加速了开发者的生产力，尤其是在较大的项目中。
+- en: It doesn’t stop there, either. I’ve been writing for a long time about how transformer
+    models might become [copilots for the mind](https://every.to/chain-of-thought/gpt-4-a-copilot-for-the-mind?sid=35073)—and
+    [end our need to organize our notes](https://every.to/chain-of-thought/the-end-of-organizing?sid=35074)
+    forever. Gemini Pro 1.5 is a step in that direction. For example, recently I was
+    writing a piece about an effect I’ve noticed that I’m calling “I can do it myself”
+    syndrome, where people tend to not use ChatGPT and similar tools because they
+    feel like they can get the same task done more quickly, at better quality, if
+    they do it themselves. It’s like inexperienced managers who micromanage their
+    reports to the point of doing most of the work themselves, guaranteeing it’s done
+    the way they want it to, but sacrificing a lot of leverage in the process.
+  id: totrans-46
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 这还不止于此。我长期以来一直在探讨转换模型可能如何成为[思想的共同驾驶员](https://every.to/chain-of-thought/gpt-4-a-copilot-for-the-mind?sid=35073)——并永远结束我们整理笔记的需求。Gemini
+    Pro 1.5 是朝这个方向迈出的一步。例如，最近我正在写一篇关于我注意到的一种效应的文章，我称之为“我可以自己做”，人们倾向于不使用 ChatGPT 和类似的工具，因为他们觉得如果自己做，可以更快地完成相同的任务，质量也更好。这就像是经验不足的经理人，他们对下属进行微观管理，直至几乎把所有工作都自己做完，保证它们按照他们想要的方式完成，但在这个过程中牺牲了很多的影响力。
+- en: "I wanted an anecdote to open the essay with, so I asked Gemini to find one\
+    \ in my reading highlights. It came up with something perfect:\uFEFF"
+  id: totrans-47
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 我想要一个轶事来开篇，所以我让 Gemini 在我的阅读摘要中找一个。它给出了一个完美的选择：
+- en: I could not have found a better anecdote, and it’s not a generic one—it’s from
+    my own reading history and taste.
+  id: totrans-48
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 我找不到比这更好的轶事了，而且它并不是一个通用的轶事——它来自我的阅读历史和口味。
+- en: '*Except:* I later learned thatthe anecdote is made up. The general thrust of
+    the idea is true—Luce did run both the editorial and business sides of *Time*—so
+    it is pointing me in the right direction. But after I reviewed my Readwise highlights,
+    I couldn''t find the exact quote Gemini came up with. (I only figured this out
+    after Gwern and other savvy Hacker News commenters pointed it out in a previous
+    version of this article.)'
+  id: totrans-49
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '*除此之外：* 我后来得知这个轶事是虚构的。这个想法的总体方向是正确的——Luce确实同时负责过《时代》杂志的编辑和商业部门——所以它引导了我朝着正确的方向。但是在我回顾了我的
+    Readwise 高亮之后，我找不到 Gemini 给出的确切引用。 （在此文的早期版本中，Gwern 和其他精明的 Hacker News 评论者在我之前就指出了这一点。）'
+- en: So Gemini is not perfect. You do need to check its work. But if you're careful,
+    it's a powerful tool.
+  id: totrans-50
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 所以 Gemini 不是完美的。你确实需要检查它的工作。但是如果你小心谨慎，它是一个强大的工具。
+- en: Again, all of this comes back to the context window. This kind of performance
+    is only possible because with Gemini we don’t need to search for or sort relevant
+    pieces of information before we hand it to the model. We just feed it everything
+    we have and let the model do the rest.
+  id: totrans-51
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 再次强调，所有这些都与上下文窗口有关。正是因为有了 Gemini，这种性能才成为可能，我们不需要在将信息交给模型之前搜索或排序相关信息。我们只需将所有信息都提供给它，让模型完成剩下的工作。
+- en: 'It’s much easier to work with large context windows, and they can deliver far
+    more consistent and powerful results without extra retrieval code. The question
+    is: What’s next?'
+  id: totrans-52
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 与大型上下文窗口一起工作要容易得多，它们可以提供更一致和更强大的结果，而无需额外的检索代码。问题是：接下来是什么？
+- en: The future of large context models
+  id: totrans-53
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+  zh: 大型上下文模型的未来
+- en: 'About a year ago [I wrote](https://every.to/chain-of-thought/gpt-4-is-a-reasoning-engine?sid=35075):'
+  id: totrans-54
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 大约一年前，[我写道](https://every.to/chain-of-thought/gpt-4-is-a-reasoning-engine?sid=35075)：
+- en: “People have been saying that data is the new oil for a long time. But I do
+    think, in this case, if you’ve spent a lot of time collecting and curating your
+    own personal set of notes, articles, books, and highlights it’ll be the equivalent
+    of having a topped-off oil drum in your bedroom during an OPEC crisis.”
+  id: totrans-55
+  prefs: []
+  type: TYPE_NORMAL
+  zh: “人们长期以来一直在说数据是新的石油。但我认为，在这种情况下，如果你花了很多时间收集和整理自己的个人笔记、文章、书籍和重点，那将相当于在石油输出国家组织危机期间在你的卧室里有一个装满了油的桶。”
+- en: Gemini is the perfect example of why this is true. With its large context window,
+    all of the personal data you’ve been collecting is at the tip of your fingers
+    ready to be deployed at the right place and the right time, in whatever task you
+    need it for. The more personal data you have—even if it’s disorganized—the better.
+  id: totrans-56
+  prefs: []
+  type: TYPE_NORMAL
+  zh: Gemini是这一事实的完美例证。有了它的大上下文窗口，你收集的所有个人数据都准备就绪，随时可以在正确的地点和正确的时间部署，在你需要的任何任务中使用。你拥有的个人数据越多——即使它是杂乱无章的——越好。
+- en: 'There are a few important caveats to note, though:'
+  id: totrans-57
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 但还有一些重要的注意事项：
+- en: 'First, this is a private beta that I can use for free. These models often perform
+    differently (read: worse) when they are released publicly, and we don’t know how
+    Gemini will perform when it’s tasked with operating at Google scale. There’s also
+    no telling how much pumping 1 million tokens is going to cost into Gemini when
+    it’s live. Over time the cost of using it will likely significantly decrease,
+    but it will take a while.'
+  id: totrans-58
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 首先，这是一个我可以免费使用的私人测试版。这些模型在公开发布时通常会表现出不同的性能（读：更差），而我们不知道当Gemini被要求在Google规模下运行时会表现如何。当它正式上线时，向Gemini注入100万个令牌会花费多少是无法预料的。随着时间的推移，使用它的成本可能会显著降低，但这需要一段时间。
+- en: Second, Gemini is pretty slow. Many requests took a minute or more to return,
+    so it’s not a drop-in replacement for every LLM use case. It’s for the heavy lifting
+    that you can’t get done with ChatGPT, which you probably don’t need to do on a
+    regular basis. I would expect speed to increase significantly over time as well,
+    but it’s still not there yet.
+  id: totrans-59
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 其次，Gemini速度相当慢。许多请求需要一分钟或更长时间才能返回，因此它并不是每个LLM使用案例的即插即用替代品。它是用于不能通过ChatGPT完成的繁重工作，而这些工作你可能不需要经常进行。我预计随着时间的推移速度会显著提高，但目前还没有达到这一点。
+- en: OpenAI has some catching up to do, and I’ll be watching to see how they respond.
+    But the other players on my mind—companies like Langchain, LlamaIndex (where I’m
+    an investor), Pinecone, and Weaviate—are to some degree betting on *retrieval*
+    being an important component of LLM usage. They either provide the library that
+    does the chunking and searching for information to pass to the LLM, or the datastore
+    that keeps the information searchable and safe. As I mentioned earlier, retrieval
+    is less relevant when you have a large context window, because you can input 
+    all of your information into each request.
+  id: totrans-60
+  prefs: []
+  type: TYPE_NORMAL
+  zh: OpenAI还有一些赶上的工作要做，我将密切关注他们的反应。但我关心的其他参与者——像Langchain、LlamaIndex（我是一名投资者）、Pinecone和Weaviate——在某种程度上正在押注*检索*是LLM使用中的一个重要组成部分。它们提供的是库，用于分块和搜索信息以传递给LLM，或者是保持信息可搜索和安全的数据存储库。正如我之前提到的，当你拥有一个大的上下文窗口时，检索就不那么重要了，因为你可以将所有信息输入到每个请求中。
+- en: You might think those companies are in trouble. Gemini’s huge context window
+    *does* make some of what they’re building less important for basic queries. But
+    I think retrieval will still be important long-term.
+  id: totrans-61
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 这些公司可能会陷入困境。Gemini的巨大上下文窗口确实使他们正在构建的一些内容对于基本查询不那么重要。但我认为检索长期来看仍然很重要。
+- en: 'If there’s one thing we know about humanity, it’s that our ambition scales
+    with the tools we have available to satisfy it. If 1 million token context models
+    become the norm, we’ll learn to fill them. Every chat prompt will include all
+    of our emails, and all of our journal entries, and maybe a book or two for good
+    measure. Retrieval will still be used to figure out which 1 million tokens are
+    the most relevant, rather than what it’s used for now: to find which 1,000 tokens
+    are the most relevant.'
+  id: totrans-62
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 如果有一件事我们了解的是，那就是我们的野心会随着我们可用的工具的增加而扩大。如果100万个令牌的上下文模型成为常态，我们会学会如何填充它们。每个聊天提示都会包含我们所有的电子邮件，以及我们所有的日记条目，也许还有一两本书作为补充。检索仍然会被用来找出哪些100万个令牌是最相关的，而不是像现在这样用来找出哪些1000个令牌是最相关的。
+- en: It’s an exciting time. Expect more experiments from me in the weeks to come!
+  id: totrans-63
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 这是一个令人兴奋的时刻。期待接下来几周我会进行更多的实验！
+- en: '* * *'
+  id: totrans-64
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '* * *'
+- en: '***Dan Shipper*** *is the co-founder and CEO of Every, where he writes the*
+    [*Chain of Thought*](https://every.to/chain-of-thought) *column and hosts the
+    podcast* [How Do You Use ChatGPT?](https://open.spotify.com/show/5qX1nRTaFsfWdmdj5JWO1G)
+    *You can follow him on X at* [*@danshipper*](https://twitter.com/danshipper) *and
+    on* [*LinkedIn*](https://www.linkedin.com/in/danshipper/)*, and Every on X at*
+    [*@every*](https://twitter.com/every) *and on* [*LinkedIn*](https://www.linkedin.com/company/everyinc/)*.*'
+  id: totrans-65
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '***丹·希珀*** *是Every的联合创始人兼首席执行官，在那里他撰写* [*Chain of Thought*](https://every.to/chain-of-thought)
+    *专栏并主持* [你如何使用 ChatGPT？](https://open.spotify.com/show/5qX1nRTaFsfWdmdj5JWO1G)
+    *播客。您可以在 X 上关注他* [*@danshipper*](https://twitter.com/danshipper) *，在* [*LinkedIn*](https://www.linkedin.com/in/danshipper/)
+    *上关注他，以及在 Every 上在 X 上关注* [*@every*](https://twitter.com/every) *，在* [*LinkedIn*](https://www.linkedin.com/company/everyinc/)
+    *上关注 Every。*'
+- en: '* * *'
+  id: totrans-66
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '* * *'
+- en: '***Correction:*** *An earlier version of this article did not note that the
+    Henry Luce quote was hallucinated. It has been updated with that information.*'
+  id: totrans-67
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '***更正：*** *本文早期版本未注明亨利·卢斯的引述是虚构的。已更新包含该信息的内容。*'

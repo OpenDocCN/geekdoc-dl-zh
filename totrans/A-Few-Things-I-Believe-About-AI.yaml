@@ -1,0 +1,488 @@
+- en: <!--yml
+  id: totrans-0
+  prefs: []
+  type: TYPE_NORMAL
+  zh: <!--yml
+- en: 'category: COT 专栏'
+  id: totrans-1
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 分类：COT 专栏
+- en: 'date: 2024-05-08 11:10:17'
+  id: totrans-2
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 日期：2024-05-08 11:10:17
+- en: -->
+  id: totrans-3
+  prefs: []
+  type: TYPE_NORMAL
+  zh: -->
+- en: A Few Things I Believe About AI
+  id: totrans-4
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+  zh: 关于人工智能的几点信念
+- en: 来源：[https://every.to/chain-of-thought/a-few-things-i-believe-about-ai](https://every.to/chain-of-thought/a-few-things-i-believe-about-ai)
+  id: totrans-5
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+  zh: 来源：[https://every.to/chain-of-thought/a-few-things-i-believe-about-ai](https://every.to/chain-of-thought/a-few-things-i-believe-about-ai)
+- en: CHATBOT COURSE EARLY BIRD PRICING ENDING SOON!
+  id: totrans-6
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+  zh: 聊天机器人课程早鸟价即将结束！
+- en: We are thrilled to announce we are relaunching our [How to Build a Chatbot course](https://www.chatbot-course.com/)!
+    If you are interested in learning how to build with AI, join our upcoming Fall
+    cohort taught by our very own Dan Shipper.
+  id: totrans-7
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 我们很高兴地宣布我们将重新推出我们的[如何构建聊天机器人课程](https://www.chatbot-course.com/)！如果您有兴趣学习如何利用人工智能构建，请加入我们即将到来的秋季队伍，由我们自己的Dan
+    Shipper教授
+- en: 'In the course you''ll learn:'
+  id: totrans-8
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 在这门课程中，你将学到：
+- en: How to aggregate sources of data for your chatbot
+  id: totrans-9
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: 如何汇总聊天机器人的数据来源
+- en: How to manage your vector databases
+  id: totrans-10
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: 如何管理您的向量数据库
+- en: How to build a UI and bring your chatbot into production
+  id: totrans-11
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: 如何构建一个UI并将您的聊天机器人投入生产
+- en: How to use Langchain and LlamaIndex to build a chatbot that can access private
+    data, and use tools
+  id: totrans-12
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: 如何使用Langchain和LlamaIndex构建一个可以访问私人数据并使用工具的聊天机器人
+- en: and so much more!
+  id: totrans-13
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: 还有更多！
+- en: Learn [how to build your own chatbot in less than 30 days](https://www.chatbot-course.com/).
+    It will run once a week for five weeks starting September 5th and early bird pricing
+    is available for $1,300 along with an Every membership. Last time we ran the course
+    it sold out pretty quickly, so if you are interested, grab your seat now while
+    early bird pricing still applies.
+  id: totrans-14
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 学习[如何在不到30天内构建自己的聊天机器人](https://www.chatbot-course.com/)。课程将于9月5日开始，每周进行一次，为期五周，提供早鸟价1300美元，同时还提供Every会员资格。上次我们开设了这门课程，它很快就售罄了，所以如果你有兴趣，现在就抢购你的位置，早鸟价仍然有效。
+- en: Early-bird pricing ends on July 31st, after that the price will be $2000.
+  id: totrans-15
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 早鸟价将于7月31日结束，之后价格将为2000美元。
+- en: Over the last 6 months I’ve been obsessively tinkering with, writing about,
+    and investing in AI. It’s been a ride. I’ve talked to some of the [most interesting
+    thinkers in the space](https://every.to/chain-of-thought/linus-lee-is-living-with-ai),
+    I’ve stayed up late at night [hacking zillions of little experiments](https://every.to/chain-of-thought/how-to-build-a-chatbot-with-gpt-3?sid=18166),
+    I’ve panicked about [AI doom](https://every.to/chain-of-thought/a-primer-on-ai-doom-for-people-who-don-t-yet-wear-fedoras?sid=18167),
+    I’ve imagined never [organizing anything again](https://every.to/chain-of-thought/the-end-of-organizing),
+    and I’ve basked in the warm [glow of curiosity](https://every.to/chain-of-thought/gpt-3-is-the-best-journal-you-ve-ever-used)
+    and [delight](https://every.to/chain-of-thought/permission-to-be-excited) I get
+    from using these models.
+  id: totrans-16
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 在过去的六个月里，我一直在着迷地摆弄、撰写和投资于人工智能。这是一段旅程。我与一些[最有趣的思想家交谈过](https://every.to/chain-of-thought/linus-lee-is-living-with-ai)，我在深夜熬夜[进行了无数的小实验](https://every.to/chain-of-thought/how-to-build-a-chatbot-with-gpt-3?sid=18166)，我为[人工智能的末日](https://every.to/chain-of-thought/a-primer-on-ai-doom-for-people-who-don-t-yet-wear-fedoras?sid=18167)感到恐慌，我曾经幻想过永远不[再组织任何事情](https://every.to/chain-of-thought/the-end-of-organizing)，我也沉浸在使用这些模型带来的温暖的[好奇心](https://every.to/chain-of-thought/gpt-3-is-the-best-journal-you-ve-ever-used)和[愉悦](https://every.to/chain-of-thought/permission-to-be-excited)之中。
+- en: Working in AI during this period has felt like having a SpaceX rocket strapped
+    to my butt. I think everyone feels this way. You go very fast, but you constantly
+    feel behind. Every once in a while your brain explodes with the possibilities
+    in front of you. It’s easy to end up carried away with all caps tweets about how
+    THE WORLD HAS CHANGED.
+  id: totrans-17
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 在这个时期从事人工智能工作感觉就像是让一枚SpaceX火箭绑在我的屁股上。我想每个人都有这种感觉。你飞得很快，但你总是感觉落后。偶尔你的大脑会因为你面前的可能性而爆炸。很容易陷入对于“世界已经改变”的全大写推文中。
+- en: Today, I’d like to write something a little more nuanced and reflective. Even
+    if you’ve got a rocket strapped to your butt, it’s important to look down every
+    once in a while, and take stock of where you are. As such, here’s a short list
+    of things I believe about AI that are shaping how I’m approaching my work at Every
+    and beyond.
+  id: totrans-18
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 今天，我想写点更加细致和反思性的东西。即使你屁股上绑着火箭，偶尔俯视一下，盘点一下你的位置也很重要。因此，这里是我对人工智能的几点信念的简短列表，这些信念正在影响我在Every及以后的工作方式。
+- en: Knowledge orchestration is the most important bottleneck for AI applications
+  id: totrans-19
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+  zh: 知识编排是人工智能应用中最重要的瓶颈
+- en: 'There are two important components to intelligence: reasoning and knowledge.
+    [GPT-4 is quite good at reasoning](https://every.to/chain-of-thought/gpt-4-is-a-reasoning-engine),
+    but its knowledge of the world is limited. As such, its performance is bottlenecked
+    by our ability to give it the right knowledge at the right time for it to reason
+    with.'
+  id: totrans-20
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 智能有两个重要组成部分：推理和知识。[GPT-4 在推理方面非常出色](https://every.to/chain-of-thought/gpt-4-is-a-reasoning-engine)，但它对世界的了解是有限的。因此，它的性能受制于我们在适当的时间给予它正确的知识来推理的能力。
+- en: ''
+  id: totrans-21
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: Unlock the power of AI and [learn to create your personal AI chatbot](https://www.chatbot-course.com/)
+    in just 30 days with our cohort-based course. No advanced programming skills are
+    required, just a desire to learn.
+  id: totrans-22
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 解锁人工智能的力量，并在我们的同步课程中仅需 30 天学会[创建个人人工智能聊天机器人](https://www.chatbot-course.com/)。无需高级编程技能，只需渴望学习。
+- en: '**Here''s what you''ll learn:**'
+  id: totrans-23
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '**你将学到以下内容：**'
+- en: Master AI fundamentals like GPT-4, ChatGPT, vector databases, and LLM libraries
+  id: totrans-24
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: 掌握人工智能基础知识，如 GPT-4、ChatGPT、向量数据库和 LLM 库
+- en: Learn to build, code, and ship a versatile AI chatbot
+  id: totrans-25
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: 学会构建、编码和发布多功能人工智能聊天机器人
+- en: Enhance your writing, decision-making, and ideation with your AI assistant
+  id: totrans-26
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: 通过您的人工智能助手增强写作、决策和构思能力
+- en: '**What''s included:**'
+  id: totrans-27
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '**包括以下内容：**'
+- en: Weekly live sessions and expert mentorship
+  id: totrans-28
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: 每周直播会话和专家指导
+- en: Access to our thriving AI community
+  id: totrans-29
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: 访问我们蓬勃发展的人工智能社区
+- en: Hands-on projects and in-depth lessons
+  id: totrans-30
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: 实践项目和深入课程
+- en: Live Q&A sessions with industry experts
+  id: totrans-31
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: 与行业专家的现场问答会议
+- en: A step-by-step roadmap to launch your AI assistant
+  id: totrans-32
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: 发布您的人工智能助手的逐步路线图
+- en: '**Early bird pricing ends on July 31st.** [Sign up now](https://www.chatbot-course.com/)
+    to take advantage. Learn to build in AI—with AI in just 30 days!'
+  id: totrans-33
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '**早鸟价将于 7 月 31 日结束。** [现在报名](https://www.chatbot-course.com/)来把握机会。在短短 30 天内学会利用
+    AI 构建 AI！'
+- en: 'This problem, which I’m calling *knowledge orchestration*, is the biggest unsolved
+    problem for builders in AI outside of progress on foundational models. It touches
+    how you store, index, and retrieve the knowledge you need to perform useful large
+    language model tasks. There are many people trying to improve this at different
+    layers of the stack:'
+  id: totrans-34
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 这个问题，我称之为*知识编排*，是AI构建者在基础模型进展之外最大的未解决问题。它涉及到如何存储、索引和检索您需要执行有用的大型语言模型任务的知识。有许多人试图在堆栈的不同层次上改进这一点：
+- en: 'OpenAI and other players are working to build this at the foundational model
+    layer. They’re building bigger context window sizes: the more knowledge you can
+    fit into your prompt, the better. [GPT-4’s 32,000 token context window](https://help.openai.com/en/articles/7127966-what-is-the-difference-between-the-gpt-4-models)
+    is 8x better than previous models, so improvement is happening quickly.'
+  id: totrans-35
+  prefs: []
+  type: TYPE_NORMAL
+  zh: OpenAI 和其他参与者正在致力于在基础模型层构建此功能。他们正在构建更大的上下文窗口大小：您可以将更多的知识放入您的提示中，效果就会更好。[GPT-4
+    的 32,000 个标记上下文窗口](https://help.openai.com/en/articles/7127966-what-is-the-difference-between-the-gpt-4-models)比之前的模型好了
+    8 倍，因此改进正在迅速发生。
+- en: One layer up from that, [LlamaIndex](https://gpt-index.readthedocs.io/en/latest/)
+    and [Langchain](https://python.langchain.com/en/latest/index.html) are building
+    at the developer tool / infrastructure layer. They’re making it easy for developers
+    to chunk, store, and retrieve knowledge from various different kinds of databases
+    with only a few lines of code.
+  id: totrans-36
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 在此之上，[LlamaIndex](https://gpt-index.readthedocs.io/en/latest/) 和 [Langchain](https://python.langchain.com/en/latest/index.html)
+    正在构建开发者工具 / 基础设施层。它们使开发者只需几行代码就能轻松地将知识从各种不同类型的数据库中分块、存储和检索。
+- en: Vector database providers are also working on this problem. Pinecone, Weaviate,
+    and Chroma are all battling for supremacy here—with Pinecone in the lead.
+  id: totrans-37
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 向量数据库提供商也在解决这个问题。Pinecone、Weaviate 和 Chroma 都在这里争夺统治地位，而 Pinecone 处于领先地位。
+- en: Finally, various all-in-one solutions like [Metal](https://getmetal.io) and
+    [Baseplate](https://www.baseplate.ai) are bundling all of these layers of the
+    stack together to make it easy for developers to get started. They’ve got slick
+    web interfaces that make data observable, and easy for developers to get started
+    quickly.
+  id: totrans-38
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 最后，各种一体化解决方案如 [Metal](https://getmetal.io) 和 [Baseplate](https://www.baseplate.ai)
+    将所有这些堆栈层捆绑在一起，使开发者能够轻松入门。它们拥有流畅的 Web 界面，使数据可观察，并使开发者能够快速入门。
+- en: I suspect all of these players will start to leak out of their current layer
+    of the stack, and try to grow into other areas. The right solution will figure
+    out how to integrate layers in the right way to make it easy for builders to get
+    started and to make iteration speeds faster.
+  id: totrans-39
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 我怀疑所有这些参与者都将开始泄漏他们当前的堆栈层，并尝试成长到其他领域。正确的解决方案将找出如何以正确的方式集成层，使构建者能够轻松入门并加快迭代速度。
+- en: Knowledge orchestration is the *process* around knowledge. But what about the
+    knowledge itself? What *kind* of knowledge is most valuable?
+  id: totrans-40
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 知识编排是围绕知识的*过程*。但是知识本身呢？最有价值的是什么*类型*的知识？
+- en: 'Here’s one type that excites me: end-to-end interaction data about the lifecycle
+    of any process. A process could be something that a company does itself (like
+    creating a D2C product) or it could be something that a company enables its customers
+    to do (like editing photos).'
+  id: totrans-41
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 这是我感到兴奋的一种类型：关于任何过程生命周期的端到端交互数据。一个过程可以是公司自己做的事情（比如创建 D2C 产品），也可以是公司使其客户能够做的事情（比如编辑照片）。
+- en: End-to-end interaction means you can see the process at the beginning, you can
+    see all of the iterations and editing steps in the middle, and then you can see
+    and measure the results that this process generates at the end.
+  id: totrans-42
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 端到端交互意味着你可以看到开始的过程，你可以看到中间的所有迭代和编辑步骤，然后你可以看到并测量这个过程在最后产生的结果。
+- en: Being able to see the iteration steps in the middle and the final results at
+    the end give you key data about what humans prefer, and also how they *get* to
+    their preferred solutions. The more of this you can see, the better you’ll be
+    able to steer models with techniques like [reinforcement learning through human
+    feedback (RLHF)](https://huggingface.co/blog/rlhf), fine tuning, and prompting
+    to recreate these processes automatically—and, crucially, to make them better
+    over time.
+  id: totrans-43
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 能够看到中间的迭代步骤和最终的结果会为你提供关于人类偏好的关键数据，以及他们是如何*达到*他们偏好解决方案的。你能看到的越多，你就能够更好地通过技术来引导模型，比如通过人类反馈的强化学习（RLHF）、微调和提示来自动重新创建这些过程——关键是，随着时间的推移使它们变得更好。
+- en: 'This dynamic leads to my next thesis: startups that are integrated over a process
+    will be dominant.'
+  id: totrans-44
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 这种动态导致了我的下一个论点：集成了一个过程的初创企业将占据主导地位。
+- en: Startups that are horizontally integrated over a process will be dominant
+  id: totrans-45
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+  zh: 集成了一个过程的初创企业将占据主导地位
+- en: The more of a process you can see and store in your database, the more you can
+    improve it. Therefore, there’s a significant incentive for startups to horizontally
+    integrate and bundle to achieve better performance in an AI-first world. This
+    means replacing things that their customers are paying other companies for with
+    their own solution—so they can see more of the process and integrate it together.
+  id: totrans-46
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 越多的过程你能够看到并存储在你的数据库中，你就能够越多地改进它。因此，在 AI 优先的世界中，初创企业有巨大的激励去横向集成和捆绑，以实现更好的性能。这意味着用自己的解决方案替换客户正在支付其他公司的东西，以便他们可以看到更多的过程并将其集成在一起。
+- en: I first came to this idea through a conversation with Replit founder, [Amjad
+    Masad](https://twitter.com/amasad). (Interview coming soon!) Replit is a prime
+    example of being integrated over a process their customers do. They build a developer
+    platform that allows customers to write and deploy apps all from a browser window.
+    So in their case the process they’re integrating over is turning ideas into software.
+  id: totrans-47
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 我第一次想到这个想法是通过与 Replit 创始人 [Amjad Masad](https://twitter.com/amasad) 的一次对话。 （访谈即将发布！）
+    Replit 是一个很好的例子，他们集成了客户所做的过程。他们构建了一个开发者平台，允许客户从浏览器窗口编写和部署应用程序。因此，在他们的情况下，他们正在集成的过程是将想法转化为软件。
+- en: I’ve seen similar sentiment about the importance of end-to-end process integration
+    in other places as well. At a Sequoia event I attended a few weeks ago, Sam Altman
+    mentioned that one of the main reasons OpenAI built ChatGPT was so that they could
+    get human feedback from end users back into their models. In other words, they
+    started out as an API-only, but realized that the best way to improve performance
+    was to integrate forward over more layers of the value chain so that they could
+    get direct access to their customers' data.
+  id: totrans-48
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 我在其他地方也看到了类似的关于端到端过程集成重要性的观点。几周前我参加了 Sequoia 的一个活动，在那里 Sam Altman 提到，OpenAI
+    构建 ChatGPT 的主要原因之一是为了能够将终端用户的人类反馈纳入到他们的模型中。换句话说，他们起初只是一个 API，但意识到改善性能的最佳方法是向价值链的更多层次前进集成，以便他们可以直接访问他们客户的数据。
+- en: "Backwards integration through earlier parts of the value chain can also be\
+    \ useful. The more you have access to the editing process that led to the final\
+    \ output of a process, the better you’ll be able to learn to recreate or improve\
+    \ that process:\uFEFF"
+  id: totrans-49
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 通过价值链早期部分的逆向整合也可能是有用的。你能够访问导致最终输出的编辑过程，你就能更好地学习重新创建或改进该过程：
+- en: What does this imply?
+  id: totrans-50
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 这意味着什么？
+- en: '**Startups should integrate over more of the process their customers perform**'
+  id: totrans-51
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '**初创公司应该整合客户执行的更多流程**'
+- en: Today, Midjourney has no idea what you do with an image after it’s generated.
+    You could imagine a version of Midjourney that generates an initial image, includes
+    a full suite of Photoshop-like image editing capabilities, and then allows you
+    to post the resulting image to social media and measure its performance. Startups
+    like Playground are already doing this, and I expect this design pattern to be
+    more prevalent over time. Adobe has done the same with their Firefly models.
+  id: totrans-52
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 如今，Midjourney还不知道在生成图像后你会做什么。你可以想象一个Midjourney的版本，它生成一个初始图像，包括类似Photoshop的完整图像编辑功能，然后允许你将生成的图像发布到社交媒体并衡量其性能。像Playground这样的初创公司已经在做这个，我预计这种设计模式将随着时间的推移变得更加普遍。Adobe也对他们的Firefly模型做了同样的事情。
+- en: '**Companies that already integrate over an entire process will start to automate
+    with good results**'
+  id: totrans-53
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '**已经整合整个流程的公司将开始自动化，并取得良好的效果**'
+- en: Today, browsers see many of the end-to-end processes their customers do. If
+    you’re a salesperson that researches prospects on LinkedIn, takes meetings in
+    Google Meets, takes notes in Roam, and then records the resulting sale in Salesforce—your
+    browser is going to see that. This gives browsers (and operating systems) the
+    unique ability to automate and improve these kinds of processes for you. They’ll
+    start with reducing manual data entry, but move into things like suggesting new
+    leads so you don’t even need to browse through LinkedIn.
+  id: totrans-54
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 如今，浏览器能够看到客户所做的许多端到端流程。如果你是一名在LinkedIn上研究潜在客户、在Google Meets参加会议、在Roam记笔记，然后在Salesforce记录结果销售的销售人员——你的浏览器会看到这一切。这使得浏览器（和操作系统）具有自动化和改进这些流程的独特能力。它们将从减少手工数据输入开始，但会进入到诸如建议新的潜在客户，这样你甚至都不需要浏览LinkedIn的领域。
+- en: You can see this starting to happen already with the work that [Adept](https://www.adept.ai/)
+    is doing to automate processes on your computer. The potential value of this type
+    of interaction is also behind the popularity of agent paradigms like [AutoGPT.](https://github.com/Significant-Gravitas/Auto-GPT)
+  id: totrans-55
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 这种情况已经开始出现，[Adept](https://www.adept.ai/)正在努力自动化计算机上的流程。这种交互类型的潜在价值也是像[AutoGPT](https://github.com/Significant-Gravitas/Auto-GPT)这样的代理范式如此受欢迎的原因。
+- en: '**This world is good for incumbents, but better for startups**'
+  id: totrans-56
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '**这个世界对于现有企业来说很好，但对于初创企业来说更好**'
+- en: You could argue that companies that are in the best position to collect this
+    kind of data are incumbents. After all, Google has everything from your emails,
+    to your documents, to your code, to your web analytics. But there will be significant
+    privacy concerns for incumbents who try to share data between apps in their ecosystems,
+    and there will also be significant internal political resistance to doing so.
+    In short, incumbents are not organizationally architected for this world.
+  id: totrans-57
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 你可以认为，最有可能收集这种数据的公司是现有企业。毕竟，Google拥有从你的邮件、文档、代码到网络分析的一切。但是，试图在其生态系统中的应用程序之间共享数据将会有重大的隐私问题，并且在这样做方面也会有重大的内部政治阻力。简而言之，现有企业的组织结构不适合这个世界。
+- en: Startups that are architected with this intention from the beginning, who know
+    it is a priority to both own an entire end-to-end process, and centrally store
+    the data from that process so it can be used to make models better, will have
+    an advantage. I think they’ll also have more leeway on security and privacy concerns
+    to begin with, because they’ll be much smaller scale.
+  id: totrans-58
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 从一开始就设计出这种意图的初创公司，他们知道拥有整个端到端的流程并集中存储该流程的数据以便用于改进模型是一项优先任务，他们将具有优势。我认为，他们在安全和隐私问题上也会有更多的自由，因为他们的规模要小得多。
+- en: Of course, this kind of integration over a process is time consuming and expensive.
+    Startups can’t afford to build everything at once. But I think that startups that
+    begin with a vision to eventually control a process in this way eventually are
+    a good bet.
+  id: totrans-59
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 当然，这种流程整合是耗时且昂贵的。初创公司无法一次性建立所有内容。但我认为，从一开始就有愿景最终控制这种流程的初创公司最终是一个不错的选择。
+- en: AI will make progress where science has struggled
+  id: totrans-60
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+  zh: AI将在科学遇到困难的地方取得进展
+- en: 'Science is about creating simple, causal explanations of the world so that
+    we can make good predictions. But science has had a hard time in certain parts
+    of the world where simple, causal explanations seem to elude us: psychology, social
+    sciences, economics, and more. Despite centuries of research, and little consistent
+    progress we keep looking for scientific explanations in these areas because we
+    have no good alternative.'
+  id: totrans-61
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 科学的目的在于创造简单、因果关系的解释世界的方法，以便我们可以做出良好的预测。但是，在世界某些地区，简单、因果关系的解释似乎难以捉摸：心理学、社会科学、经济学等领域。尽管经过几个世纪的研究，进展微小，我们仍在这些领域寻找科学解释，因为我们没有更好的选择。
+- en: AI changes this equation. It allows us to make predictions about parts of the
+    world that we can’t yet explain with science. AI can [screen for cancer now](https://github.com/jostmey/msm).
+    It can also [predict things like who is likely to be diagnosed with anxiety or
+    depression](https://pdf.sciencedirectassets.com/280203/1-s2.0-S1877050920X00056/1-s2.0-S1877050920309091/main.pdf?X-Amz-Security-Token=IQoJb3JpZ2luX2VjEK%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLWVhc3QtMSJHMEUCIQDxLfD5QWxhaFx%2BovJxDlRFBa9zmjzGCufFARpHdTqFtQIgfv9BvSt1UdOOu%2B%2B7TRjW%2B26y9quweszoFJvqcr2tCsYquwUIp%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARAFGgwwNTkwMDM1NDY4NjUiDPg8DQ7WfK2zwca3OyqPBXJpOyqPfySdcKDkTxmn9sjOX0kTW9%2BjMpQfSD5pmiEUpZEwaS2X7ylcKiRVkuthrjxs0mjFQ%2B0ygi50QCTjTRse%2FRyBqWBae9vgHfJZ3yF8ydqO%2FiX9beSm%2F0hv7CD26AYNuNpiaF%2BXVcUPLNHDNuYHgXhoiBZUqyML0d9wI2Ta%2Fr8DoHjCrmxTd%2FbQa%2Bu3tfkg8lgqrwYZzhCEPYZiODCbWLton61wSdFHF66KWsIchxnmUpY5QIZ5sT%2FmlV%2FLD0Ub7%2Fuk%2FDx3jBZZbJNUW6vE8o2uS0TZ%2B9zRHqvEqKoRbxzTpWRDYHvAPfQUbtGX6FjRsyR3sO%2F%2BJnXG2uHz3nZ1F1iZlAo6dWnkmwu2wkUN4I%2BUwWTAKnGSNLVoLv%2Fz7EnM53F9qUmh748RDh6y%2BD2Ve5d38EffLBiBn3JsiUgyowBXuj%2FmpJlKqyNPPjvD%2BqcSkloGjTCOnSQ1zTi3k8cucx95v%2FUqrVNGKJR2PBdNZIkvnX0IjdG1bKDyH2NGuQ79VrUkPCYt9Yc6cDXyIdcnI54Nlpcg7p7jsmrQjbWr3C%2F2znT8LWQCK26T1MKoJjB0zbkwzvYn%2B2uswDTUrXfeTB6PM42TXKI61MLvpj00ige9MPsYxy7Wh24GaC1mBethVTxtr6oJqKc2%2FTt%2B8BxixiiOIurI2fNGkTG4QenbXINSfCSxsb7j3f6YOzHD1FW5H3M18beNK7GUFXdVzdN0lB4gfcjjYU5DeOniLdVutq6K1dr8E1lMUqBVXfRvDbkt3TTWN0AKu6LLXqjt0xmpQoagn1WQxHLKvpADkMlUja0u6X0ZKcEbo6q%2BbCc%2Flw6MwXJ1Gxc2ez8z6yEOHgXzY4aElX%2Bx5HvpqWYGPGkwqrWKogY6sQGTgugykIKrB6QhVTOlZ%2FLgD5p2ETTw%2BCFACT9jphyyTXXXMDu4by7kzQxVRl%2BzIw8H0Zo1nzqoGNps7EXYiEJ%2FEizDb8bJ8LRljAAwN5rhtHIx1y7OWd2gDof4qzB7OEShHkm24dUF1SCY9Vz8vp4BSafXFa1n%2FDHDVGxU33GrWq2fFEDVvGmRYvdHPvHG7hADxg0CBtvsw0mmr4dJirRIdZymmkg%2FvOXuzOog2jmMiSQ%3D&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20230421T143456Z&X-Amz-SignedHeaders=host&X-Amz-Expires=300&X-Amz-Credential=ASIAQ3PHCVTYZWDRWUFY%2F20230421%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=48b6256c1821231fbb12b0923034301c35cbefa1d421d05e981147a67a2b3ee0&hash=702f97f07904a2500841e3e07829b419880cae5d61c59e948e0ec4fa5010f01a&host=68042c943591013ac2b2430a89b270f6af2c76d8dfd086a07176afe7c76c2c61&pii=S1877050920309091&tid=spdf-f9e8a19f-d4d4-450e-98f0-cddd616f4a36&sid=9992636595806941e52841e264dbc66c98e1gxrqa&type=client&tsoh=d3d3LnNjaWVuY2VkaXJlY3QuY29t&ua=0f15570401535b5a0c5e00&rr=7bb659c8da740f3a&cc=us),
+    or, in theory, which interventions or practitioners are most likely to heal it.
+    It can do this without needing any definitive, universal scientific explanation
+    for what anxiety *is* and how it arises—which decades of research has failed to
+    find.
+  id: totrans-62
+  prefs: []
+  type: TYPE_NORMAL
+  zh: AI改变了这一方程。它让我们能够对我们目前无法用科学解释的世界进行预测。现在AI可以[筛查癌症](https://github.com/jostmey/msm)。它还可以[预测谁可能被诊断出焦虑或抑郁](https://pdf.sciencedirectassets.com/280203/1-s2.0-S1877050920X00056/1-s2.0-S1877050920309091/main.pdf?X-Amz-Security-Token=IQoJb3JpZ2luX2VjEK%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLWVhc3QtMSJHMEUCIQDxLfD5QWxhaFx%2BovJxDlRFBa9zmjzGCufFARpHdTqFtQIgfv9BvSt1UdOOu%2B%2B7TRjW%2B26y9quweszoFJvqcr2tCsYquwUIp%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARAFGgwwNTkwMDM1NDY4NjUiDPg8DQ7WfK2zwca3OyqPBXJpOyqPfySdcKDkTxmn9sjOX0kTW9%2BjMpQfSD5pmiEUpZEwaS2X7ylcKiRVkuthrjxs0mjFQ%2B0ygi50QCTjTRse%2FRyBqWBae9vgHfJZ3yF8ydqO%2FiX9beSm%2F0hv7CD26AYNuNpiaF%2BXVcUPLNHDNuYHgXhoiBZUqyML0d9wI2Ta%2Fr8DoHjCrmxTd%2FbQa%2Bu3tfkg8lgqrwYZzhCEPYZiODCbWLton61wSdFHF66KWsIchxnmUpY5QIZ5sT%2FmlV%2FLD0Ub7%2Fuk%2FDx3jBZZbJNUW6vE8o2uS0TZ%2B9zRHqvEqKoRbxzTpWRDYHvAPfQUbtGX6FjRsyR3sO%2F%2BJnXG2uHz3nZ1F1iZlAo6dWnkmwu2wkUN4I%2BUwWTAKnGSNLVoLv%2Fz7EnM53F9qUmh748RDh6y%2BD2Ve5d38EffLBiBn3JsiUgyowBXuj%2FmpJlKqyNPPjvD%2BqcSkloGjTCOnSQ1zTi3k8cucx95v%2FUqrVNGKJR2PBdNZIkvnX0IjdG1bKDyH2NGuQ79VrUkPCYt9Yc6cDXyIdcnI54Nlpcg7p7jsmrQjbWr3C%2F2znT8LWQCK26T1MKoJjB0zbkwzvYn%2B2uswDTUrXfeTB6PM42TXKI61MLvpj00ige9MPsYxy7Wh24GaC1mBethVTxtr6oJqKc2%2FTt%2B8BxixiiOIurI2fNGkTG4QenbXINSfCSxsb7j3f6YOzHD1FW5H3M18beNK7GUFXdVzdN0lB4gfcjjYU5DeOniLdVutq6K1dr8E1lMUqBVXfRvDbkt3TTWN0AKu6LLXqjt0xmpQoagn1WQxHLKvpADkMlUja0u6X0ZKcEbo6q%2BbCc%2Flw6MwXJ1Gxc2ez8z6yEOHgXzY4aElX%2Bx5HvpqWYGPGkwqrWKogY6sQGTgugykIKrB6QhVTOlZ%2FLgD5p2ETTw%2BCFACT9jphyyTXXXMDu4by7kzQxVRl%2BzIw8H0Zo1nzqoGNps7EXYiEJ%2FEizDb8bJ8LRljAAwN5rhtHIx1y7OWd2gDof4qzB7OEShHkm24dUF1SCY9Vz8vp4BSafXFa1n%2FDHDVGxU33GrWq2fFEDVvGmRYvdHPvHG7hADxg0CBtvsw0mmr4dJirRIdZymmkg%2FvOXuzOog2jmMiSQ%3D&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20230421T143456Z&X-Amz-SignedHeaders=host&X-Amz-Expires=300&X-Amz-Credential=ASIAQ3PHCVTYZWDRWUFY%2F20230421%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=48b6256c1821231fbb12b0923034301c35cbefa1d421d05e981147a67a2b3ee0&hash=702f97f07904a2500841e3e07829b419880cae5d61c59e948e0ec4fa5010f01a&host=68042c943591013ac2b2430a89b270f6af2c76d8dfd086a07176afe7c76c2c61&pii=S1877050920309091&tid=spdf-f9e8a19f-d4d4-450e-98f0-cddd616f4a36&sid=9992636595806941e52841e264dbc66c98e1gxrqa&type=client&tsoh=d3d3LnNjaWVuY2VkaXJlY3QuY29t&ua=0f15570401535b5a0c5e00&rr=7bb659c8da740f3a&cc=us)，或者理论上讲，预测哪些干预或从业人员最有可能治愈它。它可以做到这一点，而不需要对焦虑是什么以及它如何产生有任何明确的、普遍适用的科学解释——这是几十年的研究都未能找到的。
+- en: Interestingly, if AI can learn to be a good predictor of something like anxiety
+    then at some level it has encoded at least part of the explanation for anxiety
+    inside of its net. Neural networks are hard to examine, but they are easier to
+    examine than brains—so we might be able to find good, simple scientific explanations
+    for hard-to-study phenomena by first learning to predict them with AI.
+  id: totrans-63
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 有趣的是，如果人工智能能够学会成为类似焦虑这样的东西的良好预测器，那么在某种程度上，它已经在其网络内部编码了至少焦虑解释的一部分。神经网络难以检查，但比大脑容易检查——因此我们可能能够通过首先用人工智能学会预测它们来找到对于难以研究的现象的良好、简单的科学解释。
+- en: We might also find that the simplest possible explanation for a complex biopsychosocial
+    phenomena like anxiety is actually close to the size and complexity of the neural
+    network that can predict it. If we learn to interpret neural nets, and print out
+    their decision-making processes we might find that the explanation for something
+    like anxiety is the size of a novel, or a textbook, or ten put together.
+  id: totrans-64
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 我们也可能发现，对于像焦虑这样的复杂的生物心理社会现象，最简单的可能解释实际上接近于可以预测它的神经网络的大小和复杂性。如果我们学会解释神经网络，并打印出它们的决策过程，我们可能会发现，对于像焦虑这样的事物的解释大小相当于一部小说，或一本教科书，或十本放在一起。
+- en: Nature doesn’t guarantee that simple explanations exist—even though we, as humans,
+    are by nature attracted to them. This could represent the full-circle journey
+    of science. At first, it tossed out human intuition and human stories in favor
+    of equations and experiments. In the end, it might be that intuition and storytelling
+    were the best ways for our minds to predict, and explain things that are beyond
+    the ability of our more limited rational minds to comprehend. That would be something,
+    indeed.
+  id: totrans-65
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 自然并不保证存在简单的解释——尽管我们作为人类本能地被它们吸引。这可能代表了科学的完整循环旅程。起初，它放弃了人类直觉和人类故事，转而采用方程式和实验。最终，也许直觉和叙事是我们的心智预测和解释那些超出我们更有限理性思维能力的事物的最佳方式。这确实是一件了不起的事情。

@@ -1,0 +1,528 @@
+- en: <!--yml
+  id: totrans-0
+  prefs: []
+  type: TYPE_NORMAL
+  zh: <!--yml
+- en: 'category: COT 专栏'
+  id: totrans-1
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 分类：COT 专栏
+- en: 'date: 2024-05-08 11:10:05'
+  id: totrans-2
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 日期：2024-05-08 11:10:05
+- en: -->
+  id: totrans-3
+  prefs: []
+  type: TYPE_NORMAL
+  zh: -->
+- en: AI Is Transforming Media Forever, Here's How
+  id: totrans-4
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+  zh: 人工智能正在永久改变媒体，以下是如何改变的
+- en: 来源：[https://every.to/chain-of-thought/we-re-building-ai-into-our-media-business](https://every.to/chain-of-thought/we-re-building-ai-into-our-media-business)
+  id: totrans-5
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+  zh: 来源：[https://every.to/chain-of-thought/we-re-building-ai-into-our-media-business](https://every.to/chain-of-thought/we-re-building-ai-into-our-media-business)
+- en: 'I run a media company, and I love writing. So it’s bittersweet to write this,
+    but here it is: AI is going to fundamentally change media in all sorts of ways
+    over the next five years. It’ll make running some newsletters like running a buggy
+    whip business, but it will also open up new opportunities for content creation
+    that we can’t imagine today.'
+  id: totrans-6
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 我经营着一家媒体公司，我热爱写作。因此，写下这些话有点苦涩，但是事实就是：在未来五年内，人工智能将从根本上改变媒体的各个方面。它将使一些新闻简报的运营就像经营一家制造马鞭的企业一样，但它也将开辟我们今天无法想象的内容创作新机会。
+- en: 'Given this state of affairs, I’ve been thinking a lot about how AI affects
+    what we do at Every—what are its opportunities, and what are its risks? We want
+    to build for the future, while also respecting the fundamental thing that we created
+    Every to do: create more high-quality business writing in the world.'
+  id: totrans-7
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 鉴于当前形势，我一直在思考人工智能如何影响我们在 Every 所做的事情——它的机遇是什么，风险又是什么？我们希望为未来构建，同时也尊重我们创建 Every
+    的根本目标：在世界上创造更多高质量的商业写作。
+- en: In my opinion, the best way to think about things like this is to experiment.
+    So that’s what we’ve been doing. We’ve been building [chatbots that make it easier
+    to ask questions of written content](https://every.to/chain-of-thought/how-to-build-a-chatbot-with-gpt-3).
+    We’ve also been building little tools and workflows, some public and some not,
+    to see how [AI fits into our writing process](https://every.to/chain-of-thought/writing-essays-with-ai-a-guide)
+    and our strategy. My co-founder Nathan has even incubated [an AI writing app](https://lex.page).
+    I want to lay out a few things that I’ve learned, and some predictions for what
+    it might mean for the future.
+  id: totrans-8
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 我认为，思考这类事情的最佳方式是进行实验。所以这就是我们一直在做的事情。我们一直在构建[聊天机器人，使询问书面内容更容易](https://every.to/chain-of-thought/how-to-build-a-chatbot-with-gpt-3)。我们还在构建一些小工具和工作流程，有些是公开的，有些不是，以了解[人工智能如何融入我们的写作过程](https://every.to/chain-of-thought/writing-essays-with-ai-a-guide)和我们的策略。我的联合创始人纳森甚至孵化了[一个人工智能写作应用程序](https://lex.page)。我想列出一些我学到的东西，以及对未来可能意味着什么的一些预测。
+- en: Transitions are hard, and this one is no exception. I think it’s right to be
+    apprehensive about the impact this will have on creatives of all stripes, and
+    in particular on those who work at larger media organizations that were built
+    for a pre-AI world. For example, [screenwriters are currently on strike](https://www.cbsnews.com/news/writers-strike-2023-artificial-intelligence-guardrails/)
+    and one of their demands is a guarantee that AI won’t be used in the scriptwriting
+    process.
+  id: totrans-9
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 转变总是困难的，这次也不例外。我认为对于这将对各种创意人士产生的影响，特别是那些为前人工智能时代而建立的大型媒体组织工作的人，感到担忧是正确的。例如，[编剧目前正在罢工](https://www.cbsnews.com/news/writers-strike-2023-artificial-intelligence-guardrails/)，其中一项要求是保证人工智能不会用于剧本写作过程中。
+- en: I think these are important issues, and I'm hopeful that Hollywood and its screenwriters
+    can find an equilibrium that uses AI to augment writers and compensate them better—rather
+    than ban it entirely.
+  id: totrans-10
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 我认为这些是重要的问题，我希望好莱坞及其编剧们能够找到一种平衡，利用人工智能来增强编剧并更好地补偿他们，而不是完全禁止使用它。
+- en: Because far from sucking the marrow out of the creative act, I’m optimistic
+    that these tools will become platforms upon which more people can make better
+    creative work, and [where smaller teams of people will be able to have a larger
+    impact](https://every.to/chain-of-thought/ai-and-the-age-of-the-individual).
+  id: totrans-11
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 因为这些工具远非仅仅是对创造性行为的剥削，我对这些工具将成为更多人创作更好创意作品的平台，并且[让更小的团队能够产生更大的影响](https://every.to/chain-of-thought/ai-and-the-age-of-the-individual)充满了乐观情绪。
+- en: 'Here’s a short rundown of the ways I predict that AI will fundamentally change
+    the piece of media that I know best: written media.'
+  id: totrans-12
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 以下是我预测人工智能将如何从根本上改变我最了解的媒体形式：书面媒体的简短介绍。
+- en: '**De-risked content is going to get automated**'
+  id: totrans-13
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+  zh: '**去风险化的内容将被自动化**'
+- en: Media companies monetize creativity, but the creative act is inherently unpredictable.
+    Sometimes an individual or group sits down at a computer or in front of a canvas
+    or behind a camera and produces something earth-shattering. Mostly, they produce
+    crap. Usually, they do it behind schedule.
+  id: totrans-14
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 媒体公司的盈利来自创造力，但创造行为本质上是不可预测的。有时，个人或团队坐在电脑前、画布前或摄像机后，创作出一些改变世界的东西。大多数情况下，他们创造的是垃圾。通常，他们还会超过截止日期。
+- en: 'This makes running a media company hard. If the quality of your product is
+    inherently unpredictable and changes every day, creating stable, growing cash
+    flows is like throwing a leash on a feral alligator and trying to take it on a
+    walk in Central Park: ill-advised.'
+  id: totrans-15
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 运营媒体公司很困难。如果你的产品质量本质上是不可预测的，并且每天都在变化，那么创造稳定、不断增长的现金流就像给野生鳄鱼套上皮带，然后试图在中央公园遛它一样：不明智。
+- en: 'Because of the inherent unpredictability of the creative act, most of the media
+    business is about looking for ways to de-risk creativity. De-risking strategies
+    are like SSRIs for media companies. Usually, they flatten the upside of your creative
+    work a bit, but they seriously dampen the downsides. De-risking makes it easier
+    to stack the bricks of your business and provide a quality product day after day.
+    There are many strategies that can make this work:'
+  id: totrans-16
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 由于创造行为的固有不可预测性，大部分媒体业务都在寻找降低创造风险的方法。降低风险的策略就像媒体公司的SSRI。通常情况下，它们能够略微降低您创造性工作的上行空间，但它们严重减少了下行空间。降低风险使得事业的积累和日复一日提供优质产品变得更加容易。有很多策略可以实现这一点：
+- en: '**Summarize other people’s work.** It’s easier to summarize something interesting
+    than it is to create it from scratch. Morning Brew, which provides short voice-y
+    summaries of business news, is a great example of this.'
+  id: totrans-17
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: '**总结他人的工作。** 总结有趣的内容比从零开始创造容易得多。Morning Brew提供业务新闻的简短语态摘要，是一个很好的例子。'
+- en: '**Find a content arbitrage.** Take a piece of content that did well somewhere
+    else and reformat it for your audience. [Early Buzzfeed found that if they took
+    popular posts on Reddit and rewrote them as listicles they’d reliably go viral.](https://www.thediff.co/archive/buzzfeed-and-the-platform-squeeze/)
+    This is also why Hollywood turns books into movies. Finding arbitrages is easier
+    than finding your own ideas.'
+  id: totrans-18
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: '**找到内容套利机会。** 拿一个在其他地方表现不错的内容，并为你的受众重新制作格式。[Buzzfeed早期发现，如果他们将Reddit上热门帖子重新写成列表形式，它们很容易就会传播。](https://www.thediff.co/archive/buzzfeed-and-the-platform-squeeze/)
+    这也是好莱坞为什么要把书变成电影的原因。找到套利机会比找到自己的想法容易得多。'
+- en: '**Create a format.** Formats give structure to your creativity, which makes
+    creating something new a little more like filling out a Mad Libs and a little
+    less like alchemy. Matt Levine’s format is a few mini-essays reacting to finance
+    news. Ben Thompson’s format is taking a piece of news about a large-cap tech company
+    and then quoting old pieces he’s written about aggregation theory to analyze it.
+    Axios’s format is [smart brevity](https://www.axios.com/smart-brevity). Every
+    has experimented with this a lot, too, with [3 Shorts](https://every.to/divinations/why-salesforce-bought-slack-21480730?sid=18815)
+    and more.'
+  id: totrans-19
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: '**创造一个格式。** 格式给你的创造活动提供了结构，使得创造新东西更像填空游戏，而不是炼金术。Matt Levine的格式是对金融新闻做一些小文章的反应。Ben
+    Thompson的格式是选取大型科技公司的一条新闻，然后引用他之前关于聚合理论的文章来分析它。Axios的格式是[智能简洁](https://www.axios.com/smart-brevity)。Every也进行了很多尝试，比如[3
+    Shorts](https://every.to/divinations/why-salesforce-bought-slack-21480730?sid=18815)等。'
+- en: '**Make it shorter and shallower.** Complexity increases exponentially with
+    the length and depth of your creative output. The shorter and shallower your piece
+    is, the easier it is to make. Not calling anyone out here in particular. 😆'
+  id: totrans-20
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: '**做得更简短、更肤浅。** 复杂性与创造输出的长度和深度成正比增加。你的作品越短、越肤浅，制作起来就越容易。这里没有特指任何人。😆'
+- en: '**Get a beat.** If you want to get a piece out every day, you have to play
+    in a pond where you can effortlessly react to what’s going on without the need
+    for too much additional research. A beat solves this by creating a box around
+    what you need to know to make something interesting. For example, Ben Thompson
+    sticks to large-cap tech companies, and I stick to what’s going on in AI.'
+  id: totrans-21
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: '**找到一个专题报道。** 如果你每天都想发布一篇文章，你必须在一个领域里活动，在这个领域里你可以毫不费力地对当前发生的事情做出反应，而不需要太多额外的研究。专题报道通过框定你需要了解的内容，从而解决了这个问题。比如，Ben
+    Thompson专注于大型科技公司，而我专注于人工智能领域的动态。'
+- en: '**Make sequels.** You don’t have to risk coming up with something new if you’re
+    remixing something old. This is why Hollywood does sequel after sequel. Each sequel
+    might cost a lot of money to produce, but they’d have to make 10 to 100 movies
+    with net-new characters in order to find one that does as well—so it’s relatively
+    cheaper to make a sequel.'
+  id: totrans-22
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: '**制作续集。** 如果你在翻新旧事物，就无需冒险想出新东西。这就是为什么好莱坞会制作一部接一部的续集。每部续集可能会花费大量资金来制作，但他们必须制作
+    10 到 100 部全新角色的电影，才能找到一部表现得像这样的电影——因此制作续集相对便宜。'
+- en: '**Interview people.** It’s easier to have an interesting conversation than
+    to think up new ideas yourself. Have a conversation with someone and then summarize
+    it. I’ve done this a lot for Every.'
+  id: totrans-23
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: '**采访人员。** 与其自己想出新主意，不如进行一次有趣的对话。与某人进行对话，然后总结一下。我为 Every 做了很多这样的事情。'
+- en: Interestingly, while each of these strategies de-risks a human’s ability to
+    make pretty good content—they also make it easier for AI to automate. Summary-based
+    media products are easier to automate. Shorter pieces are easier to automate.
+    [Content arbitrages](https://www.animalz.co/blog/content-arbitrage/) are easier
+    to automate. Formats are easier to automate. Interviews, which are primarily summaries,
+    are easier to automate.
+  id: totrans-24
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 有趣的是，尽管这些策略都降低了人类制作相当不错内容的风险，但它们也让 AI 更容易自动化。基于摘要的媒体产品更容易自动化。较短的文章更容易自动化。[内容套利](https://www.animalz.co/blog/content-arbitrage/)更容易自动化。格式更容易自动化。主要是摘要的访谈更容易自动化。
+- en: I know this is true firsthand because we’ve already done it at Every. Each Sunday,
+    we send out a digest email to Every readers linking to the articles we published
+    that week with little one-paragraph summaries of each one. I’ve written these
+    summaries off and on every Saturday for the past few years—much to my girlfriend’s
+    chagrin. We’ve also had a rotating cast of writers who’ve tried their hand at
+    it.
+  id: totrans-25
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 我知道这是真的，因为我们已经在 Every 这样做了。每个星期天，我们向 Every 的读者发送一封摘要电子邮件，链接到我们那周发布的文章，并附有每篇文章的一个小段摘要。过去几年里，我每个星期六都会撰写这些摘要——这让我的女朋友感到很不满。我们还有一群轮换的作者尝试过这个工作。
+- en: Now it’s automated. [Lucas Crespo](https://twitter.com/lucas__crespo), who runs
+    our ad and course operations, built a little app that does it. You stick a headline,
+    author, and article text into the app and it outputs a summary using GPT-4\. The
+    summaries it generates are modeled on previous summaries that we’ve written in
+    the Digest, so it comes closer to our style. Oh, and did I mention that Lucas
+    built this app in Python and deployed on Heroku in two days—and that he has zero
+    prior programming experience? All he had to do was tell GPT-4 what he wanted to
+    build, follow its programming instructions, and ask it to help him when he got
+    stuck.
+  id: totrans-26
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 现在已经实现了自动化。[Lucas Crespo](https://twitter.com/lucas__crespo)，负责我们的广告和课程运营，开发了一个小应用程序来实现这一点。你只需将标题、作者和文章文本放入应用程序中，它就会使用
+    GPT-4 输出摘要。它生成的摘要是基于我们在 Digest 中撰写的先前摘要进行建模的，因此更接近我们的风格。哦，我忘了提醒你了吗？Lucas 在两天内就用
+    Python 构建了这个应用程序，并将其部署在 Heroku 上——而且他之前没有任何编程经验？他只需要告诉 GPT-4 他想要构建什么，按照它的编程说明进行操作，并在卡住时寻求它的帮助。
+- en: Even though we have this summarizer tool now, I still spend time editing the
+    summaries we put in the Digest. Occasionally I’ll rewrite them if I don’t think
+    the ones the tool produces are good enough. GPT-4’s ability to summarize is not
+    perfect—yet. But I wouldn’t bet against it over the next year or so, especially
+    as tools for fine-tuning and reinforcement learning through human feedback become
+    more widely available.
+  id: totrans-27
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 即使现在我们有了这个摘要工具，我仍然会花时间编辑我们在 Digest 中发布的摘要。如果我认为工具生成的摘要不够好，偶尔我会重新写一下。GPT-4 的摘要能力还不完美——但是我不会在未来一年左右打赌反对它，特别是随着用于微调和通过人类反馈进行强化学习的工具变得更加普遍。
+- en: What does this mean? Individual writers will have a lot more leverage to create
+    more media products on their own. The cost structure of creating these media products
+    will look more like software and less like media. There will be some R&D cost
+    upfront to encode your taste and sensibilities into a summarizer. But once that’s
+    done, you’ll be able to let it loose on the world without having to write every
+    single day. The same thing goes for interviewing—you’ll still have to spend time
+    asking good questions (though AI might help even with that). But turning a conversation
+    into a transcript into a readable interview might soon be a far less time-consuming
+    project than it is today. It’s also possible that readers will prefer to own the
+    summarizer themselves and curate it according to their own preferences—à la my
+    co-founder Nathan’s [Infinite Article](https://every.to/divinations/the-infinite-article)
+    idea.
+  id: totrans-28
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 这意味着什么？个人作家将有更多的杠杆来自主创建更多的媒体产品。创建这些媒体产品的成本结构将更像软件，而不是媒体。最初需要一些研发成本来将你的口味和感受编码到一个摘要生成器中。但一旦做到了，你就可以让它自由地面向世界，而不必每天都写作。采访也是一样
+    —— 你仍然需要花时间提出好问题（尽管AI可能会帮助你甚至在这方面）。但将对话转化为可阅读的采访文本可能很快就不再是今天这样耗时的项目了。读者也可能更愿意拥有摘要生成器，并根据自己的偏好进行策划
+    —— 就像我的联合创始人纳撒尼尔的[无限文章](https://every.to/divinations/the-infinite-article)想法所描述的那样。
+- en: This means that writers will be able to devote more time to gathering new facts
+    and doing research. They’ll also be able to spend more time writing longer, more
+    interesting articles that are less amenable to automation.
+  id: totrans-29
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 这意味着作家将能够更多地投入时间收集新事实和进行研究。他们还将能够花更多时间编写更长、更有趣的文章，这些文章不太容易被自动化。
+- en: There’s creative upside here, but there’s also a lot of risk for writers who
+    are currently writing more de-risked types of editorial products as part of their
+    day job at larger companies. I can imagine that type of job changing significantly—and
+    soon. If that’s what your job consists of, the best option, in my opinion, is
+    to learn to use these tools *today* to get better leverage and create good work.
+    It’s a skill in and of itself to get good summaries or interviews or formatted
+    news hits from AI, and your value will go up tremendously if you know how to do
+    it.
+  id: totrans-30
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 这里有创造性的优势，但对于目前在大公司日常工作中编写更多低风险类型的编辑产品的作家来说，也存在很多风险。我可以想象这种工作类型会发生显著变化 —— 并且很快。如果你的工作就是这样，我认为最好的选择是*今天*就学会使用这些工具，以获得更好的
+    leverage 并创造出好的作品。从AI那里获得良好摘要、采访或格式化新闻报道本身就是一种技能，如果你知道如何做到这一点，你的价值将会大大提高。
+- en: Another smart move for writers who are part of unionized workplaces is to apply
+    collective pressure in the same way screenwriters are doing in Hollywood. Media
+    compensation was designed for a world without AI—and it’s clear that compensation
+    frameworks need to change as technology changes.
+  id: totrans-31
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 对于在工会化工作场所的作家来说，另一个聪明的举动是像好莱坞的编剧们那样施加集体压力。媒体报酬是针对没有AI的世界设计的 —— 很明显，随着技术的变革，报酬框架需要相应调整。
+- en: The implications of AI in the media landscape extend beyond the realm of de-risking
+    content in existing formats. It will also lead to the creation of new content
+    formats that were previously impossible.
+  id: totrans-32
+  prefs: []
+  type: TYPE_NORMAL
+  zh: AI在媒体格局中的影响超越了降低现有格式内容风险的范畴。它还将导致以前不可能的新内容格式的产生。
+- en: '**AI unbundles research and narrative**'
+  id: totrans-33
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+  zh: '**AI拆分研究与叙事**'
+- en: 'Writers, especially in journalistic organizations, do two things: research
+    and write. Any given news piece in The New York Times is the sum of research,
+    in the form of one or multiple interviews, plus the summarization of those interviews
+    into one cohesive story.'
+  id: totrans-34
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 作家，尤其是新闻机构的作家，做两件事情：研究和写作。《纽约时报》中的任何新闻报道都是研究的总和，以一次或多次采访的形式出现，并将这些采访总结成一个连贯的故事。
+- en: This bundling of research and narrative is a product of a past where news was
+    printed, summarizing was a rare skill, and there was limited space for stories.
+  id: totrans-35
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 这种研究与叙事的捆绑是过去新闻印刷时代的产物，总结是一项罕见的技能，故事空间有限。
+- en: 'It comes with real upsides: There’s a significant amount of good judgment,
+    craft, and experience needed to create the right story from a mess of underlying
+    data. It’s also nice that, filter bubbles aside, everyone in your audience reads
+    the same version of the story so there’s a consistent source of truth, and stories
+    can spread more easily.'
+  id: totrans-36
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 它带来了真正的好处：需要相当数量的良好判断、技艺和经验来从混乱的基础数据中创建正确的故事。也很好的是，除了过滤泡沫外，你的观众都看到同一版本的故事，因此有一个一致的真相来源，故事可以更容易传播。
+- en: 'But this also comes with real downsides: There are always going to be complaints
+    (real or imagined) that important details were left out and that the narrative
+    tilts too much in favor of one party or another.'
+  id: totrans-37
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 但这也带来了真正的缺点：总会有人抱怨（真实或想象的）说重要的细节被遗漏了，叙事也太偏向一方或另一方。
+- en: This bundling of research and narrative is no longer strictly necessary. Publications
+    *should* still write their own version of the narrative given the facts they’ve
+    gathered. But they could also expose the research underlying those facts, and
+    allow readers to interrogate that research with AI.
+  id: totrans-38
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 这种将研究和叙事捆绑在一起的方法不再绝对必要。出版物 *应该* 仍然根据他们收集到的事实写出自己的叙述版本。但他们也可以公开这些事实背后的研究，并允许读者用人工智能质疑这些研究。
+- en: Imagine a world in which you can click a button next to a news story and see
+    all of the interview transcripts, Google searches, editorial conversations, and
+    more that were used to create the story. Based on this source information, news
+    organizations could make chatbots available that could rewrite the canonical story
+    for you with more details—or answer key questions you might have that went unaddressed
+    in the original. These experiences, when well-created, might constitute new content
+    formats in and of themselves and will require craft to create.
+  id: totrans-39
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 想象一下，你可以点击新闻故事旁边的按钮，看到用于创建故事的全部采访文本、谷歌搜索、编辑对话等等。基于这些信息，新闻组织可以提供可以为你重新写出更多细节的聊天机器人，或回答原文中未提出的关键问题。当这些经验被很好地创建时，它们可能构成有形的新内容格式，并需要技艺来创建。
+- en: 'To be clear, this unbundling of research and narrative still allows publications
+    to use their judgment in telling the story they believe is important. But it could
+    help respond to questions of bias in how stories by letting readers know: *You
+    can see for yourself how the sausage is made.*'
+  id: totrans-40
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 明确地说，这种将研究和叙述分离的方法仍然允许出版物使用他们认为重要的故事进行判断。但它可能有助于回应关于故事偏见的问题，让读者知道：*你可以亲眼看看香肠是怎么造出来的*。
+- en: It might also make some parts of news organizations look more and more like
+    wire services. As my colleague [Evan Armstrong argued](https://every.to/napkin-math/how-ai-changes-the-media-business),
+    the job of these organizations might shift to uncovering and corroborating new
+    and important facts, as they leave the basic summarization of facts to bots that
+    they run, or to bots that are run by individual users. Writers at these organizations
+    may shift toward more research and investigation, or toward more creative and
+    ambitious editorial projects that require original thinking.
+  id: totrans-41
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 它还可能使新闻组织的一些部分看起来越来越像通讯社。正如我的同事 [埃文·阿姆斯特朗（Evan Armstrong）所说](https://every.to/napkin-math/how-ai-changes-the-media-business)，这些组织的工作可能转向发现和证实新的重要事实，因为他们把基本的事实概要交给他们运行的机器人，或由个人用户运行的机器人。这些组织的作家可能会更倾向于更多的研究和调查，或者更有创意和雄心的原创编辑项目。
+- en: AI might change how media organizations present narratives. It might also broaden
+    the notion of who is considered a writer.
+  id: totrans-42
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 人工智能可能改变媒体组织呈现叙述的方式。它也可能扩大谁被认为是作家的概念。
+- en: '**AI means unwritten stories will be written **'
+  id: totrans-43
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+  zh: '**人工智能意味着未被写出的故事将被写出来**'
+- en: AI will change what writers do at large and small organizations, but it may
+    help more people write. This is an old dream, but it’s getting a new moment.
+  id: totrans-44
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 人工智能将改变大型和小型组织作家的工作，但它可能帮助更多人写作。这是一个古老的梦想，但它正在迎来新的时刻。
+- en: Medium, for example, was launched with the idea that any person with one good
+    idea should be able to write a viral blog post. The idea was that smart people
+    shouldn’t need to blog in obscurity for years before they got noticed, and they
+    certainly shouldn’t need a team of editors to gatekeep whether or not their work
+    was high-quality. Just put your idea in a text box, and Medium would figure out
+    who should see it.
+  id: totrans-45
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 例如，Medium 的创立理念是，任何有一个好点子的人都应该能够写出一篇病毒式的博客文章。这个想法是，聪明人不应该在被忽视多年后才被注意到，他们当然也不需要一个编辑团队来把守他们的作品是否高质量。只需将你的想法放在文本框中，Medium
+    将找出谁应该看到它。
+- en: The problem is that writing good blog posts is a complex skill. There are actually
+    very few people in the world who can do it well. There are even fewer who can
+    do it consistently. There are even fewer who are crazy enough to want to do it.
+    Writers like me revel in harvesting weird ideas into letters on a page. These
+    are the only kind of people that tend to put in enough hours to actually learn
+    how to make writing that spreads.
+  id: totrans-46
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 写好博客文章是一项复杂的技能。实际上，世界上能做到这一点的人非常少。能够持之以恒地做到的人更少。甚至还有更少的人愿意这样做。像我这样的作家热衷于将奇怪的想法收割成页面上的文字。这些往往是唯一愿意投入足够时间去真正学会传播文字的人。
+- en: When your supply of writing consists of one-off posts from non-professionals,
+    you tend to get bad-quality writing with surface-level PR-fluff marketing content.
+  id: totrans-47
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 当你的写作供应只包括非专业人士的一篇篇零星文章时，你往往会得到质量低劣、表面 PR 包装的内容。
+- en: AI might close the skill gap here because it could get good enough to turn people
+    into writers without forcing them to enter anything into a text box at all.
+  id: totrans-48
+  prefs: []
+  type: TYPE_NORMAL
+  zh: AI 可能在这里弥补技能差距，因为它可能会变得足够好，让人们成为作家，而无需他们在文本框中输入任何内容。
+- en: In particular, it could even evolve enough to turn an incredibly interesting
+    conversation into a good tweet, or essay, or maybe even a book. In turn, it may
+    bring Medium’s original dream a lot closer to reality.
+  id: totrans-49
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 特别是，它甚至可能发展到足以将一次非常有趣的对话转化为一条好推文，或者一篇文章，甚至可能是一本书。进而，这可能会让 Medium 的原始梦想更加接近现实。
+- en: This will be incredibly important because it will open up new vistas for writing
+    that were never previously available. For example, take the business world. From
+    the beginning of Every, we’ve noticed that the best ideas in business are never
+    written down—they’re locked up in people’s heads. You’ll hear them on a Zoom call
+    with a famous investor, or at an impromptu dinner with a few founders who happen
+    to be in town. These are things said by people with a twinkle in their eye, and
+    that might make you see the world differently or change the trajectory of your
+    business. But these ideas don’t spread because whoever said them doesn’t necessarily
+    have the skills to write about them.
+  id: totrans-50
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 这将非常重要，因为它将打开以前从未有过的写作新视野。例如，看看商界。从 Every 的开端，我们就注意到商界最好的想法从来都没有被记录下来——它们被锁在人们的头脑中。你会在与著名投资者的
+    Zoom 电话会议中听到它们，或者在与几位碰巧在城里的创始人临时晚餐时听到它们。这些是由眼中闪烁着光芒的人说出的话，这些话可能让你以不同的方式看待世界，或者改变你的业务轨迹。但是这些想法并没有传播开来，因为说出它们的人并不一定有写作的技能。
+- en: Part of the mission of Every is to bring these ideas to life on the page—but
+    for now, it’s been slow, difficult, and expensive. We do a lot of interviews with
+    people for this purpose, and we’ve also dabbled in ghostwriting. But it’s a fundamentally
+    talent-constrained endeavor. Good ghostwriters are incredibly rare, and they can
+    only work with a few people at a time.
+  id: totrans-51
+  prefs: []
+  type: TYPE_NORMAL
+  zh: Every 的使命之一是将这些想法活跃起来——但是目前来说，这是缓慢、困难且昂贵的。我们为此目的进行了许多人物采访，还尝试过幽灵写作。但这是一项根本上受才能限制的工作。好的幽灵写手非常罕见，而且他们一次只能与几个人合作。
+- en: 'AI changes this equation significantly. We’re already starting to see how AI
+    makes interviewing easier to do: It’s brought down the cost of producing a basic
+    transcript significantly. We’re starting to tinker with doing more on this front,
+    using it to take a basic transcript and polish it into a more final form. It’s
+    still early, but it looks like it could work. If it does, it might be able to
+    help with the even more complex task of ghostwriting. This will dramatically expand
+    the number of high-quality posts we can publish from people who don’t consider
+    themselves writers but who have incredible ideas about business. I can see this
+    holding true in a lot of other subject areas.'
+  id: totrans-52
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 人工智能显著改变了这个方程式。我们已经开始看到人工智能如何使采访更容易进行：它大大降低了制作基本转录的成本。我们开始尝试在这方面做更多的尝试，利用它将基本转录变得更加完善。现在还只是初期阶段，但看起来可能行得通。如果可以的话，它可能会有助于更复杂的代笔任务。这将大大扩大我们可以从那些不认为自己是作家但对业务有着不可思议想法的人那里发布的高质量文章的数量。我可以看到这在很多其他领域也是如此。
+- en: We’ve covered a lot in this article, so let’s pull back and take stock. If AI
+    is able to automate certain types of content creation, unbundle research from
+    narrative, and help to write unwritten stories…what happens then?
+  id: totrans-53
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 这篇文章我们讨论了很多内容，所以让我们回过头来看看。如果人工智能能够自动化某些类型的内容创作，将研究与叙述分开，并帮助撰写未写的故事……那么会发生什么？
+- en: '**The robots are coming, but will we like them?**'
+  id: totrans-54
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+  zh: '**机器人来了，但我们会喜欢它们吗？**'
+- en: The idea to use machines to automate parts of the content creation process is
+    not new.
+  id: totrans-55
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 利用机器自动化内容创作流程的想法并不新鲜。
+- en: For example, in BuzzFeed’s early days, CEO Jonah Peretti created a bot called
+    [LilyBoo](https://www.buzzfeed.com/lilyboo) that would help him trawl through
+    Pinterest posts looking for maximally cute pictures of dogs, cats, and more. The
+    pictures were then gathered into a list format and published.
+  id: totrans-56
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 例如，在BuzzFeed的早期，首席执行官Jonah Peretti创建了一个名为[LilyBoo](https://www.buzzfeed.com/lilyboo)的机器人，帮助他浏览Pinterest上的帖子，寻找最可爱的狗狗、猫猫等照片。然后，这些图片被整理成列表格式并发布。
+- en: According to the excellent new book [*Traffic*](https://www.amazon.com/Traffic-Genius-Rivalry-Delusion-Billion-Dollar/dp/0593299752),
+    by BuzzFeed’s former editor-in-chief Ben Smith, the idea for LilyBoo was, “machines,
+    with a little human help, feeding culture back to itself, scaling to infinity.”
+    LilyBoo, though, never quite took off. The problem was that there was “something
+    sterile about simply, clinically, feeding people’s own social media posts back
+    to them.”
+  id: totrans-57
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 根据BuzzFeed的前总编辑本·史密斯的优秀新书[*Traffic*](https://www.amazon.com/Traffic-Genius-Rivalry-Delusion-Billion-Dollar/dp/0593299752)的说法，LilyBoo的想法是，“机器，再加上一点人类的帮助，将文化反馈给自己，无限扩展。”
+    然而，LilyBoo从未完全起飞。问题在于，“简单地、临床地向人们反馈自己的社交媒体帖子，这种做法显得有些无趣。”
+- en: This new generation of AI will face the same problem. GPT-4’s summarizing capabilities
+    might be quite good—but they still lack the *zing* and voice of truly great human
+    writing. Great writing—even when it’s de-risked—is still a complex activity where
+    what it means to be “good” is changing all of the time. AI is still far off from
+    being able to do that on its own. There’s a good chance it will get there over
+    some long, undefined period of time, but anyone who uses these tools day-to-day
+    can see they’ll need a lot of help for the foreseeable future.
+  id: totrans-58
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 这一代新的人工智能将面临同样的问题。GPT-4的摘要能力可能相当不错，但它们仍然缺乏真正优秀人类写作的 *活力* 和声音。伟大的写作——即使它被降低了风险——仍然是一个复杂的活动，而“好”的含义随时都在变化。人工智能仍然远远不能独立做到这一点。有很大的机会它会在一段漫长而未定义的时间内达到这个目标，但任何日常使用这些工具的人都能看到，在可预见的未来，它们需要很多帮助。
+- en: I’ve argued before that [AI will probably change the set of skills you need
+    in order to be a writer](https://every.to/chain-of-thought/writing-essays-with-ai-a-guide),
+    but that it won’t get rid of writers. That’s why I’m optimistic about approaches
+    that intelligently blend what AI can do and what humans are great at. In an ideal
+    world, these technologies give humans more time to do satisfying creative work
+    at a higher level of ambition and scale and also make media businesses significantly
+    easier to run predictably.
+  id: totrans-59
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 我之前曾经论述过，[人工智能可能会改变作家所需的技能组合](https://every.to/chain-of-thought/writing-essays-with-ai-a-guide)，但它不会淘汰作家。这就是为什么我对能够智能地融合人工智能所能做的和人类擅长的方面的方法感到乐观。在理想的情况下，这些技术能够让人类有更多的时间从事令人满意的创意工作，提高雄心壮志和规模，同时也使媒体业务显着更易于可预测地运行。
+- en: We’ll see how it goes!
+  id: totrans-60
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 我们拭目以待！

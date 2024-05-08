@@ -1,0 +1,238 @@
+- en: <!--yml
+  id: totrans-0
+  prefs: []
+  type: TYPE_NORMAL
+  zh: <!--yml
+- en: 'category: COT 专栏'
+  id: totrans-1
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 类别：COT 专栏
+- en: 'date: 2024-05-08 11:03:24'
+  id: totrans-2
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 'date: 2024-05-08 11:03:24'
+- en: -->
+  id: totrans-3
+  prefs: []
+  type: TYPE_NORMAL
+  zh: -->
+- en: 'Inside the Pod: How to Make a Movie with ChatGPT, Midjourney, and Runway'
+  id: totrans-4
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+  zh: 在播客中：如何使用ChatGPT、Midjourney和Runway制作电影
+- en: 来源：[https://every.to/chain-of-thought/how-to-make-a-movie-with-chatgpt-midjourney-and-runway](https://every.to/chain-of-thought/how-to-make-a-movie-with-chatgpt-midjourney-and-runway)
+  id: totrans-5
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+  zh: 来源：[https://every.to/chain-of-thought/how-to-make-a-movie-with-chatgpt-midjourney-and-runway](https://every.to/chain-of-thought/how-to-make-a-movie-with-chatgpt-midjourney-and-runway)
+- en: '*Thank you to everyone who is watching or listening to my podcast,* [How Do
+    You Use ChatGPT?](https://open.spotify.com/show/5qX1nRTaFsfWdmdj5JWO1G) *If you
+    want to see a collection of all of the prompts and responses in one place, Every
+    contributor* ***Rhea Purohit*** *is breaking them down for you to replicate. Let
+    us know in the comments if you find these guides useful. —*[*Dan Shipper*](https://twitter.com/danshipper)'
+  id: totrans-6
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '*感谢所有收听或收看我的播客的人，* [你是如何使用ChatGPT？](https://open.spotify.com/show/5qX1nRTaFsfWdmdj5JWO1G)
+    *如果你想看到所有提示和回复的集合，请让每位贡献者* ***Rhea Purohit*** *为你分析。如果你发现这些指南有用，请在评论中告诉我们。 —*[*丹·希珀*](https://twitter.com/danshipper)'
+- en: '*Was this newsletter forwarded to you?* [*Sign up*](https://every.to/account)
+    *to get it in your inbox.*'
+  id: totrans-7
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '*您收到了这封通讯吗？* [*注册*](https://every.to/account) *以便收件箱接收。*'
+- en: '* * *'
+  id: totrans-8
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '* * *'
+- en: 'Movie-making has historically been prohibitively expensive. If you wanted to
+    make a Hollywood movie in 2012, you’d likely need high-end cameras, a sound system
+    with too many buttons, and maybe even a friend who knew Christopher Nolan personally.
+    Even the cheapest films to make are still pricey for the average person:'
+  id: totrans-9
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 电影制作过去一直成本高昂。如果你想在2012年拍一部好莱坞电影，你很可能需要高端摄像机，一个按钮太多的声音系统，甚至可能还需要一个认识克里斯托弗·诺兰（Christopher
+    Nolan）的朋友。即使制作成本最低的电影对普通人来说仍然昂贵：
+- en: '*The Blair Witch Project*'
+  id: totrans-10
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '*《布莱尔女巫计划》*'
+- en: and
+  id: totrans-11
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 并且
+- en: '*Paranormal Activity*'
+  id: totrans-12
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '*超常活动*'
+- en: cost about
+  id: totrans-13
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 大约花费
+- en: '[$200,000](https://www.hollywoodreporter.com/movies/movie-news/what-is-profitable-movie-ever-1269879/)'
+  id: totrans-14
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '[$200,000](https://www.hollywoodreporter.com/movies/movie-news/what-is-profitable-movie-ever-1269879/)'
+- en: each after post-production.
+  id: totrans-15
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 后期制作后的每一个。
+- en: But [AI is dramatically altering the cost of filmmaking](https://every.to/chain-of-thought/sora-and-the-future-of-filmmaking).
+    And AI tools have become a flywheel, broadening our ability to bring our own ideas
+    to life.
+  id: totrans-16
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 但是[人工智能正在大幅改变电影制作的成本](https://every.to/chain-of-thought/sora-and-the-future-of-filmmaking)。而人工智能工具已经成为一个飞轮，扩大了我们将自己的想法付诸实践的能力。
+- en: Film and commercial [director](https://daveclarkcreative.com/projects) Dave
+    Clark broke into Hollywood earlier this year with the sci-fi short film [*Borrowing
+    Time*](https://twitter.com/Diesol/status/1747351624329355474), which he made on
+    his own on his laptop, with AI tools like Midjourney, the text-to-video model
+    [Runway](https://runwayml.com/), and the generative voice platform [ElevenLabs](https://elevenlabs.io/).
+  id: totrans-17
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 电影和商业[导演](https://daveclarkcreative.com/projects)戴夫·克拉克（Dave Clark）于今年早些时候进入了好莱坞，他用自己的笔记本电脑和人工智能工具，如Midjourney、文本转视频模型[Runway](https://runwayml.com/)和生成式语音平台[ElevenLabs](https://elevenlabs.io/)制作了科幻短片[*Borrowing
+    Time*](https://twitter.com/Diesol/status/1747351624329355474)。
+- en: Clark talks about how he managed this in a recent episode of [*How Do You Use
+    ChatGPT?*](https://open.spotify.com/show/5qX1nRTaFsfWdmdj5JWO1G), where he makes
+    a movie live on the show with [Dan Shipper](https://twitter.com/danshipper). He
+    goes as far as to say that he *couldn’t* have made the three-minute-long featurewithout
+    AI—it would have been expensive, and Hollywood would never have funded it. But
+    after his short went viral on X, major production houses approached him with offers
+    to make it a full-length movie. Clark had his proof of concept.
+  id: totrans-18
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 克拉克在最近的一期[*你如何使用ChatGPT？*](https://open.spotify.com/show/5qX1nRTaFsfWdmdj5JWO1G)节目中谈到了他是如何做到这一点的，在节目中与[丹·希珀](https://twitter.com/danshipper)一起现场制作了一部电影。他甚至说，没有人工智能，他*不可能*制作出这部三分钟长的影片——它会很昂贵，好莱坞永远不会资助它。但在他的短片在X上爆红后，主要制片公司找上门来，提出要把它做成一部长片电影。克拉克有了他的概念验证。
+- en: In this interview, Dan and Dave delve into the realm of AI tools that generate
+    images and videos, exploring how budding filmmakers can leverage them to come
+    up with ideas, test these concepts, and perhaps even gain enough traction to secure
+    funding.
+  id: totrans-19
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 在这次采访中，丹和戴夫深入探讨了生成图像和视频的人工智能工具领域，探讨了初出茅庐的电影制作人如何利用它们来提出想法，测试这些概念，甚至可能获得足够的关注来获得资金支持。
+- en: I’m not aspiring to break into Hollywood—but I came away from this episode amazed
+    at what AI is capable of, and inspired to use it to put my words into action.
+  id: totrans-20
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 我不奢望闯入好莱坞——但我从这一集中对人工智能的能力感到惊讶，并受到启发，要将其用于实践。
+- en: Read on to see how Dan and Dave use AI tools to make a short film featuring
+    Nicolas Cage using a haunted roulette ball to resurrect his dead movie career.
+    They use a custom GPT that Clark has trained on his own creative style. The GPT—called
+    BlasianGPT to represent Clark’s Black and Asian heritage—is a text-to-image generator.
+  id: totrans-21
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 往下看，看看丹和戴夫如何使用人工智能工具拍摄一部短片，其中尼古拉斯·凯奇使用一个闹鬼的轮盘球来复活他已故的电影生涯。他们使用了克拉克自己创作风格的定制GPT。这个GPT——名为BlasianGPT，以代表克拉克的黑人和亚裔遗产——是一个文本到图像的生成器。
+- en: First, we’ll give you Dan and Dave’s prompts, followed by screenshots from BlasianGPT
+    and other AI tools employed to make the movie. My comments are peppered in using
+    italics.
+  id: totrans-22
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 首先，我们将给出丹和戴夫的提示，然后是来自BlasianGPT和其他用于制作电影的AI工具的截图。我的评论用斜体字插入其中。
+- en: '**Dan and Dave:** Create an image of Nicolas Cage getting sworn in as president.
+    The image should be cinematic and gritty in the style of the David Fincher film
+    *Se7en*.'
+  id: totrans-23
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '**丹和戴夫：**创造一张尼古拉斯·凯奇被宣誓就职为总统的形象。这张图片应该是像大卫·芬奇的电影《七宗罪》那样的电影式、泥泞的风格。'
+- en: '*All screenshots courtesy of Dave Clark and* [How Do You Use ChatGPT](https://www.youtube.com/watch?v=1XzKXz9CmvM&t=3642s)'
+  id: totrans-24
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '*所有截图由戴夫·克拉克和* [你如何使用ChatGPT](https://www.youtube.com/watch?v=1XzKXz9CmvM&t=3642s)'
+- en: .
+  id: totrans-25
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 。
+- en: '*Clark comments that BlasianGPT understood the vibe they were trying to achieve,
+    pointing out that the image had “perfume lighting,” a technique used by the director
+    of*'
+  id: totrans-26
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '*克拉克评论说，BlasianGPT理解了他们试图实现的氛围，指出图片有“香水灯光”，这是导演使用的一种技巧*'
+- en: Se7en
+  id: totrans-27
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 七宗罪
+- en: '*. A little trivia for all the movie buffs out there: Clark explains that the
+    term “perfume lighting” has its roots in advertisements for perfumes in the 1980s,
+    which typically used high-contrast visuals in an attempt to create an element
+    of drama.*'
+  id: totrans-28
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '*. 对于所有的电影爱好者来说，这里有一个小趣闻：克拉克解释说，“香水灯光”一词起源于20世纪80年代香水广告，这些广告通常使用高对比度的视觉效果，试图营造出戏剧性的元素。*'
+- en: '*Dan thinks the image looks like a Nicolas Cage-Harry Potter crossover. Even
+    though BlasianGPT didn’t effectively capture the setting of a presidential swearing-in
+    ceremony, he thinks the picture is interesting. Intrigued, Dan wonders what book
+    Nicolas Cage is holding in his hand.*'
+  id: totrans-29
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '*丹认为这张图片看起来像是尼古拉斯·凯奇和哈利·波特的交叉。尽管BlasianGPT没有有效地捕捉到总统宣誓就职仪式的场景，但他认为这张图片很有趣。好奇的丹想知道尼古拉斯·凯奇手里拿着什么书。*'
+- en: '**Dan and Dave:** What is the book Nicolas Cage is holding in his hand?'
+  id: totrans-30
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '**丹和戴夫：**尼古拉斯·凯奇手里拿着的是什么书？'
+- en: '*BlasianGPT plays it safe, drawing from the original prompt to answer that
+    the book is either a constitution or the Bible. However, Dan and Dave want to
+    pull on a more exciting thread.***Dan and Dave:**'
+  id: totrans-31
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '*BlasianGPT采取保守态度，根据原始提示回答说这本书可能是宪法或圣经。然而，丹和戴夫想要拉出更令人兴奋的线索。***丹和戴夫：**'
+- en: Nicolas Cage is holding the Book of the Dead, and he opened it and made a deal
+    with ghosts to resurrect his career. Show me the next scene in aspect ratio 16:9.
+  id: totrans-32
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 尼古拉斯·凯奇手持着《死者之书》，他打开了它并与幽灵达成了协议，以复活他的事业。给我看16:9宽高比的下一场景。
+- en: '[Learn more](/)'
+  id: totrans-33
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '[了解更多](/)'
+- en: This post is for
+  id: totrans-34
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+  zh: 这篇文章是为了
+- en: paying subscribers
+  id: totrans-35
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 付费订阅者
+- en: '[Subscribe →](/subscribe?publication=chain-of-thought)'
+  id: totrans-36
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '[订阅 →](/subscribe?publication=chain-of-thought)'
+- en: Or, [login](/login).
+  id: totrans-37
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 或者，[登录](/login)。

@@ -1,0 +1,417 @@
+- en: <!--yml
+  id: totrans-0
+  prefs: []
+  type: TYPE_NORMAL
+  zh: <!--yml
+- en: 'category: COT 专栏'
+  id: totrans-1
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 分类：COT 专栏
+- en: 'date: 2024-05-08 11:10:30'
+  id: totrans-2
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 日期：2024-05-08 11:10:30
+- en: -->
+  id: totrans-3
+  prefs: []
+  type: TYPE_NORMAL
+  zh: -->
+- en: Against Explanations
+  id: totrans-4
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+  zh: 反对解释
+- en: 来源：[https://every.to/chain-of-thought/against-explanations](https://every.to/chain-of-thought/against-explanations)
+  id: totrans-5
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+  zh: 来源：[https://every.to/chain-of-thought/against-explanations](https://every.to/chain-of-thought/against-explanations)
+- en: 'Sponsored By: Reflect'
+  id: totrans-6
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+  zh: 赞助商：Reflect
+- en: This article is brought to you by [Reflect](http://reflect.app/?utm_source=every.to&utm_medium=newsletter&utm_campaign=march23),
+    a frictionless note-taking app with a built-in AI assistant. Use it to generate
+    summaries, list key takeaways or action items, or ask it anything you want.
+  id: totrans-7
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 本文由[Reflect](http://reflect.app/?utm_source=every.to&utm_medium=newsletter&utm_campaign=march23)提供，这是一个带有内置AI助手的无摩擦笔记应用。使用它来生成摘要，列出关键要点或行动项目，或询问任何你想要的。
+- en: I think we should give up on explanations. Or, at least give up on explanations
+    in areas of science where good explanations have been hard to come by like psychology.
+  id: totrans-8
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 我认为我们应该放弃解释。或者，至少放弃在心理学等科学领域中很难得到良好解释的领域里解释。
+- en: We put a premium on explanations because historically we’ve felt that unless
+    we know “why” something happens, we can’t reliably predict it or change it. Sure,
+    human intuition has been able to predict things in psychology for millennia without
+    any clear “whys”. But intuition isn’t inspectable, debuggable, or transferrable.
+    Only explanations—the domain of science—are.
+  id: totrans-9
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 我们对解释付出了很高的代价，因为从历史上看，我们一直认为除非知道某事发生的“为什么”，否则我们无法可靠地预测或改变它。当然，几千年来，人类直觉一直能够预测心理学中的事情，而没有明确的“为什么”。但是直觉不具备可检查性、可调试性或可转移性。只有解释——科学的领域才有。
+- en: That’s not true anymore. AI works like human intuition, but it has more of the
+    properties of explanations. In other words, it is more inspectable, debuggable,
+    and transferrable.
+  id: totrans-10
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 这不再是真的了。人工智能的工作方式类似于人类直觉，但它具有更多解释的属性。换句话说，它更具可检查性、可调试性和可转移性。
+- en: AI models like GPT-4 can encode intuition and can make progress in places where
+    science hasn’t yet. We should use it to benefit humanity.
+  id: totrans-11
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 像GPT-4这样的AI模型可以编码直觉，并在科学尚未取得进展的领域取得进展。我们应该利用它造福人类。
+- en: We can find the explanations later.
+  id: totrans-12
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 我们可以以后找到解释。
+- en: .   .   .
+  id: totrans-13
+  prefs: []
+  type: TYPE_NORMAL
+  zh: .   .   .
+- en: If you look at the history of psychology, various schools of thought have come
+    and gone purporting to explain the underlying issues that create psychological
+    problems like anxiety and depression.
+  id: totrans-14
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 如果你看看心理学的历史，各种学派声称解释导致了心理问题，如焦虑和抑郁。
+- en: Freudians (and their descendants) think it’s about the conflict between the
+    unconscious and the conscious parts of the mind. They also put great emphasis
+    on how past experiences shape our experience of the present. Cognitive behaviorists
+    think anxious feelings come from distorted thoughts, and if you change your distorted
+    thoughts you’ll resolve your anxious feelings. ACT adherents believe that anxiety
+    is a feedback loop that is reinforced by attention and that if we focus less on
+    our anxiety and more on our behaviors the anxiety will become less of a problem
+    on its own. Somatic experiencing adherents think anxiety is a trauma response
+    that’s trapped in the body and needs to be released. [The list goes on.](https://slatestarcodex.com/2019/11/20/book-review-all-therapy-books/)
+  id: totrans-15
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 弗洛伊德派（及其后裔）认为这与意识和潜意识之间的冲突有关。他们还非常强调过去的经历如何塑造我们对现在经历的体验。认知行为主义者认为焦虑感来自扭曲的思想，如果你改变了你扭曲的思想，你就会解决你的焦虑感。行为承诺和接受（ACT）的信徒认为焦虑是通过注意力加强的反馈循环，如果我们把注意力减少放在焦虑上，更多地放在我们的行为上，焦虑将自行减少成为一个问题。躯体体验的信徒认为焦虑是一种困在身体中需要释放的创伤反应。[列表还在继续。](https://slatestarcodex.com/2019/11/20/book-review-all-therapy-books/)
+- en: ''
+  id: totrans-16
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: Imagine combining ChatGPT with Apple Notes. That's what it feels like using [Reflect](http://reflect.app/?utm_source=every.to&utm_medium=newsletter&utm_campaign=march23) –
+    an ultra-fast notes app with an AI assistant built in directly. Use the AI assistant
+    to organize your notes and thoughts, improve your writing and boost your productivity.
+  id: totrans-17
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 想象一下将ChatGPT与Apple Notes结合起来。这就像使用[Reflect](http://reflect.app/?utm_source=every.to&utm_medium=newsletter&utm_campaign=march23)一样——一个内置直接AI助手的超快笔记应用。使用AI助手来组织你的笔记和想法，提高你的写作水平，提高你的生产力。
+- en: '[Reflect](http://reflect.app/?utm_source=every.to&utm_medium=newsletter&utm_campaign=march23)
+    also uses Whisper from OpenAI to transcribe voice notes with near human-level
+    accuracy. That means you can use Reflect to ramble about a topic, and then have
+    the AI assistant turn it into an article outline.'
+  id: totrans-18
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '[Reflect](http://reflect.app/?utm_source=every.to&utm_medium=newsletter&utm_campaign=march23)
+    还使用 OpenAI 的 Whisper 来转录语音笔记，准确率接近人类水平。这意味着你可以使用 Reflect 来谈论一个话题，然后让 AI 助手将其转化为文章提纲。'
+- en: Start a free trial with Reflect to transform your note-taking using AI.
+  id: totrans-19
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 使用 Reflect 免费试用，利用人工智能改变你的笔记记录。
+- en: There’s probably truth to all of these theories. But when we look at the studies,
+    we find that there’s [no clear consensus that any of these work better](https://en.wikipedia.org/wiki/Dodo_bird_verdict)
+    than any others. (There are certain exceptions like exposure therapy for OCD which
+    does appear to work better, but that is the exception rather than the rule.) Instead,
+    the therapeutic alliance—literally the intuition-led relationship a therapist
+    builds with their client—[mediates most of the outcomes](https://pubmed.ncbi.nlm.nih.gov/33069096/)
+    in psychotherapy regardless of the specific methodology used.
+  id: totrans-20
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 所有这些理论可能都有一定的道理。但是当我们查看研究时，我们发现[没有明确的共识表明其中任何一个比其他任何一个更有效](https://en.wikipedia.org/wiki/Dodo_bird_verdict)。（有一些例外，比如暴露疗法对强迫症有效，但这是例外而不是规则。）相反，治疗联盟——字面上是指治疗师与其客户建立的直觉关系——[在心理治疗中大多数结果的中介](https://pubmed.ncbi.nlm.nih.gov/33069096/)，无论使用的具体方法是什么。
+- en: It doesn’t get much better in psychiatry. We’ve been prescribing antidepressants
+    for 40 years but we still can’t explain why they work. We also don’t really [know
+    *if* they work for sure](https://lorienpsych.com/2020/10/25/ssris/), despite lots
+    of economic and research incentives to figure it out. They probably do for certain
+    people and different ones work better or worse for different people with different
+    conditions at different times. But we can’t predict it in advance, and we have
+    no real unifying theories for why.
+  id: totrans-21
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 在精神病学方面情况并不乐观。我们已经开处方抗抑郁药物 40 年了，但我们仍然无法解释它们为什么有效。我们也不真正[知道它们是否肯定有效](https://lorienpsych.com/2020/10/25/ssris/)，尽管有很多经济和研究激励去弄清楚。它们可能对某些人有效，不同的人和不同情况下的不同药物对不同人的效果更好或更差。但我们无法预测它，而且我们对其真正统一的理论一无所知。
+- en: These are just the unresolved questions in psychology and psychiatry! Similar
+    situations abound in every other area of what we usually call the “soft” sciences.
+    In these fields, despite the best efforts of science to explain things, the intuition
+    of human beings still reigns supreme.
+  id: totrans-22
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 这些只是心理学和精神病学中未解决的问题！在我们通常称为“软科学”的每个其他领域中，类似的情况都屡见不鲜。在这些领域中，尽管科学竭尽全力解释事物，但人类的直觉仍然至高无上。
+- en: 'This isn’t what science promised us. It promised elegant, unifying theories
+    that explain how anxiety arises, or why anti-depressants work (or don’t.) It’s
+    the romantic ideal that we got from Newton: He [watched an apple fall from a tree](https://every.to/superorganizers/the-lucky-ones-358044?sid=17587)
+    and used it to come up with a simple formula to explain the motions of the moon.'
+  id: totrans-23
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 这不是科学向我们承诺的。它承诺了优雅的、统一的理论，解释焦虑是如何产生的，或者抗抑郁药物为什么有效（或不有效）。这是我们从牛顿那里得到的浪漫理想：他[看着苹果从树上掉下来](https://every.to/superorganizers/the-lucky-ones-358044?sid=17587)，并用它来提出一个简单的公式来解释月球的运动。
+- en: But what if what worked for physics is wrong-headed for psychology? What if
+    we admitted that the world is very complicated and that these fields involve elaborate
+    and often non-linear interactions between essentially infinite variables? What
+    if we admitted that this makes it difficult to develop clear, parsimonious, reproducible
+    explanations for any particular observation?
+  id: totrans-24
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 但是，如果对物理学有效的方法对心理学来说是错误的呢？如果我们承认世界是非常复杂的，而这些领域涉及基本上无限变量之间复杂且经常是非线性的相互作用呢？如果我们承认这使得难以为任何特定观察开发清晰、简洁、可重复的解释呢？
+- en: 'Historically, we jettisoned human intuition and fell in love with explanations
+    because they make progress possible. Explanations help us make predictions that
+    have the following properties:'
+  id: totrans-25
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 从历史上看，我们抛弃了人类的直觉，爱上了解释，因为它们使进步成为可能。解释帮助我们做出具有以下特性的预测：
+- en: '**They are inspectable.** We can understand what gave rise to the prediction,
+    why it might have been wrong, and what we can change to correct it.'
+  id: totrans-26
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+  zh: '**它们是可检查的。** 我们可以理解是什么导致了这个预测，为什么它可能是错误的，以及我们可以改变什么来纠正它。'
+- en: '**They are debuggable.** Because we know what gave rise to the prediction,
+    if it turns out to be wrong, we can tell that our explanations are wrong—and learn
+    to revise them.'
+  id: totrans-27
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+  zh: '**它们是可调试的。** 因为我们知道是什么导致了预测的出现，如果发现错误，我们就可以知道我们的解释是错误的，并学会修正它们。'
+- en: '**They are transferable.** Because they are explicit, they can be written down
+    and communicated succinctly. This allows them to spread and be built upon.'
+  id: totrans-28
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+  zh: '**它们是可传递的。** 因为它们是明确的，可以被记录并简洁地传达。这使它们能够传播并被进一步构建。'
+- en: Scientific explanations ushered in the age of antibiotics and sent us to space.
+    They built the atomic bomb and birthed the internet.
+  id: totrans-29
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 科学解释引领着抗生素时代，并将我们送入太空。它们制造了原子弹，孕育了互联网。
+- en: It would’ve been impossible to do any of these things with intuition alone because
+    intuition is too personal and too vulnerable to superstition. Both intuition and
+    explanation allow us to make predictions. Intuition says, “Trust me.” Explanations
+    say, “See for yourself.”
+  id: totrans-30
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 仅凭直觉是不可能做到这些事情的，因为直觉太过个人化，太容易受到迷信的影响。直觉和解释都允许我们进行预测。直觉说：“相信我。”解释说：“亲自看看吧。”
+- en: 'Expert human intuition—pattern recognition built from experience—works surprisingly
+    well in problem domains that are resistant to scientific explanations like psychology.
+    But human intuition lacks many of the best properties of scientific explanations:'
+  id: totrans-31
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 专家的人类直觉——从经验中建立的模式识别——在心理学等抗拒科学解释的问题领域中效果惊人。但人类的直觉缺乏科学解释的许多最佳特性：
+- en: It is, to some degree, inspectable and debuggable but the process is slow, prone
+    to errors, and vulnerable to [pet explanations](https://every.to/superorganizers/beware-of-pet-explanations).
+  id: totrans-32
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 在某种程度上，它是可检查和可调试的，但是这个过程缓慢，容易出错，并且容易受到[宠物解释](https://every.to/superorganizers/beware-of-pet-explanations)的影响。
+- en: It is somewhat transferable, this is the role of storytelling. But stories only
+    pave the way to intuition, they don’t transfer it outright. This means that experts
+    with well-developed intuition might get really great at, for example, providing
+    therapy to patients even in the absence of scientific explanations for their effectiveness.
+    But the intuitions developed by those clinicians are trapped in their heads, and
+    only available in a watered-down form as books, or talks, or textbooks.
+  id: totrans-33
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 这在某种程度上是可传递的，这是讲故事的作用。但故事只是为直觉铺平道路，而不是直接转移它。这意味着，即使在没有对其有效性进行科学解释的情况下，具有良好发展的直觉的专家可能会非常擅长，例如为患者提供治疗。但是，这些临床医生所发展的直觉被困在他们的头脑中，并且只能以一种淡化的形式作为书籍、演讲或教科书提供。
+- en: AI changes this equation.
+  id: totrans-34
+  prefs: []
+  type: TYPE_NORMAL
+  zh: AI 改变了这个方程式。
+- en: 'AI: encoded intuition'
+  id: totrans-35
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+  zh: AI：编码的直觉
+- en: Today’s large language models like GPT-4 are very good at predicting what comes
+    next. Given a prompt, they’ll give you a response. They see pairs of prompts and
+    completions over and over again, and thus learn what’s likely to come next. They
+    can encode the billions of different possibilities at play in a situation and
+    learn to make reasonable predictions without needing explanations.
+  id: totrans-36
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 如今的大型语言模型如 GPT-4 非常擅长预测接下来会发生什么。给定一个提示，它们会给出一个响应。它们一遍又一遍地看到提示和完成对，并因此学会了下一个可能会发生的事情。它们可以编码在一个情境中发挥作用的数十亿种不同可能性，并学会在不需要解释的情况下进行合理的预测。
+- en: 'These models have a type of pattern recognition that is akin to human intuition,
+    but with a few key differences:'
+  id: totrans-37
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 这些模型具有一种类似于人类直觉的模式识别能力，但有一些关键的区别：
+- en: '**They are inspectable.** We can’t see the chain of reasoning that gave rise
+    to a particular prediction, but we *can* look at the training data that was given
+    to them, the architecture of the model, and the prompt to understand why a prediction
+    was made.'
+  id: totrans-38
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+  zh: '**它们是可检查的。** 我们无法看到导致特定预测出现的推理链，但我们*可以*查看给它们提供的训练数据、模型的架构和提示，以理解为什么会做出某种预测。'
+- en: '**They are debuggable.** We can create theories about why a prediction was
+    off, and change some of the inputs to the model to change its behavior. We can
+    measure how much better or worse this makes the model, and keep making it better
+    over time.'
+  id: totrans-39
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+  zh: '**它们是可调试的。** 我们可以建立关于为什么预测错误的理论，并改变模型的一些输入以改变其行为。我们可以衡量这使模型变得更好或更差的程度，并随着时间的推移不断使其变得更好。'
+- en: '**They are transferable.** If you have the dataset and the code, you can recreate
+    the model. Or, if you have access to an API for the model you have access to what
+    it knows without running it yourself.'
+  id: totrans-40
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+  zh: '**它们是可传递的。** 如果你有数据集和代码，你可以重新创建模型。或者，如果你可以访问该模型的 API，你就可以访问它所知道的内容，而不必自己运行它。'
+- en: None of this is easy! And it can be very hard to understand and modify the behavior
+    of machine learning models. But it *is* doable.
+  id: totrans-41
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 这一切都不容易！而且很难理解和修改机器学习模型的行为。但这是可以做到的。
+- en: You could imagine a branch of psychology that, instead of being obsessed with
+    explanations, was instead focused on prediction using AI models. The game here
+    would not be about coming up with elegant theories. Instead, it would be to generate
+    predictions by gathering a high volume of accurate data and using it to train
+    a model.
+  id: totrans-42
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 你可以想象一个心理学分支，它不再痴迷于解释，而是专注于使用人工智能模型进行预测。这里的游戏不是想出优雅的理论。相反，它是通过收集大量准确数据并使用它来训练模型来生成预测。
+- en: For example, imagine a team of researchers focused on predicting the most effective
+    intervention for anxiety in a given individual. They would gather a vast dataset
+    including demographic information, genetic data, medical histories, lifestyle
+    factors, therapy session transcripts, and prior treatment outcomes for thousands
+    of patients with anxiety. They could then train an AI model on this dataset, allowing
+    it to learn the patterns and relationships between various factors and treatment
+    success.
+  id: totrans-43
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 举个例子，想象一支研究团队致力于预测针对特定个体的最有效干预措施以减轻焦虑。他们将收集包括人口统计信息、基因数据、医疗史、生活方式因素、治疗会话记录以及成千上万患有焦虑症的患者的先前治疗结果在内的庞大数据集。然后，他们可以在这个数据集上训练一个人工智能模型，使其学习各种因素与治疗成功之间的模式和关系。
+- en: Once the model is trained, researchers could use it to predict the most effective
+    treatment for a new patient based on their unique profile. The AI model might
+    not provide a clear-cut explanation for why a specific treatment works better
+    for a certain patient, but its predictions could be more accurate than those derived
+    from any single psychological theory.
+  id: totrans-44
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 一旦模型训练完成，研究人员可以使用它来预测基于其独特概况的新患者的最有效治疗方法。人工智能模型可能不会明确解释为什么某种特定治疗方法对某些患者更有效，但其预测可能比从任何单一心理理论得出的预测更准确。
+- en: As the AI model's predictions are tested in real-world settings, researchers
+    can fine-tune its performance by updating the training data with new outcomes,
+    identifying any biases or inaccuracies, and modifying the model's architecture
+    as needed. This iterative process would help the model become even more effective
+    at predicting good treatment options.
+  id: totrans-45
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 随着人工智能模型的预测在实际环境中进行测试，研究人员可以通过更新训练数据的新结果、识别任何偏见或不准确之处，并根据需要修改模型的架构来微调其性能。这个迭代过程将帮助模型更有效地预测良好的治疗选项。
+- en: AI-All-The-Things
+  id: totrans-46
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+  zh: AI-All-The-Things
+- en: It’s presumptuous for a non-scientist to demand we AI-ALL-THE-THINGS, I know.
+    In fact, what I’m suggesting is not science at all—it’s antithetical to it. Science
+    *demands* that we explain, otherwise, it’s not science.
+  id: totrans-47
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 对于一个非科学家来要求我们AI-ALL-THE-THINGS，这是傲慢的，我知道。事实上，我所建议的根本不是科学——它与科学相悖。科学*要求*我们解释，否则，它就不是科学。
+- en: 'But as a guy who has spent countless hours and tens of thousands of dollars
+    wading through the psychology literature and the therapy-industrial complex I
+    have some experience with the limitations of science to explain and ameliorate
+    my problems. Let me speak from that perspective:'
+  id: totrans-48
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 但作为一个花费了无数时间和数万美元研究心理学文献和治疗产业复杂性的人，我对科学解释和改善我的问题的局限性有些经验。让我从这个角度谈谈：
+- en: 'Explanations have a functional purpose: they help us make our predictions better.
+    Explanations used to be the only way to make our predictions better, but that’s
+    not so anymore.'
+  id: totrans-49
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 解释有一个功能性目的：它们帮助我们更好地进行预测。解释曾经是改善我们预测的唯一途径，但现在不再是这样了。
+- en: We now live in a world where we can suddenly make good predictions in domains
+    where explanations seem to be hard to come by. I’m arguing we should wake up to
+    this fact, and take advantage of it. Now that intuition-like predictions can be
+    made by AI, scientific explanations are less of a bottleneck for progress. That’s
+    a totally new situation in human history.
+  id: totrans-50
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 我们现在生活在一个能够在解释似乎难以获得的领域中突然做出良好预测的世界里。我在争论我们应该意识到这一事实，并加以利用。现在，人工智能可以做出类似直觉的预测，科学解释不再是进步的瓶颈。这是人类历史上完全新的情况。
+- en: Moreover, if we do manage to build accurate predictors in fields like psychology
+    using AI, we’ll have a new ground for science. It’s not [easy to examine a neural
+    network](https://every.to/chain-of-thought/a-primer-on-ai-doom-for-people-who-don-t-yet-wear-fedoras),
+    but it's much easier to examine a neural network than it is to examine a brain.
+    Neural networks that predict accurately might be studied to find the underlying
+    rules they’re following—and that could help us find new scientific explanations
+    for phenomena that we never would have considered before.
+  id: totrans-51
+  prefs: []
+  type: TYPE_NORMAL
+  zh: Moreover, if we do manage to build accurate predictors in fields like psychology
+    using AI, we’ll have a new ground for science. It’s not [easy to examine a neural
+    network](https://every.to/chain-of-thought/a-primer-on-ai-doom-for-people-who-don-t-yet-wear-fedoras)，
+    but it's much easier to examine a neural network than it is to examine a brain.
+    Neural networks that predict accurately might be studied to find the underlying
+    rules they’re following—and that could help us find new scientific explanations
+    for phenomena that we never would have considered before.
+- en: None of this means we should leave scientific explanations behind. It just means
+    we don’t have to wait for them.
+  id: totrans-52
+  prefs: []
+  type: TYPE_NORMAL
+  zh: None of this means we should leave scientific explanations behind. It just means
+    we don’t have to wait for them.
+- en: '* * *'
+  id: totrans-53
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '* * *'
+- en: '*I’m launching a course to teach you how to build your own chatbot. It''s an
+    online cohort-based course that will run once a week for four weeks starting May
+    1st. It costs $2,000, but Every subscribers get early access to it for $1,500\.
+    20+ students are already signed up, and spots are limited. Want to learn to build
+    in AI? *[***Learn more.***](https://every.to/chain-of-thought/how-to-build-a-chatbot-course)'
+  id: totrans-54
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '*I’m launching a course to teach you how to build your own chatbot. It''s an
+    online cohort-based course that will run once a week for four weeks starting May
+    1st. It costs $2,000, but Every subscribers get early access to it for $1,500\.
+    20+ students are already signed up, and spots are limited. Want to learn to build
+    in AI? *[***Learn more.***](https://every.to/chain-of-thought/how-to-build-a-chatbot-course)'

@@ -1,0 +1,551 @@
+- en: <!--yml
+  id: totrans-0
+  prefs: []
+  type: TYPE_NORMAL
+  zh: <!--yml
+- en: 'category: COT 专栏'
+  id: totrans-1
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 类别：COT专栏
+- en: 'date: 2024-05-08 11:09:59'
+  id: totrans-2
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 日期：2024-05-08 11:09:59
+- en: -->
+  id: totrans-3
+  prefs: []
+  type: TYPE_NORMAL
+  zh: -->
+- en: Does GPT-4 Know Me Better Than My Girlfriend?
+  id: totrans-4
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+  zh: GPT-4是否比我的女朋友更了解我？
+- en: 来源：[https://every.to/chain-of-thought/does-gpt-4-know-me-better-than-my-girlfriend](https://every.to/chain-of-thought/does-gpt-4-know-me-better-than-my-girlfriend)
+  id: totrans-5
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+  zh: 来源：[https://every.to/chain-of-thought/does-gpt-4-know-me-better-than-my-girlfriend](https://every.to/chain-of-thought/does-gpt-4-know-me-better-than-my-girlfriend)
+- en: Sponsor Every
+  id: totrans-6
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+  zh: 赞助商Every
+- en: '**Want to reach AI early-adopters?** Every is the premier place for 80,000+
+    founders, operators, and investors to read about business, AI, and personal development.'
+  id: totrans-7
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '**想要抵达人工智能的早期采用者吗？**Every是80000多位创始人、运营者和投资者阅读商业、人工智能和个人发展的首选之地。'
+- en: 'We''re currently accepting sponsors for Q3! If you''re interested in reaching
+    our audience, learn more:'
+  id: totrans-8
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 我们目前正在接受第三季度的赞助商！如果你有兴趣触达我们的受众，请了解更多：
+- en: 'The answer is: yes.'
+  id: totrans-9
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 答案是：是的。
+- en: I know because I tried it. This week, I built an AI that can simulate me and
+    predict how I would answer personality questions. It can guess my scores better
+    than my girlfriend does.
+  id: totrans-10
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 我知道，因为我尝试过。本周，我建立了一个可以模拟我并预测我如何回答个性问题的人工智能。它可以比我的女朋友更好地猜测我的分数。
+- en: (If you try this at home, do not tell your girlfriend/boyfriend/partner this.
+    You should definitely never show them a graph of how badly they did versus an
+    AI. You can try saying, “But baby, it’s just math!”. This doesn’t seem to help
+    for some reason.)
+  id: totrans-11
+  prefs: []
+  type: TYPE_NORMAL
+  zh: （如果你在家里尝试这个，请不要告诉你的女朋友/男朋友/伴侣。你绝对不应该向他们展示一张图表，显示他们与人工智能相比表现得有多差。你可以试着说，“但是宝贝，这只是数学！”这似乎出于某种原因没有帮助。）
+- en: 'I got into this mess because I had an idea the other night: Can GPT-4 predict
+    my personality? And, more importantly, can it predict my personality from just
+    a little bit of information like stuff I’ve written online or a sampling of notes
+    and journal entries?'
+  id: totrans-12
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 我陷入这个困境是因为我前几天晚上有一个想法：GPT-4能预测我的个性吗？更重要的是，它能否仅仅通过我在网上写的东西或一些笔记和日记的抽样来预测我的个性？
+- en: 'I decided to test GPT-4 as follows: I’d take a personality test. Then, I’d
+    give GPT-4 some information about me and ask it to take the same personality test—but
+    pretend to be *me*. I’d tell it to attempt to predict the ways I’d answer the
+    questions based on what it knows. Then I’d measure the difference between what
+    GPT-4 predicted my responses would be and my actual responses to see how accurate
+    it was.'
+  id: totrans-13
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 我决定如下测试GPT-4：我会进行一个人格测试。然后，我会给GPT-4一些关于我的信息，并要求它进行相同的人格测试，但假装是*我*。我会告诉它尝试根据它所知道的来预测我会如何回答这些问题。然后我会测量GPT-4预测我的答案和我的实际答案之间的差异，以查看它的准确性如何。
+- en: I’d also ask my girlfriend, Julia, who is unusually perceptive about people
+    and knows me quite well, to do the same task. Then I’d compare GPT-4’s accuracy
+    against hers.
+  id: totrans-14
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 我还会请我的女朋友朱莉娅，她对人很敏感，对我也很了解，做同样的任务。然后我会比较GPT-4的准确性和她的准确性。
+- en: 'Below are the results. The graph you see measures how well each predictor (the
+    AI, Julia, and random chance) did at predicting my scores:'
+  id: totrans-15
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 下面是结果。你看到的图表衡量了每个预测者（人工智能、朱莉娅和随机机会）在预测我的分数时的表现：
+- en: As you can see, random chance—blindly picking answers to a personality test—performed
+    the worst. Julia placed in the middle of the pack. And an AI that was pretending
+    to be me, using as its source material a small sampling of my notes, journal entries,
+    articles, and therapy transcripts did the best.
+  id: totrans-16
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 正如你所见，随机选择——盲目选择性格测试的答案——表现得最差。朱莉娅排在中间。而一个假装是我，使用了我一小部分笔记、日记、文章和治疗记录作为其素材的人工智能做得最好。
+- en: It’s still not perfect—but this is what I could cook up over the course of a
+    day or two. I think it will get even better than this.
+  id: totrans-17
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 这还不是完美的——但这是我在一两天内能够做出的。我认为它会变得比这更好。
+- en: Here's how I built it, and what it means.
+  id: totrans-18
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 这是我建立它的方式，以及它的含义。
+- en: Using GPT-4 to create a personality profile
+  id: totrans-19
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+  zh: 使用GPT-4创建个性概
+- en: 'I wanted GPT-4 to get to know me. So the first thing I did was ask it to create
+    a personality profile of me based on my Twitter account. I used an alpha version
+    of GPT-4 that has access to the web. Here’s my prompt:'
+  id: totrans-20
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 我想让GPT-4了解我。所以我做的第一件事是要求它根据我的Twitter账户创建一个我的个性概况。我使用的是一个可以访问网络的GPT-4的alpha版本。这是我的提示：
+- en: (Despite the typos in this prompt, GPT-4 understood the task anyway.)
+  id: totrans-21
+  prefs: []
+  type: TYPE_NORMAL
+  zh: （尽管这个提示中有错别字，GPT-4仍然理解了任务。）
+- en: 'Given this prompt, GPT-4 happily went off and perused my Twitter pretending
+    to be an expert psychologist looking for insights. It read through all of my tweets,
+    and came back a few minutes later with a few pages of flattering missives like
+    this:'
+  id: totrans-22
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 给定这个提示，GPT-4 开心地开始浏览我的 Twitter，假装是一位专业的心理学家寻找见解。它阅读了我所有的推文，几分钟后带着一些奉承的信件回来，内容如下：
+- en: '*“Shipper frequently tweets about AI and its potential impact, indicating a
+    high level of curiosity and a willingness to explore and understand complex topics.
+    For example, he has tweeted about the nature of AI models like GPT-4, emphasizing
+    that they are reasoning engines rather than simple knowledge databases​​. He also
+    expresses enthusiasm about the application of AI in various fields, such as media
+    and science​​​. This suggests a high degree of intellectual curiosity and a desire
+    for knowledge, typically associated with individuals who are analytical, thoughtful,
+    and forward-thinking.”*'
+  id: totrans-23
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '*“Shipper 经常在 Twitter 上发推关于人工智能及其潜在影响，表明他对探索和理解复杂主题有很高的好奇心和愿意​​。例如，他曾在推文中谈到人工智能模型的性质，如
+    GPT-4，强调它们是推理引擎而不是简单的知识数据库​​。他还表达了对人工智能在各个领域的应用的热情​​​。这表明了一种高度的求知欲和渴望知识的程度，通常与那些具有分析能力、思考能力和未来导向的个人相关。”*'
+- en: Everything in here is complimentary, but I actually think this is fairly perceptive.
+    (Of course, I do.) It’s missing things that I don’t share on social media—like
+    what I’m afraid of, what I struggle with, or things I think about that are not
+    at all related to the audience I’m building. Tweets are, of course, only a slice
+    of one person’s personality. I wondered how well it would do without nuanced data
+    sources nuance—but I also felt confident it had perceived *some* things accurately.
+  id: totrans-24
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 这里的一切都是称赞的，但我实际上认为这相当有洞察力。（当然，我这么认为。）它缺少了我不在社交媒体上分享的东西——比如我害怕什么，我在奋斗什么，或者和我正在建立的受众完全无关的想法。推文当然只是一个人个性的一部分。我想知道它在没有细致的数据源的情况下会做得有多好，但我也觉得它已经相当准确地感知到了
+    *一些* 东西。
+- en: Once I had the Twitter-based personality I also tried to construct a few other
+    profiles from a more varied group of sources. I collected a group of 7 pieces
+    of text that ranged from a summary of a therapy session, to some randomly selected
+    Roam Notes, to a life goals document I wrote a few years ago. I then used GPT-4
+    to summarize these documents into a profile that I could use to compare against
+    the Twitter one.
+  id: totrans-25
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 一旦我有了基于 Twitter 的个性，我还尝试从更多样化的来源构建几个其他档案。我收集了一组 7 个文本，涵盖了从一个治疗会议摘要到一些随机选择的 Roam
+    笔记，再到我几年前写的一个人生目标文件。然后，我使用 GPT-4 对这些文档进行总结，形成一个可以与 Twitter 比较的档案。
+- en: 'When those were ready, I proceeded to the next step: getting GPT-4 to don my
+    personality like a new coat and begin to answer test questions as me.'
+  id: totrans-26
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 当这些准备好后，我进行了下一步：让 GPT-4 像穿上一件新外套一样穿上我的个性，并开始以我的名义回答测试问题。
+- en: Using GPT-4 to simulate my personality
+  id: totrans-27
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+  zh: 使用 GPT-4 模拟我的个性
+- en: 'GPT-4 is already, at its core, a [simulator](https://www.lesswrong.com/s/N7nDePaNabJdnbXeE/p/vJFdjigzmcXMhNTsx):'
+  id: totrans-28
+  prefs: []
+  type: TYPE_NORMAL
+  zh: GPT-4 本质上已经是一个 [模拟器](https://www.lesswrong.com/s/N7nDePaNabJdnbXeE/p/vJFdjigzmcXMhNTsx)：
+- en: If you ask it to take on the personality of a New Yorker writer and edit your
+    sentences—it will do that. If you ask it to pretend to be William Shakespeare
+    and write a sonnet about McDonalds—it will do that. If you ask it to pretend to
+    be a super smart programmer hellbent on draining large banks of all of their money
+    who will use their winnings to buy a large island for you and your relatives—it
+    probably *could* do that. But it won’t, instead, it will tell you, “As an AI language
+    model, I cannot support, condone or participate in illegal activities.”
+  id: totrans-29
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 如果你要求它扮演纽约客的作家并编辑你的句子——它会这样做。如果你要求它假装是威廉·莎士比亚并写一首关于麦当劳的十四行诗——它会这样做。如果你要求它假装是一个铁了心要从大银行中掏空所有资金并用得来的钱给你和你的亲戚买一座大岛的超级聪明程序员——它很可能
+    *能* 做到。但它不会这样做，相反，它会告诉你，“作为一个 AI 语言模型，我不能支持、容忍或参与非法活动。”
+- en: Interestingly, the simulation capacity of GPT-4 runs so deep that its capabilities
+    go up and down depending on what it’s being asked to simulate. For example, [people
+    have found](https://astralcodexten.substack.com/p/janus-simulators) if you ask
+    it to be “super smart” it will answer questions better than if you don’t.
+  id: totrans-30
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 有趣的是，GPT-4 的模拟能力非常深厚，取决于它被要求模拟的内容。例如，[人们已经发现](https://astralcodexten.substack.com/p/janus-simulators)，如果你要求它“非常聪明”，它会比不要求时回答问题更好。
+- en: OpenAI provides a way to do this for developers by setting what’s called a “system”
+    message. This is a message at the start of a chat that sets the “personality”
+    of the bot. I did this first in the GPT-4 Playground which provides an easy interface
+    for testing.
+  id: totrans-31
+  prefs: []
+  type: TYPE_NORMAL
+  zh: OpenAI 通过设置所谓的“系统”消息为开发者提供了一种方法来实现这一点。这是一个在聊天开始时设置机器人“个性”的消息。我首先在 GPT-4 游乐场中进行了此操作，该游乐场提供了一个方便的界面用于测试。
+- en: 'I just copy and pasted the output of GPT-4’s Twitter sleuthing from the previous
+    step into the System Message with a little preamble to give it more context:'
+  id: totrans-32
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 我只是将之前一步的 GPT-4 推特调查的输出复制并粘贴到了系统消息中，并稍微添加了一些前言来提供更多的背景：
+- en: 'Once I set my system message, then I could start asking questions and getting
+    responses from GPT-4 as “me”:'
+  id: totrans-33
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 一旦我设置了我的系统消息，然后我就可以开始问问题并从 GPT-4 得到作为“我”的回答了：
+- en: Once GPT-4 was reliably answering questions as me, I needed to pick a personality
+    test.
+  id: totrans-34
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 一旦 GPT-4 可靠地作为我回答问题，我就需要选择一个个性测试。
+- en: The personality test I picked
+  id: totrans-35
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+  zh: 我选择的个性测试
+- en: Depending on who you ask, personality tests are either X-Ray machines or fortune
+    cookies.
+  id: totrans-36
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 根据你询问的人，个性测试要么是 X 光机，要么是幸运饼干。
+- en: They range from the *probably scientific* like [The Big Five test](https://openpsychometrics.org/tests/IPIP-BFFM/)
+    which is the gold standard of tests, to the *fun but definitely garbage* like
+    Buzzfeed’s, [We Know Exactly Which Taylor Swift Era Captures Your Aura Based On
+    The Aesthetic Images You Choose.](https://www.buzzfeed.com/lovemazecam/choose-from-these-aesthetic-images-to-find-out-whi-a4dboxu8p3)
+  id: totrans-37
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 它们的范围从*可能是科学的*，比如[大五人格测试](https://openpsychometrics.org/tests/IPIP-BFFM/)，这是测试的黄金标准，到*有趣但绝对是垃圾的*，比如
+    Buzzfeed 的[我们完全知道根据您选择的审美图像，泰勒·斯威夫特的哪个时代捕捉了您的光环。](https://www.buzzfeed.com/lovemazecam/choose-from-these-aesthetic-images-to-find-out-whi-a4dboxu8p3)
+- en: 'Whatever you believe, there are a few inarguable things about personality tests:
+    there are a lot of them, you’ll feel special when you see your results, and they’re
+    a hell of a lot of fun.'
+  id: totrans-38
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 无论你相信什么，关于个性测试有一些无可辩驳的事实：有很多种，当你看到你的结果时，你会觉得特别，而且它们非常有趣。
+- en: 'For this experiment, I chose a test that is probably somewhere in the middle
+    between X-Ray and fortune cookie. It purports to measure which of four personality
+    types you are: Productive Narcissist, Obsessive, Marketer, or Erotic.'
+  id: totrans-39
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 对于这个实验，我选择了一种可能介于 X 光机和幸运饼干之间的测试。它声称可以测量你是四种个性类型中的哪一种：富有成效的自恋者、强迫、市场人员或性感者。
+- en: 'It comes from a book called, [The Productive Narcissist](https://www.amazon.com/Productive-Narcissist-Promise-Visionary-Leadership/dp/0767910230),
+    which is about the personality type of visionary tech leaders. The author, psychologist
+    Michael Maccoby, splits personality into four types: Erotic, Obsessive, Marketing,
+    and Narcissistic:'
+  id: totrans-40
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 它来自一本名为《富有成效的自恋者》（The Productive Narcissist）的书，该书讨论了有远见的科技领袖的人格类型。作者，心理学家迈克尔·马科比（Michael
+    Maccoby），将个性分为四种类型：性感、强迫、市场和自恋：
+- en: '**Erotic Personality:** People who are driven by love and a need to care for
+    others.'
+  id: totrans-41
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '**性感个性：** 那些受爱和照顾他人需要驱使的人。'
+- en: '**Obsessive Personality:** People who are driven by a need for security, consistency,
+    rules, and logical order.'
+  id: totrans-42
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '**强迫个性：** 那些被需要安全、一致性、规则和逻辑秩序的需要驱使的人。'
+- en: '**Marketing Personality:** People who adapt to the market''s demands and are
+    driven by a need to be accepted and fit into society.'
+  id: totrans-43
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '**市场个性：** 那些适应市场需求并受到被接受和融入社会的需要驱使的人。'
+- en: '**Narcissistic Personality:** These individuals are driven by the need to be
+    unique, express their creativity, and achieve greatness.'
+  id: totrans-44
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '**自恋个性：** 这些个体被需要独特、表达他们的创造力和实现伟大的需要驱使。'
+- en: Maccoby saw the narcissistic personality as the classic tech CEO personality.
+    He thinks they are fundamentally people who “don’t listen to anyone else when
+    [they] believe in doing something” and who have “a precise vision of how things
+    should be.” It’s this combination, and their desire to achieve greatness that
+    can push them to build gigantic businesses in new fields.
+  id: totrans-45
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 马科比将自恋的个性视为典型的科技 CEO 个性。他认为他们从根本上讲是“在相信做某事时不听任何人的话”，并且有“如何事物应该是的精确愿景”。正是这种组合，以及他们渴望取得伟大成就的欲望，推动他们在新领域建立庞大的企业。
+- en: I think this is interesting because even though this book was published in the
+    early 2000s it’s exactly what most modern VCs say they are looking for in a founder.
+    For example, Peter Thiel’s idea of a [definite optimist](https://boxkitemachine.net/posts/zero-to-one-peter-thiel-definite-vs-indefinite-thinking/)
+    matches Maccoby’s definition of a productive narcissist perfectly.
+  id: totrans-46
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 我认为这很有趣，因为尽管这本书是在 2000 年代初出版的，但这正是大多数现代风险投资者说他们在创始人身上寻找的东西。例如，彼得·蒂尔对 [明确乐观者](https://boxkitemachine.net/posts/zero-to-one-peter-thiel-definite-vs-indefinite-thinking/)
+    的观念与麦考比对生产型自恋者的定义完美地吻合。
+- en: Maccoby created a personality test that asks questions that will tell you which
+    personality type you are—and subsequently, whether you are cut out to be a visionary
+    tech CEO.
+  id: totrans-47
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 麦考比创建了一个性格测试，通过一些问题告诉你你属于哪种个性类型，以及是否适合成为一个有远见的科技公司首席执行官。
+- en: It asks you to rate yourself on a scale of 0 (never) to 5 (almost always) on
+    questions that range from straightforward, to cryptic (”I make my bosses into
+    colleagues”) to existential (”I would rather be loved than admired”.) Each question
+    corresponds to one of the four personalities, and you add your scores on each
+    of these question types to figure out what your predominant personality is.
+  id: totrans-48
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 它要求你根据从直截了当到神秘（“我让我的老板成为同事”）再到存在主义的问题（“我更愿意被爱而非被赞美”）的问题在0（从不）到5（几乎总是）的等级上对自己评分。每个问题对应于四种个性之一，你需要在这些问题类型的每一个上添加你的分数，以确定你的主导个性是什么。
+- en: I took this personality test when I first read the book, and it turns out, I
+    am not a visionary tech CEO. *Womp womp.* Apologies to all of my investors.
+  id: totrans-49
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 当我第一次读这本书时我做了个性格测试，结果表明，我并不是一个有远见的科技公司 CEO。*哎* 向所有我的投资者致歉。
+- en: Instead, I scored fairly evenly across all categories which makes me a marketer
+    personality—someone who is very socially attuned and good at telling which way
+    the wind is blowing, but who fears they have nothing concrete at the center of
+    themselves. (I agree with the positive stuff, but the negative stuff is obviously
+    rude, wrong, and inapplicable to me.)
+  id: totrans-50
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 反而， 我的得分在所有类别上都相当平均，这使我成为了一个营销人格——一个非常社交敏感，善于判断风向向何方的人，但害怕自己内心没有任何具体东西的人。(我同意积极的东西，但消极的东西显然是粗鲁、错误的，不适用于我。)
+- en: Once I had my test scores in hand it was time to make the AI pretend to be me,
+    and see if its scores matched up. I wrote a little bit of code that would administer
+    the test by asking questions, and another bit of code that would use GPT-4 to
+    answer the questions based on the personality profiles that it had assembled previously.
+  id: totrans-51
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 一旦我得到了我的测试分数，就是让人工智能假扮成我，并看看它的分数是否匹配的时候了。我写了一小部分代码，用来通过问问题来进行测试，并另一小部分代码，用 GPT-4
+    根据之前它已经组装好的个性特征概述来回答这些问题。
+- en: I had a suspicion that GPT-4 would be good. But the results were…kind of shocking.
+  id: totrans-52
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 我怀疑 GPT-4 会很出色。但结果却……有点令人震惊。
+- en: Taking the test
+  id: totrans-53
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+  zh: 参加测试
+- en: To calculate how good the AI was I put my scores, its scores, and Julia’s scores
+    into a spreadsheet. Then I put the spreadsheet into ChatGPT’s Code Interpreter—an
+    alpha version of ChatGPT that can analyze spreadsheets, run code, and create data
+    visualizations.
+  id: totrans-54
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 为了计算人工智能的好坏，我把我的得分、它的得分和 Julia 的得分放进了电子表格中。然后我把这个电子表格放到 ChatGPT 的代码解释器里——这是
+    ChatGPT 的 alpha 版本，它可以分析电子表格，运行代码，并创建数据可视化。
+- en: 'I asked it to calculate the “loss” on GPT-4’s scores and Julia’s scores and
+    graph them for me. In AI parlance, “loss” means how good or bad your prediction
+    is. And you want to minimize it—in other words, minimize the gap between your
+    prediction and the truth. The graph below shows which predictor was best at getting
+    closest to the truth:'
+  id: totrans-55
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 我让它计算 GPT-4 的得分和 Julia 的得分的“损失”，并为我绘制他们的图表。在人工智能术语中，“损失”意味着你的预测好坏，你想要最小化它——换句话说，最小化你的预测和真相之间的差距。下面的图表显示了哪个预测者最擅长接近真相：
+- en: You can see I created three different AI versions of me and had them all take
+    personality tests. The one that did a basic summary of a few notes, therapy logs,
+    and articles from me did about as well as Julia did. The one that was constructed
+    from my Twitter did a bit better.
+  id: totrans-56
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 你可以看到我创造了三个不同的 AI 版本，它们都参加了一项个性测试。那一个对我几次笔记、治疗日志和文章进行了基本总结的表现和 Julia 的表现差不多。那一个是由我的推特构建的，表现的更好。
+- en: But the best one of all was a personality profile created from the same set
+    of notes but with a more advanced summary method used by the ChatGPT Code Interpreter.
+  id: totrans-57
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 但最棒的一个是由 ChatGPT 代码解释器使用更先进的总结方法创建的个性特征概要。
+- en: 'Just to see how the AI stood up to intense scrutiny, I also had my mom run
+    the same exercise as Julia. Here are her results:'
+  id: totrans-58
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 为了看看 AI 如何经受住严格的审查，我也让我妈妈做了与 Julia 相同的练习。以下是她的结果：
+- en: You can see, the woman who raised me from birth did better than an AI trained
+    on my Twitter account. But she still was no match for one that had access to my
+    notes.
+  id: totrans-59
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 你可以看到，抚养我长大的女人比一个训练过我的 Twitter 账户的 AI 表现得更好。但她仍然不及那些能够访问我的笔记的 AI。
+- en: These results are pretty good, but they’re still far from perfect. The correlation
+    between the best AI score and my scores was .45—which is a moderate positive correlation.
+    You should keep in mind though—this was only a first pass. My guess is that with
+    a week of work instead of a day or two, I could increase that significantly. Over
+    the course of a year or two…I’d be surprised if it wasn’t possible to predict
+    close to perfectly with the right data.
+  id: totrans-60
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 这些结果相当不错，但仍然远非完美。最佳 AI 得分与我的得分之间的相关性为0.45——这是一个中等正相关。但请记住——这只是第一次尝试。我猜想，如果有一周的时间而不是一两天的时间，我可以显著提高这个相关性。在一两年的时间里……如果有了正确的数据，我会惊讶地发现几乎可以预测得非常完美。
+- en: So what does that mean?
+  id: totrans-61
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 所以这意味着什么？
+- en: So what?
+  id: totrans-62
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+  zh: 所以呢？
+- en: 'What I built here looks like a silly quiz-taking bot—and it is. But quizzes
+    are important: they allow us to tell stories about ourselves which generate self-understanding.
+    There are plenty of interesting impacts on the world if that’s *all* that’s going
+    on here: perhaps AI will usher in a new golden era of quizzes on the internet.'
+  id: totrans-63
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 我在这里构建的东西看起来像一个愚蠢的测验机器人——而且确实如此。但测验很重要：它们让我们能够讲述关于自己的故事，从而产生自我理解。如果这就是这里发生的一切：也许
+    AI 将带来互联网上测验的新黄金时代，那么世界上就会有很多有趣的影响。
+- en: We’ll each have our own quiz-taking bots based on our personalities that will
+    constantly be answering questions and surfacing the most interesting results back
+    to us. These bots will be like little personal mirrors reflecting back to us parts
+    of ourselves we couldn’t otherwise see. They’ll allow us to see ourselves in different
+    lighting, with different poses, and maybe with clothes on that we would never
+    have otherwise dared to try on ourselves. We’d be able to see what we’d be like
+    with a new job, or a different partner, or if we tried a new self-help routine.
+    In this way, these bots could help us to understand the endlessly complex and
+    fascinating puzzle of who we truly are.
+  id: totrans-64
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 我们每个人都会有基于我们个性的测验机器人，它们将不断回答问题并向我们展示最有趣的结果。这些机器人就像是向我们反射出我们无法以其他方式看到的自己的小个人镜子。它们将使我们能够在不同的光线下看到自己，以不同的姿势，也许穿着我们从未敢自己尝试的衣服。我们将能够看到自己在新工作中会是什么样子，或者与不同的伴侣在一起会是什么样子，或者如果我们尝试新的自助改进程序会是什么样子。通过这种方式，这些机器人可以帮助我们理解我们真正是谁这个无尽复杂而迷人的谜题。
+- en: They could also help us understand what it might be like to be someone totally
+    different. For example, maybe you struggle with conflict avoidance, confidence,
+    or remaining empathetic. Having a bot that was modeled on any of those personality
+    traits—maybe from someone you admire—to turn to when you’re making a difficult
+    decision, or when you’re trying to decide how to communicate with someone else
+    might be an incredibly powerful tool in business and life.
+  id: totrans-65
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 它们还可以帮助我们理解成为完全不同的人可能是什么样子。例如，也许你在冲突回避、自信或保持同理心方面遇到困难。当你在做出困难的决定时，或者当你试图决定如何与他人沟通时，有一个模仿任何这些人格特质的机器人——也许是来自你崇拜的人——作为支持可能是商业和生活中非常强大的工具。
+- en: If all of this does come to pass, I don’t think its impact will be limited to
+    increased personal understanding, or self-improvement though. The ability to build
+    good predictors of human psychology with AI could become a [fundamentally new
+    ground for science](https://every.to/chain-of-thought/against-explanations), and
+    one that can usher in progress that decades of research haven’t been able to.
+  id: totrans-66
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 如果所有这些确实实现了，我认为它的影响不会仅限于增加个人理解或自我改善。使用 AI 构建良好的人类心理预测模型的能力可能成为一种[基本新的科学领域](https://every.to/chain-of-thought/against-explanations)，并且可以带来几十年研究无法实现的进步。
+- en: For example, you might be able to predict things like when an individual might
+    be suffering from anxiety or depression. You might also be able to predict which
+    interventions would be most likely to help that person feel better—and deliver
+    those interventions to them.
+  id: totrans-67
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 例如，你可能能够预测一个人何时可能患有焦虑或抑郁。你还可能能够预测哪种干预措施最有可能帮助这个人感觉更好——并向他们提供这些干预措施。
+- en: And this is where building predictors starts to have a huge impact on scientific
+    progress. Despite decades of research, we don’t have a very good scientific model
+    of what mental health conditions are, what causes them, or how to heal them. We
+    have a lot of theories and high-level stories but our understanding is nothing
+    even close to the scientific understanding we have in other fields like physics
+    or chemistry.
+  id: totrans-68
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 而这正是构建预测器开始对科学进展产生巨大影响的地方。尽管经过数十年的研究，我们对心理健康状况、其成因或治疗方法没有一个非常好的科学模型。我们有很多理论和高层次的故事，但是我们的理解与物理学或化学等其他领域的科学理解相去甚远。
+- en: If you truly can predict parts of human psychology like anxiety or depression
+    with AI, then presumably you’ve encoded an explanation for the causes of these
+    conditions into your AI. If you examine the underlying structure of the AI itself—you
+    might be able to find good, simple scientific explanations for mental health conditions
+    by first learning to predict them with AI.
+  id: totrans-69
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 如果您真的能够用人工智能预测人类心理的一些部分，比如焦虑或抑郁，那么您可能已经将这些状况的成因编码到了您的人工智能中。如果您检查人工智能本身的基本结构，您可能会通过首先学会用人工智能来预测这些状况，找到心理健康状况的良好、简单的科学解释。
+- en: Or maybe we won’t. Nature doesn’t guarantee that simple explanations exist—even
+    though we, as humans, are by nature attracted to them. When we build these predictors,
+    we might find that the simplest possible explanation for a complex condition like
+    anxiety is actually close to the size and complexity of the AI that can predict
+    it. At the end of this process, we might discover that the explanation for something
+    like anxiety is the size of a novel, a textbook, or ten put together.
+  id: totrans-70
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 或者也许我们不会。自然并不保证简单的解释存在，即使作为人类，我们天生就对它们有吸引力。当我们构建这些预测器时，我们可能会发现，类似焦虑这样的复杂状况的最简单可能的解释实际上接近可以预测它的人工智能的大小和复杂性。在这个过程结束时，我们可能会发现，类似焦虑这样的东西的解释是一部小说、一本教科书或十本的大小。
+- en: This could represent the full-circle journey of science. At first, it tossed
+    out human intuition and human stories in favor of equations and experiments. In
+    the end, it might be that intuition and storytelling were the best ways for our
+    minds to predict, and explain things that are beyond the ability of our more limited
+    rational minds to comprehend.
+  id: totrans-71
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 这可能代表了科学的一次全方位之旅。最初，它舍弃了人类直觉和故事，转而采用方程式和实验。最后，也许直觉和叙事是我们的头脑预测和解释那些超出我们更有限理性头脑能理解的事物的最佳方式。
+- en: That would be an interesting outcome of quiz-taking AI bots indeed.
+  id: totrans-72
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 那将确实是有趣的测试AI机器人的结果。
+- en: '* * *'
+  id: totrans-73
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '* * *'
+- en: '*If you''re interested in digging into the data generated by this experiment,
+    you can access a spreadsheet with all of the scores* [*here*](https://www.dropbox.com/s/o68yl98mv37i76l/Merged_Original_Format_Data_with_Random_Chance.xlsx?dl=0)*.
+    I''m curious to know if you find any interesting patterns in the data.*'
+  id: totrans-74
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '*如果您对深入挖掘这个实验产生的数据感兴趣，您可以在[*这里*](https://www.dropbox.com/s/o68yl98mv37i76l/Merged_Original_Format_Data_with_Random_Chance.xlsx?dl=0)*访问带有所有分数的电子表格。我很想知道您是否在数据中发现了任何有趣的模式。*'

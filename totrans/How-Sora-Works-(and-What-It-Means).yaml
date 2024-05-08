@@ -1,0 +1,557 @@
+- en: <!--yml
+  id: totrans-0
+  prefs: []
+  type: TYPE_NORMAL
+  zh: <!--yml
+- en: 'category: COT 专栏'
+  id: totrans-1
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 'category: COT 专栏'
+- en: 'date: 2024-05-08 11:05:20'
+  id: totrans-2
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 'date: 2024-05-08 11:05:20'
+- en: -->
+  id: totrans-3
+  prefs: []
+  type: TYPE_NORMAL
+  zh: -->
+- en: How Sora Works (and What It Means)
+  id: totrans-4
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+  zh: Sora是如何运作的（以及它的意义）
+- en: 来源：[https://every.to/chain-of-thought/sora-and-the-future-of-filmmaking](https://every.to/chain-of-thought/sora-and-the-future-of-filmmaking)
+  id: totrans-5
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+  zh: 来源：[https://every.to/chain-of-thought/sora-and-the-future-of-filmmaking](https://every.to/chain-of-thought/sora-and-the-future-of-filmmaking)
+- en: Look, here’s what we’re *not* going to do. We’re not going to freak out. We’re
+    not going to prognosticate about utopia or predict doom. We’re going to keep our
+    heads on straight and…
+  id: totrans-6
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 看，这是我们*不*要做的。我们不会惊慌失措。我们不会预言乌托邦或者预测末日。我们会保持头脑清醒并…
+- en: DID YOU FREAKING SEE SORA????
+  id: totrans-7
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 你看到Sora了吗？？？
+- en: OpenAI’s new text-to-video model can generate a 60-second photorealistic video
+    of a pair of adorable [golden retrievers podcasting on a mountain top](https://twitter.com/sama/status/1758218820542763012).
+    It can generate a video of [Bling Zoo](https://twitter.com/billpeeb/status/1758223674832728242),
+    where a tiger lazes in an enclosure littered with emeralds and a capuchin monkey
+    wears a king’s crown behind a gilded cage. It can generate a video of an [AI Italian
+    grandmother](https://twitter.com/sama/status/1758219575882301608) wearing a pink
+    floral apron and making gnocchi in a rustic kitchen. (Her hands look a little
+    like the hot dog fingers from *Everything Everywhere All at Once,* but still—that’s
+    a movie, too!)
+  id: totrans-8
+  prefs: []
+  type: TYPE_NORMAL
+  zh: OpenAI的新文本转视频模型可以生成一段 60 秒的逼真视频，展示一对可爱的[金毛收音机播客在山顶](https://twitter.com/sama/status/1758218820542763012)。它可以生成一个
+    [Bling Zoo](https://twitter.com/billpeeb/status/1758223674832728242) 的视频，一只老虎在装满祖母绿的围栏中悠闲地躺着，一只卷尾猴戴着王冠在镀金的笼子后面。它可以生成一个[AI意大利奶奶](https://twitter.com/sama/status/1758219575882301608)，穿着粉色花卉围裙在一个乡村厨房里做意大利汤圆。（她的手有点像《无所不在的一切》中的热狗手指，但仍然是电影！）
+- en: 'It’s wild. It’s incredible. It caused Mr. Beast [to tweet at Sam Altman](https://twitter.com/MrBeast/status/1758194696034365674):
+    “Please don’t make me homeless.”'
+  id: totrans-9
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 太疯狂了。太不可思议了。这让Mr. Beast [发推给 Sam Altman](https://twitter.com/MrBeast/status/1758194696034365674)：“请不要让我无家可归。”
+- en: There’s a line from a Chekhov story that reads, “I understood it as I understand
+    lightning.” He might as well have been talking about Sora. The demos struck me
+    bodily, like electricity.
+  id: totrans-10
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 有一句出自契诃夫小说的话：“我领会它的方式就像我领会闪电一样。”他可能也可以在谈论Sora。这些演示像电一样击中了我。
+- en: '*Phew*. I’m glad I got that out of my system. It was important to say that
+    because writing about a buzzy new drop from OpenAI is a little bit like sailing
+    between a [Scylla and Charybdis](https://en.wikipedia.org/wiki/Between_Scylla_and_Charybdis)
+    of the mind:'
+  id: totrans-11
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '*呼~*。我很高兴我把这个说出来了。这很重要，因为写关于OpenAI的新热门产品有点像在心灵的[斯库拉和喀里布迪斯之间](https://en.wikipedia.org/wiki/Between_Scylla_and_Charybdis)航行：'
+- en: '*Meme format inspired by* [*Visakan Veerasamy*](https://twitter.com/visakanv)*.*'
+  id: totrans-12
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '*受* [*Visakan Veerasamy*](https://twitter.com/visakanv) *启发的模因格式*。'
+- en: In one part of my brain are the multi-headed dragons of doom telling me to strafe
+    the freaking data centers before the movie industry combusts like Mel Gibson’s
+    career. In another part is the techno-optimistic quantum whirlpool of excitement
+    already planning the Pixar-style movie I will create as soon as I get my hands
+    on this model. The world will finally see me as the undiscovered heir to George
+    Lucas that I secretly always knew that I was—lack of ever having made a film be
+    damned.
+  id: totrans-13
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 在我的大脑的一部分是告诉我在电影工业像梅尔·吉布森的职业生涯一样燃烧之前，对着数据中心开火的多头灾难龙。在另一部分是乐观的技术量子漩涡兴奋地计划着我一旦拿到这个模型就要创造的像Pixar风格的电影。世界终于会看到我作为乔治·卢卡斯未发现的继承人，我一直暗自以为是的—不管我是否曾经拍过电影。
+- en: The problem is, I know both parts of my brain are wrong. *Ayyy lmao*.
+  id: totrans-14
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 问题是，我知道我大脑的两个部分都是错误的。*Ayyy lmao*。
+- en: My brain is mistaking *newness* for something that it’s not. The feeling I’m
+    getting from watching these demos is not the one I get from watching a great movie,
+    YouTube video, or TikTok. Why? I know, in time, the newness of these demos will
+    fade, and they’ll become normal—mundane, even. I’ll no longer get excited by them.
+    But a well-crafted movie will continue to be compelling.
+  id: totrans-15
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 我的大脑误将*新奇*误认为了它不是的东西。我从观看这些演示中得到的感觉并不是我从观看一部精彩电影、YouTube视频或者TikTok得到的感觉。为什么？我知道，随着时间的推移，这些演示的新奇感会消失，它们会变得普通—甚至是平淡的。我不会再为它们感到兴奋。但是一部精心制作的电影将会持续引人入胜。
+- en: 'The best way to keep a level head about advances like these is to think of
+    them in terms of long-term trends. Sora in particular, and AI filmmaking in general,
+    is an extension of two important ones:'
+  id: totrans-16
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 关于这类进步保持冷静的最佳方法是从长期趋势的角度来思考它们。特别是Sora，以及AI电影制作的一般，是两个重要趋势的延伸：
+- en: Tremendous amounts of data and compute being used to generate mind-blowing AI
+    breakthroughs
+  id: totrans-17
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+  zh: 使用大量数据和计算资源来生成令人叹为观止的 AI 突破
+- en: Technology driving down the cost of filmmaking
+  id: totrans-18
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+  zh: 技术正在降低电影制作的成本
+- en: Let’s talk about both of them.
+  id: totrans-19
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 让我们来谈谈它们两个。
+- en: How Sora uses massive amounts of data to make mind-blowing video clips
+  id: totrans-20
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+  zh: Sora 如何利用海量数据制作令人叹为观止的视频片段
+- en: 'AI runs on scale: More data and more compute means better results. Sora is
+    impressive because OpenAI figured out how to throw more data and more compute
+    at text-to-video than anyone else has before. Here’s a simplified version of how
+    the company did it based on what I can glean from [its whitepaper](https://openai.com/research/video-generation-models-as-world-simulators).'
+  id: totrans-21
+  prefs: []
+  type: TYPE_NORMAL
+  zh: AI 的运行依赖于规模：更多的数据和更多的计算意味着更好的结果。Sora 令人印象深刻，因为 OpenAI 找出了如何将更多的数据和计算资源投入到文本到视频中，而其他人以前都没有做到。这里是根据我从[其白皮书](https://openai.com/research/video-generation-models-as-world-simulators)中所能获得的信息制作的一个简化版本。
+- en: 'Imagine a film print of *The Dark Knight*. You know what I’m talking about:
+    the reel of cellophane wound around a metal disk that a young man in a red blazer
+    hooks up to a projector in an old-style movie theater.'
+  id: totrans-22
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 想象一下 *The Dark Knight* 的电影胶片。你知道我在说什么：绕在金属盘子上的一卷塑料薄膜，一个穿着红色西装的年轻人将其连接到老式电影院的放映机上。
+- en: 'You unroll the film from its scroll and chop off the first 100 frames of cellophane.
+    You take each frame—here the Joker laughing maniacally, there the Batman grimacing
+    —and perform the following strange ritual:'
+  id: totrans-23
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 你展开卷轴上的电影并砍掉前 100 帧的胶片。你拿起每一帧——这里是小丑狂笑，那里是蝙蝠侠扭曲着脸——并进行以下奇怪的仪式：
+- en: 'You use an X-acto knife to cut a gash in the shape of an amoeba in the first
+    frame. You excise this cellophane amoeba with tweezers as carefully as a watchmaker
+    and put it in a safe place. Then you move on to the next frame: You cut the same
+    amoeba-shaped hole from the same part of the next cellophane frame. You remove
+    this new amoeba—shaped precisely the same as the last one—with tweezers and stack
+    it carefully on top of the first one. You keep going, until you’ve done this to
+    all 100 frames.'
+  id: totrans-24
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 你用 X-acto 刀在第一帧上切出一个变形虫形状的切口。你用镊子小心翼翼地将这个胶片变形虫割掉，并放在一个安全的地方。然后你继续下一帧：你从下一帧相同部位切出相同形状的变形虫孔。你用镊子小心地移除这个新的变形虫——形状与上一个完全相同——并小心地叠放在第一个上面。你继续进行，直到对所有
+    100 帧都做完这个操作
+- en: You now have a multicolored amoeba extruded along its Y-axis. A tower of cellophane
+    that could be run through a projector to show a small area of *The Dark Knight*,
+    as if someone stuck their hand in a loose fist in front of the projector, letting
+    only a little bit of the movie through.
+  id: totrans-25
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 现在，你有一个沿着 Y 轴伸展的多彩的变形虫。一根胶片的塔，可以通过放映机展示 *The Dark Knight* 的一个小区域，就好像有人把手伸进放映机前面，只让一小部分电影通过一样。
+- en: This tower is then compressed and turn into what’s called a “patch”—a smear
+    of color changing through time. The patch is the basic unit of Sora in the same
+    way the “token” is the basic unit of GPT-4\. Tokens are bits of words, while patches
+    are bits of movies.
+  id: totrans-26
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 然后，这个塔被压缩并转化为所谓的“补丁”——随时间变化的颜色涂抹。与“令牌”是 GPT-4 的基本单位一样，补丁是 Sora 的基本单位。令牌是词的一部分，而补丁是电影的一部分。
+- en: 'GPT-4 has been trained to take in a sequence of tokens and output the next
+    token in the sequence. Sora has been trained to do the same thing: It takes in
+    a sequence of patches and outputs the next “patch” in the sequence.'
+  id: totrans-27
+  prefs: []
+  type: TYPE_NORMAL
+  zh: GPT-4 已经被训练为接收一系列令牌并输出序列中的下一个令牌。Sora 也被训练做同样的事情：它接收一系列补丁并输出序列中的下一个“补丁”。
+- en: Patches are innovative—and Sora appears to be so powerful—because they allowed
+    OpenAI to train Sora on an immense amount of image and video data. Imagine patches
+    cut out of every video in existence—infinite towers of cellophane—stacked and
+    fed into the model.
+  id: totrans-28
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 补丁是创新的，而 Sora 似乎是如此强大，因为它们使得 OpenAI 能够在大量图像和视频数据上训练 Sora。想象一下从所有视频中剪切出的补丁——无尽的胶片塔——堆叠起来并输入到模型中。
+- en: Previous text-to-video approaches required images and videos used in training
+    to all be the same size, which required significant pre-processing to cut videos
+    down to size. But because Sora trains on “patches” instead of the full frame of
+    the video, it can gobble up any video or image without requiring it to be cut
+    down.
+  id: totrans-29
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 以前的文本到视频方法要求在训练中使用的图像和视频都是相同大小的，这需要进行大量的预处理来裁剪视频。但是由于 Sora 不是在整个视频帧上进行训练，而是在“补丁”上进行训练，因此可以吸收任何视频或图像，而无需裁剪。
+- en: As a result, more data can be used for training, for a higher quality output.
+    For example, pre-processing videos into new aspect ratios often means that they’re
+    cut in such a way that the original framing of the video is lost. A video showing
+    a person at the center of the frame in widescreen, when cropped, might show that
+    human only partially in view. Because Sora can take any video as training input,
+    its output doesn’t suffer from the effects of poorly framed training input.
+  id: totrans-30
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 因此，可以利用更多的数据进行训练，以获得更高质量的输出。例如，将视频预处理为新的长宽比通常意味着它们会以丢失原始视频构图的方式被裁剪。当剪辑时，显示在宽屏中央的人物的视频，一旦被裁剪，可能只会部分展示该人物。由于
+    Sora 可以将任何视频作为训练输入，因此其输出不会受到制作不佳的训练输入的影响。
+- en: 'Another big advance with Sora is the architecture it uses. Traditionally, text-to-video
+    models like [Runway](https://runwayml.com) are diffusion models, while text models
+    like GPT-4 are transformers. Sora is a diffusion transformer: a mashup of the
+    two. Instead of predicting the next piece of text in a sequence, Sora predicts
+    the next “patch” in a sequence of patches. By using this architecture, OpenAI
+    can throw much more data and compute at training Sora, and the results are stunning.'
+  id: totrans-31
+  prefs: []
+  type: TYPE_NORMAL
+  zh: Sora 的另一个重大进步是它所使用的架构。传统上，文本到视频模型（如 [Runway](https://runwayml.com)）是扩散模型，而文本模型（如
+    GPT-4）是变压器。Sora 是一种扩散变换器：两者的混合体。Sora 不是预测序列中的下一个文本片段，而是预测序列中的下一个“补丁”。通过使用这种架构，OpenAI
+    可以为 Sora 的训练投入更多的数据和计算资源，而结果令人震惊。
+- en: When Sora videos first dropped, [people were amazed](https://twitter.com/drjimfan/status/1758210245799920123?s=46)
+    that it could simulate things like the fluid dynamics of coffee splashing around
+    in a coffee cup. They assumed that OpenAI had connected Sora to a game engine
+    (the algorithms that power video games and can simulate physics) in order to generate
+    results like that. But that’s not what happened. Sora can create graphics like
+    that on its own.
+  id: totrans-32
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 当 Sora 视频首次发布时，[人们都感到惊讶](https://twitter.com/drjimfan/status/1758210245799920123?s=46)，因为它可以模拟咖啡在杯子里飞溅的流体动力学。他们认为
+    OpenAI 将 Sora 连接到游戏引擎（驱动视频游戏并能够模拟物理现象的算法）以生成这样的结果。但实际并非如此。Sora 可以自己创建这样的图形。
+- en: GPT-4 seems to learn the rules of grammar in order to predict the next word
+    in a sequence.
+  id: totrans-33
+  prefs: []
+  type: TYPE_NORMAL
+  zh: GPT-4 似乎学习语法规则以预测序列中的下一个单词。
+- en: Diffusion transformer models like Sora seem to learn physics—the grammar of
+    the universe—in order to predict the next segment of video. OpenAI sees Sora as
+    the first step in a “world simulator” that can model any slice of reality with
+    a text prompt.
+  id: totrans-34
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 像 Sora 这样的扩散变换模型似乎在学习物理学——宇宙的语法——以预测视频的下一段。OpenAI 视 Sora 为“世界模拟器”的第一步，它可以通过文本提示模拟任何现实片段。
+- en: It’s mind-blowing. And it will have important implications for filmmaking.
+  id: totrans-35
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 这真是令人惊叹。而且这将对电影制作产生重要影响。
+- en: How technology has shaped filmmaking
+  id: totrans-36
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+  zh: 科技如何塑造了电影制作
+- en: What will be different in a world where videos like this are normal? Probably
+    everything about how videos are made—and that’s a good thing.
+  id: totrans-37
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 在一个这样的世界中，这样的视频是正常的，会有什么不同？关于视频制作的一切可能都会不同——而这是一件好事。
+- en: Movie-making has historically been insanely expensive. Cameras, lights, emotionally
+    unstable actors—these things all cost *moolah*. That’s why the movie industry
+    is an industry instead of an artist’s colony.
+  id: totrans-38
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 电影制作历来是非常昂贵的。摄像机、灯光、情绪不稳定的演员——这些都需要花费*大笔资金*。这就是为什么电影业是一个产业，而不是一个艺术家殖民地的原因。
+- en: For most of the history of movies, only a few people got to make them. They
+    were risky! You needed money to make them. And only certain people were able to
+    get enough money to take the risk of making an expensive flop. Making movies was
+    akin to starting a company.
+  id: totrans-39
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 在电影历史的大部分时间里，只有少数人有机会制作电影。这是有风险的！你需要钱来制作电影。只有一些人能够得到足够的钱去冒险制作一部昂贵的失败作品。制作电影就像开办一家公司。
+- en: 'Over the past two decades, that started to change. The internet and the iPhone,
+    for example, are step-changes that put movie-making and distribution equipment
+    into millions more hands than was possible before. It spawned an entirely new
+    form of filmmaking: YouTube videos, TikToks, Reels, and Quibbis. (Okay, maybe
+    not Quibbis.)'
+  id: totrans-40
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 在过去的两个十年里，情况开始发生改变。例如，互联网和 iPhone 让制作和分发设备进入了比之前更多的数百万人手中。它催生了一种全新的电影制作形式：YouTube
+    视频、TikToks、Reels 和 Quibbis。（好吧，也许不包括 Quibbis。）
+- en: This generation’s genre of filmmaking has its own style, distinct from Hollywood,
+    that is constrained and shaped by the technology and resources available to make
+    it. YouTubers, for example, are known for direct-to-camera monologues, quick cuts,
+    and vlogs showing the day-to-day minutiae of life—the kind of videos you can make
+    alone in your room with an iPhone.
+  id: totrans-41
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 这一代的电影制作风格有自己的风格，与好莱坞截然不同，这种风格是受到可用技术和资源的制约和塑造的。例如，YouTubers以直奔摄像头的独白、快速切换和展示日常生活琐事的视频而闻名——这种你可以独自在房间里用iPhone拍摄的视频。
+- en: AI video makes it even easier to make many more kinds of videos alone in your
+    room. Runway, which is already publicly available, allows you to turn an image—whether
+    real or AI-generated—into a four-second video clip. You can make different elements
+    of the image move in different ways and control the motion of the camera. It’s
+    as if you have the ability to make your images move like the wizard photos in
+    *Harry Potter*.
+  id: totrans-42
+  prefs: []
+  type: TYPE_NORMAL
+  zh: AI视频使得在房间里制作更多种类的视频变得更加容易。已经公开可用的Runway可以将一张图像——无论是真实的还是AI生成的——变成一个四秒钟的视频剪辑。你可以让图像的不同元素以不同的方式移动，并控制摄像机的运动。这就好像你有能力让你的图像像*哈利·波特*中的巫师照片一样动起来。
+- en: These tools, too, have spawned a new style of filmmaking constrained and shaped
+    by their unique powers and limitations. For example, they make it easy to create
+    AI videos that use familiar characters in new settings and styles. A common trope
+    is to take two shared pieces of pop culture and mash them up, like in a clip that
+    renders [*Star Wars* characters in the style of Wes Anderson](https://www.youtube.com/watch?v=d-8DT5Q8kzI).
+  id: totrans-43
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 这些工具也催生了一种受其独特力量和局限性制约和塑造的新电影制作风格。例如，它们让创建使用熟悉角色的全新情景和风格的AI视频变得轻而易举。一个常见的套路是将两个共享的流行文化元素混合在一起，就像一个视频剪辑将[*星球大战*角色以韦斯·安德森的风格呈现](https://www.youtube.com/watch?v=d-8DT5Q8kzI)。
+- en: 'Another example: The architecture of today’s video models like Runway make
+    it tricky to consistently generate the same character in different clips. You
+    can get them to look similar—there’s a family resemblance—but the controls are
+    not fine-grained enough to make the characters look exactly alike.  So AI films
+    tend to be more like visual montages: clips of a few seconds with quick cuts and
+    a narrator monologuing a story, rather than one where a consistent set of actors
+    do dialogue in front of a camera.'
+  id: totrans-44
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 另一个例子：像Runway这样的当今视频模型的架构使得在不同的剪辑中一致地生成相同的角色变得棘手。你可以让它们看起来相似——有一种家庭相似之处——但控制不够精细，无法使角色看起来完全一样。因此，AI电影往往更像是视觉拼贴：几秒钟的剪辑，快速切换和叙述者讲述故事，而不是一部有一组一致的演员在摄像机前对话的电影。
+- en: Sora is a step-change in the capabilities of these tools, making it possible
+    for AI filmmakers to do more with less. Clips can be 60 seconds long, which will
+    enable a greater variety of editing styles. The motion and physics simulation
+    that Sora can perform is *far* better than any publicly available model. This
+    will allow for more complex scenes, character movements, and interactions between
+    characters and the world around them than is currently possible.
+  id: totrans-45
+  prefs: []
+  type: TYPE_NORMAL
+  zh: Sora在这些工具的能力方面迈出了一大步，使AI制片人能够用更少的资源做更多事情。视频剪辑可以达到60秒，这将使编辑风格更加多样化。Sora可以执行的动作和物理模拟比任何公开可用的模型都要*好得多*。这将使得比目前可能的更复杂的场景、角色动作和角色与周围世界的互动成为可能。
+- en: What effect will this have on filmmaking?
+  id: totrans-46
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 这对电影制作会有什么影响？
+- en: AI filmmaking today
+  id: totrans-47
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+  zh: 今日AI电影制作
+- en: Sometimes it feels like the universe has your back, like hitting a straight
+    on the river card when you’re holding a two-three off-suit. As it happens, I know
+    a little bit about AI filmmaking because I interviewed someone at the forefront
+    of it for [my podcas](https://www.youtube.com/@everyinc)t this week, two days
+    before Sora launched. That interview will be live in two weeks, but I want to
+    tell you a bit about what I learned.
+  id: totrans-48
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 有时候感觉宇宙在支持你，就像在持有两三的情况下河牌上出现了一张顺子牌一样。碰巧，我对AI电影制作有所了解，因为这周我在[我的播客](https://www.youtube.com/@everyinc)中采访了一位在这方面处于前沿的人，就在Sora发布两天前。这次采访将在两周后播出，但我想先告诉你一些我学到的东西。
+- en: '[Dave Clark](https://twitter.com/Diesol) is a traditional filmmaker who has
+    started to make AI-generated videos. He recently produced a sci-fi short called
+    [*Borrowing Time*](https://twitter.com/Diesol/status/1747351624329355474) that
+    was inspired by his father’s experiences as a Black man in the 1960s. He produced
+    it entirely using Midjourney and Runway to generate images and videos. He narrated
+    the movie himself and used [ElevenLabs](https://elevenlabs.io/) to turn his voice
+    acting into the voices of different characters.'
+  id: totrans-49
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '[戴夫·克拉克](https://twitter.com/Diesol) 是一位传统电影制作人，他开始制作由 AI 生成的视频。他最近制作了一部叫做
+    [*借时间*](https://twitter.com/Diesol/status/1747351624329355474) 的科幻短片，灵感来自他父亲在
+    1960 年代的经历。他完全使用 Midjourney 和 Runway 生成图像和视频。他自己叙述了电影，并使用 [ElevenLabs](https://elevenlabs.io/)
+    将自己的配音转换为不同角色的声音。'
+- en: '*Borrowing Time* went viral, and Dave told me he wouldn’t have been able to
+    make it without AI. It would’ve been impossible to get a sci-fi short like his
+    funded by a traditional Hollywood studio. But now that it’s out, and popular,
+    he says that he’s fielding interest from top-tier Hollywood studios who would
+    like to make it into a full-length movie.'
+  id: totrans-50
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '*借时间* 一炮走红，戴夫告诉我说，没有 AI 他不可能做到这一切。要是传统好莱坞制片厂根本不可能资助这样一部科幻短片。但现在，它已经出来了，而且很受欢迎，他说他收到了来自顶尖好莱坞制片厂的兴趣，他们想将其拍成一部完整的电影。'
+- en: This anecdote speaks volumes about the way that AI models like Sora will change
+    filmmaking in the future.
+  id: totrans-51
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 这个轶事充分说明了像 Sora 这样的 AI 模型将如何改变未来的电影制作方式。
+- en: '**Movie concepts will be cheap to test**'
+  id: totrans-52
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+  zh: '**电影概念将会廉价测试**'
+- en: If you want to make a sci-fi movie in a world with Sora, all you need is a laptop
+    and some OpenAI credits. More people will be able to make videos reflecting their
+    imagination without needing to go through traditional gatekeepers for approval
+    or get funding. And it won’t be just podcasting or monologuing YouTubers who get
+    this opportunity; it will be anyone.
+  id: totrans-53
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 如果你想在一个有着 Sora 的世界里制作一部科幻电影，你只需要一台笔记本电脑和一些 OpenAI 的积分。更多的人将能够制作反映他们想象力的视频，而不需要经过传统的审批官或获得资金支持。而且这不仅仅是播客或独白
+    YouTuber 才有这个机会；任何人都有可能。
+- en: Video producers whose ideas get traction will be more likely to get funded to
+    make them into movies—much like the way writers today use tweets and newsletters
+    to land book deals.
+  id: totrans-54
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 视频制作人如果他们的想法受到关注，他们更有可能获得资金将其拍成电影——就像今天的作家使用推特和新闻通讯来获得出书合同一样。
+- en: '**Big-budget movies will cost less to make**'
+  id: totrans-55
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+  zh: '**大制作电影的成本将降低**'
+- en: In a vacuum, AI tools will make traditional Hollywood movies cost less to produce.
+    *Everything Everywhere All at Once*, which used Runway for its special effects,
+    was able to portray mind-bending feats (like hot dog hands!) with a [team of just
+    eight people](https://variety.com/2023/artisans/news/artificial-intelligence-runway-everything-everywhere-all-at-once-1235532322/).
+    For context, about 300 people worked on *Shrek*.
+  id: totrans-56
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 在没有外界干扰的情况下，AI 工具将使传统好莱坞电影的制作成本降低。例如，使用 Runway 进行特效的 *Everything Everywhere
+    All at Once* 能够只用[八人团队](https://variety.com/2023/artisans/news/artificial-intelligence-runway-everything-everywhere-all-at-once-1235532322/)制作出令人叹为观止的特技效果（比如热狗手！）。作为对比，大约有
+    300 人参与了 *Shrek* 的制作。
+- en: Theoretically, Sora *should* make productions like *EEAAO* more common. But
+    pre-existing business structures and union agreements might make it difficult
+    for Hollywood to take maximum advantage of these tools. Instead, a new form of
+    filmmaking will flower somewhere else.
+  id: totrans-57
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 从理论上讲，Sora *应该* 会使像 *EEAAO* 这样的制作更加普遍。但是现有的商业结构和工会协议可能会使好莱坞难以充分利用这些工具。相反，一种新的电影制作形式将在其他地方绽放。
+- en: '**AI filmmaking will become its own form, and Hollywood will become less relevant**'
+  id: totrans-58
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+  zh: '**AI 电影制作将成为自己的形式，好莱坞将变得不那么重要**'
+- en: 'In the same way that the iPhone and the internet led to the flourishing of
+    vlogs and makeup tutorials, AI filmmaking will create its own genre of film, with
+    its own style and form. I’d expect the kinds of videos we’ve already seen to proliferate:
+    The use of existing IP to make mashups and clips with quicker cuts and voiceover
+    monologue should be staples of the genre until the technology changes again. (As
+    far as we can tell, actors in videos generated by Sora can’t deliver facial movements
+    that map to a specific line of dialogue.)'
+  id: totrans-59
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 就像 iPhone 和互联网导致视频博客和化妆教程的蓬勃发展一样，AI 电影制作将创造出自己的电影类型，具有自己的风格和形式。我预计我们已经看到的视频类型将会增多：利用现有
+    IP 制作混搭和剪辑，快速切换和旁白独白应该会成为该类型的基本元素，直到技术再次发生变化。（据我们所知，Sora 生成的视频中的演员不能提供与特定台词相对应的面部动作。）
+- en: These AI videos won’t replace traditional Hollywood movie-making—just like YouTube
+    videos haven’t—but they’ll likely eat into mind- and market-share, especially
+    among young people.
+  id: totrans-60
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 这些人工智能视频不会取代传统的好莱坞电影制作——就像 YouTube 视频没有取代一样——但它们很可能会侵蚀心智和市场份额，特别是在年轻人中间。
+- en: The future of creativity
+  id: totrans-61
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+  zh: 创造力的未来
+- en: 'Earlier in this article we talked about the long-term trends that Sora is extending:'
+  id: totrans-62
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 本文前面我们谈到了 Sora 正在延续的长期趋势：
+- en: More data and more compute generating more impressive AI results
+  id: totrans-63
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+  zh: 更多的数据和更多的计算带来更令人印象深刻的人工智能结果。
+- en: Technology driving down the cost of filmmaking, thereby changing what kinds
+    of movies get made and by whom
+  id: totrans-64
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+  zh: 技术降低了电影制作成本，从而改变了哪些类型的电影被制作以及由谁制作。
+- en: Hopefully that has put some of Sora’s capabilities into a broader perspective.
+    But there’s one more important trend that I want to end with.
+  id: totrans-65
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 希望这些对 Sora 的能力有一定的拓展视角。但还有一个我想结束的更重要的趋势。
+- en: 'I’ve been writing for the last couple months about our transition from a knowledge
+    economy to [an allocation economy](https://every.to/chain-of-thought/the-knowledge-economy-is-over-welcome-to-the-allocation-economy):
+    We’re moving from a world where you’re compensated based on what you know to one
+    where you’re compensated for how well you can allocate intelligence. In this world,
+    even individual contributors or solopreneurs become managers—but instead of managing
+    humans, we manage models.'
+  id: totrans-66
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 在过去几个月里，我一直在写我们从知识经济向[配置经济](https://every.to/chain-of-thought/the-knowledge-economy-is-over-welcome-to-the-allocation-economy)的过渡：我们正在从一个你根据自己知识得到报酬的世界转变为一个你根据你能多好地配置智力而得到报酬的世界。在这个世界中，即使是个体贡献者或独立企业家也会成为经理，但我们管理的不是人，而是模型。
+- en: 'It’s clear that Sora fits into this paradigm: The better you know how to manage
+    it as a tool to create incredible things, the better you’ll be positioned in the
+    new economy. But the most exciting part is that it broadens the sphere of people
+    who are allowed to make things in the world.'
+  id: totrans-67
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 很明显，Sora符合这一范式：你越懂得如何将其作为创造不可思议事物的工具，你就越能在新经济中处于有利位置。但最令人兴奋的部分是，它扩大了在世界上制造东西的人群范围。
+- en: Just like GPT-4 made it possible for anyone to ship a web app with enough persistence,
+    Sora makes it possible for anyone to make a video. And when I say anyone, that
+    includes you.
+  id: totrans-68
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 就像 GPT-4 使任何人只要有足够的坚持就能发布一个 Web 应用一样，Sora 使任何人都能制作视频。而当我说任何人时，包括你。
+- en: Sora doesn’t allow anyone to make a great video at the touch of a button. Storytelling
+    will require much more skill, taste, and dedication than that. But anyone can
+    get started, learn those skills, and have a shot to be great—all they need is
+    a laptop.
+  id: totrans-69
+  prefs: []
+  type: TYPE_NORMAL
+  zh: Sora 不允许任何人只需按一下按钮就制作出一部伟大的视频。讲故事需要比那更多的技巧、品味和奉献精神。但任何人都可以开始学习这些技能，并有机会变得伟大——他们所需要的只是一台笔记本电脑。
+- en: If you are a creative person, this is without a doubt the best time to be alive.
+  id: totrans-70
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 如果你是一个有创造力的人，毫无疑问，这是活着的最好时代。
+- en: '* * *'
+  id: totrans-71
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '* * *'
+- en: '*Editor''s note:* The explanation of Sora is deliberately simplified. The pixels
+    of video that make up a "patch" are compressed into a smaller latent space before
+    being used. For full details, read the [white paper](https://openai.com/research/video-generation-models-as-world-simulators)
+    (also linked to in the article).'
+  id: totrans-72
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '*编辑注：* Sora 的解释是故意简化的。视频的像素组成的“补丁”在使用之前被压缩到一个较小的潜在空间中。有关全部细节，请阅读[白皮书](https://openai.com/research/video-generation-models-as-world-simulators)（也链接到了文章中）。'

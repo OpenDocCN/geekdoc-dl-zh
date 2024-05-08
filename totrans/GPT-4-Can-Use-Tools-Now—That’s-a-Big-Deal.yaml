@@ -1,0 +1,335 @@
+- en: <!--yml
+  id: totrans-0
+  prefs: []
+  type: TYPE_NORMAL
+  zh: <!--yml
+- en: 'category: COT 专栏'
+  id: totrans-1
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 类别：COT 专栏
+- en: 'date: 2024-05-08 11:09:30'
+  id: totrans-2
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 日期：2024-05-08 11:09:30
+- en: -->
+  id: totrans-3
+  prefs: []
+  type: TYPE_NORMAL
+  zh: -->
+- en: GPT-4 Can Use Tools Now—That’s a Big Deal
+  id: totrans-4
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+  zh: GPT-4 现在可以使用工具了——这是一个重大事件
+- en: 来源：[https://every.to/chain-of-thought/gpt-4-can-use-tools-now-that-s-a-big-deal](https://every.to/chain-of-thought/gpt-4-can-use-tools-now-that-s-a-big-deal)
+  id: totrans-5
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+  zh: 来源：[https://every.to/chain-of-thought/gpt-4-can-use-tools-now-that-s-a-big-deal](https://every.to/chain-of-thought/gpt-4-can-use-tools-now-that-s-a-big-deal)
+- en: 'Sponsored By: Brilliant'
+  id: totrans-6
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+  zh: 赞助商：Brilliant
+- en: This article is brought to you by [Brilliant](https://brilliant.org/Every/),
+    the best way to future-proof your mind through interactive lessons on everything
+    from logic and math to data science, programming, and beyond.
+  id: totrans-7
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 本文由[Brilliant](https://brilliant.org/Every/) 提供，这是未来预防性思维的最佳途径，通过交互式课程涵盖从逻辑和数学到数据科学、编程等一切内容。
+- en: 'Human children come out of the womb totally helpless except in one important
+    way: they know how to use their parents as tools.'
+  id: totrans-8
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 人类婴儿出生时除了一种重要的方式外完全无助：他们知道如何将自己的父母用作工具。
+- en: 'Infant tool use is quite blunt at first: they cry loudly and incessantly whenever
+    there’s a problem: “HUNGRY”, DIRTYY DIAPER!!!!”, “TIREEDDD!!!!”, and so on. They
+    keep crying until their parent adequately diagnoses and resolves the issue through
+    trial and error.'
+  id: totrans-9
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 婴儿期的工具使用起初相当笨拙：每当出现问题时他们就大声哭泣不止：“饿了”，“尿布脏了！！！！”，“累了！！！” 等等。他们一直哭到他们的父母通过试错足够地诊断和解决问题。
+- en: 'As they get older, however, children ditch these crude initial methods and
+    instead use language to skillfully manipulate their parents in ever more targeted
+    and precise ways. Rather than simply becoming totally unconsolable because they
+    see someone eating a cookie and want one for themselves they can now specify in
+    precise language exactly what they want: “Can I have a cookie?”. Parents can then
+    use their unique capabilities—the ability to walk, their height differential,
+    their manual dexterity, and strength—to walk to the cookie jar, open it, select
+    a cookie, and appropriately offer it up as tribute. This kind of tool use is a
+    powerful method for intelligent beings with significant limitations to accomplish
+    goals in the world.'
+  id: totrans-10
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 然而，随着他们的年龄增长，孩子们放弃了这些粗糙的初始方法，而是使用语言来巧妙地操纵他们的父母，以越来越有针对性和精确的方式。他们不再仅仅因为看到有人吃饼干而想要一些而变得完全难以安慰，他们现在可以用精确的语言准确地表达他们想要什么：“我可以要一个饼干吗？”
+    父母然后可以利用他们独特的能力——行走的能力、身高差异、手部灵活性和力量——走到饼干罐子旁边，打开它，挑选一个饼干，并适当地献上作为贡品。这种工具使用是智能生物通过在世界上完成目标来克服重要限制的强大方法。
+- en: In contrast to human children, large language models like GPT-4 were not created
+    knowing how to use tools to accomplish their aims. This limited their capabilities
+    significantly. Third-party libraries tried to implement this functionality—but
+    the results were often slow and inconsistent.
+  id: totrans-11
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 与人类孩子相比，像 GPT-4 这样的大型语言模型并没有天生知道如何使用工具来实现他们的目标。这严重限制了它们的能力。第三方库试图实现这种功能——但结果往往缓慢且不一致。
+- en: Earlier this week, OpenAI built tool use right into the GPT API with an update
+    called *function calling.* It’s a little like a child’s ability to ask their parents
+    to help them with a task that they know they can’t do on their own. Except in
+    this case, instead of parents, GPT can call out to external code, databases, or
+    other APIs when it needs to.
+  id: totrans-12
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 本周早些时候，OpenAI 在 GPT API 中内置了一个名为 *函数调用* 的更新，这有点像一个孩子请求父母帮助他们完成自己无法做到的任务。但在这种情况下，GPT
+    可以在需要时调用外部代码、数据库或其他 API。
+- en: Each function in *function calling* represents a tool that a GPT model can use
+    when necessary, and GPT gets to decide which ones it wants to use and when. This
+    instantly upgrades GPT capabilities—not because it can now do every task perfectly—but
+    because it now knows how to ask for what it wants and get it.
+  id: totrans-13
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '*函数调用* 中的每个函数代表了 GPT 模型在必要时可以使用的工具，而 GPT 则决定了它想要使用哪些工具以及何时使用。这立即提升了 GPT 的能力——不是因为它现在可以完美地完成每项任务——而是因为它现在知道如何请求它想要的东西并获得它。'
+- en: 'Function calling works like this:'
+  id: totrans-14
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 函数调用的工作方式如下：
+- en: When you query a GPT model you can now send along with it a set of tools that
+    the model can use if it needs to. For each tool you can specify a description
+    of its capabilities (do math, call a SQL database, launch nuclear bombs) and instructions
+    for how GPT can properly call each one if it wants to. Depending on the query,
+    GPT can choose to respond directly, or instead request to use a tool. If GPT sends
+    back a request to use a tool your code calls the tool and sends back the results
+    to GPT for further processing, if necessary.
+  id: totrans-15
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 当你查询一个GPT模型时，现在你可以连同一组工具发送给它，如果需要，模型可以使用这些工具。对于每个工具，您可以指定其能力的描述（执行数学运算、调用SQL数据库、发射核弹）以及GPT如何适当地调用每个工具的说明。根据查询，GPT可以选择直接回答，也可以请求使用工具。如果GPT返回一个使用工具的请求，您的代码将调用该工具，并将结果发送回GPT以进一步处理，如果有必要的话。
+- en: 'Tool use is important because, just like a four-year-old, GPT models currently
+    have some glaring limitations: they’re horrible at math, they don’t have access
+    to private data, they don''t know about anything past 2021, they can’t use APIs,
+    and more. In order to fix these problems OpenAI has harnessed GPT’s reasoning
+    abilities to choose for itself when to use a tool to help it with a query that
+    it knows might be difficult for it.'
+  id: totrans-16
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 工具使用非常重要，因为，就像一个四岁的孩子一样，目前的GPT模型有一些明显的局限性：它们在数学上很糟糕，它们无法访问私人数据，它们对2021年之后的任何事情都不了解，它们无法使用API等等。为了解决这些问题，OpenAI利用了GPT的推理能力，让其自行决定何时使用工具来帮助它解决可能对它而言困难的查询。
+- en: 'This matters for two big reasons:'
+  id: totrans-17
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 这对两个重要原因很重要：
+- en: It makes GPT models significantly more powerful
+  id: totrans-18
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+  zh: 它使GPT模型显著更加强大
+- en: It replaces some of the functionality of open-source libraries that do the same
+    thing
+  id: totrans-19
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+  zh: 它取代了一些执行相同功能的开源库的功能
+- en: ''
+  id: totrans-20
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: '**Invest in your human intelligence**'
+  id: totrans-21
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '**投资于你的人类智慧**'
+- en: With technology evolving at light speed, continuous learning is essential to
+    stay one step ahead. That's where [Brilliant](https://brilliant.org/Every/) comes
+    in.
+  id: totrans-22
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 随着技术以光速发展，持续学习对于保持领先至关重要。这就是[Brilliant](https://brilliant.org/Every/)的用武之地。
+- en: '[Brilliant](https://brilliant.org/Every/) is the best way to sharpen your problem-solving
+    skills and master complex concepts in math, data, and computer science in minutes
+    a day. Engaging, bite-sized lessons make it easy to develop a daily learning habit
+    while leveling up on AI, data science, and more.'
+  id: totrans-23
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '[Brilliant](https://brilliant.org/Every/)是提升解决问题能力、掌握数学、数据和计算机科学复杂概念的最佳方式，每天只需几分钟。引人入胜的小课程使您能够养成每日学习的习惯，同时提升人工智能、数据科学等方面的能力。'
+- en: Try Brilliant free for 30 days, plus get 20% off an annual premium membership
+    for the newsletter readers.
+  id: totrans-24
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 试用[Brilliant](https://brilliant.org/Every/)30天免费，而且还可以为新闻通讯读者获得年度高级会员资格 8 折优惠。
+- en: GPT the tool user > GPT
+  id: totrans-25
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+  zh: GPT的工具使用者 > GPT
+- en: Given all of the current hype about AI, you could be excused for forgetting
+    that traditional software is actually very powerful. Right now, that power is
+    mostly cut off from GPT models because it’s quite hard to integrate the two. If
+    you could do that well, it would be a force multiplier on AI’s existing capabilities.
+    That’s what makes *function calling* very exciting.
+  id: totrans-26
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 鉴于目前关于人工智能的所有炒作，如果你忘记了传统软件实际上非常强大，你可以原谅。目前，这种力量大部分与GPT模型隔绝开来，因为将两者整合起来相当困难。如果你能做到这一点，那么它将成为人工智能现有能力的增强器。这就是*函数调用*非常令人兴奋的原因。
+- en: It’s suddenly a lot easier to equip a GPT model to check the weather, get a
+    stock price, look up data in your company’s database, or send an email. It can
+    now send a text message with Twilio, or initiate a zap in Zapier, or [track the
+    position of near-Earth asteroids](https://api.nasa.gov/) via NASA’s API. All you
+    have to do as a programmer is make these capabilities available as a tool to GPT
+    (which is fairly straightforward). GPT will then intelligently decide to use them
+    to complete the tasks you’ve given it.
+  id: totrans-27
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 突然之间，为GPT模型提供检查天气、获取股价、查找公司数据库中的数据或发送电子邮件变得更加容易。它现在可以使用Twilio发送短信，或在Zapier中初始化zap，或通过NASA的API[跟踪近地小行星的位置](https://api.nasa.gov/)。作为程序员，您所需做的就是将这些能力作为工具提供给GPT（这相当简单）。然后，GPT将智能地决定使用它们来完成您给定的任务。
+- en: 'This isn’t just useful for one-off calls to GPT though. It’s also quite useful
+    for one of the most hyped LLM use cases over the last few months: running agents.'
+  id: totrans-28
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 这不仅对GPT的一次性调用有用。对于过去几个月里最受瞩目的LLM用例之一也非常有用：运行代理。
+- en: Agents are language models that are given a task—like “research and summarize
+    news about UFOs”—and a set of tools—like a Google Search tool, and a Twitter search
+    tool. The language model then runs in a loop until it completes its goal. First,
+    it plans a set of steps, and then it uses tools to help it achieve each task it
+    has set for itself.
+  id: totrans-29
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 代理是一种语言模型，它被赋予了一个任务，比如“研究和总结关于不明飞行物的新闻”，以及一套工具，比如谷歌搜索工具和 Twitter 搜索工具。然后，语言模型会循环运行直到完成其目标。首先，它规划一组步骤，然后使用工具帮助它实现自己设定的每个任务。
+- en: Previously, agents had to be hacked together with a lot of custom code, or by
+    using an open-source library like [Langchain](https://python.langchain.com/en/latest/).
+    Langchain would do some fancy stuff on the backend to get GPT to use tools, but
+    the way this worked was, to put it in technical terms, *very janky*. In my experience,
+    it was incredibly slow, and would break frequently because GPT would go off the
+    rails. In order for tool use to work, Langchain needs the model to give its choice
+    of tool back in a very specific format so that it can be passed to your surrounding
+    code for execution. GPT has historically been very bad at following the precise
+    formatting instructions necessary for this to work—and so agent implementations
+    were unreliable.
+  id: totrans-30
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 以前，代理必须通过大量自定义代码或使用开源库（比如 [Langchain](https://python.langchain.com/en/latest/)）来拼凑在一起。Langchain
+    在后端做了一些花哨的工作来让 GPT 使用工具，但这种工作方式，用技术术语来说，*非常不稳定*。根据我的经验，它速度非常慢，并且会经常出故障，因为 GPT
+    会偏离轨道。为了使工具使用起作用，Langchain 需要模型以非常特定的格式返回其工具选择，以便可以将其传递给您周围的代码以执行。从历史上看，GPT 在遵循这种工作所需的精确格式说明方面表现非常糟糕——因此代理实现是不可靠的。
+- en: OpenAI seems to have eliminated these problems with the *function calling* release.
+    Simple agents can be built easily, they’ll work a lot faster, and they'll break
+    less frequently than the previous generation. This means more power for more LLM
+    use cases with less code. It’s a huge win for builders.
+  id: totrans-31
+  prefs: []
+  type: TYPE_NORMAL
+  zh: OpenAI 似乎已经通过 *函数调用* 发布解决了这些问题。简单的代理可以很容易地构建，它们的工作速度会快得多，并且它们的故障率会比上一代低得多。这意味着更多的
+    LLM 使用案例可以用更少的代码实现更强大的功能。这对于开发者来说是一个巨大的胜利。
+- en: But it has to be a frustrating thing for open-source libraries.
+  id: totrans-32
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 但这对于开源库来说必然是令人沮丧的事情。
+- en: Building on the infrastructure layer is building on sand
+  id: totrans-33
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+  zh: 在基础设施层上构建就像在沙子上建房。
+- en: In May I ran a cohort-based course called [How to Build an AI Chatbot](https://www.chatbot-course.com/).
+    One of the lectures was entirely about how to build agents in Langchain. I worked
+    really hard on explaining the ins and outs, polishing the slides, and building
+    code samples for the students. All of that work is now completely outdated by
+    this release.
+  id: totrans-34
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 五月份，我开设了一个名为 [如何构建 AI 聊天机器人](https://www.chatbot-course.com/) 的基于同学小组的课程。其中一个讲座完全是关于如何在
+    Langchain 中构建代理的。我非常努力地解释细节，完善幻灯片，并为学生编写了代码示例。但现在，所有这些工作都被这个版本完全淘汰了。
+- en: If I feel frustrated about it, I’m sure Langchain does too. They’ve done an
+    incredible job of making the bleeding edge of language model developments available
+    to the developer community. Every time an academic releases a paper, or a hacker
+    builds a demo showing how to get LLMs to do something new and fancy—like create
+    agents—Langchain implements it and suddenly everyone can do it.
+  id: totrans-35
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 如果我对此感到沮丧，我相信 Langchain 也是如此。他们在让开发者社区获得语言模型发展的最前沿方面做得非常出色。每当一位学者发布论文，或者一个黑客构建一个演示如何让
+    LLM 完成一些新奇的事情——比如创建代理——Langchain 就会实现它，然后突然间每个人都能做到。
+- en: Now, much of the code they wrote to enable agent functionality is natively implemented
+    inside of GPT-4\. This doesn’t obviate the need for Langchain, in fact, [you can
+    already use *function calling* capabilities](https://twitter.com/hwchase17/status/1668682373767020545)
+    in Langchain instead of using their previous agent architecture. But it does mean
+    all of the work they did to build those previous architectures is now, to some
+    degree, unnecessary and out of date.
+  id: totrans-36
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 现在，用于启用代理功能的许多代码已经在 GPT-4 内部原生实现。这并不意味着 Langchain 不再需要，事实上，[您已经可以在 Langchain
+    中使用 *函数调用* 功能](https://twitter.com/hwchase17/status/1668682373767020545)而不是使用他们以前的代理架构。但这意味着他们为构建这些先前架构所做的所有工作在某种程度上现在是不必要的和过时的。
+- en: 'This raises big questions for any company building at the infrastructure layer:
+    Anything you’ve created could, in very short order, be eaten or obviated by a
+    new OpenAI feature release. So you have two options: try to build things that
+    OpenAI won’t, or keep racing further and further ahead to continually implement
+    new ideas in the window of time before OpenAI does.'
+  id: totrans-37
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 这给任何在基础设施层构建的公司提出了重大问题：你创造的任何东西都可能在很短的时间内被新的 OpenAI 功能发布所消灭或废除。所以你有两个选择：尝试构建
+    OpenAI 不会构建的东西，或者在 OpenAI 之前不断地推进，并不断在 OpenAI 之前的时间窗口内实现新的想法。
+- en: It’s a tough game, and I’m curious to see how libraries like Langchain deal
+    with it. One of the advantages they have is that many developers are used to using
+    OpenAI APIs only through Langchain—not directly. Those developers probably won’t
+    switch to the underlying APIs so long as Langchain continues to swiftly implement
+    the new functionality that OpenAI provides, and that seems to be exactly what
+    they’re doing.
+  id: totrans-38
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 这是一场艰难的游戏，我很好奇像Langchain这样的图书馆是如何处理的。他们的一个优势是，许多开发人员习惯于仅通过Langchain而不是直接使用OpenAI
+    API。只要Langchain继续迅速实现OpenAI提供的新功能，这些开发人员可能不会转向基础 API，并且这似乎正是他们正在做的事情。
+- en: Wrapping up
+  id: totrans-39
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+  zh: 总结
+- en: Let’s go back to human children for a second (you know I had to do it.) One
+    of the coolest parts about watching them grow up is that they get these seemingly
+    overnight upgrades to their functionality. From one day to the next, they learn
+    how to smile, or they learn how to crawl, or they can give you a little wave.
+    Each one of these building blocks expands their repertoire until they’re walking,
+    talking, moody teenagers who hate your guts.
+  id: totrans-40
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 让我们回到人类孩子身上一秒钟（你知道我不得不这样做）。观察他们长大的最酷的部分之一是，他们在功能上似乎在一夜之间就得到了升级。从一天到另一天，他们学会了微笑，或者他们学会了爬行，或者他们可以给你一个小手挥动。这些构建块中的每一个都扩展了他们的表演，直到他们成为行走、说话、情绪化的十几岁孩子，讨厌你。
+- en: Building with language models is sort of like that. Every few weeks or months
+    we get an upgrade that totally changes their capabilities, and also changes the
+    competitive landscape. This is one of those out-of-nowhere shifts that will make
+    it radically easier to build complex LLM functionality quickly. It also means
+    that a significant percentage of code is now unnecessary or out of date.
+  id: totrans-41
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 使用语言模型进行构建有点像那样。每隔几周或几个月，我们都会得到一个完全改变其功能的升级，也会改变竞争环境。这是那些突如其来的转变之一，它将极大地简化快速构建复杂
+    LLM 功能。这也意味着现在有相当大比例的代码是不必要或过时的。
+- en: It’s a fun time and a frustrating one depending on where you sit.
+  id: totrans-42
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 这是一个有趣的时刻，也是一个令人沮丧的时刻，这取决于你所处的位置。

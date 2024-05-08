@@ -1,0 +1,300 @@
+- en: <!--yml
+  id: totrans-0
+  prefs: []
+  type: TYPE_NORMAL
+  zh: <!--yml
+- en: 'category: COT 专栏'
+  id: totrans-1
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 类别：COT专栏
+- en: 'date: 2024-05-08 11:07:03'
+  id: totrans-2
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 日期：2024年5月8日11:07:03
+- en: -->
+  id: totrans-3
+  prefs: []
+  type: TYPE_NORMAL
+  zh: -->
+- en: How an AI Researcher Uses ChatGPT and Notion AI
+  id: totrans-4
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+  zh: AI研究员如何使用ChatGPT和Notion AI
+- en: 来源：[https://every.to/chain-of-thought/how-an-ai-researcher-uses-chatgpt-and-notion-ai](https://every.to/chain-of-thought/how-an-ai-researcher-uses-chatgpt-and-notion-ai)
+  id: totrans-5
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+  zh: 来源：[https://every.to/chain-of-thought/how-an-ai-researcher-uses-chatgpt-and-notion-ai](https://every.to/chain-of-thought/how-an-ai-researcher-uses-chatgpt-and-notion-ai)
+- en: 'Sponsored By: Tnoc'
+  id: totrans-6
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+  zh: 赞助商：Tnoc
+- en: For all the software engineers and engineering managers, say goodbye to the
+    headache of provisioning quality test data. With [Tonic](https://vpdae.com/redirect/61u8fwvuzj5pre9gcgquc9a8qfk),
+    you can effortlessly keep your staging in sync with production using realistic
+    test data generated from your actual production data. It's a seamless solution
+    for maintaining data integrity and efficiency. Discover how with a simple click.
+  id: totrans-7
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 对于所有软件工程师和工程经理们，告别为获取优质测试数据而头疼。使用[Tonic](https://vpdae.com/redirect/61u8fwvuzj5pre9gcgquc9a8qfk)，你可以轻松地使用从实际生产数据生成的逼真测试数据保持你的暂存与生产的同步。这是一个保持数据完整性和效率的无缝解决方案。只需点击，立即了解如何实现。
+- en: '*TL;DR: Today we’re releasing a new episode of our podcast* How Do You Use
+    ChatGPT? *I go in-depth with Notion research engineer Linus Lee on how he uses
+    ChatGPT and Notion AI to maximize creative control. Watch on* [*X*](https://twitter.com/danshipper/status/1735016918229119222)*,*
+    [*Spotify*](https://open.spotify.com/episode/5w87KT8CrVLINtEQ1YwLjZ?si=ANrNEHsiTaGCW_-qIYRJCQ&nd=1&dlsi=2a19685d378547cb),
+    *or* [*YouTube*](https://share.transistor.fm/s/ef83db2b) *.*'
+  id: totrans-8
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '*TL;DR：今天我们发布了我们的播客新剧集*《你如何使用ChatGPT？*》我将与Notion研究工程师林纳斯·李深入探讨他如何使用ChatGPT和Notion
+    AI来最大程度地发挥创造力控制。在* [*X*](https://twitter.com/danshipper/status/1735016918229119222)*、*
+    [*Spotify*](https://open.spotify.com/episode/5w87KT8CrVLINtEQ1YwLjZ?si=ANrNEHsiTaGCW_-qIYRJCQ&nd=1&dlsi=2a19685d378547cb)
+    *或* [*YouTube*](https://share.transistor.fm/s/ef83db2b)* 上收看。*'
+- en: You might think that being an AI researcher would mostly involve solving complicated
+    programming problems and thinking through mathematical equations. Instead, a big
+    part of the job is rewriting parts of your prompts in ALL CAPS in order to make
+    sure the AI model you’re working with follows your directions. “All caps works!”
+    Linus Lee told me in this interview. “If you look at OpenAI's system prompts for
+    a lot of their tools, all caps works.”
+  id: totrans-9
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 你可能会认为成为AI研究员主要涉及解决复杂的编程问题和思考数学方程式。相反，工作的一个重要部分是以全大写字母重写提示的部分，以确保你正在使用的AI模型遵循你的指示。“全大写字母确实有效！”林纳斯·李在这次采访中告诉我。“如果你看看OpenAI的系统提示，对于很多工具来说，全大写字母确实有效。”
+- en: Linus is a research engineer at Notion who works on its AI team, prototyping
+    new experiences, like a Q&A chatbot. He is a deep thinker who is obsessed with
+    building AI that enables human creativity and agency. He came on the show to talk
+    about how AI might augment our thinking, how he thinks about prompting to get
+    the best results, and how he uses ChatGPT and Notion AI in his work and life.
+  id: totrans-10
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 林纳斯是Notion的研究工程师，负责AI团队，原型设计新体验，比如问答聊天机器人。他是一个深思熟虑的人，他着迷于构建能够启发人类创造力和行动力的AI。他上节目来讨论AI如何增强我们的思维，他如何考虑提示以获得最佳结果，以及他如何在工作和生活中使用ChatGPT和Notion
+    AI。
+- en: I [first interviewed him](https://every.to/chain-of-thought/linus-lee-is-living-with-ai)
+    a year ago, when he showed off dozens of AI prototypes he’d been building to try
+    to understand the future of this technology. Our latest interview is a mixture
+    of theory and practice. Linus talks about how the tools we use shape the work
+    we can create and what the future of AI-driven interfaces might be. We watch him
+    demo personal tools he’s built, like an AI chatbot that he communicates with over
+    iMessage. And we peek over his shoulder to see his chats with ChatGPT to understand
+    how he talks to it to get the best results.
+  id: totrans-11
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 我[第一次采访他](https://every.to/chain-of-thought/linus-lee-is-living-with-ai)是一年前，当时他展示了他建立的数十个AI原型，试图了解这项技术的未来。我们最新的采访是理论与实践的结合。林纳斯谈到了我们使用的工具如何塑造我们可以创建的工作，以及AI驱动界面的未来可能是什么样子。我们观看他演示他构建的个人工具，比如一个他通过iMessage与之交流的AI聊天机器人。我们也偷窥他与ChatGPT的聊天，以了解他如何与它交流以获得最佳结果。
+- en: ''
+  id: totrans-12
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: Tonic is revolutionizing the way teams handle test data. By transforming sensitive
+    production data into safe, realistic test data, Tonic ensures your pre-prod environments
+    are always up-to-date and secure. Companies like eBay, Flexport, and Everlywell
+    are already leveraging [Tonic](https://vpdae.com/redirect/61u8fwvuzj5pre9gcgquc9a8qfk) to
+    keep their environments fresh and consistent. With Tonic, you can accelerate regression
+    testing, catch bugs quicker, and significantly shorten release cycles. Experience
+    a smoother, more efficient workflow that aligns with your development needs. Ready
+    to transform your data management?
+  id: totrans-13
+  prefs: []
+  type: TYPE_NORMAL
+  zh: Tonic 正在改变团队处理测试数据的方式。通过将敏感的生产数据转换为安全、逼真的测试数据，Tonic 确保您的预生产环境始终保持最新和安全。像 eBay、Flexport
+    和 Everlywell 这样的公司已经利用 [Tonic](https://vpdae.com/redirect/61u8fwvuzj5pre9gcgquc9a8qfk)
+    来保持其环境的新鲜和一致。有了 Tonic，您可以加速回归测试，更快地捕捉错误，并大大缩短发布周期。体验一个更顺畅、更高效的工作流程，与您的开发需求保持一致。准备好改变您的数据管理方式了吗？
+- en: Here’s a taste of what we talk about. Read on for more analysis from me at the
+    bottom.
+  id: totrans-14
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 以下是我们谈论的一部分内容。往下看，了解我在底部的更多分析。
+- en: '**Using AI to maximize agency.** Linus talks a lot about the ways our tools
+    shape our agency as thinkers and creatives—and how AI might be used to enhance
+    rather than reduce our agency.'
+  id: totrans-15
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: '**利用人工智能来最大化主动性。** 林纳斯经常谈论我们的工具如何塑造我们作为思想家和创作者的主动性，以及人工智能如何被用来增强而不是减少我们的主动性。'
+- en: '**AI as a “thought calculator.”** Linus borrows a phrase from the popular tech
+    blogger Simon Willison to illustrate dueling points of view on the ultimate goal
+    of AI: is it meant to be a simulacrum of humans or a “thought calculator,” a way
+    to enhance human imagination and creativity?'
+  id: totrans-16
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: '**AI 作为“思维计算器”。** 林纳斯借用了流行科技博主西蒙·威利森的一句话，来阐明人工智能的最终目标的两种观点：它是要成为人类的模拟还是“思维计算器”，一种增强人类想象力和创造力的方式？'
+- en: '**Personal prototypes he’s built.** Linus regularly experiments with AI on
+    the weekend. He shows us a chatbot he built that works over iMessage, and a new
+    interface for image generators that gives him much better control over their output.'
+  id: totrans-17
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: '**他构建的个人原型。** 林纳斯经常在周末尝试人工智能。他向我们展示了他建立的一款在 iMessage 上运行的聊天机器人，以及一个新的界面，用于图像生成器，使他能够更好地控制它们的输出。'
+- en: '**Better prompting.** We go over simple yet powerful techniques for getting
+    the best answer out of AI models—like starting with general queries first, and
+    repeatedly asking the model to answer the same question.'
+  id: totrans-18
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: '**更好的提示。** 我们讨论了简单但强大的技术，以获得 AI 模型的最佳答案——比如首先从一般查询开始，并重复询问模型回答同一个问题。'
+- en: '**Using AI for vibe checks.** AI is great for reflecting the vibes of books,
+    people, places—and even files on your computer. Linus talks about how he uses
+    ChatGPT to get quick vibe checks that allow him to make decisions.'
+  id: totrans-19
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: '**利用人工智能进行氛围检查。** 人工智能非常擅长反映书籍、人物、地点甚至你计算机上的文件的氛围。林纳斯谈到了他如何利用 ChatGPT 快速获取氛围检查，从而做出决策。'
+- en: '**Book recommendations.** We pit ChatGPT head-to-head against Notion AI to
+    see which can best capture our reading taste. And just when ChatGPT seems like
+    it’s coming out on top, Linus makes a convincing case for Notion AI’s special
+    skill set as an organizational tool that already knows how its users work.'
+  id: totrans-20
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: '**书籍推荐。** 我们将 ChatGPT 与 Notion AI 进行了对比，看看哪个能够最好地捕捉我们的阅读品味。就在 ChatGPT 似乎占据上风的时候，林纳斯为
+    Notion AI 作为一种组织工具的特殊技能集提出了令人信服的论据，因为它已经知道了它的用户如何工作。'
+- en: 'You can watch the episode on Twitter/X, Spotify, or YouTube. Links and timestamps
+    are below:'
+  id: totrans-21
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 您可以在 Twitter/X、Spotify 或 YouTube 上观看该剧集。链接和时间戳如下：
+- en: '**Timestamps:**'
+  id: totrans-22
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '**时间戳：**'
+- en: Intro *1:03*
+  id: totrans-23
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+  zh: 介绍 *1:03*
+- en: Retaining agency when conversing with AI *4:06*
+  id: totrans-24
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+  zh: 在与 AI 对话时保持主动性 *4:06*
+- en: A personal iMessage chatbot *27:04*
+  id: totrans-25
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+  zh: 个人 iMessage 聊天机器人 *27:04*
+- en: The difference between prompting and prompt engineering *32:49*
+  id: totrans-26
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+  zh: 提示和提示工程之间的区别 *32:49*
+- en: “What's the vibe of this file?” *38:48*
+  id: totrans-27
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+  zh: “这个文件的氛围是什么？” *38:48*
+- en: Travel recommendations *44:57*
+  id: totrans-28
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+  zh: 旅行建议 *44:57*
+- en: Book recommendations *51:57*
+  id: totrans-29
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+  zh: 书籍推荐 *51:57*
+- en: Notion AI's advantage over ChatGPT *56:00*
+  id: totrans-30
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+  zh: Notion AI 相对于 ChatGPT 的优势 *56:00*
+- en: Using Notion AI at work *1:02:00*
+  id: totrans-31
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+  zh: 在工作中使用 Notion AI *1:02:00*
+- en: Is GPT-4 getting lazy? *1:09:16*
+  id: totrans-32
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+  zh: GPT-4 是否变懒了？ *1:09:16*
+- en: What do you use ChatGPT for? Have you found any interesting or surprising use
+    cases? We want to hear from you—and we might even interview you. Reply here to
+    talk to me!
+  id: totrans-33
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 您使用 ChatGPT 做什么？您发现了哪些有趣或令人惊讶的用例？我们想听听您的想法——甚至我们可能会采访您。在这里回复我，与我交谈吧！
+- en: Miss an episode? Catch up on my recent conversations with writer [Nat Eliason](https://every.to/chain-of-thought/chatgpt-for-writing-and-recommending-books)
+    and Gumroad CEO [Sahil Lavingia](https://every.to/news/introducing-how-i-use-chatgpt)
+    and learn how *they* use ChatGPT.
+  id: totrans-34
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 错过了一集吗？赶上我最近与作家[Nat Eliason](https://every.to/chain-of-thought/chatgpt-for-writing-and-recommending-books)和Gumroad
+    CEO[Sahil Lavingia](https://every.to/news/introducing-how-i-use-chatgpt)的对话，了解*他们*如何使用ChatGPT。
+- en: '**My take on this show and the episode transcript is below for paying subscribers.**'
+  id: totrans-35
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '**对这个节目以及本集的文字稿我的看法都在下面，仅限付费订阅者。**'
+- en: '[Learn more](/)'
+  id: totrans-36
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '[了解更多](/)'
+- en: This post is for
+  id: totrans-37
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+  zh: 这篇文章是给
+- en: paying subscribers
+  id: totrans-38
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 付费订阅者
+- en: '[Subscribe →](/subscribe?publication=chain-of-thought)'
+  id: totrans-39
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '[订阅 →](/subscribe?publication=chain-of-thought)'
+- en: Or, [login](/login).
+  id: totrans-40
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 或者，[登录](/login)。
+- en: 'Thanks to our Sponsor:'
+  id: totrans-41
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+  zh: 感谢我们的赞助商：
+- en: Thanks again to our sponsor [Tonic](https://vpdae.com/redirect/61u8fwvuzj5pre9gcgquc9a8qfk),
+    the expert in realistic data de-identification. Join a growing list of successful
+    companies who trust Tonic for their test data needs. Embrace a platform that's
+    designed to make your engineering workflows simpler and more effective. With Tonic,
+    you're not just managing test data; you're mastering it. Elevate your data strategy
+    today.
+  id: totrans-42
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 感谢我们的赞助商[Tonic](https://vpdae.com/redirect/61u8fwvuzj5pre9gcgquc9a8qfk)，这家专业从事真实数据去标识化。加入成功公司日益增长的列表，他们信任Tonic满足他们的测试数据需求。拥抱一个旨在简化和提高工程工作流程的平台。有了Tonic，你不仅仅是在管理测试数据；你是在掌握它。立即提升你的数据策略。

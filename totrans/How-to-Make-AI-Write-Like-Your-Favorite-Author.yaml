@@ -1,0 +1,885 @@
+- en: <!--yml
+  id: totrans-0
+  prefs: []
+  type: TYPE_NORMAL
+  zh: <!--yml
+- en: 'category: COT 专栏'
+  id: totrans-1
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 类别：COT 专栏
+- en: 'date: 2024-05-08 11:11:10'
+  id: totrans-2
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 日期：2024 年 5 月 8 日 11:11:10
+- en: -->
+  id: totrans-3
+  prefs: []
+  type: TYPE_NORMAL
+  zh: -->
+- en: How to Make AI Write Like Your Favorite Author
+  id: totrans-4
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+  zh: 如何让 AI 像你最喜欢的作者那样写作
+- en: 来源：[https://every.to/chain-of-thought/how-to-make-ai-write-like-your-favorite-author](https://every.to/chain-of-thought/how-to-make-ai-write-like-your-favorite-author)
+  id: totrans-5
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+  zh: 来源：[https://every.to/chain-of-thought/how-to-make-ai-write-like-your-favorite-author](https://every.to/chain-of-thought/how-to-make-ai-write-like-your-favorite-author)
+- en: 'Sponsored By: Scrintal'
+  id: totrans-6
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+  zh: 由 Scrintal 赞助
+- en: This essay is brought to you by [Scrintal](https://www.scrintal.com/?utm_source=newsletter&utm_medium=partnership&utm_term=10252),
+    a visual-first knowledge management tool that lets you organize and connect all
+    your thoughts in one place.
+  id: totrans-7
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 本文由 [Scrintal](https://www.scrintal.com/?utm_source=newsletter&utm_medium=partnership&utm_term=10252)
+    提供，它是一个以视觉为先的知识管理工具，让你可以在一个地方组织和连接所有的想法。
+- en: '***Want to get hands-on practice with these techniques?*** *I’m running a subscribers-only
+    workshop next Wednesday, March 15th at 12 PM EST about how to get AI to write
+    in your favorite writer’s voice. Curious?*'
+  id: totrans-8
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '***想亲身实践这些技术吗？*** *我将在下周三，3 月 15 日下午 12 点 EST 举办一个仅限订阅者的研讨会，介绍如何让 AI 以你最喜欢的作家的声音写作。好奇吗？*'
+- en: '* * *'
+  id: totrans-9
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '* * *'
+- en: There is a unique blandness to entry-level AI writing.
+  id: totrans-10
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 初级 AI 写作具有独特的乏味。
+- en: It’s the prose version of licking cardboard. There is a taste to it, but it
+    is the absence of any real flavor that is most striking. So, reasonably, AI-assisted
+    writing gets a bad rap. People say it reads like SEO content farm marketing swill.
+    It’s not for serious writers.
+  id: totrans-11
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 这就像舔硬纸板的散文版本。有一种味道，但最引人注目的是缺乏任何真正的味道。因此，合理地说，AI 辅助写作声誉不佳。人们说它读起来像 SEO 内容农场的市场垃圾。这不适合严肃的作家。
+- en: This criticism is correct, in the sense that inputting a basic prompt to a popular
+    model like ChatGPT or Bing will output wholly middle-of-the-road responses.
+  id: totrans-12
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 这种批评是正确的，从某种意义上说，给一个流行模型输入一个基本提示，比如 ChatGPT 或 Bing，将输出完全中庸的回答。
+- en: But this criticism is a little like saying that the output of keyboards is typically
+    bland. Yes, it’s true, when you first learned to write on a keyboard you couldn’t
+    write anything particularly good.
+  id: totrans-13
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 但这种批评有点像说键盘的输出通常很乏味。是的，事实上，当你学会在键盘上写字时，你不能写出特别好的东西。
+- en: With a little practice, though, you can get a keyboard to write anything you
+    want. The same is true for AI.
+  id: totrans-14
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 经过一点练习，你就可以让键盘写出任何你想要的东西。AI 也是如此。
+- en: 'I’ve written before about how I use [AI as part of my writing process](https://every.to/chain-of-thought/writing-essays-with-ai-a-guide)—it
+    can help me get ideas out of my head, find the narrative of a piece, or help me
+    when I get stuck. But today I want to focus on one of the most useful things you
+    can do with AI -assisted writing:'
+  id: totrans-15
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 我之前写过关于我如何将 [AI 作为写作过程的一部分](https://every.to/chain-of-thought/writing-essays-with-ai-a-guide)——它可以帮助我将想法从头脑中抽离出来，找到一篇文章的叙述，或者在我卡住时帮助我。但今天我想专注于你可以用
+    AI 辅助写作做的最有用的事情之一：
+- en: Capture a particular kind of voice or style.
+  id: totrans-16
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 捕捉特定的声音或风格。
+- en: 'This article will go through the whole process: from finding prompts that work
+    to fine-tuning. By the end, you’ll have a richer understanding of how to push
+    generative AI models in new directions, and how to add more depth and flavor to
+    your own writing.'
+  id: totrans-17
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 本文将介绍整个过程：从找到有效的提示到微调。到最后，你将对如何推动生成式 AI 模型朝着新方向发展，以及如何给你自己的写作增加更多的深度和风味有更丰富的理解。
+- en: I know the title of this article claims to teach you how to use AI to write
+    like your favorite author. But this is not going to be about learning to push
+    one button in order to output a deep fake Tolstoy novel. That’s not technically
+    possible and probably not desirable.
+  id: totrans-18
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 我知道这篇文章的标题声称教你如何使用 AI 像你最喜欢的作者那样写作。但这不会是关于学习按下一个按钮以输出一个深度伪造的托尔斯泰小说。那在技术上不可能，也可能不可取。
+- en: Instead, this article will teach you to use AI to write like a richer, deeper
+    version of yourself. It can be used to help you understand what you love about
+    a particular writer. And it can also be used to help push your brain into the
+    territory of their language, so that you can incorporate some of their style into
+    your own.
+  id: totrans-19
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 相反，本文将教你如何使用 AI 来写出一个更丰富、更深刻的自我版本。它可以帮助你理解你喜欢某位作家的什么。它也可以帮助你将你的大脑推向他们的语言领域，这样你就可以将他们的风格融入你自己的写作中。
+- en: ''
+  id: totrans-20
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: '[Scrintal](https://www.scrintal.com/?utm_source=newsletter&utm_medium=partnership&utm_term=10252)
+    is a beautifully designed app that combines the power of an infinite canvas with
+    bi-directional links. Whether you''re researching, mapping complex projects, building
+    processes, planning, or studying, [Scrintal](https://www.scrintal.com/?utm_source=newsletter&utm_medium=partnership&utm_term=10252)
+    has everything you need to streamline your workflow and take your work to the
+    next level. With Scrintal you can:'
+  id: totrans-21
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '[Scrintal](https://www.scrintal.com/?utm_source=newsletter&utm_medium=partnership&utm_term=10252)
+    是一个设计精美的应用程序，将无限画布的功能与双向链接结合在一起。无论您是在研究、绘制复杂项目、构建流程、规划还是学习，[Scrintal](https://www.scrintal.com/?utm_source=newsletter&utm_medium=partnership&utm_term=10252)
+    都拥有您所需的一切，可以简化您的工作流程，并将您的工作提升到新的水平。使用 Scrintal 您可以：'
+- en: Organize your thoughts
+  id: totrans-22
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: 整理你的想法
+- en: Visually connect your notes
+  id: totrans-23
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: 将你的笔记进行视觉连接
+- en: Collaborate in real-time
+  id: totrans-24
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: 实时协作
+- en: Share as PDF or markdown
+  id: totrans-25
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: 将内容分享为 PDF 或 markdown
+- en: Early subscribers enjoy priority support and complimentary 1-1 onboarding. Curious?
+  id: totrans-26
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 早期订阅者享有优先支持和免费的一对一入门指导。好奇吗？
+- en: How I Started Doing This
+  id: totrans-27
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+  zh: 我是如何开始做到这一点的
+- en: I love Annie Dillard.
+  id: totrans-28
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 我喜欢安妮·迪拉德。
+- en: Sometimes I want to push my writing to better describe nature, or a metaphor
+    or simile that’s as vivid as hers. Usually, if I want to do this, I’ll sit down
+    and read some of her stuff—like [Pilgrim at Tinker Creek](https://www.amazon.com/Pilgrim-Tinker-Harper-Perennial-Classics/dp/0061233323/ref=sr_1_1?crid=ELXM9XCOKCVF&keywords=pilgrim+at+tinker+creek&qid=1660335632&sprefix=pilgrim+at+tinker+creek%2Caps%2C76&sr=8-1)
+    or [The Writing Life](https://www.amazon.com/Writing-Life-Annie-Dillard/dp/0060919884)—and
+    then I’ll go off to write.
+  id: totrans-29
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 有时我想推动我的写作更好地描述自然，或者一个像她那样生动的比喻或象征。通常，如果我想这样做，我会坐下来读一些她的东西—比如 [《Pilgrim at Tinker
+    Creek》](https://www.amazon.com/Pilgrim-Tinker-Harper-Perennial-Classics/dp/0061233323/ref=sr_1_1?crid=ELXM9XCOKCVF&keywords=pilgrim+at+tinker+creek&qid=1660335632&sprefix=pilgrim+at+tinker+creek%2Caps%2C76&sr=8-1)
+    或 [《The Writing Life》](https://www.amazon.com/Writing-Life-Annie-Dillard/dp/0060919884)—然后我会开始写作。
+- en: Some of what I’ve read will tint the voice I have that day, and if I’m lucky
+    it’ll show up in the writing that I’m doing. It sort of pushes me into the right
+    headspace to get the style that I want.
+  id: totrans-30
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 我读的一些东西会影响我当天的语调，如果我幸运的话，它会出现在我正在写作的文字中。它有点推动我进入正确的思维状态，以获得我想要的风格。
+- en: Recently, I began wondering if GPT-3 could help with that. I didn’t want it
+    to automatically spit out prose I could pass off as my own. Instead, I wondered
+    if it could help get my brain going in the same way that reading a piece by that
+    writer might—but with the added benefit that the sentences I was reading would
+    be about the topic I was writing about, rather than being totally unrelated.
+  id: totrans-31
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 最近，我开始想知道 GPT-3 是否能帮上忙。我不想它自动吐出我可以假装是我自己写的散文。相反，我想知道它是否能像阅读那位作家的文章那样激发我的大脑—但有一个额外的好处，那就是我读到的句子将是关于我正在写作的主题，而不是完全无关的。
+- en: 'So I hopped into the OpenAI Playground and tried a naïve prompt: “When I breathe
+    I feel…”'
+  id: totrans-32
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 所以我跳进了 OpenAI Playground 并尝试了一个天真的提示：“当我呼吸时我感觉…”
+- en: 'I figured starting off with a sentence like that would be somewhat close to
+    the territory of language that Annie Dillard’s style might live in. And that might
+    be an ample opportunity for GPT-3 to get vivid and poetic. Unfortunately, it did
+    not work:'
+  id: totrans-33
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 我觉得以这样的句子开头可能会比较接近安妮·迪拉德风格所在的领域。而这可能是 GPT-3 让文笔生动和诗意的一个充分的机会。不幸的是，它没有成功：
+- en: This is grammatically correct, but it’s everything that AI critics say it is.
+    It’s bland and boring. It doesn’t do anything interesting. But after experimenting
+    with this a good amount, I’ve devised some ways to get the AI into a territory
+    where it does sound a bit more like Dillard—and that in turn gets
+  id: totrans-34
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 这在语法上是正确的，但它就是 AI 批评者所说的那样。它很乏味，很无聊。它没有任何有趣的东西。但是在大量尝试之后，我想出了一些方法，可以让 AI 进入一个听起来有点像迪拉德的领域—这反过来又会使得
+- en: '*my*'
+  id: totrans-35
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '*我的*'
+- en: mind working.
+  id: totrans-36
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 大脑正在运转。
+- en: OK, ready? Let’s dive in.
+  id: totrans-37
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 好了，准备好了吗？让我们开始吧。
+- en: How to capture a voice in AI-assisted writing
+  id: totrans-38
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+  zh: 如何在 AI 辅助写作中捕捉声音
+- en: 'I’ve found three good ways to capture a voice in AI-assisted writing:'
+  id: totrans-39
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 我发现了三种捕捉 AI 辅助写作中的声音的好方法：
+- en: Directly ask the AI to write like the writer you have in mind
+  id: totrans-40
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+  zh: 直接要求 AI 像你想到的作家那样写作
+- en: Describe what the writer’s voice is like, and ask the AI to write like that
+    (preferably with examples)
+  id: totrans-41
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+  zh: 描述作家的语音特征，并要求 AI 像那样写作（最好附带示例）
+- en: Fine-tune the AI on a specific writer
+  id: totrans-42
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+  zh: 调整 AI 至特定作家
+- en: I’ve listed these in order of difficulty and expense. If you’re trying to do
+    this yourself, start out by directly asking the AI to write like a writer you
+    admire. If that doesn’t work, try describing the style you want the AI to write
+    in. And, finally, if that doesn’t work, try fine-tuning.
+  id: totrans-43
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 我已经按难度和成本的顺序列出了这些内容。如果你想自己做这个，首先尝试直接要求AI像你欣赏的作家那样写作。如果这行不通，试着描述你想让AI写作的风格。最后，如果那也不管用，再尝试微调。
+- en: Just because fine-tuning is more technical and expensive doesn’t necessarily
+    mean it’s going to be the best option for your use-case. Try the easy thing first,
+    and work up to the hard thing. You’ll learn a lot along the way. (Of course, if
+    you just want to do fine-tuning because it’s fun, that’s also nice and I won’t
+    stop you.)
+  id: totrans-44
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 只是因为微调更加技术化和昂贵，并不意味着它一定是你使用案例的最佳选择。先尝试简单的事情，然后再尝试困难的事情。在这个过程中，你会学到很多东西。（当然，如果你只是因为觉得微调有趣，那也挺好，我不会阻止你。）
+- en: 'So, let’s start with step one: Directly ask the AI to write like the writer
+    you have in mind.'
+  id: totrans-45
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 所以，让我们从第一步开始：直接要求AI像你心中的作家那样写作。
+- en: Ask the AI to simulate a famous writer
+  id: totrans-46
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+  zh: 要求AI模拟一位著名作家
+- en: AI is not one single *thing* that sounds or thinks. Rather, it’s a simulator.
+    It’s ingesting a prompt and trying to predict what it thinks you want. So directly
+    asking it to sound like a writer you admire is a good place to start.
+  id: totrans-47
+  prefs: []
+  type: TYPE_NORMAL
+  zh: AI 不是一个单一的 *东西*，它听起来或思考起来并不是一个。相反，它是一个模拟器。它正在摄取一个提示并试图预测它认为你想要什么。因此，直接要求它听起来像你欣赏的作家是一个很好的开始。
+- en: This actually works quite well for writers whose work is famous and is well
+    represented on the internet.
+  id: totrans-48
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 这对于那些作品著名且在互联网上有很好代表的作家来说，实际上效果很好。
+- en: 'Let’s start by asking GPT-3 to rewrite a sentence that could use some Dillard-ifying:'
+  id: totrans-49
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 让我们先让 GPT-3 重写一句可能需要迪拉德化的句子：
+- en: OK, so this is obviously ridiculous and doesn’t sound anything like Dillard.
+    But…it does sound
+  id: totrans-50
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 好吧，这显然是荒谬的，一点也不像迪拉德。但是……它确实有一种
+- en: '*different.*'
+  id: totrans-51
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '*不同。*'
+- en: That should tell us we’re on to something. The voice and tone is, like, vaguely
+    Shakespearean or medieval or “high schooler discovering a thesaurus for the first
+    time-ish.” It’s using big words that it wouldn’t have ordinarily used. For example,
+    I like the phrase “cushioned throne” and the word “sonorous.” So I might not take
+    this output wholesale, but I *might* feel good about using some of these words
+    in whatever I’m writing about. It’s getting my mind going and expanding the options
+    in my vocabulary—which is exactly what I want.
+  id: totrans-52
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 这应该告诉我们我们正在找到一些东西。这个声音和语气，就像，模糊地说，有点像莎士比亚的或中世纪的或“高中生第一次发现词典的时候的”。它使用了它原本不会用的大词。例如，我喜欢短语“软垫的王座”和单词“洪亮”。所以我可能不会完全采纳这个输出，但我
+    *可能* 会对在我写作中使用一些这样的词感到满意。它让我的思维活跃起来，扩展了我的词汇选项——这正是我想要的。
+- en: 'Interestingly, Bing (which uses a more advanced version of the same model)
+    is a bit better here:'
+  id: totrans-53
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 有趣的是，Bing（它使用了更先进版本的相同模型）在这方面表现得更好一点：
+- en: 'Here, we can see Bing is using similes: “The notes are clear and precise, like
+    icicles hanging from the eaves.” This feels vaguely Dillard-y. But I have to decide…is
+    that really true? Do the notes of the music sound clear and precise? I also have
+    to decide whether icicles hanging from the eaves evoke that for me.'
+  id: totrans-54
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 在这里，我们可以看到Bing在使用比喻：“音符清晰而精确，就像挂在屋檐上的冰柱。”这感觉有点像迪拉德。但我必须决定……这是真的吗？音符听起来清晰而精确吗？我还必须决定挂在屋檐上的冰柱是否唤起了这种感觉。
+- en: But now I’m actually thinking about it. What is the quality of the music I’m
+    listening to? And what’s a simile that might evoke it? These kinds of questions
+    get *my* brain working—and once again, help me improve the passage I’m working
+    on.
+  id: totrans-55
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 但现在我实际上在思考。我正在听的音乐的质量是什么？还有一个可能唤起它的比喻？这些问题让 *我的* 大脑运转——再一次，帮助我改善我正在工作的段落。
+- en: 'This same technique works well with other major writers. Here’s Shakespeare:'
+  id: totrans-56
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 这个技术对其他主要作家也很有效。这里是莎士比亚：
+- en: 'Here’s Seinfeld:'
+  id: totrans-57
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 这里是《宋飞》：
+- en: The nice thing about using Bing for this versus ChatGPT is that Bing has access
+    to the internet. So it can look up a writer in real time to try to find more about
+    their style—which helps it to improve its responses. This is particularly useful
+    for writers who are not as famous or who have fewer examples of their writing
+    on the internet.
+  id: totrans-58
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 使用Bing与ChatGPT相比的好处是Bing可以访问互联网。因此，它可以实时查找作家以尝试更多地了解他们的风格——这有助于它改进其响应。这对于不那么出名或在互联网上写作样本较少的作家尤其有用。
+- en: 'Take some time to experiment with this—see what works and what doesn’t. But
+    if you’re not getting the results you want, it’s time to move on to the next step:
+    describing the style you want.'
+  id: totrans-59
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 花点时间来尝试一下这个——看看什么起作用，什么不起作用。但是，如果你没有得到想要的结果，那就是时候进行下一步了：描述你想要的风格。
+- en: Describe the kind of writing you want the AI to do
+  id: totrans-60
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+  zh: 描述你想让AI写作的风格
+- en: Telling the AI to “write like Annie Dillard” or “to write like Tolkien” can
+    give you interesting results, but it’s also vague. What is it about Dillard or
+    Tolkien that you’re trying to capture? Is it Dillard’s descriptions of nature?
+    Is it Tolkien’s tales of dwarves and magic? There’s a blurry line between style
+    and content. The AI has to guess, and that will make the results less interesting.
+  id: totrans-61
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 告诉AI“像安妮·迪拉德那样写作”或“像托尔金那样写作”会给你带来有趣的结果，但也很模糊。你试图捕捉迪拉德或托尔金的是什么？是迪拉德对自然的描述吗？是托尔金对矮人和魔法的故事吗？风格和内容之间存在模糊的界限。AI必须猜测，这会使结果变得不那么有趣。
+- en: 'A good next step is to try to get specific with it. Ask it for exactly what
+    you want it to do, and see if it can do it. This is a good thing to try, because
+    the results you get might be better—and you’ll become a better writer in the process.
+    In order for you to ask the AI to write in a specific style, you need to understand
+    how to describe the style that you’re going for. You’ll need to ask yourself:
+    What is it about any of these writers that I like? And that process is quite valuable.'
+  id: totrans-62
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 下一步是尝试更加具体地描述它。要求它做你想要的事情，并看看它能否做到。这是一个很好的尝试，因为你得到的结果可能会更好——而且在这个过程中你会成为一个更好的作家。为了让你让AI按照特定的风格写作，你需要了解如何描述你想要的风格。你需要问自己：我喜欢这些作家的什么？而这个过程是非常宝贵的。
+- en: 'Here’s an example. When I think about what I like about Annie Dillard’s use
+    of words, there are a few things that come immediately to mind:'
+  id: totrans-63
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 举个例子。当我思考安妮·迪拉德在使用词语上的喜欢之处时，有几件事情立刻浮现在脑海中：
+- en: It’s quite vivid, she has incredible metaphors and similes, and her descriptions
+    of nature are specific, beautiful, and poignant.
+  id: totrans-64
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 它非常生动，她有令人难以置信的比喻和象征，她对自然的描述具体、美丽且切中要害。
+- en: 'There’s a lot more to like about her writing style—but for this kind of thing,
+    it’s better to start simple and build on top of it. Let’s see how using this description
+    might change the output we get from the AI:'
+  id: totrans-65
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '还有很多关于她写作风格值得喜欢的地方——但是对于这种事情，最好从简单的开始，然后逐步建立。让我们看看使用这个描述会如何改变我们从AI得到的输出： '
+- en: This is decent, but it’s a little cliché. But I wonder if we could make it more
+    interesting. I want to get a good description of Dillard’s writing for my prompt.
+    One thing to do is to look at what critics say about her and incorporate that.
+  id: totrans-66
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 这还不错，但有点老套。但我想知道我们是否可以让它更有趣。我想得到一个对迪拉德的写作的好描述来作为我的提示。要做的一件事是看看评论家们对她说了什么，然后加以融合。
+- en: 'So I find a [review](https://archive.nytimes.com/www.nytimes.com/books/99/03/28/specials/dillard-writing.html#:~:text=his%20is%20a%20tricky%20review%20for%20me%20to,inspires%20-%20my%20imagination%20and%20my%20own%20work.)
+    of her book, *The Writing Life*, and ask Bing to summarize it:'
+  id: totrans-67
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 所以我找到了她书籍《写作生活》的一篇[评论](https://archive.nytimes.com/www.nytimes.com/books/99/03/28/specials/dillard-writing.html#:~:text=his%20is%20a%20tricky%20review%20for%20me%20to,inspires%20-%20my%20imagination%20and%20my%20own%20work.)，并让必应给我总结一下：
+- en: 'Here’s what I get back:'
+  id: totrans-68
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 这是我收到的回复：
+- en: 'Now I can incorporate some of this back into my prompt and see what I get:'
+  id: totrans-69
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 现在我可以将其中一些内容整合到我的提示中，看看我得到了什么：
+- en: I actually like some of this! “The classical music plays on, weaving through
+    the air like a graceful ribbon” is pretty good! I also like “dreams as light as
+    snowflakes.” It’s still a little heavy-handed and on the nose about the mundane—but
+    you can see how spending just a little bit of time on our prompt completely changes
+    the output we get from the model.
+  id: totrans-70
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 我实际上有些喜欢这个！“古典音乐在播放，像一条优雅的丝带穿过空气”是相当不错的！我也喜欢“像雪花一样轻盈的梦想”。它仍然有点过于直接和关于平凡的——但你可以看到，只需花费一点时间在我们的提示上，就会完全改变我们从模型得到的输出。
+- en: If you’re still looking for more though, the next step is fine-tuning.
+  id: totrans-71
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 如果你仍然在寻找更多，那么下一步就是微调。
+- en: Fine-tuning on a writer’s voice
+  id: totrans-72
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+  zh: 对作家的声音进行微调
+- en: The way to get as close as possible to a particular writer’s voice is to use
+    fine-tuning.
+  id: totrans-73
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 尽可能接近某个特定作家的声音的方法是进行微调。
+- en: 'Fine-tuning is a way to adapt an AI model to a specific task by training it
+    on a dataset specifically designed for that task. It’s a dark art. There are a
+    lot of variables to play with, and most of what people know about it for AI models
+    like GPT-3 seems to be gained through trial and error. (And the errors are expensive:
+    Fine-tuning costs money, on the order of $10–$50 for a single fine-tune.)'
+  id: totrans-74
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 微调是通过在专门设计的数据集上训练AI模型来使其适应特定任务的一种方法。这是一门黑暗的艺术。有很多要玩耍的变量，对于像GPT-3这样的AI模型，人们对它的了解似乎大多是通过反复试验获得的。（而且错误是昂贵的：微调需要花钱，大约是每次微调10-50美元。）
+- en: Here are some basics to understand.
+  id: totrans-75
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 以下是一些基础知识。
+- en: When you fine-tune a model, you give it examples of prompts and correct completions.
+    It’s a way of telling the model, “if you see this prompt, here’s an example of
+    a good way to complete it.” If you show examples like this to the model over and
+    over again, it will eventually learn to give completions that are closer to your
+    preferred completion.
+  id: totrans-76
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 当您微调一个模型时，您给它一些提示和正确的完成示例。这是一种告诉模型的方式：“如果你看到这个提示，这是一个好的完成方式的示例。”如果您一遍又一遍地向模型展示这样的示例，它最终会学会提供更接近您的首选完成的完成。
+- en: 'For example, if you fine-tune on a prompt completion pair like this:'
+  id: totrans-77
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 例如，如果您在一个提示完成对上进行微调，就像这样：
+- en: '**Prompt:** What is the best kind of dog?'
+  id: totrans-78
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+  zh: '**提示：** 什么是最好的狗？'
+- en: '**Completion:** Bernedoodle'
+  id: totrans-79
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+  zh: '**完成：** 伯恩德oodle'
+- en: The next time you use the model, if you ask it for the best kind of dog, it’ll
+    be much more likely to spit out “Bernedoodle.” So, the question is, how do we
+    fine-tune the model so that it is more likely to output writing in the style of
+    our favorite author?
+  id: totrans-80
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 下次您使用模型时，如果您问它什么是最好的狗，它很可能会输出“伯恩德oodle”。所以，问题是，我们如何微调模型，使其更有可能输出我们最喜欢作者的风格的写作？
+- en: 'I’ve tried lots of different experiments to try to get the AI to write in the
+    style of a specific author, and fine-tuning on an empty prompt with a completion
+    that is a few sentences of the writer’s work seems to be best. So, for example,
+    your fine-tune can be something like:'
+  id: totrans-81
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 我尝试了很多不同的实验，试图让AI以特定作者的风格写作，微调一个空提示，其中完成是作家作品中的几句话似乎是最好的。所以，例如，您的微调可以是这样的：
+- en: '**Prompt:**'
+  id: totrans-82
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+  zh: '**提示：**'
+- en: '**Completion: “**I used to have a cat, an old fighting tom, who would jump
+    through the open window by my bed in the middle of the night and land on my chest.
+    I’d half-awaken. He’d stick his skull under my nose and purr, stinking of urine
+    and blood. Some nights he kneaded my bare chest with his front paws, powerfully,
+    arching his back, as if sharpening his claws, or pummeling a mother for milk..
+    And some mornings I’d wake in daylight to find my body covered with paw prints
+    in blood; I looked as though I’d been painted with roses.”'
+  id: totrans-83
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+  zh: '**完成：**“我过去养过一只猫，一只老斗猫，半夜会跳到我床边的开窗户里，落在我的胸口上。我半醒着。它会把头伸到我鼻子下，咕噜咕噜地发出声音，身上散发着尿和血的气味。有些晚上，它用前爪在我的赤裸胸膛上揉搓，用力地、拱起它的背，好像在磨爪子，或者像把母亲按在乳房上般用力拍打。。有些早晨，我会在白天醒来，发现我的身体上布满了鲜血的爪印；我看起来好像被玫瑰花涂满了。”'
+- en: This type of fine-tuning appears to teach the model to learn to lean toward
+    the voice, style, and subject matter of a particular writer for any prompt. This
+    is quite useful for our purposes.
+  id: totrans-84
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 这种类型的微调似乎教会了模型倾向于某个特定作家的声音、风格和主题。对于我们的目的来说，这非常有用。
+- en: 'The process goes like this:'
+  id: totrans-85
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 这个过程是这样的：
+- en: Find a large corpus of text from a writer that you like
+  id: totrans-86
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+  zh: 找到一位您喜欢的作家的大量文本语料库
+- en: Break corpus into chunks of a few sentences each
+  id: totrans-87
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+  zh: 将语料库分成几句一组的块
+- en: Create a file with prompt-completion pairs where the prompt is empty and the
+    completion is a few sentences from your text
+  id: totrans-88
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+  zh: 创建一个文件，其中包含提示-完成对，其中提示为空，完成是您文本的几句话
+- en: Fine-tune on that file for 8 or 16 epochs
+  id: totrans-89
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+  zh: 对该文件进行8或16轮的微调
+- en: 'Here’s how to do it:'
+  id: totrans-90
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 这是如何做到的：
+- en: Find a text corpus
+  id: totrans-91
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+  zh: 找到一个文本语料库
+- en: This part is a little tricky, but for any author out of copyright, you can use
+    [Project Gutenberg](https://www.gutenberg.org). For other writers, you can usually
+    find things they’ve written on the internet or try to buy and download DRM free
+    digital versions of their work.
+  id: totrans-92
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 这部分有点棘手，但对于任何过期版权作者，您都可以使用[古腾堡计划](https://www.gutenberg.org)。对于其他作者，您通常可以在互联网上找到他们写过的东西，或者尝试购买和下载他们作品的无数字版权保护的数字版本。
+- en: There are lots of ways to do this, so get creative. But make sure you do it
+    in a way that’s mindful of fair use and copyright.
+  id: totrans-93
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 有很多方法可以做到这一点，所以要有创意。但确保以符合公平使用和版权的方式进行。
+- en: Break the text corpus into chunks and create empty prompt-completion pairs
+  id: totrans-94
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+  zh: 将文本语料库分成块，并创建空的提示-完成对。
+- en: 'This one is a little more difficult and technical, but luckily you can actually
+    use ChatGPT or Bing for this step. At the end of it you’re going to want a file
+    that looks like this:'
+  id: totrans-95
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 这个步骤稍微有点困难和技术性，但幸运的是你可以使用 ChatGPT 或 Bing 来完成这一步。在这之后，你会想要一个看起来像这样的文件：
+- en: '{"prompt":"","completion":"[text from your author here]"}'
+  id: totrans-96
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '{"prompt":"","completion":"[text from your author here]"}'
+- en: '{"prompt":"","completion":"[text from your author here]"}'
+  id: totrans-97
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '{"prompt":"","completion":"[text from your author here]"}'
+- en: 'To get this, open up ChatGPT and ask:'
+  id: totrans-98
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 要获得它，打开 ChatGPT 并询问：
+- en: '*Please write me a Python script that reads in a text file, breaks it into
+    chunks of 3 sentences each, and outputs each chunk into a valid JSON file with
+    the following form: *'
+  id: totrans-99
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '*请给我写一个 Python 脚本，它读入一个文本文件，将其分成每三个句子一个块，并将每个块输出到一个形式良好的 JSON 文件中：*'
+- en: '*{"prompt":"","completion":"[chunk 1]"}*'
+  id: totrans-100
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '*{"prompt":"","completion":"[chunk 1]"}*'
+- en: '*{"prompt":"","completion":"[chunk 2]"}*'
+  id: totrans-101
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '*{"prompt":"","completion":"[chunk 2]"}*'
+- en: …
+  id: totrans-102
+  prefs: []
+  type: TYPE_NORMAL
+  zh: …
+- en: Take the script that ChatGPT outputs, and run it on your text corpus from the
+    last step. (If you’re confused by this step, I’ll be holding a [workshop for paying
+    subscribers next week to take you through it step by step](https://every.to/chain-of-thought/workshop-fine-tuning-ai-on-your-favorite-writer-s-voice).)
+  id: totrans-103
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 取 ChatGPT 输出的脚本，并在上一步的文本语料库上运行它。（如果你对这一步感到困惑，我将在下周举办一个[为付费订阅者举办的研讨会，逐步指导你进行](https://every.to/chain-of-thought/workshop-fine-tuning-ai-on-your-favorite-writer-s-voice)。）
+- en: Fine tune on your JSON file
+  id: totrans-104
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+  zh: 在你的 JSON 文件上进行微调
+- en: 'Now that you have your JSON file, it’s time to fine tune. You should refer
+    to the OpenAI fine tuning guide [here](https://platform.openai.com/docs/guides/fine-tuning),
+    but the basic steps are as follows:'
+  id: totrans-105
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 现在你有了你的 JSON 文件，是时候进行微调了。你应该参考 OpenAI 的微调指南[此处](https://platform.openai.com/docs/guides/fine-tuning)，但基本步骤如下：
+- en: '**Prepare your data**'
+  id: totrans-106
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+  zh: '**准备你的数据**'
+- en: OpenAI has a fine tuning utility that will check your JSON file and make modifications
+    to it in order to optimize it.
+  id: totrans-107
+  prefs: []
+  type: TYPE_NORMAL
+  zh: OpenAI 有一个微调实用程序，它会检查你的 JSON 文件并对其进行修改以进行优化。
+- en: 'Run the following command to prepare your data:'
+  id: totrans-108
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 运行以下命令来准备你的数据：
+- en: '*openai tools fine_tunes.prepare_data -f <LOCAL_FILE>*'
+  id: totrans-109
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '*openai 工具 fine_tunes.prepare_data -f <LOCAL_FILE>*'
+- en: When that’s done, it’s time to actually run the fine tune.
+  id: totrans-110
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 当完成后，就该真正运行微调了。
+- en: '**Run the fine tune**'
+  id: totrans-111
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+  zh: '**运行微调**'
+- en: 'To start the fine tune, you can run the following command:'
+  id: totrans-112
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 要开始微调，你可以运行以下命令：
+- en: '*openai api fine_tunes.create -t <TRAIN_FILE_ID_OR_PATH> -m <BASE_MODEL> --suffix
+    "[NAME YOUR MODEL]" --n_epochs 8*'
+  id: totrans-113
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '*openai api fine_tunes.create -t <TRAIN_FILE_ID_OR_PATH> -m <BASE_MODEL> --suffix
+    "[NAME YOUR MODEL]" --n_epochs 8*'
+- en: There are two important pieces of this that are missing from the OpenAI fine
+    tuning guide. One, you should definitely set your suffix. That names your model
+    something sensible like, “My Favorite Writer Voice” so that you can find it later.
+    Two, you should set your number of epochs to 8 or 16\. Epochs are how many times
+    the model is trained on the dataset you give it. The default for this is 4—but
+    my experience is that the sweet spot is usually around 8 or 16\. It’s unclear
+    why this is, but 8 or 16 seems to get it focused enough on the prompts and completions
+    you’re giving it to make sure the voice you want is coming through. But it’s not
+    so much fine tuning that you overfit and the output gets worse.
+  id: totrans-114
+  prefs: []
+  type: TYPE_NORMAL
+  zh: OpenAI 的微调指南中缺少两个重要部分。一，你应该确实设置你的后缀。这样你的模型会被命名为类似“我的最爱作家声音”的合理名称，这样你以后可以找到它。二，你应该将你的
+    epoch 数设置为 8 或 16。Epoch 是指模型在给定数据集上训练的次数。这个默认值是 4——但我的经验是，甜点通常在 8 或 16 附近。目前尚不清楚为什么会这样，但
+    8 或 16 似乎能够更好地专注于你所给出的提示和完成，以确保你想要的声音传递出来。但也不要进行太多的微调，以免过度拟合，输出变得更糟。
+- en: '**Use your model**'
+  id: totrans-115
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+  zh: '**使用你的模型**'
+- en: 'Now that the model is trained, it’s time to use it! I trained a model on Annie
+    Dillard’s work, and here’s what the output looks like:'
+  id: totrans-116
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 现在模型已经训练好了，是时候使用它了！我在安妮·迪拉德的作品上训练了一个模型，这是输出的样子：
+- en: 'Here’s another run:'
+  id: totrans-117
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 下面是另一个运行示例：
+- en: You’ll notice here that I’m not asking the model to rewrite my work, just to
+    continue it in a Dillard-y way. I haven’t been able to get a fine-tune that does
+    rewriting to work well. But I do think that this type of fine tune is quite good.
+    It’s less cliché, it has more of Dillard’s style and flavor, and it’s got really
+    nice, poetic descriptions of nature.
+  id: totrans-118
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 请注意，这里我并没有要求模型重新写我的作品，只是以迪拉德的方式继续它。我还没有能够让重写的微调效果良好。但我认为这种微调类型相当不错。它不那么陈词滥调，有更多迪拉德的风格和味道，而且对自然有着非常好的诗意描述。
+- en: Wrapping up
+  id: totrans-119
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+  zh: 总结
+- en: 'There you have it: Those are the basics of getting AI to assist with writing
+    in the style of your favorite author.'
+  id: totrans-120
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 就是这样：这些是让人工智能辅助以你喜欢的作家风格进行写作的基础知识。
+- en: 'It’s worth mentioning before we close: You need to be careful when you do this.
+    As I wrote at the top, the point of these exercises is not to help you create
+    deep fakes—it’s to help you find your own style and inflect it with the richness
+    of writers you admire.'
+  id: totrans-121
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 在我们结束之前，值得一提的是：你在这样做时需要小心。就像我在开头写的那样，这些练习的目的不是帮助你创建深度伪造——而是帮助你找到自己的风格，并赋予它你所钦佩的作家的丰富性。
+- en: I recommend you not take the output of these models wholesale—but instead use
+    it as a jumping-off point for your own work. If you’re writing in an environment
+    where standards for plagiarism are important, it’s critical that you run this
+    output through a plagiarism checker to make sure it’s not too close to someone
+    else’s work.
+  id: totrans-122
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 我建议你不要完全接受这些模型的输出，而是将其作为你自己工作的起点。如果你在一个重视抄袭标准的环境中写作，那么通过一个抄袭检查器来确保它不会与别人的作品过于相似是至关重要的。
+- en: But if you’re taking the above seriously—there’s a tremendous amount of territory
+    to explore here. You’ll get a lot of weird and wonky output. It’ll fail a lot.
+  id: totrans-123
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 但是，如果你认真对待上面的内容——这里有大量的领域需要探索。你会得到很多奇怪和古怪的输出。它会经常失败。
+- en: In trying, and failing, you’ll discover your own voice. It’ll be richer and
+    deeper and spiced with the taste of all of the people we’ve read and loved.
+  id: totrans-124
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 在尝试和失败中，你会发现自己的声音。它会更丰富、更深刻，并带有我们阅读和喜爱的所有人的味道。
+- en: Good luck!
+  id: totrans-125
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 祝你好运！
+- en: ''
+  id: totrans-126
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: '* * *'
+  id: totrans-127
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '* * *'
+- en: Get hands-on practice with the techniques in this article
+  id: totrans-128
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 通过这篇文章中的技巧进行实践练习
+- en: If you want to get hands-on practice with the techniques I mentioned in this
+    article, I’ll be running a workshop next Tuesday, March 14th at 12 PM EST about
+    how to get AI to write in your favorite writer’s voice.
+  id: totrans-129
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 如果你想通过我在这篇文章中提到的技巧进行实践练习，我将在下周二，3月14日下午12点（东部标准时间）举办一个关于如何让人工智能写出你喜欢的作家风格的研讨会。
+- en: 'We’ll cover:'
+  id: totrans-130
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 我们将涵盖：
+- en: Basic prompts and completions
+  id: totrans-131
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: 基本提示和完成
+- en: Fine-tuning, from start to finish
+  id: totrans-132
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: 从头到尾的微调
+- en: No programming experience required. Curious?
+  id: totrans-133
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 无需编程经验。好奇吗？
+- en: '* * *'
+  id: totrans-134
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '* * *'
+- en: 'We also offer a 40-minute self-paced workshop on the basics of writing with
+    AI. It includes everything you need to get started including prompts, and hands-on
+    exercises. Learn more here:'
+  id: totrans-135
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 我们还提供一个40分钟的自学工作坊，介绍如何使用人工智能进行写作的基础知识。它包括了一切你需要开始的内容，包括提示和实践练习。在这里了解更多：

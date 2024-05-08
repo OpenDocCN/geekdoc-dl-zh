@@ -1,0 +1,444 @@
+- en: <!--yml
+  id: totrans-0
+  prefs: []
+  type: TYPE_NORMAL
+  zh: <!--yml
+- en: 'category: COT 专栏'
+  id: totrans-1
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 类别：COT 专栏
+- en: 'date: 2024-05-08 11:03:45'
+  id: totrans-2
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 'date: 2024-05-08 11:03:45'
+- en: -->
+  id: totrans-3
+  prefs: []
+  type: TYPE_NORMAL
+  zh: -->
+- en: Simulating One-way Door Decisions With AI
+  id: totrans-4
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+  zh: 用人工智能模拟单向门决策
+- en: 来源：[https://every.to/chain-of-thought/simulating-one-way-door-decisions-with-ai](https://every.to/chain-of-thought/simulating-one-way-door-decisions-with-ai)
+  id: totrans-5
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+  zh: 来源：[https://every.to/chain-of-thought/simulating-one-way-door-decisions-with-ai](https://every.to/chain-of-thought/simulating-one-way-door-decisions-with-ai)
+- en: We all want to know how we’ll feel in the future. If we had perfect information
+    about how decisions in our lives would affect our emotions, we might do a lot
+    of things differently. That’s why, as they say, youth is wasted on the young.
+  id: totrans-6
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 我们都想知道自己未来会怎么感受。如果我们对我们生活中的决策如何影响我们的情绪有完美的信息，我们可能会做很多事情不同。这就是为什么人们说，青春被浪费在年轻人身上。
+- en: I remember dancing in a glass-enclosed conference room when we got our first
+    acquisition offer. It was 2014, and the company I’d started, Firefly, was a small
+    team and had just started to bring in meaningful revenue. I hung up with Public
+    Live Chat’s (a pseudonym) corp dev guy, queued up AWOLNATION’s song “Sail” on
+    Spotify, and wriggled as un-self-consciously as a Hasid in prayer. Suddenly, at
+    22, I was faced with one of the biggest one-way door decisions of my life.
+  id: totrans-7
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 我记得我们得到第一个收购要约时在一个玻璃封闭的会议室里跳舞。那是2014年，我创办的公司Firefly只有一个小团队，刚开始带来有意义的收入。我挂断了Public
+    Live Chat（化名）的公司发展负责人的电话，然后在Spotify上播放了AWOLNATION的歌曲“Sail”，像一个以色列哈西德教徒一样毫不自我意识地扭动着。突然，我22岁，面临着我一生中最重要的单向门决策之一。
+- en: Six years later, I remember deliberating endlessly in late-night phone calls
+    with Nathan about the decision to raise money for Every. It was the heady days
+    of the creator economy, we were growing like crazy, and startups were pulling
+    down massive seed rounds. Did we want to put the company on a venture path? Or
+    should we heed the blood-soaked history of venture-backed media companies and
+    stay bootstrapped?
+  id: totrans-8
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 六年后，我仍然记得与Nathan在深夜电话里反复讨论是否要为Every筹集资金的决定。那是创作者经济的狂热时期，我们的增长速度像疯了一样，初创公司正在获得大规模的种子轮融资。我们是否想要将公司置于风险投资的道路上？还是应该听取风投支持的媒体公司血腥的历史，保持自给自足？
+- en: 'Most decisions in life are reversible. But some are one-way doors. Jeff Bezos
+    [talks about these](https://www.inc.com/jeff-haden/amazon-founder-jeff-bezos-this-is-how-successful-people-make-such-smart-decisions.html):'
+  id: totrans-9
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 生活中的大多数决定是可逆转的。但有些是单向门。Jeff Bezos[谈到了这些](https://www.inc.com/jeff-haden/amazon-founder-jeff-bezos-this-is-how-successful-people-make-such-smart-decisions.html)：
+- en: “Some decisions are consequential and irreversible or nearly irreversible—one-way
+    doors—and these decisions must be made methodically, carefully, slowly, with great
+    deliberation and consultation.”
+  id: totrans-10
+  prefs: []
+  type: TYPE_NORMAL
+  zh: “一些决策具有重大影响，并且是不可逆转的，或者几乎不可逆转的——单向门——这些决策必须以方法、谨慎、缓慢、经过深思熟虑和磋商。”
+- en: 'If you’ve lived any length of time you’ve probably faced a few of these one-way
+    door decisions yourself. Sometimes you’re choosing between two new options: Get
+    a job or travel the world. Sometimes you’re choosing between the status quo and
+    something radically new: Stay in a relationship or leave; climb the corporate
+    ladder or quit to go all in on a startup.'
+  id: totrans-11
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 如果你活了一段时间，你可能已经面对过一些这样的单向门决策。有时你在选择两个新选项之间：找一份工作还是环游世界。有时你在现状和全新事物之间做出选择：继续一段关系还是结束；攀登职业阶梯还是辞职全力投入创业公司。
+- en: The decisions we make are the lives we build. One-way doors are the entrance
+    to an entirely new and unfamiliar part of our paths.
+  id: totrans-12
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 我们做出的决定就是我们构建的生活。单向门是通往我们路径上一个全新而陌生部分的入口。
+- en: 'In business, there are many inputs to a one-way door decision. There are practical
+    considerations, strategic considerations, and economic considerations. But an
+    important variable in any decision is: How will we feel, personally, when we cross
+    the threshold of that door? Will we regret it? Will we be happier?'
+  id: totrans-13
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 在商业上，做出单向门决策有许多因素。有实际考虑、战略考虑和经济考虑。但在任何决策中，一个重要的变量是：当我们跨越那扇门的门槛时，我们会有怎样的个人感受？我们会后悔吗？我们会更快乐吗？
+- en: Predicting how we’ll feel about a decision is something that we repeatedly get
+    wrong. We think things will make us happy when they won’t. We miss opportunities
+    that would change our lives because we’re too afraid to try them out.
+  id: totrans-14
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 预测我们对决策的感受是一件我们反复错误判断的事情。我们认为某些事情会让我们快乐，但事实并非如此。我们错过了可能改变生活的机会，因为我们害怕尝试。
+- en: Worst of all, our projections about what might make us feel happy or satisfied
+    are key inputs to our economic and strategic decision-making. How many people
+    raise money or sell their startups expecting to feel happier, only to find a deep
+    depression on the other side?
+  id: totrans-15
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 最糟糕的是，我们对于可能让我们感到幸福或满意的预期是我们经济和战略决策的关键输入。有多少人筹集资金或出售他们的初创公司，期望会感到更快乐，结果却发现在那边有一种深深的沮丧？
+- en: In short, refining our ability to predict our future state is critical.
+  id: totrans-16
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 简而言之，完善我们预测未来状态的能力至关重要。
+- en: 'AI is an incredible tool for this kind of decision-making. It can simulate
+    us—our personalities, our thoughts, our emotions—and reveal what that simulated
+    version of ourselves might feel and think in different circumstances. It allows
+    you to walk through a one-way door like a caver: wearing a sturdy harness knotted
+    to a rope tied to a rusted stake. You explore the darkness fearlessly and follow
+    the fastened rope back out.'
+  id: totrans-17
+  prefs: []
+  type: TYPE_NORMAL
+  zh: AI是这种决策的一种令人难以置信的工具。它可以模拟我们——我们的个性、思想、情感——并揭示在不同情况下，我们的这种模拟版本可能会感觉和思考什么。它让你像穿着牢固的绳索系着的结实安全带的洞穴探险者一样穿越单向门：无畏地探索黑暗，并跟随着系紧的绳索返回。
+- en: I’ve been using AI to help me make one-way door decisions and predict my future
+    state. For obvious reasons, I don’t want to talk about present-day decisions.
+    But I do want to walk you through how it could have affected one of my historical
+    one-way door decisions, so you can see how powerful it might’ve been.
+  id: totrans-18
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 我一直在使用AI来帮助我做单向门决策并预测我的未来状态。出于明显的原因，我不想谈论当下的决定。但我确实想带你走过它如何影响了我历史上的一个单向门决定，这样你就能看到它可能有多么强大。
+- en: AI-assisted one-way door decisions
+  id: totrans-19
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+  zh: AI辅助的单向门决策
+- en: 'When we were deciding whether or not to raise money for Every in 2020, I was
+    doing a lot of journaling in the then-red-hot note-taking app Roam Research. I
+    was writing about things like: What are the pros of raising? What are the cons?
+    What are my fears and how realistic are they? What could work about raising money
+    for this business?'
+  id: totrans-20
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 当我们在2020年决定是否为Every筹集资金时，我在当时备受瞩目的笔记应用Roam Research中写了很多日记。我写了一些关于：筹集资金的利弊是什么？有什么缺点？我的恐惧是什么，它们有多现实？为这个业务筹集资金可能会起到什么作用？
+- en: 'The nice thing about this journaling habit is that I have all of the entries.
+    I know exactly what I was thinking at the time. So I grabbed a bunch of them,
+    threw them into Claude, and asked it to pull out the patterns:'
+  id: totrans-21
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 这个记日记的好处是我有所有的条目。我知道我当时在想什么。所以我抓了一堆，扔到了克劳德（Claude），让它提取模式：
+- en: '*“Here are a few journal entries about whether or not to fundraise for Every.
+    Can you help me find patterns that can help me make a breakthrough? Be honest
+    and direct. Be specific, use examples.”*'
+  id: totrans-22
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '*“这里有一些关于是否为Every筹集资金的日记条目。你能帮我找到可以帮助我取得突破的模式吗？要诚实直接。要具体，使用例子。”*'
+- en: 'Here’s what I got back (lightly edited for clarity and privacy):'
+  id: totrans-23
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 这是我收到的（轻微编辑以提高清晰度和隐私性）：
+- en: '*“Based on the journal entries you provided, there are a few key patterns and
+    themes that emerge:*'
+  id: totrans-24
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '*“根据您提供的日记条目，有一些关键的模式和主题浮现出来：*'
+- en: '***Fear of losing control and autonomy by taking outside capital.*** *You worry
+    that having investors will make you feel obligated to hit metrics and strain for
+    growth in ways that make you uncomfortable. You want to avoid feeling terrible
+    and being "behind the curve" constantly. The idea of taking investor money is
+    triggering a strong "NO" reaction in your body. You seem to want to maintain control
+    and optionality, focusing on craft and writing. *'
+  id: totrans-25
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+  zh: '***害怕失去控制权和自主权，因为接受外部资金。*** *你担心有投资者会让你感觉有义务达到指标，并以让你感到不舒服的方式努力增长。你想要避免感觉糟糕，并且不断地“落后于潮流”。想要接受投资者的钱触发了你身体内强烈的“NO”反应。你似乎想要保持控制和选择权，专注于技艺和写作。*'
+- en: '***Desire to build something on your own terms.*** *You are drawn to founders
+    like Andrew Wilkinson, Nathan Barry and the Basecamp founders who built profitable
+    businesses they own and control. You want to create your own "weird wonderland
+    company" and having too many investor expectations feels at odds with that.*'
+  id: totrans-26
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+  zh: '***渴望按照自己的条款建立东西。*** *你被像安德鲁·威尔金森、内森·巴里和Basecamp的创始人们这样的创始人所吸引，他们建立了盈利的企业，拥有并控制着它们。你想要创建自己的“怪异仙境公司”，而拥有太多的投资者期望感觉与此相悖。*'
+- en: '***Changing and uncertain feelings.*** *Your feelings seem to oscillate a lot
+    on this topic and you acknowledge not being 100% sure how you feel. The VC-backed
+    vision sometimes resonates but other times feels off to you. You are trying to
+    stay open while also listening to your intuition.*'
+  id: totrans-27
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+  zh: '***变化和不确定的感受。*** *你在这个话题上的感受似乎摇摆不定，你承认自己并不百分之百确定自己的感受。VC支持的愿景有时与你共鸣，但其他时候又觉得不合适。你正在尝试保持开放，同时也在倾听你的直觉。*'
+- en: '*In summary, the conflict between an investor-driven, high-expectation growth
+    path and a more organic, craft-driven, founder-controlled approach is the core
+    tension causing you stress. At the same time, you acknowledge that company-building
+    inherently involves some discomfort and that investors aren''t necessarily bad.
+    Staying open to paths where you maintain sufficient control/autonomy while still
+    having support to build something great seems wise.”*'
+  id: totrans-28
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '*总的来说，投资者驱动的高期望增长道路与更有机的、手艺驱动的、创始人控制的方法之间的冲突是导致你感到压力的核心紧张因素。与此同时，你承认公司建设本身就会带来一些不适，投资者并不一定是坏事。保持开放的态度，同时仍然有足够的控制/自主权来支持建立一些伟大的东西似乎是明智的。”*'
+- en: When I read this, my jaw dropped. It’s such a mirror into my mind. I could see
+    things in it that I felt but, at the time, hadn’t been able to put into words.
+    The clarity about my fears and desires is striking, and it’s a far cry from the
+    ambivalent mess on display in the raw entries I fed it.
+  id: totrans-29
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 当我读到这个时，我的下巴都掉了。这完全反映了我的心思。我能从中看到一些我感觉到但当时无法用言语表达的东西。关于我的恐惧和欲望的清晰度令人震惊，它与我喂给它的原始条目中的混乱形成了鲜明的对比。
+- en: '**Simulate future journal entries**'
+  id: totrans-30
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '**模拟未来的日记条目**'
+- en: 'Next, I asked Claude to write future journal entries. First, I asked it to
+    journal about how I would feel if we raised a small round for Every (which we
+    did):'
+  id: totrans-31
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 接下来，我请克劳德写未来的日记条目。首先，我让它记录我如果我们为Every筹集了一小笔资金（我们确实这样做了）会有什么感受：
+- en: '*“Based on these journal entries, please write a new journal entry as me with
+    how I’d feel if we raised a small $700k round for Every. Try to simulate me and
+    my personality as accurately as possible.”*'
+  id: totrans-32
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '*“根据这些日记条目，请以我的名义写一篇新的日记条目，描述一下如果我们为Every筹集了一小笔700k美元的资金我会有什么感受。尽量模拟我和我的个性。”*'
+- en: 'Here’s how it replied (again edited for clarity and privacy):'
+  id: totrans-33
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '以下是它的回复（再次进行了编辑以确保清晰和隐私）:'
+- en: '*[[Every Journal]]*'
+  id: totrans-34
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '*[[Every Journal]]*'
+- en: '*We decided to raise a small $700k round for Every, and I have to admit, I''m
+    feeling a mix of emotions about it. On one hand, I''m excited about the possibilities
+    this funding opens up for us. It''s a vote of confidence in what [[Nathan Baschez]]
+    and I are building, and it gives us some runway to really focus on creating something
+    amazing.*'
+  id: totrans-35
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '*我们决定为Every筹集700k美元的小额融资，我不得不承认，我对此有各种各样的情绪。一方面，我对这笔资金为我们打开的可能性感到兴奋。这是对我和[[Nathan
+    Baschez]]正在构建的东西的信任，也给了我们一些时间去真正专注于创造一些了不起的东西。*'
+- en: '*At the same time, I can''t shake this lingering unease. I keep coming back
+    to this vision I have of building a company on our own terms - something that
+    reflects our unique perspectives and values. I worry that even with a smaller
+    round, we''ll still feel that pressure to hit certain metrics and make decisions
+    that prioritize growth over craft.***(The journal entry** [**continues**](https://every.to/admin/posts/hypothetical-journal-entries-written-by-ai/edit)
+    **for paying subscribers.)**'
+  id: totrans-36
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '*与此同时，我无法摆脱这种持续的不安。我一直回到我心中构建一家公司的愿景 - 一个反映我们独特观点和价值观的东西。我担心即使进行了一轮较小的融资，我们仍然会感到压力，去追求特定的指标，并做出优先增长而不是手艺的决策。*(这篇日记继续**[**阅读**](https://every.to/admin/posts/hypothetical-journal-entries-written-by-ai/edit)
+    **适用于付费订阅者。)**'
+- en: 'This is strikingly similar to what I *actually* wrote about our fundraise in
+    my journal, which you can [read](https://every.to/chain-of-thought/hypothetical-journal-entries-written-by-ai)
+    **(for paying subscribers).** It also predicted exactly what happened: Even though
+    we raised a small round, I *did* feel a lot of pressure. It caused me to make
+    a lot of decisions—like deciding not to write anymore so I could run the business—that
+    stagnated our growth and made me less happy.'
+  id: totrans-37
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 这与我在日记中*实际*写的关于我们的筹资的情况非常相似，你可以[阅读](https://every.to/chain-of-thought/hypothetical-journal-entries-written-by-ai)
+    **（适用于付费订阅者）**。它还预测到了发生的一切：即使我们筹集了一小笔资金，我仍然感到很大的压力。这导致我做了很多决定 - 比如决定不再写作，以便我可以经营业务
+    - 这阻碍了我们的增长，并让我不那么快乐。
+- en: 'It gets even more interesting, though. I asked Claude to write about how I
+    *would* have felt if we hadn’t raised money:'
+  id: totrans-38
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 不过，更有趣的是。我让克劳德写一下如果我们没有筹集资金我*会*有什么感受：
+- en: '*“Based on these journal entries, please write a new journal entry as me with
+    how I’d feel if we didn’t fundraise at all. Try to simulate me and my personality
+    as accurately as possible.”*'
+  id: totrans-39
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '*“根据这些日记条目，请以我的名义写一个新的日记条目，描述如果我们根本不筹款我会有什么感受。尽量模拟我和我的个性。”*'
+- en: 'Claude does its best to pick up the patterns in my feelings and reactions,
+    and tries to simulate how I would feel in a hypothetical future:'
+  id: totrans-40
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 克劳德尽其所能地捕捉我感受和反应中的模式，并尝试模拟我在假设的未来会有什么感受：
+- en: '*[[Every Journal]]*'
+  id: totrans-41
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '*[[Every Journal]]*'
+- en: '*After a lot of deep conversations and soul-searching, we have decided not
+    to fundraise for Every right now. And I have to say, as soon as we made that decision,
+    I felt this huge wave of relief wash over me.*'
+  id: totrans-42
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '*经过许多深入的交谈和反思，我们决定现在不为 Every 筹款。我必须说，当我们做出这个决定时，我感到一股巨大的解脱感涌上心头。*'
+- en: '*It''s not that I''m totally opposed to the idea of fundraising ever, but right
+    now, it just doesn''t feel aligned with what I want to build. I keep coming back
+    to this deep desire to create something that is truly an expression of our unique
+    perspectives and values - a "weird wonderland company" as I''ve been calling it
+    in my head.* ***(The journal entry*** [***continues***](https://every.to/admin/posts/hypothetical-journal-entries-written-by-ai/edit)
+    ***for paying subscribers.)***'
+  id: totrans-43
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '*并不是我完全反对筹款的想法，但现在，它只是与我想要建立的东西不太契合。我一直都有这种深深的愿望，想要创造出真正表达我们独特观点和价值观的东西——就像我在脑海中称之为“奇异仙境公司”一样。*
+    ***(这篇日记条目*** [***继续***](https://every.to/admin/posts/hypothetical-journal-entries-written-by-ai/edit)
+    ***供付费订户阅读。)***'
+- en: 'I think Claude is right. I’m glad we raised money for Every: It’s given us
+    a cash cushion and a bunch of great investors on our side who can help us when
+    we need it. But if I’m honest, it ended up being a distraction from what I really
+    wanted to do with the business. I think I would’ve felt a tremendous sense of
+    relief if we’d skipped it entirely—and we’d probably be at a similar (or possibly
+    better) place in the business.'
+  id: totrans-44
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 我认为克劳德是对的。我很高兴我们为 Every 筹集了资金：这给了我们一个现金垫和一群支持我们的出色投资者。但老实说，这成为了我真正想要做的事情的一种分心。如果我说实话，如果我们完全跳过这一步，我想我会感到巨大的解脱感——我们可能会处于类似（或可能更好）的商业地位。
+- en: Reading this now, I feel a little bit of grief. Years ago, hiding behind one
+    of the doors of that decision was a wave of relief that probably would’ve been
+    best for the business. I just couldn’t quite see it at the time.
+  id: totrans-45
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 现在看这些，我感到有点悲伤。多年前，在那个决定的门后藏着一股解脱的浪潮，这可能对公司最有利。当时我只是不能完全看到它。
+- en: Why it works
+  id: totrans-46
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+  zh: 为什么会奏效
+- en: Large language models are excellent personality simulators. If you give a language
+    model a prompt about what kind of personality to mimic, it will reliably answer
+    your questions in that style. It can even produce long-form writing consistent
+    with a given personality type. (For more on this, I wrote about it in ["Personality
+    Simulation Is Coming."](https://every.to/chain-of-thought/llms-can-simulate-personality-that-s-a-big-deal?sid=39492))
+  id: totrans-47
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 大型语言模型是出色的个性模拟器。如果你给一个语言模型一个关于要模仿什么样的个性的提示，它会可靠地以那种风格回答你的问题。它甚至可以产生与给定个性类型一致的长篇写作。（欲了解更多，请参阅我在[“个性模拟即将来临”](https://every.to/chain-of-thought/llms-can-simulate-personality-that-s-a-big-deal?sid=39492)中的介绍。）
+- en: Language models can also take on *your* personality. For example, I asked GPT-4
+    to read my tweets and construct a personality profile from them. Then I had it
+    take a personality test *as* me—trying to see how close it could get to answering
+    the test the same way I did. I also asked my girlfriend at the time and my mom
+    to try the same thing.
+  id: totrans-48
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 语言模型也可以承担*你*的个性。例如，我让 GPT-4 阅读我的推文，并从中构建一个个性概况。然后我让它以我的身份进行一次人格测试——试图看看它能否像我一样回答测试问题。我还让当时的女友和我妈妈尝试同样的事情。
+- en: 'GPT-4, based only on my tweets, [beat them](https://every.to/chain-of-thought/does-gpt-4-know-me-better-than-my-girlfriend?sid=39492)
+    both:'
+  id: totrans-49
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 基于我的推文，GPT-4 [击败了它们](https://every.to/chain-of-thought/does-gpt-4-know-me-better-than-my-girlfriend?sid=39492)：
+- en: 'All of this operates on a simple principle: What’s past and present is prologue.
+    How you might feel about a particular situation in the future is going to reliably
+    appear (sometimes in veiled form) in the way you feel about things in the present.'
+  id: totrans-50
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 所有这些都是基于一个简单的原则运作：过去和现在都是序言。你对未来某种特定情况可能的感受，会可靠地出现（有时以隐晦的形式）在你对现在事物的感受中。
+- en: ChatGPT and Claude can find subtle patterns, embellish them, and predict how
+    they might evolve in new contexts.
+  id: totrans-51
+  prefs: []
+  type: TYPE_NORMAL
+  zh: ChatGPT 和 Claude 能够发现微妙的模式，加以修饰，并预测它们在新环境中可能的演变。
+- en: If someone told you the future, would you listen?
+  id: totrans-52
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+  zh: 如果有人告诉你未来，你会听吗？
+- en: Using AI in these contexts to help you refine your predictions about how different
+    decisions will make you feel is a game changer. It can bring you an entirely new
+    perspective on yourself—one that might pull you out of longstanding patterns or
+    can help you see the forest through the trees of your experience.
+  id: totrans-53
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 在这些情境中使用AI来帮助你完善对不同决定会让你产生怎样感受的预测是一个重大改变。它可以给你带来一个全新的对自己的视角——可能会让你摆脱长期存在的模式，或者帮助你看到你经历中的树木和森林。
+- en: It picks up on things you know, but couldn’t say. It expands upon what you’ve
+    written so that you can more effectively project yourself into a possible future.
+    It allows you to try on a decision like you would a piece of clothing.
+  id: totrans-54
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 它会捕捉到你所知道但无法言说的事情。它会扩展你所写的内容，让你更有效地投射自己到可能的未来中去。它允许你像试穿衣服一样尝试一个决定。
+- en: 'AI can help you turn a decision that was once murky into something that’s clear
+    as crystal. The question is: Will you listen?'
+  id: totrans-55
+  prefs: []
+  type: TYPE_NORMAL
+  zh: AI可以帮助你把原本模糊的决定变得清晰如水晶。问题是：你会听吗？
+- en: '* * *'
+  id: totrans-56
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '* * *'
+- en: The [**AI's hypothetical and my real journal entries**](https://every.to/chain-of-thought/hypothetical-journal-entries-written-by-ai)
+    **are available for paying subscribers.**
+  id: totrans-57
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '[**AI的假设和我的真实日记条目**](https://every.to/chain-of-thought/hypothetical-journal-entries-written-by-ai)
+    **仅供付费订阅者使用。**'
+- en: '* * *'
+  id: totrans-58
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '* * *'
+- en: '***Dan Shipper*** *is the cofounder and CEO of Every, where he writes the*
+    [*Chain of Thought*](https://every.to/chain-of-thought) *column and hosts the
+    podcast* [How Do You Use ChatGPT?](https://open.spotify.com/show/5qX1nRTaFsfWdmdj5JWO1G)
+    *You can follow him on X at* [*@danshipper*](https://twitter.com/danshipper) *and
+    on* [*LinkedIn*](https://www.linkedin.com/in/danshipper/)*, and Every on X at*
+    [*@every*](https://twitter.com/every) *and on* [*LinkedIn*](https://www.linkedin.com/company/everyinc/)*.*'
+  id: totrans-59
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '***丹·希珀*** *是Every的联合创始人兼首席执行官，他在* [*Chain of Thought*](https://every.to/chain-of-thought)
+    *专栏撰写文章，并主持* [你如何使用ChatGPT？](https://open.spotify.com/show/5qX1nRTaFsfWdmdj5JWO1G)
+    *播客。你可以在X上关注他* [*@danshipper*](https://twitter.com/danshipper) *，Every在X上关注他们*
+    [*@every*](https://twitter.com/every) *，以及在* [*LinkedIn*](https://www.linkedin.com/company/everyinc/)
+    *上关注Every。*'

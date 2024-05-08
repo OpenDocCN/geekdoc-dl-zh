@@ -1,0 +1,756 @@
+- en: <!--yml
+  id: totrans-0
+  prefs: []
+  type: TYPE_NORMAL
+  zh: <!--yml
+- en: 'category: COT 专栏'
+  id: totrans-1
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 分类：COT 专栏
+- en: 'date: 2024-05-08 11:11:46'
+  id: totrans-2
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 日期：2024年5月8日 11:11:46
+- en: -->
+  id: totrans-3
+  prefs: []
+  type: TYPE_NORMAL
+  zh: -->
+- en: Can GPT-3 Explain My Past and Tell My Future?
+  id: totrans-4
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+  zh: 能否让GPT-3解释我的过去并告诉我未来？
+- en: 来源：[https://every.to/chain-of-thought/can-gpt-3-explain-my-past-and-tell-me-my-future](https://every.to/chain-of-thought/can-gpt-3-explain-my-past-and-tell-me-my-future)
+  id: totrans-5
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+  zh: 来源：[https://every.to/chain-of-thought/can-gpt-3-explain-my-past-and-tell-me-my-future](https://every.to/chain-of-thought/can-gpt-3-explain-my-past-and-tell-me-my-future)
+- en: Sponsor Every
+  id: totrans-6
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+  zh: 赞助商：Every
+- en: '**Want to reach AI early-adopters?** Every is the premier place for 80,000+
+    founders, operators, and investors to read about business, AI, and personal development.'
+  id: totrans-7
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '**想要触及AI的早期采用者吗？** Every是80,000+创始人、运营商和投资者阅读有关业务、人工智能和个人发展的首要场所。'
+- en: 'We''re currently accepting sponsors for Q3! If you''re interested in reaching
+    our audience, learn more:'
+  id: totrans-8
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 我们目前正在接受第三季的赞助商！如果您有兴趣接触我们的受众，请了解更多：
+- en: '*What do you want to know about yourself?* asks the bot.'
+  id: totrans-9
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '*您想了解一些关于自己的事情吗？* 机器人问道。'
+- en: The bot is built with [GPT-3](/c/ai-and-gpt3), and has access to hundreds of
+    my old journal entries from the last 10 years that it can use to answer my questions.
+    It took me a few hours of programming, and I’m using it for the first time. I
+    built it to analyze my past so, hopefully, I could better understand my future.
+    “What’s past is prologue,” wrote Shakespeare, after all.
+  id: totrans-10
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 这个机器人是由[GPT-3](/c/ai-and-gpt3)构建的，并且可以访问过去10年中数百篇我的旧日记，它可以用来回答我的问题。我花了几个小时进行编程，这是我第一次使用它。我建立它是为了分析我的过去，希望能更好地了解我的未来。“过去的是序言”，毕竟莎士比亚写道。
+- en: I start to type a question into my laptop. “When in his life has the author
+    been the happiest?” GPT-3 doesn’t know my name yet, so I have to refer to myself
+    as the author.“Please be specific about moments and situations. Identify what
+    caused the happiness. Be truthful, don't make anything up. If you can't find a
+    specific moment of happiness, don't summarize. Find moments that are surprising.”
+  id: totrans-11
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 我开始在笔记本电脑上输入一个问题。“作者的生活中什么时候最幸福？”GPT-3目前还不知道我的名字，所以我不得不称自己为作者。“请具体说出快乐的时刻和情况。指出导致快乐的原因。要诚实，不要编造任何事情。如果找不到特定的快乐时刻，就不要做总结。找到令人惊讶的时刻。”
+- en: I hit enter, and GPT-3 begins its work, finding the entries that are most relevant
+    to my question and summarizing them to create an answer.
+  id: totrans-12
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 我按下回车键，GPT-3开始工作，找到最相关的条目来回答我的问题，并进行总结。
+- en: I watch its progress scroll past me with greedy focus. I feel like I just squeezed
+    my soul into the coin slot of a self-designed slot machine. Now, I’m waiting to
+    see if it will pay out.
+  id: totrans-13
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 我专注地看着它的进展滚动而过。我感觉自己好像刚刚把灵魂挤进了一个自己设计的老虎机的硬币槽。现在，我正在等待它是否会付出回报。
+- en: 'Finally, a response comes back:'
+  id: totrans-14
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 最终，一个回应传回来了：
+- en: '*“The author felt the most happiness when he was walking on the beach in Koh
+    Phangan, Thailand. He started out feeling somber, but as he walked he started
+    to think about ideas for a novel about startups written in a style similar to
+    Alain de Botton. This inspired him and he felt a lot lighter and happier.” *'
+  id: totrans-15
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '*“作者最幸福的时候是在泰国科帕岸岛的海滩上散步时。起初他感到沮丧，但随着散步，他开始思考关于初创公司的小说思路，写作风格类似于阿兰·德·波顿。这使他感到灵感涌现，他的心情变得更加轻松和快乐。”*'
+- en: 'It continues:'
+  id: totrans-16
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 它继续说道：
+- en: '*“He also felt happiness when he was with Julia, reading, writing, building/creating
+    things, having good conversations with people, watching football, reading Jonathan
+    Gold, feeling in command of himself, going into an office and having people who
+    look to him to set direction, and during/immediately after public speaking that
+    went well.”*'
+  id: totrans-17
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '*“他还在与朱莉娅在一起，阅读、写作、建立/创造东西，与人进行良好的对话，观看足球比赛，阅读乔纳森·戈德（Jonathan Gold）的作品，感到对自己有控制，步入办公室并让人们期待他设定方向，以及在/紧接着成功的公开演讲之后也感到幸福。”*'
+- en: Jackpot.
+  id: totrans-18
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 中了头奖。
+- en: . . . .
+  id: totrans-19
+  prefs: []
+  type: TYPE_NORMAL
+  zh: . . . .
+- en: I’ve been experimenting a lot with GPT-3 recently. I built [a chatbot based
+    on the Huberman Lab podcast](https://every.to/chain-of-thought/i-trained-a-gpt-3-chatbot-on-every-episode-of-my-favorite-podcast).
+    I built [a custom journal bot](https://every.to/chain-of-thought/gpt-3-is-the-best-journal-you-ve-ever-used)
+    to help me unpack issues in my life.
+  id: totrans-20
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 最近，我一直在进行很多关于GPT-3的实验。我建立了[基于Huberman Lab播客的聊天机器人](https://every.to/chain-of-thought/i-trained-a-gpt-3-chatbot-on-every-episode-of-my-favorite-podcast)。我建立了[一个定制的日记机器人](https://every.to/chain-of-thought/gpt-3-is-the-best-journal-you-ve-ever-used)来帮助我解决生活中的问题。
+- en: But this is by far my most personal experiment—and, in my opinion, one of the
+    most valuable.
+  id: totrans-21
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 但这绝对是我最私人化的实验之一，也是我认为最有价值的实验之一。
+- en: I’ll take you through how I came up with the idea, how I built it, what the
+    results are, and what I think the future holds for these kinds of tools.
+  id: totrans-22
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 我将带你了解我是如何想出这个主意的，我是如何构建它的，结果是什么，以及我认为未来对这些工具会带来什么。
+- en: Summarizing the present
+  id: totrans-23
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+  zh: 总结现在
+- en: I found out innocently enough that GPT-3 is good at summarizing.
+  id: totrans-24
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 我无意中发现 GPT-3 擅长总结。
+- en: I was writing an article for Every and having trouble finding the main thread,
+    so I pasted what I had so far into ChatGPT and asked it to summarize my key points.
+    Usually, I’d ask someone at Every to help me with this, but no one was online.
+    So I figured, why not ask GPT-3 to do it?
+  id: totrans-25
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 我正在为 Every 写一篇文章，但很难找到主线，所以我把我到目前为止写的东西粘贴到 ChatGPT 中，并要求它总结我的关键点。通常，我会请 Every
+    的某个人帮助我处理这个问题，但那时没有人在线。所以我想，为什么不问问 GPT-3 呢？
+- en: I hit enter and got the results—they were *great*. I saw the article I was writing
+    in a totally new way, and I was able to finish it quickly and easily.
+  id: totrans-26
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 我按下回车键，得到了结果——它们*很棒*。我以全新的方式看待了我正在写的文章，而且我能够迅速而轻松地完成它。
+- en: My curiosity was piqued. What else might GPT-3 be good at summarizing? Maybe
+    it would work for more than just my half-finished essays.
+  id: totrans-27
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 我的好奇心被激发了。GPT-3 还能擅长总结什么其他内容？也许它不仅适用于我那些未完成的文章。
+- en: In my next therapy session I had an idea. I asked my therapist if I could record
+    our session and feed the transcripts into GPT-3\. It’s been a tough few weeks,
+    and I wanted to see if it could help me look at what I was dealing with from a
+    new perspective.
+  id: totrans-28
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 在我接下来的治疗过程中，我有了一个主意。我问我的治疗师是否可以录制我们的会话并将文字传输到 GPT-3 中。最近几周过得很艰难，我想看看它是否可以帮助我从一个新的角度看待我所面对的问题。
+- en: 'He was intrigued, so we laid a few ground rules about what I would do with
+    the recording and what I would share. Then we dove in. *(Note: if you are in therapy,
+    do not do this without explicitly discussing it with your therapist.)* Afterwards
+    I threw a section of the transcript into ChatGPT and asked it to summarize.'
+  id: totrans-29
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 他对此感到好奇，所以我们制定了一些关于我将如何处理录音以及我将分享什么的基本规则。然后我们开始了。*(注意：如果你在接受心理治疗，请务必在明确与你的治疗师讨论后再进行此操作。)*
+    然后我把一部分记录的文字放到了 ChatGPT 中，并要求它进行摘要。
+- en: The results were stunning.
+  id: totrans-30
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 结果令人惊叹。
+- en: '*“From this session, it appears the client is experiencing a lot of stress
+    due to a variety of life events, such as [REDACTED]. The client is feeling overwhelmed,
+    exhausted, and scared, and is struggling to manage conflicting feelings of wanting
+    to escape the situation and wanting to remain brave and committed to working through
+    it. On a deeper level, the client is struggling with feelings of inadequacy and
+    fear of disappointing others, and a fear of conflict.”*'
+  id: totrans-31
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '*“从这次治疗过程中，看起来客户由于各种生活事件（如[已编辑]）而感到非常紧张。客户感到不堪重负，精疲力尽，害怕，并且努力管理着想要逃离情况和想要保持勇敢和承诺去应对的矛盾感。在更深层次上，客户正在努力应对自卑感和害怕辜负他人的恐惧，以及对冲突的恐惧。”*'
+- en: It correctly identified each of the things that I was struggling with, and then,
+    in its own words, it expressed how I’d been feeling—but far more precisely than
+    I had been able to do on my own. In some strange way, it felt like the AI knew
+    me better than I knew myself.
+  id: totrans-32
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 它准确地识别了我所困扰的每一件事情，然后，用它自己的话表达了我一直以来的感受——但比我自己更精确。以某种奇怪的方式，感觉这个人工智能了解我比我了解自己更多。
+- en: When someone, or something, puts their finger on exactly what you’re feeling,
+    something clicks, and it creates an instant sense of relief. That’s exactly what
+    happened when I read the summary. I had never directly used the word “inadequacy”
+    to explain how I was feeling in that situation, but I was clearly feeling it.
+    Now, when that feeling comes up, I can recognize it, label it, and work with it
+    in a way that I wasn’t able to before.
+  id: totrans-33
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 当有人或某物准确抓住你的感受时，一种东西会产生共鸣，并立即带来一种解脱感。当我读到摘要时，这正是发生的事情。我从未直接使用过“自卑”这个词来解释我在那种情况下的感受，但我显然是这样感受到的。现在，当那种感觉出现时，我可以认识到它，标记它，并以一种我之前无法做到的方式处理它。
+- en: The experience left me even more curious to experiment.
+  id: totrans-34
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 这个经历让我更加好奇去尝试。
+- en: What other kinds of insights were hiding in plain sight? What would happen if
+    I had recorded more than that one therapy session? I wanted to try giving it 100x
+    the amount of material to work with.
+  id: totrans-35
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 还有什么其他隐藏在明面上的见解？如果我记录了不止一个治疗过程会发生什么？我想尝试给它提供100倍于现在的材料。
+- en: I had an idea where to look.
+  id: totrans-36
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 我有一个搜索的方向。
+- en: Explaining the past
+  id: totrans-37
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+  zh: 解释过去
+- en: A journal is a way to catch pieces of yourself as they float through the present.
+  id: totrans-38
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 日记是在你的一部分在当下飘过时捕捉它们的一种方式。
+- en: I’ve been patiently catching those pieces for 10 years, in journals of every
+    type. I’ve marked up markdown files and back-linked my morning pages in Roam.
+    I’ve scrawled in yellow legal pads, Moleskines, and Midoris. (I even built a [GPT-3
+    journal](https://every.to/superorganizers/gpt-3-is-the-best-journal-you-ve-ever-used).)
+  id: totrans-39
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 我已经耐心地捕捉了这些片段10年了，记录在各种类型的日记中。我标记了 markdown 文件，并在 Roam 中反向链接了我的早晨页面。我在黄色法律信封、Moleskines
+    和 Midoris 上涂鸦。（我甚至建立了一个 [GPT-3 日记](https://every.to/superorganizers/gpt-3-is-the-best-journal-you-ve-ever-used)。）
+- en: I’ve always wondered why I do journaling. It helps me think through things in
+    the moment, but I’ve always felt like I would use all of these entries for something
+    more important. Maybe a book—a memoir. Now, it occurred to me that I should feed
+    my journal into a machine.
+  id: totrans-40
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 我一直想知道为什么要写日记。它帮助我在当下思考事情，但我一直觉得我会将所有这些条目用于更重要的事情。也许是一本书——一本回忆录。现在，我想到了我应该将我的日记喂给一台机器。
+- en: It is, perhaps, the most delightfully narcissistic use of AI ever. But maybe
+    it will also be helpful.
+  id: totrans-41
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 这可能是对人工智能最愉快的自恋使用。但也许它也会有所帮助。
+- en: There’s only one problem.
+  id: totrans-42
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 只有一个问题。
+- en: Solving GPT-3’s poor memory
+  id: totrans-43
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+  zh: 解决 GPT-3 的记忆问题
+- en: GPT-3 might be good at summarizing text, but, at least for now, it has a poor
+    memory. You can only feed it a few pages of text at a time to get summaries back.
+    If you try to, say, feed it an entire journal, it'll error out.
+  id: totrans-44
+  prefs: []
+  type: TYPE_NORMAL
+  zh: GPT-3可能擅长总结文本，但至少目前来说，它的记忆力很差。你一次只能给它喂几页文本来获得摘要。如果你试图，比如说，给它喂一整本期刊，它会报错。
+- en: I needed an alternative solution.
+  id: totrans-45
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 我需要一个替代方案。
+- en: 'Luckily, I discovered a new library called [GPTIndex](https://github.com/jerryjliu/gpt_index)
+    that makes this easy with just a few lines of code. I spent a few hours on it
+    (and some time on the phone with GPTIndex’s creator, [Jerry Liu](https://twitter.com/jerryjliu0))
+    and eventually arrived at a setup that works like this:'
+  id: totrans-46
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 幸运的是，我发现了一个叫做 [GPTIndex](https://github.com/jerryjliu/gpt_index) 的新库，它只需几行代码就可以轻松实现这一点。我花了几个小时在上面（还有一些时间和
+    GPTIndex 的创建者 [Jerry Liu](https://twitter.com/jerryjliu0) 通电话），最终找到了一个像这样工作的设置：
+- en: It breaks all of my entries into small chunks.
+  id: totrans-47
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+  zh: 它将我所有的条目分成小块。
+- en: It stores them in a form that makes them easily searchable.
+  id: totrans-48
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+  zh: 它以易于搜索的形式存储它们。
+- en: When I ask a question, it retrieves the most relevant chunks.
+  id: totrans-49
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+  zh: 当我提出问题时，它会检索出最相关的块。
+- en: It summarizes the chunks, and then synthesizes the summaries repeatedly until
+    it gets a final answer.
+  id: totrans-50
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+  zh: 它总结这些块，然后重复合成摘要直到得到最终答案。
+- en: It displays the answer.
+  id: totrans-51
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+  zh: 它显示答案。
+- en: Here’s more detail on how it works.
+  id: totrans-52
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 这是关于它如何工作的更多细节。
+- en: '**Preparing the journal entries**'
+  id: totrans-53
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+  zh: '**准备日记条目**'
+- en: The first thing I needed to do was prepare the journal entries. I compiled them
+    into a folder and—using GPTIndex’s GPTSimpleVectorIndex, a data structure—wrote
+    a short script that could break them into chunks and store them in a way that
+    made them easily searchable.
+  id: totrans-54
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 我需要做的第一件事是准备日记条目。我把它们编译成一个文件夹，并且——使用 GPTIndex 的 GPTSimpleVectorIndex，一个数据结构——编写了一个简短的脚本，它可以将它们分成块并以一种使它们易于搜索的方式存储起来。
+- en: 'The code looks like this:'
+  id: totrans-55
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 代码看起来像这样：
+- en: '*(Paid subscribers can access the file* [*here*](https://every.to/chain-of-thought/code-for-gpt-3-journal-summarizer)*.)*'
+  id: totrans-56
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '*(付费订阅者可以在* [*这里*](https://every.to/chain-of-thought/code-for-gpt-3-journal-summarizer)
+    *访问该文件。)*'
+- en: The result of this code is a single file that contains chunks of all of my journal
+    entries stored so that they can be easily searched and summarized. All I needed
+    to do was write a script to query it.
+  id: totrans-57
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 这段代码的结果是一个包含我所有日记条目块的单个文件，以便它们可以轻松搜索和摘要。我所需要做的就是编写一个查询脚本。
+- en: Querying the entries
+  id: totrans-58
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+  zh: 查询条目
+- en: The query script is simple, but the details took me a while to figure out.
+  id: totrans-59
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 查询脚本很简单，但细节花了我一些时间才弄清楚。
+- en: It starts by asking the user for what kind of journal chunks it should load.
+    I can write something like, “Collect all of the documents where the author is
+    exhibiting joy, happiness, and excitement”—and it will find the top matches.
+  id: totrans-60
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 它开始询问用户应该加载哪种类型的日记块。我可以写一些像“收集所有作者表现出欢乐、幸福和兴奋的文档”的东西——它会找到最匹配的结果。
+- en: 'Once the documents are returned, I can ask my actual question. I might ask
+    something like:'
+  id: totrans-61
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 一旦文档返回，我就可以问我的真正问题了。我可能会问类似这样的问题：
+- en: '*“Please summarize the times when the author has exhibited the most joy. Output
+    Identify what caused the happiness. Be truthful, don''t make anything up. If you
+    can''t find a specific moment of joy don''t summarize. Find moments that are surprising.
+    Please return a list as bullet points.” *'
+  id: totrans-62
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '*“请总结作者表现出最大喜悦的时刻。输出识别导致幸福的原因。要真实，不要捏造任何东西。如果找不到特定的快乐时刻，请不要总结。找到令人惊讶的时刻。请返回一个项目列表作为项目符号。”*'
+- en: I have to ask it not to make stuff up so that it stays as close to what it finds
+    in the entries as possible. Then it will go through each journal chunk, summarize
+    it to answer my question, and synthesize those summaries until it can produce
+    a single summary of all of the chunks we started with.
+  id: totrans-63
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 我不得不要求它不要编造东西，以便尽可能地保持接近它在条目中找到的内容。然后它将会查看每个日志片段，总结它以回答我的问题，并综合那些总结，直到它能够产生所有我们开始的片段的单一摘要。
+- en: 'While this may sound like a lot of code, it’s mostly done under the hood with
+    GPTIndex. Here’s what the code looks like:'
+  id: totrans-64
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 虽然这听起来像是很多代码，但主要是在幕后用 GPTIndex 完成的。以下是代码的样子：
+- en: '*(Paid subscribers can access the file* [*here*](https://every.to/chain-of-thought/code-for-gpt-3-journal-summarizer)*.)*'
+  id: totrans-65
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '*(付费订阅者可以访问文件* [*这里*](https://every.to/chain-of-thought/code-for-gpt-3-journal-summarizer)*。)*'
+- en: The results
+  id: totrans-66
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+  zh: 结果
+- en: There are a lot of interesting ways to use this technology. A few are too personal
+    to share. “Tell me about why this relationship ended?” produced incredible results—but
+    isn’t something I want to put on the internet.
+  id: totrans-67
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 有很多有趣的方法可以使用这项技术。有一些太私人化，不方便分享。“告诉我为什么这段关系结束了？”取得了令人难以置信的结果，但我不想将其放在互联网上。
+- en: 'Here are some that produced the best answers for me that I''m comfortable sharing:'
+  id: totrans-68
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 这里有一些为我提供了最佳答案的答案，我很乐意分享：
+- en: '* * *'
+  id: totrans-69
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '* * *'
+- en: '**What might the author need to learn in order to improve their life?**'
+  id: totrans-70
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '**为了改善他们的生活，作者可能需要学习什么？**'
+- en: 'The author might need to learn:'
+  id: totrans-71
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 作者可能需要学习：
+- en: How to identify and address underlying beliefs that may be impacting their behavior.
+  id: totrans-72
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: 如何识别和解决可能影响他们行为的潜在信念。
+- en: How to differentiate between their own needs and wants and those of other people.
+  id: totrans-73
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: 如何区分他们自己的需求和愿望与其他人的需求和愿望。
+- en: How to develop strategies for managing ambivalence and inner conflict.
+  id: totrans-74
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: 如何制定管理矛盾和内心冲突的策略。
+- en: How to prioritize tasks and manage their inbox more effectively.
+  id: totrans-75
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: 如何优先处理任务并更有效地管理他们的收件箱。
+- en: '* * *'
+  id: totrans-76
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '* * *'
+- en: '**What is obvious to everyone around the author, but doesn’t appear obvious
+    to the author?**'
+  id: totrans-77
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '**对作者周围所有人来说很明显，但作者看起来不明显的是什么？**'
+- en: What is obvious to everyone around the author, but doesn't appear to be obvious
+    to the author, is that they have achieved a lot and should be proud of themselves.
+  id: totrans-78
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 对作者周围所有人来说很明显，但作者似乎看不出来的是，他们已经取得了很多成就，并且应该为此感到自豪。
+- en: '* * *'
+  id: totrans-79
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '* * *'
+- en: '**What is the author’s deepest unmet need?**'
+  id: totrans-80
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '**作者最深切的未满足需求是什么？**'
+- en: The author's deepest unmet need is for a sense of connection, understanding,
+    and acceptance in their relationships with others, as well as a sense of purpose
+    and appreciation for the little things in life.
+  id: totrans-81
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 作者最深切的未满足需求是在他们与他人的关系中获得连接、理解和接受的感觉，以及对生活中的小事物有目的感和欣赏。
+- en: '* * *'
+  id: totrans-82
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '* * *'
+- en: '**What are the author’s deepest hopes and dreams?**'
+  id: totrans-83
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '**作者最深切的希望和梦想是什么？**'
+- en: The author's deepest hopes and dreams are to write amazing things, build something
+    important, appreciate the little things, and have a job that they can wear a cape
+    to; to bring more awareness to their emotions, create a sense of agency around
+    their experiences, and savor the feeling of excitement for their work.
+  id: totrans-84
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 作者最深切的希望和梦想是写出了不起的东西，建立了重要的东西，欣赏了小事，有一份可以穿斗篷的工作；在情感上更加自觉，为自己的经历创造一种主动感，并享受对工作的兴奋感。
+- en: '* * *'
+  id: totrans-85
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '* * *'
+- en: '**What is the author’s Myers-Briggs personality type?**'
+  id: totrans-86
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '**作者的迈尔斯-布里格斯人格类型是什么？**'
+- en: Based on the context information provide, it is difficult to determine the author’s
+    Myers-Briggs personality type. However, based on the information provided, it
+    is possible to make an educated guess. The author appears to be an analytical
+    thinker who is creative and enjoys problem solving. They appear to be organized
+    and have a strong sense of responsibility. They also appear to be open-minded
+    and willing to explore new ideas. Based on these characteristics, it is likely
+    that the author is an INTJ (Introverted, Intuitive, Thinking, Judging) personality
+    type.
+  id: totrans-87
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 根据提供的上下文信息，很难确定作者的迈尔斯-布里格斯人格类型。然而，根据提供的信息，可以做出一个有根据的猜测。作者似乎是一个具有创造力和喜欢解决问题的分析型思维者。他们似乎很有条理，责任心强。他们也似乎是开放思维，愿意探索新思想的人。基于这些特征，作者很可能是INTJ（内向，直觉，思维，判断）人格类型。
+- en: '* * *'
+  id: totrans-88
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '* * *'
+- en: '**If the author were to write a *New York Times* bestselling book about the
+    intersection of their interests and AI, what would it be about?**'
+  id: totrans-89
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '**如果作者要写一本关于他们兴趣和人工智能交汇的《纽约时报》畅销书，那会是关于什么？**'
+- en: The author’s *New York Times* bestselling book would be about how to use AI
+    to find more meaning in their lives. The book would explore how AI can be used
+    to help people better understand their own thoughts and feelings, and how to use
+    that understanding to make better decisions and find more fulfillment in life.
+  id: totrans-90
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 作者的《纽约时报》畅销书将会是关于如何利用人工智能在生活中找到更多意义的。这本书将探讨人工智能如何帮助人们更好地理解自己的思想和感情，以及如何利用这种理解做出更好的决策，并在生活中找到更多的满足感。
+- en: '* * *'
+  id: totrans-91
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '* * *'
+- en: My conclusions
+  id: totrans-92
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+  zh: 我的结论
+- en: 'This experiment appeals to me deeply because it uses technology to speak to
+    the most basic human questions:'
+  id: totrans-93
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 这个实验深深吸引了我，因为它利用技术来回答最基本的人类问题：
+- en: Who am I?
+  id: totrans-94
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: 我是谁？
+- en: How did I get here?
+  id: totrans-95
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: 我是怎么到这里的？
+- en: Where am I going?
+  id: totrans-96
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: 我要去哪里？
+- en: 'And it comes, or seems to come, tantalizingly close to answering them in a
+    useful way. It''s far from perfect: its answers are sometimes repetitive. Sometimes
+    they’re generic. Sometimes they’re just plain wrong.'
+  id: totrans-97
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 它似乎在某种程度上或许能够以一种有用的方式回答这些问题。它远非完美：它的答案有时是重复的。有时他们是泛泛的。有时他们只是错的。
+- en: But sometimes, it provides that valuable “aha!” moment where something clicks.
+    There’s a moment of recognition, and it causes me to remember something about
+    myself that I knew but had forgotten, or that had always been there but hadn’t
+    recognized before.  That’s when it seems to be the most valuable.
+  id: totrans-98
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 但有时，它提供了宝贵的“啊哈！”时刻，某些事物突然豁然开朗。有一种认知的时刻，它使我记起了自己的某些东西，但却遗忘了，或者一直都在那里，但以前没有意识到。那时它似乎是最有价值的。
+- en: '**The ''aha'' moment**'
+  id: totrans-99
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+  zh: '**那个“啊哈”时刻**'
+- en: What is that "aha!" moment, really? Is it insight? Or is it confirmation bias
+    dressed up in insight’s clothes. Does it matter?
+  id: totrans-100
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 那个“啊哈！”时刻究竟是什么？是洞察力吗？还是洞察力打扮成的确认偏见。这有关系吗？
+- en: I think it’s probably a bit of both. It’s trained to respond based on *my* journal
+    entries, so it’s not going to go too far beyond what I’ve said. I think it’s alright
+    to have a tool that can help me understand what *I* already think, if that’s what
+    it’s doing.
+  id: totrans-101
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 我认为可能两者都有点。它是根据*我的*日记条目来做出反应的，所以它不会超出我所说的范围。如果它正在做这件事，我认为拥有一个可以帮助我理解我已经想过的东西的工具是可以的。
+- en: But there’s also the worry that it’s subtly putting words in my mouth. Maybe
+    it’s using words to describe me that I never would have used before have now adopted
+    as my own. That could be dangerous if it’s not handled properly.
+  id: totrans-102
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 但也担心它可能在我嘴里悄悄地塞了话。也许它用来描述我的话，是我以前从未使用过的，现在却已经成为我的话了。如果处理不当，这可能是危险的。
+- en: The dangers are important to point out.
+  id: totrans-103
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 危险是需要指出的重要问题。
+- en: '**The danger of too much knowledge**'
+  id: totrans-104
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+  zh: '**过多知识的危险**'
+- en: The most obvious danger is security. I don’t recommend uploading your soul to
+    a cloud service unless you’re ready to take on the risks.
+  id: totrans-105
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 最明显的危险是安全问题。我不建议将你的灵魂上传到云服务，除非你准备好承担风险。
+- en: But beyond the problem of data leaks is the larger problem of knowledge. Every
+    culture has myths about the danger of too much knowledge, starting with Adam and
+    Eve. Eating from the tree of knowledge of good and evil had some pretty terrible
+    consequences, after all.
+  id: totrans-106
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 但超越数据泄漏问题的更大问题是知识问题。每个文化都有关于过多知识危险的神话，从亚当和夏娃开始。毕竟，吃了善恶知识树的果子会有一些可怕的后果。
+- en: 'The most dangerous knowledge of all is, of course, prophecy. And that’s the
+    temptation of this tool: to use its knowledge of my past to get it to tell me
+    about my future. That, too, is fraught in world literature. Oedipus, Macbeth,
+    even Lord Voldemort have found ruin in following prophecy. But the interesting
+    lesson of these literary figures is that it’s not the prophecy that gets you—it’s
+    how you react to the prophecy that does.'
+  id: totrans-107
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 所有最危险的知识当然是预言。这就是这个工具的诱惑所在：利用它对我的过去的知识来让它告诉我关于我的未来。在世界文学中，这也是充满风险的。俄狄浦斯、麦克白，甚至是伏地魔都在追随预言中找到了毁灭。但这些文学人物的有趣教训是，它并不是预言让你失败——而是你对预言的反应。
+- en: Each of those characters brought about their own ruin by the decisions they
+    made in reaction to knowledge of their fate, not to the knowledge itself. But
+    can you possess knowledge of fate without reacting to it?
+  id: totrans-108
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 这些角色中的每一个都是通过对自己命运的知识做出的反应而导致了自己的毁灭，而不是由于知识本身。但你能拥有命运的知识而不对其做出反应吗？
+- en: I feel prepared to handle whatever the model spits back out to me, but I worry
+    about people who might not be ready for it. I don’t yet know what to do but worry
+    about it—and write about it.
+  id: totrans-109
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 我感觉准备好了应对模型给我的任何回馈，但我担心可能还没有准备好的人。我还不知道该怎么做，只能担心着并写下来。
+- en: '**Incredible powers—and limitations**'
+  id: totrans-110
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+  zh: '**令人难以置信的力量和限制**'
+- en: For the time being, we get out of these tools what we put in.
+  id: totrans-111
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 就目前而言，我们从这些工具中得到的是我们所投入的。
+- en: The responses we receive are highly dependent on the information fed into the
+    model and the way the prompts are phrased. If you ask leading questions, you’ll
+    get leading answers. For now, we’re building mirrors to show us our own faces
+    in a slightly different light.
+  id: totrans-112
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 我们收到的回应高度依赖于输入到模型中的信息以及提示的措辞方式。如果你问一些引导性问题，你将得到引导性的答案。目前，我们正在构建镜子，以在略微不同的光线下展示我们自己的面孔。
+- en: This is valuable in itself. But will the technology advance further?
+  id: totrans-113
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 这本身就是有价值的。但技术会进一步发展吗？
+- en: I have a temptation to hope that it will—that feeding myself into a super-intelligence
+    will solve my problems. Eventually it might help, but not totally.
+  id: totrans-114
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 我有一种希望，希望喂养自己进入一个超级智能将解决我的问题。最终它可能会有所帮助，但并非完全解决。
+- en: Any true insight that a theoretical GPT-6 has will bounce off me until I’m ready
+    to hear it. In the words of Thoreau, “The light which puts out our eyes is darkness
+    to us.”
+  id: totrans-115
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 任何理论GPT-6拥有的真正见解都会在我尚未准备好听取之前反弹回去。用梭罗的话说，“熄灭我们眼睛的光对我们来说是黑暗。”
+- en: For now, building a new way for *me* to see my own self is valuable enough.
+  id: totrans-116
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 目前，为了让*我*能够看到自己的另一种方式是足够有价值的。
+- en: '* * *'
+  id: totrans-117
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '* * *'
+- en: '*Thanks to* [*Jerry Liu*](https://twitter.com/jerryjliu0) *for building GPTIndex
+    and generously spending time with me in order to make this experiment possible.*'
+  id: totrans-118
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '*感谢* [*Jerry Liu*](https://twitter.com/jerryjliu0) *构建GPTIndex并慷慨花时间与我一起使这个实验成为可能。*'

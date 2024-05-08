@@ -1,0 +1,496 @@
+- en: <!--yml
+  id: totrans-0
+  prefs: []
+  type: TYPE_NORMAL
+  zh: <!--yml
+- en: 'category: COT 专栏'
+  id: totrans-1
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 分类：COT 专栏
+- en: 'date: 2024-05-08 11:10:10'
+  id: totrans-2
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 日期：2024-05-08 11:10:10
+- en: -->
+  id: totrans-3
+  prefs: []
+  type: TYPE_NORMAL
+  zh: -->
+- en: AI and the Future of Programming
+  id: totrans-4
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+  zh: AI 和编程的未来
+- en: 来源：[https://every.to/chain-of-thought/ai-and-the-future-of-programming](https://every.to/chain-of-thought/ai-and-the-future-of-programming)
+  id: totrans-5
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+  zh: 来源：[https://every.to/chain-of-thought/ai-and-the-future-of-programming](https://every.to/chain-of-thought/ai-and-the-future-of-programming)
+- en: 'Sponsored By: Viable'
+  id: totrans-6
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+  zh: 由 [Viable](https://askviable.com?utm_source=Every&utm_medium=Email&utm_campaign=Ad)
+    赞助
+- en: This essay is brought to you by [Viable](https://askviable.com?utm_source=Every&utm_medium=Email&utm_campaign=Ad),
+    the Generative Analysis platform that redefines data-driven decision-making. Say
+    goodbye to manual data crunching and hello to lightning-fast, AI-powered insights
+    from your unstructured data.
+  id: totrans-7
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 这篇文章由 [Viable](https://askviable.com?utm_source=Every&utm_medium=Email&utm_campaign=Ad)
+    赞助，这是一个重新定义数据驱动决策的生成分析平台。告别手动数据处理，向你的非结构化数据迅速、由人工智能驱动的见解问好。
+- en: The first thing I asked [Replit](https://replit.com/) founder, [Amjad Masad](https://twitter.com/amasad),
+    is whether he’d still want his kids to learn to code.
+  id: totrans-8
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 我问 [Replit](https://replit.com/) 创始人 [Amjad Masad](https://twitter.com/amasad)
+    的第一件事是，他是否还希望他的孩子学会编程。
+- en: Amjad is both a long-time programmer, and the founder of Replit—the newest AI
+    unicorn. They're a web-based development environment that announced [this week
+    that they raised almost $100m dollars at a $1.6B](https://techcrunch.com/2023/04/27/replit-funding-100m-generative-ai/)
+    valuation from a16z and a host of other top investors. They’ve built a Github
+    CoPilot competitor, called GhostWriter, and part of their mission is to give every
+    programmer an AI team member that can write code for them.
+  id: totrans-9
+  prefs: []
+  type: TYPE_NORMAL
+  zh: Amjad 既是一名长期的程序员，也是 Replit 的创始人——最新的 AI 独角兽。他们是一个基于 web 的开发环境，本周宣布从 a16z 和一系列其他顶级投资者那里筹集了将近
+    1 亿美元，估值为 16 亿美元。他们建立了一个名为 GhostWriter 的 Github CoPilot 竞争对手，他们的使命的一部分是为每个程序员提供一个可以为他们编写代码的
+    AI 团队成员。
+- en: So, I wanted to know, does programming still matter?
+  id: totrans-10
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 所以，我想知道，编程还重要吗？
+- en: He told me that he believes that the leverage on programming skills has gone
+    way up in the last year. He thinks that the current generation of AI tools are
+    inherently *augmenting* tools, not *automating* tools. They might change the bundle
+    of skills you need to be a programmer—you might act more like a guide or a manager
+    in many instances than writing code yourself.  But he believes that programming
+    skills actually become *more* important in an AI-driven world. So yes, he still
+    wants his kids to learn to code.
+  id: totrans-11
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 他告诉我，他相信编程技能的 leverage 在过去一年里大大提高了。他认为当前一代 AI 工具本质上是 *增强* 工具，而不是 *自动化* 工具。它们可能改变你成为程序员所需的技能包——在许多情况下，你可能更像是一个指南或经理，而不是自己写代码。但他相信，在
+    AI 驱动的世界中，编程技能实际上变得*更加*重要。所以是的，他仍然希望他的孩子学会编程。
+- en: 'In other words: even though he could—and even though maybe he should—Amjad
+    isn’t blindly banging the AI drum.'
+  id: totrans-12
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 换句话说：即使他可以——甚至也许他应该——Amjad 也没有盲目地敲击 AI 的鼓。
+- en: He actually struck me as one of the few people in the space who has the right
+    level of excitement. Replit has been prototyping AI tools for the last 3-4 years,
+    long before they were popular. So Replit isn’t a Johnny-come-lately entrant into
+    this space. Instead he’s someone who believes deeply in the long term potential
+    of the technology, but can also acknowledge its significant present limitations.
+    He does a good job of not swinging between poles of mania or doom, and I left
+    the interview feeling grounded, and smarter.
+  id: totrans-13
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 实际上，他给我的印象是，他是空间中少数几个对此充满了正确程度兴奋的人之一。 Replit 在过去的 3-4 年里一直在原型化 AI 工具，早在它们变得流行之前。所以，Replit
+    不是这个领域的后来者。相反，他是一个深信技术的长期潜力，但也能承认其现有重大限制的人。他在不在狂热或毁灭之间摇摆方面做得很好，我离开采访时感到扎实，更聪明。
+- en: 'We covered his thoughts on two big topics: the future of programming, and how
+    startups can win against incumbents in the AI race. The second is something Amjad
+    knows a lot about too. Replit’s going up against Microsoft in a quest to own how
+    you build software with AI. And so, they’re facing the biggest question every
+    single one of today’s startups has to face: how do you build and win with an AI
+    product against a better funded incumbent that also has access to AI?'
+  id: totrans-14
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 我们涵盖了他对两个重要主题的想法：编程的未来，以及初创公司如何在 AI 竞赛中战胜现有公司。第二个主题也是 Amjad 很了解的。 Replit 正在与微软竞争，以拥有
+    AI 来构建软件。因此，他们面临着今天每个初创公司都必须面对的最大问题：如何建立并赢得 AI 产品，以对抗资金更充裕且还可以访问 AI 的现有公司？
+- en: Amjad has a plan. Read on to learn more.
+  id: totrans-15
+  prefs: []
+  type: TYPE_NORMAL
+  zh: Amjad 有一个计划。继续阅读了解更多。
+- en: ''
+  id: totrans-16
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: Stop manually crunching data 🛑 Leverage AI to generate lightning-fast, powerful
+    insights from your qualitative data.
+  id: totrans-17
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 停止手动处理数据 🛑 利用 AI 从您的定性数据中生成快速、强大的洞见。
+- en: '[Viable](https://askviable.com?utm_source=Every&utm_medium=Email&utm_campaign=Ad) combines
+    the power of GPT-4 with our cutting-edge analysis technology to distill your data
+    into crucial themes based on churn risk, customer tier, and more. It''s like having
+    a team of data scientists at your fingertips, helping you focus on what truly
+    matters.'
+  id: totrans-18
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '[Viable](https://askviable.com?utm_source=Every&utm_medium=Email&utm_campaign=Ad)
+    将 GPT-4 的力量与我们的尖端分析技术相结合，将您的数据精炼成基于流失风险、客户层级等关键主题。这就像有一个数据科学家团队在您的指尖上，帮助您专注于真正重要的事情。'
+- en: Join industry leaders like Uber, Circle, and AngelList who trust [Viable](https://askviable.com?utm_source=Every&utm_medium=Email&utm_campaign=Ad) to
+    boost NPS, slash support ticket volumes, and cut operating costs. Experience the
+    magic of Viable's AI-driven insights and save hundreds of hours each year.
+  id: totrans-19
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 加入像 Uber、Circle 和 AngelList 这样的行业领导者，他们信任 [Viable](https://askviable.com?utm_source=Every&utm_medium=Email&utm_campaign=Ad)
+    来提高NPS，减少支持票数量，削减运营成本。体验 Viable 的 AI 驱动洞见的魔力，每年节省数百小时。
+- en: Start your journey with [Viable](https://askviable.com?utm_source=Every&utm_medium=Email&utm_campaign=Ad)
+    today and unlock the full potential of your qualitative data. Empower your business
+    with the ultimate time-saving, growth-driving solution.
+  id: totrans-20
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 今天就开始使用 [Viable](https://askviable.com?utm_source=Every&utm_medium=Email&utm_campaign=Ad)
+    ，释放您的定性数据的全部潜力。用最终节省时间、推动增长的解决方案赋予您的业务力量。
+- en: Amjad introduces himself
+  id: totrans-21
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+  zh: 阿姆贾德介绍自己
+- en: Hi, I’m Amjad. I'm originally from Jordan—born and raised there. I came to the
+    US in 2012 to work at Codeacademy in New York. I was a founding engineer there.
+    I actually built one of the first open source in-browser coding sandboxes while
+    I was there, so that's the predecessor to Replit. I was obsessed with this idea
+    of making programming easier to get started with and more fun. I wanted to make
+    hacking easy, so you can have an idea and build it fast, instead of needing to
+    plan a lot and set up a big development environment. It's been my obsession over
+    my career to just make programming more fun and accessible.
+  id: totrans-22
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 嗨，我是阿姆贾德。我原来来自约旦——在那里出生并长大。2012年，我来到美国，在纽约的 Codeacademy 工作。我是那里的一名创始工程师。当时我实际上构建了一个最早的开放源码浏览器内编码沙盒之一，所以那是
+    Replit 的前身。我着迷于让编程更容易入门和更有趣的想法。我想让黑客变得容易，这样你就可以很快地构思并快速构建它，而不需要做很多规划和设置一个庞大的开发环境。在我整个职业生涯中，我的痴迷就是让编程更有趣和更易于接触。
+- en: 'I worked at Codeacademy in New York for a while, then joined Facebook. At Facebook
+    I worked on the React team and then was one of the founding engineers on React
+    Native, and built the entire JavaScript runtime and compiler tool chain. I brought
+    the same ideas to React: fast feedback loops, fast updates, and refresh. I wanted
+    you to be able to work on it as if you''re working in a sandbox. In 2016, I went
+    back to browser-based coding and started Replit as a company with my wife Haya,
+    who''s our head of design now. And we pursued the same mission: just make programming
+    more fun and accessible.'
+  id: totrans-23
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 我曾在纽约的 Codeacademy 工作一段时间，然后加入 Facebook。在 Facebook，我参与了 React 团队的工作，然后成为 React
+    Native 的创始工程师之一，并构建了整个 JavaScript 运行时和编译器工具链。我将相同的想法带到了 React 中：快速反馈循环，快速更新和刷新。我希望你能像在沙盒中工作一样在其上工作。2016年，我回到了基于浏览器的编码，并与我的妻子
+    Haya 一起成立了 Replit 公司，她现在是我们的设计主管。我们追求的是同样的使命：只是让编程更有趣和更易于接触。
+- en: The importance of learning to code in the AI era
+  id: totrans-24
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+  zh: 在 AI 时代学习编程的重要性
+- en: Learning how to code becomes more important in a world with AI.
+  id: totrans-25
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 在 AI 的世界里学习编程变得更加重要。
+- en: AI means that the return on investment from learning to code just went way up.
+    AI models are great at generating code, but they go off the rails easily. They’re
+    inherently statistical and stochastic, so they make a lot of mistakes. That will
+    get better asymptotically, but for the foreseeable future, they’ll need human
+    input.
+  id: totrans-26
+  prefs: []
+  type: TYPE_NORMAL
+  zh: AI 意味着学习编程的投资回报率大幅提高。AI 模型擅长生成代码，但容易偏离轨道。它们本质上是统计和随机的，所以会犯很多错误。这将在渐近地变得更好，但在可预见的未来，它们仍然需要人类的输入。
+- en: That means in this new world, you can suddenly build incredible things by leveraging
+    these tools to generate code. And, if you can program, you can understand where
+    they’re getting things wrong and fill in the gaps.
+  id: totrans-27
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 这意味着在这个新世界中，你可以通过利用这些工具生成代码来突然构建令人惊讶的东西。而且，如果你能编程，你就能理解它们在哪里出错并填补空白。
+- en: You become less of a traditional programmer and more of a guide to bring your
+    ideas to life. These are inherently augmenting technologies, not automating technologies.
+  id: totrans-28
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 你变得不再是一个传统的程序员，而是更像是一个将你的想法变为现实的向导。这些本质上是增强技术，而不是自动化技术。
+- en: Another way to say this is that these models are really good as copilots. And
+    I think that will create deflationary pressure in the environment where individual
+    companies may need fewer programmers. So it will have a significant impact on
+    productivity from that perspective.
+  id: totrans-29
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 另一种说法是这些模型真的很擅长作为副驾驶。而我认为这将在环境中产生通缩压力，其中个别公司可能需要更少的程序员。因此，从这个角度来看，这将对生产力产生重大影响。
+- en: That doesn’t mean that we’ll need fewer programmers overall though. I think
+    we’re far away from automating programming completely, even though autonomous
+    agents are popular right now. The problem with autonomous agents is that the errors
+    they make compound. Each time the LLM gets called there’s a certain amount of
+    errors, and by the time they get to the 10th loop on something they’re very likely
+    to have gone off the rails.
+  id: totrans-30
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 那并不意味着我们总体上需要更少的程序员。我认为我们离完全自动化编程还很远，即使自主代理现在很流行。自主代理的问题在于它们制造的错误会不断累积。每次调用
+    LLM 时都会有一定数量的错误，到第 10 次循环时，它们很可能已经偏离了正轨。
+- en: The whole trend in software development over the last 70 years is towards more
+    predictability in terms of output. And so using autonomous agents where there’s
+    inherent unpredictability seems unlikely to me. They’re just not smart enough
+    for that right now.
+  id: totrans-31
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 在过去的 70 年里，软件开发的整体趋势是朝着输出方面更加可预测的方向发展。因此，在存在固有不可预测性的情况下使用自主代理对我来说似乎不太可能。它们现在还不够聪明。
+- en: I think this is something that’s missed in the larger conversation around AI.
+  id: totrans-32
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 我认为在围绕人工智能的更大对话中，这一点被忽视了。
+- en: AI doom is bullshit
+  id: totrans-33
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+  zh: AI 的末日论是胡扯。
+- en: We are now in a vicious cycle of hype and fear where the incentives of the players
+    involved make the cycle extremely bipolar.
+  id: totrans-34
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 我们现在处于一种炒作和恐惧的恶性循环中，在这种循环中，参与者的激励使得循环极端双极化。
+- en: On the one hand AI labs are incentivized to oversell their models’ capabilities.
+    Take Microsoft for example—they put out a paper titled “First Contact With AGI”
+    talking about GPT-4 (which they later renamed “Sparks of AGI”). Of course, that’s
+    not science, it’s content-marketing. But when people read that and predictably
+    freak out about it, Microsoft goes and says, “Oh no, you’re overreacting.”
+  id: totrans-35
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 一方面，AI 实验室有动力夸大其模型的能力。以微软为例，他们发表了一篇标题为“与 AGI 的第一次接触”的论文，谈论的是 GPT-4（后来更名为“AGI
+    的火花”）。当然，那不是科学，那是内容营销。但是当人们看到这个并像预料中地感到恐慌时，微软就会说，“哦，不，你反应过度了。”
+- en: On the other hand you have people who built their entire identity on freaking
+    out about AGI, and the louder they freak out the more attention and funding they
+    attract. So they’re incentivized to also overstate the capabilities. Then the
+    labs benefit indirectly from the fear caused by doomers because they can raise
+    more money on bigger valuations, and attract talent that feel like they’re working
+    on existential problems. And that makes doomers freak out more. So there’s a perverse
+    incentive to hype this technology and make it seem like superintelligence is just
+    around the corner. The reality is, we’re very far from that.
+  id: totrans-36
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 另一方面，有些人完全以对 AGI 的恐慌来建立他们的整个身份，而他们越是大声地感到恐慌，他们就越能吸引更多的关注和资金。因此，他们也被激励夸大这些能力。然后实验室间接受益于末日论者造成的恐惧，因为他们可以在更大的估值上筹集更多的资金，并吸引觉得自己在解决存在问题的人才。这又使末日论者感到更加恐慌。因此，有一种错误的激励来夸大这项技术，使其看起来超级智能就在眼前。现实是，我们离那还很远。
+- en: GPT-2 to GPT-3 was the birth of a new technology. But GPT-3 to GPT-4 is an incremental
+    jump. GPT-4 has less hallucination, it’s more predictable, it has a bigger context
+    window—but it’s just technical incremental improvement. We’re really hitting diminishing
+    returns on the current architecture of these models.
+  id: totrans-37
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 从 GPT-2 到 GPT-3 是一种新技术的诞生。但是从 GPT-3 到 GPT-4 是一种渐进性的跳跃。GPT-4 减少了幻觉，更加可预测，具有更大的上下文窗口——但这只是技术上的渐进改进。在当前这些模型的架构上，我们真的正在遭遇收益递减。
+- en: If you just look at the way these models are today, you’ll see that they’re
+    going to have a very difficult time impacting the physical world enough to end
+    humanity. Sure, if you connect GPT-4 to the US nuclear arsenal it could cause
+    massive damage, but no one is going to do that. Even if you postulate the intelligence
+    of these models greatly advancing, they’re still going to run into physical limits.
+  id: totrans-38
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 如果你只是看看这些模型如今的状态，你会发现它们在对现实世界产生足够影响以结束人类方面会遇到很大困难。当然，如果你把GPT-4连接到美国核武库，它可能会造成巨大的破坏，但没有人会这样做。即使你假设这些模型的智能大大进步，它们仍然会遇到物理限制。
+- en: Mastering tasks in the real world requires considerable trial and error. While
+    doomsday scenarios often depict AI as an omnipotent entity, such a notion inherently
+    creates issues. However, if we consider AI as an extremely intelligent being,
+    it will still face challenges with simple tasks, like lifting a cup of coffee.
+    Over time, it can learn to accomplish this.Even then, there are a lot of real-world
+    scenarios that are inherently computationally intractable that AIs will run into
+    trouble trying to control. People miss that.
+  id: totrans-39
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 掌握现实世界中的任务需要大量的试错。尽管末日场景经常将人工智能描绘为一个全能的实体，但这种概念本身就会产生问题。然而，如果我们将人工智能看作是一个极其智能的存在，它仍然会在简单的任务上面临挑战，比如举起一杯咖啡。随着时间的推移，它可以学会完成这个任务。即便如此，仍然有很多现实场景是计算上无法解决的，人工智能在尝试控制时会遇到麻烦。人们忽视了这一点。
+- en: One of the great tragedies of modern times is that we inherited this world,
+    we didn’t build it. People of the last century, who lived through the industrial
+    revolution, knew how hard it was to build things in the physical world. But we’ve
+    mostly lived in a world that was built for us, so we forget how hard it is to
+    do.
+  id: totrans-40
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 现代的一大悲剧之一是，我们继承了这个世界，而不是建造了它。上个世纪生活在工业革命中的人们知道在现实世界中建造东西是多么困难。但我们大多生活在一个为我们建造的世界中，所以我们忘记了做这件事有多难。
+- en: We understand how to build the virtual world, and it’s possible AI will get
+    very good at that. But the physical world is a different story. I think forgetting
+    that distinction leads to all sorts of thinking about being able to dominate the
+    world and the physical space that is not realistic because we don't really have
+    an intuition for how hard it is.
+  id: totrans-41
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 我们知道如何建立虚拟世界，而人工智能可能会在这方面做得很好。但现实世界是另一回事。我认为忽略这种区别会导致各种关于能够主宰世界和现实空间的想法，而这并不现实，因为我们对此有多难并没有真正的直觉。
+- en: People were way undershooting on the potential of AI for a long time, and now
+    they’re way overshooting. There’s a bipolar nature to markets like this. It’s
+    something you have to come to terms with if you want to build companies.
+  id: totrans-42
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 人们长期以来对人工智能的潜力大大低估，现在又大大高估了。市场上存在这种**双极性**。如果你想要建立公司，你必须接受这一点。
+- en: Overall though, it’s super exciting to see so much progress. Especially in open
+    source. You want to focus on the builders, and put the hype or the doom aside.
+    That’s what’s most exciting.
+  id: totrans-43
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 总的来说，看到这么多进展真是令人兴奋。尤其是在开源方面。你要专注于那些建设者，把炒作或厄运放在一边。那才是最令人兴奋的。
+- en: How startups can use bundling and vertical integration to win in AI
+  id: totrans-44
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+  zh: 初创公司如何利用捆绑和纵向整合在人工智能领域取得胜利
+- en: We were fairly early to AI-powered development. We built a lot of GPT-2 and
+    GPT-3 based code generation and code explanation experiments back in 2020\. And
+    then we productized that as GhostWriter last year, which is our CoPilot-like AI
+    assistant—but it also has an AI chat and can do things in the programming environment,
+    understands your projects, understands your output and more.
+  id: totrans-45
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 我们在AI驱动的开发方面相当早期。我们在2020年进行了许多基于GPT-2和GPT-3的代码生成和代码解释实验。然后我们去年将其产品化为GhostWriter，这是我们类似于CoPilot的AI助手，但它还具有AI聊天功能，可以在编程环境中执行操作，了解你的项目，理解你的输出等等。
+- en: I’ve been in the space for a long time, so I have a few thoughts on how startups
+    and startup builders can win in AI.
+  id: totrans-46
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 我在这个领域已经很长时间了，所以我对初创公司和初创公司建设者如何在人工智能领域取得成功有一些想法。
+- en: The inherent benefit of Replit is that we bundle and vertically integrate the
+    entire toolchain and lifecycle of software development. We help our users go from
+    idea, to an end product that you can see and share with friends, to a deployment
+    that you can share with the world. We’re even building in tools to help developers
+    monetize what they build.
+  id: totrans-47
+  prefs: []
+  type: TYPE_NORMAL
+  zh: Replit的固有优势在于我们捆绑并纵向整合了软件开发的整个工具链和生命周期。我们帮助用户从构思开始，制作出一个可以让朋友看到和分享的最终产品，再到可以向世界分享的部署。我们甚至正在构建工具来帮助开发者实现他们所构建内容的货币化。
+- en: So we’re taking people from idea to dollar. We want to bring the distance between
+    those two things to as close to zero as possible.
+  id: totrans-48
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 因此，我们将人们从想法带到了收入。我们希望将这两者之间的距离尽可能地缩小。
+- en: Most development tools are not built this way. If you’re VS Code, you can’t
+    do this. You have to support every use case under the sun. You have to support
+    every idiosyncratic way that your users are used to doing things, so you can’t
+    bundle and vertically integrate.
+  id: totrans-49
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 大多数开发工具都不是这样构建的。如果你是 VS Code，你做不到这一点。你必须支持太阳底下的每种用例。你必须支持你的用户习惯于以各种怪异的方式做事，所以你不能捆绑和垂直整合。
+- en: But our approach allows us to see the entire lifecycle of software development,
+    which gives us a fundamental advantage. For example, Ghostwriter will soon be
+    able to know your entire history of deploying to your app, and see all of the
+    logs from users using it in the wild. Because it sees the entire process, it will
+    be able to make coding suggestions for you to build features or fix bugs based
+    on how your users are using your app.
+  id: totrans-50
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 但我们的方法使我们能够看到整个软件开发生命周期，这给了我们根本性的优势。例如，Ghostwriter 很快就能够了解你的整个应用部署历史，并查看用户在野外使用它的所有日志。因为它看到了整个过程，所以它将能够根据用户使用你的应用的方式为你提供建议，以构建功能或修复错误。
+- en: So vertical integration becomes a superpower for us. It’s technically possible
+    for Microsoft to build that, but it’s extremely hard because their customers aren’t
+    specifically asking for that. They’re not asking for bundling and vertical integration,
+    most of them want less bundling and more customization.
+  id: totrans-51
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 因此，垂直整合对我们来说成为了一个超能力。从技术上讲，微软有可能构建这个，但这非常困难，因为他们的客户并没有明确要求。他们不要求捆绑和垂直整合，他们中的大多数人希望减少捆绑并增加更多的定制化。
+- en: There are other good examples of this. One is Tesla.
+  id: totrans-52
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 还有其他很好的例子。其中一个是特斯拉。
+- en: Yesterday, I was in San Francisco and I wanted to drive back to South Bay where
+    we live. And I put in our address, and I didn’t have enough battery to get there.
+    The Tesla automatically added the address of a Supercharger station that’s on
+    our way home, and it used self-driving to get me there.
+  id: totrans-53
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 昨天，我在旧金山，我想驾车回到我们住的 South Bay。然后我输入了我们的地址，但我没有足够的电池可以到那里。特斯拉自动添加了一家位于我回家路上的超级充电站的地址，并使用自动驾驶把我带到那里。
+- en: The vertical integration of the car, the AI, and the physical power station
+    created this incredible experience. It allows Tesla to suck at a lot of things
+    – like build quality issues – but because they can provide an unparalleled end-to-end
+    experience they win.
+  id: totrans-54
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 车辆、人工智能和物理动力站的垂直整合创造了令人难以置信的体验。它允许特斯拉在许多方面表现糟糕——比如建造质量问题——但由于他们能够提供无与伦比的端到端体验，他们获胜了。
+- en: This type of bundling and vertical integration is something I’d recommend startups
+    who want to build in AI think about as a strategy. It takes a certain type of
+    founder who is very focused and able to do it for a really long time in order
+    to build something like this.
+  id: totrans-55
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 对于想要在人工智能领域构建东西的创业公司，我建议他们考虑这种捆绑和垂直整合作为一种策略。这需要一种非常专注且能够长时间做某事的创始人。
+- en: It’s super hard. It will nearly kill you. And you can’t go for the vertical
+    integration and bundling right out of the gate. There were a lot of startups founded
+    around the time of Replit that tried to do this, and they all died. A few of them
+    raised big seed rounds, and burned through it for five years, and closed the company.
+  id: totrans-56
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 这太难了。这几乎会把你累死。而且你不能一开始就进行垂直整合和捆绑。有很多创业公司在 Replit 成立时期尝试过这样做，但它们都倒闭了。其中一些公司获得了大笔种子轮融资，然后在五年内烧掉了这笔钱，最后倒闭了。
+- en: You can’t get too ambitious too fast. What we did is we built a toy version
+    of the complete thing.
+  id: totrans-57
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 你不能太快就雄心勃勃。我们所做的是构建完整东西的玩具版本。
+- en: When we first started the company I expected the product would be powerful enough
+    within a year that we could code Replit with Replit. But we just started getting
+    to the point where that’s possible—so it took a few years.
+  id: totrans-58
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 当我们刚开始公司的时候，我预计产品在一年内就会足够强大，以至于我们可以使用 Replit 编写 Replit。但我们刚刚开始达到这一点的时候——所以这花了几年的时间。
+- en: At first it was very useful for students. So, it was a toy for the lower end
+    of the market, and then you keep making it better and more complete over time.
+  id: totrans-59
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 起初，它对学生来说非常有用。因此，它是市场下端的玩具，然后你可以随着时间的推移不断改进并完善它。
+- en: Building a toy is helpful because it allows you to ship. You create progress
+    for people like investors or talent to see, and it allows you to tell if you’re
+    building something people find useful. Whereas if you’re hiding in a corner somewhere,
+    even if you have infinite capital, it’s really hard to have the willpower to keep
+    going.
+  id: totrans-60
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 制作玩具很有帮助，因为它可以让你交付成果。你为像投资者或人才这样的人创造进展，它让你知道你是否在构建人们发现有用的东西。而如果你藏在某个角落里，即使你有无限的资本，也很难有足够的意志力继续前进。
+- en: This stuff is important, but I don’t think founders should over-strategize.
+    Just build something useful and get it into the hands of people. You want to think
+    strategically, but don’t do it so early on that the magnitude of the challenge
+    depresses you.
+  id: totrans-61
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 这些东西很重要，但我认为创始人不应该过度战略化。只需构建一些有用的东西，并将其交到人们手中。你想要战略性地思考，但不要在太早的时候这样做，以至于挑战的巨大程度让你沮丧。
+- en: A book recommendation
+  id: totrans-62
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+  zh: 一本书的推荐
+- en: '[This book](https://www.amazon.com/Sovereign-Individual-Mastering-Transition-Information/dp/0684832720)
+    has come as close as any other book in history to predict the massive change the
+    information revolution will have. It predicted many things we''re just experiencing—from
+    AI lawyers to Bitcoin'
+  id: totrans-63
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '[这本书](https://www.amazon.com/Sovereign-Individual-Mastering-Transition-Information/dp/0684832720)已经比历史上任何其他书籍更接近预测信息革命将带来的巨大变革。它预测了许多我们刚刚经历的事情——从人工智能律师到比特币。'

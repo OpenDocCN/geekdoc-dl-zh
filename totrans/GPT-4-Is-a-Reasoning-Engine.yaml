@@ -1,0 +1,451 @@
+- en: <!--yml
+  id: totrans-0
+  prefs: []
+  type: TYPE_NORMAL
+  zh: <!--yml
+- en: 'category: COT 专栏'
+  id: totrans-1
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 类别：COT 专栏
+- en: 'date: 2024-05-08 11:10:39'
+  id: totrans-2
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 日期：2024-05-08 11:10:39
+- en: -->
+  id: totrans-3
+  prefs: []
+  type: TYPE_NORMAL
+  zh: -->
+- en: GPT-4 Is a Reasoning Engine
+  id: totrans-4
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+  zh: GPT-4 是一个推理引擎。
+- en: 来源：[https://every.to/chain-of-thought/gpt-4-is-a-reasoning-engine](https://every.to/chain-of-thought/gpt-4-is-a-reasoning-engine)
+  id: totrans-5
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+  zh: 来源：[https://every.to/chain-of-thought/gpt-4-is-a-reasoning-engine](https://every.to/chain-of-thought/gpt-4-is-a-reasoning-engine)
+- en: 'Sponsored By: Mindsera'
+  id: totrans-6
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+  zh: 赞助商：Mindsera
+- en: This article is brought to you by [Mindsera](https://www.mindsera.com/), an
+    AI-powered journal that gives you personalized mentorship and feedback for improving
+    your mindset, cognitive skills, mental health, and fitness.
+  id: totrans-7
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 本文由 [Mindsera](https://www.mindsera.com/) 提供，这是一款由人工智能驱动的日记，为你提供个性化的指导和反馈，帮助你改善心态、认知能力、心理健康和健身。
+- en: In 1894, a Boston-based astronomer named Percivel Lowell [found intelligent
+    life](https://books.google.com/books?id=CSk6AQAAMAAJ&pg=PA446&dq=%22mars+in+1907%22&hl=en&sa=X&ved=0CCIQ6AEwAWoVChMIq7CR8rqdyAIVxBo-Ch2WnQaP#v=onepage&q=%22mars%20in%201907%22&f=false)
+    on Mars.
+  id: totrans-8
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 在 1894 年，波士顿的一位名叫佩西瓦尔·洛威尔的天文学家在火星上发现了智慧生命。
+- en: Looking through a telescope from his private observatory he observed dark straight
+    lines running across the Martian surface. He believed these lines to be [evidence
+    of canals](https://en.wikipedia.org/wiki/Martian_canals) built by an advanced
+    but struggling alien civilization trying to tap water from the polar ice caps.
+  id: totrans-9
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 从他的私人天文台通过望远镜观察，他观察到了火星表面的黑色直线。他相信这些直线是由一种先进但陷入困境的外星文明建造的运河，试图从极地冰盖中获取水。
+- en: He spent years making intricate drawings of these lines, and his findings captured
+    public imagination at the time. But you’ve never heard of him because he turned
+    out to be dead wrong.
+  id: totrans-10
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 他花了多年时间制作这些线条的精致图纸，他的发现当时引起了公众的想象。但是你从来没有听说过他，因为他的结论是错误的。
+- en: In the 1960s, NASA's Mariner missions captured high-resolution images of Mars,
+    revealing that these "canals" were nothing more than an optical illusion caused
+    by the distribution of craters on the planet's surface. With the low resolution
+    available to his telescope at the time, these craters looked to Lowell like straight
+    lines which, through a chain of reasoning, he theorized to be canals built by
+    intelligent life.
+  id: totrans-11
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 在 1960 年代，NASA 的水手号任务捕捉到了火星的高分辨率图像，揭示了这些“运河”只不过是行星表面撒布的陨石坑造成的光学错觉。在当时他的望远镜可用的低分辨率下，这些陨石坑看起来像是直线，由此洛威尔推理，他理论上认为这是由智慧生命建造的运河。
+- en: 'Lowell’s story shows that there are at least two important components to thinking:
+    reasoning and knowledge. Knowledge without reasoning is inert—you can’t do anything
+    with it. But reasoning without knowledge can turn into compelling, confident fabrication.'
+  id: totrans-12
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 洛威尔的故事表明思考至少有两个重要组成部分：推理和知识。没有推理的知识是惰性的——你无法利用它做任何事情。但是没有知识的推理会变成令人信服、自信的虚构。
+- en: 'Interestingly, this dichotomy isn’t limited to human cognition. It’s also a
+    key thing that people fundamentally miss about AI:'
+  id: totrans-13
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 有趣的是，这种二元性不仅限于人类认知。这也是人们对人工智能根本性质的一个关键误解：
+- en: Even though our AI models were trained by reading the whole internet, that training
+    mostly enhances their reasoning abilities not how much they know. And so, the
+    performance of today’s AI models is constrained by their lack of knowledge.
+  id: totrans-14
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 尽管我们的人工智能模型通过阅读整个互联网进行了训练，但这种训练主要是增强了它们的推理能力，而不是它们所知道的东西有多少。因此，今天的人工智能模型的性能受到它们缺乏知识的限制。
+- en: 'I saw Sam Altman speak at a small Sequoia event in SF last week, and he emphasized
+    this exact point: GPT models are actually reasoning engines not knowledge databases.'
+  id: totrans-15
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 我上周在旧金山的一场小型 Sequoia 活动上听到了 Sam Altman 的讲话，他强调了这一点：GPT 模型实际上是推理引擎，而不是知识数据库。
+- en: This is crucial to understand because it predicts that advances in the usefulness
+    of AI will come from advances in its ability to access the right knowledge at
+    the right time—not just from advances in its reasoning powers.
+  id: totrans-16
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 这一点至关重要，因为它预测了人工智能的有用性进步将来自于其在正确的时间访问正确的知识的能力，而不仅仅是其推理能力的进步。
+- en: ''
+  id: totrans-17
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: '[Mindsera](https://www.mindsera.com/) structures your thinking with journaling
+    templates based on useful frameworks and mental models, so you can make better
+    decisions, solve complex problems, and be more productive.'
+  id: totrans-18
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '[Mindsera](https://www.mindsera.com/)通过基于有用的框架和心理模型的日记模板来构建你的思维，让你能够做出更好的决策，解决复杂的问题，提高生产力。'
+- en: Our innovative AI coaching helps you to achieve your goals by making mental
+    models actionable. You get the power of a professional coach without paying over
+    $250 per hour.
+  id: totrans-19
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 我们创新的人工智能辅导帮助您通过使心智模型可操作来实现您的目标。您可以获得专业教练的力量，而不必支付每小时 250 美元以上的费用。
+- en: '[Mindsera](https://www.mindsera.com/) smart analysis generates an original
+    artwork based on your writing, measures your emotional state, reflects on your
+    personality, and gives personalized suggestions to help you improve.'
+  id: totrans-20
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '[Mindsera](https://www.mindsera.com/) 的智能分析基于您的写作生成原创艺术品，测量您的情绪状态，反映您的个性，并提供个性化建议，帮助您改善。'
+- en: Build self-awareness, get clarity of thought, and succeed in an increasingly
+    uncertain world.
+  id: totrans-21
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 建立自我意识，清晰思考，并在日益不确定的世界中取得成功。
+- en: Knowledge and reasoning in GPT models
+  id: totrans-22
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+  zh: GPT 模型中的知识和推理
+- en: 'Here’s an example to illustrate this point. GPT-4 is the most advanced model
+    on the market today. Its reasoning capabilities are so good that it can get a
+    5 on the AP Bio exam. But if I ask it who I am it says the following:'
+  id: totrans-23
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 以下是一个例子来说明这一点。GPT-4 是市场上最先进的模型。它的推理能力非常好，以至于它可以在 AP 生物学考试上得到 5 分。但是如果我问它我是谁，它会说以下内容：
+- en: That’s close to being right except for one big problem…I’m the co-founder of
+    a few companies, but neither of them are Superhuman or Reify.
+  id: totrans-24
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 这几乎是正确的，除了一个大问题……我是几家公司的联合创始人，但它们中没有一个是 Superhuman 或 Reify。
+- en: AI critics will be quick to say that this proves GPT-4 is nothing more than
+    a stochastic parrot, and that its results should be dismissed offhand. But they’re
+    wrong. Its performance improves dramatically the second it has access to the right
+    information.
+  id: totrans-25
+  prefs: []
+  type: TYPE_NORMAL
+  zh: AI 批评者会很快地说，这证明了 GPT-4 只不过是一个随机鹦鹉，其结果应该被一脚踢开。但他们错了。一旦它有了正确的信息，它的表现会显著提高。
+- en: For example, I have access to a version of ChatGPT that can use web searches
+    to *ground* its answers with what it finds on the internet.
+  id: totrans-26
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 例如，我可以访问一个版本的 ChatGPT，它可以使用网络搜索来*联系*其答案与互联网上找到的内容。
+- en: 'In other words, instead of using its reasoning capabilities to come up with
+    a theoretically plausible answer, it does web research to create a knowledge base
+    for itself. It then analyzes the collected information and distills a more accurate
+    answer:'
+  id: totrans-27
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 换句话说，它不是用其推理能力提出一个在理论上合理的答案，而是进行网页搜索以为自己创建一个知识库。然后，它分析收集到的信息，并提炼出一个更准确的答案：
+- en: Now, that’s pretty good! The underlying model is the same—but the answer improves
+    significantly because it has the right information to reason over.
+  id: totrans-28
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 现在，这很不错！底层模型是一样的——但答案显著改善了，因为它有了正确的信息可以推理。
+- en: What’s going on here? GPT-4’s architecture is not public, but we can make some
+    educated guesses based on previous models that have been released.
+  id: totrans-29
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 这是怎么回事？GPT-4 的架构不是公开的，但我们可以根据之前发布的模型做一些有根据的猜测。
+- en: When GPT-4 was trained, it was fed a large portion of the available material
+    on the internet. Training transformed that data into a statistical model that
+    is very good at, given a string of words, knowing which words should follow from
+    it—this is called next token prediction.
+  id: totrans-30
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 当 GPT-4 被训练时，它被喂了大量互联网上的可用材料。训练将这些数据转化为一个统计模型，该模型非常擅长于在给定一串词的情况下，知道哪些词应该跟随它——这被称为下一个令牌预测。
+- en: However, the kind of “knowledge” contained in this statistical model is fuzzy
+    and inexplicit. The model doesn’t have any sort of long-term memory or way to
+    look up the information it has seen—it only remembers what it encountered in its
+    training set in the form of a statistical model.
+  id: totrans-31
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 然而，这个统计模型中包含的“知识”类型是模糊的和不明确的。该模型没有任何长期记忆或查找它看到的信息的方法——它只记得在训练集中遇到的东西，形式是一个统计模型。
+- en: When it encounters my name it uses this model to make an educated guess about
+    who I am. It draws a conclusion that’s in the ballpark of being right, but is
+    completely wrong in its details because it doesn’t have any explicit way to look
+    up the answer.
+  id: totrans-32
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 当它遇到我的名字时，它使用这个模型来对我是谁做出一个有根据的猜测。它得出了一个大致正确的结论，但在细节上完全错误，因为它没有任何明确的方法来查找答案。
+- en: But when GPT-4 is hooked up to the internet (or anything that acts like a database)
+    it doesn’t have to rely on its fuzzy statistical understanding. Instead, it can
+    retrieve explicit facts like, “Dan Shipper is the co-founder of Every” and use
+    that to create its answer.
+  id: totrans-33
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 但是当 GPT-4 连接到互联网（或任何像数据库的东西）时，它就不必依赖于其模糊的统计理解。相反，它可以检索明确的事实，比如“丹·希普是 Every 的联合创始人”，并使用这些来创建它的答案
+- en: 'So, what does this mean for the future? I think there are at least two interesting
+    conclusions:'
+  id: totrans-34
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 那么，这对未来意味着什么呢？我认为至少有两个有趣的结论：
+- en: Knowledge databases are as important to AI progress as foundational models
+  id: totrans-35
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+  zh: 对于 AI 进步来说，知识数据库与基础模型一样重要
+- en: People who organize, store, and catalog their own thinking and reading will
+    have a leg up in an AI-driven world. They can make those resources available to
+    the model and use it to enhance the intelligence and relevance of its responses.
+  id: totrans-36
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+  zh: 那些组织、存储和编目自己的思想和阅读的人在一个由 AI 驱动的世界中将拥有优势。他们可以将这些资源提供给模型，并用它来增强其响应的智能和相关性。
+- en: Let’s take these one at a time.
+  id: totrans-37
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 让我们一次讨论一个。
+- en: '**Knowledge databases are surprisingly important**'
+  id: totrans-38
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+  zh: '**知识数据库非常重要**'
+- en: When it comes to knowledge you want to be able to store a lot of it, and you
+    want to be able to find the right piece of knowledge at the right time. In AI
+    this is typically done with a vector database.
+  id: totrans-39
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 当涉及到你希望能够存储大量知识，并且在正确的时间找到正确的知识时，你希望能够使用向量数据库。在 AI 中，这通常是通过向量数据库完成的。
+- en: Vector databases allow you to easily index and store large amounts of information,
+    and then quickly query for similar pieces of information to give to your model
+    when you need to. They’re so common in AI apps that it’s likely almost every demo
+    you’ve tried over the last few months has included a vector database for some
+    part of their functionality.
+  id: totrans-40
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 向量数据库允许您轻松索引和存储大量信息，然后在需要时快速查询类似的信息以提供给您的模型。它们在 AI 应用中非常常见，以至于过去几个月中您尝试的几乎每个演示都包含了某个部分的向量数据库功能。
+- en: In fact, if you want to make an investment that indexes the success of companies
+    building in AI as a whole, one smart move would be to invest in a vector database
+    provider, or a basket of them. (Alternatives might be to invest in OpenAI, or
+    a basket of large cap software companies like Microsoft and Google that build
+    AI, or chipmakers like NVIDIA that build the GPUs that AIs run on.)
+  id: totrans-41
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 实际上，如果你想进行一项投资，以整体衡量建设人工智能的公司的成功，一个明智的举措将是投资于一个向量数据库提供商，或者一篮子向量数据库提供商。（其他选择可能是投资于
+    OpenAI，或者一篮子像微软和谷歌这样的大型软件公司，它们构建人工智能，或者像 NVIDIA 这样构建 AI 运行的 GPU 的芯片制造商。）
+- en: Smarter investors than me seem to agree. Pinecone, the most popular vector database,
+    just [raised money at a $700m valuation](https://www.businessinsider.com/chroma-weaviate-pinecone-raise-funding-a16z-index-vector-database-ai-2023-3).
+    Smaller alternatives like Weaviate and Chroma aren’t far behind, and they’re also
+    reportedly raising money at steep valuations.
+  id: totrans-42
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 比我更聪明的投资者似乎是同意的。Pinecone，最受欢迎的向量数据库，刚刚在 [7 亿美元的估值](https://www.businessinsider.com/chroma-weaviate-pinecone-raise-funding-a16z-index-vector-database-ai-2023-3)
+    上筹集了资金。较小的替代品，如 Weaviate 和 Chroma，并没有落后太远，据报道它们也正在以高估值筹集资金。
+- en: Interestingly, though, most of these vector databases were originally built
+    before the large language model ([LLM](https://en.wikipedia.org/wiki/Large_language_model))
+    craze. Vectors are incredibly important for all sorts of previous-generation machine
+    learning algorithms like [recommendation systems](https://every.to/napkin-math/recommendation-algorithims-are-good-sort-of).
+    As a result, the database tooling from providers like Pinecone isn’t purpose built
+    for large language models like ChatGPT.
+  id: totrans-43
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 有趣的是，大多数这些向量数据库最初是在大语言模型（[LLM](https://en.wikipedia.org/wiki/Large_language_model)）热潮之前构建的。向量对于所有类型的先前一代机器学习算法（如[推荐系统](https://every.to/napkin-math/recommendation-algorithims-are-good-sort-of)）都非常重要。因此，Pinecone
+    等提供商的数据库工具不是专门为像 ChatGPT 这样的大语言模型构建的。
+- en: We’re already seeing newer alternatives springing up that wrap some [business
+    logic](https://en.wikipedia.org/wiki/Business_logic) around the database layer
+    to make it easier for AI developers to do common tasks. Some of these are developer
+    libraries like Langchain and LlamaIndex. And some seem to be more fully featured
+    developer tools like [Metal](https://www.getmetal.io?utm_source=every) and [Baseplate](https://www.baseplate.ai?utm_source=every).
+    Just like Pinecone, are also likely to raise a lot of money or already have! AI’s
+    advancement is a raindance that calls forth capital from Patagonia vest wearing
+    angels.
+  id: totrans-44
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 我们已经看到了一些新的替代品涌现出来，它们在数据库层面上包装了一些[业务逻辑](https://en.wikipedia.org/wiki/Business_logic)，以便于
+    AI 开发人员执行常见任务。其中一些是开发人员库，如 Langchain 和 LlamaIndex。还有一些似乎是更全面的开发人员工具，如 [Metal](https://www.getmetal.io?utm_source=every)
+    和 [Baseplate](https://www.baseplate.ai?utm_source=every)。就像 Pinecone 一样，它们也很可能筹集了大量资金，或者已经筹集到了！AI
+    的进步是一场舞蹈，从 Patagonia 背心穿戴的天使那里召唤资本。
+- en: I find this very exciting because it will make it a lot easier to make AI apps.
+    There’s a tremendous amount of boilerplate code being written to take, say, a
+    PDF or a webpage with interesting information on it, parse it, break it into chunks,
+    store it, and retrieve it for use in AI apps. The more that can happen with just
+    a line or two of code, the better.
+  id: totrans-45
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 我觉得这非常令人兴奋，因为它将大大简化制作人工智能应用程序的过程。 目前已经编写了大量的样板代码，用于处理、解析、分割、存储和检索PDF或包含有趣信息的网页，以供人工智能应用程序使用。
+    能够用一两行代码来完成这一切，这样做越多越好。
+- en: When I talk to people about vector databases—even people who have been following
+    AI closely—they typically say, “What’s that?” I think, over time, that will change
+    significantly as we start to understand how important it is for these models to
+    have access to the knowledge that they contain.
+  id: totrans-46
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 当我跟人们谈论向量数据库——即使是那些一直关注人工智能的人们——他们通常会说，“那是什么？” 我认为，随着时间的推移，随着我们开始理解这些模型能够访问其所包含知识的重要性，这种情况将发生显著变化。
+- en: Vector databases are how information gets stored and made available to AI applications.
+    One place that I think they’ll get a lot of valuable information from is private,
+    personal knowledgebases.
+  id: totrans-47
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 向量数据库是信息存储和提供给人工智能应用的方式。我认为他们会从私人的、个人的知识库中获得大量有价值的信息。
+- en: '**Private repositories of knowledge are going to be very valuable**'
+  id: totrans-48
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+  zh: '**私人知识库将会非常有价值**'
+- en: People have been saying that data is the new oil for a long time. But I do think,
+    in this case, if you’ve spent a lot of time collecting and curating your own personal
+    set of notes, articles, books, and highlights it’ll be the equivalent of having
+    a topped-off oil drum in your bedroom during an OPEC crisis.
+  id: totrans-49
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 人们长期以来一直在说数据是新的石油。 但在这种情况下，我认为，如果你花了很多时间收集和整理你自己的个人笔记、文章、书籍和重点，这将相当于在石油输出国家组织危机期间在卧室里有一桶装满的石油。
+- en: Why? It’s [expensive and time consuming](https://every.to/chain-of-thought/gpt-4-a-copilot-for-the-mind)
+    to find information that’s relevant to the things you think about. Even if you
+    give AI access to a search engine, so it can make queries to find the right information—it’ll
+    cost you money and time.
+  id: totrans-50
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 为什么？找到与你所思考的事情相关的信息是[昂贵且耗时的](https://every.to/chain-of-thought/gpt-4-a-copilot-for-the-mind)。
+    即使你让人工智能访问搜索引擎，让它进行查询以找到正确的信息，这也会花费你金钱和时间。
+- en: If, instead, you’ve spent a lifetime gathering and curating  information that’s
+    important to you, you can customize your AI experience so it’s more useful to
+    you right off the bat.
+  id: totrans-51
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 如果相反，你一生都在收集和整理对你重要的信息，你可以自定义你的人工智能体验，使其一开始对你更加有用。
+- en: Apps like [Readwise Reader](https://read.readwise.io/) or Pocket or Instapaper
+    that allow you to store articles you’ve read (or articles you want to read) are
+    going to be a gold mine to the extent that they hook up to AI tools. They’ll be
+    extra useful because they record the articles you explicitly bookmarked and read,
+    this will make it easier for AI tools to know which pieces of information to weight
+    in their responses.
+  id: totrans-52
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 类似[Readwise Reader](https://read.readwise.io/)、Pocket或Instapaper的应用，允许您存储您阅读过的文章（或您想阅读的文章），将成为一座金矿，因为它们连接到人工智能工具。
+    它们将会格外有用，因为它们记录了您明确收藏和阅读的文章，这将使得人工智能工具更容易知道在其回复中给予哪些信息更多的权重。
+- en: But the use of personal knowledge databases will get weirder and more advanced
+    than this.
+  id: totrans-53
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 但个人知识库的使用将会变得更加奇怪和先进。
+- en: For example, Rewind is a tool that sits on your computer and records everything
+    you see and everything you type. It’s all stored locally for privacy purposes,
+    and you can already hook it up to ChatGPT.
+  id: totrans-54
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 例如，Rewind 是一个工具，可以记录您在计算机上看到的一切和您键入的一切。 为了保护隐私，所有这些都存储在本地，并且您已经可以将其连接到 ChatGPT。
+- en: 'In one of their demos they show a user asking, “What did I do last week?” The
+    AI is able to summarize all of the tasks they did on their computer:'
+  id: totrans-55
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 在他们的演示中，他们展示了一个用户询问：“上周我做了什么？” 人工智能能够总结出他们在计算机上完成的所有任务：
+- en: For my part, I’ve installed Rewind, and I’ve been playing around with building
+    little tools to save more of what I encounter online. I made a little app I call
+    Tend that sits open on my browser all day, and I can feed it any articles with
+    interesting information for indexing and storage. Later, I’ll build a little ChatGPT
+    plugin to give me access to all the information I saved with it.
+  id: totrans-56
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 就我而言，我已经安装了 Rewind，并且一直在尝试构建一些小工具来保存我在网上遇到的更多内容。 我做了一个叫做 Tend 的小应用程序，它整天都在我浏览器上开启，我可以向它提供任何具有有趣信息的文章进行索引和存储。
+    后来，我会制作一个小的 ChatGPT 插件，让我可以访问我用它保存的所有信息。
+- en: Wrapping up
+  id: totrans-57
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+  zh: 总结
+- en: When we talk about the future of AI, we tend to focus on its output. Given a
+    prompt, it can think through a complex problem, compose an essay, or create a
+    new scientific breakthrough without much human involvement.
+  id: totrans-58
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 当我们谈论人工智能的未来时，我们往往集中在其输出上。给定提示后，它可以思考一个复杂的问题，撰写一篇文章，或在没有太多人类参与的情况下创造出新的科学突破。
+- en: We tend to underappreciate the significance of the input—what information we
+    feed it to produce those results. Its answers are largely dependent on the information
+    we make available to it for analysis. It’s only as powerful as its starting point.
+  id: totrans-59
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 我们往往低估了输入的重要性——我们提供什么样的信息来产生这些结果。它的答案在很大程度上取决于我们为其提供的用于分析的信息。它只有在起点强大时才会强大。
+- en: We don’t pay enough attention to the limits of its knowledge—how much information
+    is locked away,  inaccessible to these systems. We also forget how expensive (both
+    in time and in [compute](https://www.techopedia.com/definition/6580/compute))
+    it is to crawl through information sources and find relevant facts. And finally,
+    we underestimate the difficulty of surfacing relevant pieces of information for
+    the model at the right time.
+  id: totrans-60
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 我们没有足够注意其知识的限制——有多少信息被锁在其中，无法访问到这些系统。我们也忘记了穿越信息源并找到相关事实的代价是多么昂贵（无论是时间上还是[计算](https://www.techopedia.com/definition/6580/compute)上）。最后，我们低估了在正确的时间为模型提供相关信息的困难程度。
+- en: But solving these sorts of problems is just as fundamental as solving for the
+    reasoning capabilities of the underlying models. I’m excited to see what people
+    build.
+  id: totrans-61
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 但解决这些问题与解决底层模型的推理能力一样基础。我很兴奋地期待着看到人们构建什么。
