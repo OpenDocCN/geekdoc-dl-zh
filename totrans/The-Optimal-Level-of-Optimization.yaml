@@ -1,84 +1,122 @@
 - en: <!--yml
+  id: totrans-0
   prefs: []
   type: TYPE_NORMAL
+  zh: <!--yml
 - en: 'category: COT 专栏'
+  id: totrans-1
   prefs: []
   type: TYPE_NORMAL
+  zh: 类别：COT 专栏
 - en: 'date: 2024-05-08 11:09:17'
+  id: totrans-2
   prefs: []
   type: TYPE_NORMAL
+  zh: 日期：2024-05-08 11:09:17
 - en: -->
+  id: totrans-3
   prefs: []
   type: TYPE_NORMAL
+  zh: -->
 - en: The Optimal Level of Optimization
+  id: totrans-4
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
+  zh: 最佳优化水平
 - en: 来源：[https://every.to/chain-of-thought/the-optimal-level-of-optimization](https://every.to/chain-of-thought/the-optimal-level-of-optimization)
+  id: totrans-5
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 来源：[https://every.to/chain-of-thought/the-optimal-level-of-optimization](https://every.to/chain-of-thought/the-optimal-level-of-optimization)
 - en: 'Sponsored By: Mindsera'
+  id: totrans-6
   prefs:
   - PREF_H4
   type: TYPE_NORMAL
+  zh: 赞助商：Mindsera
 - en: This article is brought to you by [Mindsera](https://www.mindsera.com/), an
     AI-powered journal that gives you personalized mentorship and feedback for improving
     your mindset, cognitive skills, mental health, and fitness.
+  id: totrans-7
   prefs: []
   type: TYPE_NORMAL
+  zh: 本文由[Mindsera](https://www.mindsera.com/)提供，Mindsera 是一家 AI 动力学期刊，为您提供个性化的心理指导和反馈，帮助您改善心态、认知能力、心理健康和健康。
 - en: How hard should I optimize? It’s a question I’ve often asked myself, and I bet
     you have too. If you’re optimizing for a goal—building a generational company,
     or finding the perfect life partner, or devising a flawless workout routine—the
     tendency is to try to go all the way.
+  id: totrans-8
   prefs: []
   type: TYPE_NORMAL
+  zh: 我应该如何进行优化？这是我经常问自己的问题，我打赌你也是。如果你在优化目标—建立一家跨代公司，或者找到完美的生活伴侣，或者设计一个无懈可击的锻炼计划—那么倾向是尽可能地去做。
 - en: Optimization is the pursuit of perfection—and we optimize for our goals because
     we don’t want to settle. But is it better to go all the way? In other words, how
     much optimizing is too much?
+  id: totrans-9
   prefs: []
   type: TYPE_NORMAL
+  zh: 优化是追求完美的过程—我们为了自己的目标而进行优化，因为我们不想妥协。但是到底是更好地进行到底呢？换句话说，优化到什么程度才算过多？
 - en: .   .   .
+  id: totrans-10
   prefs: []
   type: TYPE_NORMAL
+  zh: .   .   .
 - en: People have been trying to figure out how hard to optimize for a long time.
     You can put them on a spectrum.
+  id: totrans-11
   prefs: []
   type: TYPE_NORMAL
+  zh: 人们一直试图弄清楚到底应该如何进行优化。你可以把它们放在一个光谱上。
 - en: 'On one side is John Mayer, who thinks less is more. In definitely-his-best-song,
     “Gravity,” he sings:'
+  id: totrans-12
   prefs: []
   type: TYPE_NORMAL
+  zh: 一方面是约翰·梅尔（John Mayer），他认为少即是多。在绝对是他最好的歌曲“Gravity”中，他唱道：
 - en: “Oh, twice as much ain't twice as good / And can't sustain like one half could
     / It's wanting more that's gonna send me to my knees.”
+  id: totrans-13
   prefs: []
   type: TYPE_NORMAL
+  zh: “噢，两倍的东西不是两倍好 / 不能像一半那样持续 / 渴望更多会把我送到膝盖上。”
 - en: Dolly Parton, who seriously disagrees, is on the opposite side. She’s famous
     for saying, “Less is not more. [More is more](https://quotefancy.com/quote/795529/Dolly-Parton-Some-people-say-that-less-is-more-But-I-think-more-is-more).”
+  id: totrans-14
   prefs: []
   type: TYPE_NORMAL
+  zh: 多莉·帕顿（Dolly Parton）严重不同意，她站在相反的一边。她因说过“少不是更多。[更多才是更多](https://quotefancy.com/quote/795529/Dolly-Parton-Some-people-say-that-less-is-more-But-I-think-more-is-more)而闻名”。
 - en: 'Aristotle disagreed with both of them. He propounded the golden mean 2,000
     years ago: when you’re optimizing against a goal, you want the middle between
     too much and too little.'
+  id: totrans-15
   prefs: []
   type: TYPE_NORMAL
+  zh: 亚里士多德与他们两个都不同意。他在 2000 年前提出了中庸之道：当你优化目标时，你希望找到过多和过少之间的中间点。
 - en: Which one do we pick? Well, it’s 2023\. We want to be a little more quantitative
     and a little less aphoristic about this. Ideally, we’d have some way to measure
     how well optimizing against a goal works out.
+  id: totrans-16
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们选哪一个？嗯，现在是 2023 年。我们想要对此进行更多定量的分析，而不是纯粹的格言。理想情况下，我们应该有某种方式来衡量优化目标的效果如何。
 - en: As is the case very often these days, we can turn to the machines for help.
     Goal optimization is one of the key things that machine learning and AI researchers
     study. In order to get a neural network to do anything useful, you have to give
     it a goal and try to make it better at achieving that goal. The answers that computer
     scientists have found in the context of neural networks can teach us a lot about
     optimizing in general.
+  id: totrans-17
   prefs: []
   type: TYPE_NORMAL
+  zh: 正如现今经常发生的情况一样，我们可以求助于机器。目标优化是机器学习和人工智能研究人员研究的关键内容之一。为了让神经网络做任何有用的事情，你必须给它一个目标，并尝试让它更好地实现这个目标。计算机科学家在神经网络背景下找到的答案可以告诉我们很多关于一般优化的东西。
 - en: 'I was particularly excited by [a recent article](https://sohl-dickstein.github.io/2022/11/06/strong-Goodhart.html)
     by machine learning researcher Jascha Sohl-Dickstein who argues the following:'
+  id: totrans-18
   prefs: []
   type: TYPE_NORMAL
+  zh: 我特别被机器学习研究员贾斯查·索尔-迪克斯坦最近的一篇文章所激动，他在[最近的一篇文章](https://sohl-dickstein.github.io/2022/11/06/strong-Goodhart.html)中提出了以下观点：
 - en: Machine learning teaches us that too much optimization against a goal makes
     things go horribly wrong—and you can see it in a quantitative way. When machine
     learning algorithms over-optimize for a goal, they tend to lose sight of the big
@@ -86,303 +124,432 @@
     we overly focus on perfecting a certain process or task, we become excessively
     tailored to the task at hand, and unable to handle variations or new challenges
     effectively.
+  id: totrans-19
   prefs: []
   type: TYPE_NORMAL
+  zh: 机器学习告诉我们，过度优化目标会使事情变得非常糟糕——您可以以定量方式看到这一点。当机器学习算法过度优化某个目标时，它们往往会失去对整体情况的视野，导致研究人员所说的“过拟合”。在实际情况中，当我们过于专注于完善某个特定的过程或任务时，我们会过于针对手头的任务，无法有效处理变化或新挑战。
 - en: So, when it comes to optimization—more is not, in fact, more. Take that, Dolly
     Parton.
+  id: totrans-20
   prefs: []
   type: TYPE_NORMAL
+  zh: 因此，当涉及到优化时——更多实际上并不意味着更多。达利·帕顿，你就该这么想。
 - en: This piece is my attempt to summarize Jachsa’s article and explain his point
     in accessible language. To understand it, let’s examine how training a machine
     learning model works.
+  id: totrans-21
   prefs: []
   type: TYPE_NORMAL
+  zh: 这篇文章是我总结Jachsa的文章并用通俗的语言解释他观点的尝试。为了理解它，让我们看看训练机器学习模型的工作原理。
 - en: ''
+  id: totrans-22
   prefs:
   - PREF_H4
   type: TYPE_NORMAL
 - en: '[Mindsera](https://www.mindsera.com/) uses AI to help you uncover hidden thought
     patterns, reveal the blindspots in thinking, and understand yourself better.'
+  id: totrans-23
   prefs: []
   type: TYPE_NORMAL
+  zh: '[Mindsera](https://www.mindsera.com/)利用人工智能帮助您揭示隐藏的思维模式，揭示思维的盲点，并更好地了解自己。'
 - en: You can structure your thinking with journaling templates based on useful frameworks
     and mental models to make better decisions, improve your wellbeing, and be more
     productive.
+  id: totrans-24
   prefs: []
   type: TYPE_NORMAL
+  zh: 您可以使用基于有用框架和思维模型的日记模板来构建思维，以做出更好的决策，改善您的健康状况，并提高工作效率。
 - en: '[Mindsera](https://www.mindsera.com/) AI mentors imitate the minds of intellectual
     giants like Marcus Aurelius and Socrates, offering you new pathways for insight.'
+  id: totrans-25
   prefs: []
   type: TYPE_NORMAL
+  zh: '[Mindsera](https://www.mindsera.com/)的AI导师模仿了像马库斯·奥勒留和苏格拉底这样的思想巨匠的思维方式，为您提供了洞察力的新路径。'
 - en: The smart analysis generates an original artwork based on your writing, measures
     your emotional state, reflects on your personality, and gives personalized suggestions
     to help you improve.
+  id: totrans-26
   prefs: []
   type: TYPE_NORMAL
+  zh: 智能分析基于您的文字生成原创艺术品，测量您的情绪状态，反映您的个性，并提供个性化建议，帮助您改进。
 - en: Build self-awareness, get clarity of thought, and succeed in an increasingly
     uncertain world.
+  id: totrans-27
   prefs: []
   type: TYPE_NORMAL
+  zh: 建立自我意识，明确思维，并在日益不确定的世界中取得成功。
 - en: Too much efficiency makes everything worse
+  id: totrans-28
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 过度的效率会使一切变得更糟
 - en: Say you want to create a machine-learning model that’s excellent at classifying
     images of dogs. You want to give it a dog image and get back the breed of dog.
     But you don’t just want any old dog image classifier. You want *the best* machine
     learning classifier money, code, and coffee can buy. (We’re optimizing, after
     all.)
+  id: totrans-29
   prefs: []
   type: TYPE_NORMAL
+  zh: 假设您想创建一个出色的机器学习模型，用于对狗的图像进行分类。您希望给它一张狗的图片，并获得狗的品种。但是，您不只是想要任何一种老式的狗图像分类器。您想要*最好的*机器学习分类器，不惜金钱、代码和咖啡。（毕竟，我们在优化。）
 - en: 'How do you do this? There are several approaches, but you’ll probably want
     to use supervised learning. Supervised learning is like having a tutor for your
     machine learning model: it involves quizzing the model with questions and correcting
     it when it makes mistakes. It’ll learn to get good at answering the types of questions
     it’s encountered during its training process.'
+  id: totrans-30
   prefs: []
   type: TYPE_NORMAL
+  zh: 如何做到这一点？有几种方法，但您可能会选择使用监督学习。监督学习就像给您的机器学习模型找一个导师：它涉及向模型提出问题并在它犯错时纠正它。它将学会擅长回答训练过程中遇到的问题类型。
 - en: 'First, you construct a data set of images that you use to train your model.
     You pre-label all of the images: “poodle,” “cockapoo,” “[Dandie Dinmont Terrier](https://en.wikipedia.org/wiki/Dandie_Dinmont_Terrier).”
     You feed the images and their labels to the model, and the model begins to learn
     from them.'
+  id: totrans-31
   prefs: []
   type: TYPE_NORMAL
+  zh: 首先，您构建一个图像数据集，用于训练您的模型。您对所有图像进行预标记：“贵宾犬”，“可卡犬”，“[丹迪丁蒙特梗](https://en.wikipedia.org/wiki/Dandie_Dinmont_Terrier)”
+    。您将图像及其标签提供给模型，模型开始从中学习。
 - en: 'The model learns by a guess-and-check method. You feed it an image, and it
     guesses what the label is. If it gives the wrong answer, you change the model
     slightly so that it gives a better one. If you follow this process over time,
     the model will get better and better at predicting the labels to images in its
     training set:'
+  id: totrans-32
   prefs: []
   type: TYPE_NORMAL
+  zh: 模型通过猜测和检查的方法学习。您向它提供一张图片，它猜测标签是什么。如果它给出了错误的答案，您就稍微改变一下模型，使其给出更好的答案。如果您随着时间的推移一直按照这个过程，模型将越来越擅长于预测其训练集中图像的标签：
 - en: Now that the model is getting good at predicting the labels for images in its
     training set, you set a new task for it. You ask the model to label new images
     of dogs that it hasn’t seen before in training.
+  id: totrans-33
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在模型擅长于预测其训练集中图像的标签后，你为它设置了一个新任务。你要求模型为它以前在训练中没有见过的新狗图片贴标签。
 - en: 'This is an important test: if you only ask the model about images it’s seen
     before, it’s sort of like letting it cheat on a test. So you go out and get some
     more dog images that you’re sure the model hasn’t seen.'
+  id: totrans-34
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是一个重要的测试：如果你只问模型关于它以前见过的图像，那有点像让它作弊考试。所以你去找一些你确定模型没见过的狗的图像。
 - en: 'At first, everything is very rock and roll. The more you train the model, the
     better it gets:'
+  id: totrans-35
   prefs: []
   type: TYPE_NORMAL
+  zh: 起初，一切都非常摇滚。你训练模型越多，它就变得越好：
 - en: 'But if you keep training, the model will start to do the AI equivalent of shitting
     on the rug:'
+  id: totrans-36
   prefs: []
   type: TYPE_NORMAL
+  zh: 但如果你继续训练，模型将开始做等效于在地毯上拉屎的AI：
 - en: What’s happening here?
+  id: totrans-37
   prefs: []
   type: TYPE_NORMAL
+  zh: 这里发生了什么？
 - en: Some training makes the model better at optimizing for the goal. But past a
     certain point, more training actually makes things worse. This is a phenomenon
     in machine learning called “overfitting.”
+  id: totrans-38
   prefs: []
   type: TYPE_NORMAL
+  zh: 一些训练使模型在优化目标上变得更好。但过了一定程度，更多的训练实际上会使事情变得更糟。这是机器学习中的一种现象，称为“过拟合”。
 - en: Why overfitting makes things worse
+  id: totrans-39
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 过拟合为什么会使事情变得更糟
 - en: We’ve been doing something subtle with our model training.
+  id: totrans-40
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们在模型训练中做了一些微妙的事情。
 - en: 'We want the model to be good at labeling pictures of *any dog—*this is our
     true objective. But we can’t optimize it for that directly, because we can’t possibly
     get the set of all possible dog pictures. Instead, we optimize it for a *proxy
     objective*: a smaller subset of dog pictures that we hope are representative of
     the true objective.'
+  id: totrans-41
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们希望模型擅长于标记*任何狗的*图片——这是我们的真实目标。但我们不能直接为此进行优化，因为我们不可能获得所有可能的狗图片集。相反，我们将其优化为一个*代理目标*：一小部分我们希望是真实目标的狗图片。
 - en: There’s a lot of similarity between the proxy objective and the true objective,
     so at the start, the model gets better at both objectives. But as the model gets
     more trained, the usable similarities between the two objectives diminish. Pretty
     soon, the model is *only* getting good at recognizing what’s in the training set,
     and bad at anything else.
+  id: totrans-42
   prefs: []
   type: TYPE_NORMAL
+  zh: 代理目标和真实目标之间有很多相似之处，所以在开始时，模型在两个目标上都变得更好。但随着模型训练得更多，两个目标之间可用的相似性减少了。很快，模型*只*擅长识别训练集中的内容，而对其他任何内容都不擅长。
 - en: The more the model is trained, the more it starts to get too attuned to the
     details of the dataset you trained it on. For example, maybe the training dataset
     has too many pictures of yellow labradoodles. When it’s overtrained, the model
     might accidentally learn that all yellow dogs are labradoodles.
+  id: totrans-43
   prefs: []
   type: TYPE_NORMAL
+  zh: 模型训练得越多，它就越开始过于关注你训练它的数据集的细节。例如，也许训练数据集有太多黄色的拉布拉多。当它过度训练时，模型可能会意外地学到所有黄色狗都是拉布拉多。
 - en: When presented with new images that don't share the same peculiarities as the
     training dataset, the overfitted model will struggle.
+  id: totrans-44
   prefs: []
   type: TYPE_NORMAL
+  zh: 当被呈现出与训练数据集不同的新图片时，过度拟合的模型将遇到困难。
 - en: Overfitting illustrates an important point in our exploration of goal optimization.
+  id: totrans-45
   prefs: []
   type: TYPE_NORMAL
+  zh: 过拟合在我们探索目标优化中阐明了一个重要的观点。
 - en: First, when you’re trying to optimize anything, you’re rarely optimizing the
     thing itself—you’re optimizing a proxy measure. In the dog classification problem,
     we can’t train the model against the set of all possible dog images. Instead,
     we try to optimize for a subset of dog pictures and hope that works well enough
     to generalize. And it does—until we take it too far.
+  id: totrans-46
   prefs: []
   type: TYPE_NORMAL
+  zh: 首先，当你试图优化任何东西时，你很少优化它本身——你优化的是一个代理度量。在狗分类问题中，我们无法针对所有可能的狗图片训练模型。相反，我们尝试优化一部分狗图片，并希望它足够好以泛化。它确实如此——直到我们走得太远。
 - en: 'Which is the second point: when you over-optimize a proxy function, you actually
     get quite far away from the original goal you had in mind.'
+  id: totrans-47
   prefs: []
   type: TYPE_NORMAL
+  zh: 这就是第二点：当你过度优化代理函数时，实际上你离最初设想的原始目标越来越远。
 - en: Once you understand how this works in machine learning, you’ll start to see
     it everywhere.
+  id: totrans-48
   prefs: []
   type: TYPE_NORMAL
+  zh: 一旦你理解了这在机器学习中的运作方式，你就会开始在各处看到它。
 - en: How overfitting applies to the real world
+  id: totrans-49
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 过拟合如何应用于现实世界
 - en: 'Here’s an easy example:'
+  id: totrans-50
   prefs: []
   type: TYPE_NORMAL
+  zh: 这里有一个简单的例子：
 - en: In school, we want to optimize learning the subject matter of the classes we
     take. But it’s hard to measure how well you know something, so we give out standardized
     tests. Standardized tests are a good proxy for whether you know a subject—to some
     degree.
+  id: totrans-51
   prefs: []
   type: TYPE_NORMAL
+  zh: 在学校里，我们希望优化学习我们所上课程的学科内容。但很难衡量你对某事的了解程度，所以我们进行标准化测试。标准化测试在一定程度上是评判你是否了解某个科目的一个好的代理。
 - en: But when students and schools put too much pressure on standardized test scores,
     the pressure to optimize for them starts to come at the cost of true learning.
     Students become overfitted to the process of increasing their test scores. They
     learn to take the test (or cheat) in order to optimize their score, rather than
     actually learning the subject matter.
+  id: totrans-52
   prefs: []
   type: TYPE_NORMAL
+  zh: 但当学生和学校过分强调标准化考试成绩时，为了优化成绩，他们开始以牺牲真正学习为代价。学生们开始过度适应提高考试成绩的过程。他们学会了应对考试（或作弊），以优化他们的分数，而不是真正学习学科内容。
 - en: 'Overfitting occurs in the world of business, too. In the book [*Fooled by Randomness*](https://www.amazon.com/Fooled-Randomness-Hidden-Markets-Incerto/dp/0812975219),
     Nassim Taleb writes about a banker named Carlos, an impeccably dressed trader
     of emerging-market bonds. His trading style was to buy dips: when Mexico devalued
     its currency in 1995, Carlos bought the dip, and profited when bond prices rallied
     upward after the crisis was resolved.'
+  id: totrans-53
   prefs: []
   type: TYPE_NORMAL
+  zh: 过度拟合也会发生在商业世界中。在书籍[*Fooled by Randomness*](https://www.amazon.com/Fooled-Randomness-Hidden-Markets-Incerto/dp/0812975219)中，纳西姆·塔勒布讲述了一个名叫卡洛斯的银行家，一个着装完美的新兴市场债券交易商。他的交易风格是在低点买入：1995年墨西哥货币贬值时，卡洛斯买了低点，在危机解决后债券价格上涨时获利。
 - en: This dip-buying strategy netted $80 million in returns to his firm over the
     years he ran it. But Carlos became “overfitted” to the market he’d been exposed
     to, and his drive to optimize his returns did him in.
+  id: totrans-54
   prefs: []
   type: TYPE_NORMAL
+  zh: 这种买低卖高的策略在他经营期间为公司带来了8000万美元的回报。但卡洛斯对他所接触到的市场过度拟合，他优化回报的动力使他失败了。
 - en: In the summer of 1998, he bought a dip in Russian bonds. As the summer progressed,
     the dip worsened—and Carlos continued to buy more. Carlos kept doubling down until
     bond prices were so low that he eventually lost $300 million—three times more
     than he’d made in his entire career to that point.
+  id: totrans-55
   prefs: []
   type: TYPE_NORMAL
+  zh: 1998年夏天，他买了俄罗斯债券的低点。随着夏天的进行，低点加剧了，而卡洛斯继续增加购买量。卡洛斯一直加码，直到债券价格低到最终他亏损了3亿美元——比他此前整个职业生涯赚的还要多三倍。
 - en: As Taleb points out in his book, “At a given time in the market, the most successful
     traders are likely to be those that are best fit to the latest cycle.”
+  id: totrans-56
   prefs: []
   type: TYPE_NORMAL
+  zh: 正如塔勒布在他的书中指出的，“在市场中的某个时刻，最成功的交易员很可能是那些最适合最新周期的人。”
 - en: In other words, over-optimizing returns likely means overfitting to the current
     market cycle. Your performance will dramatically increase your performance over
     the short run. But the current market cycle is just a proxy for the market’s behavior
     as a whole—and when the cycle changes, your previously successful strategy can
     suddenly leave you bankrupt.
+  id: totrans-57
   prefs: []
   type: TYPE_NORMAL
+  zh: 换句话说，过度优化收益可能意味着过度拟合当前的市场周期。短期内，你的表现会显著提高你的绩效。但当前市场周期只是市场整体行为的一个代理——当周期变化时，你以前成功的策略可能会让你突然破产。
 - en: The same heuristic applies in my business. Every is a subscription media business,
     for which I want to increase MRR (monthly recurring revenue.) To optimize for
     that goal, one thing I can do is to increase the traffic to our articles by rewarding
     writers for getting more pageviews.
+  id: totrans-58
   prefs: []
   type: TYPE_NORMAL
+  zh: 这个启发式法则也适用于我的业务。Every 是一个订阅媒体业务，我希望增加 MRR（月度重复收入）。为了优化这个目标，我可以通过奖励作家获得更多页面浏览量来增加我们文章的流量。
 - en: And it will likely work! Increased traffic does increase our paid subscribers—to
     a point. Past that point, though, and I bet writers would start driving pageviews
     from clickbait-y or salacious articles that wouldn’t draw in engaged readers who
     want to pay. Ultimately, if I turned Every into a clickbait factory, it would
     probably cause our paid subscribers to shrink instead of grow.
+  id: totrans-59
   prefs: []
   type: TYPE_NORMAL
+  zh: 这很可能会奏效！增加流量确实会增加我们的付费订阅者——到一定程度。但过了那个点，我打赌作家们会开始通过点击率高或耸人听闻的文章来增加页面浏览量，这些文章不会吸引那些想要付费的忠实读者。最终，如果我把
+    Every 变成了一个点击量工厂，可能会导致我们的付费订阅者减少而不是增加。
 - en: 'If you keep looking at places in your life or your business, you’re bound to
     find the same pattern. The question is: what do we do about this?'
+  id: totrans-60
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果你一直在生活或事业中寻找这种模式，你肯定会找到相同的模式。问题是：我们该怎么办？
 - en: So what do we do about it?
+  id: totrans-61
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 那么我们该怎么办呢？
 - en: 'Machine learning researchers use many techniques to try to prevent overfitting.
     Jascha’s article tells us about three major things you can do: early stopping,
     introducing random noise into the system, and regularization.'
+  id: totrans-62
   prefs: []
   type: TYPE_NORMAL
+  zh: 机器学习研究人员使用许多技术来尝试防止过拟合。贾斯查的文章告诉我们三件主要的事情：提前停止、向系统引入随机噪音和正则化。
 - en: '**Early stopping**'
+  id: totrans-63
   prefs: []
   type: TYPE_NORMAL
+  zh: '**提前停止**'
 - en: This means consistently checking the model’s performance on its true objective
     and pausing training when performance starts to go down.
+  id: totrans-64
   prefs: []
   type: TYPE_NORMAL
+  zh: 这意味着持续检查模型在其真正目标上的性能，并在性能开始下降时暂停训练。
 - en: In the case of Carlos, the trader who lost all of his money buying bond dips,
     this might mean a strict loss control mechanism that forces him to unwind his
     trades after a certain amount of accumulated loss.
+  id: totrans-65
   prefs: []
   type: TYPE_NORMAL
+  zh: 对于卡洛斯这种买债券跌幅失去所有资金的交易者来说，这可能意味着一个严格的损失控制机制，迫使他在累积一定损失后解除交易。
 - en: '**Introducing random noise**'
+  id: totrans-66
   prefs: []
   type: TYPE_NORMAL
+  zh: '**引入随机噪音**'
 - en: If you add noise to the inputs or the parameters of a machine-learning model,
     it will be harder for it to overfit. The same thing is true in other systems.
+  id: totrans-67
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果向机器学习模型的输入或参数添加噪音，它就会更难过拟合。其他系统也是如此。
 - en: In the case of students and schools, this might mean giving standardized tests
     at random times to make it harder to cram.
+  id: totrans-68
   prefs: []
   type: TYPE_NORMAL
+  zh: 对于学生和学校来说，这可能意味着在随机时间进行标准化测试，以使临时抱佛脚变得更困难。
 - en: '**Regularization**'
+  id: totrans-69
   prefs: []
   type: TYPE_NORMAL
+  zh: '**正则化**'
 - en: Regularization is used in machine learning to penalize models so that they don’t
     become too complex. The more complex they are, the more likely they are to be
     *overfitted* to the data. The technical details of this aren’t too important,
     but you can apply the same concept outside of machine learning by adding friction
     to the system.
+  id: totrans-70
   prefs: []
   type: TYPE_NORMAL
+  zh: 在机器学习中，正则化用于惩罚模型，使其不会变得过于复杂。它们越复杂，就越有可能对数据*过拟合*。这方面的技术细节并不太重要，但你可以在机器学习之外的领域应用相同的概念，通过为系统增加摩擦来实现。
 - en: If I wanted to incentivize all of our writers at Every to increase our MRR by
     increasing our pageviews, I could modify the way pageviews are rewarded such that
     any pageviews above a certain threshold count for progressively less.
+  id: totrans-71
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果我想激励我们每个作家增加我们的月度收入（MRR）以增加我们的页面浏览量，我可以修改奖励页面浏览量的方式，使得任何超过一定阈值的页面浏览量都逐渐减少。
 - en: 'Those are the potential solutions to the problem of overfitting, which brings
     us back to our original question: what is the optimal level of optimization?'
+  id: totrans-72
   prefs: []
   type: TYPE_NORMAL
+  zh: 这些都是解决过拟合问题的潜在解决方案，这让我们回到了我们最初的问题：优化的最佳水平是什么？
 - en: The optimal level of optimization
+  id: totrans-73
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 优化的最佳水平
 - en: The main lesson we’ve learned is that you can almost never optimize directly
     for a goal—instead, you’re usually optimizing for something that looks like your
     goal but is slightly different. It’s a proxy.
+  id: totrans-74
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们学到的主要教训是，你几乎永远不能直接为一个目标进行优化——相反，你通常是为类似于你的目标但略有不同的东西进行优化。这是一个代理目标。
 - en: Because you have to optimize for a proxy, when you optimize too much, you get
     too good at maximizing your proxy objective—which often takes you far away from
     your real goal.
+  id: totrans-75
   prefs: []
   type: TYPE_NORMAL
+  zh: 因为你必须为一个代理目标进行优化，当你优化过多时，你变得太擅长于最大化你的代理目标——这往往会让你远离你真正的目标。
 - en: 'So the point to keep in mind is: know what you’re optimizing for. Know that
     the proxy for the goal is not the goal itself. Hew loosely to your optimization
     process, and be ready to stop it or switch strategies when it seems like you’ve
     run out of useful similarity between your proxy objective and your actual goal.'
+  id: totrans-76
   prefs: []
   type: TYPE_NORMAL
+  zh: 因此要记住的要点是：了解你正在优化的目标是什么。了解代理目标不是真正的目标。松散地遵循你的优化过程，并在看起来你已经用完了你的代理目标和实际目标之间的有用相似性时准备停止或切换策略。
 - en: As far as John Mayer, Dolly Parton, and Aristotle go on the wisdom of optimization,
     I think we have to hand the award to Aristotle and his golden mean.
+  id: totrans-77
   prefs: []
   type: TYPE_NORMAL
+  zh: 关于优化智慧，约翰·梅尔、多莉·帕顿和亚里士多德的观点，我认为我们应该把奖项颁给亚里士多德和他的中庸之道。
 - en: When you’re optimizing for a goal, the optimal level of optimization is somewhere
     between too much and too little. It’s just right.
+  id: totrans-78
   prefs: []
   type: TYPE_NORMAL
+  zh: 当你为一个目标进行优化时，最佳的优化水平在太多和太少之间。刚刚好。
 - en: '* * *'
+  id: totrans-79
   prefs: []
   type: TYPE_NORMAL
+  zh: '* * *'
 - en: If you're still curious about this topic I highly recommend reading
+  id: totrans-80
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果你仍然对这个话题感兴趣，我强烈推荐阅读
 - en: '[*Too much efficiency makes everything worse*](https://sohl-dickstein.github.io/2022/11/06/strong-Goodhart.html)'
+  id: totrans-81
   prefs: []
   type: TYPE_NORMAL
+  zh: '[*效率过高会使一切变得更糟*](https://sohl-dickstein.github.io/2022/11/06/strong-Goodhart.html)'
 - en: for a more in-depth explanation with great practical examples.
+  id: totrans-82
   prefs: []
   type: TYPE_NORMAL
+  zh: 以更深入的解释和出色的实际示例。
