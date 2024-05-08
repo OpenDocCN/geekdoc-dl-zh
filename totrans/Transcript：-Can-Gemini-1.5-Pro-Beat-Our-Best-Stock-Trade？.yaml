@@ -1,118 +1,179 @@
 - en: <!--yml
+  id: totrans-0
   prefs: []
   type: TYPE_NORMAL
+  zh: <!--yml
 - en: 'category: COT 专栏'
+  id: totrans-1
   prefs: []
   type: TYPE_NORMAL
+  zh: 类别：COT 专栏
 - en: 'date: 2024-05-08 11:04:41'
+  id: totrans-2
   prefs: []
   type: TYPE_NORMAL
+  zh: 日期：2024-05-08 11:04:41
 - en: -->
+  id: totrans-3
   prefs: []
   type: TYPE_NORMAL
+  zh: -->
 - en: 'Transcript: Can Gemini 1.5 Pro Beat Our Best Stock Trade?'
+  id: totrans-4
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
+  zh: 文本记录：《Gemini 1.5 Pro 能否超越我们最佳的股票交易？》
 - en: 来源：[https://every.to/chain-of-thought/transcript-can-gemini-1-5-pro-beat-our-best-stock-trade](https://every.to/chain-of-thought/transcript-can-gemini-1-5-pro-beat-our-best-stock-trade)
+  id: totrans-5
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 来源：[https://every.to/chain-of-thought/transcript-can-gemini-1-5-pro-beat-our-best-stock-trade](https://every.to/chain-of-thought/transcript-can-gemini-1-5-pro-beat-our-best-stock-trade)
 - en: '**The transcript of *How Do You Use ChatGPT?* with Jesse Beyroutey is below
     for paying subscribers.**'
+  id: totrans-6
   prefs: []
   type: TYPE_NORMAL
+  zh: '**以下是 *How Do You Use ChatGPT?* 的文本记录，供付费订阅者使用。**'
 - en: Timestamps
+  id: totrans-7
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 时间戳
 - en: 'Introduction: *01:29*'
+  id: totrans-8
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 介绍：*01:29*
 - en: 'How Dan made the greatest trade of his life: *03:50*'
+  id: totrans-9
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 当 Dan 做出他一生中最伟大的交易时：*03:50*
 - en: Jesse’s strategy to use LLMs to get nuanced answers *05:27*
+  id: totrans-10
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: Jesse 使用 LLMs 获取细致答案的策略 *05:27*
 - en: Gearing up to orchestrate the best trade of our lives with Gemini Pro 1.5 *09:20*
+  id: totrans-11
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 为了组织我们生命中最好的交易做准备，使用 Gemini Pro 1.5 *09:20*
 - en: How Jesse gets AI to make great decisions *17:52*
+  id: totrans-12
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: Jesse 如何让人工智能做出优秀决策 *17:52*
 - en: Using Gemini Pro 1.5 to find patterns in data *22:38*
+  id: totrans-13
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 使用 Gemini Pro 1.5 寻找数据中的模式 *22:38*
 - en: How AI can provide deeper insights into the stock market *26:48*
+  id: totrans-14
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 人工智能如何提供对股市更深层次的见解 *26:48*
 - en: Leveraging Gemini Pro 1.5’s huge context window to analyze data *34:41*
+  id: totrans-15
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 利用 Gemini Pro 1.5 的大范围上下文窗口分析数据 *34:41*
 - en: Gemini Pro 1.5 and ChatGPT go head-to-head *46:33*
+  id: totrans-16
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: Gemini Pro 1.5 和 ChatGPT 正面对决 *46:33*
 - en: Choosing a stock with just 15 minutes left on the clock *1:10:11*
+  id: totrans-17
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 在时钟上只剩下 15 分钟时选择一支股票 *1:10:11*
 - en: What Jesse thinks are the biggest new opportunities enabled by LLMs *1:24:01*
+  id: totrans-18
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: Jesse 认为由 LLMs 带来的最大新机遇 *1:24:01*
 - en: The epilogue Jesse and Dan recorded one week after making the trade *1:28:43*
+  id: totrans-19
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: Jesse 和 Dan 在进行了交易一周后录制的尾声 *1:28:43*
 - en: Transcript
+  id: totrans-20
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 文本记录
 - en: '**Dan Shipper (00:00:00)**'
+  id: totrans-21
   prefs: []
   type: TYPE_NORMAL
+  zh: '**Dan Shipper (00:00:00)**'
 - en: When we bought Nvidia in January 2019, it was $33 a share. Today, it is $800
     a share. That was the trade of our lives. We want to find an investment that's
     just as good as our Nvidia investment using Gemini. And I think we can do it.
     Basically what we have done is we have downloaded earnings call transcripts from
     2022 and 2023.
+  id: totrans-22
   prefs: []
   type: TYPE_NORMAL
+  zh: 当我们在 2019 年一月购买 Nvidia 时，它的股价是 $33。如今，它是 $800 一股。那是我们生命中的交易。我们想要找到一笔投资，跟我们 Nvidia
+    投资一样好，使用 Gemini。而且我认为我们可以做到。基本上我们已经下载了 2022 年和 2023 年的盈利电话记录。
 - en: We're going to load them into Gemini and we'll ask some questions, see how it
     does. This is the stock that we came to at the end of a long journey, and I'll
     let you see it as I do it. We're going to swipe up to submit. Order received.
     So there we go.
+  id: totrans-23
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们将它们加载到 Gemini 中，然后提出一些问题，看看它的表现。这是我们经过漫长旅程后得到的股票，我会让你像我一样看到它。我们将向上滑动提交。订单已收到。所以我们到这里了。
 - en: Hey, I want to just take a quick break from this episode to tell you about a
     podcast you should know about. It’s hosted by Nathan Labenz, who was actually
     on this show and did one of the most popular episodes we’ve ever had about how
     to use AI as a copilot for the mind.
+  id: totrans-24
   prefs: []
   type: TYPE_NORMAL
+  zh: 嘿，我想从这一集中抽出一点时间，告诉你应该了解的一个播客。它的主持人是 Nathan Labenz，他实际上曾在这个节目上，并且做了我们有史以来最受欢迎的一集，讲述了如何将人工智能作为思维的副驾驶。
 - en: '[Learn more](/)'
+  id: totrans-25
   prefs: []
   type: TYPE_NORMAL
+  zh: '[了解更多](/)'
 - en: This post is for
+  id: totrans-26
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 这篇文章适用于
 - en: paying subscribers
+  id: totrans-27
   prefs: []
   type: TYPE_NORMAL
+  zh: 付费订阅者
 - en: '[Subscribe →](/subscribe?publication=chain-of-thought)'
+  id: totrans-28
   prefs: []
   type: TYPE_NORMAL
+  zh: '[订阅 →](/subscribe?publication=chain-of-thought)'
 - en: Or, [login](/login).
+  id: totrans-29
   prefs: []
   type: TYPE_NORMAL
+  zh: 或者，[登录](/login)。
