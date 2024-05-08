@@ -1,346 +1,500 @@
 - en: <!--yml
+  id: totrans-0
   prefs: []
   type: TYPE_NORMAL
+  zh: <!--yml
 - en: 'category: COT 专栏'
+  id: totrans-1
   prefs: []
   type: TYPE_NORMAL
+  zh: 类别：COT 专栏
 - en: 'date: 2024-05-08 11:02:17'
+  id: totrans-2
   prefs: []
   type: TYPE_NORMAL
+  zh: 日期：2024-05-08 11:02:17
 - en: -->
+  id: totrans-3
   prefs: []
   type: TYPE_NORMAL
+  zh: -->
 - en: The Next Big Programming Language Is English
+  id: totrans-4
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
+  zh: 下一个大型编程语言是英语
 - en: 来源：[https://every.to/chain-of-thought/i-spent-24-hours-with-github-copilot-workspaces](https://every.to/chain-of-thought/i-spent-24-hours-with-github-copilot-workspaces)
+  id: totrans-5
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 来源：[https://every.to/chain-of-thought/i-spent-24-hours-with-github-copilot-workspaces](https://every.to/chain-of-thought/i-spent-24-hours-with-github-copilot-workspaces)
 - en: '*Was this newsletter forwarded to you?* [*Sign up*](https://every.to/account)
     *to get it in your inbox.*'
+  id: totrans-6
   prefs: []
   type: TYPE_NORMAL
+  zh: '*这封通讯是转发给您的吗？* [*注册*](https://every.to/account) *以在您的收件箱中获取它。*'
 - en: '* * *'
+  id: totrans-7
   prefs: []
   type: TYPE_NORMAL
+  zh: '* * *'
 - en: GitHub Copilot is like autocomplete for programmers.
+  id: totrans-8
   prefs: []
   type: TYPE_NORMAL
+  zh: GitHub Copilot 就像程序员的自动完成功能。
 - en: As you type, it guesses what you’re trying to accomplish and suggests the block
     of code it *thinks* you’re going to write. If it’s right—and very often it is—you
     press Tab and it’ll fill in the rest for you. Launched in 2021, a year or so before
     ChatGPT’s arrival, Copilot was the first breakthrough generative AI use case for
     programming that really took off.
+  id: totrans-9
   prefs: []
   type: TYPE_NORMAL
+  zh: 当你输入时，它猜测你想要完成什么，并建议它 *认为* 你将要编写的代码块。如果它猜对了——而它经常猜对——你只需按下 Tab 键，它会为你填写剩下的部分。在
+    ChatGPT 到来之前的2021年推出的 Copilot，是真正开始蓬勃发展的编程的第一个突破性生成 AI 应用案例。
 - en: If GitHub Copilot is like autocomplete, [GitHub Copilot Workspace](https://github.blog/2024-04-29-github-copilot-workspace/)—currently
     in limited technical preview—is like an extremely capable [pair programmer](https://en.wikipedia.org/wiki/Pair_programming#:~:text=Pair%20programming%20is%20a%20software,two%20programmers%20switch%20roles%20frequently.)
     who never asks for coffee breaks or RSUs.
+  id: totrans-10
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果 GitHub Copilot 就像自动完成一样，[GitHub Copilot Workspace](https://github.blog/2024-04-29-github-copilot-workspace/)——目前处于有限的技术预览阶段——就像一个极其能干的[双人编程](https://en.wikipedia.org/wiki/Pair_programming#:~:text=Pair%20programming%20is%20a%20software,two%20programmers%20switch%20roles%20frequently.)伙伴，从不要求喝咖啡休息或
+    RSU。
 - en: It’s a tool that lets you code in plain English from start to finish without
     leaving your browser. If you give it a task to complete, Copilot Workspace will
     read your existing codebase, construct a step-by-step plan to build it, and then—once
     you give the green light—it’ll implement the code while you watch.
+  id: totrans-11
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是一个让你可以从头到尾用纯英语编写代码而不离开浏览器的工具。如果你给它一个任务来完成，Copilot Workspace 将会阅读你现有的代码库，构建一个逐步构建它的计划，然后——一旦你点亮绿灯——它会在你观看的同时实现代码。
 - en: Put another way, it’s an agent. It’s similar to Devin, the AI agent for programming
     whose [launch announcement](https://www.cognition-labs.com/introducing-devin)
     went viral a few months ago, and which was reportedly seeking a [$2 billion valuation](https://www.wsj.com/tech/ai/a-peter-thiel-backed-ai-startup-cognition-labs-seeks-2-billion-valuation-998fa39d)
     in a new fundraising effort. I haven’t gotten access to that yet (shakes fist
     in Devin’s general direction!), but I do have access to Copilot Workspace.
+  id: totrans-12
   prefs: []
   type: TYPE_NORMAL
+  zh: 换句话说，这是一个代理。这类似于 Devin，一个编程的人工智能代理，其 [发布公告](https://www.cognition-labs.com/introducing-devin)
+    几个月前在网络上广为流传，据报道正在寻求新的融资，估值达到 [$20 亿](https://www.wsj.com/tech/ai/a-peter-thiel-backed-ai-startup-cognition-labs-seeks-2-billion-valuation-998fa39d)。我还没有得到那个（向
+    Devin 愤怒地挥动拳头！），但我可以访问 Copilot Workspace。
 - en: Over the past 24 hours, I’ve put Copilot Workspace through some of its paces.
     I tried to have it build a large, complex feature on its own, but I also asked
     it to do smaller, better-defined tasks. My goal was to see what I could ask of
     it, what kinds of tasks it could handle, and when I might choose to use this instead
     of ChatGPT.
+  id: totrans-13
   prefs: []
   type: TYPE_NORMAL
+  zh: 在过去的 24 小时里，我对 Copilot Workspace 进行了一些测试。我试图让它自己构建一个庞大而复杂的功能，但我也要求它执行更小、定义更清晰的任务。我的目标是看看我能向它要什么，它能处理什么样的任务，以及何时我会选择使用它而不是
+    ChatGPT。
 - en: 'The short answer is: This kind of product is the future of programming. The
     long answer is below.'
+  id: totrans-14
   prefs: []
   type: TYPE_NORMAL
+  zh: 简而言之：这种产品是编程的未来。详细答案见下文。
 - en: How Copilot Workspace works
+  id: totrans-15
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: Copilot Workspace 是如何工作的
 - en: I’ve been working on an internal tool that we use at Every called Spiral. It
     allows users to build and share prompts for common AI tasks—but more on that in
     a future essay. I fashioned an ugly tribal tattoo-looking logo, and I wanted to
     replace it with a new one created by [Keshav](https://twitter.com/keshavchan),
     one of our talented designers.
+  id: totrans-16
   prefs: []
   type: TYPE_NORMAL
+  zh: 我一直在研究一个我们在 Every 使用的内部工具，叫做 Spiral。它允许用户构建和共享常见 AI 任务的提示——但更多关于这个的内容将在未来的文章中谈及。我设计了一个丑陋的部落纹身式的标志，我想用一个由
+    [Keshav](https://twitter.com/keshavchan) （我们其中一位才华横溢的设计师）设计的新标志来替换它。
 - en: This is one of those changes that isn’t very hard to code, but it’s a little
     annoying. You have to make sure the logo looks right in context and doesn’t break
     any of the styles of the elements around it. It’s one of those all-too-simple
     tasks that I also usually procrastinate doing until I really need to.
+  id: totrans-17
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是一个并不难编写的改变，但有点烦人。你必须确保徽标在上下文中看起来正确，并且不会破坏周围元素的任何样式。这是那些太简单的任务之一，我通常会拖延直到我真的需要。
 - en: So, I figured it was perfect for an AI. I decided to try Copilot Workspace—from
     here, simply referred to as CW—to see how it would do.
+  id: totrans-18
   prefs: []
   type: TYPE_NORMAL
+  zh: 所以，我觉得这对 AI 来说是完美的。我决定尝试 Copilot Workspace——从这里简称为 CW——看看它能做到什么。
 - en: '**Create a task**'
+  id: totrans-19
   prefs:
   - PREF_H4
   type: TYPE_NORMAL
+  zh: '**创建一个任务**'
 - en: 'First, I opened up CW and created a task. A task is a natural language description
     of what you want CW to build:'
+  id: totrans-20
   prefs: []
   type: TYPE_NORMAL
+  zh: 首先，我打开了 CW 并创建了一个任务。任务是对你想让 CW 构建的内容的自然语言描述：
 - en: '*Source: Screenshots courtesy of the author.*'
+  id: totrans-21
   prefs: []
   type: TYPE_NORMAL
+  zh: '*来源：作者提供的截图。*'
 - en: You’ll notice that the task description I gave it has details such as the file
     I want it to modify, where I want the logo to appear, and the file name of the
     logo image. I experimented with different prompts (and looked through the GitHub
     documentation) and learned that giving it more detail should lead to better results.
+  id: totrans-22
   prefs: []
   type: TYPE_NORMAL
+  zh: 你会注意到，我给它的任务描述包括一些细节，比如我希望它修改的文件，我希望徽标出现的位置，以及徽标图像的文件名。我尝试了不同的提示（并查阅了 GitHub
+    文档），并了解到提供更多细节应该会带来更好的结果。
 - en: 'Once I inputted the task, CW processed it and created a specification: a map
     of the current state of the codebase, and a set of criteria for what success looks
     like.'
+  id: totrans-23
   prefs: []
   type: TYPE_NORMAL
+  zh: 一旦我输入了任务，CW 对其进行处理并创建了一个规范：当前代码库的地图，以及成功看起来是什么样的一组标准。
 - en: '**Specifying out your idea of success**'
+  id: totrans-24
   prefs:
   - PREF_H4
   type: TYPE_NORMAL
+  zh: '**明确你的成功想法**'
 - en: 'CW creates a specification through a process that is sort of like what I do
     before I leave the house to grab coffee: I tap both of my pants pockets to make
     sure I have my phone, AirPods, wallet, and keys. In a sense, I am asking my pants,
     “Do you contain all of the essentials I need in order to leave the house, purchase
     a coffee, and make sure I don’t get locked out?”'
+  id: totrans-25
   prefs: []
   type: TYPE_NORMAL
+  zh: CW 通过一种类似于我出门买咖啡前所做的事情的过程来创建一个规范：我轻轻拍打我的裤子口袋，确保我带了手机、AirPods、钱包和钥匙。从某种意义上说，我在问我的裤子：“你是否装有我出门购买咖啡、确保我不会被锁在外面所需的所有必需品？”
 - en: 'Depending on how they reply—bear with me—I know whether each item is either
     present or missing. This helps me to create a plan to gather the things I need
     to find in order to successfully complete my mission. (Note to self: Your wallet
     is always wedged in some physics-defying configuration between the couch and the
     wall. Look there. Not there? Look again.)'
+  id: totrans-26
   prefs: []
   type: TYPE_NORMAL
+  zh: 根据他们的回答，——请耐心等待——我知道每个项目是存在还是缺失的。这帮助我制定计划，收集我需要找到以成功完成任务的东西。（自己注意：你的钱包总是奇迹般地夹在沙发和墙之间的某个物理上不合常规的位置。看那里。没找到？再看一遍。）
 - en: In a sense, CW does this, too. Given the task you assigned it, it attempts to
     figure out the current state of your codebase (to put it in pants terms, it taps
     the codebase and finds the wallet and keys are missing). Then it proposes a set
     of tests for what your codebase *should* look like when the task has been completed
     properly (the wallet and keys are now safely slotted in their proper pockets).
+  id: totrans-27
   prefs: []
   type: TYPE_NORMAL
+  zh: 从某种意义上说，CW 也是这样做的。给定你指定的任务，它试图弄清楚你的代码库的当前状态（用裤子的话说，它轻轻拍打代码库，并发现钱包和钥匙丢失了）。然后，它提出了一组测试，以确定任务正确完成时你的代码库应该是什么样子的（现在钱包和钥匙已经安全地放在它们应该在的口袋里）。
 - en: 'To make it even easier, it does this in normal English:'
+  id: totrans-28
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了更加简单，它用普通英语进行了说明：
 - en: Plus, you can edit each step of this process and, if you want to, add your own
     ideas in natural language. Basically, you can give CW your own test criteria for
     what success should look like so that it will check against it as it writes code.
+  id: totrans-29
   prefs: []
   type: TYPE_NORMAL
+  zh: 此外，你可以编辑这个过程的每一步，如果你愿意的话，用自然语言添加自己的想法。基本上，你可以给 CW 提供你自己的成功测试标准，以便它在编写代码时进行检查。
 - en: Once you’re satisfied with the specification, you move on to the plan.
+  id: totrans-30
   prefs: []
   type: TYPE_NORMAL
+  zh: 一旦你对规范满意，就可以继续进行规划。
 - en: '**Creating your plan**'
+  id: totrans-31
   prefs:
   - PREF_H4
   type: TYPE_NORMAL
+  zh: '**创建你的计划**'
 - en: 'If the specification stage is about figuring out *what* needs to be done in
     your codebase, the planning step is *how* it will be done. At this stage, CW gets
     into the nitty-gritty details of your codebase and writes out the changes it will
     make to each file:'
+  id: totrans-32
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果规范阶段是关于弄清楚你的代码库需要做什么，那么计划步骤就是如何做。在这个阶段，CW 进入了代码库的细节，并写出了对每个文件所做的更改：
 - en: Again, this all happens in natural language, and you can edit or add anything
     to the plan if you think CW is missing something. Once you’re satisfied, you hit
+  id: totrans-33
   prefs: []
   type: TYPE_NORMAL
+  zh: 再次说明，所有这些都是在自然语言中发生的，如果你认为 CW 遗漏了某些内容，你可以编辑或添加任何内容到计划中。一旦你满意，你就点击
 - en: '*implement*'
+  id: totrans-34
   prefs: []
   type: TYPE_NORMAL
+  zh: '*实现*'
 - en: "—and the magic begins.\uFEFF\uFEFF"
+  id: totrans-35
   prefs: []
   type: TYPE_NORMAL
+  zh: ——魔法开始了。
 - en: '**It codes!**'
+  id: totrans-36
   prefs:
   - PREF_H4
   type: TYPE_NORMAL
+  zh: '**它编码！**'
 - en: I’ve been programming with AI for more than a year-and-a-half, and this part
     is *still* so fun to me. When you hit *implement*, CW will take your plan and
     write the corresponding code for you inside your codebase.
+  id: totrans-37
   prefs: []
   type: TYPE_NORMAL
+  zh: 我已经和 AI 编程超过一年半了，而这部分对我来说仍然非常有趣。当你点击 *实现* 时，CW 将接受你的计划，并在你的代码库内为你编写相应的代码。
 - en: 'You can watch it work in real time, and, at the end, you can see a diff of
     each file—a way to see highlights of anything that changed:'
+  id: totrans-38
   prefs: []
   type: TYPE_NORMAL
+  zh: 你可以实时观看它的工作，最后，你可以看到每个文件的差异——一种查看任何更改亮点的方式：
 - en: Normally, when I’m doing this with ChatGPT, I’m constantly hopping back and
     forth between my browser and my programming environment, copy-pasting code into
     ChatGPT and vice versa. CW’s experience, by contrast, is fully integrated into
     your codebase so you can take your fingers off the keyboard and watch.
+  id: totrans-39
   prefs: []
   type: TYPE_NORMAL
+  zh: 通常情况下，当我使用 ChatGPT 时，我经常在浏览器和编程环境之间来回跳转，将代码复制粘贴到 ChatGPT 中，反之亦然。相比之下，CW 的体验完全集成到你的代码库中，所以你可以把手指离开键盘并观看。
 - en: '*Look, Ma, no hands!*'
+  id: totrans-40
   prefs: []
   type: TYPE_NORMAL
+  zh: '*看，妈妈，我不用手！*'
 - en: If you’re satisfied with the changes CW makes, you can create a *pull request*
     and instantly have the new feature merged into your codebase. It’s very cool.
+  id: totrans-41
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果你对 CW 所做的更改满意，你可以创建一个 *拉取请求*，并立即将新功能合并到你的代码库中。这非常酷。
 - en: 'And, indeed, it did create the proper code in the proper file: It swapped out
     the old logo for the new one—no programming or copy-pasting required.'
+  id: totrans-42
   prefs: []
   type: TYPE_NORMAL
+  zh: 而且，它确实在正确的文件中创建了正确的代码：它用新的换掉了旧的标志——不需要编程或复制粘贴。
 - en: 'The question is: How does this kind of programming agent experience compare
     to using ChatGPT or Claude to accomplish the same thing?'
+  id: totrans-43
   prefs: []
   type: TYPE_NORMAL
+  zh: 问题是：这种编程代理体验与使用 ChatGPT 或 Claude 完成相同任务相比如何？
 - en: Is GitHub Copilot Workspace the future of programming?
+  id: totrans-44
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: GitHub Copilot Workspace 是编程的未来吗？
 - en: 'ChatGPT is a fresh, blank notebook: There’s no structure, and you can use it
     for pretty much anything. But that means there are very few guardrails, so it
     can be difficult to get the most out of it.'
+  id: totrans-45
   prefs: []
   type: TYPE_NORMAL
+  zh: ChatGPT 就像是一个新鲜的空白笔记本：没有结构，你可以用它做几乎任何事情。但这意味着几乎没有防护栏，所以很难充分利用它。
 - en: 'Copilot Workspace is more like a bullet journal: It follows a process to help
     you get tasks done. It’s purpose-built for programming, so it’s less flexible
     than ChatGPT, but in some situations it might be more effective.'
+  id: totrans-46
   prefs: []
   type: TYPE_NORMAL
+  zh: Copilot Workspace 更像是一个子弹日记：它遵循一个流程来帮助你完成任务。它专为编程而设计，所以比 ChatGPT 更不灵活，但在某些情况下可能更有效。
 - en: While working with CW, I noticed a few things. First, it was slow. I attempted
     the same update (with the same initial prompt) to our internal Spiral app with
     CW, ChatGPT, and Claude so that I could compare them side-by-side. Both ChatGPT
     and Claude returned answers within 10-20 seconds. CW took two to three minutes
     to return.
+  id: totrans-47
   prefs: []
   type: TYPE_NORMAL
+  zh: 在使用 CW 时，我注意到了一些事情。首先，它很慢。我尝试使用 CW、ChatGPT 和 Claude 对我们内部的 Spiral 应用程序进行相同的更新（使用相同的初始提示），以便我可以将它们并排进行比较。ChatGPT
+    和 Claude 都在 10-20 秒内返回了答案。CW 则需要两到三分钟才能返回。
 - en: I think this is because both ChatGPT and Claude just output the small snippets
     of code that I needed to change. CW, by contrast, rewrote the entire file, which
     took more time.
+  id: totrans-48
   prefs: []
   type: TYPE_NORMAL
+  zh: 我认为这是因为 ChatGPT 和 Claude 都只输出了我需要更改的小代码片段。相比之下，CW 重写了整个文件，这花费了更多时间。
 - en: On the plus side, I found the code generation from CW to be higher quality.
     ChatGPT and Claude both got the answer right, but they made some subtle, pesky
     mistakes that I would’ve had to clean up by hand. CW took longer, yes, but it
     got it right on the first go.
+  id: totrans-49
   prefs: []
   type: TYPE_NORMAL
+  zh: 正面看，我发现 CW 生成的代码质量更高。ChatGPT 和 Claude 都答对了，但它们都犯了一些微妙而讨厌的错误，我本来不得不手动清理。CW 确实花了更长的时间，是的，但它一次就做对了。
 - en: 'I spent some time trying to hack CW (don’t get mad at me, GitHub, it was very
     nice hacking!) with various prompt injections to get it to tell me which AI models
     it was using under the hood, but alas, it declined to reveal its secrets:'
+  id: totrans-50
   prefs: []
   type: TYPE_NORMAL
+  zh: 我花了一些时间试图黑 CW（别生气，GitHub，这只是友好的黑客攻击！）用各种提示注入来让它告诉我它底层使用的是哪些 AI 模型，但遗憾的是，它拒绝揭示它的秘密：
 - en: Based on my experience with the logo replacement, it’s a fair assumption that
     CW would be quite good at fixing small issues or minor feature requests that constantly
     pop up in mature codebases. It may not get everything right the first time, but
     it’d probably be enough to get an engineer 90 percent of the way for minor tasks.
     And it’s deeply integrated into GitHub, which makes it easy to manage and merge
     the changes.
+  id: totrans-51
   prefs: []
   type: TYPE_NORMAL
+  zh: 根据我对标志更换的经验，可以合理地假设CW在修复成熟代码库中经常出现的小问题或次要功能请求方面表现出色。它可能不会一次性完成所有任务，但对于小任务，它可能足够让工程师完成90％的工作。而且它与GitHub深度集成，使得管理和合并更改变得容易。
 - en: 'But what about the holy grail: Can you let it run wild on a big feature request?
     I tried it out on that as well. I’ve been meaning to create a team-sharing flow
     for Spiral so it’s easier for Every team members to share spirals with one another.
     This one yielded more mixed results, but the reason *why* might surprise you.'
+  id: totrans-52
   prefs: []
   type: TYPE_NORMAL
+  zh: 但是关于圣杯：您能让它对一个大功能请求进行大范围地运行吗？我也试过。我一直想为Spiral创建一个团队共享流程，以便每个团队成员更轻松地共享螺旋。这个任务产生了更多的混合结果，但*原因*可能会让您感到意外。
 - en: 'To get started, I wrote a short paragraph for how I thought the sharing feature
     *should* work, and CW built a spec for it:'
+  id: totrans-53
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了开始，我写了一个简短的段落，说明了我认为共享功能*应该*如何工作，CW为此建立了一个规范：
 - en: But my eyes glazed over looking at the spec. Everything looked basically right,
     but it was difficult to know whether or not I should let CW proceed to a plan
     and implementation, or whether I needed to back up a step.
+  id: totrans-54
   prefs: []
   type: TYPE_NORMAL
+  zh: 但是当我看着规范时，我的眼睛模糊了。一切看起来基本正确，但很难知道我是否应该让CW继续制定计划和实施，还是我需要退一步。
 - en: Why? I realized I didn’t have a good understanding of what the feature should
     be. There are a bunch of different ways to do sharing, and a lot of subtle decisions
     to be made. CW had taken my nebulous task and made those decisions for me. That
     could be great in some situations, but it was hard for me to discern which decisions
     it had made and what their effects would be on the final experience.
+  id: totrans-55
   prefs: []
   type: TYPE_NORMAL
+  zh: 为什么呢？我意识到我对功能应该是什么没有很好的理解。有许多不同的共享方式，需要做出许多微妙的决定。CW已经为我做出了这些决定。在某些情况下，这可能是很好的，但我很难辨别它做出了哪些决定以及它们对最终体验的影响。
 - en: Basically, I had a *vague* mental model of what I wanted to be built. CW took
     that and created a *specific* model of what it thought I meant. But it felt taxing
     to try to map CW’s design onto the model in my head. The task was too big; I felt
     like I needed to visualize it somehow.
+  id: totrans-56
   prefs: []
   type: TYPE_NORMAL
+  zh: 基本上，我对我想要构建的东西有一个*模糊*的心理模型。CW接受了这一点，并创建了它认为我想要的*具体*模型。但是尝试将CW的设计映射到我头脑中的模型是令人费解的。任务太大了；我觉得我需要以某种方式将其可视化。
 - en: So despite not totally understanding it, I went ahead and asked it to perform
     a full implementation, just to see what would happen. And when it started coding,
     I noticed some issues in the code it was writing. It was writing the code based
     on the plan it made, but I only saw the issues in the plan once I saw the final
     code.
+  id: totrans-57
   prefs: []
   type: TYPE_NORMAL
+  zh: 所以尽管我并没有完全理解它，我还是继续要求它执行完整的实现，只是想看看会发生什么。当它开始编码时，我注意到它编写的代码中存在一些问题。它是根据它制定的计划编写代码的，但只有当我看到最终代码时，我才注意到计划中存在的问题。
 - en: I don’t usually have this experience with ChatGPT. I think that’s for two reasons.
+  id: totrans-58
   prefs: []
   type: TYPE_NORMAL
+  zh: 我通常与ChatGPT没有这种经历。我认为这有两个原因。
 - en: First, I often ask ChatGPT to ask me questions about a feature I’m building
     so I can flesh out anything that’s underspecified before it starts to plan how
     to build the feature. This helps make my thinking sharper and its plan more likely
     to be correct. We’re building a shared model of the feature together step-by-step—so
     we’re both clear on what it should look like at the end.
+  id: totrans-59
   prefs: []
   type: TYPE_NORMAL
+  zh: 首先，我经常要求ChatGPT问我关于我正在构建的功能的问题，以便在它开始规划如何构建功能之前完善任何未明确说明的内容。这有助于使我的思维更加清晰，使其计划更有可能是正确的。我们正在一步一步地共同建立功能的共享模型
+    - 因此我们都清楚最终它应该是什么样子。
 - en: Second, I’m often working with fast feedback loops between ChatGPT, my code
     editor, and a local version of whatever app I’m building. I’m picking off a small
     chunk of a feature, building it, and then seeing the results. So I can quickly
     see the downstream effects of any code ChatGPT is creating and iterating toward
     the result I want. I’m not asking ChatGPT to build an entire feature at once like
     I did with CW.
+  id: totrans-60
   prefs: []
   type: TYPE_NORMAL
+  zh: 第二，我经常在ChatGPT，我的代码编辑器和我正在构建的任何应用程序的本地版本之间进行快速反馈循环。我正在完成一个功能的小部分，构建它，然后看到结果。因此，我可以快速看到ChatGPT创建的任何代码的下游影响，并朝着我想要的结果进行迭代。我没有像我之前对CW那样一次性要求ChatGPT构建整个功能。
 - en: There are some easy solutions —some on CW’s side and some on mine. On the CW
     side, it would be awesome if, after I inputted a task, CW initiated a chat session
     to help expand upon what I actually want before it moves on to a specification.
     Sometimes I don’t know yet! I only have a vague idea, and I wish it would force
     me to get more clear so that we build up our understanding of what needs to be
     done together.
+  id: totrans-61
   prefs: []
   type: TYPE_NORMAL
+  zh: 在 CW 的一侧有一些简单的解决方案，有些是在我这边。在 CW 的一侧，如果我输入了一个任务后，CW 能够启动一个聊天会话，帮助扩展我实际想要的内容，然后再转移到具体说明，那就太棒了。有时我还不知道！我只有一个模糊的想法，我希望它能迫使我更加清晰，这样我们就可以一起建立对需要完成的工作的理解。
 - en: On my end, using a tool like this effectively will involve learning to understand
     what kinds of tasks it can handle, how hefty an assignment it can handle by itself,
     and then using it explicitly for that. I need to learn how to be a good [model
     manager](https://every.to/chain-of-thought/the-knowledge-economy-is-over-welcome-to-the-allocation-economy)
     for this kind of model.
+  id: totrans-62
   prefs: []
   type: TYPE_NORMAL
+  zh: 在我的这一端，有效地使用这样的工具将涉及学习了解它能处理哪些类型的任务，它能独立处理多么繁重的任务，然后明确地为此使用它。我需要学会如何成为这种模型的良好[模型经理](https://every.to/chain-of-thought/the-knowledge-economy-is-over-welcome-to-the-allocation-economy)。
 - en: It’s definitely not yet at a point where I can hand it a vague notion of a complex
     feature and have it be built end-to-end like I might expect a human programmer
     to do. But it could dramatically speed up many of the tasks involved in creating
     that feature, if it’s used properly.
+  id: totrans-63
   prefs: []
   type: TYPE_NORMAL
+  zh: 它绝对还没有到我可以将一个复杂特性的模糊概念交给它并让它像我期望人类程序员那样端到端地构建的地步。但是如果正确使用，它可以大大加快创建该特性所涉及的许多任务。
 - en: Copilot Workspace is still in technical preview, so I expect some of its shortcomings
     are growing pains that will be resolved before it’s released more widely.
+  id: totrans-64
   prefs: []
   type: TYPE_NORMAL
+  zh: Copilot Workspace 目前仍处于技术预览阶段，因此我预计它的一些缺点是在更广泛地发布之前解决的成长烦恼。
 - en: Putting those quibbles aside, though, CW is a step in the direction of the future.
     English is becoming a programming language. You’ll still have to understand and
     use scripting languages like Python or Javascript, or lower-level languages like
     C.
+  id: totrans-65
   prefs: []
   type: TYPE_NORMAL
+  zh: 尽管有这些小问题，CW 无疑是朝未来发展的一步。英语正在变成一种编程语言。您仍然需要了解并使用脚本语言如 Python 或 Javascript，或者低级语言如
+    C。
 - en: But most software will probably start as sentences written into an interface
     like CW’s.
+  id: totrans-66
   prefs: []
   type: TYPE_NORMAL
+  zh: 但是大多数软件可能会始于像 CW 这样的界面中写入的句子。
 - en: It’s an exciting time to be a programmer.
+  id: totrans-67
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是作为程序员的激动人心的时刻。
 - en: '* * *'
+  id: totrans-68
   prefs: []
   type: TYPE_NORMAL
+  zh: '* * *'
 - en: '***Dan Shipper*** *is the cofounder and CEO of Every, where he writes the*
     [*Chain of Thought*](https://every.to/chain-of-thought) *column and hosts the
     podcast* [How Do You Use ChatGPT?](https://open.spotify.com/show/5qX1nRTaFsfWdmdj5JWO1G)
     *You can follow him on X at* [*@danshipper*](https://twitter.com/danshipper) *and
     on* [*LinkedIn*](https://www.linkedin.com/in/danshipper/)*, and Every on X at*
     [*@every*](https://twitter.com/every) *and on* [*LinkedIn*](https://www.linkedin.com/company/everyinc/)*.*'
+  id: totrans-69
   prefs: []
   type: TYPE_NORMAL
+  zh: '***丹·希珀*** *是 Every 的联合创始人兼首席执行官，在那里他撰写* [*Chain of Thought*](https://every.to/chain-of-thought)
+    *专栏并主持播客* [你如何使用 ChatGPT？](https://open.spotify.com/show/5qX1nRTaFsfWdmdj5JWO1G)
+    *你可以在 X 上关注他* [*@danshipper*](https://twitter.com/danshipper) *以及在* [*LinkedIn*](https://www.linkedin.com/in/danshipper/)*
+    上，还有 Every 在 X 上* [*@every*](https://twitter.com/every) *以及在* [*LinkedIn*](https://www.linkedin.com/company/everyinc/)*
+    上。*'
