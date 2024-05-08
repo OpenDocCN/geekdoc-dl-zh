@@ -1,51 +1,63 @@
 - en: <!--yml
+  id: totrans-0
   prefs: []
   type: TYPE_NORMAL
 - en: 'category: COT 专栏'
+  id: totrans-1
   prefs: []
   type: TYPE_NORMAL
 - en: 'date: 2024-05-08 11:09:50'
+  id: totrans-2
   prefs: []
   type: TYPE_NORMAL
 - en: -->
+  id: totrans-3
   prefs: []
   type: TYPE_NORMAL
 - en: What I Learned Teaching 100 People To Code with AI
+  id: totrans-4
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
 - en: 来源：[https://every.to/chain-of-thought/i-guess-i-m-a-programming-teacher-now](https://every.to/chain-of-thought/i-guess-i-m-a-programming-teacher-now)
+  id: totrans-5
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: 'Sponsored By: LeverTRM'
+  id: totrans-6
   prefs:
   - PREF_H4
   type: TYPE_NORMAL
 - en: Today's essay is brought to you by [LeverTRM](https://www.lever.co/demo/?utm_medium=third_party_email&utm_source=other&utm_campaign=).
     Empower Your Recruitment and Hiring with LeverTRM.
+  id: totrans-7
   prefs: []
   type: TYPE_NORMAL
 - en: 'Last month I launched a cohort-based course through Every: [How to Build an
     AI Chatbot](https://www.chatbot-course.com). The idea was to teach people how
     to make a GPT-4 chatbot by programming with ChatGPT over the course of a month.'
+  id: totrans-8
   prefs: []
   type: TYPE_NORMAL
 - en: AI is a hot topic, and [my articles](https://every.to/chain-of-thought) on it
     have done well. I felt like I had something genuinely important to teach. So,
     I had high expectations for the course. But I was completely unprepared for the
     level of response we got.
+  id: totrans-9
   prefs: []
   type: TYPE_NORMAL
 - en: We got a trickle of signups in the first hour. But over the course of the next
     few days—the trickle kept coming, and coming, and coming. I watched the number
     of registered students go from 5 to 10 to 25.
+  id: totrans-10
   prefs: []
   type: TYPE_NORMAL
 - en: 'By the 80th student, we shut off signups. We gave out 20 scholarships to students
     who couldn’t otherwise afford a seat, and I started to prepare to teach. My terror
     that no one would show up was replaced by something else: Will anyone like it?
     More importantly, will they truly learn something? Will it be valuable?'
+  id: totrans-11
   prefs: []
   type: TYPE_NORMAL
 - en: Over the last month, I’ve had the absolute honor of watching almost 100 people
@@ -54,6 +66,7 @@
     understood an AI term they’d been hearing about forever like “embeddings”. There
     were also some bumps and bruises along the way—it turns out, AI is still unreliable
     at programming and that I personally have some ways I can improve as an instructor.
+  id: totrans-12
   prefs: []
   type: TYPE_NORMAL
 - en: But the incredible thing about courses like this is that if you’re doing it
@@ -61,12 +74,15 @@
     for me this month. It was a huge pleasure to help so many people get their feet
     wet building with AI—and it was a crash course on being a programming teacher
     in this new world.
+  id: totrans-13
   prefs: []
   type: TYPE_NORMAL
 - en: Here are a few things I learned.
+  id: totrans-14
   prefs: []
   type: TYPE_NORMAL
 - en: ''
+  id: totrans-15
   prefs:
   - PREF_H4
   type: TYPE_NORMAL
@@ -74,30 +90,38 @@
     is a cloud-based Talent Relationship Management platform that offers ATS+CRM functionality
     in one, making it easy for companies to manage candidate relationships and streamline
     their recruitment and hiring process.'
+  id: totrans-16
   prefs: []
   type: TYPE_NORMAL
 - en: With a powerful automation hub, [LeverTRM](https://www.lever.co/demo/?utm_medium=third_party_email&utm_source=other&utm_campaign=)
     takes care of everyday tasks, freeing up time for recruiters to focus on finding
     the best-fit talent for their company. See LeverTRM in action today and ask about Lever's
     NEW Candidate Texting!
+  id: totrans-17
   prefs: []
   type: TYPE_NORMAL
 - en: AI is a cheat-code level powerup for creativity
+  id: totrans-18
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 人工智能是一种作弊级别的创造力增强。
 - en: I went into this course believing that AI is a video game cheat code powerup
     for creativity that can take people who are only marginally technical and turn
     them into builders who can suddenly bring their ideas to life. All they need is
     a little push.
+  id: totrans-19
   prefs: []
   type: TYPE_NORMAL
+  zh: 我参加这门课程的初衷是相信人工智能是一种创造力的视频游戏作弊级别增强，它可以让那些只具有基本技术能力的人成为能够突然将自己的想法付诸实践的创造者。他们所需要的只是一点推动。
 - en: 'I believe that even more fervently now. I watched people in this course go
     in with only basic technical skills and have immediate *WOW* moments that stoked
     their creativity and sense of agency. In the first class everyone made a basic
     conversational chatbot that looked like this:'
+  id: totrans-20
   prefs: []
   type: TYPE_NORMAL
+  zh: 我现在更加坚信这一点了。我看着这门课上的人们带着基本的技术技能，立即产生了让他们的创造力和主动性倍增的*惊叹*时刻。在第一堂课上，每个人都制作了一个基本的对话聊天机器人，看起来像这样：
 - en: 'At the beginning of class, I demoed the bot and stepped through sample code
     to explain how it worked. Then I live-coded the bot from scratch using ChatGPT
     so students could see how to properly prompt it to get the code they needed. Then
@@ -105,129 +129,178 @@
     class included people from all different programming skill levels. But it turned
     into a huge moment for a fair number of them. Here are a few things people said
     in the chat as they were working through the exercise:'
+  id: totrans-21
   prefs: []
   type: TYPE_NORMAL
+  zh: 在课程开始时，我演示了这个机器人，并逐步介绍了样本代码以解释它的工作原理。然后我用 ChatGPT 从头开始现场编写了这个机器人，这样学生们就可以看到如何正确地提示它以获得他们所需的代码。然后我让他们自己使用
+    ChatGPT 编写他们自己的机器人。这是有风险的——这门课程包括了各种不同编程技能水平的人。但对他们中的很多人来说，这变成了一个重要时刻。这里是一些人们在进行练习时在聊天中说的话：
 - en: “It worked!!! I'm in shock right now ;)”
+  id: totrans-22
   prefs: []
   type: TYPE_NORMAL
+  zh: “它成功了！！！我现在很震惊；）”
 - en: “It's working! It feels like cheating—I barely did anything.”
+  id: totrans-23
   prefs: []
   type: TYPE_NORMAL
+  zh: “它起作用了！感觉像是作弊——我几乎什么都没做。”
 - en: Programming with AI for the first time is like that. It sort of feels like that
     moment in The Matrix where Morpheus downloads martial arts skills into Neo’s brain.
     Neo wakes up and suddenly knows kung fu.
+  id: totrans-24
   prefs: []
   type: TYPE_NORMAL
+  zh: 第一次使用人工智能进行编程就像那样。这有点像《黑客帝国》中 Morpheus 将武术技能下载到 Neo 大脑中的那一刻。Neo 醒来，突然懂得了功夫。
 - en: Getting people to that initial feeling of creative agency with AI is great because
     it is *real*. They suddenly realize that they can do much more than they thought
     they could if they use AI to power their workflow.
+  id: totrans-25
   prefs: []
   type: TYPE_NORMAL
+  zh: 让人们达到对人工智能产生初始创造性的感觉是很好的，因为这是*真实*的。他们突然意识到，如果他们使用人工智能来驱动他们的工作流程，他们可以做的事情比他们想象的要多得多。
 - en: 'But it’s also good for a deeper reason: it helps motivate understanding.'
+  id: totrans-26
   prefs: []
   type: TYPE_NORMAL
+  zh: 但更重要的是它有一个更深层的原因：它有助于激发理解的动力。
 - en: AI makes learning to code way less intimidating and abstract
+  id: totrans-27
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 人工智能使学习编程变得不那么令人畏惧和抽象。
 - en: The problem with programming, in my opinion, is that you have to climb a steep
     hill in order to do anything interesting with it. People come to learn programming
     so they can build apps, websites, video games, and other fun creative stuff. But
     instead of learning how to do those things, they spend their first few months
     learning about variables, arrays, functions, and loops.
+  id: totrans-28
   prefs: []
   type: TYPE_NORMAL
+  zh: 我个人认为，编程的问题在于，你必须攀登一座陡峭的山才能做出有趣的事情。人们来学习编程是为了能够构建应用程序、网站、视频游戏和其他有趣的创意作品。但与其学习如何做这些事情，他们花费了前几个月的时间学习变量、数组、函数和循环。
 - en: The initial building blocks of programming seem so abstract and disconnected
     from the actual goals that students have that many drop out quickly. It’s sort
     of like taking guitar lessons so you can learn to shred like John Mayer, only
     to learn that you need to practice scales for 6 months before you start learning
     a single song.
+  id: totrans-29
   prefs: []
   type: TYPE_NORMAL
+  zh: 编程的最初构建块似乎与学生实际目标毫不相关，许多人很快就退出了。这有点像为了像约翰·梅耶（John Mayer）一样弹奏吉他而去上吉他课，结果发现你需要练习六个月的音阶，然后才能开始学习一首歌曲。
 - en: And this is not just limited to general programming concepts. AI has its own
     language, too. Large language models, embeddings, vector databases, attention…the
     list goes on.
+  id: totrans-30
   prefs: []
   type: TYPE_NORMAL
+  zh: 而这不仅仅局限于一般的编程概念。人工智能也有自己的语言。大型语言模型、嵌入、向量数据库、注意力……列举不胜。
 - en: It’s overwhelming! And it selects for people who have a natural aptitude for
     abstraction or who are persistent and self-motivated enough to get through it.
+  id: totrans-31
   prefs: []
   type: TYPE_NORMAL
+  zh: 它令人不知所措！它选拔那些具有自然抽象能力或足够坚持自我激励以度过困境的人。
 - en: AI lets people build a Day One project that looks a lot like the app, a website,
     or a game they’ve been dreaming about. These projects are deeply connected to
     their initial reasons for learning to program in the first place. And once they’ve
     done that, it provides sufficient motivation to go deeper such that technical
     topics like client-server interactions seem more appealing to learn—because you
     can connect to why they’re important.
+  id: totrans-32
   prefs: []
   type: TYPE_NORMAL
+  zh: 人工智能让人们能够构建一个看起来很像他们一直梦想的应用程序、网站或游戏的“第一天项目”。这些项目与他们最初学习编程的原因密切相关。一旦他们做到了，它就提供了足够的动力去深入学习技术主题，比如客户端-服务器交互为什么重要。
 - en: It also makes it a lot easier to understand AI-specific vocabulary like embeddings
     when you have hands-on experience you can refer to. I think a lot of people came
     into the course hungry for an opportunity to finally understand AI’s terminology—and
     I think some of the most effective moments in the course were when one of those
     concepts clicked.
+  id: totrans-33
   prefs: []
   type: TYPE_NORMAL
+  zh: 当你有实际经验可以参考时，理解像嵌入这样的人工智能专有词汇也会容易得多。我认为很多人参加这门课程都渴望有机会最终理解人工智能的术语——我认为课程中一些最有效的时刻就是当这些概念之一被理解时。
 - en: 'All of this has an important impact: it makes more people who can count themselves
     as “technical”.'
+  id: totrans-34
   prefs: []
   type: TYPE_NORMAL
+  zh: 所有这一切都具有重要的影响：能够认为自己是"技术人员"的人更多了。
 - en: There’s an expanding frontier of who counts as “technical”
+  id: totrans-35
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: '"技术人员"的范围正在不断扩大。'
 - en: There are about 132,000 professional programmers in the United States according
     to the Bureau of Labor and Statistics. About [100,000 students majored in computer
     science in 2017](https://www.nytimes.com/2019/01/24/technology/computer-science-courses-college.html#:~:text=The%20number%20of%20undergraduates%20majoring,data%20from%20about%20200%20universities.)—so
     there’s a *huge* proportion of people who have taken a few comp sci classes but
     didn’t end up becoming professional programmers.
+  id: totrans-36
   prefs: []
   type: TYPE_NORMAL
+  zh: 根据美国劳工统计局的数据，美国大约有132,000名专业程序员。2017年约有[100,000名学生主修计算机科学](https://www.nytimes.com/2019/01/24/technology/computer-science-courses-college.html#:~:text=The%20number%20of%20undergraduates%20majoring,data%20from%20about%20200%20universities.)——因此，有很大比例的人修了几门计算机科学课程，但最终并没有成为专业程序员。
 - en: These are people who understand some basic concepts but don’t really consider
     themselves “technical”. Some of them are product managers who work with engineers
     every day but aren’t in the code themselves. Some of them ended up at banks working
     on complicated Excel formulas. Some of them dropped programming entirely and ended
     up doing something totally different.
+  id: totrans-37
   prefs: []
   type: TYPE_NORMAL
+  zh: 这些人理解一些基本概念，但并不认为自己是"技术人员"。其中一些是产品经理，每天都与工程师合作，但自己不写代码。有些人在银行工作，处理复杂的Excel公式。还有一些人完全放弃了编程，转而从事完全不同的工作。
 - en: All of them have dreams, and AI means all of them are 10x more capable of building
     those dreams today than they were a year ago. They just don’t realize it yet.
+  id: totrans-38
   prefs: []
   type: TYPE_NORMAL
+  zh: 他们所有人都有梦想，而人工智能意味着他们中的所有人今天都比一年前能够实现这些梦想的能力增加了十倍。只是他们还没有意识到。
 - en: That’s who I was trying to reach with this course. And after teaching it this
     month, I feel confident that the basic programming knowledge you pick up with
     a few college courses is enough to get a web app running with ChatGPT in a few
     hours if you prompt it correctly. It doesn’t bring you to the level of a professional
     programmer—but it does make you productive enough to be dangerous. And that’s
     just what’s possible *today*.
+  id: totrans-39
   prefs: []
   type: TYPE_NORMAL
+  zh: 这就是我试图通过这门课程达到的人群。在本月教授了这门课程之后，我有信心说，如果你正确引导ChatGPT，那么你在几个小时内就能掌握一些基本的编程知识，让一个Web应用程序运行起来。这并不会使你达到专业程序员的水平，但它确实使你变得足够有生产力，可以制造一些危险的东西。而这就是*今天*可能实现的。
 - en: In the future, I think the frontier of people who can use AI to become builders
     will expand even further. For example, there are many more people who know how
     to use no code tools like Notion, or Squarespace, or Bubble than there are people
     who understand underlying programming concepts. Those people will suddenly be
     able to build interesting things with AI, too.
+  id: totrans-40
   prefs: []
   type: TYPE_NORMAL
+  zh: 在未来，我认为能够利用人工智能成为构建者的人群范围将进一步扩大。例如，了解如何使用Notion、Squarespace或Bubble等无代码工具的人比了解底层编程概念的人要多得多。这些人也将能够利用人工智能构建有趣的东西。
 - en: But it’s not all sunshine and rainbows. There are problems here too.
+  id: totrans-41
   prefs: []
   type: TYPE_NORMAL
+  zh: 但并非一切都是光明和彩虹。这里也存在问题。
 - en: Even if you’re coding with AI, you still need basic programming knowledge
+  id: totrans-42
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 即使你在使用人工智能编码，你仍然需要基本的编程知识。
 - en: AI isn’t good enough yet to reliably avoid or fix its own programming mistakes.
     There are certain areas where it’s quite good and others where it falls flat on
     its face.
+  id: totrans-43
   prefs: []
   type: TYPE_NORMAL
+  zh: AI目前还不足以可靠地避免或修复自己的编程错误。在某些领域，它表现得非常好，在其他领域，它则毫无作为。
 - en: A programmer with a little bit of experience can learn to fill in the gaps for
     ChatGPT, but it’s much harder for people with less technical experience to manage
     this. You can easily get into a frustrating rabbit hole of prompting the model
     to do something for you, finding that it fails, and prompting it to fix things
     with little success.
+  id: totrans-44
   prefs: []
   type: TYPE_NORMAL
+  zh: 有一点经验的程序员可以学会填补ChatGPT的空白，但对于技术经验较少的人来说，管理这一点要困难得多。你很容易陷入一个令人沮丧的循环中，提示模型为你做某事，发现它失败了，然后提示它修复问题，但很少能成功。
 - en: We definitely ran into this during the course, and I think it was partially
     driven by my own blindness to what counts as “basic”. I’ve been programming for
     about 20 years at this point, and so at the beginning, I was unaware of how complicated
@@ -235,43 +308,59 @@
     explain what embeddings were to students, or why GPT models tend to hallucinate.
     But I sometimes neglected to explain basic terms like API key or environment variable—and
     these understandably got confusing for people without a programming background.
+  id: totrans-45
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们在课程中确实遇到了这个问题，我认为这部分是由于我对“基础”概念的盲视所导致的。我现在已经编程大约20年了，所以一开始我并没有意识到看似“基础”的任务会有多么复杂。例如，我知道我需要向学生解释嵌入式是什么，或者为什么GPT模型倾向于产生幻觉。但有时我忽略了解释像API密钥或环境变量这样的基本术语——这些对于没有编程背景的人来说是令人困惑的。
 - en: Writing that now, I feel embarrassed that I didn’t realize that concepts like
     that needed to be explained thoroughly. It made the first lecture very up and
     down. As I mentioned above, some students were having *WOW* moments getting their
     bots to work with just a few prompts, and some students ended up feeling left
     behind because they got stuck on steps of the process that I hadn’t fully explained.
+  id: totrans-46
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在写这个，我感到很尴尬，我没有意识到那些概念需要彻底解释。这使得第一堂课起伏不定。正如我上面提到的，一些学生通过几个提示就让他们的机器人工作起来时有惊喜的时刻，而一些学生因为我没有完全解释清楚流程中的步骤而感到被抛在后面。
 - en: I was able to dial in on what was truly “basic” a bit better over the ensuing
     lectures, but I kept having moments like this over the course of the class. 20
     years of intuition and knowledge built up *does* make a significant difference
     in the amount of leverage you can get out of these models to do programming tasks,
     and it is easy to get lost if you don’t have that to fall back on.
+  id: totrans-47
   prefs: []
   type: TYPE_NORMAL
+  zh: 随着课程的进行，我能够更好地理解什么才是真正的“基础”，但在整个课程过程中，我不断遇到这样的时刻。积累了20年的直觉和知识*确实*会显著影响你能够从这些模型中获取的编程任务的杠杆，如果你没有这个作为后盾，很容易迷失方向。
 - en: 'What this means is that effective modern programming education weaves in both:
     1) teaching students to prompt models to do programming tasks for them and 2)
     teaching them to understand the code the model is generating.'
+  id: totrans-48
   prefs: []
   type: TYPE_NORMAL
+  zh: 这意味着有效的现代编程教育要同时涵盖两方面：1）教导学生指导模型完成编程任务，以及2）教导他们理解模型生成的代码。
 - en: If you don’t have number two, it’s too easy to get lost. This is especially
     true if you don’t have access to the latest models.
+  id: totrans-49
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果你没有第二条，很容易就会迷失方向。如果你没有使用最新模型的权限，情况尤其如此。
 - en: The haves and have-nots of AI programming
+  id: totrans-50
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: AI编程的富者与穷者
 - en: The simple truth of the matter is that GPT-4 is significantly better at programming
     than GPT-3.5.
+  id: totrans-51
   prefs: []
   type: TYPE_NORMAL
+  zh: 事实很简单，GPT-4在编程方面比GPT-3.5要好得多。
 - en: GPT-3.5 is like a caterpillar and GPT-4 is like a butterfly. GPT-4 with web
     browsing is like you took your cute little butterfly and fed it some growth hormone.
+  id: totrans-52
   prefs: []
   type: TYPE_NORMAL
+  zh: GPT-3.5就像一只毛虫，而GPT-4就像一只蝴蝶。具备浏览网络功能的GPT-4就像你给你的可爱小蝴蝶喂了一些生长激素。
 - en: There are some simple reasons for this. GPT 3.5 is much more likely to have
     bugs in its code and to make stuff up than subsequent models. GPT-4 is much better
     about these issues. However, its knowledge cutoff (it doesn’t know about anything
@@ -279,11 +368,13 @@
     libraries that were released *after* that date—you’re going to have a hard time.
     For example, GPT-4 doesn’t know that GPT-4 exists. So if you ask it to code a
     bot that uses the GPT-4 API, it won’t be able to do it.
+  id: totrans-53
   prefs: []
   type: TYPE_NORMAL
 - en: This made the course somewhat hard to teach because the set of tools that were
     available to each student was different—and the tools they could use significantly
     augmented (or detracted from) their ability level.
+  id: totrans-54
   prefs: []
   type: TYPE_NORMAL
 - en: This created a sort of *haves* and *haves nots* atmosphere in class, where you
@@ -292,29 +383,35 @@
     I tried to ameliorate this by making lessons doable no matter what your access
     level was, and by giving out GPT-4 API keys to students, but that didn’t totally
     solve the problem.
+  id: totrans-55
   prefs: []
   type: TYPE_NORMAL
 - en: Watching this unfold underscored how different the world is for the creative
     ambitions of builders who have access to the latest models. And it also made me
     excited for a time when this technology is more generally available.
+  id: totrans-56
   prefs: []
   type: TYPE_NORMAL
 - en: In a year, I think everyone will be able to use a GPT-4 quality model that has
     access to the web and to the code they’re writing. This will eliminate the *have*
     and *have-not dynamic* and also dramatically broaden who is able to build things
     with AI.
+  id: totrans-57
   prefs: []
   type: TYPE_NORMAL
 - en: I think it’s crucially important that that happens.
+  id: totrans-58
   prefs: []
   type: TYPE_NORMAL
 - en: What the future looks like
+  id: totrans-59
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: I can imagine a skeptic reading this article and saying something like, “Sure
     you can get people to make toy projects with AI, but it won’t make them a **real**
     programmer.”
+  id: totrans-60
   prefs: []
   type: TYPE_NORMAL
 - en: This is a familiar sentiment—C nerds used to sniff about how Python programmers
@@ -322,23 +419,28 @@
     were definitely right in certain ways. It is true that learning to do memory management
     makes you a better programmer. But do today’s Python programmers truly need it?
     Probably not.
+  id: totrans-61
   prefs: []
   type: TYPE_NORMAL
 - en: I think the same is true in the case of using AI to help you program. It makes
     a world of difference to have a deep understanding of underlying programming concepts
     when you’re prompting the model to help you build things.
+  id: totrans-62
   prefs: []
   type: TYPE_NORMAL
 - en: But AI can be an effective tool to help you motivate yourself to get that understanding.
     And, as models improve, you may not need nearly as much understanding of the fundamental
     implementation details as you did 20 years ago.
+  id: totrans-63
   prefs: []
   type: TYPE_NORMAL
 - en: 'Here’s the crux of all of this though:'
+  id: totrans-64
   prefs: []
   type: TYPE_NORMAL
 - en: When I learned to program I did it with a book. I used *Sam’s Teach Yourself
     C++ in 21 Days,* and let me tell you—that was a frickin’ lie.
+  id: totrans-65
   prefs: []
   type: TYPE_NORMAL
 - en: I had to sit in my bedroom and manually type instructions from the book into
@@ -347,20 +449,31 @@
     and hope to pick up the scent of someone who’d solved a similar problem. It was
     very frustrating, and very time-consuming. It probably took me 6 months to fully
     understand what was in it.
+  id: totrans-66
   prefs: []
   type: TYPE_NORMAL
+  zh: 我不得不坐在卧室里，手动将书中的指令输入到我的电脑中。当某些事情不起作用时，我不得不祈祷答案是否在文本中。如果没有，我就不得不在糟糕的 vBulletin
+    论坛帖子中搜索，并希望找到解决类似问题的人的线索。这非常令人沮丧，而且非常耗时。我可能花了6个月的时间才完全理解其中的内容。
 - en: The dream that my *Sam’s* book was selling was that I could learn to code in
     3 weeks. That was clearly impossible 20 years ago. It’s still impossible today.
+  id: totrans-67
   prefs: []
   type: TYPE_NORMAL
+  zh: 我的 *Sam's* 书所售的梦想是我可以在3周内学会编程。20年前，这显然是不可能的。如今仍然不可能。
 - en: But it is 100% possible to *build something awesome* with code in 3 weeks today
     using AI. And that is a gigantic opportunity for anyone with creative ambition.
+  id: totrans-68
   prefs: []
   type: TYPE_NORMAL
+  zh: 但是，如今使用人工智能，*在3周内用代码构建一些令人惊叹的东西*是100%可能的。这对于任何有创造力野心的人来说都是一个巨大的机会。
 - en: '* * *'
+  id: totrans-69
   prefs: []
   type: TYPE_NORMAL
+  zh: '* * *'
 - en: I’ll be teaching future cohorts of the course starting in the fall. If you’re
     interested, [sign up here.](https://www.chatbot-course.com)
+  id: totrans-70
   prefs: []
   type: TYPE_NORMAL
+  zh: 我将在秋季开始教授未来的课程。如果你有兴趣，[在这里注册。](https://www.chatbot-course.com)
