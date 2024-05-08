@@ -1713,92 +1713,116 @@
   id: totrans-214
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是我想要快速提到的另一个重要观点，对我来说非常重要的是，从零开始并不总是理想的工作流程。通常情况下，我实际上更喜欢的是从别人制作的几乎正确的应用程序开始，但我只需要做出小小的调整。这在当今的软件世界中要困难得多，因为通常，就像我之前说的那样，你不能进行那种调整。你不能这样做，因为基础设施的原因。所以我在这里展示的是在当前世界中行之有效的简单路径，那就是从头开始重新开始。但我认为实际上在未来，会有更少的从头开始，更多的是修改和混搭。一旦可能的话。想象一下，我把这个
+    Replit 链接发给你。你可以查看，你实际上可以拿到那些代码…有时我在聊天中会这样做，你可以用这个机器人做一个自己的 ChatGPT 会话，并说，“嘿，我从这个应用程序开始，并粘贴代码。”
+    然后说，“我想要做的是添加这个其他功能”，它将继续我离开的过程，现在由你来掌控，其他人可能也会这样做—
 - en: '**Dan Shipper (00:49:09)**'
   id: totrans-215
   prefs: []
   type: TYPE_NORMAL
+  zh: '**Dan Shipper (00:49:09)**'
 - en: Should we do it?
   id: totrans-216
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们要这样做吗？
 - en: '**Geoffrey Litt (00:49:11)**'
   id: totrans-217
   prefs: []
   type: TYPE_NORMAL
+  zh: '**Geoffrey Litt (00:49:11)**'
 - en: Yeah, do you want to try it?
   id: totrans-218
   prefs: []
   type: TYPE_NORMAL
+  zh: 是的，你想试试吗？
 - en: '**Dan Shipper (00:49:13)**'
   id: totrans-219
   prefs: []
   type: TYPE_NORMAL
+  zh: '**Dan Shipper (00:49:13)**'
 - en: Let's do it.
   id: totrans-220
   prefs: []
   type: TYPE_NORMAL
+  zh: 让我们试试吧。
 - en: '**Geoffrey Litt (00:49:15)**'
   id: totrans-221
   prefs: []
   type: TYPE_NORMAL
+  zh: '**Geoffrey Litt (00:49:15)**'
 - en: Okay, so do you want to simulate it where I, I make a new Chat basically, or
     do you actually—
   id: totrans-222
   prefs: []
   type: TYPE_NORMAL
+  zh: 好的，所以你想要模拟我，我基本上创建一个新的聊天，还是你实际上—
 - en: '**Dan Shipper (00:49:16)**'
   id: totrans-223
   prefs: []
   type: TYPE_NORMAL
+  zh: '**Dan Shipper (00:49:16)**'
 - en: No, no, no. I want to do it.
   id: totrans-224
   prefs: []
   type: TYPE_NORMAL
+  zh: 不，不，不。我想做。
 - en: '**Geoffrey Litt (00:49:18)**'
   id: totrans-225
   prefs: []
   type: TYPE_NORMAL
+  zh: '**Geoffrey Litt (00:49:18)**'
 - en: Okay. Well, yeah. Let's do it. I love that.
   id: totrans-226
   prefs: []
   type: TYPE_NORMAL
+  zh: 好的。好的。我们做吧。
 - en: '**Dan Shipper (00:49:22)**'
   id: totrans-227
   prefs: []
   type: TYPE_NORMAL
+  zh: '**Dan Shipper (00:49:22)**'
 - en: So, send me the REPL, and then I need a link to your custom GPT so I have the
     same stuff.
   id: totrans-228
   prefs: []
   type: TYPE_NORMAL
+  zh: 所以，把 REPL 发给我，然后我需要一个链接到你的自定义 GPT，这样我就有了相同的东西。
 - en: '**Geoffrey Litt (00:49:29)**'
   id: totrans-229
   prefs: []
   type: TYPE_NORMAL
+  zh: '**Geoffrey Litt (00:49:29)**'
 - en: Yes. Oh, this is going to be fun. So we got the REPL—
   id: totrans-230
   prefs: []
   type: TYPE_NORMAL
+  zh: 是的。哦，这会很有趣。所以我们有了 REPL—
 - en: '**Dan Shipper (00:49:37)**'
   id: totrans-231
   prefs: []
   type: TYPE_NORMAL
+  zh: '**Dan Shipper (00:49:37)**'
 - en: So you should be able to see my screen now, right?
   id: totrans-232
   prefs: []
   type: TYPE_NORMAL
+  zh: 所以你现在应该能看到我的屏幕，对吧？
 - en: '**Geoffrey Litt (00:49:40)**'
   id: totrans-233
   prefs: []
   type: TYPE_NORMAL
+  zh: '**Geoffrey Litt (00:49:40)**'
 - en: Yep.
   id: totrans-234
   prefs: []
   type: TYPE_NORMAL
+  zh: 是的。
 - en: '**Dan Shipper (00:49:42)**'
   id: totrans-235
   prefs: []
   type: TYPE_NORMAL
+  zh: '**Dan Shipper (00:49:42)**'
 - en: Okay, cool. So, okay, so you took that REPL that you just made and, and the
     REPL is basically just all the code we wrote in ChatGPT and you sent it to me.
     And what's really cool is with Replit, like I can either press “run” and it'll
@@ -1809,45 +1833,55 @@
   id: totrans-236
   prefs: []
   type: TYPE_NORMAL
+  zh: 好的，很酷。那么，你把你刚刚制作的那个 REPL 发给了我。那么真正酷的是，通过 Replit，我可以按“运行”，它就会运行，对我来说这非常棒，就像这是一个实时的东西，现在正在网络上运行，或者我可以按“分叉”，我可以制作“PodcastGuest（丹的版本）”，比旧版本“好得多”，然后我可以按“分叉”。
 - en: And, now I have all of the code that you wrote with ChatGPT, and it's somewhere
     in a source.
   id: totrans-237
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在我有了你用 ChatGPT 写的所有代码，它在某个源文件夹里。
 - en: '**Geoffrey Litt (00:50:24)**'
   id: totrans-238
   prefs: []
   type: TYPE_NORMAL
+  zh: '**Geoffrey Litt (00:50:24)**'
 - en: Look in source.
   id: totrans-239
   prefs: []
   type: TYPE_NORMAL
+  zh: 查看源代码。
 - en: '**Dan Shipper (00:50:25)**'
   id: totrans-240
   prefs: []
   type: TYPE_NORMAL
+  zh: '**Dan Shipper (00:50:25)**'
 - en: It's in source. Okay.
   id: totrans-241
   prefs: []
   type: TYPE_NORMAL
+  zh: 它在源文件中。好的。
 - en: '**Geoffrey Litt (00:50:27)**'
   id: totrans-242
   prefs: []
   type: TYPE_NORMAL
+  zh: '**Geoffrey Litt (00:50:27)**'
 - en: App.tsx.
   id: totrans-243
   prefs: []
   type: TYPE_NORMAL
+  zh: App.tsx。
 - en: '**Dan Shipper (00:50:28)**'
   id: totrans-244
   prefs: []
   type: TYPE_NORMAL
+  zh: '**Dan Shipper (00:50:28)**'
 - en: So it's right here, and that might be a thing that would take you a little while
     to figure out, but again, you could just throw all of this folder structure into
     ChatGPT and it would be like, “This is probably where the code is.”
   id: totrans-245
   prefs: []
   type: TYPE_NORMAL
+  zh: 所以就在这里，这可能需要你一段时间才能弄清楚的事情，但是再说一次，你可以把所有这些文件夹结构丢进 ChatGPT，它会告诉你，“这可能是代码的地方。”
 - en: And so now we've got to figure out what we want to do. We have this sort of
     initial thing that has a timer and has a note section. Okay, let's brainstorm
     a little bit. One thing we could do is, we could have a little window that takes
@@ -2225,15 +2259,18 @@
   id: totrans-304
   prefs: []
   type: TYPE_NORMAL
+  zh: 这将会顺利进行的。我们可能会裁掉其中的一些。它将会解决这个问题的。
 - en: One thing I’m worried about is like this is all client-side there's no server.
     So I don't know if it'll work.
   id: totrans-305
   prefs: []
   type: TYPE_NORMAL
+  zh: 我担心的一件事就是这完全是客户端的，没有服务器。所以我不知道它会不会工作。
 - en: '**Geoffrey Litt (01:00:01)**'
   id: totrans-306
   prefs: []
   type: TYPE_NORMAL
+  zh: '**Geoffrey Litt (01:00:01)**'
 - en: It will, but there are security issues here. Now, if you were to share this
     REPL link it's possible that anyone who uses it would get to use your OpenAI key,
     which is a big problem. Oh, you need to pass in the API. Yeah, this doesn't work
@@ -2241,88 +2278,108 @@
   id: totrans-307
   prefs: []
   type: TYPE_NORMAL
+  zh: 它会，但是这里存在安全问题。现在，如果你分享这个 REPL 链接，有可能任何使用它的人都会使用你的 OpenAI 密钥，这是一个大问题。哦，你需要传递API。是的，这不起作用，因为我们不在服务器上。
 - en: '**Dan Shipper (01:00:25)**'
   id: totrans-308
   prefs: []
   type: TYPE_NORMAL
+  zh: '**Dan Shipper (01:00:25)**'
 - en: Yeah, that’s why. We’ll just set it.
   id: totrans-309
   prefs: []
   type: TYPE_NORMAL
+  zh: 是的，这就是为什么。我们会设置它的。
 - en: '**Geoffrey Litt (01:00:28)**'
   id: totrans-310
   prefs: []
   type: TYPE_NORMAL
+  zh: '**Geoffrey Litt (01:00:28)**'
 - en: Alright. Just YOLO it.
   id: totrans-311
   prefs: []
   type: TYPE_NORMAL
+  zh: 好了。随便试试吧。
 - en: '**Dan Shipper (01:00:31)**'
   id: totrans-312
   prefs: []
   type: TYPE_NORMAL
+  zh: '**Dan Shipper (01:00:31)**'
 - en: Do you remember—Okay, let’s see…
   id: totrans-313
   prefs: []
   type: TYPE_NORMAL
+  zh: 你记得—好的，让我们看看…
 - en: '**Geoffrey Litt (01:00:33)**'
   id: totrans-314
   prefs: []
   type: TYPE_NORMAL
+  zh: '**Geoffrey Litt (01:00:33)**'
 - en: The error message said it. So actually, we can do it this way. I think if we
     do what Chat said, we'll actually be fine. You just need to rename the Replit
     secret you set to be, “VITE_OpenAI.”
   id: totrans-315
   prefs: []
   type: TYPE_NORMAL
+  zh: 错误消息说了。所以实际上，我们可以这样做。我认为如果我们按照 Chat 说的去做，我们实际上会没事的。你只需要将你设置的 Replit 密钥重命名为“VITE_OpenAI”。
 - en: This is a good example of annoying programmery stuff that shouldn't be necessary
     to do.
   id: totrans-316
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是一个让人讨厌的程序员问题的好例子，不应该需要做的事情。
 - en: Let's try that.
   id: totrans-317
   prefs: []
   type: TYPE_NORMAL
+  zh: 让我们试试看。
 - en: '**Dan Shipper (01:01:05)**'
   id: totrans-318
   prefs: []
   type: TYPE_NORMAL
+  zh: '**Dan Shipper (01:01:05)**'
 - en: Alright. Running again. Holding our breath.
   id: totrans-319
   prefs: []
   type: TYPE_NORMAL
+  zh: 好了。再次运行。屏住呼吸。
 - en: '**Geoffrey Litt (01:01:05)**'
   id: totrans-320
   prefs: []
   type: TYPE_NORMAL
+  zh: '**Geoffrey Litt (01:01:05)**'
 - en: This is how these things really go. It doesn't always work the first time. That's
     a part of the process.
   id: totrans-321
   prefs: []
   type: TYPE_NORMAL
+  zh: 这就是这些事情真实发生的方式。第一次并不总是成功的。这是过程的一部分。
 - en: I think that it wants you to put theAPI key… around the API key in the error
     message. It says, yeah.
   id: totrans-322
   prefs: []
   type: TYPE_NORMAL
+  zh: 我觉得它希望你将API密钥…放在错误消息中的API密钥周围。它说，是的。
 - en: Again, we probably could have given that to Chat and had it help us with that,
     but—
   id: totrans-323
   prefs: []
   type: TYPE_NORMAL
+  zh: 再次，我们本来可以把这个给 Chat，让它来帮我们，但是—
 - en: '**Dan Shipper (01:01:40)**'
   id: totrans-324
   prefs: []
   type: TYPE_NORMAL
+  zh: '**Dan Shipper (01:01:40)**'
 - en: We're running out of time here.
   id: totrans-325
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们时间快用完了。
 - en: '**Geoffrey Litt (01:01:40)**'
   id: totrans-326
   prefs: []
   type: TYPE_NORMAL
+  zh: '**Geoffrey Litt (01:01:40)**'
 - en: Okay, so yeah, it's fine. We need to set “dangerously allow browser” to “true,”
     because it doesn't like querying it from the browser, but that's okay. We're making
     a little app just for you. So it's going to be fine. Great. Again, it’s subtle,
@@ -2331,28 +2388,34 @@
   id: totrans-327
   prefs: []
   type: TYPE_NORMAL
+  zh: 好的，是的，没问题。我们需要将“允许浏览器危险”设置为“true”，因为它不喜欢从浏览器查询，但没关系。我们正在为你做一个小应用。所以一切都会好的。不过，这有点微妙，因为理解为什么这是危险的，以及什么是可以做的，什么是不可以做的，有点棘手。
 - en: '**Dan Shipper (01:02:10)**'
   id: totrans-328
   prefs: []
   type: TYPE_NORMAL
+  zh: '**Dan Shipper (01:02:10)**'
 - en: Alright, I’m going to press run and we're going to move over into our web view.
     And here it is, we've got a button. It's called “generate questions.” That's pretty
     cool.
   id: totrans-329
   prefs: []
   type: TYPE_NORMAL
+  zh: 好了，我要按运行按钮，然后我们将切换到我们的网络视图。在这里，我们有一个按钮。它叫“生成问题”。这很酷。
 - en: '**Geoffrey Litt (01:02:25)**'
   id: totrans-330
   prefs: []
   type: TYPE_NORMAL
+  zh: '**Geoffrey Litt (01:02:25)**'
 - en: Let's see if it works.
   id: totrans-331
   prefs: []
   type: TYPE_NORMAL
+  zh: 让我们看看它是否有效。
 - en: '**Dan Shipper (01:02:27)**'
   id: totrans-332
   prefs: []
   type: TYPE_NORMAL
+  zh: '**Dan Shipper (01:02:27)**'
 - en: Yeah, let's see if it works. What I want to do is just move this. How do I move
     this down? There we go. Okay, cool. So what I want to do first, we have a bunch
     of notes for our interview. So I'm going to take this and, I'm just going to throw
@@ -2360,29 +2423,35 @@
   id: totrans-333
   prefs: []
   type: TYPE_NORMAL
+  zh: 是的，让我们看看它是否工作。我想做的是把这个移到这里。我该怎么把这个移到下面？好的，搞定了。好的，我想首先做的是，我们有一堆关于我们采访的笔记。所以我要把这个，我要把它扔到这里。“这里有一些来自我的嘉宾的笔记。”
 - en: '**Geoffrey Litt (01:02:54)**'
   id: totrans-334
   prefs: []
   type: TYPE_NORMAL
+  zh: '**Geoffrey Litt (01:02:54)**'
 - en: It might give you better questions if you paste in the entire doc because then
     it'll know more about your podcast and the vibe you're going for. We have our
     timer counting down. We can see it with the progress bar.
   id: totrans-335
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果你粘贴整个文档，它可能会给你更好的问题，因为那样它会更了解你的播客以及你的氛围。我们的计时器正在倒计时。我们可以看到进度条。
 - en: '**Dan Shipper (01:03:10)**'
   id: totrans-336
   prefs: []
   type: TYPE_NORMAL
+  zh: '**Dan Shipper (01:03:10)**'
 - en: I know! Are we going to make it before the end? Okay. So I pasted a bunch of
     notes and I'm going to press “generate questions” and we’ll see what happens.
   id: totrans-337
   prefs: []
   type: TYPE_NORMAL
+  zh: 我知道！我们会在结束之前完成吗？好的。所以我粘贴了一堆笔记，然后我要按“生成问题”，我们看看会发生什么。
 - en: '**Geoffrey Litt (01:03:17)**'
   id: totrans-338
   prefs: []
   type: TYPE_NORMAL
+  zh: '**Geoffrey Litt (01:03:17)**'
 - en: Let's see what happens. So my guess, my intuition is it's not going to work
     the first try. But we'll see what happens. Have the dev tools open so you can
     see if it breaks or something.
