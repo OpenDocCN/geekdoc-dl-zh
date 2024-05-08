@@ -1,31 +1,47 @@
 - en: <!--yml
+  id: totrans-0
   prefs: []
   type: TYPE_NORMAL
+  zh: <!--yml
 - en: 'category: COT 专栏'
+  id: totrans-1
   prefs: []
   type: TYPE_NORMAL
+  zh: 分类：COT 专栏
 - en: 'date: 2024-05-08 11:07:42'
+  id: totrans-2
   prefs: []
   type: TYPE_NORMAL
+  zh: 日期：2024-05-08 11:07:42
 - en: -->
+  id: totrans-3
   prefs: []
   type: TYPE_NORMAL
+  zh: -->
 - en: What I Saw at OpenAI’s Developer Day
+  id: totrans-4
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
+  zh: 我在 OpenAI 开发者日看到的事情
 - en: 来源：[https://every.to/chain-of-thought/what-i-saw-at-openai-s-developer-day](https://every.to/chain-of-thought/what-i-saw-at-openai-s-developer-day)
+  id: totrans-5
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 来源：[https://every.to/chain-of-thought/what-i-saw-at-openai-s-developer-day](https://every.to/chain-of-thought/what-i-saw-at-openai-s-developer-day)
 - en: 'Sponsored By: LiveFlow'
+  id: totrans-6
   prefs:
   - PREF_H4
   type: TYPE_NORMAL
+  zh: 由 LiveFlow 赞助
 - en: 'This essay is brought to you by [LiveFlow](https://bit.ly/45CaNVY), North America’s
     #1 Financial Analysis Software.'
+  id: totrans-7
   prefs: []
   type: TYPE_NORMAL
+  zh: 本文由 [LiveFlow](https://bit.ly/45CaNVY) 赞助，北美第一财务分析软件。
 - en: Planning your 2024 Budget but don’t know where to start? [LiveFlow](https://bit.ly/45CaNVY)
     has already made the financial models and templates. Budget vs Actuals by Department,
     13-week Cash Flow Forecasting, Consolidation… All you have to do is plug and play.
@@ -33,214 +49,306 @@
     in minutes. Say goodbye to manually entering financial data. Say hi to automatic
     updates of your custom models and fully streamlined financial management. Get
     20% off for 3 months with promo code EVERY.
+  id: totrans-8
   prefs: []
   type: TYPE_NORMAL
+  zh: 计划你的 2024 年预算但不知从何开始？[LiveFlow](https://bit.ly/45CaNVY)已经制作好了财务模型和模板。按部门预算与实际情况对比、13周现金流预测、合并……你只需插上并开始使用。只需将你的
+    QuickBooks Online 连接到他们的模型，几分钟内就能完全设置好。告别手动输入财务数据。迎接你的定制模型自动更新和完全流程化的财务管理。使用促销码
+    EVERY 获得三个月 20% 的优惠。
 - en: '[LiveFlow](https://bit.ly/45CaNVY), the ideal choice for automation and efficiency.
     #1 Easiest to use software for Financial Planning & Analysis by G2.'
+  id: totrans-9
   prefs: []
   type: TYPE_NORMAL
+  zh: '[LiveFlow](https://bit.ly/45CaNVY)，自动化和效率的理想选择。G2评选的财务规划与分析软件中最易用的第一名。'
 - en: I like to watch what people do when they think no one's looking.
+  id: totrans-10
   prefs: []
   type: TYPE_NORMAL
+  zh: 我喜欢看人们在认为没人注意时的所作所为。
 - en: 'That''s the incredible thing about going to events like OpenAI''s Dev Day:
     you get to see the things that the cameras don''t pick up, and hear the things
     that don''t get said on stage.'
+  id: totrans-11
   prefs: []
   type: TYPE_NORMAL
+  zh: 去 OpenAI Dev Day 这样的活动真是令人难以置信的事情：你可以看到摄像机没有捕捉到的东西，听到舞台上没有被说出的话。
 - en: It was all crowds, concrete, fast wifi, and LED lights. A magic show for AI
     nerds like me.
+  id: totrans-12
   prefs: []
   type: TYPE_NORMAL
+  zh: 这里全是人群、混凝土、快速的 wifi 和 LED 灯。对像我这样的 AI 迷来说是一场魔术表演。
 - en: 'I waded through the crowd doing my patented FCO: Furtive Conference Ogle. I
     would see someone maybe-famous—[Roon](https://twitter.com/tszzl), say, or [Karpathy,](https://twitter.com/karpathy)
     or [Kevin Roose](https://twitter.com/kevinroose)—and quickly glance down at their
     badge and back up at their face before they could give me a look like, "Hey, my
     eyes are up here, buddy!"'
+  id: totrans-13
   prefs: []
   type: TYPE_NORMAL
+  zh: 我在人群中穿行，做着我专利的 FCO：秘密会议打量。我会看到某些可能有名气的人——比如 [Roon](https://twitter.com/tszzl)，或者
+    [Karpathy,](https://twitter.com/karpathy)，或者 [Kevin Roose](https://twitter.com/kevinroose)——然后迅速地瞥一眼他们的徽章，再抬起头看他们的脸，然后他们还没来得及发出像“喂，伙计，我的眼睛在这里呢！”那样的眼神。
 - en: I usually sit near the back at events, but at Dev Day I made sure to get a seat
     at the front. I wanted to see the magic up close.
+  id: totrans-14
   prefs: []
   type: TYPE_NORMAL
+  zh: 我通常在活动中坐在后排，但在 Dev Day 上，我确保坐在了前排。我想近距离看魔术。
 - en: Sam Altman walked on stage and greeted the crowd. I could see the taut, contained,
     nervous energy in his face and body as he performed. I could feel the hours of
     practice in his delivery. After a short opening monologue, Sam introduced a video
     of creative professionals, developers, and regular people talking about how they
     use ChatGPT. The lights dimmed, he stepped off to the side, and the video started.
     Everyone was watching the video, but I was watching Sam.
+  id: totrans-15
   prefs: []
   type: TYPE_NORMAL
+  zh: Sam Altman 走上舞台，向人群问好。我能看到他脸上和身上紧绷、充满紧张能量的表情。我能感觉到他在演讲中的演练时间。开场白之后，Sam 展示了一个由创意专业人士、开发者和普通人讨论他们如何使用
+    ChatGPT 的视频。灯光暗了下来，他走到一边，视频开始播放。每个人都在看视频，但我在看 Sam。
 - en: He was standing alone in the shadows on the corner of the stage. He was wearing
     dark jeans and Adidas x LEGO collab sneakers in primary colors. His hands were
     folded in front of him, and he stared intently at the floor. Sam is intense and
     always “on.” But on the side of the stage, listening to the video being played,
     he was unpracticed and unstudied. I felt like I had caught a magician’s left hand
     as he maneuvered a hidden coin, while the audience watched his right hand waving.
+  id: totrans-16
   prefs: []
   type: TYPE_NORMAL
+  zh: 他独自站在舞台角落的阴影中。他穿着深色牛仔裤和原色的阿迪达斯 x 乐高联名运动鞋。他的双手紧握在前面，目不转睛地盯着地板。Sam 是一个充满张力和总是保持状态的人。但在舞台边上，听着视频播放，他显得不熟练也没做过准备。我感觉自己就像抓住了魔术师左手操纵隐藏的硬币，而观众们则注视着他挥舞的右手。
 - en: 'Seeing a magician''s secret temporarily breaks their spell. But it also creates
     a new kind of magic: you see the magician as a human being. Eating, breathing,
     putting their pants on one leg at a time, and making magic all the same.'
+  id: totrans-17
   prefs: []
   type: TYPE_NORMAL
+  zh: 看到魔术师的秘密暂时打破了他们的魔法。但它也创造了一种新的魔法：你看到魔术师是一个人类。吃饭、呼吸、一次穿上一条裤子，但依然做着魔术。
 - en: Sam is on his way to becoming a legendary figure in tech. But in that moment
     on the stage, he was also a human being. He looked like he was enjoying himself,
     observing and anticipating the thing he's made, and watching it play out on the
     biggest stage in the world. He was living the dream of anyone who’s ever built
     something and hoped the world would like it.
+  id: totrans-18
   prefs: []
   type: TYPE_NORMAL
+  zh: 萨姆正朝着成为科技传奇人物的方向迈进。但在舞台上的那一刻，他也是一个人类。他看起来很享受，观察和期待着他所创造的事物，并在世界上最大的舞台上观看它的演出。他正在活着，任何曾经创造过东西并希望世界会喜欢的人都在实现梦想。
 - en: Watching him in that moment was worth the price of admission. I won’t soon forget
     it.
+  id: totrans-19
   prefs: []
   type: TYPE_NORMAL
+  zh: 观看他在那一刻是值得一票入场费的。我不会快忘记它的。
 - en: 'Here’s what he had to tell us:'
+  id: totrans-20
   prefs: []
   type: TYPE_NORMAL
+  zh: 他告诉我们的如下：
 - en: Bigger, smarter, faster, cheaper, easier.
+  id: totrans-21
   prefs: []
   type: TYPE_NORMAL
+  zh: 更大、更聪明、更快、更便宜、更容易。
 - en: That’s the summary of the changes that OpenAI announced yesterday. Let’s go
     through the updates one by one and discuss why they’re important.
+  id: totrans-22
   prefs: []
   type: TYPE_NORMAL
+  zh: 这就是OpenAI昨天宣布的变化摘要。我们来逐一讨论更新，并讨论它们为什么重要。
 - en: ''
+  id: totrans-23
   prefs:
   - PREF_H4
   type: TYPE_NORMAL
 - en: 'Picture this: Effortless financial reporting without lifting a finger. [LiveFlow](https://bit.ly/45CaNVY)
     is a game-changing platform that automates reporting, saving you over 5 weeks
     per year of manual work.'
+  id: totrans-24
   prefs: []
   type: TYPE_NORMAL
+  zh: 想象一下：无需举手之劳地进行财务报告。[LiveFlow](https://bit.ly/45CaNVY)是一个改变游戏规则的平台，自动化报告，每年节省您超过5周的手工工作时间。
 - en: With a library of hundreds of financial models, all you have to do is plug and
     play. [LiveFlow](https://bit.ly/45CaNVY) will connect to your QuickBooks to update
     your custom models in Google Sheets.
+  id: totrans-25
   prefs: []
   type: TYPE_NORMAL
+  zh: 有数百种财务模型可供选择，您只需插上并播放。[LiveFlow](https://bit.ly/45CaNVY)将连接到您的 QuickBooks，以更新您在
+    Google Sheets 中的自定义模型。
 - en: Join the ranks of those harnessing the power of LiveFlow to get weeks of your
     time back. Want to level up your finance management? Explore more now with LiveFlow.
     Get 20% off for 3 months with promo code EVERY.
+  id: totrans-26
   prefs: []
   type: TYPE_NORMAL
+  zh: 加入那些利用LiveFlow的力量来节省您宝贵时间的人的行列。想提升您的财务管理水平？现在就通过LiveFlow探索更多。使用促销代码EVERY，连续3个月享受8折优惠。
 - en: 'A new model: GPT-4 Turbo'
+  id: totrans-27
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 一个新的模型：GPT-4 Turbo
 - en: Bigger
+  id: totrans-28
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 更大
 - en: 'OpenAI launched a new model, GPT-4 Turbo, that sports a 128K token context
     window. That means that each prompt you send to GPT-4 Turbo can be up to the equivalent
     of 300 pages of text. Here are a few things that can fit into 300 pages:'
+  id: totrans-29
   prefs: []
   type: TYPE_NORMAL
+  zh: OpenAI 发布了一个新模型，GPT-4 Turbo，它拥有 128K 令牌的上下文窗口。这意味着您发送到 GPT-4 Turbo 的每个提示可以相当于300页的文本。以下是几件事情，可以放入300页中：
 - en: 100% of *The Lean Startup* by Eric Ries
+  id: totrans-30
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 《精益创业》全文100%
 - en: Three copies of *The Little Prince* by Antoine de Saint Exupery
+  id: totrans-31
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 三本安东尼·德·圣-埃克絮佩里的《小王子》
 - en: At least half of my collection of moody journal entries from middle school
+  id: totrans-32
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 我中学时代的抑郁日记至少有一半。
 - en: This is a 16x increase from the context window length of the most widely available
     version of GPT-4 prior to today. It significantly enhances the complexity and
     power of the queries developers can run with GPT-4\. Previously, developers had
     to spend time and energy deciding what pieces of information to put into their
     prompts, which I’ve previously argued is one of the [most important bottlenecks
     for LLM performance](https://every.to/chain-of-thought/a-few-things-i-believe-about-ai?sid=27581).
+  id: totrans-33
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是比今天之前最广泛可用的 GPT-4 版本的上下文窗口长度增加了 16 倍。它显著增强了开发人员可以在 GPT-4 上运行的查询的复杂性和功能。以前，开发人员必须花费时间和精力决定将哪些信息放入他们的提示中，我曾经认为这是[LLM性能的最重要瓶颈之一](https://every.to/chain-of-thought/a-few-things-i-believe-about-ai?sid=27581)。
 - en: A 128K context window makes this task far easier, but it doesn’t solve every
     problem. Long context windows are hard to manage, and LLMs are more likely to
     forget or miss context the longer the inputted context gets. We don’t know if
     GPT-4 Turbo suffers from these problems yet, but I’ll let you know as I start
     to build things with it.
+  id: totrans-34
   prefs: []
   type: TYPE_NORMAL
+  zh: 128K 上下文窗口使得这项任务变得更加容易，但它并不能解决所有问题。长上下文窗口很难管理，LLM越长，输入上下文就越有可能遗忘或错过上下文。我们还不知道
+    GPT-4 Turbo 是否会遇到这些问题，但随着我开始用它构建东西，我会告诉你的。
 - en: Smarter
+  id: totrans-35
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 更聪明
 - en: GPT-4 Turbo is smarter than previous generations of OpenAI models, in a few
     ways.
+  id: totrans-36
   prefs: []
   type: TYPE_NORMAL
+  zh: GPT-4 Turbo在几个方面比以前的OpenAI模型更聪明。
 - en: '**It can use multiple tools at a time.** The previous version of GPT-4 introduced
     tool use, which [I covered](https://every.to/chain-of-thought/gpt-4-can-use-tools-now-that-s-a-big-deal).
     Tool use allows GPT-4 to call out to developer-defined tools—like web browsing,
     calculators, or APIs—in order to complete queries. Previously, GPT-4 could only
     use one tool at a time. Now it can use many.'
+  id: totrans-37
   prefs: []
   type: TYPE_NORMAL
+  zh: '**它可以同时使用多个工具。** GPT-4的上一个版本引入了工具使用，我曾经报道过。工具使用允许GPT-4调用开发者定义的工具——例如网络浏览器、计算器或API——以完成查询。以前，GPT-4一次只能使用一个工具。现在它可以同时使用多个工具。'
 - en: '**Updated knowledge cutoff.** Previous versions of GPT-4 only knew about events
     up to September of 2021\. This version is current up to April 2023, making it
     far more reliable.'
+  id: totrans-38
   prefs: []
   type: TYPE_NORMAL
+  zh: '**更新的知识截止时间。** GPT-4的先前版本只知道2021年9月之前的事件。这个版本的截至日期是2023年4月，使其更加可靠。'
 - en: '**GPT-4 speaks JSON.** JSON is text that’s easily readable by non-AI applications.
     GPT-4 Turbo can return results reliably in this format—making it far easier to
     integrate into other pieces of software. Previously, developers had to cajole
     GPT to format its output correctly by, for example, telling GPT they would be
     fired if it messed up. No more cajoling necessary.'
+  id: totrans-39
   prefs: []
   type: TYPE_NORMAL
+  zh: '**GPT-4支持JSON格式。** JSON是易于非AI应用程序阅读的文本。GPT-4 Turbo可以可靠地以这种格式返回结果，这使得将其集成到其他软件中变得更加容易。以前，开发人员必须劝说GPT正确地格式化其输出，例如告诉GPT如果它弄错了他们就会被解雇。现在不再需要这样做。'
 - en: '**GPT-4 can write and run code.** For a while, ChatGPT Plus users have been
     able to use [Code Interpreter](https://every.to/napkin-math/openai-s-code-interpreter-is-about-to-remake-finance)
     (later renamed Advanced Data Analysis), a ChatGPT plugin that can write and run
     Python code for you. It’s like a data scientist in your pocket—and now it’s available
     for developers to use and integrate into their own programs via the GPT-4 API.'
+  id: totrans-40
   prefs: []
   type: TYPE_NORMAL
+  zh: '**GPT-4可以编写和运行代码。**有一段时间了，ChatGPT Plus用户已经能够使用[Code Interpreter](https://every.to/napkin-math/openai-s-code-interpreter-is-about-to-remake-finance)(后来更名为Advanced
+    Data Analysis)，这是一个ChatGPT插件，可以为您编写和运行Python代码。就像你口袋里有一位数据科学家一样——现在开发人员可以通过GPT-4
+    API使用和集成它。'
 - en: '**Multimodal.** The GPT-4 API can accept images at input: developers can send
     it any image and GPT-4 can tell them what it sees. It can also do text-to-speech,
     meaning it can reply with human-like voices to text input. And it can do image
     creation with DALL-E.'
+  id: totrans-41
   prefs: []
   type: TYPE_NORMAL
+  zh: '**多模态。** GPT-4 API可以接受图像作为输入：开发者可以发送任何图像给它，GPT-4可以告诉他们看到了什么。它还可以进行文本到语音的转换，意味着它可以以人类般的声音回复文本输入。而且它可以使用DALL-E进行图像生成。'
 - en: Faster
+  id: totrans-42
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 更快
 - en: As far as I can tell there are no publicly available speed benchmarks, but Sam
     said it was faster. Based on my very scientific testing of playing with it in
     my PJs last night, he’s right. It’s really fast. It leaves GPT-4 in the dust and
     seems at least as fast as, if not slightly faster than, GPT 3.5 Turbo—the fastest
     previous model..
+  id: totrans-43
   prefs: []
   type: TYPE_NORMAL
+  zh: 就我所知，目前没有公开可用的速度基准，但Sam说它更快。根据我昨晚穿着睡衣玩耍时进行的非常科学的测试，他是对的。它速度非常快。它让GPT-4远远甩在后面，看起来至少和GPT
+    3.5 Turbo一样快，如果不是稍微快一点的话——这是之前最快的模型。
 - en: Cheaper
+  id: totrans-44
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 更便宜
 - en: GPT-4 Turbo is **3x** **cheaper** than GPT-4\. I can’t remember a company that’s
     been able to so aggressively improve performance while also slashing the price.
+  id: totrans-45
   prefs: []
   type: TYPE_NORMAL
+  zh: GPT-4 Turbo比GPT-4 **便宜3倍**。我记不起来有哪家公司能够在大幅降低价格的同时如此激进地提高性能。
 - en: We’re lucky that OpenAI is running a Silicon Valley playbook designed to create
     mass adoption rather than just fat enterprise contracts. AI can be for everyone
     if it’s cheap enough—and that’s what OpenAI is aiming for.
+  id: totrans-46
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们很幸运，OpenAI正在执行硅谷的策略，旨在创造大规模采用，而不仅仅是获得丰厚的企业合同。
 - en: If IBM had invented GPT, do you think it would have done something like this?
     I don’t.
+  id: totrans-47
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果IBM发明了GPT，你认为它会做这样的事吗？我觉得不会。
 - en: Easier
+  id: totrans-48
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 更便宜
 - en: 'OpenAI also made interacting with GPT-4 Turbo significantly easier for developers
     and non-developers alike. The company made a lot of the functionality of third-party
     libraries (and the boilerplate code developers normally write) unnecessary. Here
     are a few ways:'
+  id: totrans-49
   prefs: []
   type: TYPE_NORMAL
+  zh: OpenAI还大大简化了开发者和非开发者与GPT-4 Turbo的交互。该公司使许多第三方库的功能（以及开发者通常编写的样板代码）变得不再必要。以下是一些方法：
 - en: '**Retrieval.** This is a big one. One of the most [important ways to improve
     LLM performance](https://every.to/chain-of-thought/a-few-things-i-believe-about-ai?sid=27581)
     is to give models access to private data, like company knowledge bases or personal
@@ -250,8 +358,13 @@
     I’m an investor). OpenAI incorporated some of the functionality of these libraries
     into its core API with its Retrieval feature—making it significantly easier for
     developers to get started building GPT-4 apps.'
+  id: totrans-50
   prefs: []
   type: TYPE_NORMAL
+  zh: '**检索。** 这是一个大问题。[提高 LLM 性能的重要方法之一](https://every.to/chain-of-thought/a-few-things-i-believe-about-ai?sid=27581)是让模型访问私有数据，如公司知识库或个人笔记。以前，这个功能必须手工构建（[就像我为我的
+    *Huberman Lab* 机器人所做的那样](https://every.to/chain-of-thought/i-trained-a-gpt-3-chatbot-on-every-episode-of-my-favorite-podcast)）或使用
+    Langchain 或 LlamaIndex 等第三方库（后者我是一位投资者）。OpenAI 将这些库的一些功能合并到其核心 API 中，通过其检索功能，使开发者更容易开始构建
+    GPT-4 应用。'
 - en: It’ll be interesting to see what comes of this. On the one hand, it reduces
     the need for these third-party libraries. On the other hand, OpenAI’s retrieval
     mechanism is currently a black box with no configurability. Retrieval is a hard
@@ -259,8 +372,11 @@
     OpenAI’s new release covers the basics, but Langchain and LlamaIndex implement
     a variety of retrieval types *and* work with models not made by OpenAI—so there’s
     still some need for their services.
+  id: totrans-51
   prefs: []
   type: TYPE_NORMAL
+  zh: 这将是一个有趣的观察对象。一方面，这减少了对这些第三方库的需求。另一方面，OpenAI 的检索机制目前是一个没有可配置性的黑盒子。检索是一个难题，而且有许多不同的检索机制用于不同的目的。OpenAI
+    的新发布涵盖了基础知识，但 Langchain 和 LlamaIndex 实现了各种检索类型 *并且* 与 OpenAI 制作的模型不相容——因此仍然需要它们的服务。
 - en: '**Saved state.** I’ve written before that the [GPT-4 is like Drew Barrymore
     on *50 First Dates*](https://every.to/chain-of-thought/using-chatgpt-custom-instructions-for-fun-and-profit):
     every time you interact with it, you have to introduce who you are and why it
@@ -268,8 +384,11 @@
     automatically through a new feature called Threads (no relation to Meta’s Twitter
     clone), saving developers time and hassle because they no longer have to manage
     conversation history themselves.'
+  id: totrans-52
   prefs: []
   type: TYPE_NORMAL
+  zh: '**保存状态。** 我之前写过[GPT-4 就像 *50次初恋* 中的 Drew Barrymore](https://every.to/chain-of-thought/using-chatgpt-custom-instructions-for-fun-and-profit)：每次你与它交互，你都必须一遍又一遍地介绍自己和为什么它爱你。GPT-4
+    API 可以通过一个名为 Threads 的新功能自动记住对话历史，节省开发者的时间和麻烦，因为他们不再需要自己管理对话历史。'
 - en: '**Custom no-code ChatGPTs.** OpenAI also made it easy for anyone to build their
     own custom version of ChatGPT with private data—no programming required. Anyone
     can set up a version of ChatGPT with its own personality and access to private
@@ -277,14 +396,20 @@
     Lenny Rachitsky](https://www.lennysnewsletter.com/p/i-built-a-lenny-chatbot-using-gpt)
     based on his newsletter archives. Today’s update means anyone can build an equivalent
     bot—no code required.'
+  id: totrans-53
   prefs: []
   type: TYPE_NORMAL
+  zh: '**定制无代码ChatGPT。** OpenAI 还为任何人都很容易地构建他们自己的定制版本的 ChatGPT，使用私人数据——无需编程。任何人都可以建立一个具有自己个性和访问私人知识的
+    ChatGPT 版本。这是一件大事。今年早些时候，[我基于 Lenny Rachitsky 的新闻通讯档案构建了一个 Substacker Lenny Rachitsky
+    的机器人](https://www.lennysnewsletter.com/p/i-built-a-lenny-chatbot-using-gpt)。今天的更新意味着任何人都可以构建一个相当的机器人——无需代码。'
 - en: '**GPT app store.** OpenAI announced the ability for anyone to list their GPT
     in a public app store and charge money for it. I’ve been arguing for almost a
     year that [chatbots are a new content format](https://twitter.com/danshipper/status/1721643301257068870)—this
     development bolsters that thesis.'
+  id: totrans-54
   prefs: []
   type: TYPE_NORMAL
+  zh: '**GPT 应用商店。** OpenAI 宣布任何人都可以在公共应用商店中列出他们的 GPT 并收费。我已经争论了近一年，[聊天机器人是一种新的内容格式](https://twitter.com/danshipper/status/1721643301257068870)——这一发展支持了这一论点。'
 - en: '**No switching models.** This is a huge, huge update. In previous versions
     of ChatGPT you had to select which model you wanted to use: GPT-3.5, GPT-4, GPT
     with DALL-E, GPT with Web Browsing, or GPT with Advanced Data Analysis. That’s
@@ -292,81 +417,113 @@
     the right model for you. Users can more easily weave all of the different powers
     of ChatGPT together without switching back and forth, *and* it creates new opportunities
     for developers (covered later in this article).'
+  id: totrans-55
   prefs: []
   type: TYPE_NORMAL
+  zh: '**不再切换模型。** 这是一个巨大的更新。在 ChatGPT 的先前版本中，您必须选择要使用的模型：GPT-3.5、GPT-4、带有 DALL-E
+    的 GPT、带有 Web 浏览的 GPT 或带有高级数据分析的 GPT。现在不再是这样：现在，您只需向 ChatGPT 输入消息，它将为您选择正确的模型。用户可以更轻松地将
+    ChatGPT 的所有不同功能融合在一起，而无需来回切换，并且为开发者创造了新的机会（稍后在本文中讨论）。'
 - en: Incremental updates—laying the groundwork for the future
+  id: totrans-56
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 渐进式更新——为未来打下基础
 - en: All of these updates are great, but they’re mostly incremental. They build a
     lot of tasks that developers had to do themselves into the API proper, making
     building things faster, cheaper, and more powerful for developers.
+  id: totrans-57
   prefs: []
   type: TYPE_NORMAL
+  zh: 所有这些更新都很棒，但它们大多是渐进式的。它们将开发者自己必须完成的许多任务整合到 API 中，使开发者构建事物更快、更便宜、更强大。
 - en: 'These features, though, lay the groundwork for a potentially more significant
     update: agents. Agents are models that can be assigned complex, multi-step tasks
     and left to accomplish them without supervision. That’s what GPT-4’s new Assistant
     API is about.'
+  id: totrans-58
   prefs: []
   type: TYPE_NORMAL
+  zh: 然而，这些功能为一个可能更重大的更新奠定了基础：代理。代理是可以分配复杂的、多步骤任务并且不需要监督就可以完成的模型。这就是 GPT-4 新的 Assistant
+    API 所涉及的内容。
 - en: This is the API that enables retrieval, saved state, and tool use (covered above).
     These elements, together, are the beginnings of an agent offering. Reading the
     tea leaves, it seems like OpenAI is previewing a world where you’ll be able to
     assign Assistants a goal, give them a set of tools, and let them accomplish the
     goal on their own.
+  id: totrans-59
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是使检索、保存状态和使用工具（如上所述）的 API。这些元素一起构成了一个代理提供的开端。从字里行间看，OpenAI 正在预览一个世界，在这个世界中，您将能够指定助理的目标，给他们一组工具，然后让他们自行完成目标。
 - en: We’re still far from that because GPT-4 isn’t smart enough to plan and execute
     tasks autonomously. But OpenAI is laying the architectural and safety groundwork
     now, and intentionally rolling out incremental steps as it gets the technology
     ready.
+  id: totrans-60
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们离那个目标还很远，因为 GPT-4 还不足以自主规划和执行任务。但是 OpenAI 现在正在奠定架构和安全基础，并故意逐步推出增量步骤，以使技术准备就绪。
 - en: OpenAI is trying to make an app store happen
+  id: totrans-61
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: OpenAI 正试图让一个应用商店成为现实
 - en: 'In April of this year OpenAI [launched plugins](https://openai.com/blog/chatgpt-plugins),
     which allowed users to access third-party services and data from within ChatGPT.
     There was a lot of hype about plugins becoming a new App Store, but it didn’t
     pan out that way. OpenAI never released numbers, but as far as I can tell, adoption
     was very low for third-party plugins, though there was good adoption for two plugins
     built by OpenAI: Code Interpreter and DALL-E.'
+  id: totrans-62
   prefs: []
   type: TYPE_NORMAL
+  zh: 今年四月，OpenAI [推出了插件](https://openai.com/blog/chatgpt-plugins)，允许用户从 ChatGPT 内访问第三方服务和数据。插件成为新的应用商店的炒作很多，但事实并非如此。OpenAI
+    从未发布过数字，但据我所知，第三方插件的采用率非常低，尽管由 OpenAI 构建的两个插件：Code Interpreter 和 DALL-E 的采用率很高。
 - en: 'Now, OpenAI is taking another bite at the apple with GPTs—its service that
     allows anyone to create a custom version of ChatGPT with private data:'
+  id: totrans-63
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在，OpenAI 正在通过 GPTs 再次尝试（它允许任何人创建具有私有数据的 ChatGPT 的自定义版本）：
 - en: 'Any user can create a GPT. You can define its personality: how it responds
     to queries and what voice and tone it uses. You can give it access to tools like
     the ability to execute code or the answer questions from a private knowledge base.
     Then GPTs can be published for other users to use.'
+  id: totrans-64
   prefs: []
   type: TYPE_NORMAL
+  zh: 任何用户都可以创建一个 GPT。您可以定义它的个性：它如何回答查询以及使用的语音和语调。您可以赋予它访问工具的能力，例如执行代码或从私有知识库中回答问题的能力。然后，GPT
+    可以发布供其他用户使用。
 - en: 'I installed a new GPT called “The Negotiator” (built by OpenAI), which can
     help you advocate for yourself in any sort of negotiation. It shows up in my ChatGPT
     sidebar like this:'
+  id: totrans-65
   prefs: []
   type: TYPE_NORMAL
+  zh: 我安装了一个名为“谈判者”的新 GPT（由 OpenAI 构建），它可以帮助你在任何谈判中为自己辩护。它会出现在我的 ChatGPT 侧边栏中，如下所示：
 - en: 'If I click The Negotiator, it will move me out of vanilla ChatGPT and into
     an experience designed specifically to help me get the best results in any negotiation:'
+  id: totrans-66
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果我点击谈判者，它会将我从普通的 ChatGPT 转移到一个专门设计来帮助我在任何谈判中获得最佳结果的体验中：
 - en: I’m a fan of this approach. I like the idea of democratizing the ability to
     build chatbots—and I can see myself building a lot of experiments here over the
     coming weeks.
+  id: totrans-67
   prefs: []
   type: TYPE_NORMAL
 - en: 'That said, I have doubts. It suffers from the same problem as OpenAI’s failed
     plugin experiment: no one wants to flip between different versions of ChatGPT
     for different use cases.'
+  id: totrans-68
   prefs: []
   type: TYPE_NORMAL
 - en: What would be far better is for ChatGPT to figure out automatically how to flip
     to a specific persona, like The Negotiator, when needed and flip back again when
     it’s not. Until that happens, I don’t see many of these bots getting significant
     adoption.
+  id: totrans-69
   prefs: []
   type: TYPE_NORMAL
 - en: But if it *does* happen, it will be huge. Downloading a new persona for ChatGPT
@@ -375,6 +532,7 @@
     content specifically for LLMs rather than for humans. For example, rather than
     buying a book on negotiations to read myself, I might buy the equivalent of one
     for ChatGPT to read and ingest for me.
+  id: totrans-70
   prefs: []
   type: TYPE_NORMAL
 - en: For this reason, I think OpenAI does have a good shot at building an App Store
@@ -382,9 +540,11 @@
     ChatGPT to automatically switch between a long list of personas.  The fact that
     OpenAI changed ChatGPT so you don’t have to switch between their internal models
     means that’s likely coming soon for custom GPTs, too.
+  id: totrans-71
   prefs: []
   type: TYPE_NORMAL
 - en: OpenAI’s relationship with developers
+  id: totrans-72
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
@@ -393,6 +553,7 @@
     custom GPTs are for a consumer audience, as are some of the ChatGPT-specific updates
     the company released. It reflects something important: OpenAI is currently divided
     between being a consumer company and a developer company.'
+  id: totrans-73
   prefs: []
   type: TYPE_NORMAL
 - en: ChatGPT was born in sin. When OpenAI started, its goal was to serve developers—until
@@ -400,91 +561,128 @@
     this puts the company at odds with developers because ChatGPT competes *directly*
     with much of what developers want to build—both at the consumer layer and the
     infrastructure layer.
+  id: totrans-74
   prefs: []
   type: TYPE_NORMAL
 - en: If OpenAI has to pick between ChatGPT and its developer ecosystem, it’s going
     to *have* to pick ChatGPT. ChatGPT is OpenAI’s most valuable source of high-quality
     training data, so it’s the best way to improve the quality of its models.
+  id: totrans-75
   prefs: []
   type: TYPE_NORMAL
 - en: Not only that, but OpenAI is moving in a direction that commoditizes and consumerizes
     development work. ChatGPT itself can turn anyone into a semi-competent programmer.
     And the features it launched yesterday allows anyone to build a chatbot without
     having to code at all.
+  id: totrans-76
   prefs: []
   type: TYPE_NORMAL
 - en: This is a fundamental tension at the core of the company. It’s a tension that
     is at the heart of many platforms—for example, Apple faced it with iOS and MacOS.
     Apple has faced criticism for building internal products that compete with what
     third-party developers have built—a practice known as [“Sherlocking.”](https://thehustle.co/sherlocking-explained/#:~:text=You%20might%20assume%20%E2%80%9Csherlocking%E2%80%9D%20means,a%20third%2Dparty%20tool%20irrelevant.)
+  id: totrans-77
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是公司核心的根本紧张关系。 这是许多平台核心的紧张关系之一——例如，Apple 在 iOS 和 MacOS 上就面临着这个问题。 Apple 因建立与第三方开发者所建立的内部产品竞争而受到批评，这被称为
+    [“Sherlocking。”](https://thehustle.co/sherlocking-explained/#:~:text=You%20might%20assume%20%E2%80%9Csherlocking%E2%80%9D%20means,a%20third%2Dparty%20tool%20irrelevant.)
 - en: But this is more problematic for OpenAI because its consumer product is extraordinarily
     similar to the product that it offers developers. It would be like Apple allowing
     developers to release their own version of iOS.
+  id: totrans-78
   prefs: []
   type: TYPE_NORMAL
+  zh: 但这对于 OpenAI 来说更加棘手，因为其消费产品与其为开发者提供的产品非常相似。 这就像是 Apple 允许开发者发布他们自己的 iOS 版本一样。
 - en: My guess is that if you want to play in the OpenAI ecosystem, the best bet is
     to gather a private dataset that will be useful for someone using ChatGPT and
     release it as a custom GPT.
+  id: totrans-79
   prefs: []
   type: TYPE_NORMAL
+  zh: 我的猜测是，如果你想在 OpenAI 生态系统中玩耍，最好的方法是收集一个私人数据集，这对使用 ChatGPT 的人有用，并将其发布为自定义 GPT。
 - en: OpenAI is likely to invest in making GPTs more accessible in the ChatGPT interface,
     and more powerful over time. The advantage you’ll be bringing to the party is
     private, curated data—and a set of rules for how to bring that data to bear for
     a specific kind of user in a specific situation. That’s something that OpenAI
     is unlikely to compete with directly—so it’s a win-win.
+  id: totrans-80
   prefs: []
   type: TYPE_NORMAL
+  zh: OpenAI 很可能会投资于使 ChatGPT 界面中的 GPTs 更加易于访问，并且随着时间的推移变得更加强大。 你要为派对带来的优势是私人、精选的数据，以及一套规则，用于如何为特定类型的用户在特定情况下使用这些数据。
+    这是 OpenAI 不太可能直接竞争的事情——所以这是双赢的。
 - en: The most exciting company in the world
+  id: totrans-81
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 世界上最令人兴奋的公司
 - en: There is no one doing more interesting work, more quickly than OpenAI right
     now. The company’s rate of progress is staggering, and it doesn’t look to be slowing
     down any time soon. At this conference, the word on the street was that OpenAI
     is a talent juggernaut, and that it feels very much like Stripe in its prime.
     (In fact, I’ve heard that OpenAI has hired a lot of people who used to work at
     Stripe.)
+  id: totrans-82
   prefs: []
   type: TYPE_NORMAL
+  zh: 目前没有任何公司比 OpenAI 做的工作更有趣、更快。公司的进展速度令人震惊，并且看起来在短时间内不会放慢脚步。在这次会议上，街上流传着 OpenAI
+    是一个人才横扫机器，并且它在其黄金时期感觉非常像 Stripe。 （事实上，我听说 OpenAI 曾雇佣了许多曾在 Stripe 工作过的人。）
 - en: The energy in the room was palpable. I don’t think there’s a bigger or more
     interesting story in technology. The coming months and years are going to be wild.
+  id: totrans-83
   prefs: []
   type: TYPE_NORMAL
+  zh: 房间里的能量是可以感受到的。 我认为在技术领域没有比这更大或更有趣的故事了。 未来几个月和几年将会是疯狂的。
 - en: '* * *'
+  id: totrans-84
   prefs: []
   type: TYPE_NORMAL
+  zh: '* * *'
 - en: Odds and ends
+  id: totrans-85
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 杂七杂八
 - en: '**Diversity.** One thing I appreciated about the conference was its inclusiveness.
     The company served excellent food, catered, as I learned, by local women- or minority-owned
     businesses. The demos and panels had an excellent diversity of presenters who
     work in leadership roles at OpenAI and other large tech companies like Shopify
     and Salesforce. All of it was low-key and not performative. OpenAI deserves praise
     for doing it right, in my opinion.'
+  id: totrans-86
   prefs: []
   type: TYPE_NORMAL
+  zh: '**多样性。** 我欣赏这次会议的一件事是其包容性。 公司提供了优质的食物，由本地的女性或少数族裔拥有的企业提供。 展示和小组讨论有许多在 OpenAI
+    和其他大型科技公司（如 Shopify 和 Salesforce）担任领导角色的演讲者。 所有这一切都很低调，没有表演性质。 在我看来，OpenAI 做得很对，值得赞扬'
 - en: '**OpenAI and Microsoft.** One attendee remarked to me that he thought OpenAI’s
     relationship with Microsoft reminded him of Apple’s longtime relationship with
     Intel. Intel made the processor, and Apple did everything else. In OpenAI’s case,
     Microsoft provides the hosting infrastructure, and OpenAI does everything else.
     It’s not a perfect analogy, but it resonated with me, especially since Satya Nadella
     showed up at this conference to stand on stage with Sam during the latter’s keynote.'
+  id: totrans-87
   prefs: []
   type: TYPE_NORMAL
+  zh: '**OpenAI 和 Microsoft。** 一位与会者对我说，他认为 OpenAI 与微软的关系让他想起了苹果与英特尔的长期关系。 英特尔制造处理器，而苹果做其他的一切。
+    在 OpenAI 的情况下，微软提供托管基础设施，而 OpenAI 做其他的一切。 这不是一个完美的类比，但它让我产生共鸣，尤其是因为萨提亚·纳德拉在这次会议上出现，与
+    Sam 一起在后者的主题演讲中站在舞台上。'
 - en: '**Can someone figure out naming at OpenAI?** I cannot freaking believe that
     it named its new custom no-code ChatGPTs “GPTs.” Someone needs to stage an intervention—it’s
     so confusing.'
+  id: totrans-88
   prefs: []
   type: TYPE_NORMAL
+  zh: '**有人能弄清楚 OpenAI 的命名吗？** 我简直不敢相信它把它的新定制无代码 ChatGPT 叫做“GPTs”。 有人需要进行干预——这太令人困惑了。'
 - en: '* * *'
+  id: totrans-89
   prefs: []
   type: TYPE_NORMAL
+  zh: '* * *'
 - en: '*I’ll be playing around with all of the new technology this week, so expect
     more updates (and maybe some demos and code samples). It’s an exciting time to
     be a tinkerer. Stay tuned for more. *'
+  id: totrans-90
   prefs: []
   type: TYPE_NORMAL
+  zh: 我将在本周玩弄所有新技术，所以请期待更多更新（也许还有一些演示和代码样本）。现在是一个令人兴奋的时代，可以做一名骚扰者。敬请关注更多信息。
