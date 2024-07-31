@@ -2,10 +2,12 @@
   id: totrans-0
   prefs:
   - PREF_H1
+  stylish: true
   type: TYPE_NORMAL
 - en: '* * *'
   id: totrans-1
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: Welcome to the versatility of Jax! In this chapter, we'll uncover how Jax extends
     its capabilities far beyond the realm of deep learning. Get ready to witness Jax
@@ -14,11 +16,13 @@
     holds in various scientific domains.
   id: totrans-2
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: 8.1 Utilizing Jax for Scientific Computing Tasks
   id: totrans-3
   prefs:
   - PREF_H2
+  stylish: true
   type: TYPE_NORMAL
 - en: Jax's prowess extends well beyond the boundaries of deep learning, making it
     a robust tool for various scientific computing tasks. In this section, we'll explore
@@ -26,10 +30,12 @@
     numerical optimization, providing efficient solutions to complex problems.
   id: totrans-4
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: Solving Differential Equations with Jax
   id: totrans-5
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: 'Jax''s automatic differentiation capabilities, which are a cornerstone of deep
     learning, become instrumental in efficiently solving differential equations. Whether
@@ -37,105 +43,128 @@
     and array manipulation features. Let''s break it down with a simple example:'
   id: totrans-6
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: import jax
+- en: '`import jax`'
   id: totrans-7
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: import jax.numpy as jnp
+- en: '`import jax.numpy as jnp`'
   id: totrans-8
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: 'def differential_equation(y, t):'
+- en: '`def differential_equation(y, t):`'
   id: totrans-9
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: 'return -2 * y  # Example: First-order ordinary differential equation'
+- en: '`return -2 * y`  # Example: First-order ordinary differential equation'
   id: totrans-10
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: initial_condition = 1.0
+- en: '`initial_condition = 1.0`'
   id: totrans-11
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: time_points = jnp.linspace(0, 1, 100)
+- en: '`time_points = jnp.linspace(0, 1, 100)`'
   id: totrans-12
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: result = jax.scipy.integrate.odeint(differential_equation, initial_condition,
-    time_points)
+- en: '`result = jax.scipy.integrate.odeint(differential_equation, initial_condition,
+    time_points)`'
   id: totrans-13
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: In this snippet, Jax's integration capabilities are utilized to solve a first-order
     ordinary differential equation. The clarity and simplicity of the code highlight
     Jax's efficiency in handling scientific computing tasks.
   id: totrans-14
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: Numerical Optimization with Jax
   id: totrans-15
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: 'Jax''s optimization algorithms provide a seamless way to tackle numerical optimization
     problems. Whether minimizing or maximizing an objective function, Jax''s automatic
     differentiation streamlines the process. Here''s a concise example:'
   id: totrans-16
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: import jax
+- en: '`import jax`'
   id: totrans-17
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: import jax.numpy as jnp
+- en: '`import jax.numpy as jnp`'
   id: totrans-18
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: 'def objective_function(x):'
+- en: '`def objective_function(x):`'
   id: totrans-19
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: 'return jnp.sin(x) / x  # Example: Objective function'
+- en: '`return jnp.sin(x) / x`  # Example: Objective function'
   id: totrans-20
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: gradient = jax.grad(objective_function)
+- en: '`gradient = jax.grad(objective_function)`'
   id: totrans-21
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: initial_guess = 2.0
+- en: '`initial_guess = 2.0`'
   id: totrans-22
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: optimized_value = jax.scipy.optimize.minimize(objective_function, initial_guess,
-    jac=gradient)
+- en: '`optimized_value = jax.scipy.optimize.minimize(objective_function, initial_guess,
+    jac=gradient)`'
   id: totrans-23
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: In this example, Jax effortlessly optimizes a simple objective function. The
     integration of automatic differentiation with optimization showcases Jax's versatility
     in scientific computing tasks.
   id: totrans-24
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: Benefits of Jax in Scientific Computing
   id: totrans-25
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: 1\. Efficient Vectorization: Jax's vectorization capabilities enhance the speed
     of numerical computations, crucial for scientific simulations.
   id: totrans-26
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: 2\. Automatic Differentiation: The automatic differentiation feature simplifies
     the process of computing gradients, a key element in scientific computing tasks.
   id: totrans-27
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: 3\. Interdisciplinary Applicability: Jax's adaptability makes it suitable for
     a wide range of scientific fields, from physics and engineering to data science.
   id: totrans-28
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: Jax's foray into scientific computing is marked by efficiency and simplicity.
     Whether solving differential equations or optimizing numerical problems, Jax proves
