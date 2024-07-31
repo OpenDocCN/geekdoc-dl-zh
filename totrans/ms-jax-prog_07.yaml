@@ -1,398 +1,593 @@
-- en: 'Chapter 6: Advanced Deep Learning Techniques with Jax'
+- en: 'Chapter 6: Advanced Deep Learning Techniques with `Jax`'
+  id: totrans-0
   prefs:
   - PREF_H1
+  stylish: true
   type: TYPE_NORMAL
 - en: '* * *'
+  id: totrans-1
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: Welcome to the realm of advanced deep learning techniques with Jax, where we'll
-    boost your neural networks to new heights. In this chapter, we explore tactics
+- en: Welcome to the realm of advanced deep learning techniques with `Jax`, where
+    we'll boost your neural networks to new heights. In this chapter, we explore tactics
     like regularization, dropout, batch normalization, and early stopping to fortify
     your models. Get ready to fine-tune your networks for unparalleled performance.
+  id: totrans-2
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: 6.1 Exploring Regularization Techniques
+  id: totrans-3
   prefs:
   - PREF_H2
+  stylish: true
   type: TYPE_NORMAL
 - en: Overfitting, a common challenge in machine learning, especially in neural networks,
     occurs when a model becomes too attuned to the training data, hindering its ability
     to generalize to new, unseen data. Regularization techniques step in as the superheroes,
     introducing constraints to prevent the model from memorizing the training data
     excessively and encouraging it to learn more broadly applicable patterns.
+  id: totrans-4
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: Common Regularization Techniques
+  id: totrans-5
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: 1\. L1 and L2 Regularization: These techniques act as gatekeepers for the weights
+- en: '1\. L1 and L2 Regularization: These techniques act as gatekeepers for the weights
     in the neural network. L1 regularization adds the absolute value of weights to
     the loss function, while L2 regularization squares the weights. This prompts the
-    model to favor smaller weights, curbing complexity and preventing overfitting.
+    model to favor smaller weights, curbing complexity and preventing overfitting.'
+  id: totrans-6
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: 'def l1_regularization(weights, alpha):'
+- en: 'def `l1_regularization`(weights, alpha):'
+  id: totrans-7
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: return alpha * jnp.sum(jnp.abs(weights))
+- en: return `alpha * jnp.sum(jnp.abs(weights))`
+  id: totrans-8
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: 'def l2_regularization(weights, beta):'
+- en: 'def `l2_regularization`(weights, beta):'
+  id: totrans-9
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: return beta * jnp.sum(weights2)
+- en: return `beta * jnp.sum(weights2)`
+  id: totrans-10
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: '2\. Dropout: Enter Dropout, the disruptor of routines. It randomly sidelines
     neurons during training, pushing the remaining neurons to learn robust representations
     less reliant on individual ones.'
+  id: totrans-11
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: 'def dropout_layer(x, dropout_prob, is_training):'
+- en: 'def `dropout_layer`(x, dropout_prob, is_training):'
+  id: totrans-12
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: 'if is_training:'
+- en: 'if `is_training`:'
+  id: totrans-13
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: mask = jax.random.bernoulli(jax.random.PRNGKey(0), dropout_prob, x.shape)
+- en: '`mask = jax.random.bernoulli(jax.random.PRNGKey(0), dropout_prob, x.shape)`'
+  id: totrans-14
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: return x * mask / (1 - dropout_prob)
+- en: return `x * mask / (1 - dropout_prob)`
+  id: totrans-15
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: 'else:'
+  id: totrans-16
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: return x
+- en: return `x`
+  id: totrans-17
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: '3\. Early Stopping: Acting as a vigilant guardian, Early Stopping keeps tabs
     on the model''s performance on a validation set, bringing training to a halt when
     the model''s prowess starts to wane.'
+  id: totrans-18
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: 'def early_stopping(validation_loss, patience, best_loss, counter):'
+- en: 'def `early_stopping`(validation_loss, patience, best_loss, counter):'
+  id: totrans-19
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: 'if validation_loss < best_loss:'
+- en: 'if `validation_loss < best_loss`:'
+  id: totrans-20
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: best_loss = validation_loss
+  id: totrans-21
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: counter = 0
+  id: totrans-22
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: 'else:'
+  id: totrans-23
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: counter += 1
+  id: totrans-24
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: return best_loss, counter, counter >= patience
+- en: return `best_loss, counter, counter >= patience`
+  id: totrans-25
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: Implementation of Regularization Techniques
+  id: totrans-26
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: '1\. L1 and L2 Regularization: Jax provides built-in functionality for L1 and
-    L2 regularization. When defining the loss function, add a regularization term
+- en: '1\. L1 and L2 Regularization: `Jax` provides built-in functionality for L1
+    and L2 regularization. When defining the loss function, add a regularization term
     penalizing the weights based on the chosen method.'
+  id: totrans-27
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: '2\. Dropout: Jax''s `jax.nn.dropout` makes dropout implementation seamless.
+- en: '2\. Dropout: `Jax''s jax.nn.dropout` makes dropout implementation seamless.
     Apply dropout to specific layers by setting the `dropout_probability` argument.'
+  id: totrans-28
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: 3\. Early Stopping: Monitor model performance on the validation set using metrics
-    like accuracy or loss. Stop training when validation performance falters.
+- en: '3\. Early Stopping: Monitor model performance on the validation set using metrics
+    like accuracy or loss. Stop training when validation performance falters.'
+  id: totrans-29
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: Benefits of Regularization
+  id: totrans-30
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: 1\. Improved Generalization: Regularization prevents overfitting, enhancing
-    performance on unseen data.
+- en: '1\. Improved Generalization: Regularization prevents overfitting, enhancing
+    performance on unseen data.'
+  id: totrans-31
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: 2\. Reduced Complexity: Regularization cuts model complexity, making it less
-    prone to memorizing training data and more adept at learning generalizable patterns.
+- en: '2\. Reduced Complexity: Regularization cuts model complexity, making it less
+    prone to memorizing training data and more adept at learning generalizable patterns.'
+  id: totrans-32
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: 3\. Enhanced Interpretability: Regularization fosters model interpretability
-    by reducing significant weights, offering insights into the model's decision-making
-    process.
+- en: 3\. 增强可解释性：通过减少重要权重来提升模型可解释性，提供对模型决策过程的洞察。
+  id: totrans-33
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: Regularization techniques stand as stalwart defenders against overfitting, fostering
-    better generalization in neural networks. By embracing L1 and L2 regularization,
-    dropout, and early stopping, you fortify your models, ensuring they perform admirably
-    across diverse tasks. Guard against overfitting and let your models shine!
+- en: 正则化技术作为防止过拟合的坚定捍卫者，在神经网络中促进更好的泛化。通过采用L1和L2正则化、dropout和early stopping，您巩固了您的模型，确保它们在各种任务中表现出色。防范过拟合，让您的模型大放异彩！
+  id: totrans-34
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: 6.2 Techniques for Neural Network Regularization
+- en: '`6.2 Techniques for Neural Network Regularization`'
+  id: totrans-35
   prefs:
   - PREF_H2
+  stylish: true
   type: TYPE_NORMAL
-- en: In the dynamic landscape of deep learning, regularization emerges as a hero,
-    combating the nemesis of overfitting—where neural networks get too cozy with training
-    data, compromising their performance on new data. Let's explore three stalwart
-    guardians—dropout, batch normalization, and early stopping—that wield effective
-    strategies to fend off overfitting and amplify the generalization prowess of neural
-    networks.
+- en: 在深度学习的动态景观中，正则化崛起为英雄，对抗过拟合的大敌——即神经网络过于依赖训练数据，从而影响其在新数据上的表现。让我们探索三位坚定的守护者——dropout、批标准化和early
+    stopping，它们运用有效策略抵御过拟合，增强神经网络的泛化能力。
+  id: totrans-36
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: 'Dropout: Crafting Robust Representations'
+- en: '`Dropout`：打造稳健的表示'
+  id: totrans-37
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: Dropout, a stochastic marvel, randomly kicks out neurons during training. This
-    compels the network to forge robust representations that don't hinge too much
-    on individual neurons, mitigating overfitting and bolstering generalization.
+- en: '`Dropout`，一个随机的奇迹，训练过程中随机剔除神经元。这迫使网络形成稳健的表示，不过度依赖单个神经元，从而减少过拟合并增强泛化能力。'
+  id: totrans-38
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: 'def apply_dropout(x, dropout_prob, is_training):'
+- en: 'def `apply_dropout`(x, dropout_prob, is_training):'
+  id: totrans-39
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: 'if is_training:'
+- en: 如果正在训练：
+  id: totrans-40
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: mask = jax.random.bernoulli(jax.random.PRNGKey(0), dropout_prob, x.shape)
+- en: '`mask = jax.random.bernoulli(jax.random.PRNGKey(0), dropout_prob, x.shape)`'
+  id: totrans-41
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: return x * mask / (1 - dropout_prob)
+- en: 返回`x * mask / (1 - dropout_prob)`
+  id: totrans-42
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: 'else:'
+- en: 否则：
+  id: totrans-43
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: return x
+- en: 返回`x`
+  id: totrans-44
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: 'Batch Normalization: Stabilizing the Journey'
+- en: 批标准化：稳固前行
+  id: totrans-45
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: Batch normalization takes the reins, normalizing layer activations to maintain
-    a steady input distribution across batches. This stabilizes training, enhances
-    gradient flow, and fast-tracks convergence, paving the way for superior performance.
+- en: 批标准化接管，规范化层激活以维持跨批次的稳定输入分布。这稳定训练，增强梯度流动，加速收敛，为卓越性能铺平道路。
+  id: totrans-46
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: 'def apply_batch_norm(x, running_mean, running_var, is_training):'
+- en: 'def `apply_batch_norm`(x, running_mean, running_var, is_training):'
+  id: totrans-47
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: mean, var = jnp.mean(x, axis=0), jnp.var(x, axis=0)
+- en: '`mean, var = jnp.mean(x, axis=0), jnp.var(x, axis=0)`'
+  id: totrans-48
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: 'if is_training:'
+- en: 如果正在训练：
+  id: totrans-49
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: '# Update running statistics during training'
+- en: '# 在训练期间更新运行统计信息'
+  id: totrans-50
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: running_mean = momentum * running_mean + (1 - momentum) * mean
+- en: '`running_mean = momentum * running_mean + (1 - momentum) * mean`'
+  id: totrans-51
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: running_var = momentum * running_var + (1 - momentum) * var
+- en: '`running_var = momentum * running_var + (1 - momentum) * var`'
+  id: totrans-52
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: normalized_x = (x - mean) / jnp.sqrt(var + epsilon)
+- en: '`normalized_x = (x - mean) / jnp.sqrt(var + epsilon)`'
+  id: totrans-53
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: return gamma * normalized_x + beta
+- en: 返回`gamma * normalized_x + beta`
+  id: totrans-54
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: 'Early Stopping: Guardian of Generalization'
+- en: '`Early Stopping`：泛化的守护者'
+  id: totrans-55
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: Early stopping stands guard, monitoring the model's performance on a validation
-    set. When signs of degradation appear, training halts. This foresighted intervention
-    prevents the model from growing too attached to the training data, preserving
-    its generalization prowess.
+- en: '`Early stopping`充当守卫，监控模型在验证集上的表现。一旦出现性能下降的迹象，训练停止。这种预见性的干预防止模型过度依赖训练数据，保持其泛化能力。'
+  id: totrans-56
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: 'def early_stopping(validation_loss, patience, best_loss, counter):'
+- en: 'def `early_stopping`(validation_loss, patience, best_loss, counter):'
+  id: totrans-57
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: 'if validation_loss < best_loss:'
+- en: 如果`validation_loss < best_loss`：
+  id: totrans-58
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: best_loss = validation_loss
+- en: '`best_loss = validation_loss`'
+  id: totrans-59
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: counter = 0
+- en: '`counter = 0`'
+  id: totrans-60
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: 'else:'
+- en: 否则：
+  id: totrans-61
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: counter += 1
+- en: '`counter += 1`'
+  id: totrans-62
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: return best_loss, counter, counter >= patience
+- en: 返回`best_loss, counter, counter >= patience`
+  id: totrans-63
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: Implementation in Action
+- en: 实现行动中
+  id: totrans-64
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: 1\. Dropout: Deploy Jax's `jax.nn.dropout` function. Set the dropout probability
-    to define the percentage of neurons to drop out.
+- en: 1\. `Dropout`：使用Jax的`jax.nn.dropout`函数。设置dropout概率以定义要丢弃的神经元的百分比。
+  id: totrans-65
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: 2\. Batch Normalization: Leverage `jax.nn.batch_norm`. Supply the input tensor
-    and a tuple of tensors representing mean and variance, usually calculated using
-    running batch statistics.
+- en: 2\. 批标准化：利用`jax.nn.batch_norm`。提供输入张量和表示平均值和方差的张量元组，通常使用运行批次统计计算。
+  id: totrans-66
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: 3\. Early Stopping: Craft a callback monitoring validation performance. When
-    the performance stagnates for a specified epoch count, the callback halts training.
+- en: '`3. Early Stopping: Craft a callback monitoring validation performance. When
+    the performance stagnates for a specified epoch count, the callback halts training.`'
+  id: totrans-67
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: Benefits of the Techniques
+- en: '`Benefits of the Techniques`'
+  id: totrans-68
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: 1\. Improved Generalization: These techniques elevate model performance on unseen
-    data by curbing overfitting.
+- en: '`1. Improved Generalization: These techniques elevate model performance on
+    unseen data by curbing overfitting.`'
+  id: totrans-69
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: 2\. Reduced Complexity: Complexity reduction discourages over-memorization,
-    steering models toward learning broadly applicable patterns.
+- en: '`2. Reduced Complexity: Complexity reduction discourages over-memorization,
+    steering models toward learning broadly applicable patterns.`'
+  id: totrans-70
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: 3\. Enhanced Interpretability: Slimming down significant weights promotes model
-    interpretability, unraveling decision-making processes.
+- en: '`3. Enhanced Interpretability: Slimming down significant weights promotes model
+    interpretability, unraveling decision-making processes.`'
+  id: totrans-71
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: Dropout, batch normalization, and early stopping stand as formidable guardians
-    against overfitting, elevating the generalization prowess of neural networks.
+- en: '`Dropout, batch normalization, and early stopping stand as formidable guardians
+    against overfitting, elevating the generalization prowess of neural networks.`'
+  id: totrans-72
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: 6.3 Hyperparameter Tuning for Optimal Model Performance
+- en: '`6.3 Hyperparameter Tuning for Optimal Model Performance`'
+  id: totrans-73
   prefs:
   - PREF_H2
+  stylish: true
   type: TYPE_NORMAL
-- en: In neural networks, hyperparameters wield immense power, influencing a model's
+- en: '`In neural networks, hyperparameters wield immense power, influencing a model''s
     performance. Tuning these parameters, like learning rate, regularization strength,
-    and batch size acts as a conductor orchestrating a model's success. Here's a peek
-    into how different techniques fine-tune these levers for optimal neural network
-    performance.
+    and batch size acts as a conductor orchestrating a model''s success. Here''s a
+    peek into how different techniques fine-tune these levers for optimal neural network
+    performance.`'
+  id: totrans-74
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: Common Hyperparameter Tuning Techniques
+- en: '`Common Hyperparameter Tuning Techniques`'
+  id: totrans-75
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: 1\. Grid Search: This meticulous method evaluates predefined hyperparameter
+- en: '`1. Grid Search: This meticulous method evaluates predefined hyperparameter
     values exhaustively. It selects the combination that shines brightest in terms
-    of performance. However, its thoroughness comes with computational demands.
+    of performance. However, its thoroughness comes with computational demands.`'
+  id: totrans-76
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: from sklearn.model_selection import GridSearchCV
+- en: '`from sklearn.model_selection import GridSearchCV`'
+  id: totrans-77
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: from sklearn.svm import SVC
+- en: '`from sklearn.svm import SVC`'
+  id: totrans-78
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: 'param_grid = {''C'': [0.1, 1, 10, 100], ''gamma'': [1, 0.1, 0.01, 0.001], ''kernel'':
-    [''rbf'', ''linear'']}'
+- en: '`param_grid = {''C'': [0.1, 1, 10, 100], ''gamma'': [1, 0.1, 0.01, 0.001],
+    ''kernel'': [''rbf'', ''linear'']}`'
+  id: totrans-79
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: grid = GridSearchCV(SVC(), param_grid, refit=True, verbose=2)
+- en: '`grid = GridSearchCV(SVC(), param_grid, refit=True, verbose=2)`'
+  id: totrans-80
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: grid.fit(X_train, y_train)
+- en: '`grid.fit(X_train, y_train)`'
+  id: totrans-81
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: print(grid.best_params_)
+- en: '`print(grid.best_params_)`'
+  id: totrans-82
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: '2\. Random Search: A less intensive approach, random search randomly explores
+- en: '`2. Random Search: A less intensive approach, random search randomly explores
     hyperparameter values within a range. It embraces serendipity, opting for the
-    best-found combo. Though less taxing, it might miss nuances in the parameter space.'
+    best-found combo. Though less taxing, it might miss nuances in the parameter space.`'
+  id: totrans-83
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: from sklearn.model_selection import RandomizedSearchCV
+- en: '`from sklearn.model_selection import RandomizedSearchCV`'
+  id: totrans-84
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: from scipy.stats import uniform
+- en: '`from scipy.stats import uniform`'
+  id: totrans-85
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: 'param_dist = {''C'': uniform(0, 4), ''gamma'': uniform(0, 0.1), ''kernel'':
-    [''rbf'', ''linear'']}'
+- en: '`param_dist = {''C'': uniform(0, 4), ''gamma'': uniform(0, 0.1), ''kernel'':
+    [''rbf'', ''linear'']}`'
+  id: totrans-86
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: random_search = RandomizedSearchCV(SVC(), param_distributions=param_dist, n_iter=10,
-    random_state=42)
+- en: '`random_search = RandomizedSearchCV(SVC(), param_distributions=param_dist,
+    n_iter=10, random_state=42)`'
+  id: totrans-87
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: random_search.fit(X_train, y_train)
+- en: '`random_search.fit(X_train, y_train)`'
+  id: totrans-88
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: print(random_search.best_params_)
+- en: '`print(random_search.best_params_)`'
+  id: totrans-89
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: 3\. Bayesian Optimization: A sophisticated strategy that employs a probabilistic
+- en: '`3. Bayesian Optimization: A sophisticated strategy that employs a probabilistic
     model to guide the search. It focuses on zones with higher performance potential,
-    offering efficiency without compromising exploration depth.
+    offering efficiency without compromising exploration depth.`'
+  id: totrans-90
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: from skopt import BayesSearchCV
+- en: '`from skopt import BayesSearchCV`'
+  id: totrans-91
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: 'param_bayes = {''C'': (0.1, 100), ''gamma'': (0.01, 1.0), ''kernel'': [''rbf'',
-    ''linear'']}'
+- en: '`param_bayes = {''C'': (0.1, 100), ''gamma'': (0.01, 1.0), ''kernel'': [''rbf'',
+    ''linear'']}`'
+  id: totrans-92
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: bayesian_search = BayesSearchCV(SVC(), param_bayes, n_iter=50, random_state=42)
+- en: '`bayesian_search = BayesSearchCV(SVC(), param_bayes, n_iter=50, random_state=42)`'
+  id: totrans-93
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: bayesian_search.fit(X_train, y_train)
+- en: '`bayesian_search.fit(X_train, y_train)`'
+  id: totrans-94
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: print(bayesian_search.best_params_)
+- en: '`print(bayesian_search.best_params_)`'
+  id: totrans-95
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: Strategies for Hyperparameter Tuning
+- en: '`Strategies for Hyperparameter Tuning`'
+  id: totrans-96
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: 1\. Define a Performance Metric: Handpick a performance metric like accuracy
-    or loss to gauge the model's prowess during hyperparameter tuning.
+- en: '`1. Define a Performance Metric: Handpick a performance metric like accuracy
+    or loss to gauge the model''s prowess during hyperparameter tuning.`'
+  id: totrans-97
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: 2\. Setting Tuning Goals: Clearly articulate the goals for tuning whether it's
     boosting accuracy, trimming loss, or refining generalization.
+  id: totrans-98
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: 3\. Selecting the Right Technique: Choose the hyperparameter tuning technique
     best suited to your resources and exploration objectives.
+  id: totrans-99
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: 4\. Evaluate and Enhance: Assess the model's performance across different hyperparameter
     combinations. Refine your strategy based on these evaluations.
+  id: totrans-100
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: Benefits of Hyperparameter Tuning
+  id: totrans-101
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: 1\. Peak Model Performance: Optimizing hyperparameters can drastically elevate
     a model's performance by zeroing in on the best parameter combination.
+  id: totrans-102
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: 2\. Trimmed Training Time: Tuning parameters not only improves performance but
     also speeds up the training process, boosting overall efficiency.
+  id: totrans-103
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: 3\. Enhanced Generalization: Fine-tuning parameters augments a model's ability
     to generalize, rendering better performance on unseen data.
+  id: totrans-104
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: Hyperparameter tuning emerges as the linchpin in optimizing neural networks.
     By implementing various tuning techniques, meticulously evaluating a model's performance,
     and strategically navigating hyperparameter spaces, you unearth the optimal parameter
     combination. This translates into supercharged models, aligned precisely with
     your performance objectives.
+  id: totrans-105
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: Congratulations! You've journeyed through the realm of advanced Jax techniques.
     Now armed with tools against overfitting, and strategies like dropout and batch
     normalization, you're prepared to optimize models. The art of hyperparameter tuning
     is at your fingertips.
+  id: totrans-106
   prefs: []
+  stylish: true
   type: TYPE_NORMAL

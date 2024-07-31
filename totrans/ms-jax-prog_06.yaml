@@ -2,10 +2,12 @@
   id: totrans-0
   prefs:
   - PREF_H1
+  stylish: true
   type: TYPE_NORMAL
-- en: '* * *'
+- en: '`* * *`'
   id: totrans-1
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: Welcome to the hands-on side of deep learning with Jax! This chapter is your
     practical gateway to crafting neural networks using Jax's functional programming
@@ -13,11 +15,13 @@
     network concepts into tangible models.
   id: totrans-2
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: 5.1 Jax's functional programming paradigm
   id: totrans-3
   prefs:
   - PREF_H2
+  stylish: true
   type: TYPE_NORMAL
 - en: Jax's functional programming paradigm presents an elegant and expressive approach
     to construct neural network models. This methodology treats neural networks as
@@ -25,147 +29,180 @@
     and experimenting with ease.
   id: totrans-4
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: Key Steps in Implementing Neural Networks with Jax's Functional Programming
   id: totrans-5
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: 1\. Network Architecture Definition: Define the neural network structure, specifying
     layers, activation functions, and connections between layers. This sets the groundwork
     for the network's computational flow.
   id: totrans-6
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: import jax.numpy as jnp
+- en: '`import jax.numpy as jnp`'
   id: totrans-7
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: 'def neural_network(x):'
+- en: '`def neural_network(x):`'
   id: totrans-8
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: layer1 = jnp.tanh(jnp.dot(x, W1) + b1)
+- en: '`layer1 = jnp.tanh(jnp.dot(x, W1) + b1)`'
   id: totrans-9
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: output = jnp.dot(layer1, W2) + b2
+- en: '`output = jnp.dot(layer1, W2) + b2`'
   id: totrans-10
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: return output
+- en: '`return output`'
   id: totrans-11
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: 2\. Parameter Initialization: Initialize network parameters, like weights and
     biases, using appropriate random distributions to set the starting points for
     training.
   id: totrans-12
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: W1 = jnp.random.normal(key, (input_dim, hidden_dim))
+- en: '`W1 = jnp.random.normal(key, (input_dim, hidden_dim))`'
   id: totrans-13
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: b1 = jnp.random.normal(key, (hidden_dim,))
+- en: '`b1 = jnp.random.normal(key, (hidden_dim,))`'
   id: totrans-14
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: W2 = jnp.random.normal(key, (hidden_dim, output_dim))
+- en: '`W2 = jnp.random.normal(key, (hidden_dim, output_dim))`'
   id: totrans-15
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: b2 = jnp.random.normal(key, (output_dim,))
+- en: '`b2 = jnp.random.normal(key, (output_dim,))`'
   id: totrans-16
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: 3\. Forward Propagation Implementation: Construct forward propagation to pass
     input data through the network, involving activation functions and layer computations.
   id: totrans-17
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: 'def forward_pass(x, W1, b1, W2, b2):'
+- en: '`def forward_pass(x, W1, b1, W2, b2):`'
   id: totrans-18
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: layer1 = jnp.tanh(jnp.dot(x, W1) + b1)
+- en: '`layer1 = jnp.tanh(jnp.dot(x, W1) + b1)`'
   id: totrans-19
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: output = jnp.dot(layer1, W2) + b2
+- en: '`output = jnp.dot(layer1, W2) + b2`'
   id: totrans-20
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: return output
+- en: '`return output`'
   id: totrans-21
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: 4\. Loss Function Definition: Define a suitable loss function that measures
     the error between the network's output and the desired output.
   id: totrans-22
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: 'def mse_loss(predicted, target):'
+- en: '`def mse_loss(predicted, target):`'
   id: totrans-23
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: return jnp.mean((predicted - target)2)
+- en: '`return jnp.mean((predicted - target)2)`'
   id: totrans-24
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: 5\. Gradient Computation: Utilize Jax's automatic differentiation to compute
     gradients of the loss function concerning the network parameters.
   id: totrans-25
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: gradients = jax.grad(mse_loss)
+- en: '`gradients = jax.grad(mse_loss)`'
   id: totrans-26
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: 6\. Parameter Updates: Employ an optimizer like SGD or Adam to iteratively update
     network parameters using the computed gradients.
   id: totrans-27
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: 'def update_parameters(parameters, gradients, learning_rate):'
+- en: '`def update_parameters(parameters, gradients, learning_rate):`'
   id: totrans-28
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: new_parameters = parameters - learning_rate * gradients
+- en: '`new_parameters = parameters - learning_rate * gradients`'
   id: totrans-29
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: return new_parameters
+- en: '`return new_parameters`'
   id: totrans-30
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: Benefits of Jax's Functional Programming Paradigm
   id: totrans-31
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: 1\. Conciseness: Promotes clear, concise, and maintainable code for complex
     neural network models.
   id: totrans-32
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: 2\. Expressiveness: Allows expressive code to convey network structure and computations
     with clarity.
   id: totrans-33
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: 3\. Modular Design: Facilitates a modular approach for creating reusable components
     and organizing code efficiently.
   id: totrans-34
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: '4\. Error Proneness: Reduces error risks by isolating code and avoiding mutable
     state.'
   id: totrans-35
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: 5\. Experimentation Efficiency: Enables rapid prototyping and experimentation
     with various architectures and configurations.
   id: totrans-36
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: 'Jax''s Automatic Differentiation: A Powerful Tool for Neural Network Training'
   id: totrans-37
