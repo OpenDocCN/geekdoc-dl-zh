@@ -1,0 +1,398 @@
+- en: 'Chapter 6: Advanced Deep Learning Techniques with Jax'
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: '* * *'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Welcome to the realm of advanced deep learning techniques with Jax, where we'll
+    boost your neural networks to new heights. In this chapter, we explore tactics
+    like regularization, dropout, batch normalization, and early stopping to fortify
+    your models. Get ready to fine-tune your networks for unparalleled performance.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 6.1 Exploring Regularization Techniques
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Overfitting, a common challenge in machine learning, especially in neural networks,
+    occurs when a model becomes too attuned to the training data, hindering its ability
+    to generalize to new, unseen data. Regularization techniques step in as the superheroes,
+    introducing constraints to prevent the model from memorizing the training data
+    excessively and encouraging it to learn more broadly applicable patterns.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Common Regularization Techniques
+  prefs: []
+  type: TYPE_NORMAL
+- en: 1\. L1 and L2 Regularization: These techniques act as gatekeepers for the weights
+    in the neural network. L1 regularization adds the absolute value of weights to
+    the loss function, while L2 regularization squares the weights. This prompts the
+    model to favor smaller weights, curbing complexity and preventing overfitting.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'def l1_regularization(weights, alpha):'
+  prefs: []
+  type: TYPE_NORMAL
+- en: return alpha * jnp.sum(jnp.abs(weights))
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'def l2_regularization(weights, beta):'
+  prefs: []
+  type: TYPE_NORMAL
+- en: return beta * jnp.sum(weights2)
+  prefs: []
+  type: TYPE_NORMAL
+- en: '2\. Dropout: Enter Dropout, the disruptor of routines. It randomly sidelines
+    neurons during training, pushing the remaining neurons to learn robust representations
+    less reliant on individual ones.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'def dropout_layer(x, dropout_prob, is_training):'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'if is_training:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: mask = jax.random.bernoulli(jax.random.PRNGKey(0), dropout_prob, x.shape)
+  prefs: []
+  type: TYPE_NORMAL
+- en: return x * mask / (1 - dropout_prob)
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'else:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: return x
+  prefs: []
+  type: TYPE_NORMAL
+- en: '3\. Early Stopping: Acting as a vigilant guardian, Early Stopping keeps tabs
+    on the model''s performance on a validation set, bringing training to a halt when
+    the model''s prowess starts to wane.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'def early_stopping(validation_loss, patience, best_loss, counter):'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'if validation_loss < best_loss:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: best_loss = validation_loss
+  prefs: []
+  type: TYPE_NORMAL
+- en: counter = 0
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'else:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: counter += 1
+  prefs: []
+  type: TYPE_NORMAL
+- en: return best_loss, counter, counter >= patience
+  prefs: []
+  type: TYPE_NORMAL
+- en: Implementation of Regularization Techniques
+  prefs: []
+  type: TYPE_NORMAL
+- en: '1\. L1 and L2 Regularization: Jax provides built-in functionality for L1 and
+    L2 regularization. When defining the loss function, add a regularization term
+    penalizing the weights based on the chosen method.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '2\. Dropout: Jax''s `jax.nn.dropout` makes dropout implementation seamless.
+    Apply dropout to specific layers by setting the `dropout_probability` argument.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 3\. Early Stopping: Monitor model performance on the validation set using metrics
+    like accuracy or loss. Stop training when validation performance falters.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Benefits of Regularization
+  prefs: []
+  type: TYPE_NORMAL
+- en: 1\. Improved Generalization: Regularization prevents overfitting, enhancing
+    performance on unseen data.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 2\. Reduced Complexity: Regularization cuts model complexity, making it less
+    prone to memorizing training data and more adept at learning generalizable patterns.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 3\. Enhanced Interpretability: Regularization fosters model interpretability
+    by reducing significant weights, offering insights into the model's decision-making
+    process.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Regularization techniques stand as stalwart defenders against overfitting, fostering
+    better generalization in neural networks. By embracing L1 and L2 regularization,
+    dropout, and early stopping, you fortify your models, ensuring they perform admirably
+    across diverse tasks. Guard against overfitting and let your models shine!
+  prefs: []
+  type: TYPE_NORMAL
+- en: 6.2 Techniques for Neural Network Regularization
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: In the dynamic landscape of deep learning, regularization emerges as a hero,
+    combating the nemesis of overfitting—where neural networks get too cozy with training
+    data, compromising their performance on new data. Let's explore three stalwart
+    guardians—dropout, batch normalization, and early stopping—that wield effective
+    strategies to fend off overfitting and amplify the generalization prowess of neural
+    networks.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Dropout: Crafting Robust Representations'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Dropout, a stochastic marvel, randomly kicks out neurons during training. This
+    compels the network to forge robust representations that don't hinge too much
+    on individual neurons, mitigating overfitting and bolstering generalization.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'def apply_dropout(x, dropout_prob, is_training):'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'if is_training:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: mask = jax.random.bernoulli(jax.random.PRNGKey(0), dropout_prob, x.shape)
+  prefs: []
+  type: TYPE_NORMAL
+- en: return x * mask / (1 - dropout_prob)
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'else:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: return x
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Batch Normalization: Stabilizing the Journey'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Batch normalization takes the reins, normalizing layer activations to maintain
+    a steady input distribution across batches. This stabilizes training, enhances
+    gradient flow, and fast-tracks convergence, paving the way for superior performance.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'def apply_batch_norm(x, running_mean, running_var, is_training):'
+  prefs: []
+  type: TYPE_NORMAL
+- en: mean, var = jnp.mean(x, axis=0), jnp.var(x, axis=0)
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'if is_training:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '# Update running statistics during training'
+  prefs: []
+  type: TYPE_NORMAL
+- en: running_mean = momentum * running_mean + (1 - momentum) * mean
+  prefs: []
+  type: TYPE_NORMAL
+- en: running_var = momentum * running_var + (1 - momentum) * var
+  prefs: []
+  type: TYPE_NORMAL
+- en: normalized_x = (x - mean) / jnp.sqrt(var + epsilon)
+  prefs: []
+  type: TYPE_NORMAL
+- en: return gamma * normalized_x + beta
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Early Stopping: Guardian of Generalization'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Early stopping stands guard, monitoring the model's performance on a validation
+    set. When signs of degradation appear, training halts. This foresighted intervention
+    prevents the model from growing too attached to the training data, preserving
+    its generalization prowess.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'def early_stopping(validation_loss, patience, best_loss, counter):'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'if validation_loss < best_loss:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: best_loss = validation_loss
+  prefs: []
+  type: TYPE_NORMAL
+- en: counter = 0
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'else:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: counter += 1
+  prefs: []
+  type: TYPE_NORMAL
+- en: return best_loss, counter, counter >= patience
+  prefs: []
+  type: TYPE_NORMAL
+- en: Implementation in Action
+  prefs: []
+  type: TYPE_NORMAL
+- en: 1\. Dropout: Deploy Jax's `jax.nn.dropout` function. Set the dropout probability
+    to define the percentage of neurons to drop out.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 2\. Batch Normalization: Leverage `jax.nn.batch_norm`. Supply the input tensor
+    and a tuple of tensors representing mean and variance, usually calculated using
+    running batch statistics.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 3\. Early Stopping: Craft a callback monitoring validation performance. When
+    the performance stagnates for a specified epoch count, the callback halts training.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Benefits of the Techniques
+  prefs: []
+  type: TYPE_NORMAL
+- en: 1\. Improved Generalization: These techniques elevate model performance on unseen
+    data by curbing overfitting.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 2\. Reduced Complexity: Complexity reduction discourages over-memorization,
+    steering models toward learning broadly applicable patterns.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 3\. Enhanced Interpretability: Slimming down significant weights promotes model
+    interpretability, unraveling decision-making processes.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Dropout, batch normalization, and early stopping stand as formidable guardians
+    against overfitting, elevating the generalization prowess of neural networks.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 6.3 Hyperparameter Tuning for Optimal Model Performance
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: In neural networks, hyperparameters wield immense power, influencing a model's
+    performance. Tuning these parameters, like learning rate, regularization strength,
+    and batch size acts as a conductor orchestrating a model's success. Here's a peek
+    into how different techniques fine-tune these levers for optimal neural network
+    performance.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Common Hyperparameter Tuning Techniques
+  prefs: []
+  type: TYPE_NORMAL
+- en: 1\. Grid Search: This meticulous method evaluates predefined hyperparameter
+    values exhaustively. It selects the combination that shines brightest in terms
+    of performance. However, its thoroughness comes with computational demands.
+  prefs: []
+  type: TYPE_NORMAL
+- en: from sklearn.model_selection import GridSearchCV
+  prefs: []
+  type: TYPE_NORMAL
+- en: from sklearn.svm import SVC
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'param_grid = {''C'': [0.1, 1, 10, 100], ''gamma'': [1, 0.1, 0.01, 0.001], ''kernel'':
+    [''rbf'', ''linear'']}'
+  prefs: []
+  type: TYPE_NORMAL
+- en: grid = GridSearchCV(SVC(), param_grid, refit=True, verbose=2)
+  prefs: []
+  type: TYPE_NORMAL
+- en: grid.fit(X_train, y_train)
+  prefs: []
+  type: TYPE_NORMAL
+- en: print(grid.best_params_)
+  prefs: []
+  type: TYPE_NORMAL
+- en: '2\. Random Search: A less intensive approach, random search randomly explores
+    hyperparameter values within a range. It embraces serendipity, opting for the
+    best-found combo. Though less taxing, it might miss nuances in the parameter space.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: from sklearn.model_selection import RandomizedSearchCV
+  prefs: []
+  type: TYPE_NORMAL
+- en: from scipy.stats import uniform
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'param_dist = {''C'': uniform(0, 4), ''gamma'': uniform(0, 0.1), ''kernel'':
+    [''rbf'', ''linear'']}'
+  prefs: []
+  type: TYPE_NORMAL
+- en: random_search = RandomizedSearchCV(SVC(), param_distributions=param_dist, n_iter=10,
+    random_state=42)
+  prefs: []
+  type: TYPE_NORMAL
+- en: random_search.fit(X_train, y_train)
+  prefs: []
+  type: TYPE_NORMAL
+- en: print(random_search.best_params_)
+  prefs: []
+  type: TYPE_NORMAL
+- en: 3\. Bayesian Optimization: A sophisticated strategy that employs a probabilistic
+    model to guide the search. It focuses on zones with higher performance potential,
+    offering efficiency without compromising exploration depth.
+  prefs: []
+  type: TYPE_NORMAL
+- en: from skopt import BayesSearchCV
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'param_bayes = {''C'': (0.1, 100), ''gamma'': (0.01, 1.0), ''kernel'': [''rbf'',
+    ''linear'']}'
+  prefs: []
+  type: TYPE_NORMAL
+- en: bayesian_search = BayesSearchCV(SVC(), param_bayes, n_iter=50, random_state=42)
+  prefs: []
+  type: TYPE_NORMAL
+- en: bayesian_search.fit(X_train, y_train)
+  prefs: []
+  type: TYPE_NORMAL
+- en: print(bayesian_search.best_params_)
+  prefs: []
+  type: TYPE_NORMAL
+- en: Strategies for Hyperparameter Tuning
+  prefs: []
+  type: TYPE_NORMAL
+- en: 1\. Define a Performance Metric: Handpick a performance metric like accuracy
+    or loss to gauge the model's prowess during hyperparameter tuning.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 2\. Setting Tuning Goals: Clearly articulate the goals for tuning whether it's
+    boosting accuracy, trimming loss, or refining generalization.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 3\. Selecting the Right Technique: Choose the hyperparameter tuning technique
+    best suited to your resources and exploration objectives.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 4\. Evaluate and Enhance: Assess the model's performance across different hyperparameter
+    combinations. Refine your strategy based on these evaluations.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Benefits of Hyperparameter Tuning
+  prefs: []
+  type: TYPE_NORMAL
+- en: 1\. Peak Model Performance: Optimizing hyperparameters can drastically elevate
+    a model's performance by zeroing in on the best parameter combination.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 2\. Trimmed Training Time: Tuning parameters not only improves performance but
+    also speeds up the training process, boosting overall efficiency.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 3\. Enhanced Generalization: Fine-tuning parameters augments a model's ability
+    to generalize, rendering better performance on unseen data.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Hyperparameter tuning emerges as the linchpin in optimizing neural networks.
+    By implementing various tuning techniques, meticulously evaluating a model's performance,
+    and strategically navigating hyperparameter spaces, you unearth the optimal parameter
+    combination. This translates into supercharged models, aligned precisely with
+    your performance objectives.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Congratulations! You've journeyed through the realm of advanced Jax techniques.
+    Now armed with tools against overfitting, and strategies like dropout and batch
+    normalization, you're prepared to optimize models. The art of hyperparameter tuning
+    is at your fingertips.
+  prefs: []
+  type: TYPE_NORMAL

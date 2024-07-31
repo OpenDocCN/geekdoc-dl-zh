@@ -1,0 +1,687 @@
+- en: 'Chapter 7: Deep Learning Applications with Jax'
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: '* * *'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Welcome to the practical side of Jax! In this chapter, we'll explore how Jax
+    becomes a powerhouse for real-world applications in deep learning. From image
+    classification to natural language processing and generative modeling, Jax flexes
+    its muscles to tackle diverse tasks, proving its versatility in the hands of developers.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 7.1 Image Classification Models with Jax
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Image classification is a fundamental task in deep learning, and with Jax's
+    capabilities, constructing powerful models becomes both efficient and effective.
+    In this section, we'll walk through the process of building an image classification
+    model using Convolutional Neural Networks (CNNs) in Jax.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 1\. Importing Necessary Libraries
+  prefs: []
+  type: TYPE_NORMAL
+- en: Begin by importing the required libraries. Jax, together with libraries like
+    NumPy and Jax's neural network module `flax`, provides a solid foundation for
+    creating sophisticated models.
+  prefs: []
+  type: TYPE_NORMAL
+- en: import jax
+  prefs: []
+  type: TYPE_NORMAL
+- en: import jax.numpy as jnp
+  prefs: []
+  type: TYPE_NORMAL
+- en: from flax import linen as nn
+  prefs: []
+  type: TYPE_NORMAL
+- en: 2\. Defining the CNN Model
+  prefs: []
+  type: TYPE_NORMAL
+- en: Constructing the CNN architecture is straightforward with Jax. Here, we define
+    a simple CNN using the `nn.Conv` and `nn.Dense` layers.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'class CNNModel(nn.Module):'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'features: int'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'def setup(self):'
+  prefs: []
+  type: TYPE_NORMAL
+- en: self.conv1 = nn.Conv(features=self.features, kernel_size=(3, 3))
+  prefs: []
+  type: TYPE_NORMAL
+- en: self.conv2 = nn.Conv(features=self.features * 2, kernel_size=(3, 3))
+  prefs: []
+  type: TYPE_NORMAL
+- en: self.flatten = nn.Flatten()
+  prefs: []
+  type: TYPE_NORMAL
+- en: self.dense = nn.Dense(features=10)
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'def __call__(self, x):'
+  prefs: []
+  type: TYPE_NORMAL
+- en: x = self.conv1(x)
+  prefs: []
+  type: TYPE_NORMAL
+- en: x = self.conv2(x)
+  prefs: []
+  type: TYPE_NORMAL
+- en: x = self.flatten(x)
+  prefs: []
+  type: TYPE_NORMAL
+- en: return self.dense(x)
+  prefs: []
+  type: TYPE_NORMAL
+- en: 3\. Initializing the Model
+  prefs: []
+  type: TYPE_NORMAL
+- en: Initialize the model with random parameters. Jax allows for easy parameter initialization
+    using its PRNG key.
+  prefs: []
+  type: TYPE_NORMAL
+- en: key = jax.random.PRNGKey(42)
+  prefs: []
+  type: TYPE_NORMAL
+- en: input_shape = (1, 28, 28, 1)  # Assuming grayscale images of size 28x28
+  prefs: []
+  type: TYPE_NORMAL
+- en: model = CNNModel(features=32)
+  prefs: []
+  type: TYPE_NORMAL
+- en: params = model.init(key, jnp.ones(input_shape))
+  prefs: []
+  type: TYPE_NORMAL
+- en: 4\. Forward Pass
+  prefs: []
+  type: TYPE_NORMAL
+- en: Perform a forward pass to check if the model processes inputs correctly.
+  prefs: []
+  type: TYPE_NORMAL
+- en: input_data = jnp.ones(input_shape)
+  prefs: []
+  type: TYPE_NORMAL
+- en: output = model.apply(params, input_data)
+  prefs: []
+  type: TYPE_NORMAL
+- en: print("Model Output Shape:", output.shape)
+  prefs: []
+  type: TYPE_NORMAL
+- en: 5\. Training Loop
+  prefs: []
+  type: TYPE_NORMAL
+- en: To train the model, set up a training loop using Jax's automatic differentiation
+    and an optimizer like SGD.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'def loss_fn(params, input_data, targets):'
+  prefs: []
+  type: TYPE_NORMAL
+- en: predictions = model.apply(params, input_data)
+  prefs: []
+  type: TYPE_NORMAL
+- en: loss = jnp.mean(jax.nn.softmax_cross_entropy_with_logits(targets, predictions))
+  prefs: []
+  type: TYPE_NORMAL
+- en: return loss
+  prefs: []
+  type: TYPE_NORMAL
+- en: grad_fn = jax.grad(loss_fn)
+  prefs: []
+  type: TYPE_NORMAL
+- en: learning_rate = 0.01
+  prefs: []
+  type: TYPE_NORMAL
+- en: optimizer = jax.optimizers.sgd(learning_rate)
+  prefs: []
+  type: TYPE_NORMAL
+- en: Inside the training loop, update parameters using optimizer and gradients.
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'for epoch in range(num_epochs):'
+  prefs: []
+  type: TYPE_NORMAL
+- en: grad = grad_fn(params, input_data, targets)
+  prefs: []
+  type: TYPE_NORMAL
+- en: optimizer = optimizer.apply_gradient(grad)
+  prefs: []
+  type: TYPE_NORMAL
+- en: Building image classification models with Jax is a seamless process. The modular
+    design and concise syntax allow for quick experimentation and efficient development.
+    The combination of Jax's flexibility and neural network modules facilitates the
+    creation of models tailored to specific tasks, ensuring that you can effortlessly
+    implement and train image classification models for various applications.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 7.2 NLP Models for Text Classification and Sentiment Analysis
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Natural Language Processing (NLP) tasks, such as text classification and sentiment
+    analysis, are at the core of language understanding. Let's explore how to implement
+    NLP models for these tasks using Jax.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 1\. Importing Necessary Libraries
+  prefs: []
+  type: TYPE_NORMAL
+- en: Begin by importing the required libraries, including Jax, NumPy, and the relevant
+    modules from `flax` for neural network building.
+  prefs: []
+  type: TYPE_NORMAL
+- en: import jax
+  prefs: []
+  type: TYPE_NORMAL
+- en: import jax.numpy as jnp
+  prefs: []
+  type: TYPE_NORMAL
+- en: from flax import linen as nn
+  prefs: []
+  type: TYPE_NORMAL
+- en: 2\. Defining an RNN Model for Text Classification
+  prefs: []
+  type: TYPE_NORMAL
+- en: For text classification, Recurrent Neural Networks (RNNs) are effective. Define
+    an RNN model using Jax's `flax.linen` module.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'class RNNModel(nn.Module):'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'vocab_size: int'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'hidden_size: int'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'def setup(self):'
+  prefs: []
+  type: TYPE_NORMAL
+- en: self.embedding = nn.Embed(vocab_size=self.vocab_size, features=self.hidden_size)
+  prefs: []
+  type: TYPE_NORMAL
+- en: self.rnn = nn.LSTMCell(name="lstm")
+  prefs: []
+  type: TYPE_NORMAL
+- en: self.dense = nn.Dense(features=2)  # Assuming binary classification
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'def __call__(self, x):'
+  prefs: []
+  type: TYPE_NORMAL
+- en: x = self.embedding(x)
+  prefs: []
+  type: TYPE_NORMAL
+- en: h = None
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'for _ in range(x.shape[1]):'
+  prefs: []
+  type: TYPE_NORMAL
+- en: h = self.rnn(h, x[:, _])
+  prefs: []
+  type: TYPE_NORMAL
+- en: return self.dense(h)
+  prefs: []
+  type: TYPE_NORMAL
+- en: 3\. Initializing and Forward Pass
+  prefs: []
+  type: TYPE_NORMAL
+- en: Initialize the model and perform a forward pass to check its output shape.
+  prefs: []
+  type: TYPE_NORMAL
+- en: key = jax.random.PRNGKey(42)
+  prefs: []
+  type: TYPE_NORMAL
+- en: seq_len, batch_size = 20, 64
+  prefs: []
+  type: TYPE_NORMAL
+- en: model = RNNModel(vocab_size=10000, hidden_size=64)
+  prefs: []
+  type: TYPE_NORMAL
+- en: params = model.init(key, jnp.ones((batch_size, seq_len)))
+  prefs: []
+  type: TYPE_NORMAL
+- en: input_data = jnp.ones((batch_size, seq_len), dtype=jnp.int32)
+  prefs: []
+  type: TYPE_NORMAL
+- en: output = model.apply(params, input_data)
+  prefs: []
+  type: TYPE_NORMAL
+- en: print("Model Output Shape:", output.shape)
+  prefs: []
+  type: TYPE_NORMAL
+- en: 4\. Training Loop for Sentiment Analysis
+  prefs: []
+  type: TYPE_NORMAL
+- en: For sentiment analysis, define a simple training loop using Jax's automatic
+    differentiation and an optimizer like SGD.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'def loss_fn(params, input_data, targets):'
+  prefs: []
+  type: TYPE_NORMAL
+- en: predictions = model.apply(params, input_data)
+  prefs: []
+  type: TYPE_NORMAL
+- en: loss = jnp.mean(jax.nn.softmax_cross_entropy_with_logits(targets, predictions))
+  prefs: []
+  type: TYPE_NORMAL
+- en: return loss
+  prefs: []
+  type: TYPE_NORMAL
+- en: grad_fn = jax.grad(loss_fn)
+  prefs: []
+  type: TYPE_NORMAL
+- en: learning_rate = 0.01
+  prefs: []
+  type: TYPE_NORMAL
+- en: optimizer = jax.optimizers.sgd(learning_rate)
+  prefs: []
+  type: TYPE_NORMAL
+- en: Inside the training loop, update parameters using optimizer and gradients.
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'for epoch in range(num_epochs):'
+  prefs: []
+  type: TYPE_NORMAL
+- en: grad = grad_fn(params, input_data, targets)
+  prefs: []
+  type: TYPE_NORMAL
+- en: optimizer = optimizer.apply_gradient(grad)
+  prefs: []
+  type: TYPE_NORMAL
+- en: Implementing NLP models for text classification and sentiment analysis with
+    Jax is straightforward. The modular structure of Jax's `flax` allows you to define
+    and train models with ease. The provided code snippets offer a starting point
+    for building and experimenting with NLP models tailored to your specific applications.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 7.3 Developing Generative Models for Realistic Images and Text
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Generative models are the artists of the AI world, creating new content that
+    mirrors the patterns learned during training. Let's develop generative models
+    using Jax for both images and text!
+  prefs: []
+  type: TYPE_NORMAL
+- en: 1\. Building a Variational Autoencoder (VAE) for Image Generation
+  prefs: []
+  type: TYPE_NORMAL
+- en: Variational Autoencoders (VAEs) are excellent for generating realistic images.
+    Define a VAE model using Jax and Flax.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'class VAE(nn.Module):'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'latent_dim: int = 50'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'def setup(self):'
+  prefs: []
+  type: TYPE_NORMAL
+- en: self.encoder = nn.Sequential([nn.Dense(256), nn.relu, nn.Dense(2 * self.latent_dim)])
+  prefs: []
+  type: TYPE_NORMAL
+- en: self.decoder = nn.Sequential([nn.Dense(256), nn.relu, nn.Dense(784), nn.sigmoid])
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'def __call__(self, x):'
+  prefs: []
+  type: TYPE_NORMAL
+- en: mean, log_std = jnp.split(self.encoder(x), 2, axis=-1)
+  prefs: []
+  type: TYPE_NORMAL
+- en: std = jnp.exp(log_std)
+  prefs: []
+  type: TYPE_NORMAL
+- en: eps = jax.random.normal(self.make_rng(), mean.shape)
+  prefs: []
+  type: TYPE_NORMAL
+- en: z = mean + std * eps
+  prefs: []
+  type: TYPE_NORMAL
+- en: reconstruction = self.decoder(z)
+  prefs: []
+  type: TYPE_NORMAL
+- en: return reconstruction, mean, log_std
+  prefs: []
+  type: TYPE_NORMAL
+- en: 2\. Training the VAE for Image Generation
+  prefs: []
+  type: TYPE_NORMAL
+- en: Define a training loop for the VAE model using a dataset like MNIST.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Assume `train_images` is the training dataset.
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: vae = VAE()
+  prefs: []
+  type: TYPE_NORMAL
+- en: params = vae.init(jax.random.PRNGKey(42), jnp.ones((28 * 28,)))
+  prefs: []
+  type: TYPE_NORMAL
+- en: optimizer = jax.optimizers.adam(learning_rate=0.001)
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'def loss_fn(params, images):'
+  prefs: []
+  type: TYPE_NORMAL
+- en: reconstructions, mean, log_std = vae.apply(params, images)
+  prefs: []
+  type: TYPE_NORMAL
+- en: '# Define the reconstruction loss and KL divergence term here.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: reconstruction_loss = ...
+  prefs: []
+  type: TYPE_NORMAL
+- en: kl_divergence = ...
+  prefs: []
+  type: TYPE_NORMAL
+- en: return reconstruction_loss + kl_divergence
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'for epoch in range(num_epochs):'
+  prefs: []
+  type: TYPE_NORMAL
+- en: grad = jax.grad(loss_fn)(params, train_images)
+  prefs: []
+  type: TYPE_NORMAL
+- en: optimizer = optimizer.apply_gradient(grad)
+  prefs: []
+  type: TYPE_NORMAL
+- en: 3\. Creating Text with a Generative Adversarial Network (GAN)
+  prefs: []
+  type: TYPE_NORMAL
+- en: Generative Adversarial Networks (GANs) excel at generating realistic text. Define
+    a simple GAN model for text generation.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'class GAN(nn.Module):'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'latent_dim: int = 100'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'def setup(self):'
+  prefs: []
+  type: TYPE_NORMAL
+- en: self.generator = nn.Sequential([nn.Dense(256), nn.relu, nn.Dense(784)])
+  prefs: []
+  type: TYPE_NORMAL
+- en: self.discriminator = nn.Sequential([nn.Dense(256), nn.relu, nn.Dense(1), nn.sigmoid])
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'def __call__(self, z):'
+  prefs: []
+  type: TYPE_NORMAL
+- en: fake_data = self.generator(z)
+  prefs: []
+  type: TYPE_NORMAL
+- en: return fake_data
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'def discriminate(self, x):'
+  prefs: []
+  type: TYPE_NORMAL
+- en: return self.discriminator(x)
+  prefs: []
+  type: TYPE_NORMAL
+- en: 4\. Training the GAN for Text Generation
+  prefs: []
+  type: TYPE_NORMAL
+- en: Train the GAN model using a suitable loss function, often involving adversarial
+    and reconstruction components.
+  prefs: []
+  type: TYPE_NORMAL
+- en: gan = GAN()
+  prefs: []
+  type: TYPE_NORMAL
+- en: params = gan.init(jax.random.PRNGKey(42), jnp.ones((gan.latent_dim,)))
+  prefs: []
+  type: TYPE_NORMAL
+- en: optimizer = jax.optimizers.adam(learning_rate=0.0002, beta1=0.5, beta2=0.999)
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'def loss_fn(params, real_data):'
+  prefs: []
+  type: TYPE_NORMAL
+- en: fake_data = gan.apply(params, jax.random.normal(jax.random.PRNGKey(42), (batch_size,
+    gan.latent_dim)))
+  prefs: []
+  type: TYPE_NORMAL
+- en: '# Define the adversarial and reconstruction loss components here.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: adversarial_loss = ...
+  prefs: []
+  type: TYPE_NORMAL
+- en: reconstruction_loss = ...
+  prefs: []
+  type: TYPE_NORMAL
+- en: return adversarial_loss + reconstruction_loss
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'for epoch in range(num_epochs):'
+  prefs: []
+  type: TYPE_NORMAL
+- en: grad = jax.grad(loss_fn)(params, real_data)
+  prefs: []
+  type: TYPE_NORMAL
+- en: optimizer = optimizer.apply_gradient(grad)
+  prefs: []
+  type: TYPE_NORMAL
+- en: Developing generative models with Jax empowers you to create diverse and realistic
+    content, whether it's images or text. The flexibility and expressiveness of Jax's
+    programming model make it an ideal choice for experimenting with and refining
+    your generative models.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Coding Challenge 7: Image Generation with Variational Autoencoder (VAE)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Implement a Variational Autoencoder (VAE) using Jax and Flax for image generation.
+    Use a dataset of your choice, such as MNIST, for training the VAE. After training,
+    generate new images with the trained VAE.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Solution
+  prefs: []
+  type: TYPE_NORMAL
+- en: Here's a basic implementation of a VAE in Jax and Flax. Please note that this
+    is a simplified example, and you may need to adapt it based on your specific dataset
+    and requirements.
+  prefs: []
+  type: TYPE_NORMAL
+- en: import jax
+  prefs: []
+  type: TYPE_NORMAL
+- en: import jax.numpy as jnp
+  prefs: []
+  type: TYPE_NORMAL
+- en: import flax
+  prefs: []
+  type: TYPE_NORMAL
+- en: from flax import linen as nn
+  prefs: []
+  type: TYPE_NORMAL
+- en: from flax.training import train_state
+  prefs: []
+  type: TYPE_NORMAL
+- en: Define the VAE model
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'class VAE(nn.Module):'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'latent_dim: int = 20'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'def setup(self):'
+  prefs: []
+  type: TYPE_NORMAL
+- en: self.encoder = nn.Sequential([nn.Conv(32, (3, 3)), nn.relu, nn.Conv(64, (3,
+    3)), nn.relu, nn.flatten,
+  prefs: []
+  type: TYPE_NORMAL
+- en: nn.Dense(2 * self.latent_dim)])
+  prefs: []
+  type: TYPE_NORMAL
+- en: self.decoder = nn.Sequential([nn.Dense(7 * 7 * 64), nn.relu, nn.reshape((7,
+    7, 64)),
+  prefs: []
+  type: TYPE_NORMAL
+- en: nn.ConvTranspose(32, (3, 3)), nn.relu, nn.ConvTranspose(1, (3, 3)), nn.sigmoid])
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'def __call__(self, x):'
+  prefs: []
+  type: TYPE_NORMAL
+- en: mean, log_std = jnp.split(self.encoder(x), 2, axis=-1)
+  prefs: []
+  type: TYPE_NORMAL
+- en: std = jnp.exp(log_std)
+  prefs: []
+  type: TYPE_NORMAL
+- en: eps = jax.random.normal(self.make_rng(), mean.shape)
+  prefs: []
+  type: TYPE_NORMAL
+- en: z = mean + std * eps
+  prefs: []
+  type: TYPE_NORMAL
+- en: reconstruction = self.decoder(z)
+  prefs: []
+  type: TYPE_NORMAL
+- en: return reconstruction, mean, log_std
+  prefs: []
+  type: TYPE_NORMAL
+- en: Define training and evaluation steps
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'def train_step(state, batch):'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'def loss_fn(params):'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'reconstructions, mean, log_std = vae.apply({''params'': params}, batch[''image''])'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '# Define the reconstruction loss and KL divergence term here.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: reconstruction_loss = jnp.mean((reconstructions - batch['image'])  2)
+  prefs: []
+  type: TYPE_NORMAL
+- en: kl_divergence = -0.5 * jnp.mean(1 + 2 * log_std - mean2 - jnp.exp(2 * log_std))
+  prefs: []
+  type: TYPE_NORMAL
+- en: return reconstruction_loss + kl_divergence
+  prefs: []
+  type: TYPE_NORMAL
+- en: grad = jax.grad(loss_fn)(state.params)
+  prefs: []
+  type: TYPE_NORMAL
+- en: new_state = state.apply_gradient(grad)
+  prefs: []
+  type: TYPE_NORMAL
+- en: return new_state
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'def eval_step(params, batch):'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'reconstructions, _, _ = vae.apply({''params'': params}, batch[''image''])'
+  prefs: []
+  type: TYPE_NORMAL
+- en: reconstruction_loss = jnp.mean((reconstructions - batch['image'])  2)
+  prefs: []
+  type: TYPE_NORMAL
+- en: return reconstruction_loss
+  prefs: []
+  type: TYPE_NORMAL
+- en: Load your dataset (e.g., MNIST)
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: '...'
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Initialize the VAE and optimizer
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: vae = VAE()
+  prefs: []
+  type: TYPE_NORMAL
+- en: params = vae.init(jax.random.PRNGKey(42), jnp.ones((28, 28, 1)))
+  prefs: []
+  type: TYPE_NORMAL
+- en: optimizer = flax.optim.Adam(learning_rate=0.001).create(params)
+  prefs: []
+  type: TYPE_NORMAL
+- en: Training loop
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'for epoch in range(num_epochs):'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '# Iterate over batches'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'for batch in batches:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: state = train_step(state, batch)
+  prefs: []
+  type: TYPE_NORMAL
+- en: '# Evaluate on a validation set (optional)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: validation_loss = jnp.mean([eval_step(state.params, val_batch) for val_batch
+    in validation_batches])
+  prefs: []
+  type: TYPE_NORMAL
+- en: Generate new images after training
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: new_images, _, _ = vae.apply(state.params, jax.random.normal(jax.random.PRNGKey(42),
+    (num_generated_images, vae.latent_dim)))
+  prefs: []
+  type: TYPE_NORMAL
+- en: Challenge Extension
+  prefs: []
+  type: TYPE_NORMAL
+- en: Experiment with different hyperparameters, architectures, or datasets to improve
+    the VAE's performance and generate more diverse and realistic images.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Jax empowers you to turn deep learning concepts into reality. As we've seen
+    in this chapter, you can leverage Jax's capabilities to build robust models for
+    image classification, handle natural language intricacies, and even delve into
+    the creative realm of generative models. Armed with Jax, you're equipped to bring
+    your deep learning ideas to life, crafting solutions that go beyond theory to
+    make a tangible impact.
+  prefs: []
+  type: TYPE_NORMAL

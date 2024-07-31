@@ -1,0 +1,356 @@
+- en: 'Chapter 2: Getting Started with Jax'
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: '* * *'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Welcome to the launchpad of your Jax adventure! In this chapter, we're gearing
+    up for the ride into Jax programming. Buckle up as we set the stage, install the
+    necessary tools, and take our first strides into the world of Jax with hands-on
+    coding.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 2.1 Setting up the Jax Environment
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Before we embark on the Jax journey, let's ensure our toolkit is ready for action.
+    Setting up the Jax environment is a crucial first step, and in this section, we'll
+    guide you through the process. From choosing your platform to installing essential
+    libraries, let's make sure you're well-equipped to unleash the power of Jax.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Setting the Stage: Choosing Your Platform'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Jax is flexible, catering to various platforms such as macOS, Linux, and Windows.
+    Ensure you're on the right track by checking your operating system's compatibility
+    and hardware requirements.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Step 1: Install Python'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Jax relies on Python, so if you don't have it installed, now's the time. Ensure
+    you have Python 3.7 or later. You can download the latest version from the official
+    Python website.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Step 2: Install Jax'
+  prefs: []
+  type: TYPE_NORMAL
+- en: With Python in place, use the pip package installer to get Jax.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Open your terminal or command prompt and type: `pip install jax`'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Step 3: Confirm Installation'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Make sure Jax is properly installed by opening a Python interpreter and typing:
+    `import jax; print(jax.__version__)` This should display the installed Jax version.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Equipping Your Toolbox: Installing Essential Libraries'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Jax teams up with other libraries to enhance functionality. Let's install the
+    essential ones.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Step 1: Install NumPy'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'NumPy is Jax''s right-hand companion for numerical operations. Install it using:
+    `pip install numpy`'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Step 2: Optional Libraries'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Consider additional libraries for extended capabilities. For example, Matplotlib
+    for plotting and scikit-learn for machine learning. Install them as needed.
+  prefs: []
+  type: TYPE_NORMAL
+- en: With your Jax environment set up and essential libraries in place, you're armed
+    and ready. The journey ahead involves crafting code, exploring data structures,
+    and tapping into the power of Jax.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 2.2 Writing Basic Jax Programs Using NumPy-Style Syntax
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Now that our Jax environment is up and running, it's time to get hands-on with
+    some basic Jax programs. In this section, we'll explore the NumPy-style syntax
+    that makes Jax not only powerful but also pleasantly familiar. Let's start writing
+    some code and unleash the simplicity of Jax.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Step 1: Importing Jax'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Start by importing the Jax library. This sets the stage for all your numerical
+    computations in the Jax style.
+  prefs: []
+  type: TYPE_NORMAL
+- en: import jax
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Step 2: Creating Arrays'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Jax adopts the NumPy-style syntax for creating arrays. Let's dive in and create
+    a simple array.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Creating a Jax array
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: x = jax.numpy.array([1, 2, 3])
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Step 3: Performing Operations'
+  prefs: []
+  type: TYPE_NORMAL
+- en: The beauty of Jax lies in its ability to perform operations on arrays with the
+    ease of NumPy.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Let's apply a mathematical function to our array.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Applying a sine function to the array
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: y = jax.numpy.sin(x) + 2
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Step 4: Printing Results'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Now, let's print the results and witness the outcome of our Jax computations.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Displaying the results
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: print(y)
+  prefs: []
+  type: TYPE_NORMAL
+- en: Exploring Data Structures and Mathematical Operations
+  prefs: []
+  type: TYPE_NORMAL
+- en: Jax supports various data structures and mathematical operations, making it
+    a versatile tool for numerical computation.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Data Structures in Jax
+  prefs: []
+  type: TYPE_NORMAL
+- en: Creating a Jax vector
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: vector = jax.numpy.array([4, 5, 6])
+  prefs: []
+  type: TYPE_NORMAL
+- en: Creating a Jax matrix
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: matrix = jax.numpy.array([[1, 2], [3, 4]])
+  prefs: []
+  type: TYPE_NORMAL
+- en: Mathematical Operations in Jax
+  prefs: []
+  type: TYPE_NORMAL
+- en: Performing arithmetic operations
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: result_addition = x + vector
+  prefs: []
+  type: TYPE_NORMAL
+- en: result_multiplication = matrix * 2
+  prefs: []
+  type: TYPE_NORMAL
+- en: Congratulations! You've just crafted your first Jax programs using NumPy-style
+    syntax. The simplicity and familiarity of NumPy combined with the power of Jax
+    are at your fingertips. As you continue your Jax journey, these basic building
+    blocks will form the foundation for more complex and exciting numerical computations.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 2.3 Working with Arrays, Data Structures, and Mathematical Operations in Jax
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'Arrays in Jax: Embracing Numerical Simplicity'
+  prefs: []
+  type: TYPE_NORMAL
+- en: In the heart of Jax lies its exceptional handling of arrays. Leveraging the
+    NumPy-style syntax, creating and manipulating arrays becomes a breeze.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Creating Arrays with Jax
+  prefs: []
+  type: TYPE_NORMAL
+- en: Creating a Jax array
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: x = jax.numpy.array([1, 2, 3])
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Performing Operations on Arrays:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Jax unleashes its power when it comes to array operations. Whether it's simple
+    arithmetic or complex mathematical functions, Jax handles it seamlessly.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Applying operations to arrays
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: y = jax.numpy.sin(x) + 2
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Data Structures in Jax: Versatility Unleashed'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Jax isn't limited to basic arrays; it extends its capabilities to various data
+    structures, adding a layer of flexibility to your numerical computations.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Creating Vectors and Matrices in Jax
+  prefs: []
+  type: TYPE_NORMAL
+- en: Creating a Jax vector
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: vector = jax.numpy.array([4, 5, 6])
+  prefs: []
+  type: TYPE_NORMAL
+- en: Creating a Jax matrix
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: matrix = jax.numpy.array([[1, 2], [3, 4]])
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Mathematical Marvels with Jax: Operations Beyond the Basics'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Jax's mathematical prowess shines through as it handles a spectrum of operations,
+    making it a robust tool for diverse numerical tasks.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Arithmetic Operations with Jax
+  prefs: []
+  type: TYPE_NORMAL
+- en: Performing arithmetic operations on arrays
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: result_addition = x + vector
+  prefs: []
+  type: TYPE_NORMAL
+- en: result_multiplication = matrix * 2
+  prefs: []
+  type: TYPE_NORMAL
+- en: Complex Mathematical Functions in Jax
+  prefs: []
+  type: TYPE_NORMAL
+- en: Applying more complex functions
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: result_exp = jax.numpy.exp(x)
+  prefs: []
+  type: TYPE_NORMAL
+- en: result_sqrt = jax.numpy.sqrt(matrix)
+  prefs: []
+  type: TYPE_NORMAL
+- en: As you've witnessed, Jax transforms numerical computations into a playground
+    of simplicity and efficiency. Working with arrays, exploring data structures,
+    and engaging in mathematical operations become intuitive and powerful with Jax.
+    This marks another step in your journey towards mastering the art of Jax programming.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Coding Challenge: Array Manipulation with Jax'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Challenge: Create a Jax program that takes an array `A` and performs the following
+    operations:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 1\. Compute the square of each element in `A`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 2\. Calculate the cumulative sum of the squared elements.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 3\. Find the mean of the resulting array.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Solution
+  prefs: []
+  type: TYPE_NORMAL
+- en: import jax
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'def array_manipulation_challenge(A):'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '# Step 1: Compute the square of each element in A'
+  prefs: []
+  type: TYPE_NORMAL
+- en: squared_elements = jax.numpy.square(A)
+  prefs: []
+  type: TYPE_NORMAL
+- en: '# Step 2: Calculate the cumulative sum of the squared elements'
+  prefs: []
+  type: TYPE_NORMAL
+- en: cumulative_sum = jax.numpy.cumsum(squared_elements)
+  prefs: []
+  type: TYPE_NORMAL
+- en: '# Step 3: Find the mean of the resulting array'
+  prefs: []
+  type: TYPE_NORMAL
+- en: mean_result = jax.numpy.mean(cumulative_sum)
+  prefs: []
+  type: TYPE_NORMAL
+- en: return mean_result
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Example usage:'
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: input_array = jax.numpy.array([1, 2, 3, 4, 5])
+  prefs: []
+  type: TYPE_NORMAL
+- en: result = array_manipulation_challenge(input_array)
+  prefs: []
+  type: TYPE_NORMAL
+- en: print("Result:", result)
+  prefs: []
+  type: TYPE_NORMAL
+- en: This challenge encourages you to manipulate an array using Jax's capabilities.
+    Feel free to experiment with different input arrays and explore how Jax simplifies
+    complex operations on numerical data.
+  prefs: []
+  type: TYPE_NORMAL
+- en: And there you have it—the kickoff to your Jax journey! You've laid the groundwork,
+    from setting up your environment to flexing your coding muscles with basic Jax
+    programs. As we wrap up, remember, this is just the beginning. The coding playground
+    is yours to explore, and the versatility of Jax is your toolkit.
+  prefs: []
+  type: TYPE_NORMAL
