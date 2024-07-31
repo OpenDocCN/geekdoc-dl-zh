@@ -1,4 +1,6 @@
 +   [COT 专栏中文翻译](docs/cot-col/README.md)
++   [JAX & Flax 深度学习教程](docs/dl-jax-flax/README.md)
 +   [与 TensorFlow 的初次接触](docs/first_contact_with_tensorFlow/README.md)
 +   [TensorFlow 学习指南](docs/learning-tf-zh/README.md)
++   [精通 JAX 编程](docs/ms-jax-prog/README.md)
 +   [TensorFlow Rager 教程](docs/tf-eager-tut/README.md)
