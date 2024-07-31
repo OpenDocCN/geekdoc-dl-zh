@@ -4,11 +4,13 @@
   - PREF_H1
   stylish: true
   type: TYPE_NORMAL
+  zh: 第9章：Jax 的持久遗产：高级 Jax
 - en: \*\*\*
   id: totrans-1
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: \*\*\*
 - en: Jax, a vibrant and rapidly evolving programming language, has emerged as a transformative
     force in the realm of scientific computing and deep learning. Its unique combination
     of flexibility, efficiency, and expressive power has empowered researchers and
@@ -17,12 +19,14 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: Jax 是一种充满活力且快速发展的编程语言，在科学计算和深度学习领域已成为变革性力量。其独特的灵活性、效率和表现力使研究人员和开发者能够轻松创新地解决复杂问题。
 - en: 9.1  JIT Compilation and Custom XLA Backends
   id: totrans-3
   prefs:
   - PREF_H2
   stylish: true
   type: TYPE_NORMAL
+  zh: 9.1  JIT 编译和定制 XLA 后端
 - en: In this section, we'll explore advanced features of Jax that elevate its performance
     and flexibility, providing a deeper understanding of Just-In-Time (JIT) compilation
     and the creation of custom XLA (Accelerated Linear Algebra) backends. These features
@@ -32,11 +36,14 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 在本节中，我们将探讨提升 Jax 性能和灵活性的高级功能，深入了解 JIT 编译和创建定制 XLA（加速线性代数）后端。这些特性在优化代码执行中发挥关键作用，使
+    Jax 成为机器学习和科学计算中高效计算的强大选择。
 - en: 'JIT Compilation in Jax: Just-In-Time (JIT) Compilation Primer'
   id: totrans-5
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: Jax 中的 JIT 编译：即时编译（JIT）编译入门
 - en: JIT compilation is a dynamic compilation approach that occurs at runtime, translating
     Python functions into machine code just before they are executed. Jax leverages
     JIT compilation to accelerate computation, providing significant performance gains.
@@ -44,11 +51,13 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: JIT（即时编译）是一种动态编译方法，在运行时将 Python 函数转换为机器码，以便在执行前执行。 Jax 利用 JIT 编译来加速计算，提供显著的性能提升。
 - en: Key Aspects of JIT Compilation in Jax
   id: totrans-7
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: JIT 编译在 Jax 中的关键方面
 - en: 1\. Enhanced Performance: JIT compilation optimizes the execution speed of Jax
     code, particularly in numerical and scientific computing tasks, by converting
     Python functions into highly efficient machine code.
@@ -56,6 +65,7 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 1\. 提升性能：JIT 编译通过将 Python 函数转换为高效的机器码，优化了 Jax 代码的执行速度，尤其在数值和科学计算任务中表现突出。
 - en: 2\. Efficient Vectorization: Jax excels at vectorization, a process of converting
     operations into parallel, array-based computations. JIT compilation enhances this
     vectorization, making it a powerful tool for handling large datasets and complex
@@ -64,6 +74,7 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 2\. 高效向量化：Jax 擅长向量化，将操作转换为并行的基于数组的计算过程。JIT 编译增强了这种向量化能力，使其成为处理大数据集和复杂数学操作的强大工具。
 - en: 3\. Transparent Integration: Jax seamlessly integrates JIT compilation into
     its workflow, allowing users to harness its benefits without extensive modifications
     to their code.
@@ -71,11 +82,13 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 3\. 透明集成：Jax 将 JIT 编译无缝集成到其工作流程中，使用户能够在不大幅修改其代码的情况下利用其优势。
 - en: 'Custom XLA Backends: Crafting Tailored Execution Environments'
   id: totrans-11
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 定制 XLA 后端：打造定制化的执行环境
 - en: Jax's extensibility is further showcased through the creation of custom XLA
     backends. This advanced feature enables the development of specialized execution
     environments tailored to specific computational requirements.
@@ -83,17 +96,20 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: Jax 的可扩展性进一步体现在创建定制 XLA 后端上。这一先进特性允许开发专门的执行环境，以满足特定的计算需求。
 - en: Steps to Create Custom XLA Backends
   id: totrans-13
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 创建自定义 XLA 后端的步骤
 - en: 1\. Understand XLA Architecture: Familiarize yourself with the XLA architecture,
     grasping its modular structure and the role each component plays in defining computation.
   id: totrans-14
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 1\. 理解 XLA 架构：熟悉 XLA 架构，了解其模块化结构以及每个组件在定义计算中的角色。
 - en: 2\. Define Custom Operations: Create custom operations using XLA's extensibility
     features, allowing you to implement specialized computations not covered by standard
     operations.
@@ -101,6 +117,7 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 2\. 定义自定义操作：使用 XLA 的可扩展性功能创建自定义操作，允许您实现标准操作未涵盖的专业计算。
 - en: 3\. Build Backend Compilation Rules: Specify how Jax should compile your custom
     operations by defining backend compilation rules. This step ensures seamless integration
     with Jax's overall compilation process.
@@ -108,6 +125,7 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 3\. 构建后端编译规则：通过定义后端编译规则来指定 Jax 如何编译您的自定义操作。此步骤确保与 Jax 整体编译流程的无缝集成。
 - en: 4\. Compile and Execute: Once the custom XLA backend is defined, compile your
     Jax code using the new backend, and observe how the tailored execution environment
     handles the specified computations.
@@ -115,17 +133,20 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 4\. 编译和执行：一旦定义了定制的 XLA 后端，使用新的后端编译您的 Jax 代码，并观察定制执行环境如何处理指定的计算。
 - en: Benefits of Advanced Jax Features
   id: totrans-18
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 高级 Jax 特性的好处
 - en: 1\. Performance Boost: JIT compilation significantly enhances code execution
     speed, providing a performance boost crucial for large-scale computations.
   id: totrans-19
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 1\. 性能提升：JIT 编译显著提高了代码执行速度，为大规模计算提供了至关重要的性能提升。
 - en: 2\. Flexibility and Customization: Custom XLA backends offer flexibility and
     customization, allowing users to tailor execution environments for specific computational
     needs.
@@ -133,12 +154,14 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 2\. 灵活性与定制化：自定义 XLA 后端提供了灵活性和定制化选项，允许用户为特定的计算需求定制执行环境。
 - en: 3\. Seamless Integration: Both JIT compilation and custom XLA backends integrate
     seamlessly with Jax's workflow, ensuring a smooth experience for users.
   id: totrans-21
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 3\. 无缝集成：JIT 编译和自定义 XLA 后端与 Jax 的工作流程无缝集成，确保用户体验流畅。
 - en: These features empower practitioners to tackle complex computations efficiently,
     making Jax a formidable choice for advanced scientific computing and machine learning
     tasks.
@@ -146,12 +169,14 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 这些特性使从业者能够高效地处理复杂计算，使 Jax 成为高级科学计算和机器学习任务的强大选择。
 - en: 9.2 Meta-Learning and Differentiable Programming
   id: totrans-23
   prefs:
   - PREF_H2
   stylish: true
   type: TYPE_NORMAL
+  zh: 9.2 元学习与可微编程
 - en: Now, we venture into the cutting-edge research directions within Jax, shedding
     light on meta-learning and differentiable programming. These advancements push
     the boundaries of traditional machine learning approaches, offering new avenues
@@ -160,11 +185,13 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 现在，我们将探索 Jax 中的前沿研究方向，揭示元学习和可微编程的内涵。这些进展推动了传统机器学习方法的边界，为动态模型适应和增强程序表现能力开辟了新的道路。
 - en: 'Meta-Learning with Jax: Unlocking Adaptive Learning Paradigms'
   id: totrans-25
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: Jax 中的元学习：解锁自适应学习范式
 - en: Meta-learning, or learning to learn, is a revolutionary approach wherein models
     acquire the ability to adapt dynamically to new tasks or domains with minimal
     data. Jax's unique capabilities make it an ideal framework for delving into the
@@ -173,11 +200,13 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 元学习或学会学习是一种革命性的方法，其中模型通过最少的数据动态适应于新任务或领域。Jax 的独特能力使其成为深入研究元学习领域的理想框架。
 - en: Key Aspects of Meta-Learning in Jax
   id: totrans-27
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: Jax 中元学习的关键方面
 - en: 1\. Gradient-Based Meta-Learning: Jax's automatic differentiation capabilities
     shine in the context of meta-learning. Models can be trained to quickly adapt
     to new tasks by efficiently adjusting their parameters based on gradient information.
@@ -185,6 +214,7 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 1\. 基于梯度的元学习：在元学习的背景下，Jax 的自动微分能力发挥了重要作用。模型可以通过有效地根据梯度信息调整其参数，快速适应新任务的训练。
 - en: 2\. Few-Shot Learning: Meta-learning often involves few-shot learning scenarios
     where models generalize from a small number of examples. Jax's efficiency in handling
     gradient computation facilitates effective few-shot adaptation.
@@ -192,6 +222,7 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 2\. 少样本学习：元学习通常涉及少样本学习场景，模型从少量示例中泛化。Jax 在处理梯度计算方面的效率有助于有效的少样本适应。
 - en: 3\. Model-Agnostic Meta-Learning (MAML): Jax supports the implementation of
     model-agnostic meta-learning algorithms like MAML, enabling practitioners to develop
     models that can rapidly adapt to diverse tasks.
@@ -199,11 +230,13 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 3\. 模型无关的元学习（MAML）：Jax 支持实现像 MAML 这样的模型无关的元学习算法，使从业者能够开发能够快速适应多样任务的模型。
 - en: 'Differentiable Programming Paradigms: Beyond Static Computation'
   id: totrans-31
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 可微编程范式：超越静态计算
 - en: Differentiable programming goes beyond traditional programming paradigms by
     allowing not only variables but also entire programs to be differentiable. This
     opens up exciting possibilities for creating models that can be seamlessly integrated
@@ -212,11 +245,13 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 可微编程超越传统的编程范式，不仅允许变量，还允许整个程序具有可微性。这为创建可以与优化过程无缝集成的模型打开了激动人心的可能性。
 - en: Key Aspects of Differentiable Programming in Jax
   id: totrans-33
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: Jax 中可微编程的关键方面
 - en: 1\. Program-Level Differentiation: Jax extends differentiation beyond individual
     functions to entire programs, enabling the computation of gradients with respect
     to entire workflows. This paradigm shift enhances the expressiveness of machine
@@ -225,6 +260,7 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 1\. 程序级别的不同化：Jax 将不同化扩展到整个程序，而不仅仅是单个函数，从而使得可以计算整个工作流的梯度。这种范式转变增强了机器学习模型的表达能力。
 - en: 2\. Neural Programming: Differentiable programming facilitates the creation
     of neural programs, where the structure of the program itself can be optimized
     based on the learning task. Jax's capabilities make it a pioneering platform for
@@ -233,6 +269,7 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 2\. 神经编程：可微编程促进了神经程序的创建，其中程序的结构本身可以根据学习任务进行优化。Jax 的能力使其成为探索这一范式的先驱平台。
 - en: 3\. Custom Gradients: Jax allows users to define custom gradients for non-standard
     operations, offering a high degree of flexibility in specifying how computations
     are differentiated. This feature is instrumental in pushing the boundaries of
@@ -241,17 +278,20 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 3\. 自定义梯度：Jax允许用户为非标准操作定义自定义梯度，极大地提高了在不同iable编程中计算的灵活性。这一特性在推动可微分编程的边界方面起到了关键作用。
 - en: '`Benefits of Exploring Cutting-Edge Research Directions in Jax`'
   id: totrans-37
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`探索Jax在前沿研究方向中的益处`'
 - en: 1\. Adaptive Learning: Meta-learning in Jax enables models to rapidly adapt
     to new tasks, facilitating efficient learning in dynamically changing environments.
   id: totrans-38
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 1\. 自适应学习：Jax中的元学习使模型能够快速适应新任务，在动态变化的环境中促进了高效的学习。
 - en: 2\. Enhanced Programmatic Expressiveness: Differentiable programming elevates
     the expressiveness of machine learning models, allowing for dynamic and adaptive
     program structures.
@@ -259,6 +299,7 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 2\. 增强的编程表达能力：可微分编程提升了机器学习模型的表达能力，允许动态和自适应的程序结构。
 - en: 3\. Innovative Model Architectures: Exploring these research frontiers fosters
     the development of innovative model architectures capable of handling tasks that
     were previously challenging for traditional approaches.
@@ -266,6 +307,7 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 3\. 创新模型架构：探索这些研究前沿促进了创新模型架构的发展，这些架构能够处理传统方法难以解决的任务。
 - en: The exploration of cutting-edge research directions in Jax, particularly meta-learning
     and differentiable programming, ushers in a new era of adaptability and expressiveness
     in machine learning models. Researchers and practitioners can leverage these advancements
@@ -275,12 +317,14 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 在Jax中探索前沿研究方向，特别是元学习和可微分编程，引领了机器学习模型适应性和表达能力的新时代。研究人员和实践者可以利用这些进展来推动在动态和快速发展的学习场景中所能达到的界限。
 - en: '`9.3 Transforming Real-World Challenges and Advancing Fields`'
   id: totrans-42
   prefs:
   - PREF_H2
   stylish: true
   type: TYPE_NORMAL
+  zh: '`9.3 转化现实世界挑战和推进领域发展`'
 - en: Let's unravel the potential of Jax to address real-world problems and spearhead
     advancements across diverse fields. Jax's versatility extends beyond theoretical
     constructs, positioning it as a pragmatic solution for tackling complex challenges
@@ -289,11 +333,13 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 让我们揭示Jax在解决实际问题和引领跨领域进步方面的潜力。Jax的多功能性不仅限于理论构造，而是将其定位为解决复杂挑战和推动创新边界的实用解决方案。
 - en: '`Jax in Real-World Problem Solving`'
   id: totrans-44
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`Jax在实际问题解决中的应用`'
 - en: 'Jax''s foundational principles of automatic differentiation and functional
     programming provide a solid framework for crafting solutions to real-world problems.
     Let''s explore key areas where Jax demonstrates significant potential:'
@@ -301,6 +347,7 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: Jax的自动微分和函数式编程的基础原理为解决实际问题提供了坚实的框架。让我们探索Jax展示显著潜力的关键领域：
 - en: 1\. Optimization in Engineering: Jax's optimization algorithms and differentiable
     programming capabilities find applications in optimizing complex engineering systems.
     From structural design to process optimization, Jax's efficiency enhances engineering
@@ -309,6 +356,7 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 1\. 工程优化：Jax的优化算法和可微编程能力在优化复杂工程系统中得到了应用。从结构设计到流程优化，Jax的高效性提升了工程工作流程。
 - en: 2\. Healthcare and Biomedical Research: Jax's prowess is harnessed in healthcare
     for tasks such as optimizing treatment plans and modeling biological processes.
     Its adaptability to differentiable programming aids in developing models for personalized
@@ -317,6 +365,7 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 2\. 医疗保健和生物医学研究：Jax在医疗保健领域的能力被用于优化治疗方案和建模生物过程。其在可微分编程中的适应性有助于开发个性化医学模型。
 - en: 3\. Financial Modeling and Risk Management: Jax's numerical computation strengths
     are well-suited for financial modeling and risk analysis. It enables efficient
     simulations, portfolio optimization, and risk assessments in dynamic financial
@@ -325,11 +374,13 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 3\. 金融建模与风险管理：Jax的数值计算能力非常适合金融建模和风险分析。它在动态金融环境中实现了高效的模拟、投资组合优化和风险评估。
 - en: '`Advancing Various Fields with Jax`'
   id: totrans-49
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`用Jax推进各领域发展`'
 - en: 'Beyond problem-solving, Jax serves as a catalyst for innovation across various
     domains. Its impact is not confined to specific industries but extends to diverse
     fields:'
@@ -337,6 +388,7 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 除了问题解决，Jax还作为跨各个领域创新的催化剂。它的影响力不仅限于特定行业，而是延伸到多个领域：
 - en: '1\. Scientific Discovery: Jax''s capabilities in scientific computing contribute
     to breakthroughs in understanding complex phenomena. Its application in simulating
     physical processes accelerates scientific discovery in physics, chemistry, and
@@ -345,6 +397,7 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 1\. 科学发现：Jax 在科学计算方面的能力促进了对复杂现象的突破性理解。其在模拟物理过程中的应用加速了物理学、化学和材料科学的科学发现。
 - en: '2\. Environmental Science: Jax facilitates the development of advanced models
     for climate prediction and environmental impact assessment. Researchers leverage
     its numerical capabilities to analyze vast datasets and model intricate environmental
@@ -353,6 +406,7 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 2\. 环境科学：Jax 促进了气候预测和环境影响评估模型的发展。研究人员利用其数值能力分析大量数据集，并模拟复杂的环境系统。
 - en: '3\. Education and Research: Jax''s accessibility and flexibility make it an
     ideal tool for educational purposes and research exploration. Its adoption in
     academic settings empowers students and researchers to experiment with cutting-edge
@@ -361,17 +415,20 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 3\. 教育和研究：Jax 的易用性和灵活性使其成为教育和研究探索的理想工具。其在学术环境中的采用使学生和研究人员能够尝试先进的机器学习技术。
 - en: Harnessing Jax for Social Impact
   id: totrans-54
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 利用 Jax 推动社会影响
 - en: 'Jax''s potential extends beyond technical domains to contribute to positive
     societal change:'
   id: totrans-55
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: Jax 的潜力不仅限于技术领域，还能为促进积极社会变革做出贡献：
 - en: '1\. Accessibility in AI: Jax''s open-source nature and user-friendly features
     democratize access to advanced machine learning capabilities. This accessibility
     fosters inclusivity and enables a broader community to engage in AI research and
@@ -380,6 +437,7 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 1\. AI 可及性：Jax 的开源特性和用户友好功能使得广大社区可以接触到先进的机器学习能力。这种可及性促进了包容性，并使更广泛的社区参与 AI 研究和开发。
 - en: '2\. Addressing Global Challenges: Whether it''s predicting disease outbreaks,
     optimizing resource allocation, or understanding socio-economic dynamics, Jax
     stands as a valuable tool for addressing pressing global challenges.'
@@ -387,6 +445,7 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 2\. 应对全球挑战：无论是预测疾病爆发、优化资源配置还是理解社会经济动态，Jax 都是解决紧迫全球挑战的宝贵工具。
 - en: Jax emerges not just as a technological tool but as an enabler of innovation,
     problem-solving, and positive societal impact. Its potential to provide efficient
     solutions to real-world problems and advance diverse fields underscores its significance
@@ -397,6 +456,8 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: Jax 不仅仅是一种技术工具，更是创新、问题解决和积极社会影响的推动者。其在提供高效解决方案、推动各个领域进步方面的潜力，凸显了它在塑造更加动态和有影响力未来中的重要性。随着
+    Jax 的发展，其在推动技术和社会景观进步中的角色日益突出。
 - en: Jax's journey has just begun, and its potential for shaping the future of scientific
     computing and deep learning is truly immense. As Jax continues to evolve and mature,
     it will undoubtedly play an even more crucial role in advancing our understanding
@@ -406,3 +467,4 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: Jax 的旅程才刚刚开始，塑造科学计算和深度学习未来的潜力确实巨大。随着 Jax 的持续发展和成熟，它无疑将在推动我们对周围世界的理解和开启突破性创新方面发挥更加关键的作用。

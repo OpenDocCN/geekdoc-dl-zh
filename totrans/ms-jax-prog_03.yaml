@@ -4,11 +4,13 @@
   - PREF_H1
   stylish: true
   type: TYPE_NORMAL
+  zh: '`第3章：Jax基础知识：自动微分和XLA`'
 - en: '`* * *`'
   id: totrans-1
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`* * *`'
 - en: '`Welcome to the powerhouse duo of Jax – Automatic Differentiation and XLA.
     In this chapter, we''re about to unravel the magic behind Jax''s lightning-fast
     performance. Automatic Differentiation frees you from the gradient grind, while
@@ -17,6 +19,7 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`欢迎来到Jax强大组合 - 自动微分和XLA。在本章中，我们将揭开Jax极快性能背后的神奇。自动微分让你摆脱梯度的苦工，而XLA将你的代码推向性能的高峰。`'
 - en: '`3.1 Exploring Automatic Differentiation Automatic Differentiation (AD) is
     the engine that powers efficient gradient computation in Jax. It''s the tool that
     liberates you from manually computing derivatives, a task often prone to errors
@@ -26,11 +29,13 @@
   - PREF_H2
   stylish: true
   type: TYPE_NORMAL
+  zh: '`3.1 探索自动微分自动微分（AD）是Jax中高效梯度计算的引擎。它是一种解放您手动计算导数的工具，这通常容易出错且复杂的任务。`'
 - en: '`Automatic Differentiation in Action: The Core Concept`'
   id: totrans-4
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`自动微分实践：核心概念`'
 - en: At its core, Automatic Differentiation is about computing derivatives of functions
     with respect to their inputs. Jax adopts a method called `"forward-mode" AD`,
     which efficiently computes the derivatives by traversing the computation graph
@@ -40,64 +45,76 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 在其核心，自动微分是关于计算函数相对于其输入的导数。Jax采用一种称为`“前向模式”AD`的方法，通过在正向方向遍历计算图有效地计算导数。这种方法使Jax能够以显著的效率计算梯度。
 - en: '`Code Example: Automatic Differentiation in Jax`'
   id: totrans-6
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`代码示例：Jax中的自动微分`'
 - en: '`Let''s see how Jax performs automatic differentiation in a simple example:`'
   id: totrans-7
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`让我们看看Jax在一个简单例子中如何执行自动微分：`'
 - en: '`import jax`'
   id: totrans-8
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`导入jax`'
 - en: '`Define a function`'
   id: totrans-9
   prefs:
   - PREF_H1
   stylish: true
   type: TYPE_NORMAL
+  zh: '`定义一个函数`'
 - en: '`def simple_function(x):`'
   id: totrans-10
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`def simple_function(x):`'
 - en: return`x2 + jax.numpy.sin(x)`
   id: totrans-11
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`return`x2 + jax.numpy.sin(x)`'
 - en: '`Calculate the gradient using Jax''s automatic differentiation`'
   id: totrans-12
   prefs:
   - PREF_H1
   stylish: true
   type: TYPE_NORMAL
+  zh: '`使用Jax的自动微分计算梯度`'
 - en: '`gradient = jax.grad(simple_function)`'
   id: totrans-13
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`gradient = jax.grad(simple_function)`'
 - en: '`Evaluate the gradient at a specific point`'
   id: totrans-14
   prefs:
   - PREF_H1
   stylish: true
   type: TYPE_NORMAL
+  zh: '`在特定点评估梯度`'
 - en: '`result = gradient(2.0)`'
   id: totrans-15
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`结果 = gradient(2.0)`'
 - en: '`print("Gradient at x = 2.0:", result)`'
   id: totrans-16
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`print("在x = 2.0处的梯度:", result)`'
 - en: '`In this example, Jax''s `grad` function is used to automatically compute the
     gradient of the `simple_function`. The result is the derivative of the function
     at the specified point.`'
@@ -105,11 +122,13 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`在这个例子中，Jax的`grad`函数用于自动计算`simple_function`的梯度。结果是在指定点处函数的导数。`'
 - en: '`Efficiency and Flexibility: Jax''s AD Superpowers`'
   id: totrans-18
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`高效与灵活性：Jax的AD超级能力`'
 - en: '`Jax''s Automatic Differentiation isn''t just efficient; it''s also highly
     flexible. It seamlessly handles functions with multiple inputs and outputs, making
     it a powerful tool for machine learning tasks. Whether you''re dealing with simple
@@ -118,6 +137,7 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`Jax的自动微分不仅高效，而且高度灵活。它无缝处理具有多个输入和输出的函数，使其成为机器学习任务的强大工具。无论你是在处理简单的数学函数还是复杂的神经网络，Jax的AD都能胜任。`'
 - en: '`Automatic Differentiation in Jax is the superhero that swoops in to handle
     the heavy lifting of gradient computation. It liberates you from the intricacies
     of manual differentiation, allowing you to focus on the creative aspects of model
@@ -126,12 +146,14 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`Jax中的自动微分是一个超级英雄，它能处理梯度计算的繁重工作。它让您摆脱手动微分的复杂性，让您专注于模型设计的创造性方面。`'
 - en: '`3.2 Role of XLA in Jax Performance Optimization`'
   id: totrans-21
   prefs:
   - PREF_H2
   stylish: true
   type: TYPE_NORMAL
+  zh: '`3.2 XLA在Jax性能优化中的作用`'
 - en: '`In the realm of Jax performance optimization, Accelerated Linear Algebra (XLA)
     stands as the unsung hero. XLA serves as the powerhouse that transforms your Jax
     code into high-performance machine code, specifically tailored to the hardware
@@ -140,11 +162,13 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`在Jax性能优化领域，加速线性代数（XLA）被视为无名英雄。XLA是将您的Jax代码转换为高性能机器代码的强大引擎，专门针对硬件架构。`'
 - en: '`XLA at a Glance: Transforming Jax Code for Performance`'
   id: totrans-23
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`XLA一瞥：为性能转换Jax代码`'
 - en: '`XLA acts as a compiler for Jax, translating your numerical computations into
     optimized machine code. Its goal is to make your code run faster by leveraging
     hardware-specific optimizations. This is particularly crucial for tasks involving
@@ -153,103 +177,123 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`XLA充当Jax的编译器，将您的数值计算转换为优化的机器代码。它的目标是通过利用硬件特定的优化使您的代码运行更快。这对涉及线性代数的任务尤为重要，XLA表现得最出色。`'
 - en: '`Code Example: Unleashing XLA''s Power`'
   id: totrans-25
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`代码示例：释放XLA的力量`'
 - en: '`Let''s witness the impact of XLA in a simple matrix multiplication example:`'
   id: totrans-26
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`让我们在一个简单的矩阵乘法示例中见证XLA的影响：`'
 - en: '`import jax.numpy as jnp`'
   id: totrans-27
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`import jax.numpy as jnp`'
 - en: '`import jax`'
   id: totrans-28
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`import jax`'
 - en: '`def matmul(A, B):`'
   id: totrans-29
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`def matmul(A, B):`'
 - en: '`return A @ B`'
   id: totrans-30
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`return A @ B`'
 - en: '`@jax.jit`'
   id: totrans-31
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`@jax.jit`'
 - en: '`def optimized_matmul(A, B):`'
   id: totrans-32
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`def optimized_matmul(A, B):`'
 - en: '`return A @ B`'
   id: totrans-33
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`return A @ B`'
 - en: '`A = jnp.array([[1, 2], [3, 4]])`'
   id: totrans-34
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`A = jnp.array([[1, 2], [3, 4]])`'
 - en: '`B = jnp.array([[5, 6], [7, 8]])`'
   id: totrans-35
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`B = jnp.array([[5, 6], [7, 8]])`'
 - en: Unoptimized matrix multiplication
   id: totrans-36
   prefs:
   - PREF_H1
   stylish: true
   type: TYPE_NORMAL
+  zh: 未优化的矩阵乘法
 - en: '`C = matmul(A, B)`'
   id: totrans-37
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`C = matmul(A, B)`'
 - en: '`print("Unoptimized Result:")`'
   id: totrans-38
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`print("Unoptimized Result:")`'
 - en: '`print(C)`'
   id: totrans-39
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`print(C)`'
 - en: XLA-optimized matrix multiplication
   id: totrans-40
   prefs:
   - PREF_H1
   stylish: true
   type: TYPE_NORMAL
+  zh: XLA优化的矩阵乘法
 - en: '`D = optimized_matmul(A, B)`'
   id: totrans-41
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`D = optimized_matmul(A, B)`'
 - en: '`print("\nXLA-Optimized Result:")`'
   id: totrans-42
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`print("\nXLA-Optimized Result:")`'
 - en: '`print(D)`'
   id: totrans-43
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`print(D)`'
 - en: The `matmul` function performs a matrix multiplication without XLA optimization.
     The `optimized_matmul` function uses `@jax.jit` to enable XLA optimization. When
     you run this code, you'll notice that `optimized_matmul` significantly outperforms
@@ -258,11 +302,13 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`matmul`函数执行了一个未经XLA优化的矩阵乘法。`optimized_matmul`函数使用了`@jax.jit`来启用XLA优化。当您运行此代码时，您会注意到`optimized_matmul`明显优于`matmul`。'
 - en: 'Witnessing the Impact: Unoptimized vs. XLA-Optimized'
   id: totrans-45
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 见证影响：未优化 vs. XLA优化
 - en: Running this code, you'll observe the difference in performance between the
     unoptimized and XLA-optimized matrix multiplication. The XLA-optimized version
     should demonstrate significantly faster execution, showcasing the tangible benefits
@@ -271,6 +317,7 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 运行此代码，您将观察到未优化和XLA优化的矩阵乘法之间的性能差异。XLA优化版本应该表现出显著更快的执行速度，展示了在Jax中XLA的实际益处。
 - en: XLA's role in Jax performance optimization is transformative. By intelligently
     compiling your code for specific hardware, XLA unlocks the full potential of Jax.
     As you integrate XLA into your Jax programs, relish the newfound speed and efficiency
@@ -281,6 +328,7 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: XLA在Jax性能优化中的角色是变革性的。通过为特定硬件智能编译您的代码，XLA释放了Jax的全部潜力。当您将XLA整合到Jax程序中时，享受在数值计算中新发现的速度和效率。这在Jax编程世界中是一个游戏变革者，通过拥抱XLA，您将推动您的代码达到新的性能高度。
 - en: '`3.3 Leveraging XLA to Accelerate Numerical Computations and Deep Learning
     Models`'
   id: totrans-48
@@ -288,6 +336,7 @@
   - PREF_H2
   stylish: true
   type: TYPE_NORMAL
+  zh: '`3.3 利用XLA加速数值计算和深度学习模型`'
 - en: In the context of Jax, the role of Accelerated Linear Algebra (`XLA`) is paramount.
     This section illuminates the practical application of XLA, showcasing how it optimizes
     numerical computations and propels the efficiency of deep learning models.
@@ -295,11 +344,13 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 在Jax的背景下，加速线性代数（`XLA`）的作用至关重要。本节展示了XLA如何优化数值计算，推动深度学习模型的效率。
 - en: 'XLA''s Impact on Numerical Computations: Precision and Speed'
   id: totrans-50
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: XLA对数值计算的影响：精度和速度
 - en: XLA serves as a catalyst for elevating the efficiency of various numerical computations.
     Its ability to harness hardware-specific optimizations ensures a substantial boost
     in performance. From intricate mathematical problem-solving to the optimization
@@ -308,123 +359,146 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: XLA作为提升各种数值计算效率的催化剂。它利用硬件特定的优化确保了性能的显著提升。从复杂的数学问题求解到线性系统的优化，XLA为精确性和速度做出了贡献。
 - en: 'Code Example: Accelerating Numerical Computations with XLA'
   id: totrans-52
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 代码示例：利用XLA加速数值计算
 - en: 'Illustrating the impact of XLA on numerical computations through a succinct
     example:'
   id: totrans-53
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 通过一个简洁的例子说明XLA对数值计算的影响：
 - en: '`import jax.numpy as jnp`'
   id: totrans-54
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`import jax.numpy as jnp`'
 - en: '`import jax`'
   id: totrans-55
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`import jax`'
 - en: Unoptimized numerical computation function
   id: totrans-56
   prefs:
   - PREF_H1
   stylish: true
   type: TYPE_NORMAL
+  zh: 未优化的数值计算函数
 - en: '`def numerical_computation(x, y):`'
   id: totrans-57
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`def numerical_computation(x, y):`'
 - en: '`return jnp.exp(x) + jnp.sin(y)`'
   id: totrans-58
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`return jnp.exp(x) + jnp.sin(y)`'
 - en: XLA-optimized version using `@jax.jit`
   id: totrans-59
   prefs:
   - PREF_H1
   stylish: true
   type: TYPE_NORMAL
+  zh: 使用`@jax.jit`的XLA优化版本
 - en: '`@jax.jit`'
   id: totrans-60
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`@jax.jit`'
 - en: '`def xla_optimized_computation(x, y):`'
   id: totrans-61
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`def xla_optimized_computation(x, y):`'
 - en: '`return jnp.exp(x) + jnp.sin(y)`'
   id: totrans-62
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`return jnp.exp(x) + jnp.sin(y)`'
 - en: Input values
   id: totrans-63
   prefs:
   - PREF_H1
   stylish: true
   type: TYPE_NORMAL
+  zh: 输入值
 - en: '`x_value = 2.0`'
   id: totrans-64
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`x_value = 2.0`'
 - en: '`y_value = 1.5`'
   id: totrans-65
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`y_value = 1.5`'
 - en: Unoptimized numerical computation
   id: totrans-66
   prefs:
   - PREF_H1
   stylish: true
   type: TYPE_NORMAL
+  zh: 未优化的数值计算
 - en: '`result_unoptimized = numerical_computation(x_value, y_value)`'
   id: totrans-67
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`result_unoptimized = numerical_computation(x_value, y_value)`'
 - en: '`print("Unoptimized Result:", result_unoptimized)`'
   id: totrans-68
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`print("Unoptimized Result:", result_unoptimized)`'
 - en: XLA-Optimized numerical computation
   id: totrans-69
   prefs:
   - PREF_H1
   stylish: true
   type: TYPE_NORMAL
+  zh: XLA优化的数值计算
 - en: '`result_xla_optimized = xla_optimized_computation(x_value, y_value)`'
   id: totrans-70
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`result_xla_optimized = xla_optimized_computation(x_value, y_value)`'
 - en: '`print("XLA-Optimized Result:", result_xla_optimized)`'
   id: totrans-71
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`print("XLA-Optimized Result:", result_xla_optimized)`'
 - en: This example distinguishes the unoptimized function from its XLA-optimized counterpart,
     emphasizing the tangible impact on computational efficiency.
   id: totrans-72
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 这个示例突显了未优化函数与XLA优化版本之间的区别，强调了对计算效率的具体影响。
 - en: 'XLA in Deep Learning: Elevating Model Performance'
   id: totrans-73
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 深度学习中的XLA：提升模型性能
 - en: In the realm of deep learning, XLA emerges as a transformative asset. It meticulously
     optimizes both the training and inference stages of neural networks, ensuring
     accelerated performance on GPUs and TPUs. The result is expedited model training,
@@ -433,6 +507,7 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 在深度学习领域，XLA作为一项革命性资产出现。它精心优化神经网络的训练和推理阶段，确保在GPU和TPU上加速性能。结果是加快的模型训练、更快的预测速度以及整体增强的深度学习体验。
 - en: XLA's strategic integration into Jax projects marks a decisive step toward achieving
     computational excellence. As we incorporate XLA into our workflows, we celebrate
     the heightened speed and efficiency it injects into our code. Whether confronting
@@ -442,11 +517,13 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: XLA战略性地整合到Jax项目中，是实现计算卓越的重要一步。随着我们将XLA整合到工作流程中，我们庆祝它为我们的代码注入的提速和效率提升。无论是面对复杂的数学挑战还是处理深度学习的复杂性，XLA都是推动我们代码达到最优性能的重要力量。
 - en: '**Coding Challenge**: Matrix Power and XLA Optimization'
   id: totrans-76
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '**编程挑战：** 矩阵幂和XLA优化'
 - en: 'Create a Jax program that calculates the power of a matrix and then optimize
     it using XLA to observe the performance difference. Use the following matrix as
     an example:'
@@ -454,162 +531,193 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 创建一个Jax程序来计算矩阵的幂，并使用XLA进行优化，以观察性能差异。以以下矩阵为例：
 - en: '`import jax`'
   id: totrans-78
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`import jax`'
 - en: '`import jax.numpy as jnp`'
   id: totrans-79
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`import jax.numpy as jnp`'
 - en: '**Matrix definition**'
   id: totrans-80
   prefs:
   - PREF_H1
   stylish: true
   type: TYPE_NORMAL
+  zh: '**矩阵定义**'
 - en: '`matrix = jnp.array([[2, 3], [1, 4]])`'
   id: totrans-81
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`matrix = jnp.array([[2, 3], [1, 4]])`'
 - en: '**Solution**'
   id: totrans-82
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '**解决方案**'
 - en: '`import jax`'
   id: totrans-83
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`import jax`'
 - en: '`import jax.numpy as jnp`'
   id: totrans-84
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`import jax.numpy as jnp`'
 - en: '**Matrix definition**'
   id: totrans-85
   prefs:
   - PREF_H1
   stylish: true
   type: TYPE_NORMAL
+  zh: '**矩阵定义**'
 - en: '`matrix = jnp.array([[2, 3], [1, 4]])`'
   id: totrans-86
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`matrix = jnp.array([[2, 3], [1, 4]])`'
 - en: '**Function to calculate matrix power**'
   id: totrans-87
   prefs:
   - PREF_H1
   stylish: true
   type: TYPE_NORMAL
+  zh: '**计算矩阵幂的函数**'
 - en: '`def matrix_power`(A, n):'
   id: totrans-88
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`def matrix_power`(A, n):'
 - en: '`result = jnp.eye(A.shape[0])`'
   id: totrans-89
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`result = jnp.eye(A.shape[0])`'
 - en: '`for _ in range(n):`'
   id: totrans-90
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`for _ in range(n):`'
 - en: '`result = result @ A`'
   id: totrans-91
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`result = result @ A`'
 - en: '`return result`'
   id: totrans-92
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`return result`'
 - en: '**XLA-optimized version using `@jax.jit`**'
   id: totrans-93
   prefs:
   - PREF_H1
   stylish: true
   type: TYPE_NORMAL
+  zh: '**使用`@jax.jit`进行XLA优化的版本**'
 - en: '`@jax.jit`'
   id: totrans-94
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`@jax.jit`'
 - en: '`def xla_optimized_matrix_power`(A, n):'
   id: totrans-95
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`def xla_optimized_matrix_power`(A, n):'
 - en: '`result = jnp.eye(A.shape[0])`'
   id: totrans-96
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`result = jnp.eye(A.shape[0])`'
 - en: '`for _ in range(n):`'
   id: totrans-97
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`for _ in range(n):`'
 - en: '`result = result @ A`'
   id: totrans-98
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`result = result @ A`'
 - en: '`return result`'
   id: totrans-99
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`return result`'
 - en: '**Challenge**: Calculate matrix power without XLA optimization'
   id: totrans-100
   prefs:
   - PREF_H1
   stylish: true
   type: TYPE_NORMAL
+  zh: '**挑战：** 计算未使用XLA优化的矩阵幂'
 - en: '`power_result_unoptimized = matrix_power(matrix, 5)`'
   id: totrans-101
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`power_result_unoptimized = matrix_power(matrix, 5)`'
 - en: '`print("Unoptimized Matrix Power Result:")`'
   id: totrans-102
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`print("未优化的矩阵幂结果：")`'
 - en: '`print(power_result_unoptimized)`'
   id: totrans-103
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`print(power_result_unoptimized)`'
 - en: '**Challenge**: Calculate matrix power with XLA optimization'
   id: totrans-104
   prefs:
   - PREF_H1
   stylish: true
   type: TYPE_NORMAL
+  zh: '**挑战：** 计算使用XLA优化的矩阵幂'
 - en: '`power_result_xla_optimized = xla_optimized_matrix_power(matrix, 5)`'
   id: totrans-105
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`power_result_xla_optimized = xla_optimized_matrix_power(matrix, 5)`'
 - en: '`print("\nXLA-Optimized Matrix Power Result:")`'
   id: totrans-106
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`print("\nXLA优化的矩阵幂结果：")`'
 - en: '`print(power_result_xla_optimized)`'
   id: totrans-107
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`print(power_result_xla_optimized)`'
 - en: In this challenge, you are tasked with calculating the power of the given matrix
     without and with XLA optimization. Observe the performance difference between
     the unoptimized and XLA-optimized versions. Feel free to experiment with different
@@ -618,6 +726,7 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 在这个挑战中，你的任务是计算给定矩阵的幂次，分别使用未优化和XLA优化的版本。观察在不同矩阵大小和幂值下未优化和XLA优化版本的性能差异。可以自由地尝试不同的矩阵尺寸和幂次，探索XLA在计算效率上的影响。
 - en: And there you have it – the dynamic duo that propels Jax to unparalleled heights.
     Automatic Differentiation handles gradients effortlessly, and XLA turns your code
     into a performance masterpiece. As you continue your journey with Jax, remember,
@@ -627,3 +736,4 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 这就是将Jax推向无与伦比高度的动态二人组。自动微分轻松处理梯度，而XLA则将您的代码转变为性能杰作。在继续使用Jax的旅程中，请记住，本章的见解是您解锁Jax全部潜力的关键。系好安全带，前方的道路铺满创新和效率！

@@ -4,11 +4,13 @@
   - PREF_H1
   stylish: true
   type: TYPE_NORMAL
+  zh: 第四章：神经网络与深度学习基础
 - en: '* * *'
   id: totrans-1
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '* * *'
 - en: In this chapter, we unravel the magic behind these computational symphonies,
     inspired by the human brain. As we explore their fundamental concepts and diverse
     architectures, you're on the path to mastering the building blocks of modern AI.
@@ -16,12 +18,14 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 在本章中，我们揭开了这些计算交响乐背后的魔力，灵感源自人类大脑。随着我们探索它们的基本概念和多样化的架构，您正走在掌握现代人工智能构建基块的道路上。
 - en: 4.1 Introduction to Neural Networks and Their Components
   id: totrans-3
   prefs:
   - PREF_H2
   stylish: true
   type: TYPE_NORMAL
+  zh: 4.1 神经网络及其组成部分介绍
 - en: Neural networks, the backbone of contemporary artificial intelligence, are inspired
     by the intricate workings of the human brain. Understanding their fundamental
     components is the key to unlocking the potential of these powerful computational
@@ -30,11 +34,13 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 神经网络，当代人工智能的支柱，灵感来自于人类大脑错综复杂的运作方式。理解它们的基本组成是解锁这些强大计算模型潜力的关键。
 - en: What Are Neural Networks?
   id: totrans-5
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 什么是神经网络？
 - en: At their core, neural networks are a type of artificial intelligence designed
     to mimic the functionality of the human brain. They consist of interconnected
     nodes called neurons, organized into layers. Each neuron receives input, processes
@@ -43,17 +49,20 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 在其核心，神经网络是一种旨在模仿人类大脑功能的人工智能类型。它们由称为神经元的互连节点组成，组织成层次结构。每个神经元接收输入，通过简单计算处理它，并将输出传递给其他神经元。
 - en: Components of a Neural Network
   id: totrans-7
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 神经网络的组成部分
 - en: '1\. Neurons: These are the basic units of computation within a neural network.
     They receive input from other neurons, perform calculations, and produce an output.'
   id: totrans-8
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 1\. 神经元：这些是神经网络内的基本计算单元。它们从其他神经元接收输入，进行计算，并产生输出。
 - en: '2\. Weights: Connections between neurons are determined by weights. The weight
     of a connection dictates the influence one neuron''s output has on another''s
     input.'
@@ -61,12 +70,14 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 2\. 权重：神经元之间的连接由权重确定。连接的权重决定一个神经元输出对另一个输入的影响。
 - en: '3\. Biases: Numbers added to a neuron''s input before passing through the activation
     function, contributing to the overall flexibility of the network.'
   id: totrans-10
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 3\. 偏差：在通过激活函数之前添加到神经元输入的数字，有助于网络的整体灵活性。
 - en: '4\. Activation Functions: Responsible for deciding whether a neuron should
     "fire" or not. These functions introduce nonlinearity, allowing the network to
     learn complex patterns.'
@@ -74,6 +85,7 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 4\. 激活函数：负责决定神经元是否“激活”。这些函数引入非线性，使网络能够学习复杂模式。
 - en: '5\. Layers: Neurons are organized into layers. Neural networks typically comprise
     input, hidden, and output layers, each serving a specific purpose in information
     processing.'
@@ -81,11 +93,13 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 5\. 层次：神经元组织成层次结构。神经网络通常包括输入层、隐藏层和输出层，每个层在信息处理中起特定作用。
 - en: How Neural Networks Work
   id: totrans-13
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 神经网络如何工作
 - en: Neural networks operate by learning to map inputs to outputs. Through iterative
     adjustments of weights and biases, a process known as training, the network aims
     to minimize the error between its predictions and the desired outcomes.
@@ -93,50 +107,59 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 神经网络通过学习将输入映射到输出。通过权重和偏差的迭代调整（称为训练），网络旨在最小化其预测与期望结果之间的误差。
 - en: Types of Neural Networks
   id: totrans-15
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 神经网络的类型
 - en: '1\. Perceptrons: The simplest form, consisting of a single layer of neurons.'
   id: totrans-16
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 1\. 感知器：最简单的形式，由单层神经元组成。
 - en: '2\. Multilayer Perceptrons (MLPs): Expanded versions of perceptrons with multiple
     layers, enhancing their ability to learn intricate patterns.'
   id: totrans-17
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 2\. 多层感知器（MLPs）：具有多层的感知器扩展版本，增强了学习复杂模式的能力。
 - en: '3\. Convolutional Neural Networks (CNNs): Specialized for image recognition,
     utilizing filters for feature extraction.'
   id: totrans-18
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 3\. 卷积神经网络（CNNs）：专为图像识别而设计，利用滤波器进行特征提取。
 - en: '4\. Recurrent Neural Networks (RNNs): Tailored for sequential data processing,
     such as text or speech.'
   id: totrans-19
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 4\. 循环神经网络（RNNs）：专为顺序数据处理而设计，如文本或语音。
 - en: Applications of Neural Networks
   id: totrans-20
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 神经网络的应用
 - en: 'Neural networks find applications across diverse domains:'
   id: totrans-21
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 神经网络在各个领域中找到应用：
 - en: 'Image Recognition: Identifying objects in images, from faces to traffic signs.'
   id: totrans-22
   prefs:
   - PREF_UL
   stylish: true
   type: TYPE_NORMAL
+  zh: 图像识别：识别图像中的对象，从人脸到交通标志。
 - en: 'Natural Language Processing (NLP): Processing and understanding human language
     for translation and text classification.'
   id: totrans-23
@@ -144,24 +167,28 @@
   - PREF_UL
   stylish: true
   type: TYPE_NORMAL
+  zh: 自然语言处理（NLP）：处理和理解人类语言，用于翻译和文本分类。
 - en: 'Speech Recognition: Transcribing spoken language into text.'
   id: totrans-24
   prefs:
   - PREF_UL
   stylish: true
   type: TYPE_NORMAL
+  zh: 语音识别：将口语转录为文本。
 - en: 'Recommender Systems: Recommending products, movies, books, or music to users.'
   id: totrans-25
   prefs:
   - PREF_UL
   stylish: true
   type: TYPE_NORMAL
+  zh: 推荐系统：向用户推荐产品、电影、书籍或音乐。
 - en: '`Anomaly Detection: Detecting anomalies in data, such as fraud or network intrusions.`'
   id: totrans-26
   prefs:
   - PREF_UL
   stylish: true
   type: TYPE_NORMAL
+  zh: '`异常检测：检测数据中的异常，如欺诈或网络入侵。`'
 - en: '`As powerful tools with a broad range of applications, neural networks continue
     to evolve, promising innovative solutions and reshaping the landscape of artificial
     intelligence.`'
@@ -169,12 +196,14 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`作为功能强大的工具，具有广泛的应用领域，神经网络不断发展，承诺创新解决方案并重塑人工智能的格局。`'
 - en: '`4.2 Activation Functions`'
   id: totrans-28
   prefs:
   - PREF_H2
   stylish: true
   type: TYPE_NORMAL
+  zh: '`4.2 激活函数`'
 - en: '`Activation functions are the powerhouses of neural networks, injecting crucial
     nonlinearity into the network''s computations. This introduces decision-making
     capabilities, allowing the network to grasp intricate patterns in data. The choice
@@ -185,351 +214,421 @@
   - PREF_H2
   stylish: true
   type: TYPE_NORMAL
+  zh: '`激活函数是神经网络的动力源，为网络的计算注入了重要的非线性。这引入了决策能力，使网络能够抓住数据中复杂的模式。激活函数的选择塑造了网络的行为，是实现最佳性能的关键因素。`'
 - en: '`Sigmoid Function`'
   id: totrans-30
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`Sigmoid 函数`'
 - en: '`import numpy as np`'
   id: totrans-31
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`import numpy as np`'
 - en: '`def sigmoid(x):`'
   id: totrans-32
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`def sigmoid(x):`'
 - en: '`return 1 / (1 + np.exp(-x))`'
   id: totrans-33
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`return 1 / (1 + np.exp(-x))`'
 - en: '`Sigmoid squashes input to a range between 0 and 1, fitting well for binary
     classification tasks.`'
   id: totrans-34
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`Sigmoid 将输入压缩到 0 到 1 的范围内，非常适合二分类任务。`'
 - en: '`Rectified Linear Unit (ReLU)`'
   id: totrans-35
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`修正线性单元（ReLU）`'
 - en: '`def relu(x):`'
   id: totrans-36
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`def relu(x):`'
 - en: '`return np.maximum(0, x)`'
   id: totrans-37
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`return np.maximum(0, x)`'
 - en: '`ReLU outputs the input directly if positive, enhancing efficiency compared
     to sigmoid.`'
   id: totrans-38
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`ReLU 如果输入为正，则直接输出输入，与 Sigmoid 相比提高了效率。`'
 - en: '`Tanh Function`'
   id: totrans-39
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`双曲正切函数`'
 - en: '`def tanh(x):`'
   id: totrans-40
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`def tanh(x):`'
 - en: '`return np.tanh(x)`'
   id: totrans-41
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`return np.tanh(x)`'
 - en: '`Similar to sigmoid but with an output range of -1 to 1.`'
   id: totrans-42
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`与 Sigmoid 类似，但输出范围为 -1 到 1。`'
 - en: '`Softmax Function`'
   id: totrans-43
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`Softmax 函数`'
 - en: '`def softmax(x):`'
   id: totrans-44
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`def softmax(x):`'
 - en: '`exp_values = np.exp(x - np.max(x, axis=1, keepdims=True))`'
   id: totrans-45
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`exp_values = np.exp(x - np.max(x, axis=1, keepdims=True))`'
 - en: '`return exp_values / np.sum(exp_values, axis=1, keepdims=True)`'
   id: totrans-46
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`return exp_values / np.sum(exp_values, axis=1, keepdims=True)`'
 - en: '`Used in the output layer for multi-class classification, converting outputs
     into probabilities.`'
   id: totrans-47
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`用于多类分类的输出层，将输出转换为概率。`'
 - en: '`Backpropagation: Unraveling the Gradient Descent Algorithm`'
   id: totrans-48
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`反向传播：揭开梯度下降算法的奥秘`'
 - en: '`Backpropagation, the engine behind neural network training, iteratively adjusts
     weights and biases to minimize the error between predicted and actual outputs.`'
   id: totrans-49
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`反向传播是神经网络训练的引擎，通过迭代调整权重和偏差以最小化预测和实际输出之间的误差。`'
 - en: '`Assuming a simple neural network with one hidden layer`'
   id: totrans-50
   prefs:
   - PREF_H1
   stylish: true
   type: TYPE_NORMAL
+  zh: '`假设一个简单的具有一个隐藏层的神经网络`'
 - en: '`def backpropagation(inputs, targets, weights_input_hidden, weights_hidden_output):`'
   id: totrans-51
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`def backpropagation(inputs, targets, weights_input_hidden, weights_hidden_output):`'
 - en: '`# Forward pass`'
   id: totrans-52
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`# 前向传播`'
 - en: '`hidden_inputs = np.dot(inputs, weights_input_hidden)`'
   id: totrans-53
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`hidden_inputs = np.dot(inputs, weights_input_hidden)`'
 - en: '`hidden_outputs = sigmoid(hidden_inputs)`'
   id: totrans-54
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`hidden_outputs = sigmoid(hidden_inputs)`'
 - en: '`final_inputs = np.dot(hidden_outputs, weights_hidden_output)`'
   id: totrans-55
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`final_inputs = np.dot(hidden_outputs, weights_hidden_output)`'
 - en: '`final_outputs = sigmoid(final_inputs)`'
   id: totrans-56
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`final_outputs = sigmoid(final_inputs)`'
 - en: '`# Calculate error`'
   id: totrans-57
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`# 计算误差`'
 - en: '`output_errors = targets - final_outputs`'
   id: totrans-58
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`output_errors = targets - final_outputs`'
 - en: '`# Backward pass`'
   id: totrans-59
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`# 反向传播`'
 - en: '`output_grad = final_outputs * (1 - final_outputs) * output_errors`'
   id: totrans-60
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`output_grad = final_outputs * (1 - final_outputs) * output_errors`'
 - en: '`hidden_errors = np.dot(output_grad, weights_hidden_output.T)`'
   id: totrans-61
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`hidden_errors = np.dot(output_grad, weights_hidden_output.T)`'
 - en: '`hidden_grad = hidden_outputs * (1 - hidden_outputs) * hidden_errors`'
   id: totrans-62
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`hidden_grad = hidden_outputs * (1 - hidden_outputs) * hidden_errors`'
 - en: '`# Update weights and biases`'
   id: totrans-63
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`# 更新权重和偏差`'
 - en: '`weights_hidden_output += np.dot(hidden_outputs.T, output_grad)`'
   id: totrans-64
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`weights_hidden_output += np.dot(hidden_outputs.T, output_grad)`'
 - en: '`weights_input_hidden += np.dot(inputs.T, hidden_grad)`'
   id: totrans-65
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`weights_input_hidden += np.dot(inputs.T, hidden_grad)`'
 - en: '`This simple example illustrates the essence of backpropagation, where errors
     are propagated backward through the network to adjust parameters.`'
   id: totrans-66
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`这个简单的例子说明了反向传播的核心，通过网络向后传播误差以调整参数。`'
 - en: '`Optimization Techniques: Elevating Neural Network Performance`'
   id: totrans-67
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`优化技术：提升神经网络性能`'
 - en: '`Optimization techniques enhance the efficiency of the training process, ensuring
     convergence and preventing overfitting.`'
   id: totrans-68
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`优化技术增强训练过程的效率，确保收敛并防止过拟合。`'
 - en: '`Stochastic Gradient Descent (SGD)`'
   id: totrans-69
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`随机梯度下降（SGD）`'
 - en: '`def stochastic_gradient_descent(inputs, targets, learning_rate=0.01, epochs=100):`'
   id: totrans-70
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`def stochastic_gradient_descent(inputs, targets, learning_rate=0.01, epochs=100):`'
 - en: '`for epoch in range(epochs):`'
   id: totrans-71
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`for epoch in range(epochs):`'
 - en: '`for i in range(len(inputs))`'
   id: totrans-72
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`for i in range(len(inputs))`'
 - en: '`# Forward pass`'
   id: totrans-73
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`# 前向传播`'
 - en: '`# Backward pass and weight updates`'
   id: totrans-74
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`# 反向传播和权重更新`'
 - en: '`Momentum`'
   id: totrans-75
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`动量`'
 - en: '`def momentum_optimizer(inputs, targets, learning_rate=0.01, momentum=0.9,
     epochs=100)`'
   id: totrans-76
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`def momentum_optimizer(inputs, targets, learning_rate=0.01, momentum=0.9,
+    epochs=100)`'
 - en: '`velocity = 0`'
   id: totrans-77
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`velocity = 0`'
 - en: '`for epoch in range(epochs):`'
   id: totrans-78
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`for epoch in range(epochs):`'
 - en: '`for i in range(len(inputs))`'
   id: totrans-79
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`for i in range(len(inputs))`'
 - en: '`# Forward pass`'
   id: totrans-80
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`# 前向传播`'
 - en: '`# Backward pass and weight updates`'
   id: totrans-81
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`# 反向传播和权重更新`'
 - en: '`velocity = momentum * velocity + learning_rate * gradient`'
   id: totrans-82
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`velocity = momentum * velocity + learning_rate * gradient`'
 - en: '`Adaptive Learning Rate`'
   id: totrans-83
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`自适应学习率`'
 - en: '`def adaptive_learning_rate_optimizer(inputs, targets, learning_rate=0.01,
     epochs=100):`'
   id: totrans-84
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`def adaptive_learning_rate_optimizer(inputs, targets, learning_rate=0.01,
+    epochs=100):`'
 - en: '`for epoch in range(epochs):`'
   id: totrans-85
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`for epoch in range(epochs):`'
 - en: '`for i in range(len(inputs))`'
   id: totrans-86
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`for i in range(len(inputs))`'
 - en: '`# Forward pass`'
   id: totrans-87
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`# 前向传播`'
 - en: '`# Backward pass and weight updates`'
   id: totrans-88
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`# 反向传播和权重更新`'
 - en: '`learning_rate *= 1.0 / (1.0 + decay * epoch)`'
   id: totrans-89
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`learning_rate *= 1.0 / (1.0 + decay * epoch)`'
 - en: Regularization Techniques
   id: totrans-90
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 正则化技术
 - en: '`def dropout(inputs, dropout_rate=0.2):`'
   id: totrans-91
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`def dropout(inputs, dropout_rate=0.2):`'
 - en: '`mask = (np.random.rand(*inputs.shape) < 1.0 - dropout_rate) / (1.0 - dropout_rate)`'
   id: totrans-92
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`mask = (np.random.rand(*inputs.shape) < 1.0 - dropout_rate) / (1.0 - dropout_rate)`'
 - en: '`return inputs * mask`'
   id: totrans-93
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`return inputs * mask`'
 - en: '`def weight_decay(weights, decay_rate=0.001):`'
   id: totrans-94
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`def weight_decay(weights, decay_rate=0.001):`'
 - en: '`return weights - decay_rate * weights`'
   id: totrans-95
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`return weights - decay_rate * weights`'
 - en: These techniques, when applied judiciously, contribute to the robustness and
     generalization ability of neural networks.
   id: totrans-96
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 这些技术，如果明智地应用，将有助于提升神经网络的稳健性和泛化能力。
 - en: In summary, activation functions, backpropagation, and optimization techniques
     are pivotal in the neural network landscape. Grasping these concepts equips you
     to wield the power of neural networks effectively, paving the way for impactful
@@ -538,12 +637,14 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 总结一下，激活函数、反向传播和优化技术在神经网络领域中非常关键。理解这些概念能够使你有效地运用神经网络的力量，为解决现实世界中的问题铺平道路。
 - en: '`4.3 Unveiling Neural Network Diversity`'
   id: totrans-98
   prefs:
   - PREF_H2
   stylish: true
   type: TYPE_NORMAL
+  zh: '`4.3 揭示神经网络的多样性`'
 - en: Neural networks, the powerhouses of artificial intelligence, have reshaped how
     machines learn from data. Among their diverse structures, perceptrons, multilayer
     perceptrons (MLPs), and convolutional neural networks (CNNs) emerge as key players,
@@ -552,11 +653,14 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 神经网络，人工智能的核心动力，已经重新定义了机器从数据中学习的方式。在它们多样的结构中，感知器、多层感知器（MLPs）和卷积神经网络（CNNs） emerge
+    as key players，each contributing uniquely to solving a variety of real-world challenges.
 - en: 'Perceptrons: The Essence of Simplicity'
   id: totrans-100
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 感知器：简单之本
 - en: Originating in 1958, perceptrons are the foundational bricks of neural networks.
     With a single layer of neurons processing binary inputs and producing binary outputs,
     perceptrons excel in straightforward binary classification tasks. Imagine determining
@@ -565,11 +669,13 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 源自1958年的感知器是神经网络的基础组成部分。通过处理二进制输入并生成二进制输出的单层神经元，感知器在直观的二元分类任务中表现出色。想象一下确定一封电子邮件是否是垃圾邮件——感知器可以轻松处理这样的决策。
 - en: 'Multilayer Perceptrons (MLPs): Expanding Horizons'
   id: totrans-102
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 多层感知器（MLPs）：拓展视野
 - en: MLPs take the simplicity of perceptrons and amplify it. By stacking multiple
     layers of neurons, MLPs navigate intricate patterns in data. This versatility
     makes them ideal for diverse tasks like multi-class classification and regression,
@@ -578,11 +684,13 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: MLPs将感知器的简单性进行了扩展。通过堆叠多层神经元，MLPs能够处理数据中复杂的模式。这种多功能性使它们非常适合各种任务，如多类分类和回归，其中特征与输出之间的关系更为微妙。
 - en: 'Convolutional Neural Networks (CNNs): Visual Prowess'
   id: totrans-104
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 卷积神经网络（CNNs）：视觉能力
 - en: Enter CNNs, the maestros of image recognition. Inspired by the human visual
     cortex, CNNs utilize filters to navigate through input images, extracting essential
     features for object recognition. Whether it's classifying images, detecting objects,
@@ -592,11 +700,13 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 进入CNNs，图像识别的大师。受人类视觉皮层启发，CNNs利用滤波器浏览输入图像，提取物体识别所需的关键特征。无论是分类图像、检测物体还是分割视觉数据，CNNs在视觉任务中展示了无与伦比的能力。
 - en: Comparing Strengths and Applications
   id: totrans-106
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 比较优势和应用场景
 - en: Perceptrons shine in simplicity and computational efficiency, suited for straightforward
     relationships between features and outputs. MLPs, with their knack for unraveling
     complex patterns, prove versatile across a spectrum of classification and regression
@@ -606,6 +716,7 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 感知机以简单性和计算效率著称，适用于特征和输出之间的直接关系。MLP凭借其解开复杂模式的能力，在分类和回归挑战的广泛谱系上表现出色。CNN作为视觉数据的大师，在需要复杂分析的图像和模式任务中表现出色。
 - en: As we step into the future, neural networks continue to evolve. New architectures,
     training methods, and applications emerge at a swift pace. The journey ahead promises
     more sophistication and power, with neural networks poised to conquer increasingly
@@ -614,11 +725,13 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 随着我们迈入未来，神经网络不断演进。新的架构、训练方法和应用程序以迅猛的步伐涌现。前方的旅程承诺更多的复杂性和能力，神经网络将在征服日益复杂的挑战和重新定义人工智能领域的格局中占据重要位置。
 - en: 'Coding Challenge: Implementing a Multilayer Perceptron (MLP)'
   id: totrans-109
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 编码挑战：实现一个多层感知机（MLP）
 - en: Your task is to implement a simple multilayer perceptron (MLP) for a binary
     classification problem. Use NumPy for matrix operations and implement both forward
     and backward passes. Additionally, include a training loop to update the weights
@@ -627,337 +740,403 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 您的任务是为二分类问题实现一个简单的多层感知机（MLP）。使用NumPy进行矩阵运算，实现前向和反向传播，并包括使用梯度下降更新权重和偏置的训练循环。
 - en: 'Requirements:'
   id: totrans-111
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 要求：
 - en: '1\. Design a multilayer perceptron with:'
   id: totrans-112
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 1\. 设计一个具有以下特征的多层感知机：
 - en: '- Input layer with 5 neurons.'
   id: totrans-113
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '- 输入层有5个神经元。'
 - en: '- Hidden layer with 10 neurons, using a ReLU activation function.'
   id: totrans-114
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '- 隐藏层有10个神经元，使用ReLU激活函数。'
 - en: '- Output layer with 1 neuron and a sigmoid activation function.'
   id: totrans-115
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '- 输出层有1个神经元，并且使用sigmoid激活函数。'
 - en: 2\. Implement forward pass logic to compute the predicted output.
   id: totrans-116
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 2\. 实现前向传播逻辑以计算预测输出。
 - en: 3\. Implement backward pass logic to calculate gradients and update weights
     and biases using gradient descent.
   id: totrans-117
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 3\. 实现反向传播逻辑，计算梯度并使用梯度下降更新权重和偏置。
 - en: 4\. Create a simple dataset for binary classification (e.g., use NumPy to generate
     random data).
   id: totrans-118
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 4\. 创建一个用于二分类的简单数据集（例如，使用NumPy生成随机数据）。
 - en: 5\. Train your MLP on the dataset for a specified number of epochs.
   id: totrans-119
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 5\. 在数据集上训练您的多层感知机（MLP）指定的次数。
 - en: 'Solution:'
   id: totrans-120
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 解决方案：
 - en: 'Here''s a simplified solution in Python using NumPy:'
   id: totrans-121
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 这里是使用NumPy的Python简化解决方案：
 - en: '`import numpy as np`'
   id: totrans-122
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`import numpy as np`'
 - en: Define the MLP architecture
   id: totrans-123
   prefs:
   - PREF_H1
   stylish: true
   type: TYPE_NORMAL
+  zh: 定义MLP架构
 - en: '`input_size = 5`'
   id: totrans-124
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`input_size = 5`'
 - en: '`hidden_size = 10`'
   id: totrans-125
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`hidden_size = 10`'
 - en: '`output_size = 1`'
   id: totrans-126
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`output_size = 1`'
 - en: '`learning_rate = 0.01`'
   id: totrans-127
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`learning_rate = 0.01`'
 - en: epochs = 1000
   id: totrans-128
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: epochs = 1000
 - en: Initialize weights and biases
   id: totrans-129
   prefs:
   - PREF_H1
   stylish: true
   type: TYPE_NORMAL
+  zh: 初始化权重和偏置
 - en: '`weights_input_hidden = np.random.randn(input_size, hidden_size)`'
   id: totrans-130
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`weights_input_hidden = np.random.randn(input_size, hidden_size)`'
 - en: '`biases_hidden = np.zeros((1, hidden_size))`'
   id: totrans-131
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`biases_hidden = np.zeros((1, hidden_size))`'
 - en: '`weights_hidden_output = np.random.randn(hidden_size, output_size)`'
   id: totrans-132
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`weights_hidden_output = np.random.randn(hidden_size, output_size)`'
 - en: '`biases_output = np.zeros((1, output_size))`'
   id: totrans-133
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`biases_output = np.zeros((1, output_size))`'
 - en: Activation functions
   id: totrans-134
   prefs:
   - PREF_H1
   stylish: true
   type: TYPE_NORMAL
+  zh: 激活函数
 - en: '`def relu(x):`'
   id: totrans-135
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`def relu(x):`'
 - en: return np.maximum(0, x)
   id: totrans-136
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 返回 np.maximum(0, x)
 - en: '`def sigmoid(x):`'
   id: totrans-137
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`def sigmoid(x):`'
 - en: return 1 / (1 + np.exp(-x))
   id: totrans-138
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 返回 1 / (1 + np.exp(-x))
 - en: Forward pass
   id: totrans-139
   prefs:
   - PREF_H1
   stylish: true
   type: TYPE_NORMAL
+  zh: 前向传播
 - en: '`def forward_pass(inputs):`'
   id: totrans-140
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`def forward_pass(inputs):`'
 - en: '`hidden_layer_input = np.dot(inputs, weights_input_hidden) + biases_hidden`'
   id: totrans-141
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`hidden_layer_input = np.dot(inputs, weights_input_hidden) + biases_hidden`'
 - en: '`hidden_layer_output = relu(hidden_layer_input)`'
   id: totrans-142
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`hidden_layer_output = relu(hidden_layer_input)`'
 - en: '`output_layer_input = np.dot(hidden_layer_output, weights_hidden_output) +
     biases_output`'
   id: totrans-143
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`output_layer_input = np.dot(hidden_layer_output, weights_hidden_output) +
+    biases_output`'
 - en: '`predicted_output = sigmoid(output_layer_input)`'
   id: totrans-144
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`predicted_output = sigmoid(output_layer_input)`'
 - en: return predicted_output, hidden_layer_output
   id: totrans-145
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 返回 predicted_output, hidden_layer_output
 - en: Backward pass
   id: totrans-146
   prefs:
   - PREF_H1
   stylish: true
   type: TYPE_NORMAL
+  zh: 反向传播
 - en: '`def backward_pass(inputs, predicted_output, hidden_layer_output, labels):`'
   id: totrans-147
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`def backward_pass(inputs, predicted_output, hidden_layer_output, labels):`'
 - en: '`output_error = predicted_output - labels`'
   id: totrans-148
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`output_error = predicted_output - labels`'
 - en: '`output_delta = output_error * (predicted_output * (1 - predicted_output))`'
   id: totrans-149
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`output_delta = output_error * (predicted_output * (1 - predicted_output))`'
 - en: '`hidden_layer_error = output_delta.dot(weights_hidden_output.T)`'
   id: totrans-150
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`hidden_layer_error = output_delta.dot(weights_hidden_output.T)`'
 - en: '`hidden_layer_delta = hidden_layer_error * (hidden_layer_output > 0)`'
   id: totrans-151
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`hidden_layer_delta = hidden_layer_error * (hidden_layer_output > 0)`'
 - en: '`# Update weights and biases`'
   id: totrans-152
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`# 更新权重和偏置`'
 - en: '`weights_hidden_output -= learning_rate * hidden_layer_output.T.dot(output_delta)`'
   id: totrans-153
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`weights_hidden_output -= learning_rate * hidden_layer_output.T.dot(output_delta)`'
 - en: '`biases_output -= learning_rate * np.sum(output_delta, axis=0, keepdims=True)`'
   id: totrans-154
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`biases_output -= learning_rate * np.sum(output_delta, axis=0, keepdims=True)`'
 - en: '`weights_input_hidden -= learning_rate * inputs.T.dot(hidden_layer_delta)`'
   id: totrans-155
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`weights_input_hidden -= learning_rate * inputs.T.dot(hidden_layer_delta)`'
 - en: '`biases_hidden -= learning_rate * np.sum(hidden_layer_delta, axis=0, keepdims=True)`'
   id: totrans-156
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`biases_hidden -= learning_rate * np.sum(hidden_layer_delta, axis=0, keepdims=True)`'
 - en: Generate a simple dataset
   id: totrans-157
   prefs:
   - PREF_H1
   stylish: true
   type: TYPE_NORMAL
+  zh: 生成一个简单的数据集
 - en: '`np.random.seed(42)`'
   id: totrans-158
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`np.random.seed(42)`'
 - en: '`X = np.random.rand(100, input_size)`'
   id: totrans-159
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`X = np.random.rand(100, input_size)`'
 - en: '`y = (X[:, 0] + X[:, 1] > 1).astype(int).reshape(-1, 1)`'
   id: totrans-160
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`y = (X[:, 0] + X[:, 1] > 1).astype(int).reshape(-1, 1)`'
 - en: Training loop
   id: totrans-161
   prefs:
   - PREF_H1
   stylish: true
   type: TYPE_NORMAL
+  zh: 训练循环
 - en: for epoch in range(epochs)
   id: totrans-162
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: for epoch in range(epochs)
 - en: '`# Forward pass`'
   id: totrans-163
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`# 前向传播`'
 - en: '`predicted_output, hidden_layer_output = forward_pass(X)`'
   id: totrans-164
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`predicted_output, hidden_layer_output = forward_pass(X)`'
 - en: '`# Backward pass`'
   id: totrans-165
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`# 反向传播`'
 - en: '`backward_pass(X, predicted_output, hidden_layer_output, y)`'
   id: totrans-166
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`backward_pass(X, predicted_output, hidden_layer_output, y)`'
 - en: '`# Print loss every 100 epochs`'
   id: totrans-167
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`# 每100个epoch打印损失`'
 - en: '`if epoch % 100 == 0:`'
   id: totrans-168
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`if epoch % 100 == 0:`'
 - en: '`loss = -np.mean(y * np.log(predicted_output) + (1 - y) * np.log(1 - predicted_output))`'
   id: totrans-169
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`loss = -np.mean(y * np.log(predicted_output) + (1 - y) * np.log(1 - predicted_output))`'
 - en: '`print(f"Epoch {epoch}, Loss: {loss}")`'
   id: totrans-170
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`print(f"Epoch {epoch}, Loss: {loss}")`'
 - en: Test the trained model on a new data point
   id: totrans-171
   prefs:
   - PREF_H1
   stylish: true
   type: TYPE_NORMAL
+  zh: 在新数据点上测试训练好的模型
 - en: '`new_data_point = np.array([[0.6, 0.7, 0.8, 0.9, 1.0]])`'
   id: totrans-172
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`new_data_point = np.array([[0.6, 0.7, 0.8, 0.9, 1.0]])`'
 - en: '`prediction, _ = forward_pass(new_data_point)`'
   id: totrans-173
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`prediction, _ = forward_pass(new_data_point)`'
 - en: '`print(f"Predicted Output for New Data Point: {prediction}")`'
   id: totrans-174
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`print(f"Predicted Output for New Data Point: {prediction}")`'
 - en: 'Note: This is a simplified example for educational purposes. In practice, deep
     learning frameworks like TensorFlow or PyTorch are commonly used for building
     and training neural networks.'
@@ -965,6 +1144,7 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 注：这只是一个教育目的的简化示例。在实践中，像TensorFlow或PyTorch这样的深度学习框架通常用于构建和训练神经网络。
 - en: With neural networks as our compass, we've uncovered the essence of deep learning.
     Activation functions, backpropagation, and varied architectures are now tools
     in your arsenal. This foundation propels you toward practical applications, where
@@ -973,3 +1153,4 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 在我们的指导下，神经网络揭示了深度学习的本质。激活函数、反向传播和各种架构现在成为您工具箱中的工具。这一基础推动您朝着实际应用迈进，深度学习的转变力量得以展现。

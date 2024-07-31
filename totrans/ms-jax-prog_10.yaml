@@ -4,11 +4,13 @@
   - PREF_H1
   stylish: true
   type: TYPE_NORMAL
+  zh: 第八章：Jax 用于科学计算及其扩展
 - en: '* * *'
   id: totrans-1
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '* * *'
 - en: Welcome to the versatility of Jax! In this chapter, we'll uncover how Jax extends
     its capabilities far beyond the realm of deep learning. Get ready to witness Jax
     revolutionize scientific computing, solving complex equations, optimizing parameters,
@@ -18,12 +20,15 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 欢迎来到 Jax 的多功能世界！在本章中，我们将揭示 Jax 如何将其能力扩展到深度学习领域以外。准备好见证 Jax 在解决复杂方程、优化参数甚至模拟物理系统中的广泛潜力吧。让我们探索
+    Jax 在各种科学领域中的巨大潜力。
 - en: 8.1 Utilizing Jax for Scientific Computing Tasks
   id: totrans-3
   prefs:
   - PREF_H2
   stylish: true
   type: TYPE_NORMAL
+  zh: 8.1 利用 Jax 进行科学计算任务
 - en: Jax's prowess extends well beyond the boundaries of deep learning, making it
     a robust tool for various scientific computing tasks. In this section, we'll explore
     how Jax's unique features empower tasks like solving differential equations and
@@ -32,11 +37,13 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: Jax 的能力远远超出了深度学习的边界，使其成为各种科学计算任务的强大工具。在本节中，我们将探讨 Jax 独特功能如何增强解决微分方程和数值优化等任务的能力，为复杂问题提供高效解决方案。
 - en: Solving Differential Equations with Jax
   id: totrans-5
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 使用 Jax 解决微分方程
 - en: 'Jax''s automatic differentiation capabilities, which are a cornerstone of deep
     learning, become instrumental in efficiently solving differential equations. Whether
     tackling numerical or symbolic problems, Jax simplifies the process with its vectorization
@@ -45,42 +52,51 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: Jax 的自动微分能力是深度学习的基石，在高效求解微分方程时变得非常重要。无论是处理数值问题还是符号问题，Jax 都通过其向量化和数组操作功能简化了过程。让我们通过一个简单的例子来详细分析：
 - en: '`import jax`'
   id: totrans-7
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`import jax`'
 - en: '`import jax.numpy as jnp`'
   id: totrans-8
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`import jax.numpy as jnp`'
 - en: '`def differential_equation(y, t):`'
   id: totrans-9
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`def differential_equation(y, t):`'
 - en: '`return -2 * y`  # Example: First-order ordinary differential equation'
   id: totrans-10
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`return -2 * y`  # 示例：一阶常微分方程'
 - en: '`initial_condition = 1.0`'
   id: totrans-11
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`initial_condition = 1.0`'
 - en: '`time_points = jnp.linspace(0, 1, 100)`'
   id: totrans-12
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`time_points = jnp.linspace(0, 1, 100)`'
 - en: '`result = jax.scipy.integrate.odeint(differential_equation, initial_condition,
     time_points)`'
   id: totrans-13
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`result = jax.scipy.integrate.odeint(differential_equation, initial_condition,
+    time_points)`'
 - en: In this snippet, Jax's integration capabilities are utilized to solve a first-order
     ordinary differential equation. The clarity and simplicity of the code highlight
     Jax's efficiency in handling scientific computing tasks.
@@ -88,11 +104,13 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 在这个片段中，Jax 的集成能力被用于解决一阶常微分方程。代码的清晰简洁突显了 Jax 在处理科学计算任务中的高效性。
 - en: Numerical Optimization with Jax
   id: totrans-15
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 使用 Jax 进行数值优化
 - en: 'Jax''s optimization algorithms provide a seamless way to tackle numerical optimization
     problems. Whether minimizing or maximizing an objective function, Jax''s automatic
     differentiation streamlines the process. Here''s a concise example:'
@@ -100,42 +118,51 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: Jax 的优化算法提供了一种无缝的方式来解决数值优化问题。无论是最小化还是最大化目标函数，Jax 的自动微分都简化了这一过程。以下是一个简明的例子：
 - en: '`import jax`'
   id: totrans-17
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`import jax`'
 - en: '`import jax.numpy as jnp`'
   id: totrans-18
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`import jax.numpy as jnp`'
 - en: '`def objective_function(x):`'
   id: totrans-19
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`def objective_function(x):`'
 - en: '`return jnp.sin(x) / x`  # Example: Objective function'
   id: totrans-20
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`return jnp.sin(x) / x`  # 示例：目标函数'
 - en: '`gradient = jax.grad(objective_function)`'
   id: totrans-21
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`gradient = jax.grad(objective_function)`'
 - en: '`initial_guess = 2.0`'
   id: totrans-22
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`initial_guess = 2.0`'
 - en: '`optimized_value = jax.scipy.optimize.minimize(objective_function, initial_guess,
     jac=gradient)`'
   id: totrans-23
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`optimized_value = jax.scipy.optimize.minimize(objective_function, initial_guess,
+    jac=gradient)`'
 - en: In this example, Jax effortlessly optimizes a simple objective function. The
     integration of automatic differentiation with optimization showcases Jax's versatility
     in scientific computing tasks.
@@ -143,29 +170,34 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 在这个例子中，Jax 轻松优化了一个简单的目标函数。自动微分与优化的结合展示了Jax在科学计算任务中的多样性。
 - en: Benefits of Jax in Scientific Computing
   id: totrans-25
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: Jax 在科学计算中的优势
 - en: 1\. Efficient Vectorization: Jax's vectorization capabilities enhance the speed
     of numerical computations, crucial for scientific simulations.
   id: totrans-26
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 1\. 高效的向量化：Jax 的向量化能力增强了数值计算的速度，对科学模拟至关重要。
 - en: 2\. Automatic Differentiation: The automatic differentiation feature simplifies
     the process of computing gradients, a key element in scientific computing tasks.
   id: totrans-27
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 2\. 自动微分：自动微分功能简化了计算梯度的过程，这是科学计算任务中的关键元素。
 - en: 3\. Interdisciplinary Applicability: Jax's adaptability makes it suitable for
     a wide range of scientific fields, from physics and engineering to data science.
   id: totrans-28
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 3\. 跨学科适用性：Jax 的适应性使其适用于从物理学和工程学到数据科学的广泛科学领域。
 - en: Jax's foray into scientific computing is marked by efficiency and simplicity.
     Whether solving differential equations or optimizing numerical problems, Jax proves
     to be a valuable ally, offering clear code and robust functionality for a variety
@@ -174,12 +206,14 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: Jax 在科学计算领域的应用以其高效和简单而著称。无论是求解微分方程还是优化数值问题，Jax 都证明是一个宝贵的伙伴，为科学领域的多个任务提供了清晰的代码和强大的功能。
 - en: 8.2 Jax for Reinforcement Learning, Robotics, and Beyond
   id: totrans-30
   prefs:
   - PREF_H2
   stylish: true
   type: TYPE_NORMAL
+  zh: 8.2 Jax 用于强化学习、机器人技术等领域
 - en: Jax's versatility transcends traditional deep learning applications, extending
     into reinforcement learning, robotics, and diverse domains. Here, we'll see how
     Jax becomes a powerful ally in crafting intelligent solutions for reinforcement
@@ -188,154 +222,184 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: Jax 的多功能性超越了传统的深度学习应用，延伸到强化学习、机器人技术和多样化的领域。在这里，我们将看到 Jax 如何成为在强化学习、控制机器人和探索未知领域中打造智能解决方案的强大助手。
 - en: Reinforcement Learning with Jax
   id: totrans-32
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 使用 Jax 进行强化学习
 - en: 'Jax''s deep learning capabilities and automatic differentiation make it an
     ideal companion for reinforcement learning tasks. Let''s explore a succinct example:'
   id: totrans-33
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: Jax 的深度学习能力和自动微分使其成为强化学习任务的理想伴侣。让我们探索一个简洁的例子：
 - en: '`import jax`'
   id: totrans-34
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`import jax`'
 - en: '`import jax.numpy as jnp`'
   id: totrans-35
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`import jax.numpy as jnp`'
 - en: Define a simple Q-learning update function
   id: totrans-36
   prefs:
   - PREF_H1
   stylish: true
   type: TYPE_NORMAL
+  zh: 定义一个简单的 Q-learning 更新函数
 - en: '`def q_learning_update(q_values, state, action, reward, next_state, discount_factor=0.9,
     learning_rate=0.1):`'
   id: totrans-37
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`def q_learning_update(q_values, state, action, reward, next_state, discount_factor=0.9,
+    learning_rate=0.1):`'
 - en: '`target = reward + discount_factor * jnp.max(q_values[next_state])`'
   id: totrans-38
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`target = reward + discount_factor * jnp.max(q_values[next_state])`'
 - en: '`td_error = target - q_values[state, action]`'
   id: totrans-39
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`td_error = target - q_values[state, action]`'
 - en: '`q_values[state, action] += learning_rate * td_error`'
   id: totrans-40
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`q_values[state, action] += learning_rate * td_error`'
 - en: '`return q_values`'
   id: totrans-41
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`return q_values`'
 - en: Apply the Q-learning update
   id: totrans-42
   prefs:
   - PREF_H1
   stylish: true
   type: TYPE_NORMAL
+  zh: 应用 Q-learning 更新
 - en: '`q_values = jnp.zeros((num_states, num_actions))`  # Initialize Q-values'
   id: totrans-43
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`q_values = jnp.zeros((num_states, num_actions))`  # 初始化 Q 值'
 - en: '`updated_q_values = q_learning_update(q_values, state, action, reward, next_state)`'
   id: totrans-44
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`updated_q_values = q_learning_update(q_values, state, action, reward, next_state)`'
 - en: In this example, Jax simplifies the implementation of a Q-learning update, showcasing
     its utility in reinforcement learning scenarios.
   id: totrans-45
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 在这个示例中，Jax 简化了 Q-learning 更新的实现，展示了它在强化学习场景中的实用性。
 - en: Robotics Control with Jax
   id: totrans-46
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 使用 Jax 进行机器人控制
 - en: 'Jax''s real-time data handling and efficient computation capabilities make
     it a valuable asset for robotics applications. Consider a brief illustration:'
   id: totrans-47
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: Jax 的实时数据处理和高效计算能力使其成为机器人应用中的宝贵资产。考虑以下简要说明：
 - en: '`import jax`'
   id: totrans-48
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`import jax`'
 - en: '`import jax.numpy as jnp`'
   id: totrans-49
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`import jax.numpy as jnp`'
 - en: Define a simple robot control function
   id: totrans-50
   prefs:
   - PREF_H1
   stylish: true
   type: TYPE_NORMAL
+  zh: 定义一个简单的机器人控制函数
 - en: '`def control_robot(joint_angles, desired_angles, joint_velocities):`'
   id: totrans-51
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`def control_robot(joint_angles, desired_angles, joint_velocities):`'
 - en: '`error = desired_angles - joint_angles`'
   id: totrans-52
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`error = desired_angles - joint_angles`'
 - en: '`torque = jax.vmap(lambda x: x * control_gain)(error)`  # Element-wise control'
   id: totrans-53
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`torque = jax.vmap(lambda x: x * control_gain)(error)`  # 逐元素控制'
 - en: '`joint_accelerations = torque / joint_inertia`'
   id: totrans-54
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`joint_accelerations = torque / joint_inertia`'
 - en: '`joint_velocities += joint_accelerations * time_step`'
   id: totrans-55
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`joint_velocities += joint_accelerations * time_step`'
 - en: '`joint_angles += joint_velocities * time_step`'
   id: totrans-56
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`joint_angles += joint_velocities * time_step`'
 - en: '`return joint_angles, joint_velocities`'
   id: totrans-57
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`return joint_angles, joint_velocities`'
 - en: This snippet showcases Jax's suitability for implementing control algorithms
     in robotics, offering a concise yet powerful solution.
   id: totrans-58
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 这段代码展示了 Jax 在机器人控制算法实现中的适用性，提供了简洁而强大的解决方案。
 - en: 'Beyond: Applications in Finance, Climate Modeling, and More'
   id: totrans-59
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 超越：金融、气候建模等应用
 - en: 'Jax''s adaptability extends to various domains beyond reinforcement learning
     and robotics. From financial modeling to climate simulations, Jax proves to be
     a versatile tool. Here''s a glimpse:'
@@ -343,77 +407,92 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: Jax 的适应能力不仅限于强化学习和机器人技术，还包括金融建模和气候模拟等各个领域。以下是一个预览：
 - en: 'Example: Financial modeling with Jax'
   id: totrans-61
   prefs:
   - PREF_H1
   stylish: true
   type: TYPE_NORMAL
+  zh: 示例：使用 Jax 进行金融建模
 - en: '`import jax`'
   id: totrans-62
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`import jax`'
 - en: '`import jax.numpy as jnp`'
   id: totrans-63
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`import jax.numpy as jnp`'
 - en: '`def calculate_portfolio_value(weights, stock_prices):`'
   id: totrans-64
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`def calculate_portfolio_value(weights, stock_prices):`'
 - en: '`return jnp.sum(weights * stock_prices)`'
   id: totrans-65
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`return jnp.sum(weights * stock_prices)`'
 - en: 'Example: Climate modeling with Jax'
   id: totrans-66
   prefs:
   - PREF_H1
   stylish: true
   type: TYPE_NORMAL
+  zh: 示例：使用 Jax 进行气候建模
 - en: '`import jax.scipy`'
   id: totrans-67
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`import jax.scipy`'
 - en: '`def simulate_climate_model(parameters, initial_conditions):`'
   id: totrans-68
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`def simulate_climate_model(parameters, initial_conditions):`'
 - en: '`return jax.scipy.integrate.odeint(climate_model, initial_conditions, time_points,
     args=(parameters,))`'
   id: totrans-69
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`return jax.scipy.integrate.odeint(climate_model, initial_conditions, time_points,
+    args=(parameters,))`'
 - en: Benefits of Jax in Diverse Domains
   id: totrans-70
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: Jax 在多个领域的优势
 - en: '-   1\. Unified Framework: Jax provides a unified framework for diverse applications,
     streamlining development across domains.'
   id: totrans-71
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '-   1\. 统一框架：Jax 为多种应用提供了统一的框架，简化了跨领域的开发工作。'
 - en: '-   2\. Efficient Control Algorithms: Jax''s efficiency in handling real-time
     data contributes to the seamless implementation of control algorithms in robotics.'
   id: totrans-72
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '-   2\. 高效控制算法：Jax 在处理实时数据方面的效率有助于在机器人技术中无缝实施控制算法。'
 - en: '-   3\. Cross-Disciplinary Applicability: Jax''s capabilities are not confined
     to a single domain, making it a valuable tool for interdisciplinary applications.'
   id: totrans-73
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '-   3\. 跨学科适用性：Jax 的能力不限于单一领域，使其成为跨学科应用中的宝贵工具。'
 - en: '-   Jax''s ability for reinforcement learning, robotics, and diverse domains
     is marked by adaptability and efficiency. Whether shaping intelligent agents or
     controlling robots, Jax emerges as a versatile ally, demonstrating its applicability
@@ -422,12 +501,14 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '-   Jax 在强化学习、机器人技术和多个领域中的应用表现出了适应性和效率。无论是塑造智能体还是控制机器人，Jax 都成为多功能的盟友，在各个领域的创新解决方案中展现其适用性。'
 - en: '-   8.3 The Future of Jax and Its Impact Across Fields'
   id: totrans-75
   prefs:
   - PREF_H2
   stylish: true
   type: TYPE_NORMAL
+  zh: '-   8.3 Jax 的未来及其在各领域的影响'
 - en: '-   The horizon for Jax stretches far beyond its current capabilities, and
     this section explores the promising trajectory and potential impact that Jax might
     have on diverse fields. Let''s embark on a journey envisioning the future of Jax
@@ -436,11 +517,13 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '-   Jax 的视野远超其当前能力，本节探讨了 Jax 可能在各领域产生的潜在影响和前景。让我们一起展望 Jax 的未来，探索其在塑造创新和研究中的角色。'
 - en: '-   Jax''s Continuing Evolution'
   id: totrans-77
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '-   Jax 的持续演化'
 - en: '-   Jax is a dynamic framework in continuous evolution. As it refines its existing
     features and incorporates new functionalities, the scope of its applications is
     set to expand. The ongoing development ensures that Jax remains at the forefront
@@ -449,11 +532,13 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '-   Jax 是一个不断演进的动态框架。随着其完善现有功能并整合新功能，其应用范围将不断扩展。持续的发展确保 Jax 始终站在技术进步的前沿。'
 - en: '-   Jax''s Potential Impact on Various Fields'
   id: totrans-79
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '-   Jax 对各个领域的潜在影响'
 - en: '-   1\. Drug Discovery and Medical Research: Jax''s capabilities can accelerate
     drug discovery by efficiently modeling molecular interactions, predicting drug
     efficacy, and assessing toxicity.'
@@ -461,6 +546,7 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '-   1\. 药物发现和医学研究：Jax 的能力可以通过高效建模分子相互作用、预测药物有效性和评估毒性来加速药物发现。'
 - en: '-   2\. Climate Modeling and Environmental Science: Jax''s potential extends
     to developing sophisticated climate models and analyzing vast datasets in environmental
     science to enhance our understanding and prediction of climate change impacts.'
@@ -468,6 +554,7 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '-   2\. 气候建模与环境科学：Jax 的潜力延伸至开发复杂的气候模型和分析环境科学中的大数据集，以增强我们对气候变化影响的理解和预测能力。'
 - en: '-   3\. Materials Science and Engineering: Researchers in materials science
     and engineering can leverage Jax to simulate material properties and design novel
     materials with desired characteristics.'
@@ -475,6 +562,7 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '-   3\. 材料科学与工程：材料科学和工程领域的研究人员可以利用 Jax 模拟材料性质，并设计具有所需特性的新材料。'
 - en: '-   4\. Artificial Intelligence and Machine Learning: Jax is poised to play
     a pivotal role in advancing AI and ML frontiers, enabling the creation of more
     powerful and versatile algorithms.'
@@ -482,11 +570,13 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '-   4\. 人工智能与机器学习：Jax 注定在推进人工智能和机器学习的前沿中发挥关键作用，促进更强大和多功能算法的创造。'
 - en: '-   Harnessing Jax''s Versatility'
   id: totrans-84
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '-   发挥 Jax 的多功能性'
 - en: '-   Jax''s unique combination of deep learning capabilities, scientific computing
     tools, and functional programming paradigm positions it as a transformative force.
     Its adaptability across fields, from simulating physical systems to controlling
@@ -495,11 +585,13 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '-   Jax 独特的深度学习能力、科学计算工具和函数式编程范式的结合使其成为变革力量。其在从模拟物理系统到控制机器人等多个领域的适应能力展示了其多样化。'
 - en: '-   Continued Innovation and Exploration'
   id: totrans-86
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '-   持续创新和探索'
 - en: '-   As Jax continues to evolve, researchers and practitioners can anticipate
     groundbreaking applications in fields yet to be explored. The inherent flexibility
     and efficiency of Jax open doors to innovative solutions and breakthroughs in
@@ -508,6 +600,7 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '-   随着 Jax 的持续发展，研究人员和实践者可以期待在尚未探索的领域中出现突破性应用。Jax 的固有灵活性和效率为不同科学和技术领域的创新解决方案和突破打开了大门。'
 - en: The future of Jax holds the promise of significant impact across a spectrum
     of fields. From revolutionizing drug discovery to advancing climate modeling and
     materials science, Jax's growth is characterized by continuous innovation and
@@ -518,16 +611,19 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: Jax 的未来承诺在各个领域产生重大影响。从革新药物发现到推动气候建模和材料科学，Jax 的发展以持续创新和探索为特征。随着其不断发展，Jax 正准备重新定义科学计算领域的格局，并为各种学科的突破性发展做出贡献。
 - en: 'Coding Challenge: Scientific Computing with Jax'
   id: totrans-89
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 编程挑战：使用 Jax 进行科学计算
 - en: Problem: Solving Ordinary Differential Equations (ODEs) using Jax
   id: totrans-90
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 问题：使用 Jax 解决常微分方程（ODE）
 - en: Implement a Python function to solve a simple ordinary differential equation
     (ODE) using Jax. The ODE can be of the form`dy/dx = -2y`, with an initial condition`y(0)
     = 1`. Use Jax's automatic differentiation and numerical integration capabilities
@@ -536,163 +632,196 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 实现一个 Python 函数，使用 Jax 解决简单的常微分方程（ODE）。ODE 可以是`dy/dx = -2y`的形式，初始条件为`y(0) = 1`。利用
+    Jax 的自动微分和数值积分能力解决 ODE 并绘制解。
 - en: Solution
   id: totrans-92
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 解决方案
 - en: import`jax`
   id: totrans-93
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: import`jax`
 - en: import`jax.numpy as np`
   id: totrans-94
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: import`jax.numpy as np`
 - en: from`jax import jacfwd, vmap`
   id: totrans-95
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: from`jax import jacfwd, vmap`
 - en: import`matplotlib.pyplot as plt`
   id: totrans-96
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: import`matplotlib.pyplot as plt`
 - en: from`scipy.integrate import odeint`
   id: totrans-97
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: from`scipy.integrate import odeint`
 - en: def`ode(y, x):`
   id: totrans-98
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: def`ode(y, x):`
 - en: '"""Define the ordinary differential equation."""'
   id: totrans-99
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '"""定义常微分方程。"""'
 - en: '`return -2 * y`'
   id: totrans-100
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`return -2 * y`'
 - en: def`ode_solution(x):`
   id: totrans-101
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: def`ode_solution(x):`
 - en: '"""Analytical solution for the ODE."""'
   id: totrans-102
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '"""ODE 的解析解。"""'
 - en: '`return np.exp(-2 * x)`'
   id: totrans-103
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`return np.exp(-2 * x)`'
 - en: def`solve_ode_with_jax():`
   id: totrans-104
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: def`使用 Jax 解决 ODE():`
 - en: '"""Solve the ODE using Jax."""'
   id: totrans-105
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '"""使用 Jax 解决常微分方程（ODE）。"""'
 - en: '`x_span = np.linspace(0, 2, 100)`'
   id: totrans-106
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`x_span = np.linspace(0, 2, 100)`'
 - en: '`y_init = np.array([1.0])`'
   id: totrans-107
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`y_init = np.array([1.0])`'
 - en: def`ode_system(y, x):`
   id: totrans-108
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: def`ode_system(y, x):`
 - en: '"""System of ODEs for Jax integration."""'
   id: totrans-109
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '"""Jax 集成的常微分方程系统。"""'
 - en: '`return jax.grad(ode)(y, x)`'
   id: totrans-110
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`return jax.grad(ode)(y, x)`'
 - en: '`result = odeint(ode_system, y_init, x_span, tfirst=True)`'
   id: totrans-111
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`result = odeint(ode_system, y_init, x_span, tfirst=True)`'
 - en: '# Plot the Jax solution'
   id: totrans-112
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '# 绘制 Jax 解'
 - en: '`plt.plot(x_span, result[:, 0], label="Jax Solution", linestyle="--")`'
   id: totrans-113
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`plt.plot(x_span, result[:, 0], label="Jax 解", linestyle="--")`'
 - en: '# Plot the analytical solution'
   id: totrans-114
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '# 绘制解析解'
 - en: '`plt.plot(x_span, ode_solution(x_span), label="Analytical Solution", linestyle="-",
     alpha=0.8)`'
   id: totrans-115
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`plt.plot(x_span, ode_solution(x_span), label="解析解", linestyle="-", alpha=0.8)`'
 - en: '`plt.xlabel(''x'')`'
   id: totrans-116
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`plt.xlabel(''x'')`'
 - en: '`plt.ylabel(''y'')`'
   id: totrans-117
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`plt.ylabel(''y'')`'
 - en: '`plt.legend()`'
   id: totrans-118
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`plt.legend()`'
 - en: '`plt.title(''Solving ODE with Jax'')`'
   id: totrans-119
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`plt.title(''使用 Jax 解决 ODE'')`'
 - en: '`plt.show()`'
   id: totrans-120
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`plt.show()`'
 - en: Test the solution
   id: totrans-121
   prefs:
   - PREF_H1
   stylish: true
   type: TYPE_NORMAL
+  zh: 测试解决方案
 - en: '`solve_ode_with_jax()`'
   id: totrans-122
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`使用 Jax 解决 ODE()`'
 - en: This challenge tests your ability to leverage Jax's capabilities for solving
     ODEs. The provided solution uses both Jax and the analytical solution for comparison.
     It's essential to understand how Jax's automatic differentiation and numerical
@@ -701,6 +830,7 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 这个挑战测试你利用 Jax 解决 ODE 的能力。提供的解决方案同时使用了 Jax 和解析解进行对比。理解 Jax 的自动微分和数值积分函数如何有助于解决科学计算问题是非常重要的。
 - en: Jax isn't just about deep learning; it's a powerhouse for scientific computing
     and much more. From conquering differential equations to steering robots in real-time,
     Jax flexes its muscles across diverse fields. As we glimpse into the future, it's
@@ -710,3 +840,4 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: Jax 不仅仅是深度学习工具；它还是科学计算和更多领域的强大工具。从解决微分方程到实时控制机器人，Jax 在多个领域展示其强大能力。展望未来，Jax 显然正处于改变药物发现、气候建模、材料科学等领域的边缘。

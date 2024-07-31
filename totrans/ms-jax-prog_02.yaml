@@ -4,11 +4,13 @@
   - PREF_H1
   stylish: true
   type: TYPE_NORMAL
+  zh: '`第2章：开始使用Jax`'
 - en: '* * *'
   id: totrans-1
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '* * *'
 - en: Welcome to the launchpad of your Jax adventure! In this chapter, we're gearing
     up for the ride into Jax programming. Buckle up as we set the stage, install the
     necessary tools, and take our first strides into the world of Jax with hands-on
@@ -17,12 +19,14 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 欢迎来到您的Jax冒险的发射台！在本章中，我们为进入Jax编程之旅做好准备。随着我们设置舞台，安装必要的工具，并且通过实际编码迈出第一步，让我们一起迎接Jax世界的探险。
 - en: '`2.1 Setting up the Jax Environment`'
   id: totrans-3
   prefs:
   - PREF_H2
   stylish: true
   type: TYPE_NORMAL
+  zh: '`2.1 设置Jax环境`'
 - en: Before we embark on the Jax journey, let's ensure our toolkit is ready for action.
     Setting up the Jax environment is a crucial first step, and in this section, we'll
     guide you through the process. From choosing your platform to installing essential
@@ -31,11 +35,13 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 在我们开始Jax之旅之前，让我们确保我们的工具箱已经准备就绪。设置Jax环境是一个关键的第一步，在本节中，我们将指导您完成这个过程。从选择您的平台到安装必要的库，让我们确保您能够充分发挥Jax的威力。
 - en: 'Setting the Stage: Choosing Your Platform'
   id: totrans-5
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 设置舞台：选择您的平台
 - en: Jax is flexible, catering to various platforms such as macOS, Linux, and Windows.
     Ensure you're on the right track by checking your operating system's compatibility
     and hardware requirements.
@@ -43,11 +49,13 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: Jax非常灵活，适用于多种平台，如macOS、Linux和Windows。通过检查您的操作系统的兼容性和硬件要求，确保您选择了正确的路线。
 - en: 'Step 1: Install Python'
   id: totrans-7
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 第一步：安装Python
 - en: Jax relies on Python, so if you don't have it installed, now's the time. Ensure
     you have Python 3.7 or later. You can download the latest version from the official
     Python website.
@@ -55,65 +63,77 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: Jax依赖于Python，如果您尚未安装，请立即安装。确保您安装了Python 3.7或更新版本。您可以从官方Python网站下载最新版本。
 - en: 'Step 2: Install Jax'
   id: totrans-9
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 第二步：安装Jax
 - en: With Python in place, use the pip package installer to get Jax.
   id: totrans-10
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 安装了Python后，使用pip包安装程序获取Jax。
 - en: 'Open your terminal or command prompt and type: `pip install jax`'
   id: totrans-11
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 打开您的终端或命令提示符，并输入：`pip install jax`
 - en: 'Step 3: Confirm Installation'
   id: totrans-12
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 第三步：确认安装
 - en: 'Make sure Jax is properly installed by opening a Python interpreter and typing:
     `import jax; print(jax.__version__)` This should display the installed Jax version.'
   id: totrans-13
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 通过打开Python解释器并输入以下内容来确认Jax是否正确安装：`import jax; print(jax.__version__)` 这将显示已安装的Jax版本。
 - en: 'Equipping Your Toolbox: Installing Essential Libraries'
   id: totrans-14
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 准备您的工具箱：安装关键库
 - en: Jax teams up with other libraries to enhance functionality. Let's install the
     essential ones.
   id: totrans-15
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: Jax与其他库合作，以增强功能。让我们安装一些关键的库。
 - en: 'Step 1: Install NumPy'
   id: totrans-16
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 第一步：安装NumPy
 - en: 'NumPy is Jax''s right-hand companion for numerical operations. Install it using:
     `pip install numpy`'
   id: totrans-17
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: NumPy是Jax的得力助手，用于数值操作。使用以下命令安装NumPy：`pip install numpy`
 - en: 'Step 2: Optional Libraries'
   id: totrans-18
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 第二步：可选库
 - en: Consider additional libraries for extended capabilities. For example, Matplotlib
     for plotting and scikit-learn for machine learning. Install them as needed.
   id: totrans-19
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 考虑额外的库以扩展功能。例如，Matplotlib用于绘图，scikit-learn用于机器学习。根据需要安装它们。
 - en: With your Jax environment set up and essential libraries in place, you're armed
     and ready. The journey ahead involves crafting code, exploring data structures,
     and tapping into the power of Jax.
@@ -121,12 +141,14 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 当您的Jax环境设置好并且必要的库已经就位时，您已经准备好了。未来的旅程涉及编写代码、探索数据结构并利用Jax的潜力。
 - en: '`2.2 Writing Basic Jax Programs Using NumPy-Style Syntax`'
   id: totrans-21
   prefs:
   - PREF_H2
   stylish: true
   type: TYPE_NORMAL
+  zh: '`2.2 使用NumPy风格语法编写基本的Jax程序`'
 - en: Now that our Jax environment is up and running, it's time to get hands-on with
     some basic Jax programs. In this section, we'll explore the NumPy-style syntax
     that makes Jax not only powerful but also pleasantly familiar. Let's start writing
@@ -135,151 +157,179 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 现在我们的Jax环境已经启动，是时候动手编写一些基本的Jax程序了。在本节中，我们将探索NumPy风格的语法，这不仅使Jax强大，而且使其非常熟悉。让我们开始编写代码，释放Jax的简洁之美。
 - en: 'Step 1: Importing Jax'
   id: totrans-23
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 第一步：导入Jax
 - en: Start by importing the Jax library. This sets the stage for all your numerical
     computations in the Jax style.
   id: totrans-24
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 首先导入Jax库。这为您在Jax风格中进行所有数值计算铺平了道路。
 - en: '`import jax`'
   id: totrans-25
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`import jax`'
 - en: 'Step 2: Creating Arrays'
   id: totrans-26
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 第二步：创建数组
 - en: Jax adopts the NumPy-style syntax for creating arrays. Let's dive in and create
     a simple array.
   id: totrans-27
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: Jax采用NumPy风格的语法来创建数组。让我们深入了解并创建一个简单的数组。
 - en: '`Creating a Jax array`'
   id: totrans-28
   prefs:
   - PREF_H1
   stylish: true
   type: TYPE_NORMAL
+  zh: '`创建一个Jax数组`'
 - en: '`x = jax.numpy.array([1, 2, 3])`'
   id: totrans-29
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`x = jax.numpy.array([1, 2, 3])`'
 - en: 'Step 3: Performing Operations'
   id: totrans-30
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 第三步：执行操作
 - en: The beauty of Jax lies in its ability to perform operations on arrays with the
     ease of NumPy.
   id: totrans-31
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: Jax之美在于它能够以NumPy的简便方式对数组进行操作。
 - en: Let's apply a mathematical function to our array.
   id: totrans-32
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 让我们将一个数学函数应用到我们的数组上。
 - en: Applying a sine function to the array
   id: totrans-33
   prefs:
   - PREF_H1
   stylish: true
   type: TYPE_NORMAL
+  zh: 对数组应用正弦函数
 - en: '`y = jax.numpy.sin(x) + 2`'
   id: totrans-34
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`y = jax.numpy.sin(x) + 2`'
 - en: 'Step 4: Printing Results'
   id: totrans-35
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 第4步：打印结果
 - en: Now, let's print the results and witness the outcome of our Jax computations.
   id: totrans-36
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 现在，让我们打印结果，见证我们Jax计算的成果。
 - en: Displaying the results
   id: totrans-37
   prefs:
   - PREF_H1
   stylish: true
   type: TYPE_NORMAL
+  zh: 显示结果
 - en: '`print(y)`'
   id: totrans-38
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`print(y)`'
 - en: Exploring Data Structures and Mathematical Operations
   id: totrans-39
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 探索数据结构和数学运算
 - en: Jax supports various data structures and mathematical operations, making it
     a versatile tool for numerical computation.
   id: totrans-40
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: Jax支持各种数据结构和数学运算，使其成为数值计算的多才多艺的工具。
 - en: Data Structures in Jax
   id: totrans-41
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: Jax中的数据结构
 - en: Creating a Jax vector
   id: totrans-42
   prefs:
   - PREF_H1
   stylish: true
   type: TYPE_NORMAL
+  zh: 创建一个Jax向量
 - en: '`vector = jax.numpy.array([4, 5, 6])`'
   id: totrans-43
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`vector = jax.numpy.array([4, 5, 6])`'
 - en: Creating a Jax matrix
   id: totrans-44
   prefs:
   - PREF_H1
   stylish: true
   type: TYPE_NORMAL
+  zh: 创建一个Jax矩阵
 - en: '`matrix = jax.numpy.array([[1, 2], [3, 4]])`'
   id: totrans-45
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`matrix = jax.numpy.array([[1, 2], [3, 4]])`'
 - en: Mathematical Operations in Jax
   id: totrans-46
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: Jax中的数学运算
 - en: Performing arithmetic operations
   id: totrans-47
   prefs:
   - PREF_H1
   stylish: true
   type: TYPE_NORMAL
+  zh: 执行算术运算
 - en: '`result_addition = x + vector`'
   id: totrans-48
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`result_addition = x + vector`'
 - en: '`result_multiplication = matrix * 2`'
   id: totrans-49
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`result_multiplication = matrix * 2`'
 - en: Congratulations! You've just crafted your first Jax programs using NumPy-style
     syntax. The simplicity and familiarity of NumPy combined with the power of Jax
     are at your fingertips. As you continue your Jax journey, these basic building
@@ -288,152 +338,180 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 恭喜！你刚刚使用类似NumPy的语法编写了你的第一个Jax程序。NumPy的简单性和熟悉性与Jax的强大功能合二为一。随着你继续你的Jax之旅，这些基础构件将为更复杂和令人兴奋的数值计算奠定基础。
 - en: 2.3 Working with Arrays, Data Structures, and Mathematical Operations in Jax
   id: totrans-51
   prefs:
   - PREF_H2
   stylish: true
   type: TYPE_NORMAL
+  zh: 在Jax中工作：数组，数据结构和数学运算
 - en: 'Arrays in Jax: Embracing Numerical Simplicity'
   id: totrans-52
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: Jax中的数组：拥抱数值简洁
 - en: In the heart of Jax lies its exceptional handling of arrays. Leveraging the
     NumPy-style syntax, creating and manipulating arrays becomes a breeze.
   id: totrans-53
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: Jax的核心优势在于其对数组的出色处理能力。利用类似NumPy的语法，创建和操作数组变得轻而易举。
 - en: Creating Arrays with Jax
   id: totrans-54
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 使用Jax创建数组
 - en: Creating a Jax array
   id: totrans-55
   prefs:
   - PREF_H1
   stylish: true
   type: TYPE_NORMAL
+  zh: 创建一个Jax数组
 - en: x = `jax.numpy.array([1, 2, 3])`
   id: totrans-56
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`x = jax.numpy.array([1, 2, 3])`'
 - en: 'Performing Operations on Arrays:'
   id: totrans-57
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 在数组上执行操作：
 - en: Jax unleashes its power when it comes to array operations. Whether it's simple
     arithmetic or complex mathematical functions, Jax handles it seamlessly.
   id: totrans-58
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 当涉及到数组操作时，Jax展现出其强大的能力。无论是简单的算术运算还是复杂的数学函数，Jax都能无缝处理。
 - en: Applying operations to arrays
   id: totrans-59
   prefs:
   - PREF_H1
   stylish: true
   type: TYPE_NORMAL
+  zh: 应用操作于数组
 - en: '`y = jax.numpy.sin(x) + 2`'
   id: totrans-60
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`y = jax.numpy.sin(x) + 2`'
 - en: 'Data Structures in Jax: Versatility Unleashed'
   id: totrans-61
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: Jax中的数据结构：释放多才多艺
 - en: Jax isn't limited to basic arrays; it extends its capabilities to various data
     structures, adding a layer of flexibility to your numerical computations.
   id: totrans-62
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: Jax不仅局限于基本数组，还将其能力扩展到各种数据结构，为你的数值计算增添了灵活性。
 - en: Creating Vectors and Matrices in Jax
   id: totrans-63
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 在Jax中创建向量和矩阵
 - en: Creating a Jax vector
   id: totrans-64
   prefs:
   - PREF_H1
   stylish: true
   type: TYPE_NORMAL
+  zh: 创建一个Jax向量
 - en: '`vector = jax.numpy.array([4, 5, 6])`'
   id: totrans-65
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`vector = jax.numpy.array([4, 5, 6])`'
 - en: Creating a Jax matrix
   id: totrans-66
   prefs:
   - PREF_H1
   stylish: true
   type: TYPE_NORMAL
+  zh: 创建一个Jax矩阵
 - en: '`matrix = jax.numpy.array([[1, 2], [3, 4]])`'
   id: totrans-67
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`matrix = jax.numpy.array([[1, 2], [3, 4]])`'
 - en: 'Mathematical Marvels with Jax: Operations Beyond the Basics'
   id: totrans-68
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: Jax中的数学奇迹：超越基础运算
 - en: Jax's mathematical prowess shines through as it handles a spectrum of operations,
     making it a robust tool for diverse numerical tasks.
   id: totrans-69
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: Jax在处理各种操作时展现出其数学能力，使其成为多样化数值任务的强大工具。
 - en: Arithmetic Operations with Jax
   id: totrans-70
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: Jax中的算术运算
 - en: Performing arithmetic operations on arrays
   id: totrans-71
   prefs:
   - PREF_H1
   stylish: true
   type: TYPE_NORMAL
+  zh: 在数组上执行算术运算
 - en: '`result_addition = x + vector`'
   id: totrans-72
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`result_addition = x + vector`'
 - en: '`result_multiplication = matrix * 2`'
   id: totrans-73
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`result_multiplication = matrix * 2`'
 - en: Complex Mathematical Functions in Jax
   id: totrans-74
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: Jax中的复杂数学函数
 - en: Applying more complex functions
   id: totrans-75
   prefs:
   - PREF_H1
   stylish: true
   type: TYPE_NORMAL
+  zh: 应用更复杂的函数
 - en: '`result_exp = jax.numpy.exp(x)`'
   id: totrans-76
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`result_exp = jax.numpy.exp(x)`'
 - en: '`result_sqrt = jax.numpy.sqrt(matrix)`'
   id: totrans-77
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`result_sqrt = jax.numpy.sqrt(matrix)`'
 - en: As you've witnessed, Jax transforms numerical computations into a playground
     of simplicity and efficiency. Working with arrays, exploring data structures,
     and engaging in mathematical operations become intuitive and powerful with Jax.
@@ -442,103 +520,123 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 正如你所见，Jax将数值计算转化为简单和高效的游戏。通过Jax处理数组，探索数据结构，参与数学运算变得直观而强大。这标志着你掌握Jax编程艺术的又一步。
 - en: 'Coding Challenge: Array Manipulation with Jax'
   id: totrans-79
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 编码挑战：使用Jax进行数组操作
 - en: 'Challenge: Create a Jax program that takes an array `A` and performs the following
     operations:'
   id: totrans-80
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 挑战：创建一个Jax程序，接受一个数组`A`并执行以下操作：
 - en: 1\. Compute the square of each element in `A`.
   id: totrans-81
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 1\. 计算`A`中每个元素的平方。
 - en: 2\. Calculate the cumulative sum of the squared elements.
   id: totrans-82
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 2\. 计算平方元素的累积和。
 - en: 3\. Find the mean of the resulting array.
   id: totrans-83
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 3\. 求得结果数组的均值。
 - en: Solution
   id: totrans-84
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 解决方案
 - en: '`import jax`'
   id: totrans-85
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`import jax`'
 - en: '`def array_manipulation_challenge(A):`'
   id: totrans-86
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`def array_manipulation_challenge(A):`'
 - en: '`# Step 1: Compute the square of each element in A`'
   id: totrans-87
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`# 第一步：计算 A 中每个元素的平方`'
 - en: '`squared_elements = jax.numpy.square(A)`'
   id: totrans-88
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`squared_elements = jax.numpy.square(A)`'
 - en: '`# Step 2: Calculate the cumulative sum of the squared elements`'
   id: totrans-89
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`# 第二步：计算平方元素的累积和`'
 - en: '`cumulative_sum = jax.numpy.cumsum(squared_elements)`'
   id: totrans-90
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`cumulative_sum = jax.numpy.cumsum(squared_elements)`'
 - en: '`# Step 3: Find the mean of the resulting array`'
   id: totrans-91
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`# 第三步：找出结果数组的平均值`'
 - en: '`mean_result = jax.numpy.mean(cumulative_sum)`'
   id: totrans-92
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`mean_result = jax.numpy.mean(cumulative_sum)`'
 - en: '`return mean_result`'
   id: totrans-93
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`return mean_result`'
 - en: '`Example usage:`'
   id: totrans-94
   prefs:
   - PREF_H1
   stylish: true
   type: TYPE_NORMAL
+  zh: '`使用示例:`'
 - en: '`input_array = jax.numpy.array([1, 2, 3, 4, 5])`'
   id: totrans-95
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`input_array = jax.numpy.array([1, 2, 3, 4, 5])`'
 - en: '`result = array_manipulation_challenge(input_array)`'
   id: totrans-96
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`result = array_manipulation_challenge(input_array)`'
 - en: '`print("Result:", result)`'
   id: totrans-97
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`print("结果:", result)`'
 - en: '`This challenge encourages you to manipulate an array using Jax''s capabilities.
     Feel free to experiment with different input arrays and explore how Jax simplifies
     complex operations on numerical data.`'
@@ -546,6 +644,7 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 这个挑战鼓励您使用 Jax 的能力来操作数组。随意尝试不同的输入数组，并探索 Jax 如何简化数值数据上的复杂操作。
 - en: And there you have it—the kickoff to your Jax journey! You've laid the groundwork,
     from setting up your environment to flexing your coding muscles with basic Jax
     programs. As we wrap up, remember, this is just the beginning. The coding playground
@@ -554,3 +653,5 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 这就是您的 Jax 之旅的开端！您已经奠定了基础，从设置环境到通过基本的 Jax 程序展示编码技巧。当我们结束时，请记住，这只是个开始。编码的乐园等待您去探索，而
+    Jax 的多功能性是您的工具箱。

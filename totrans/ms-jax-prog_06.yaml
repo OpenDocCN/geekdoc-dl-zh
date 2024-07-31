@@ -4,11 +4,13 @@
   - PREF_H1
   stylish: true
   type: TYPE_NORMAL
+  zh: 第5章：在Jax中构建深度学习模型
 - en: '`* * *`'
   id: totrans-1
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`* * *`'
 - en: Welcome to the hands-on side of deep learning with Jax! This chapter is your
     practical gateway to crafting neural networks using Jax's functional programming
     prowess. Say farewell to theory; it's time to roll up your sleeves and turn neural
@@ -17,12 +19,14 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 欢迎来到使用Jax进行深度学习实践的一面！本章是您通过Jax函数式编程技术打造神经网络的实际入门。告别理论，现在是时候动手，在实际模型中应用神经网络概念了。
 - en: 5.1 Jax's functional programming paradigm
   id: totrans-3
   prefs:
   - PREF_H2
   stylish: true
   type: TYPE_NORMAL
+  zh: 5.1 Jax 函数式编程范式
 - en: Jax's functional programming paradigm presents an elegant and expressive approach
     to construct neural network models. This methodology treats neural networks as
     functions, offering a streamlined path for modeling different network architectures
@@ -31,11 +35,13 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: Jax 函数式编程范式提供了一种优雅而表达力强的方法来构建神经网络模型。这种方法将神经网络视为函数，为建模不同的网络架构和轻松实验提供了流畅的路径。
 - en: Key Steps in Implementing Neural Networks with Jax's Functional Programming
   id: totrans-5
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 使用Jax函数式编程实现神经网络的关键步骤
 - en: 1\. Network Architecture Definition: Define the neural network structure, specifying
     layers, activation functions, and connections between layers. This sets the groundwork
     for the network's computational flow.
@@ -43,31 +49,37 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 1\. 网络架构定义：定义神经网络结构，指定层、激活函数和层间连接。这为网络的计算流程奠定了基础。
 - en: '`import jax.numpy as jnp`'
   id: totrans-7
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`import jax.numpy as jnp`'
 - en: '`def neural_network(x):`'
   id: totrans-8
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`def neural_network(x):`'
 - en: '`layer1 = jnp.tanh(jnp.dot(x, W1) + b1)`'
   id: totrans-9
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`layer1 = jnp.tanh(jnp.dot(x, W1) + b1)`'
 - en: '`output = jnp.dot(layer1, W2) + b2`'
   id: totrans-10
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`output = jnp.dot(layer1, W2) + b2`'
 - en: '`return output`'
   id: totrans-11
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`return output`'
 - en: 2\. Parameter Initialization: Initialize network parameters, like weights and
     biases, using appropriate random distributions to set the starting points for
     training.
@@ -75,140 +87,166 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 2\. 参数初始化：使用适当的随机分布初始化网络参数，如权重和偏置，为训练设定起始点。
 - en: '`W1 = jnp.random.normal(key, (input_dim, hidden_dim))`'
   id: totrans-13
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`W1 = jnp.random.normal(key, (input_dim, hidden_dim))`'
 - en: '`b1 = jnp.random.normal(key, (hidden_dim,))`'
   id: totrans-14
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`b1 = jnp.random.normal(key, (hidden_dim,))`'
 - en: '`W2 = jnp.random.normal(key, (hidden_dim, output_dim))`'
   id: totrans-15
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`W2 = jnp.random.normal(key, (hidden_dim, output_dim))`'
 - en: '`b2 = jnp.random.normal(key, (output_dim,))`'
   id: totrans-16
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`b2 = jnp.random.normal(key, (output_dim,))`'
 - en: 3\. Forward Propagation Implementation: Construct forward propagation to pass
     input data through the network, involving activation functions and layer computations.
   id: totrans-17
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 3\. 前向传播实现：构建前向传播，通过网络传递输入数据，涉及激活函数和层计算。
 - en: '`def forward_pass(x, W1, b1, W2, b2):`'
   id: totrans-18
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`def forward_pass(x, W1, b1, W2, b2):`'
 - en: '`layer1 = jnp.tanh(jnp.dot(x, W1) + b1)`'
   id: totrans-19
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`layer1 = jnp.tanh(jnp.dot(x, W1) + b1)`'
 - en: '`output = jnp.dot(layer1, W2) + b2`'
   id: totrans-20
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`output = jnp.dot(layer1, W2) + b2`'
 - en: '`return output`'
   id: totrans-21
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`return output`'
 - en: 4\. Loss Function Definition: Define a suitable loss function that measures
     the error between the network's output and the desired output.
   id: totrans-22
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 4\. 损失函数定义：定义适当的损失函数，衡量网络输出与期望输出之间的误差。
 - en: '`def mse_loss(predicted, target):`'
   id: totrans-23
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`def mse_loss(predicted, target):`'
 - en: '`return jnp.mean((predicted - target)2)`'
   id: totrans-24
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`return jnp.mean((predicted - target)2)`'
 - en: 5\. Gradient Computation: Utilize Jax's automatic differentiation to compute
     gradients of the loss function concerning the network parameters.
   id: totrans-25
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 5\. 梯度计算：利用Jax的自动微分计算损失函数相对于网络参数的梯度。
 - en: '`gradients = jax.grad(mse_loss)`'
   id: totrans-26
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`gradients = jax.grad(mse_loss)`'
 - en: 6\. Parameter Updates: Employ an optimizer like SGD or Adam to iteratively update
     network parameters using the computed gradients.
   id: totrans-27
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 6\. 参数更新：使用SGD或Adam等优化器迭代更新网络参数，利用计算得到的梯度。
 - en: '`def update_parameters(parameters, gradients, learning_rate):`'
   id: totrans-28
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`def update_parameters(parameters, gradients, learning_rate):`'
 - en: '`new_parameters = parameters - learning_rate * gradients`'
   id: totrans-29
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`new_parameters = parameters - learning_rate * gradients`'
 - en: '`return new_parameters`'
   id: totrans-30
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`return new_parameters`'
 - en: Benefits of Jax's Functional Programming Paradigm
   id: totrans-31
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: Jax 函数式编程范式的优势
 - en: 1\. Conciseness: Promotes clear, concise, and maintainable code for complex
     neural network models.
   id: totrans-32
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 1\. 简洁性：为复杂神经网络模型提供清晰、简洁和可维护的代码。
 - en: 2\. Expressiveness: Allows expressive code to convey network structure and computations
     with clarity.
   id: totrans-33
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 2\. 表达力：允许用清晰的代码表达网络结构和计算过程。
 - en: 3\. Modular Design: Facilitates a modular approach for creating reusable components
     and organizing code efficiently.
   id: totrans-34
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 3\. 模块化设计：支持模块化方法，创建可重用组件并高效组织代码。
 - en: '4\. Error Proneness: Reduces error risks by isolating code and avoiding mutable
     state.'
   id: totrans-35
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 4\. 错误耐受性：通过隔离代码和避免可变状态，减少错误风险。
 - en: 5\. Experimentation Efficiency: Enables rapid prototyping and experimentation
     with various architectures and configurations.
   id: totrans-36
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 5\. 实验效率：能够快速原型设计和尝试各种架构和配置。
 - en: 'Jax''s Automatic Differentiation: A Powerful Tool for Neural Network Training'
   id: totrans-37
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: Jax的自动微分：神经网络训练的强大工具
 - en: Jax's automatic differentiation capabilities streamline the process of defining,
     training, and optimizing neural networks. By automating gradient computation,
     Jax empowers you to focus on the core aspects of neural network design and optimization,
@@ -217,11 +255,13 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: Jax的自动微分能力简化了定义、训练和优化神经网络的过程。通过自动化梯度计算，Jax使您能够专注于神经网络设计和优化的核心方面，从而能够高效构建和训练复杂模型。
 - en: Defining Neural Networks with Automatic Differentiation
   id: totrans-39
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 定义神经网络的自动微分
 - en: 1\. Functional Programming Paradigm: Leverage Jax's functional programming paradigm
     to define neural networks concisely and expressively. This approach treats neural
     networks as functions, making them modular and easy to manipulate.
@@ -229,6 +269,7 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 1\. 函数式编程范式：利用Jax的函数式编程范式来简洁而富有表现力地定义神经网络。这种方法将神经网络视为函数，使其模块化且易于操作。
 - en: 2\. Layer Definition: Define individual layers of the neural network, specifying
     the number of neurons, activation functions, and connections between neurons.
     Jax's vectorization capabilities allow for efficient computation of operations
@@ -237,6 +278,7 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 2\. 层定义：定义神经网络的各个层，指定神经元的数量、激活函数以及神经元之间的连接。Jax的向量化能力允许跨数据批次高效计算操作。
 - en: 3\. Automatic Gradient Computation: Utilize Jax's automatic differentiation
     to compute the gradients of the network's output with respect to its parameters.
     This eliminates the need for explicit gradient calculation, reducing the complexity
@@ -245,11 +287,13 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 3\. 自动梯度计算：利用Jax的自动微分计算网络输出相对于其参数的梯度。这消除了显式梯度计算的需要，降低了训练的复杂性。
 - en: Training Neural Networks with Automatic Differentiation
   id: totrans-43
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 使用自动微分训练神经网络
 - en: 1\. Loss Function Definition: Define a loss function that measures the error
     between the network's output and the desired output. Jax provides a variety of
     loss functions, such as mean squared error (MSE) for regression tasks and cross-entropy
@@ -258,6 +302,7 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 1\. 损失函数定义：定义一个损失函数，衡量网络输出与期望输出之间的误差。Jax提供多种损失函数，如均方误差（MSE）用于回归任务，交叉熵损失用于分类任务。
 - en: 2\. Gradient-Based Optimization: Employ gradient-based optimization algorithms
     to iteratively adjust the network's parameters to minimize the loss function.
     Jax offers a suite of optimizers, including stochastic gradient descent (SGD),
@@ -266,6 +311,7 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 2\. 基于梯度的优化：采用基于梯度的优化算法来迭代调整网络的参数，以最小化损失函数。Jax提供一系列优化器，包括随机梯度下降（SGD）、Adam和RMSProp，每种都有其优势和劣势。
 - en: 3\. Optimizers and Learning Rate: Choose an appropriate optimizer and learning
     rate based on the specific task and network architecture. Optimizers like Adam
     often perform well with complex networks and large datasets, while SGD may be
@@ -274,6 +320,7 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 3\. 优化器和学习率：根据特定任务和网络架构选择适当的优化器和学习率。像Adam这样的优化器通常在复杂网络和大数据集上表现良好，而SGD可能适用于更简单的模型。
 - en: '4\. Training Loop Implementation: Implement a training loop that iteratively
     feeds batches of data to the network, computes the loss, calculates gradients,
     and updates parameters using the chosen optimizer. Monitor the loss over time
@@ -282,11 +329,13 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 4\. 训练循环实现：实现一个训练循环，将数据批量输入网络，计算损失，计算梯度，并使用选择的优化器更新参数。随时间监控损失，评估网络的进展。
 - en: Key Benefits of Using Jax's Automatic Differentiation
   id: totrans-48
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 使用Jax自动微分的主要优势
 - en: 1\. Efficient Gradient Computation: Jax's automatic differentiation automatically
     computes gradients, saving time and reducing the risk of errors compared to manual
     gradient calculations.
@@ -294,6 +343,7 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 1\. 高效的梯度计算：Jax的自动微分能够自动计算梯度，节省时间并减少与手动计算梯度相比的错误风险。
 - en: 2\. Simplified Training Process: By handling gradient computation, Jax simplifies
     the training process, allowing you to focus on network design and optimization
     strategies.
@@ -301,6 +351,7 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 2\. 简化的训练过程：通过处理梯度计算，Jax简化了训练过程，使您能够集中精力进行网络设计和优化策略。
 - en: '3\. Flexibility and Expressiveness: Jax''s functional programming paradigm
     supports a wide range of network architectures and activation functions, providing
     flexibility in model design.'
@@ -308,12 +359,14 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 3\. 灵活性和表现力：Jax的函数式编程范式支持广泛的网络架构和激活函数，为模型设计提供了灵活性。
 - en: 4\. Reduced Coding Effort: Automatic differentiation reduces the amount of coding
     required for training neural networks, making the process more streamlined.
   id: totrans-52
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 4\. 减少编码工作量：自动微分减少了训练神经网络所需的编码量，使整个过程更加流畅。
 - en: 5\. Accelerated Model Development: Automatic differentiation accelerates model
     development by simplifying training and enabling rapid experimentation with different
     network architectures.
@@ -321,6 +374,7 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 5\. 加速模型开发：自动微分通过简化训练过程和快速尝试不同的网络架构，加速了模型的开发。
 - en: Jax's automatic differentiation capabilities play a crucial role in the development
     and training of neural networks. By automating gradient computation, Jax empowers
     you to focus on the core aspects of neural network design and optimization, enabling
@@ -329,12 +383,14 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: Jax 的自动微分能力在开发和训练神经网络中发挥关键作用。通过自动化梯度计算，Jax 让您可以专注于神经网络设计和优化的核心方面，极大地提升了建立和训练复杂模型的效率。
 - en: 5.2 Jax's Optimizers
   id: totrans-55
   prefs:
   - PREF_H2
   stylish: true
   type: TYPE_NORMAL
+  zh: 5.2 Jax 的优化器
 - en: Jax provides a suite of powerful optimizers, algorithms designed to iteratively
     adjust the weights and biases of a neural network to minimize the error between
     the network's output and the desired output. These optimizers, such as stochastic
@@ -344,11 +400,13 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: Jax 提供了一套强大的优化器，这些算法旨在迭代地调整神经网络的权重和偏置，以最小化网络输出与期望输出之间的误差。这些优化器，如随机梯度下降（SGD）和Adam，与自动微分结合使用，能够高效地训练神经网络模型。
 - en: Understanding Optimizer Operation
   id: totrans-57
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 理解优化器的操作
 - en: 1\. Loss Function: The loss function measures the error between the network's
     output and the desired output. Optimizers strive to minimize this loss by adjusting
     the network's parameters.
@@ -356,219 +414,266 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 1\. 损失函数：损失函数衡量网络输出与期望输出之间的误差。优化器通过调整网络参数来最小化这种误差。
 - en: def `mse_loss(predicted, target):`
   id: totrans-59
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: def `mse_loss(predicted, target):`
 - en: return `jnp.mean((predicted - target)**2)`
   id: totrans-60
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: return `jnp.mean((predicted - target)**2)`
 - en: 2\. Optimizer Selection: Choose an appropriate optimizer based on the network
     architecture, dataset, and task.
   id: totrans-61
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 2\. 选择优化器：根据网络架构、数据集和任务选择合适的优化器。
 - en: '`optimizer = jax.optimizers.adam(0.001)`'
   id: totrans-62
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`optimizer = jax.optimizers.adam(0.001)`'
 - en: 3\. Training Loop: Implement the training loop to iteratively feed data, compute
     loss, calculate gradients, and update parameters.
   id: totrans-63
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 3\. 训练循环：实现训练循环，以迭代方式提供数据，计算损失，计算梯度并更新参数。
 - en: 'for epoch in range(num_epochs):'
   id: totrans-64
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 'for epoch in range(num_epochs):'
 - en: 'for batch_x, batch_y in training_data:'
   id: totrans-65
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 'for batch_x, batch_y in training_data:'
 - en: '`predicted = neural_network(batch_x)`'
   id: totrans-66
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`predicted = neural_network(batch_x)`'
 - en: '`loss = mse_loss(predicted, batch_y)`'
   id: totrans-67
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`loss = mse_loss(predicted, batch_y)`'
 - en: '`grads = jax.grad(mse_loss)(batch_x, predicted)`'
   id: totrans-68
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`grads = jax.grad(mse_loss)(batch_x, predicted)`'
 - en: '`opt_state = optimizer.update(grads, opt_state)`'
   id: totrans-69
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`opt_state = optimizer.update(grads, opt_state)`'
 - en: '`params = optimizer.get_params(opt_state)`'
   id: totrans-70
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`params = optimizer.get_params(opt_state)`'
 - en: Common Jax Optimizers
   id: totrans-71
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 常见的 Jax 优化器
 - en: 1\. Stochastic Gradient Descent (SGD): A fundamental optimizer that updates
     parameters based on the gradients of a single training example at each iteration.
   id: totrans-72
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 1\. 随机梯度下降（SGD）：一种基础的优化器，根据单个训练样本的梯度更新参数。
 - en: def `sgd_optimizer(params, gradients, learning_rate):`
   id: totrans-73
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: def `sgd_optimizer(params, gradients, learning_rate):`
 - en: return `[param - learning_rate * grad for param, grad in zip(params, gradients)]`
   id: totrans-74
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: return `[param - learning_rate * grad for param, grad in zip(params, gradients)]`
 - en: 2\. Mini-Batch Gradient Descent: An extension of SGD that updates parameters
     based on the average gradients of a small batch of training examples at each iteration.
   id: totrans-75
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 2\. 小批量梯度下降：SGD 的一种扩展，根据小批量训练样本的平均梯度更新参数。
 - en: def `mini_batch_sgd_optimizer(params, gradients, learning_rate):`
   id: totrans-76
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: def `mini_batch_sgd_optimizer(params, gradients, learning_rate):`
 - en: '`batch_size = len(gradients)`'
   id: totrans-77
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`batch_size = len(gradients)`'
 - en: return `[param - learning_rate * (sum(grad) / batch_size) for param, grad in
     zip(params, gradients)]`
   id: totrans-78
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: return `[param - learning_rate * (sum(grad) / batch_size) for param, grad in
+    zip(params, gradients)]`
 - en: 3\. Momentum: Incorporates past gradient updates to accelerate the movement
     in the direction of decreasing error, enhancing convergence.
   id: totrans-79
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 3\. 动量：将过去的梯度更新纳入考虑，加速朝向误差减小方向的移动，增强收敛性。
 - en: def `momentum_optimizer(params, gradients, learning_rate, momentum_factor, velocities):`
   id: totrans-80
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: def `momentum_optimizer(params, gradients, learning_rate, momentum_factor, velocities):`
 - en: '`updated_velocities = [momentum_factor * vel + learning_rate * grad for vel,
     grad in zip(velocities, gradients)]`'
   id: totrans-81
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`updated_velocities = [momentum_factor * vel + learning_rate * grad for vel,
+    grad in zip(velocities, gradients)]`'
 - en: '`updated_params = [param - vel for param, vel in zip(params, updated_velocities)]`'
   id: totrans-82
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`updated_params = [param - vel for param, vel in zip(params, updated_velocities)]`'
 - en: '`return updated_params, updated_velocities`'
   id: totrans-83
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`return updated_params, updated_velocities`'
 - en: 4\. Adaptive Learning Rate: Adjusts the learning rate dynamically based on the
     network's progress, preventing oscillations and overshooting.
   id: totrans-84
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 4\. 自适应学习率：根据网络的进展动态调整学习率，防止振荡和过度冲动。
 - en: '```def adaptive_learning_rate_optimizer(params, gradients, learning_rate, epsilon):```'
   id: totrans-85
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '```def adaptive_learning_rate_optimizer(params, gradients, learning_rate, epsilon):```'
 - en: '`squared_gradients = [grad  2 for grad in gradients]`'
   id: totrans-86
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`squared_gradients = [grad  2 for grad in gradients]`'
 - en: '`adjusted_learning_rate = [learning_rate / (jnp.sqrt(squared_grad) + epsilon)
     for squared_grad in squared_gradients]`'
   id: totrans-87
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`adjusted_learning_rate = [learning_rate / (jnp.sqrt(squared_grad) + epsilon)
+    for squared_grad in squared_gradients]`'
 - en: '`updated_params = [param - adj_lr * grad for param, adj_lr, grad in zip(params,
     adjusted_learning_rate, gradients)]`'
   id: totrans-88
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`updated_params = [param - adj_lr * grad for param, adj_lr, grad in zip(params,
+    adjusted_learning_rate, gradients)]`'
 - en: '`return updated_params`'
   id: totrans-89
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`return updated_params`'
 - en: 5\. Adam: A sophisticated optimizer that combines momentum, adaptive learning
     rate, and bias correction to achieve efficient and stable training.
   id: totrans-90
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 5\. Adam：一种复杂的优化器，结合动量、自适应学习率和偏置校正，实现高效稳定的训练。
 - en: '```def adam_optimizer(params, gradients, learning_rate, beta1, beta2, epsilon,
     m, v, t):```'
   id: totrans-91
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '```def adam_optimizer(params, gradients, learning_rate, beta1, beta2, epsilon,
+    m, v, t):```'
 - en: '`m = [beta1 * m_ + (1 - beta1) * grad for m_, grad in zip(m, gradients)]`'
   id: totrans-92
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`m = [beta1 * m_ + (1 - beta1) * grad for m_, grad in zip(m, gradients)]`'
 - en: '`v = [beta2 * v_ + (1 - beta2) * grad2 for v_, grad in zip(v, gradients)]`'
   id: totrans-93
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`v = [beta2 * v_ + (1 - beta2) * grad2 for v_, grad in zip(v, gradients)]`'
 - en: '`m_hat = [m_ / (1 - beta1t) for m_ in m]`'
   id: totrans-94
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`m_hat = [m_ / (1 - beta1t) for m_ in m]`'
 - en: '`v_hat = [v_ / (1 - beta2t) for v_ in v]`'
   id: totrans-95
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`v_hat = [v_ / (1 - beta2t) for v_ in v]`'
 - en: '`updated_params = [param - learning_rate * m_h / (jnp.sqrt(v_h) + epsilon)
     for param, m_h, v_h in zip(params, m_hat, v_hat)]`'
   id: totrans-96
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`updated_params = [param - learning_rate * m_h / (jnp.sqrt(v_h) + epsilon)
+    for param, m_h, v_h in zip(params, m_hat, v_hat)]`'
 - en: '`return updated_params, m, v`'
   id: totrans-97
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`return updated_params, m, v`'
 - en: Selecting the Optimal Optimizer
   id: totrans-98
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 选择最佳优化器
 - en: The choice of optimizer depends on the specific neural network architecture,
     dataset, and task at hand. Experimentation and evaluation are essential to determine
     the optimal optimizer for a given problem.
@@ -576,11 +681,13 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 选择优化器取决于具体的神经网络架构、数据集和手头的任务。实验和评估对于确定给定问题的最佳优化器至关重要。
 - en: Tips for Efficient Training with Jax Optimizers
   id: totrans-100
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 使用Jax优化器进行高效训练的建议
 - en: 1\. Appropriate Learning Rate: Choose an appropriate learning rate that balances
     speed and stability. Too high a learning rate can lead to oscillations and divergence,
     while too low a learning rate can slow down training.
@@ -588,6 +695,7 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 1\. 适当的学习率：选择适当的学习率，平衡速度和稳定性。学习率过高可能导致振荡和发散，而学习率过低可能会减慢训练速度。
 - en: 2\. Batch Size Selection: Select an appropriate batch size that balances efficiency
     with gradient estimation accuracy. Larger batches can accelerate training but
     may introduce more noise into gradient estimates.
@@ -595,18 +703,21 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 2\. 批量大小选择：选择适当的批量大小，平衡效率与梯度估计精度。较大的批次可以加快训练速度，但可能会引入更多的梯度估计噪声。
 - en: 3\. Regularization Techniques: Employ regularization techniques, such as L1
     or L2 regularization, to prevent overfitting and improve generalization.
   id: totrans-103
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 3\. 正则化技术：采用正则化技术，如L1或L2正则化，以防止过拟合并提高泛化能力。
 - en: 4\. Early Stopping: Utilize early stopping to prevent overfitting and stop training
     when the network's performance on a validation dataset starts to deteriorate.
   id: totrans-104
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 4\. 提前停止：利用提前停止来防止过拟合，并在验证数据集上网络性能开始恶化时停止训练。
 - en: 5\. Hyperparameter Optimization: Consider using hyperparameter optimization
     techniques to automatically find the optimal combination of hyperparameters, including
     optimizer parameters and regularization strengths.
@@ -614,6 +725,7 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 5\. 超参数优化：考虑使用超参数优化技术自动找到最佳的超参数组合，包括优化器参数和正则化强度。
 - en: Jax optimizers play a crucial role in training neural network models effectively.
     By leveraging these powerful algorithms, you can efficiently minimize training
     error, improve model generalization, and achieve superior performance for a wide
@@ -622,11 +734,13 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: Jax优化器在有效训练神经网络模型中起着至关重要的作用。通过利用这些强大的算法，您可以高效地减少训练误差，提高模型泛化能力，并在各种任务中实现出色的性能。
 - en: 'Coding Challenge: Implementing an Optimizer in Jax'
   id: totrans-107
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 编码挑战：在Jax中实现优化器
 - en: Create a simple optimizer function in Jax for updating the parameters of a neural
     network based on the gradients. Implement a basic version of stochastic gradient
     descent (SGD).
@@ -634,168 +748,202 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 创建一个简单的 Jax 优化器函数，用于根据梯度更新神经网络的参数。实现随机梯度下降（SGD）的基本版本。
 - en: Requirements
   id: totrans-109
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 要求
 - en: 1\. Use Jax for tensor operations and automatic differentiation.
   id: totrans-110
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 1\. 使用 Jax 进行张量操作和自动微分。
 - en: 2\. The optimizer function should take network parameters, gradients, and a
     learning rate as input and return the updated parameters.
   id: totrans-111
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 2\. 优化器函数应接受网络参数、梯度和学习率作为输入，并返回更新后的参数。
 - en: 3\. Implement the optimizer function as a pure function without side effects.
   id: totrans-112
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 3\. 将优化器函数实现为没有副作用的纯函数。
 - en: 4\. Provide a simple example of using your optimizer to update parameters in
     a linear regression setting.
   id: totrans-113
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 4\. 提供一个简单的示例，展示如何在线性回归设置中使用您的优化器更新参数。
 - en: 'Example:'
   id: totrans-114
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 示例：
 - en: import`jax`
   id: totrans-115
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: import`jax`
 - en: import`jax.numpy as jnp`
   id: totrans-116
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: import`jax.numpy as jnp`
 - en: def`sgd_optimizer(params, gradients, learning_rate):`
   id: totrans-117
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: def`sgd_optimizer(params, gradients, learning_rate):`
 - en: '`# Your implementation here`'
   id: totrans-118
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`# 在此处实现您的代码`'
 - en: '`updated_params = [param - learning_rate * grad for param, grad in zip(params,
     gradients)]`'
   id: totrans-119
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`updated_params = [param - learning_rate * grad for param, grad in zip(params,
+    gradients)]`'
 - en: '`return updated_params`'
   id: totrans-120
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`return updated_params`'
 - en: 'Example usage:'
   id: totrans-121
   prefs:
   - PREF_H1
   stylish: true
   type: TYPE_NORMAL
+  zh: 示例用法：
 - en: '`params = [jnp.array([1.0, 2.0]), jnp.array([3.0])]`'
   id: totrans-122
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`params = [jnp.array([1.0, 2.0]), jnp.array([3.0])]`'
 - en: '`gradients = [jnp.array([0.5, 1.0]), jnp.array([2.0])]`'
   id: totrans-123
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`gradients = [jnp.array([0.5, 1.0]), jnp.array([2.0])]`'
 - en: '`learning_rate = 0.01`'
   id: totrans-124
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`learning_rate = 0.01`'
 - en: '`updated_params = sgd_optimizer(params, gradients, learning_rate)`'
   id: totrans-125
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`updated_params = sgd_optimizer(params, gradients, learning_rate)`'
 - en: '`print("Updated Parameters:", updated_params)`'
   id: totrans-126
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`print("Updated Parameters:", updated_params)`'
 - en: Solution
   id: totrans-127
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 解决方案
 - en: import`jax`
   id: totrans-128
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: import`jax`
 - en: import`jax.numpy as jnp`
   id: totrans-129
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: import`jax.numpy as jnp`
 - en: def`sgd_optimizer(params, gradients, learning_rate):`
   id: totrans-130
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: def`sgd_optimizer(params, gradients, learning_rate):`
 - en: '`updated_params = [param - learning_rate * grad for param, grad in zip(params,
     gradients)]`'
   id: totrans-131
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`updated_params = [param - learning_rate * grad for param, grad in zip(params,
+    gradients)]`'
 - en: '`return updated_params`'
   id: totrans-132
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`return updated_params`'
 - en: 'Example usage:'
   id: totrans-133
   prefs:
   - PREF_H1
   stylish: true
   type: TYPE_NORMAL
+  zh: 示例用法：
 - en: '`params = [jnp.array([1.0, 2.0]), jnp.array([3.0])]`'
   id: totrans-134
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`params = [jnp.array([1.0, 2.0]), jnp.array([3.0])]`'
 - en: '`gradients = [jnp.array([0.5, 1.0]), jnp.array([2.0])]`'
   id: totrans-135
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`gradients = [jnp.array([0.5, 1.0]), jnp.array([2.0])]`'
 - en: '`learning_rate = 0.01`'
   id: totrans-136
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`learning_rate = 0.01`'
 - en: '`updated_params = sgd_optimizer(params, gradients, learning_rate)`'
   id: totrans-137
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`updated_params = sgd_optimizer(params, gradients, learning_rate)`'
 - en: '`print("Updated Parameters:", updated_params)`'
   id: totrans-138
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`print("Updated Parameters:", updated_params)`'
 - en: This coding challenge aims to test your understanding of implementing a basic
     optimizer in Jax.
   id: totrans-139
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 这个编码挑战旨在测试您在 Jax 中实现基本优化器的理解。
 - en: 'As you wrap up this chapter, remember: Jax isn''t just a tool; it''s your ally
     in the realm of deep learning. Armed with functional programming, automatic differentiation,
     and dynamic optimizers, you''re now equipped to transform neural network ideas
@@ -804,3 +952,4 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 当您完成本章时，请记住：Jax 不仅仅是一个工具；它是您在深度学习领域的盟友。借助函数式编程、自动微分和动态优化器，您现在已经具备了将神经网络理念转化为现实解决方案的能力。
