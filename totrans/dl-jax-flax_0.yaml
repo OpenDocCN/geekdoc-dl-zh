@@ -4805,78 +4805,93 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '"""对单个步骤进行训练。"""'
 - en: '`(_, logits), grads = jax.value_and_grad(compute_loss, has_aux =True)(state.params,text,labels)`'
   id: totrans-698
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`(_, logits), grads = jax.value_and_grad(compute_loss, has_aux =True)(state.params,text,labels)`'
 - en: '`state = state.apply_gradients(grads=grads)`'
   id: totrans-699
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`state = state.apply_gradients(grads=grads)`'
 - en: '`metrics = compute_metrics(logits=logits, labels=labels)`'
   id: totrans-700
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`metrics = compute_metrics(logits=logits, labels=labels)`'
 - en: return `state, metrics`
   id: totrans-701
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: return `state, metrics`
 - en: The evaluation step applies the model to the testing data to compute the test
     metrics.
   id: totrans-702
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 评估步骤将模型应用于测试数据以计算测试指标。
 - en: '@jax.jit'
   id: totrans-703
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '@jax.jit'
 - en: '`def eval_step(state, text, labels):`'
   id: totrans-704
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`def eval_step(state, text, labels):`'
 - en: '`logits = Model().apply({''params'': state.params}, text)`'
   id: totrans-705
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`logits = Model().apply({''params'': state.params}, text)`'
 - en: return `compute_metrics(logits=logits, labels=labels)`
   id: totrans-706
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: return `compute_metrics(logits=logits, labels=labels)`
 - en: The evaluation function runs the above evaluation step to obtain the evaluation
     metrics.
   id: totrans-707
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 评估函数运行上述评估步骤以获取评估指标。
 - en: '`def evaluate_model(state, text, test_lbls):`'
   id: totrans-708
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`def evaluate_model(state, text, test_lbls):`'
 - en: '"""Evaluate on the validation set."""'
   id: totrans-709
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '"""在验证集上进行评估。"""'
 - en: '`metrics = eval_step(state, text, test_lbls)` `metrics = jax.device_get(metrics)`'
   id: totrans-710
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`metrics = eval_step(state, text, test_lbls)` `metrics = jax.device_get(metrics)`'
 - en: '`metrics = jax.tree_map(lambda x: x.item(), metrics)` return `metrics`'
   id: totrans-711
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`metrics = jax.tree_map(lambda x: x.item(), metrics)` return `metrics`'
 - en: We use the `get_train_batches` function in the`train_epoch` method. We loop
     through the batches as we apply the `[train_step]` method. We obtain the train
     metrics and return them.
@@ -4884,21 +4899,25 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 我们在`train_epoch`方法中使用`get_train_batches`函数。我们通过应用`[train_step]`方法循环遍历批次。我们获取训练指标并返回它们。
 - en: '`def train_one_epoch(state):`'
   id: totrans-713
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`def train_one_epoch(state):`'
 - en: '"""Train for 1 epoch on the training set.""" `batch_metrics = []`'
   id: totrans-714
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '"""在训练集上进行1轮训练。""" `batch_metrics = []`'
 - en: for `text, labels in get_train_batches():`
   id: totrans-715
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: for `text, labels in get_train_batches():`
 - en: '`state, metrics = train_step(state, text, labels)` `batch_metrics.append(metrics)`batch_metrics_np
     = jax.device_get(batch_metrics) epoch_metrics_np = {k: np.mean([metrics[k] for
     metrics in batch_metrics_n p])for k in batch_metrics_np[0] }return `state, epoch_metrics_np`'
@@ -4906,6 +4925,9 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`state, metrics = train_step(state, text, labels)` `batch_metrics.append(metrics)`batch_metrics_np
+    = jax.device_get(batch_metrics) epoch_metrics_np = {k: np.mean([metrics[k] for
+    metrics in batch_metrics_n p])for k in batch_metrics_np[0] }return `state, epoch_metrics_np`'
 - en: The final step is to train the network on the training set and evaluate it on
     the test set. A training state is required before training the model. This is
     because JAX expects pure functions.
@@ -4913,131 +4935,159 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 最后一步是在训练集上训练网络，并在测试集上进行评估。在训练模型之前需要一个训练状态。这是因为JAX期望纯函数。
 - en: '`rng = jax.random.PRNGKey(0)`，`rng, init_rng = jax.random.split(rng)`'
   id: totrans-718
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`rng = jax.random.PRNGKey(0)`，`rng, init_rng = jax.random.split(rng)`'
 - en: '`learning_rate = 0.1 momentum = 0.9`'
   id: totrans-719
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`learning_rate = 0.1 momentum = 0.9`'
 - en: '`seed = 0`'
   id: totrans-720
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`seed = 0`'
 - en: '`state = create_train_state(init_rng, learning_rate, momentum)` del `init_rng
     # Must not be used anymore.`'
   id: totrans-721
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`state = create_train_state(init_rng, learning_rate, momentum)` del `init_rng
+    # 不再使用。`'
 - en: '`num_epochs = 30`'
   id: totrans-722
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`num_epochs = 30`'
 - en: '`(text, test_labels) = next(iter(validation_data))` `text = jnp.array(text)`'
   id: totrans-723
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`(text, test_labels) = next(iter(validation_data))` `text = jnp.array(text)`'
 - en: '`test_labels = jnp.array(test_labels)`'
   id: totrans-724
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`test_labels = jnp.array(test_labels)`'
 - en: '`state` = `create_train_state(jax.random.PRNGKey(seed), learning_r ate, momentum)`'
   id: totrans-725
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`state` = `create_train_state(jax.random.PRNGKey(seed), learning_r ate, momentum)`'
 - en: '`training_loss` = []'
   id: totrans-726
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`training_loss` = []'
 - en: '`training_accuracy` = []'
   id: totrans-727
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`training_accuracy` = []'
 - en: '`testing_loss` = []'
   id: totrans-728
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`testing_loss` = []'
 - en: '`testing_accuracy` = []'
   id: totrans-729
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`testing_accuracy` = []'
 - en: '`for epoch in range(1, num_epochs + 1):`'
   id: totrans-730
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 'for epoch in range(1, num_epochs + 1):'
 - en: '`train_state, train_metrics = train_one_epoch(state) training_loss.append(train_metrics[''loss''])`'
   id: totrans-731
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`train_state, train_metrics = train_one_epoch(state) training_loss.append(train_metrics[''loss''])`'
 - en: '`training_accuracy.append(train_metrics[''accuracy'']) print(f"Train epoch:
     {epoch}, loss: {train_metrics[''los`'
   id: totrans-732
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`training_accuracy.append(train_metrics[''accuracy'']) print(f"Train epoch:
+    {epoch}, loss: {train_metrics[''los`'
 - en: 's'']}, accuracy: {train_metrics[''accuracy''] * 100}")`'
   id: totrans-733
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 's'']}, accuracy: {train_metrics[''accuracy''] * 100}")`'
 - en: '`test_metrics` = `evaluate_model(train_state, text, test_label s)`'
   id: totrans-734
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`test_metrics` = `evaluate_model(train_state, text, test_label s)`'
 - en: '`testing_loss.append(test_metrics[''loss''])`'
   id: totrans-735
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`testing_loss.append(test_metrics[''loss''])`'
 - en: '`testing_accuracy.append(test_metrics[''accuracy''])`'
   id: totrans-736
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`testing_accuracy.append(test_metrics[''accuracy''])`'
 - en: '`print(f"Test epoch: {epoch}, loss: {test_metrics[''loss'']}, accuracy: {test_metrics[''accuracy'']
     * 100}")`'
   id: totrans-737
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`print(f"Test epoch: {epoch}, loss: {test_metrics[''loss'']}, accuracy: {test_metrics[''accuracy'']
+    * 100}")`'
 - en: '`![](../images/00030.jpeg)`'
   id: totrans-738
   prefs: []
   stylish: true
   type: TYPE_IMG
+  zh: '`![](../images/00030.jpeg)`'
 - en: '**How to load image data in JAX**'
   id: totrans-739
   prefs:
   - PREF_H2
   stylish: true
   type: TYPE_NORMAL
+  zh: '**如何在JAX中加载图像数据**'
 - en: Let's now see how we can load image data with TensorFlow. We'll use the popular cats
     and dogs images from Kaggle. We start by downloading the data.
   id: totrans-740
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 现在让我们看看如何使用TensorFlow加载图像数据。我们将使用来自Kaggle的流行的猫和狗图像。我们首先下载数据。
 - en: '`import wget # pip install wgetimport zipfile`'
   id: totrans-741
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`import wget # pip install wgetimport zipfile`'
 - en: '`wget.download("https://ml.machinelearningnuggets.com/train.zi p")`'
   id: totrans-742
   prefs: []
@@ -6794,257 +6844,311 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 现在我们需要创建函数的并行版本。在 JAX 中，使用并行化
 - en: the `[pmap]` function. `[pmap]` compiles a function with XLA and executes it
     on multiple devices.
   id: totrans-1009
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`[pmap]` 函数。 `[pmap]` 会使用 XLA 编译函数并在多个设备上执行。'
 - en: '```python'
   id: totrans-1010
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '```python'
 - en: cnn = CNN()
   id: totrans-1011
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`cnn = CNN()`'
 - en: '`params = cnn.init(rng, jnp.ones([1, size_image, size_image, 3]))[''params'']`'
   id: totrans-1012
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`params = cnn.init(rng, jnp.ones([1, size_image, size_image, 3]))[''params'']`'
 - en: '`tx = optax.sgd(learning_rate, momentum)`'
   id: totrans-1013
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`tx = optax.sgd(learning_rate, momentum)`'
 - en: '`return train_state.TrainState.create(`'
   id: totrans-1014
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`return train_state.TrainState.create(`'
 - en: '`apply_fn=cnn.apply, params=params, tx=tx)`'
   id: totrans-1015
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`apply_fn=cnn.apply, params=params, tx=tx)`'
 - en: Apply the model
   id: totrans-1016
   prefs:
   - PREF_H2
   stylish: true
   type: TYPE_NORMAL
+  zh: 应用模型
 - en: The next step is to define
   id: totrans-1017
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 下一步是定义
 - en: parallel `apply_model` and `update_model`functions.
   id: totrans-1018
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 并行应用 `apply_model` 和 `update_model` 函数。
 - en: 'The `[apply_model]` function:'
   id: totrans-1019
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`[apply_model]` 函数：'
 - en: Computes the loss.
   id: totrans-1020
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 计算损失。
 - en: Computes predictions from all devices by calculating the average of the probabilities
     using `[jax.lax.pmean()]`.```python
   id: totrans-1021
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 通过计算使用 `[jax.lax.pmean()]` 计算所有设备的概率平均值来生成预测。```python
 - en: 'logits = CNN().apply({''params'': params}, images) one_hot = jax.nn.one_hot(labels,
     2)'
   id: totrans-1022
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 'logits = CNN().apply({''params'': params}, images) one_hot = jax.nn.one_hot(labels,
+    2)'
 - en: '`loss = optax.softmax_cross_entropy(logits=logits, labels=on`'
   id: totrans-1023
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`loss = optax.softmax_cross_entropy(logits=logits, labels=on`'
 - en: e_hot).mean()return loss, logits
   id: totrans-1024
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: e_hot).mean()return loss, logits
 - en: '`grad_fn = jax.value_and_grad(loss_fn, has_aux=True) (loss, logits), grads
     = grad_fn(state.params)`'
   id: totrans-1025
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`grad_fn = jax.value_and_grad(loss_fn, has_aux=True) (loss, logits), grads
+    = grad_fn(state.params)`'
 - en: '`probs = jax.lax.pmean(jax.nn.softmax(logits), axis_name=''ense`'
   id: totrans-1026
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`probs = jax.lax.pmean(jax.nn.softmax(logits), axis_name=''ense`'
 - en: '```python'
   id: totrans-1027
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '```python'
 - en: Notice the use of the `[axis_name]`. You can give this any name. You'll need
     to specify that when computing the mean of the probabilities and accuracies.
   id: totrans-1028
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 注意使用了 `[axis_name]`。你可以随意指定名称。在计算概率和准确率的平均值时，需要指定这个名称。
 - en: The `[update_model]` function updates the model parameters.
   id: totrans-1029
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`[update_model]` 函数更新模型参数。'
 - en: Training function
   id: totrans-1030
   prefs:
   - PREF_H2
   stylish: true
   type: TYPE_NORMAL
+  zh: 训练函数
 - en: 'The next step is to define the model training function. In the function, we:'
   id: totrans-1031
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 下一步是定义模型训练函数。在该函数中，我们：
 - en: Replicate the training data at batch level
   id: totrans-1032
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 在批级别上复制训练数据
 - en: using `jax_utils.replicat e`.
   id: totrans-1033
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 使用 `jax_utils.replicate`。
 - en: '`[apply_model]` to the replicated data.'
   id: totrans-1034
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`[apply_model]` 应用于复制的数据。'
 - en: Obtain the epoch loss and accuracy and unreplicate them
   id: totrans-1035
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 获取 epoch 损失和准确率，并对其进行解复制
 - en: using `jax_utils.unreplicate`.
   id: totrans-1036
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 使用 `jax_utils.unreplicate`。
 - en: Compute the mean of the loss and accuracy.
   id: totrans-1037
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 计算损失和准确率的均值。
 - en: '`[apply_model]` to the test data and obtain test metrics.'
   id: totrans-1038
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`[apply_model]` 应用于测试数据并获取测试指标。'
 - en: Print the training and evaluation metrics per epoch. Append the training and
     test metrics to lists for visualization later.
   id: totrans-1039
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 打印每个 epoch 的训练和评估指标。将训练和测试指标附加到列表中，以便稍后可视化。
 - en: '```python'
   id: totrans-1040
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '```python'
 - en: '`epoch_loss = []`'
   id: totrans-1041
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`epoch_loss = []`'
 - en: '`epoch_accuracy = []`'
   id: totrans-1042
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`epoch_accuracy = []`'
 - en: '`testing_accuracy = []`'
   id: totrans-1043
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`testing_accuracy = []`'
 - en: '`testing_loss = []`'
   id: totrans-1044
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`testing_loss = []`'
 - en: '`for epoch in range(num_epochs):`'
   id: totrans-1045
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`for epoch in range(num_epochs):`'
 - en: '`for cnt, (images, labels) in tqdm(enumerate(dataloade r), total=(math.ceil(len(train_set)/batch_size))):
     images = images / 255.0`'
   id: totrans-1046
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`for cnt, (images, labels) in tqdm(enumerate(dataloade r), total=(math.ceil(len(train_set)/batch_size))):
+    images = images / 255.0`'
 - en: '`images` = `jax_utils.replicate(images)`'
   id: totrans-1047
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`images` = `jax_utils.replicate(images)`'
 - en: '`labels` = `jax_utils.replicate(labels)`'
   id: totrans-1048
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`labels` = `jax_utils.replicate(labels)`'
 - en: '`grads`, `loss`, `accuracy` = `apply_model(state, images`,'
   id: totrans-1049
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`grads`, `loss`, `accuracy` = `apply_model(state, images`,'
 - en: '`labels)`'
   id: totrans-1050
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`labels)`'
 - en: '`state` = `update_model(state, grads)`'
   id: totrans-1051
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`state` = `update_model(state, grads)`'
 - en: '`epoch_loss.append(jax_utils.unreplicate(loss)) epoch_accuracy.append(jax_utils.unreplicate(accuracy))
     train_loss = np.mean(epoch_loss)`'
   id: totrans-1052
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`epoch_loss.append(jax_utils.unreplicate(loss)) epoch_accuracy.append(jax_utils.unreplicate(accuracy))
+    train_loss = np.mean(epoch_loss)`'
 - en: '`train_accuracy = np.mean(epoch_accuracy)`'
   id: totrans-1053
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`train_accuracy = np.mean(epoch_accuracy)`'
 - en: '`_, test_loss, test_accuracy` = `jax_utils.unreplicate(apply_model(state, test_images,
     test_labels))`'
   id: totrans-1054
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`_, test_loss, test_accuracy` = `jax_utils.unreplicate(apply_model(state, test_images,
+    test_labels))`'
 - en: '`testing_accuracy.append(test_accuracy)`'
   id: totrans-1055
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`testing_accuracy.append(test_accuracy)`'
 - en: '`testing_loss.append(test_loss)`'
   id: totrans-1056
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`testing_loss.append(test_loss)`'
 - en: '`print(f"Epoch: {epoch + 1}, train loss: {train_loss:.4 f}, train accuracy:
     {train_accuracy * 100:.4f}, test loss: {tes t_loss:.4f}, test accuracy: {test_accuracy*
     100:.4f}", flush=Tr ue)`'
@@ -7052,17 +7156,22 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`print(f"Epoch: {epoch + 1}, train loss: {train_loss:.4 f}, train accuracy:
+    {train_accuracy * 100:.4f}, test loss: {tes t_loss:.4f}, test accuracy: {test_accuracy*
+    100:.4f}", flush=Tr ue)`'
 - en: '`return state, epoch_loss, epoch_accuracy, testing_accuracy, testing_loss`'
   id: totrans-1058
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`return state, epoch_loss, epoch_accuracy, testing_accuracy, testing_loss`'
 - en: Train the model
   id: totrans-1059
   prefs:
   - PREF_H2
   stylish: true
   type: TYPE_NORMAL
+  zh: 训练模型
 - en: When creating the training state, we generate pseudo-random numbers equivalent
     to the number of devices. We also replicate a small batch of the test data for
     testing. The next step is to run the training function and unpack the training
@@ -7071,58 +7180,71 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 创建训练状态时，我们生成与设备数量相当的伪随机数。我们还为测试复制了一小批测试数据。下一步是运行训练函数并解压缩训练和测试指标。
 - en: '`learning_rate = 0.1 momentum = 0.9`'
   id: totrans-1061
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`learning_rate = 0.1 momentum = 0.9`'
 - en: '`seed = 0`'
   id: totrans-1062
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`seed = 0`'
 - en: '`num_epochs = 30`'
   id: totrans-1063
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`num_epochs = 30`'
 - en: '`rng` = `jax.random.PRNGKey(0)`'
   id: totrans-1064
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`rng` = `jax.random.PRNGKey(0)`'
 - en: '`rng`, `init_rng` = `jax.random.split(rng)`'
   id: totrans-1065
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`rng`, `init_rng` = `jax.random.split(rng)`'
 - en: '`state` = `create_train_state(jax.random.split(init_rng, jax.device_count()),learning_rate,
     momentum)` `del init_rng` # Must not be used anymore.'
   id: totrans-1066
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`state` = `create_train_state(jax.random.split(init_rng, jax.device_count()),learning_rate,
+    momentum)` `del init_rng` # 不再使用。'
 - en: '`(test_images, test_labels)` = `next(iter(validation_loader))` `test_images
     = test_images / 255.0`'
   id: totrans-1067
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`(test_images, test_labels)` = `next(iter(validation_loader))` `test_images
+    = test_images / 255.0`'
 - en: '`test_images` = `jax_utils.replicate(test_images)`'
   id: totrans-1068
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`test_images` = `jax_utils.replicate(test_images)`'
 - en: '`test_labels` = `jax_utils.replicate(test_labels)`'
   id: totrans-1069
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`test_labels` = `jax_utils.replicate(test_labels)`'
 - en: '`start = time.time()`'
   id: totrans-1070
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`start = time.time()`'
 - en: '`state`, `epoch_loss`, `epoch_accuracy`, `testing_accuracy`, `testing_loss`
     = `train_one_epoch(state, train_loader,num_epochs)` `print("Total time: ", time.time()
     - start, "seconds")`'
@@ -7130,63 +7252,77 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`state`, `epoch_loss`, `epoch_accuracy`, `testing_accuracy`, `testing_loss`
+    = `train_one_epoch(state, train_loader,num_epochs)` `print("Total time: ", time.time()
+    - start, "seconds")`'
 - en: '![](../images/00032.jpeg)'
   id: totrans-1072
   prefs: []
   stylish: true
   type: TYPE_IMG
+  zh: '![](../images/00032.jpeg)'
 - en: Model evaluation
   id: totrans-1073
   prefs:
   - PREF_H2
   stylish: true
   type: TYPE_NORMAL
+  zh: 模型评估
 - en: The metrics obtained above can be used to plot the metrics.
   id: totrans-1074
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 上面获得的指标可用于绘制指标。
 - en: '`plt.plot(epoch_accuracy, label="Training")`'
   id: totrans-1075
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`plt.plot(epoch_accuracy, label="Training")`'
 - en: '`plt.plot(testing_accuracy, label="Test")`'
   id: totrans-1076
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`plt.plot(testing_accuracy, label="Test")`'
 - en: '`plt.xlabel("Epoch")`'
   id: totrans-1077
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`plt.xlabel("Epoch")`'
 - en: '`plt.ylabel("Accuracy")`'
   id: totrans-1078
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`plt.ylabel("Accuracy")`'
 - en: '`plt.legend()`'
   id: totrans-1079
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`plt.legend()`'
 - en: '`plt.show()`'
   id: totrans-1080
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`plt.show()`'
 - en: '![](../images/00033.jpeg)'
   id: totrans-1081
   prefs: []
   stylish: true
   type: TYPE_IMG
+  zh: '![](../images/00033.jpeg)'
 - en: Final thoughts
   id: totrans-1082
   prefs:
   - PREF_H2
   stylish: true
   type: TYPE_NORMAL
+  zh: 最终想法
 - en: This article shows how you can use JAX and Flax to train machine learning models
     in parallel on multiple devices. You have seen that the process involves making
     a few functions parallel using JAX's pmap function. We have also covered how to
@@ -7195,12 +7331,14 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 本文展示了如何使用 JAX 和 Flax 在多设备上并行训练机器学习模型。您已经看到该过程涉及使用 JAX 的 pmap 函数将几个函数并行化。我们还介绍了如何在多个设备上复制训练和测试数据。
 - en: How to use TensorBoard in JAX & Flax
   id: totrans-1084
   prefs:
   - PREF_H2
   stylish: true
   type: TYPE_NORMAL
+  zh: 如何在 JAX 和 Flax 中使用 TensorBoard
 - en: Tracking machine learning experiments makes understanding and visualizing the
     model's performance easy. It also makes it possible to spot any problems in the
     network. For example, you can quickly spot overfitting by looking at the training
@@ -7210,88 +7348,105 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 跟踪机器学习实验使理解和可视化模型性能变得简单。它还可以帮助您快速发现网络中的任何问题。例如，通过查看训练和验证图表，您可以快速发现过拟合问题。您可以使用自己喜欢的图表包（如
+    Matplotlib）绘制这些图表。但是，您也可以使用更先进的工具，如 TensorBoard。
 - en: 'TensorBoard is an open-source library that provides tools for experiment tracking
     in machine learning. You can use TensorBoard for:'
   id: totrans-1086
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: TensorBoard 是一个开源库，提供了机器学习实验跟踪工具。您可以使用 TensorBoard 进行：
 - en: Tracking and visualizing model evaluation metrics such as accuracy.
   id: totrans-1087
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 跟踪和可视化模型评估指标，如准确性。
 - en: Logging images.
   id: totrans-1088
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 记录图像。
 - en: Visualize hyper-parameter tuning.
   id: totrans-1089
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 可视化超参数调整。
 - en: Project embeddings such as word embedding in natural language processing problems.
   id: totrans-1090
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 项目嵌入，例如自然语言处理问题中的词嵌入。
 - en: Visualize histograms of the model's weights and biases.
   id: totrans-1091
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 可视化模型权重和偏差的直方图。
 - en: Plot the architecture of the model.
   id: totrans-1092
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 绘制模型的架构。
 - en: Profile the performance of the network.
   id: totrans-1093
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 评估网络性能。
 - en: You can use TensorBoard with popular machine learning libraries such as XGBoost, JAX, Flax,
     and PyTorch.
   id: totrans-1094
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 您可以在流行的机器学习库（如 XGBoost、JAX、Flax 和 PyTorch）中使用 TensorBoard。
 - en: This article will focus on how to use TensorBoard when building networks with JAX and
     Flax.
   id: totrans-1095
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 本文将重点介绍在使用 JAX 和 Flax 构建网络时如何使用 TensorBoard。
 - en: '**How to use TensorBoard**'
   id: totrans-1096
   prefs:
   - PREF_H2
   stylish: true
   type: TYPE_NORMAL
+  zh: '**如何使用 TensorBoard**'
 - en: Let's start by exploring how to use TensorBoard.
   id: totrans-1097
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 让我们从探索如何使用 TensorBoard 开始。
 - en: '**How to install TensorBoard**'
   id: totrans-1098
   prefs:
   - PREF_H2
   stylish: true
   type: TYPE_NORMAL
+  zh: '**如何安装 TensorBoard**'
 - en: The first step is to install TensorBoard from the Python Index. `pip install
     tensorboard`
   id: totrans-1099
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 第一步是从 Python Index 安装 TensorBoard。`pip install tensorboard`
 - en: '**Using TensorBoard with Jupyter notebooks and Google Colab**'
   id: totrans-1100
   prefs:
   - PREF_H2
   stylish: true
   type: TYPE_NORMAL
+  zh: '**在 Jupyter 笔记本和 Google Colab 中使用 TensorBoard**'
 - en: Once TensorBoard is installed, you need to load it in your environment, usually
     Google Colab or your local notebook.`%load_ext tensorboard`Next, inform TensorBoard
     which folder will contain the log information.`log_folder = "runs"`
@@ -7299,18 +7454,23 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 安装了 TensorBoard 后，您需要在环境中加载它，通常是在 Google Colab 或本地笔记本中。 `%load_ext tensorboard`
+    接下来，告诉 TensorBoard 哪个文件夹将包含日志信息。 `log_folder = "runs"`
 - en: '**How to launch TensorBoard**'
   id: totrans-1102
   prefs:
   - PREF_H2
   stylish: true
   type: TYPE_NORMAL
+  zh: '**如何启动 TensorBoard**'
 - en: Tensorboard is launched using the `[tensorboard]` magic command in notebook
     environments while specifying the `[logdir]`. `%tensorboard --logdir={log_folder}`
   id: totrans-1103
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: Tensorboard 使用 `[tensorboard]` 魔术命令在笔记本环境中启动，同时指定 `[logdir]`。 `%tensorboard
+    --logdir={log_folder}`
 - en: 'You can also launch TensorBoard on the command line using a similar pattern.
     Apart from viewing the terminal on the notebook environment, you can also view
     it on the browser by visiting: http://localhost:6006.'
@@ -7318,17 +7478,20 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 您还可以使用类似的模式在命令行上启动 TensorBoard。除了在笔记本环境中查看终端外，您还可以通过访问以下地址在浏览器中查看：http://localhost:6006。
 - en: '**Tensorboard dashboards**'
   id: totrans-1105
   prefs:
   - PREF_H2
   stylish: true
   type: TYPE_NORMAL
+  zh: '**Tensorboard 仪表板**'
 - en: TensorBoard has various dashboards for showing different types of information.
   id: totrans-1106
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: TensorBoard 拥有各种仪表板，用于显示不同类型的信息。
 - en: The  **Scalars** dashboard tracks numerical information such as training metrics
     per epoch. You can use it to track other scalar values such as model training
     speed and learning rate.
@@ -7336,41 +7499,48 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '**Scalars** 仪表板跟踪数字信息，如每个 epoch 的训练指标。您可以使用它来跟踪模型训练速度和学习率等其他标量值。'
 - en: The **Graphs** dashboard is used for showing visualizations. For example, you
     can use it to check the architecture of the network.
   id: totrans-1108
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '**Graphs** 仪表板用于显示可视化。例如，您可以使用它来检查网络的架构。'
 - en: The  **Distributions and Histograms** dashboard show the distribution of tensors
     over time. Use it to check the weights and biases of the network.
   id: totrans-1109
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '**Distributions and Histograms** 仪表板显示张量随时间的分布。用它来检查网络的权重和偏置。'
 - en: The **Images** dashboard shows the images you have logged to TensorBoard.
   id: totrans-1110
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '**Images** 仪表板显示您已记录到 TensorBoard 的图像。'
 - en: The **HParams** dashboard visualizes hyperparameter optimization. It helps identify
     the best parameters for the network.
   id: totrans-1111
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '**HParams** 仪表板可视化超参数优化。它帮助确定网络的最佳参数。'
 - en: The  **Embedding Projector** is used to visualize low-level embeddings, for
     example, text embeddings.
   id: totrans-1112
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '**Embedding Projector** 用于可视化低级嵌入，例如文本嵌入。'
 - en: The **What-If Tool** dashboard helps in understanding the performance of a model.
     It also enables the measurement of a model's fairness on data subsets.
   id: totrans-1113
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '**What-If Tool** 仪表板帮助理解模型的性能。它还能够在数据子集上测量模型的公平性。'
 - en: The  **TensorFlow Profiler** monitors the model training process. It also shows
     the events in the CPU and GPU during training. The TensorFlow profiler goes further
     to offer recommendations based on the data collected. You can also use it to debug
@@ -7379,29 +7549,34 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '**TensorFlow Profiler** 监控模型训练过程。它还显示了训练期间 CPU 和 GPU 上的事件。TensorFlow 分析器进一步根据收集的数据提供建议。您还可以使用它来调试输入管道中的性能问题。'
 - en: '**How to use TensorBoard with Flax**'
   id: totrans-1115
   prefs:
   - PREF_H2
   stylish: true
   type: TYPE_NORMAL
+  zh: '**如何在 Flax 中使用 TensorBoard**'
 - en: With TensorBoard installed and some basics out of the way, let's look at how
     you can use it in Flax. Let's use
   id: totrans-1116
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 安装了 TensorBoard 并完成了一些基础设置后，让我们看看如何在 Flax 中使用它。 让我们使用
 - en: the `[SummaryWriter]` from PyTorch to write to the log folder.
   id: totrans-1117
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 使用 PyTorch 中的 `[SummaryWriter]` 向日志文件夹写入。
 - en: '**How to log images with TensorBoard in Flax**'
   id: totrans-1118
   prefs:
   - PREF_H2
   stylish: true
   type: TYPE_NORMAL
+  zh: '**如何在 Flax 中使用 TensorBoard 记录图像**'
 - en: You may want to log sample images when solving computer vision problems. You
     can also log predictions while training the model. For example, you can log prediction
     images containing bounding boxes for an object detection network.
@@ -7409,63 +7584,77 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 在解决计算机视觉问题时，您可能希望记录样本图像。您还可以在训练模型时记录预测。例如，您可以记录包含对象检测网络边界框的预测图像。
 - en: 'Let''s look at how we can log an image to TensorBoard.from`torch.utils.tensorboard`import`SummaryWriter`import`torchvision.transforms.functional`as`Fwriter
     = SummaryWriter(logdir)`def show(imgs):if not isinstance(imgs, list):'
   id: totrans-1120
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '让我们看看如何将图像记录到 TensorBoard。 from `torch.utils.tensorboard` import `SummaryWriter`
+    import `torchvision.transforms.functional` as `Fwriter = SummaryWriter(logdir)`
+    def show(imgs): if not isinstance(imgs, list):'
 - en: '`imgs = [imgs]`'
   id: totrans-1121
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`imgs = [imgs]`'
 - en: '`fig, axs = plt.subplots(ncols=len(imgs), squeeze=False)` for i, img in enumerate(imgs):'
   id: totrans-1122
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`fig, axs = plt.subplots(ncols=len(imgs), squeeze=False)` for i, img in enumerate(imgs):'
 - en: '`img = img.detach()`'
   id: totrans-1123
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`img = img.detach()`'
 - en: '`img = F.to_pil_image(img)`'
   id: totrans-1124
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`img = F.to_pil_image(img)`'
 - en: '`axs[0, i].imshow(np.asarray(img))`'
   id: totrans-1125
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`axs[0, i].imshow(np.asarray(img))`'
 - en: '`axs[0, i].set(xticklabels=[], yticklabels=[], xticks=`'
   id: totrans-1126
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`axs[0, i].set(xticklabels=[], yticklabels=[], xticks=`'
 - en: '[], yticks=[])writer.flush() # Ensure that everything is written to diskNext,
     create a grid with the images that will be logged.'
   id: totrans-1127
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '[], yticks=[])writer.flush() # 确保所有内容都已写入磁盘接下来，创建将记录的图像的网格。'
 - en: from`torchvision.utils`import`make_grid`from`torchvision.io`import`read_image`from`pathlib`import`Path`
   id: totrans-1128
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: from`torchvision.utils`import`make_grid`from`torchvision.io`import`read_image`from`pathlib`import`Path`
 - en: '`cat = read_image(str(Path(''train'') / ''cat.1.jpg'')) grid = make_grid(cat)`'
   id: totrans-1129
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`cat = read_image(str(Path(''train'') / ''cat.1.jpg'')) grid = make_grid(cat)`'
 - en: '`show(grid)`'
   id: totrans-1130
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`show(grid)`'
 - en: The `[add_image]` function is used to write images to TensorBoard.`writer.add_image('sample_cat',
     grid)`Now, load the TensorBoard extension and point it to the logs folder.`%tensorboard
     --logdir={logdir}`The logged images will be visible on the Images dashboard. ![](../images/00034.gif)**TensorBoard
@@ -7476,12 +7665,17 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 使用`[add_image]`函数将图像写入TensorBoard。`writer.add_image('sample_cat', grid)`现在，加载TensorBoard扩展并将其指向日志文件夹。`%tensorboard
+    --logdir={logdir}`记录的图像将在图像仪表板上可见。![](../images/00034.gif)**TensorBoard 图像仪表板**
+    **## 如何在Flax中使用TensorBoard记录文本** 使用`[add_text]`函数向TensorBoard写入文本。`writer.add_text('Text',
+    'Write image to TensorBoard', 0)`记录的数据在文本仪表板上可用。![](../images/00035.jpeg)
 - en: '**Track model training in JAX using TensorBoard**'
   id: totrans-1132
   prefs:
   - PREF_H2
   stylish: true
   type: TYPE_NORMAL
+  zh: '**使用TensorBoard跟踪JAX模型训练**'
 - en: You can log the evaluation metrics when training machine learning models with
     JAX. They obtained at the training stage. At this point, you can log the metrics
     to TensorBoard. In the example below, we log the training and evaluation metrics.
@@ -7489,62 +7683,75 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 在训练机器学习模型时，可以记录评估指标。它们在训练阶段获取。此时，您可以将指标记录到TensorBoard。在下面的示例中，我们记录训练和评估指标。
 - en: '`for epoch in range(1, num_epochs + 1):`'
   id: totrans-1134
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`for epoch in range(1, num_epochs + 1):`'
 - en: '`train_state, train_metrics = train_one_epoch(state, train_l`'
   id: totrans-1135
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`train_state, train_metrics = train_one_epoch(state, train_l`'
 - en: '`oader)`'
   id: totrans-1136
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`oader)`'
 - en: '`training_loss.append(train_metrics[''loss''])`'
   id: totrans-1137
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`training_loss.append(train_metrics[''loss''])`'
 - en: '`training_accuracy.append(train_metrics[''accuracy'']) print(f"Train epoch:
     {epoch}, loss: {train_metrics[''los`'
   id: totrans-1138
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`training_accuracy.append(train_metrics[''accuracy'']) print(f"Train epoch:
+    {epoch}, loss: {train_metrics[''los`'
 - en: 's'']}, accuracy: {train_metrics[''accuracy''] * 100}")'
   id: totrans-1139
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 's'']}, 准确率: {train_metrics[''accuracy''] * 100}")'
 - en: '`test_metrics = evaluate_model(train_state, test_images, tes t_labels)`'
   id: totrans-1140
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`test_metrics = evaluate_model(train_state, test_images, tes t_labels)`'
 - en: '`testing_loss.append(test_metrics[''loss''])`'
   id: totrans-1141
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`testing_loss.append(test_metrics[''loss''])`'
 - en: '`testing_accuracy.append(test_metrics[''accuracy''])`'
   id: totrans-1142
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`testing_accuracy.append(test_metrics[''accuracy''])`'
 - en: '`writer.add_scalar(''Loss/train'', train_metrics[''loss''], epoc h)`'
   id: totrans-1143
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`writer.add_scalar(''Loss/train'', train_metrics[''loss''], epoc h)`'
 - en: '`writer.add_scalar(''Loss/test'', test_metrics[''loss''], epoch)`'
   id: totrans-1144
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`writer.add_scalar(''Loss/test'', test_metrics[''loss''], epoch)`'
 - en: '`writer.add_scalar(''Accuracy/train'', train_metrics[''accuracy''], epoch)`writer.add_scalar(''Accuracy/test'',
     test_metrics[''accuracy''], epoch)print(f"Test epoch: {epoch}, loss: {test_metrics[''loss'']},
     accuracy: {test_metrics[''accuracy''] * 100}")These metrics will be available
@@ -7553,73 +7760,88 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`writer.add_scalar(''Accuracy/train'', train_metrics[''accuracy''], epoch)`writer.add_scalar(''Accuracy/test'',
+    test_metrics[''accuracy''], epoch)print(f"Test epoch: {epoch}, loss: {test_metrics[''loss'']},
+    accuracy: {test_metrics[''accuracy''] * 100}")这些指标将在TensorBoard的**Scalars**仪表板上可用。![](../images/00036.gif)'
 - en: '**How to profile JAX programs with TensorBoard**'
   id: totrans-1146
   prefs:
   - PREF_H2
   stylish: true
   type: TYPE_NORMAL
+  zh: '**如何使用TensorBoard分析JAX程序**'
 - en: To profileJAX programs, send data to the TensorBoard profiler. The first step
     is to install the profile plugin.`pip install -U tensorboard-plugin-profile`
   id: totrans-1147
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 要分析JAX程序，请将数据发送到TensorBoard分析器。第一步是安装分析插件。`pip install -U tensorboard-plugin-profile`
 - en: '**Programmatic profiling**'
   id: totrans-1148
   prefs:
   - PREF_H2
   stylish: true
   type: TYPE_NORMAL
+  zh: '**程序化分析**'
 - en: Use `jax.profiler.start_trace()` to start a trace
   id: totrans-1149
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 使用`jax.profiler.start_trace()`来启动跟踪
 - en: and `jax.profiler.stop_trace()` to stop a trace.
   id: totrans-1150
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 和`jax.profiler.stop_trace()`来停止跟踪。
 - en: The `[start_trace()]` expects the path to the directory where the traces will
     be written.`import jax`jax.profiler.start_trace("runs")
   id: totrans-1151
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`[start_trace()]`期望将跟踪写入的目录路径。`import jax`jax.profiler.start_trace("runs")'
 - en: Run the operations to be profiled `key = jax.random.PRNGKey(0)`
   id: totrans-1152
   prefs:
   - PREF_H1
   stylish: true
   type: TYPE_NORMAL
+  zh: 运行要分析的操作 `key = jax.random.PRNGKey(0)`
 - en: '`x = jax.random.normal(key, (5000, 5000)) y = x @ x`'
   id: totrans-1153
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`x = jax.random.normal(key, (5000, 5000)) y = x @ x`'
 - en: '`y.block_until_ready()`'
   id: totrans-1154
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`y.block_until_ready()`'
 - en: '`jax.profiler.stop_trace()`'
   id: totrans-1155
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`jax.profiler.stop_trace()`'
 - en: '**Manual profiling with `TensorBoard`**'
   id: totrans-1156
   prefs:
   - PREF_H2
   stylish: true
   type: TYPE_NORMAL
+  zh: '**使用`TensorBoard`进行手动分析**'
 - en: 'The second option is to profile the `JAX` program manually. `![](../images/00037.jpeg)`This
     is done in the following steps:'
   id: totrans-1157
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 第二个选项是手动分析`JAX`程序。 `![](../images/00037.jpeg)`以下是操作步骤：
 - en: Initialize `TensorBoard` `tensorboard --logdir /runs`Start a `JAX` profiler
     server at the beginning of the program and stop the server at the end of the program.
   id: totrans-1158
@@ -8508,115 +8730,140 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 在训练步骤中，我们计算相对于损失和模型参数的梯度 - **模型参数**和**批次统计**。我们使用这些梯度来更新模型参数并返回新的状态和模型指标。这个函数被装饰
 - en: with @jax.jit to make the computation faster.
   id: totrans-1305
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 以 @jax.jit 使计算更快。
 - en: '@jax.jit'
   id: totrans-1306
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '@jax.jit'
 - en: '`def train_step(state,images, labels):`'
   id: totrans-1307
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`def train_step(state,images, labels):`'
 - en: '"""Train for a single step."""'
   id: totrans-1308
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '"""进行单步训练。"""'
 - en: '`(batch_loss, (logits, batch_stats)), grads= jax.value_and_gra d(compute_loss,
     has_aux=True)(state.params,state.batch_stats, i mages,labels)`'
   id: totrans-1309
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`(batch_loss, (logits, batch_stats)), grads= jax.value_and_gra d(compute_loss,
+    has_aux=True)(state.params,state.batch_stats, i mages,labels)`'
 - en: '`state = state.apply_gradients(grads=grads)`'
   id: totrans-1310
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`state = state.apply_gradients(grads=grads)`'
 - en: '`metrics = compute_metrics(logits=logits, labels=labels) return state, metricsNext,
     define a function that applies the training step for one epoch. The functions:`'
   id: totrans-1311
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`metrics = compute_metrics(logits=logits, labels=labels) return state, metricsNext,
+    define a function that applies the training step for one epoch. The functions:`'
 - en: Loops through the training data.
   id: totrans-1312
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 通过训练数据循环。
 - en: Passes each training batch the training step.
   id: totrans-1313
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 将每个训练批次传递给训练步骤。
 - en: Obtains the batch metrics. Computes the mean to obtain the epoch metrics.
   id: totrans-1314
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 获取批次指标。 计算均值以获得 epoch 指标。
 - en: Returns the new state and metrics.
   id: totrans-1315
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 返回新状态和度量。
 - en: '`def train_one_epoch(state, dataloader):`'
   id: totrans-1316
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`def train_one_epoch(state, dataloader):`'
 - en: '"""Train for 1 epoch on the training set.""" batch_metrics = []'
   id: totrans-1317
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '"""在训练集上进行 1 个 epoch 的训练。""" batch_metrics = []'
 - en: 'for cnt, (images, labels) in enumerate(dataloader):'
   id: totrans-1318
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 'for cnt, (images, labels) in enumerate(dataloader):'
 - en: '`images = images / 255.0`'
   id: totrans-1319
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`images = images / 255.0`'
 - en: '`state, metrics = train_step(state, images, labels) batch_metrics.append(metrics)`'
   id: totrans-1320
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`state, metrics = train_step(state, images, labels) batch_metrics.append(metrics)`'
 - en: '`batch_metrics_np = jax.device_get(batch_metrics) epoch_metrics_np = {k: np.mean([metrics[k]
     for metrics in batch_metrics_n`'
   id: totrans-1321
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`batch_metrics_np = jax.device_get(batch_metrics) epoch_metrics_np = {k: np.mean([metrics[k]
+    for metrics in batch_metrics_n`'
 - en: p])
   id: totrans-1322
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: p])
 - en: for k in batch_metrics_np[0] }
   id: totrans-1323
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 对于 `batch_metrics_np[0]` 中的`k` }
 - en: '`return state, epoch_metrics_np`'
   id: totrans-1324
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`return state, epoch_metrics_np`'
 - en: '**Evaluation step**'
   id: totrans-1325
   prefs:
   - PREF_H2
   stylish: true
   type: TYPE_NORMAL
+  zh: '**评估步骤**'
 - en: We pass the test images and labels to the model in the evaluation step and obtain
     the evaluation metrics. The function is also jitted to take advantage of JAX's
     fast computation. During the evaluation, set [training] to [False] so that the
@@ -8626,6 +8873,8 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 我们在评估步骤中将测试图像和标签传递给模型并获取评估指标。该函数还通过JAX的快速计算利用JIT编译。在评估中，将 [training] 设置为 [False]，以便不更新模型参数。在这一步中，我们还传递批次统计和
+    [DropOut] 层的随机数生成器。
 - en: '@jax.jitdef eval_step(batch_stats, params, images, labels): logits = CNN().apply({''params'':
     params,''batch_stats'': batch _stats}, images, training=False,rngs={''dropout'':
     jax.random.PRN GKey(0)})return compute_metrics(logits=logits, labels=labels)The
@@ -8635,42 +8884,53 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '@jax.jitdef eval_step(batch_stats, params, images, labels): logits = CNN().apply({''params'':
+    params,''batch_stats'': batch _stats}, images, training=False,rngs={''dropout'':
+    jax.random.PRN GKey(0)})return compute_metrics(logits=logits, labels=labels)`[evaluate_model]`
+    函数将`[eval_step]` 应用于测试数据，并返回评估指标。'
 - en: '`def evaluate_model(state, test_imgs, test_lbls):`'
   id: totrans-1328
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`def evaluate_model(state, test_imgs, test_lbls):`'
 - en: '"""Evaluate on the validation set."""'
   id: totrans-1329
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '"""在验证集上评估。"""'
 - en: '`metrics = eval_step(state.batch_stats,state.params, test_im`'
   id: totrans-1330
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`metrics = eval_step(state.batch_stats,state.params, test_im`'
 - en: gs, test_lbls)
   id: totrans-1331
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: gs, test_lbls)
 - en: '`metrics = jax.device_get(metrics)`'
   id: totrans-1332
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`metrics = jax.device_get(metrics)`'
 - en: '`metrics = jax.tree_map(lambda x: x.item(), metrics) return metrics`'
   id: totrans-1333
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`metrics = jax.tree_map(lambda x: x.item(), metrics) return metrics`'
 - en: '**Train Flax model**'
   id: totrans-1334
   prefs:
   - PREF_H2
   stylish: true
   type: TYPE_NORMAL
+  zh: '**训练 Flax 模型**'
 - en: To train the model, we define another function that implements `[train_one_epoch]`.
     Let's start by defining the model evaluation data.(`test_images`, `test_labels`)
     = next(iter(validation_loader)) `test_images = test_images / 255.0`
@@ -8678,65 +8938,79 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 为了训练模型，我们定义另一个函数来实施`[train_one_epoch]`。首先定义模型评估数据。(`test_images`, `test_labels`)
+    = next(iter(validation_loader)) `test_images = test_images / 255.0`
 - en: '**Set up TensorBoard in Flax**'
   id: totrans-1336
   prefs:
   - PREF_H2
   stylish: true
   type: TYPE_NORMAL
+  zh: '**在 Flax 中设置 TensorBoard**'
 - en: You can log the model metrics to TensorBoard by writing the scalars to TensorBoard.
   id: totrans-1337
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 您可以将模型指标记录到TensorBoard中，方法是将标量写入TensorBoard。
 - en: '`from torch.utils.tensorboard import SummaryWriter import torchvision.transforms.functional
     as F logdir = "flax_logs"`'
   id: totrans-1338
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`from torch.utils.tensorboard import SummaryWriter import torchvision.transforms.functional
+    as F logdir = "flax_logs"`'
 - en: '`writer = SummaryWriter(logdir)`'
   id: totrans-1339
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`writer = SummaryWriter(logdir)`'
 - en: '**Train model**'
   id: totrans-1340
   prefs:
   - PREF_H2
   stylish: true
   type: TYPE_NORMAL
+  zh: '**训练模型**'
 - en: We can also append the metrics to a list and visualize them with Matplotlib.
   id: totrans-1341
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 我们还可以将指标附加到列表中，并使用 Matplotlib 进行可视化。
 - en: '`training_loss = [] training_accuracy = [] testing_loss = []`'
   id: totrans-1342
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`training_loss = [] training_accuracy = [] testing_loss = []`'
 - en: '`testing_accuracy = []`'
   id: totrans-1343
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`testing_accuracy = []`'
 - en: 'Next, define the training function that will: Train the Flax model for the
     specified number of epochs.'
   id: totrans-1344
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 接下来，定义将训练 Flax 模型指定轮数的训练函数。
 - en: Evaluate the model on the test data.
   id: totrans-1345
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 在测试数据上评估模型。
 - en: Append the metrics to a list. Write model metrics to TensorBoard.
   id: totrans-1346
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 将指标附加到列表中。将模型指标写入 TensorBoard。
 - en: Print the metrics on every epoch. Return the trained model state`def train_model(epochs):for
     epoch in range(1, epochs + 1):train_state, train_metrics = train_one_epoch(state,
     tra`
@@ -8744,52 +9018,64 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 在每个 epoch 打印指标。返回训练后的模型状态`def train_model(epochs):for epoch in range(1, epochs
+    + 1):train_state, train_metrics = train_one_epoch(state, tra`
 - en: '`in_loader)`'
   id: totrans-1348
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`in_loader)`'
 - en: '`training_loss.append(train_metrics[''loss''])` `training_accuracy.append(train_metrics[''accuracy''])`
     `test_metrics = evaluate_model(train_state, test_images,`'
   id: totrans-1349
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`training_loss.append(train_metrics[''loss''])` `training_accuracy.append(train_metrics[''accuracy''])`
+    `test_metrics = evaluate_model(train_state, test_images,`'
 - en: '`test_labels`'
   id: totrans-1350
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`test_labels`'
 - en: '`testing_loss.append(test_metrics[''loss''])`'
   id: totrans-1351
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`testing_loss.append(test_metrics[''loss''])`'
 - en: '`testing_accuracy.append(test_metrics[''accuracy''])`'
   id: totrans-1352
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`testing_accuracy.append(test_metrics[''accuracy''])`'
 - en: '`writer.add_scalar(''Loss/train'', train_metrics[''loss''], epoch)`'
   id: totrans-1353
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`writer.add_scalar(''Loss/train'', train_metrics[''loss''], epoch)`'
 - en: '`writer.add_scalar(''Loss/test'', test_metrics[''loss''], epoch)`'
   id: totrans-1354
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`writer.add_scalar(''Loss/test'', test_metrics[''loss''], epoch)`'
 - en: '`writer.add_scalar(''Accuracy/train'', train_metrics[''accuracy''], epoch)`'
   id: totrans-1355
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`writer.add_scalar(''Accuracy/train'', train_metrics[''accuracy''], epoch)`'
 - en: '`writer.add_scalar(''Accuracy/test'', test_metrics[''accuracy''], epoch)`'
   id: totrans-1356
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`writer.add_scalar(''Accuracy/test'', test_metrics[''accuracy''], epoch)`'
 - en: '`print(f"Epoch: {epoch}, training loss: {train_metrics [''loss'']}, training
     accuracy: {train_metrics[''accuracy''] * 10 0}, validation loss: {test_metrics[''loss'']},
     validation accuracy: {test_metrics[''accuracy''] * 100}")`'
@@ -8797,129 +9083,157 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`print(f"Epoch: {epoch}, training loss: {train_metrics [''loss'']}, training
+    accuracy: {train_metrics[''accuracy''] * 10 0}, validation loss: {test_metrics[''loss'']},
+    validation accuracy: {test_metrics[''accuracy''] * 100}")`'
 - en: '`return train_stateRun the training function to train the model. trained_model_state
     = train_model(30)`'
   id: totrans-1358
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`return train_stateRun the training function to train the model. trained_model_state
+    = train_model(30)`'
 - en: '**Save Flax model**'
   id: totrans-1359
   prefs:
   - PREF_H2
   stylish: true
   type: TYPE_NORMAL
+  zh: '**保存 Flax 模型**'
 - en: 'The `[save_checkpoint]` saves a Flax model. It expects:'
   id: totrans-1360
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`[save_checkpoint]` 保存 Flax 模型。它期望：'
 - en: The directory to save the model checkpoint.
   id: totrans-1361
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 保存模型检查点的目录。
 - en: The Flax trained model, in this case `[trained_model_state]`. The model's prefix.
   id: totrans-1362
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 在这种情况下，Flax 训练的模型是 `[trained_model_state]`。该模型的前缀。
 - en: Whether to overwrite existing models.
   id: totrans-1363
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 是否覆盖现有模型。
 - en: '`from flax.training import checkpoints`'
   id: totrans-1364
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`from flax.training import checkpoints`'
 - en: ckpt_dir = 'model_checkpoint/'
   id: totrans-1365
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: ckpt_dir = 'model_checkpoint/'
 - en: '`checkpoints.save_checkpoint(ckpt_dir=ckpt_dir`'
   id: totrans-1366
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`checkpoints.save_checkpoint(ckpt_dir=ckpt_dir)`'
 - en: '`target=trained_model_state`, `step=100,`'
   id: totrans-1367
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`target=trained_model_state`, `step=100,`'
 - en: '`prefix=''flax_model'', overwrite=True`'
   id: totrans-1368
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`prefix=''flax_model'', overwrite=True`'
 - en: )![](../images/00039.jpeg)
   id: totrans-1369
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: )![](../images/00039.jpeg)
 - en: '**Load Flax model**'
   id: totrans-1370
   prefs:
   - PREF_H2
   stylish: true
   type: TYPE_NORMAL
+  zh: '**加载 Flax 模型**'
 - en: The `[restore_checkpoint]` method loads a saved Flax model from the saved location.
   id: totrans-1371
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`[restore_checkpoint]` 方法从保存的位置加载已保存的 Flax 模型。'
 - en: '`loaded_model = checkpoints.restore_checkpoint(`'
   id: totrans-1372
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`loaded_model = checkpoints.restore_checkpoint(`'
 - en: '`ckpt_dir=ckpt_dir`, `target=state`, `prefix=''flax_mode`'
   id: totrans-1373
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`ckpt_dir=ckpt_dir`, `target=state`, `prefix=''flax_mode`'
 - en: '`l''`'
   id: totrans-1374
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`l''`'
 - en: '**Evaluate Flax model**'
   id: totrans-1375
   prefs:
   - PREF_H2
   stylish: true
   type: TYPE_NORMAL
+  zh: '**评估 Flax 模型**'
 - en: Run the `[evalaute_model]` function to check the performance of the model on
     test data. `evaluate_model(trained_model_state,test_images, test_labels)`
   id: totrans-1376
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 运行 `[evalaute_model]` 函数来检查模型在测试数据上的性能。`evaluate_model(trained_model_state,test_images,
+    test_labels)`
 - en: '**Visualize Flax model performance**'
   id: totrans-1377
   prefs:
   - PREF_H2
   stylish: true
   type: TYPE_NORMAL
+  zh: '**可视化 Flax 模型的性能**'
 - en: To visualize the performance of the Flax model, you can plot the metrics using
     Matplotlib or load TensorBoard and check the scalars tab.
   id: totrans-1378
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 要可视化 Flax 模型的性能，可以使用 Matplotlib 绘制指标图表或加载 TensorBoard 并检查标量选项卡。
 - en: '`%load_ext tensorboard` `%tensorboard --logdir={logdir}`'
   id: totrans-1379
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`%load_ext tensorboard` `%tensorboard --logdir={logdir}`'
 - en: '**Final thoughts**'
   id: totrans-1380
   prefs:
   - PREF_H2
   stylish: true
   type: TYPE_NORMAL
+  zh: '**最终思考**'
 - en: '`In this article, you have seen how to build networks in Flax containing BatchNorm
     and DropOut layers. You have also seen how to adjust the training process to cater
     to these new layers. Specifically, you have learned:`'
@@ -8927,26 +9241,31 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`在本文中，您已经看到如何在 Flax 中构建包含 BatchNorm 和 DropOut 层的网络。您还学习了如何调整训练过程以适应这些新层。具体来说，您学到了：`'
 - en: '`How to define Flax models with BatchNorm and DropOut layers.`'
   id: totrans-1382
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 如何定义包含 BatchNorm 和 DropOut 层的 Flax 模型。
 - en: '`How to create a custom Flax training state.`'
   id: totrans-1383
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`如何创建自定义的 Flax 训练状态。`'
 - en: '`Training and evaluating a Flax model with BatchNorm and DropOut layers.`'
   id: totrans-1384
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 使用 BatchNorm 和 DropOut 层训练和评估 Flax 模型。
 - en: '`How to save and load a Flax model.`'
   id: totrans-1385
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`如何保存和加载 Flax 模型。`'
 - en: '`How to evaluate the performance of a Flax model`'
   id: totrans-1386
   prefs: []
@@ -9202,11 +9521,13 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 将具有和不具有停用词的评论进行比较！[](../images/00041.jpeg)
 - en: Looking at the third review, we notice that the
   id: totrans-1425
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 查看第三条评论时，我们注意到
 - en: '`words [this], [was] and [a] have been dropped from the sentence. However,
     we can still see some special characters, such as [<br>] in the review. Let''s
     resolve that next.`'
@@ -9214,12 +9535,16 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`words [this], [was] and [a] have been dropped from the sentence. However,
+    we can still see some special characters, such as [<br>] in the review. Let''s
+    resolve that next.`'
 - en: '**Text vectorization with Keras**'
   id: totrans-1427
   prefs:
   - PREF_H2
   stylish: true
   type: TYPE_NORMAL
+  zh: '**使用 Keras 进行文本向量化**'
 - en: The review data is still in text form. However, we need to convert it to a numeric
     representation like the sentiment column. Before we do that, let's split the dataset
     into a training and testing set.
@@ -9227,27 +9552,33 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 评论数据仍然是文本形式。但是，我们需要将其转换为类似情感列的数值表示。在这之前，让我们将数据集拆分为训练集和测试集。
 - en: '`from sklearn.model_selection import train_test_split df = df.drop_duplicates()`'
   id: totrans-1429
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`from sklearn.model_selection import train_test_split df = df.drop_duplicates()`'
 - en: '`docs = df[''review'']`'
   id: totrans-1430
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`docs = df[''review'']`'
 - en: '`labels = array(df[''sentiment''])`'
   id: totrans-1431
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`labels = array(df[''sentiment''])`'
 - en: '`X_train, X_test , y_train, y_test = train_test_split(docs, labe ls , test_size
     = 0.20, random_state=0)`'
   id: totrans-1432
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`X_train, X_test , y_train, y_test = train_test_split(docs, labe ls , test_size
+    = 0.20, random_state=0)`'
 - en: 'We use the Keras text vectorization layer to convert the reviews to integer
     form. This function lets us filter out all punctuation marks and convert the reviews
     to lowercase. We pass the following parameters:'
@@ -9255,22 +9586,26 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 我们使用 Keras 文本向量化层将评论转换为整数形式。此函数可以过滤掉所有标点符号并将评论转换为小写。我们传递以下参数：
 - en: '`standardize` as `lower_and_strip_punctuation` to convert to'
   id: totrans-1434
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`standardize` 设置为 `lower_and_strip_punctuation` 以转换为'
 - en: lowercase and remove punctuation marks.
   id: totrans-1435
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 转换为小写并删除标点符号。
 - en: '`[output_mode]` to `[int]` to get the result as integers. `[tf_idf]` would
     apply the TF-IDF algorithm.'
   id: totrans-1436
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`[output_mode]` 转换为 `[int]` 以获得整数结果。 `[tf_idf]` 将应用 TF-IDF 算法。'
 - en: '`[output_sequence_length]` as 50 to get sentences of that length. Change this
     number to see how it affects the model''s performance. I found 50 to five some
     good results. Sentences longer than the specified length will be truncated, while
@@ -9279,12 +9614,14 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`[output_sequence_length]` 设置为 50，以获得该长度的句子。更改此数字以查看它如何影响模型的性能。我发现 50 给出了一些不错的结果。超过指定长度的句子将被截断，而较短的句子将用零填充。'
 - en: '`[max_tokens]` as 10,000 to have a vocabulary size of that number. Tweak this
     number and check how the model''s performance changes.'
   id: totrans-1438
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`[max_tokens]` 设置为 10,000，以获得该数量的词汇量。调整此数字并检查模型性能的变化。'
 - en: After defining the vectorization layer, we apply it to the training data. This
     is done by calling the `adapt` function. The function computes the vocabulary
     from the provided dataset. The vocabulary will be truncated to `[max_tokens]`,
@@ -9293,21 +9630,25 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 定义向量化层后，我们将其应用于训练数据。通过调用 `adapt` 函数来实现。该函数从提供的数据集中计算词汇表。如果提供了 `[max_tokens]`，则词汇表将被截断。
 - en: '`import tensorflow as tf`'
   id: totrans-1440
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`import tensorflow as tf`'
 - en: '`max_features = 10000` # Maximum vocab size.'
   id: totrans-1441
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`max_features = 10000` # 最大词汇量大小。'
 - en: '`batch_size = 128`'
   id: totrans-1442
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`batch_size = 128`'
 - en: '`max_len = 50` # Sequence length to pad the outputs to. `vectorize_layer =
     tf.keras.layers.TextVectorization(standardize =''lower_and_strip_punctuation'',max_tokens=max_features,output_m
     ode=''int'',output_sequence_length=max_len)`'
@@ -9315,11 +9656,14 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`max_len = 50` # 序列长度，用于填充输出。`vectorize_layer = tf.keras.layers.TextVectorization(standardize
+    =''lower_and_strip_punctuation'',max_tokens=max_features,output_m ode=''int'',output_sequence_length=max_len)`'
 - en: '`vectorize_layer.adapt(X_train)`'
   id: totrans-1444
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`vectorize_layer.adapt(X_train)`'
 - en: To view the generated vocabulary, call the `get_vocabulary` function.`vectorize_layer.get_vocabulary()`![](../images/00042.jpeg)Convert
     the training and test data to numerical form using the trained vectorization layer.`X_train_padded
     = vectorize_layer(X_train)` `X_test_padded = vectorize_layer(X_test)`![](../images/00043.gif)
@@ -9327,270 +9671,327 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 要查看生成的词汇表，请调用 `get_vocabulary` 函数。`vectorize_layer.get_vocabulary()`！[](../images/00042.jpeg)使用训练好的向量化层将训练和测试数据转换为数值形式。`X_train_padded
+    = vectorize_layer(X_train)` `X_test_padded = vectorize_layer(X_test)`！[](../images/00043.gif)
 - en: '**Create tf.data dataset**'
   id: totrans-1446
   prefs:
   - PREF_H2
   stylish: true
   type: TYPE_NORMAL
+  zh: '**创建 tf.data 数据集**'
 - en: Let's generate and prefetch batches from the training and test set to make loading
     them to the LSTM model more efficient. We start by creating a `tf.data.Dataset`.
   id: totrans-1447
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 让我们从训练集和测试集中生成和预取批次，以使加载到 LSTM 模型更高效。我们首先创建一个 `tf.data.Dataset`。
 - en: '`training_data = tf.data.Dataset.from_tensor_slices((X_train_padded, y_train))`'
   id: totrans-1448
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`training_data = tf.data.Dataset.from_tensor_slices((X_train_padded, y_train))`'
 - en: '`validation_data = tf.data.Dataset.from_tensor_slices((X_test_padded, y_test))`'
   id: totrans-1449
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`validation_data = tf.data.Dataset.from_tensor_slices((X_test_padded, y_test))`'
 - en: '`training_data = training_data.batch(batch_size)`'
   id: totrans-1450
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`training_data = training_data.batch(batch_size)`'
 - en: '`validation_data = validation_data.batch(batch_size)`'
   id: totrans-1451
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`validation_data = validation_data.batch(batch_size)`'
 - en: Next, we prefetch one batch, shuffle the data and return it as a `NumPy array.`
   id: totrans-1452
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 接下来，我们预取一个批次，洗牌数据，并将其作为 `NumPy array` 返回。
 - en: '`pip install tensorflow_datasets`'
   id: totrans-1453
   prefs:
   - PREF_H1
   stylish: true
   type: TYPE_NORMAL
+  zh: '`pip install tensorflow_datasets`'
 - en: '`import tensorflow_datasets as tfds`'
   id: totrans-1454
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`import tensorflow_datasets as tfds`'
 - en: '`def get_train_batches():`'
   id: totrans-1455
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`def get_train_batches():`'
 - en: '`ds = training_data.prefetch(1)`'
   id: totrans-1456
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`ds = training_data.prefetch(1)`'
 - en: '`ds = ds.shuffle(3, reshuffle_each_iteration=True)` # `tfds.dataset_as_numpy`
     converts the `tf.data.Dataset` into an'
   id: totrans-1457
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`ds = ds.shuffle(3, reshuffle_each_iteration=True)` # `tfds.dataset_as_numpy`
+    将 `tf.data.Dataset` 转换为一个'
 - en: iterable of NumPy arrays`return tfds.as_numpy(ds)`
   id: totrans-1458
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 由 NumPy 数组组成的迭代器 `return tfds.as_numpy(ds)`
 - en: '`Define LSTM model in Flax`'
   id: totrans-1459
   prefs:
   - PREF_H2
   stylish: true
   type: TYPE_NORMAL
+  zh: '`在 Flax 中定义 LSTM 模型`'
 - en: We are now ready to define the LSTM model in Flax. To design LSTMs in Flax,
     we use the `LSTMCell` or the `OptimizedLSTMCell`.
   id: totrans-1460
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 我们现在可以在 Flax 中定义 LSTM 模型了。要在 Flax 中设计 LSTM，我们使用 `LSTMCell` 或 `OptimizedLSTMCell`。
 - en: The `OptimizedLSTMCell` is the efficient `LSTMCell`.
   id: totrans-1461
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`OptimizedLSTMCell` 是高效的 `LSTMCell`。'
 - en: 'The `[LSTMCell.initialize_carry]` function is used to initialize the hidden
     state of the LSTM cell. It expects:'
   id: totrans-1462
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`[LSTMCell.initialize_carry]` 函数用于初始化 LSTM 单元的隐藏状态。它期望：'
 - en: A random number.
   id: totrans-1463
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 一个随机数。
 - en: The batch dimensions.
   id: totrans-1464
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 批次维度。
 - en: The number of units.
   id: totrans-1465
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 单元的数量。
 - en: 'Let''s use the `setup method` to define the LSTM model. The LSTM contains the
     following layers:'
   id: totrans-1466
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 让我们使用 `setup 方法` 来定义 LSTM 模型。LSTM 包含以下层：
 - en: An `Embedding layer` with the same number of features and length as defined
     in the vectorization layer.
   id: totrans-1467
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 一个与向量化层中定义的特征数和长度相同的 `Embedding layer`。
 - en: LSTM layers that pass data in one direction as specified by the `[reverse]`
     argument.
   id: totrans-1468
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: LSTM 层根据 `[reverse]` 参数在一个方向上传递数据。
 - en: A couple of `Dense layers`.
   id: totrans-1469
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 一对 `Dense layers`。
 - en: Final dense output layer.from flax import linen as nn
   id: totrans-1470
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 最终的密集输出层。from flax import linen as nn
 - en: '`class LSTMModel(nn.Module):`'
   id: totrans-1471
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`class LSTMModel(nn.Module):`'
 - en: '`def setup(self):`'
   id: totrans-1472
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`def setup(self):`'
 - en: '`self.embedding = nn.Embed(max_features, max_len) lstm_layer = nn.scan(nn.OptimizedLSTMCell,`'
   id: totrans-1473
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`self.embedding = nn.Embed(max_features, max_len) lstm_layer = nn.scan(nn.OptimizedLSTMCell,`'
 - en: '`variable_broadcast="params", split_rngs={"params": False}, in_axes=1,`'
   id: totrans-1474
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`variable_broadcast="params", split_rngs={"params": False}, in_axes=1,`'
 - en: '`out_axes=1,`'
   id: totrans-1475
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`out_axes=1,`'
 - en: '`length=max_len,`'
   id: totrans-1476
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`length=max_len,`'
 - en: '`reverse=False)`'
   id: totrans-1477
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`reverse=False)`'
 - en: '`self.lstm1 = lstm_layer()`'
   id: totrans-1478
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`self.lstm1 = lstm_layer()`'
 - en: '`self.dense1 = nn.Dense(256)`'
   id: totrans-1479
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`self.dense1 = nn.Dense(256)`'
 - en: '`self.lstm2 = lstm_layer()`'
   id: totrans-1480
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`self.lstm2 = lstm_layer()`'
 - en: '`self.dense2 = nn.Dense(128)`'
   id: totrans-1481
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`self.dense2 = nn.Dense(128)`'
 - en: '`self.lstm3 = lstm_layer()`'
   id: totrans-1482
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`self.lstm3 = lstm_layer()`'
 - en: '`self.dense3 = nn.Dense(64)`'
   id: totrans-1483
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`self.dense3 = nn.Dense(64)`'
 - en: '`self.dense4 = nn.Dense(2)`'
   id: totrans-1484
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`self.dense4 = nn.Dense(2)`'
 - en: '`@nn.rematdef __call__(self, x_batch): x = self.embedding(x_batch)`'
   id: totrans-1485
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`@nn.rematdef __call__(self, x_batch): x = self.embedding(x_batch)`'
 - en: '`carry, hidden = nn.OptimizedLSTMCell.initialize_carry(jax.random.PRNGKey(0),
     batch_dims=(len(x_batch),), size=128)`'
   id: totrans-1486
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`carry, hidden = nn.OptimizedLSTMCell.initialize_carry(jax.random.PRNGKey(0),
+    batch_dims=(len(x_batch),), size=128)`'
 - en: '`(carry, hidden), x = self.lstm1((carry, hidden), x)`'
   id: totrans-1487
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`(carry, hidden), x = self.lstm1((carry, hidden), x)`'
 - en: '`x = self.dense1(x) x = nn.relu(x)`'
   id: totrans-1488
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`x = self.dense1(x) x = nn.relu(x)`'
 - en: '`carry, hidden = nn.OptimizedLSTMCell.initialize_carry(jax.random.PRNGKey(0),
     batch_dims=(len(x_batch),), size=64)`'
   id: totrans-1489
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`carry, hidden = nn.OptimizedLSTMCell.initialize_carry(jax.random.PRNGKey(0),
+    batch_dims=(len(x_batch),), size=64)`'
 - en: '`(carry, hidden), x = self.lstm2((carry, hidden), x) x = self.dense2(x) x =
     nn.relu(x)`'
   id: totrans-1490
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`(carry, hidden), x = self.lstm2((carry, hidden), x) x = self.dense2(x) x =
+    nn.relu(x)`'
 - en: '`carry, hidden = nn.OptimizedLSTMCell.initialize_carry(jax.random.PRNGKey(0),
     batch_dims=(len(x_batch),), size=32)`'
   id: totrans-1491
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`carry, hidden = nn.OptimizedLSTMCell.initialize_carry(jax.random.PRNGKey(0),
+    batch_dims=(len(x_batch),), size=32)`'
 - en: '`(carry, hidden), x = self.lstm3((carry, hidden), x)`'
   id: totrans-1492
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`(carry, hidden), x = self.lstm3((carry, hidden), x)`'
 - en: '`x = self.dense3(x)`'
   id: totrans-1493
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`x = self.dense3(x)`'
 - en: '`x = nn.relu(x)`'
   id: totrans-1494
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`x = nn.relu(x)`'
 - en: '`x = self.dense4(x[:, -1]) return nn.log_softmax(x)`'
   id: totrans-1495
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`x = self.dense4(x[:, -1]) return nn.log_softmax(x)`'
 - en: We apply the `scan function` to iterate over the data. It expects:`scan` the
     items to be looped over. They must be the same size and will be stacked along
     the scan axis.`carry` a carried value that is updated at each iteration. The value
@@ -9599,272 +10000,326 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 我们将 `scan 函数` 应用于数据的迭代。它期望：`scan` 待循环的项目。它们必须具有相同的大小，并且将沿着扫描轴堆叠。`carry` 一个在每次迭代中更新的传递值。该值在整个迭代过程中必须具有相同的形状和
+    `[dtype]`。
 - en: '`[broadcast]` a value that is closed over by the loop ` [<axis:int>]` axis
     along which to scan.'
   id: totrans-1497
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`[广播]` 一个在循环中封闭的值 ` [<axis:int>]` 扫描的轴。'
 - en: '`[split_rngs]` to define if to split the random number generator at each step.'
   id: totrans-1498
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`[split_rngs]` 用于定义是否在每一步分割随机数生成器。'
 - en: The [nn.remat] call saves memory when using LSTMs to compute long sequences.
   id: totrans-1499
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 在使用 LSTMs 计算长序列时，`[nn.remat]` 调用节省内存。
 - en: Compute metrics in Flax
   id: totrans-1500
   prefs:
   - PREF_H2
   stylish: true
   type: TYPE_NORMAL
+  zh: 在 Flax 中计算指标
 - en: Next, we define a function to compute the loss and accuracy of the network.
   id: totrans-1501
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 接下来，我们定义一个函数来计算网络的损失和准确率。
 - en: import optax
   id: totrans-1502
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: import optax
 - en: import jax.numpy as jnp
   id: totrans-1503
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: import jax.numpy as jnp
 - en: 'def compute_metrics(logits, labels):'
   id: totrans-1504
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 'def compute_metrics(logits, labels):'
 - en: loss = jnp.mean(optax.softmax_cross_entropy(logits, jax.nn.on e_hot(labels,
     num_classes=2)))
   id: totrans-1505
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: loss = jnp.mean(optax.softmax_cross_entropy(logits, jax.nn.on e_hot(labels,
+    num_classes=2)))
 - en: accuracy = jnp.mean(jnp.argmax(logits, -1) == labels)
   id: totrans-1506
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: accuracy = jnp.mean(jnp.argmax(logits, -1) == labels)
 - en: metrics = {
   id: totrans-1507
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: metrics = {
 - en: '''loss'': loss,'
   id: totrans-1508
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '''loss'': loss,'
 - en: '''accuracy'': accuracy'
   id: totrans-1509
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '''accuracy'': accuracy'
 - en: '}'
   id: totrans-1510
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '}'
 - en: return metrics
   id: totrans-1511
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: return metrics
 - en: Create training state
   id: totrans-1512
   prefs:
   - PREF_H2
   stylish: true
   type: TYPE_NORMAL
+  zh: 创建训练状态
 - en: 'The training state applies gradients and updates the parameters and optimizer
     state. Flax provides [train_state] for this purpose. We define a function that:'
   id: totrans-1513
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 训练状态应用梯度并更新参数和优化器状态。Flax提供了[train_state]用于此目的。我们定义一个函数：
 - en: Creates an instance of the [LSTMModel].
   id: totrans-1514
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 创建[LSTMModel]的一个实例。
 - en: Initializes the model to obtain the [`params`] by passing a sample of the training
     data.
   id: totrans-1515
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 初始化模型以通过训练数据样本获取[`params`]。
 - en: Returns the created state after applying the Adam optimizer.from flax.training
     import train_state
   id: totrans-1516
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 在应用Adam优化器后返回创建的状态。from flax.training import train_state
 - en: 'def create_train_state(rng):'
   id: totrans-1517
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 'def create_train_state(rng):'
 - en: '"""Creates initial `TrainState`."""'
   id: totrans-1518
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '"""创建初始`TrainState`。"""'
 - en: model = LSTMModel()
   id: totrans-1519
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: model = LSTMModel()
 - en: params = model.init(rng, jnp.array(X_train_padded[0]))['param
   id: totrans-1520
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: params = model.init(rng, jnp.array(X_train_padded[0]))['param
 - en: s']
   id: totrans-1521
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: s']
 - en: tx = optax.adam(0.001,0.9,0.999,1e-07) return train_state.TrainState.create(
   id: totrans-1522
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: tx = optax.adam(0.001,0.9,0.999,1e-07) return train_state.TrainState.create(
 - en: apply_fn=model.apply, params=params, tx=tx)
   id: totrans-1523
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: apply_fn=model.apply, params=params, tx=tx)
 - en: Define training step
   id: totrans-1524
   prefs:
   - PREF_H2
   stylish: true
   type: TYPE_NORMAL
+  zh: 定义训练步骤
 - en: 'The training function does the following:'
   id: totrans-1525
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '训练函数执行以下操作:'
 - en: Compute the loss and logits from the model with the `apply` method.
   id: totrans-1526
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 使用`apply`方法从模型计算损失和logits。
 - en: Compute the gradients using [value_and_grad]. Use the gradients to update the
     model parameters.
   id: totrans-1527
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 使用[value_and_grad]计算梯度。使用梯度更新模型参数。
 - en: Compute the metrics using the function defined earlier. Returns the state and
     metrics.
   id: totrans-1528
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 使用先前定义的函数计算metrics。返回状态和metrics。
 - en: 'Applying [@jax.jit] makes the function run faster.`@jax.jit`def train_step(state,
     text, labels):def loss_fn(params):'
   id: totrans-1529
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '应用[@jax.jit]使函数运行更快。`@jax.jit`def train_step(state, text, labels):def loss_fn(params):'
 - en: 'logits = LSTMModel().apply({''params'': params}, text) loss = jnp.mean(optax.softmax_cross_entropy(
     logits=logits,'
   id: totrans-1530
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 'logits = LSTMModel().apply({''params'': params}, text) loss = jnp.mean(optax.softmax_cross_entropy(
+    logits=logits,'
 - en: labels=jax.nn.one_hot(labels, num_classes=2))) return loss, logits
   id: totrans-1531
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: labels=jax.nn.one_hot(labels, num_classes=2))) return loss, logits
 - en: grad_fn = jax.value_and_grad(loss_fn, has_aux=True) (_, logits), grads = grad_fn(state.params)
   id: totrans-1532
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: grad_fn = jax.value_and_grad(loss_fn, has_aux=True) (_, logits), grads = grad_fn(state.params)
 - en: state = state.apply_gradients(grads=grads)
   id: totrans-1533
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: state = state.apply_gradients(grads=grads)
 - en: metrics = compute_metrics(logits, labels)
   id: totrans-1534
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: metrics = compute_metrics(logits, labels)
 - en: return state, metrics
   id: totrans-1535
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 返回状态和metrics
 - en: Evaluate the Flax model
   id: totrans-1536
   prefs:
   - PREF_H2
   stylish: true
   type: TYPE_NORMAL
+  zh: 评估Flax模型
 - en: The [`eval_step`] evaluates the model's performance on the test set using `Module.apply`.
     It returns the loss and accuracy on the testing set.
   id: totrans-1537
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '[`eval_step`]使用`Module.apply`评估模型在测试集上的表现。它返回测试集上的损失和准确率。'
 - en: The [`evaluate_model`] function applies the [`eval_step`] , obtains the metrics
     from the device and returns them as a [`jax.tree_map`].
   id: totrans-1538
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '[`evaluate_model`]函数应用[`eval_step`]，从设备获取metrics，并作为[`jax.tree_map`]返回它们。'
 - en: '@jax.jit'
   id: totrans-1539
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '@jax.jit'
 - en: 'def eval_step(state, text, labels):'
   id: totrans-1540
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 'def eval_step(state, text, labels):'
 - en: 'logits = LSTMModel().apply({''params'': state.params}, text)'
   id: totrans-1541
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 'logits = LSTMModel().apply({''params'': state.params}, text)'
 - en: return compute_metrics(logits=logits, labels=labels)
   id: totrans-1542
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 返回使用logits和labels计算metrics的结果
 - en: 'def evaluate_model(state, text, test_lbls): """Evaluate on the validation set."""'
   id: totrans-1543
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 'def evaluate_model(state, text, test_lbls): """在验证集上评估模型。"""'
 - en: metrics = eval_step(state, text, test_lbls) metrics = jax.device_get(metrics)
   id: totrans-1544
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: metrics = eval_step(state, text, test_lbls) metrics = jax.device_get(metrics)
 - en: 'metrics = jax.tree_map(lambda x: x.item(), metrics) return metrics'
   id: totrans-1545
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 'metrics = jax.tree_map(lambda x: x.item(), metrics) return metrics'
 - en: Create training function
   id: totrans-1546
   prefs:
   - PREF_H2
   stylish: true
   type: TYPE_NORMAL
+  zh: 创建训练函数
 - en: Next, define a function that trains the Flax LSTM model on one epoch. The function
     applies  [train_step] to each batch in the training data. After each batch, it
     appends the metrics to a list.
@@ -9872,21 +10327,25 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 接下来，定义一个函数，在一个epoch上训练Flax LSTM模型。该函数对训练数据中的每个批次应用[train_step]。在每个批次之后，它将metrics附加到一个列表中。
 - en: 'def train_one_epoch(state):'
   id: totrans-1548
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 'def train_one_epoch(state):'
 - en: Train for 1 epoch on the training set. batch_metrics = []
   id: totrans-1549
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 在训练集上训练1个epoch。batch_metrics = []
 - en: 'for text, labels in get_train_batches():'
   id: totrans-1550
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '对于text, labels in get_train_batches():'
 - en: 'state, metrics = `train_step(state, text, labels)` batch_metrics.append(metrics)batch_metrics_np
     = jax.device_get(batch_metrics) epoch_metrics_np = {k: np.mean([metrics[k] for
     metrics in batch_metrics_np[0] ])for k in batch_metrics_np[0] }return state, epoch_metrics_np'
@@ -10128,33 +10587,39 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`在本文中，您已经学会了如何在 JAX 和 Flax 中解决自然语言处理问题。特别是您涵盖的关键点包括：`'
 - en: '`How to process text data with NLTK.`'
   id: totrans-1595
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`如何使用 NLTK 处理文本数据。`'
 - en: '`Text vectorization with Keras.`'
   id: totrans-1596
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`使用 Keras 进行文本向量化。`'
 - en: Creating batches of text data with Keras and TensorFlow.
   id: totrans-1597
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 使用 Keras 和 TensorFlow 创建文本数据批处理。
 - en: '`How to create LSTM models in JAX and Flax. How to train and evaluate the LSTM
     model in Flax. Saving and restoring Flax LSTM models.`'
   id: totrans-1598
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`如何在 JAX 和 Flax 中创建 LSTM 模型。如何在 Flax 中训练和评估 LSTM 模型。保存和恢复 Flax LSTM 模型。`'
 - en: '**Flax vs. TensorFlow**'
   id: totrans-1599
   prefs:
   - PREF_H2
   stylish: true
   type: TYPE_NORMAL
+  zh: '**Flax vs. TensorFlow**'
 - en: '`Flax is the neural network library for JAX. TensorFlow is a deep learning
     library with a large ecosystem of tools and resources. Flax and TensorFlow are
     similar but different in some ways. For instance, both Flax and TensorFlow can
@@ -10163,24 +10628,29 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`Flax 是建立在 JAX 上的神经网络库。TensorFlow 是一个拥有大量工具和资源的深度学习库。Flax 和 TensorFlow 在某些方面相似但又不同。例如，Flax
+    和 TensorFlow 都可以在 XLA 上运行。`'
 - en: '`Let''s look at the differences between Flax and TensorFlow from my perspective
     as a user of both libraries.`'
   id: totrans-1601
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 让我们从使用这两个库的用户角度来看一下 Flax 和 TensorFlow 的区别。
 - en: '**Random number generation in TensorFlow and Flax**'
   id: totrans-1602
   prefs:
   - PREF_H2
   stylish: true
   type: TYPE_NORMAL
+  zh: '**TensorFlow 和 Flax 中的随机数生成**'
 - en: '`In TensorFlow, you can set global or function level seeds. Generating random
     numbers in TensorFlow is quite straightforward.`tf.random.set_seed(6853)`'
   id: totrans-1603
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`在 TensorFlow 中，您可以设置全局或函数级种子。在 TensorFlow 中生成随机数非常简单。`tf.random.set_seed(6853)`'
 - en: However, this is not the case in Flax. Flax is built on top of JAX. JAX expects
     pure functions, meaning functions without any side effects. To achieve this JAX
     introduces stateless pseudo-random number generators (PRNGs). For example, calling
@@ -10190,21 +10660,26 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 然而，在 Flax 中并非如此。Flax 是建立在 JAX 之上的。JAX 期望纯函数，即没有任何副作用的函数。为了实现这一点，JAX 引入了无状态的伪随机数生成器（PRNGs）。例如，从
+    NumPy 调用随机数生成器每次都会得到不同的数字。
 - en: '`import numpy as np`'
   id: totrans-1605
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`import numpy as np`'
 - en: '`print(np.random.random()) print(np.random.random()) print(np.random.random())`'
   id: totrans-1606
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`print(np.random.random()) print(np.random.random()) print(np.random.random())`'
 - en: '`![](../images/00046.jpeg)`'
   id: totrans-1607
   prefs: []
   stylish: true
   type: TYPE_IMG
+  zh: '`![](../images/00046.jpeg)`'
 - en: '`In JAX and Flax, the result should be the same on every call. We, therefore,
     generate random numbers from a random state. The state should not be re-used.
     It can be split to obtain several pseudo-random numbers.`'
@@ -10212,32 +10687,38 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`在 JAX 和 Flax 中，每次调用时结果应该相同。因此，我们从随机状态生成随机数。状态不应该被重用。可以拆分状态以获取多个伪随机数。`'
 - en: '`import jax`'
   id: totrans-1609
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`import jax`'
 - en: '`key = jax.random.PRNGKey(0)`'
   id: totrans-1610
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`key = jax.random.PRNGKey(0)`'
 - en: '`key1, key2, key3 = jax.random.split(key, num=3)`'
   id: totrans-1611
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`key1, key2, key3 = jax.random.split(key, num=3)`'
 - en: '`![](../images/00047.gif)`'
   id: totrans-1612
   prefs: []
   stylish: true
   type: TYPE_IMG
+  zh: '`![](../images/00047.gif)`'
 - en: '**Model definition in Flax and TensorFlow**'
   id: totrans-1613
   prefs:
   - PREF_H2
   stylish: true
   type: TYPE_NORMAL
+  zh: '**Flax 和 TensorFlow 的模型定义**'
 - en: '`Model definition in TensorFlow is made easy by the Keras API. You can use
     Keras to define Sequential or Functional networks. Keras has many layers for designing
     various types of networks, such as CNNs, and LSTMS.`'
@@ -10245,6 +10726,8 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`在 TensorFlow 中，通过 Keras API 可以轻松定义模型。您可以使用 Keras 定义顺序或功能型网络。Keras 提供了许多层用于设计各种类型的网络，例如
+    CNN 和 LSTM。`'
 - en: '`In Flax, networks are designed using the setup or compact way. The setup method
     is explicit, while the compact way is in-line. Setup is very similar to how networks
     are designed in PyTorch. For example, here is a network designed with the setup
@@ -10253,85 +10736,102 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 在 Flax 中，网络可以使用 setup 或紧凑方式设计。setup 方法显式，而紧凑方式内联。Setup 非常类似于 PyTorch 中设计网络的方式。例如，这里是使用
+    setup 方式设计的网络。
 - en: '`class MLP(nn.Module):def setup(self):`'
   id: totrans-1616
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`class MLP(nn.Module):def setup(self):`'
 - en: '`Submodule names are derived by the attributes you assign to. In this`'
   id: totrans-1617
   prefs:
   - PREF_H1
   stylish: true
   type: TYPE_NORMAL
+  zh: '`子模块名称由您分配的属性派生而来。在这`'
 - en: '`case`, `"dense1"` and `"dense2"`. This follows the logic in Py Torch.'
   id: totrans-1618
   prefs:
   - PREF_H1
   stylish: true
   type: TYPE_NORMAL
+  zh: '`case`, `"dense1"` 和 `"dense2"`。这遵循了 PyTorch 的逻辑。'
 - en: '`self.dense1 = nn.Dense(32)`'
   id: totrans-1619
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`self.dense1 = nn.Dense(32)`'
 - en: '`self.dense2 = nn.Dense(32)`'
   id: totrans-1620
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`self.dense2 = nn.Dense(32)`'
 - en: '`def __call__(self, x): x = self.dense1(x) x = nn.relu(x)`'
   id: totrans-1621
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`def __call__(self, x): x = self.dense1(x) x = nn.relu(x)`'
 - en: '`x = self.dense2(x) return x`'
   id: totrans-1622
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`x = self.dense2(x) return x`'
 - en: Here's the same network designed in a compact way. The compact way is more straightforward
     because there is less code duplicity.`class MLP(nn.Module):`
   id: totrans-1623
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 这里是同一个网络的紧凑设计方式。紧凑的方式更为直接，因为代码重复较少。`class MLP(nn.Module):`
 - en: '`@nn.compact`'
   id: totrans-1624
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`@nn.compact`'
 - en: '`def __call__(self, x):`'
   id: totrans-1625
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`def __call__(self, x):`'
 - en: '`x = nn.Dense(32, name="dense1")(x)`'
   id: totrans-1626
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`x = nn.Dense(32, name="dense1")(x)`'
 - en: '`x = nn.relu(x)`'
   id: totrans-1627
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`x = nn.relu(x)`'
 - en: '`x = nn.Dense(32, name="dense2")(x)`'
   id: totrans-1628
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`x = nn.Dense(32, name="dense2")(x)`'
 - en: '`return x`'
   id: totrans-1629
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`return x`'
 - en: '**Activations in Flax and TensorFlow**'
   id: totrans-1630
   prefs:
   - PREF_H2
   stylish: true
   type: TYPE_NORMAL
+  zh: '**Flax 和 TensorFlow 中的激活函数**'
 - en: The `[tf.keras.activations]` module in TensorFlow provides most of the activations
     needed when designing networks. In Flax, activation functions are available via
     the linen module.
@@ -10339,12 +10839,14 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`[tf.keras.activations]`模块在TensorFlow中提供设计网络时所需的大部分激活函数。在Flax中，激活函数通过linen模块提供。'
 - en: '**Optimizers in Flax and TensorFlow**'
   id: totrans-1632
   prefs:
   - PREF_H2
   stylish: true
   type: TYPE_NORMAL
+  zh: '**在Flax和TensorFlow中的优化器**'
 - en: The `[tf.keras.optimizers]` in TensorFlow has popular optimizer functions. However,
     Flax doesn't ship with any optimizer functions. Optimizers used in Flax are provided
     by another library known as Optax.
@@ -10352,17 +10854,20 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`[tf.keras.optimizers]`中的优化器在TensorFlow中有流行的优化器函数。但是，Flax不提供任何优化器函数。Flax中使用的优化器由另一个名为Optax的库提供。'
 - en: '**Metrics in Flax and TensorFlow**'
   id: totrans-1634
   prefs:
   - PREF_H2
   stylish: true
   type: TYPE_NORMAL
+  zh: '**在Flax和TensorFlow中的指标**'
 - en: In TensorFlow, metrics are available via
   id: totrans-1635
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 在TensorFlow中，指标可以通过
 - en: the `[tf.keras.metrics]` module. As of this writing, Flax has no metrics module.
     You'll need to define metric functions for your networks or use other third-party
     libraries.
@@ -10370,63 +10875,76 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`[tf.keras.metrics]`模块。截至目前，Flax没有指标模块。您需要为您的网络定义指标函数或使用其他第三方库。'
 - en: '`import optax`'
   id: totrans-1637
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`import optax`'
 - en: '`import jax.numpy as jnp`'
   id: totrans-1638
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`import jax.numpy as jnp`'
 - en: '`def compute_metrics(logits, labels):`'
   id: totrans-1639
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`def compute_metrics(logits, labels):`'
 - en: '`loss = jnp.mean(optax.softmax_cross_entropy(logits, jax.nn.on e_hot(labels,
     num_classes=2)))`'
   id: totrans-1640
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`loss = jnp.mean(optax.softmax_cross_entropy(logits, jax.nn.on e_hot(labels,
+    num_classes=2)))`'
 - en: '`accuracy = jnp.mean(jnp.argmax(logits, -1) == labels)`'
   id: totrans-1641
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`accuracy = jnp.mean(jnp.argmax(logits, -1) == labels)`'
 - en: '`metrics = {`'
   id: totrans-1642
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`metrics = {`'
 - en: '`''loss'': loss,`'
   id: totrans-1643
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`''loss'': loss,`'
 - en: '`''accuracy'': accuracy`'
   id: totrans-1644
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`''accuracy'': accuracy`'
 - en: '`}`'
   id: totrans-1645
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`}`'
 - en: '`return metrics`'
   id: totrans-1646
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`return metrics`'
 - en: '**Computing gradients in Flax and TensorFlow**'
   id: totrans-1647
   prefs:
   - PREF_H2
   stylish: true
   type: TYPE_NORMAL
+  zh: '**在Flax和TensorFlow中计算梯度**'
 - en: The `[jax.grad]` function is used to compute gradients in Flax. It offers the
     ability to return auxillary data. For example, you can return loss and gradients
     at the same time.
@@ -10434,45 +10952,54 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`[jax.grad]`函数用于在Flax中计算梯度。它提供同时返回损失和梯度的能力，例如，您可以同时返回损失和梯度。'
 - en: '`@jax.jitdef sum_logistic(x):return jnp.sum(1.0 / (1.0 + jnp.exp(-x))),(x +
     1)`'
   id: totrans-1649
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`@jax.jitdef sum_logistic(x):return jnp.sum(1.0 / (1.0 + jnp.exp(-x))),(x +
+    1)`'
 - en: '`x_small = jnp.arange(6.)`'
   id: totrans-1650
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`x_small = jnp.arange(6.)`'
 - en: '`derivative_fn = jax.grad(sum_logistic, has_aux=True) print(derivative_fn(x_small))`'
   id: totrans-1651
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`derivative_fn = jax.grad(sum_logistic, has_aux=True) print(derivative_fn(x_small))`'
 - en: '`(DeviceArray([0.25 , 0.19661194, 0.10499357, 0.04517666, 0.01766271,`'
   id: totrans-1652
   prefs:
   - PREF_H1
   stylish: true
   type: TYPE_NORMAL
+  zh: '`(DeviceArray([0.25 , 0.19661194, 0.10499357, 0.04517666, 0.01766271,`'
 - en: '`0.00664806], dtype=float32), DeviceArray([1., 2.,`'
   id: totrans-1653
   prefs:
   - PREF_H1
   stylish: true
   type: TYPE_NORMAL
+  zh: '`0.00664806], dtype=float32), DeviceArray([1., 2.,`'
 - en: '`3., 4., 5., 6.], dtype=float32))Advanced automatic differentiation can also
     be done`'
   id: totrans-1654
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`3., 4., 5., 6.], dtype=float32))高级自动微分也可以完成`'
 - en: using `jax.vjp()` and `jax.jvp()`.
   id: totrans-1655
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 使用`jax.vjp()`和`jax.jvp()`。
 - en: In TensorFlow, gradients are computed using `[tf.GradientTape].def grad(model,
     inputs, targets):with tf.GradientTape() as tape:loss_value = loss(model, inputs,
     targets, training=True) return loss_value, tape.gradient(loss_value, model.trainable_
@@ -10481,18 +11008,23 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 在TensorFlow中，使用`[tf.GradientTape]`计算梯度。def grad(model, inputs, targets):with
+    tf.GradientTape() as tape:loss_value = loss(model, inputs, targets, training=True)
+    return loss_value, tape.gradient(loss_value, model.trainable_ variables)`
 - en: Unless you are creating custom training loops in TensorFlow, you will not define
     a gradient function. This is done automatically when you train the network.
   id: totrans-1657
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 除非您在TensorFlow中创建自定义训练循环，否则不会定义梯度函数。当您训练网络时，这是自动完成的。
 - en: '**Loading datasets in Flax and TensorFlow**'
   id: totrans-1658
   prefs:
   - PREF_H2
   stylish: true
   type: TYPE_NORMAL
+  zh: '**在Flax和TensorFlow中加载数据集**'
 - en: TensorFlow provides utilities for loading data. Flax doesn't ship with any data
     loaders. You have to use the data loaders from other libraries such as TensorFlow.
     As long as the data is in JAX NumPy or regular arrays and has the proper shape,
@@ -10501,12 +11033,15 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: TensorFlow提供了加载数据的实用程序。Flax不附带任何数据加载器。您必须使用来自其他库（如TensorFlow）的数据加载器。只要数据是JAX
+    NumPy或常规数组，并且具有适当的形状，就可以传递给Flax网络。
 - en: '**Training model in Flax vs. TensorFlow**'
   id: totrans-1660
   prefs:
   - PREF_H2
   stylish: true
   type: TYPE_NORMAL
+  zh: '**在Flax与TensorFlow中训练模型**'
 - en: Training models in TensorFlow is done by compiling the network and calling the
     fit method. However, in Flax, we create a training state to hold the training
     information and then pass data to the network.
@@ -10514,51 +11049,61 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 在TensorFlow中，通过编译网络并调用fit方法来训练模型。然而，在Flax中，我们创建一个训练状态来保存训练信息，然后将数据传递给网络。
 - en: '`from flax.training import train_state`'
   id: totrans-1662
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`from flax.training import train_state`'
 - en: '`def create_train_state(rng):`'
   id: totrans-1663
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`def create_train_state(rng):`'
 - en: '"""Creates initial `TrainState`."""'
   id: totrans-1664
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '"""创建初始`TrainState`。"""'
 - en: '`model = LSTMModel()`'
   id: totrans-1665
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`model = LSTMModel()`'
 - en: '`params = model.init(rng, jnp.array(X_train_padded[0]))[''param`'
   id: totrans-1666
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`params = model.init(rng, jnp.array(X_train_padded[0]))[''param`'
 - en: '`s'']`'
   id: totrans-1667
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`s'']`'
 - en: '`tx = optax.adam(0.001,0.9,0.999,1e-07)`'
   id: totrans-1668
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`tx = optax.adam(0.001,0.9,0.999,1e-07)`'
 - en: '`return train_state.TrainState.create(`'
   id: totrans-1669
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`return train_state.TrainState.create(`'
 - en: '`apply_fn=model.apply, params=params, tx=tx)`'
   id: totrans-1670
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`apply_fn=model.apply, params=params, tx=tx)`'
 - en: After that, we define a training step that will compute the loss and gradients.
     It then uses these gradients to update the model parameters and returns the model
     metrics and the new state.
@@ -10566,80 +11111,96 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 之后，我们定义一个训练步骤，计算损失和梯度。然后使用这些梯度来更新模型参数并返回模型指标和新状态。
 - en: '`@jax.jitdef train_step(state, text, labels):def loss_fn(params):`'
   id: totrans-1672
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`@jax.jitdef train_step(state, text, labels):def loss_fn(params):`'
 - en: '`logits = LSTMModel().apply({''params'': params}, text) loss = jnp.mean(optax.softmax_cross_entropy(
     logits=logits,`'
   id: totrans-1673
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`logits = LSTMModel().apply({''params'': params}, text) loss = jnp.mean(optax.softmax_cross_entropy(
+    logits=logits,`'
 - en: '`labels=jax.nn.one_hot(labels, num_classes=2))) return loss, logits`'
   id: totrans-1674
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`labels=jax.nn.one_hot(labels, num_classes=2))) return loss, logits`'
 - en: '`grad_fn = jax.value_and_grad(loss_fn, has_aux=True) (_, logits), grads = grad_fn(state.params)`'
   id: totrans-1675
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`grad_fn = jax.value_and_grad(loss_fn, has_aux=True) (_, logits), grads = grad_fn(state.params)`'
 - en: '`state = state.apply_gradients(grads=grads)`'
   id: totrans-1676
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`state = state.apply_gradients(grads=grads)`'
 - en: '`metrics = compute_metrics(logits, labels)`'
   id: totrans-1677
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`metrics = compute_metrics(logits, labels)`'
 - en: '`return state, metrics`'
   id: totrans-1678
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`return state, metrics`'
 - en: Use `Elegy` to train networks like in Keras. Elegy is a high-level API for JAX
     neural network libraries.
   id: totrans-1679
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 使用`Elegy`来训练类似于Keras的网络。Elegy是一个基于JAX神经网络库的高级API。
 - en: '**Distributed training in Flax and TensorFlow**'
   id: totrans-1680
   prefs:
   - PREF_H2
   stylish: true
   type: TYPE_NORMAL
+  zh: '**Flax和TensorFlow中的分布式训练**'
 - en: Training networks in TensorFlow in a distributed manner is done by creating `distributed
     strategy.mirrored_strategy = tf.distribute.MirroredStrategy()`
   id: totrans-1681
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 在TensorFlow中以分布式方式训练网络是通过创建`distributed strategy.mirrored_strategy = tf.distribute.MirroredStrategy()`来完成的。
 - en: '`with mirrored_strategy.scope():`'
   id: totrans-1682
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`with mirrored_strategy.scope():`'
 - en: '`model = tf.keras.Sequential([tf.keras.layers.Dense(1, input_s`'
   id: totrans-1683
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`model = tf.keras.Sequential([tf.keras.layers.Dense(1, input_s`'
 - en: '`hape=(1,))])`'
   id: totrans-1684
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`hape=(1,))])`'
 - en: '`model.compile(loss=''mse'', optimizer=''sgd'')`'
   id: totrans-1685
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`model.compile(loss=''mse'', optimizer=''sgd'')`'
 - en: To train networks in a distributed way in Flax, we define distributed versions
     of our Flax functions. This is done using the [`pmap`] function that executes
     a function on multiple devices. You'll then compute predictions from all devices
@@ -10648,23 +11209,27 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 要在Flax中以分布式方式训练网络，我们定义我们的Flax函数的分布式版本。这通过`pmap`函数完成，该函数在多个设备上执行函数。然后，您将计算所有设备上的预测并获得平均值。
 - en: using [`jax.lax.pmean()`]. You also need to replicate the data on all the devices
     using [`jax_utils.replicate`] . To obtain metrics from the
   id: totrans-1687
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 使用[`jax.lax.pmean()`]。你还需要使用[`jax_utils.replicate`]在所有设备上复制数据，以获取指标。
 - en: device use `jax_utils.unreplicate`.
   id: totrans-1688
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 设备使用`jax_utils.unreplicate`。
 - en: '**Working with TPU accelerators**'
   id: totrans-1689
   prefs:
   - PREF_H2
   stylish: true
   type: TYPE_NORMAL
+  zh: '**使用TPU加速器**'
 - en: You can use Flax and TensorFlow with TPU and GPU accelerators. To use Flax with
     TPUs on Colab, you'll need to set it up:`jax.tools.colab_tpu.setup_tpu() jax.devices()![](../images/00048.gif)`For
     TensorFlow, set up the `TPU distributed strategy.cluster_resolver = tf.distribute.cluster_resolver.TPUClusterRes
@@ -10673,18 +11238,24 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 您可以使用Flax和TensorFlow与TPU和GPU加速器。要在Colab上使用Flax与TPU，您需要设置它：`jax.tools.colab_tpu.setup_tpu()
+    jax.devices()![](../images/00048.gif)`对于TensorFlow，设置`TPU distributed strategy.cluster_resolver
+    = tf.distribute.cluster_resolver.TPUClusterRes olver(tpu=tpu_address)`
 - en: '`tf.config.experimental_connect_to_cluster(cluster_resolver) tf.tpu.experimental.initialize_tpu_system(cluster_resolver)
     tpu_strategy = tf.distribute.TPUStrategy(cluster_resolver)`'
   id: totrans-1691
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`tf.config.experimental_connect_to_cluster(cluster_resolver) tf.tpu.experimental.initialize_tpu_system(cluster_resolver)
+    tpu_strategy = tf.distribute.TPUStrategy(cluster_resolver)`'
 - en: '**Model evaluation**'
   id: totrans-1692
   prefs:
   - PREF_H2
   stylish: true
   type: TYPE_NORMAL
+  zh: '**模型评估**'
 - en: TensorFlow provides the [`evaluate`] function for evaluating networks. Flax
     doesn't ship with such a function. You'll need to create a function that applies
     the model and returns the test metrics. `Elegy` provides Keras-like functions
@@ -10693,48 +11264,58 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: TensorFlow提供了`evaluate`函数用于评估网络。Flax没有提供这样的函数。您需要创建一个应用模型并返回测试指标的函数。`Elegy`提供类似Keras的功能，例如`evaluate`方法。
 - en: '`@jax.jit`'
   id: totrans-1694
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`@jax.jit`'
 - en: '`def eval_step(state, text, labels):`'
   id: totrans-1695
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`def eval_step(state, text, labels):`'
 - en: '`logits = LSTMModel().apply({''params'': state.params}, text)`'
   id: totrans-1696
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`logits = LSTMModel().apply({''params'': state.params}, text)`'
 - en: '`return compute_metrics(logits=logits, labels=labels)`'
   id: totrans-1697
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`return compute_metrics(logits=logits, labels=labels)`'
 - en: '`def evaluate_model(state, text, test_lbls): """Evaluate on the validation
     set."""`'
   id: totrans-1698
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`def evaluate_model(state, text, test_lbls): """Evaluate on the validation
+    set."""`'
 - en: '`metrics = eval_step(state, text, test_lbls) metrics = jax.device_get(metrics)`'
   id: totrans-1699
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`metrics = eval_step(state, text, test_lbls) metrics = jax.device_get(metrics)`'
 - en: '`metrics = jax.tree_map(lambda x: x.item(), metrics) return metrics`'
   id: totrans-1700
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`metrics = jax.tree_map(lambda x: x.item(), metrics) return metrics`'
 - en: '**Visualize model performance**'
   id: totrans-1701
   prefs:
   - PREF_H2
   stylish: true
   type: TYPE_NORMAL
+  zh: '**可视化模型性能**'
 - en: Model visualizing is similar in Flax and TensorFlow. Once you obtain the metrics,
     you can use a package such as `Matplotlib` to visualize the model's performance.
     You can also use `TensorBoard` in both Flax and TensorFlow.
@@ -10742,24 +11323,29 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 模型的可视化在 Flax 和 TensorFlow 中是类似的。一旦获得指标，可以使用诸如 `Matplotlib` 之类的软件包来可视化模型的性能。你也可以在
+    Flax 和 TensorFlow 中使用 `TensorBoard`。
 - en: '**Final thoughts**'
   id: totrans-1703
   prefs:
   - PREF_H2
   stylish: true
   type: TYPE_NORMAL
+  zh: '**最后的思考**'
 - en: You have seen the differences between the Flax and TensorFlow libraries. In
     particular, have seen the difference in model definition and training.
   id: totrans-1704
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 你已经看到了 Flax 和 TensorFlow 库之间的差异。特别是，在模型定义和训练方面有所不同。
 - en: Train ResNet in Flax from scratch(Distributed ResNet training)
   id: totrans-1705
   prefs:
   - PREF_H2
   stylish: true
   type: TYPE_NORMAL
+  zh: 在 Flax 中从头开始训练 ResNet（分布式 ResNet 训练）
 - en: Apart from designing custom CNN architectures, you can use architectures that
     have already been built. ResNet is one such popular architecture. In most cases,
     you'll achieve better performance by using such architectures. In this article,
@@ -10768,43 +11354,53 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 除了设计定制的 CNN 架构外，您还可以使用已经构建好的架构。ResNet 就是这样一个流行的架构之一。在大多数情况下，使用这样的架构会获得更好的性能。在本文中，您将学习如何在
+    Flax 中进行 ResNet 模型的分布式训练。
 - en: Install Flax models
   id: totrans-1707
   prefs:
   - PREF_H2
   stylish: true
   type: TYPE_NORMAL
+  zh: 安装 Flax 模型
 - en: 'The [flaxmodels] package provides pre-trained models for Jax and Flax, including:'
   id: totrans-1708
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '[flaxmodels] 包为 Jax 和 Flax 提供了预训练模型，包括：'
 - en: StyleGAN2
   id: totrans-1709
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: StyleGAN2
 - en: '`GPT2`'
   id: totrans-1710
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`GPT2`'
 - en: '`VGG`'
   id: totrans-1711
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`VGG`'
 - en: '`ResNet`'
   id: totrans-1712
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`ResNet`'
 - en: '`git clone https://github.com/matthias-wright/flaxmodels.git pip install -r
     flaxmodels/training/resnet/requirements.txt`'
   id: totrans-1713
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`git clone https://github.com/matthias-wright/flaxmodels.git pip install -r
+    flaxmodels/training/resnet/requirements.txt`'
 - en: In this project, we will train the model from scratch– meaning that we will
     not use the pre-trained weights. In a separate article, we have covered how to
     perform transfer learning with ResNet.
@@ -10812,153 +11408,183 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 在这个项目中，我们将从头开始训练模型——也就是说，我们不会使用预训练的权重。在另一篇文章中，我们已经讨论了如何使用 ResNet 进行迁移学习。
 - en: Perform standard imports
   id: totrans-1715
   prefs:
   - PREF_H2
   stylish: true
   type: TYPE_NORMAL
+  zh: 执行标准导入
 - en: With [flaxmodels] installed, let's import the standard libraries used in this
     article.
   id: totrans-1716
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 安装了 [flaxmodels] 后，让我们导入本文中使用的标准库。
 - en: import`wget`# pip install wget
   id: totrans-1717
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: import`wget`# pip install wget
 - en: import`zipfile`
   id: totrans-1718
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: import`zipfile`
 - en: '`import torch`'
   id: totrans-1719
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`import torch`'
 - en: from`torch.utils.data`import`DataLoader import os`
   id: totrans-1720
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: from`torch.utils.data`import`DataLoader import os`
 - en: from`PIL`import`Image`
   id: totrans-1721
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: from`PIL`import`Image`
 - en: from`torchvision`import`transforms from torch.utils.data import Dataset import
     numpy as np`
   id: totrans-1722
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: from`torchvision`import`transforms from torch.utils.data import Dataset import
+    numpy as np`
 - en: '`import pandas as pd`'
   id: totrans-1723
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`import pandas as pd`'
 - en: '`import matplotlib.pyplot as plt`'
   id: totrans-1724
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`import matplotlib.pyplot as plt`'
 - en: '%matplotlib inline'
   id: totrans-1725
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '%matplotlib inline'
 - en: ignore harmless warnings
   id: totrans-1726
   prefs:
   - PREF_H1
   stylish: true
   type: TYPE_NORMAL
+  zh: 忽略无害的警告
 - en: '`import warnings`'
   id: totrans-1727
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`import warnings`'
 - en: '`warnings.filterwarnings("ignore") import jax`'
   id: totrans-1728
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`warnings.filterwarnings("ignore") import jax`'
 - en: from`jax`import`numpy as jnp`
   id: totrans-1729
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: from`jax`import`numpy as jnp`
 - en: '`import flax`'
   id: totrans-1730
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`import flax`'
 - en: from`flax`import`linen as nn`
   id: totrans-1731
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: from`flax`import`linen as nn`
 - en: from`flax.training`import`train_state import optax`
   id: totrans-1732
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: from`flax.training`import`train_state import optax`
 - en: import`time`
   id: totrans-1733
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: import`time`
 - en: '`from tqdm.notebook import tqdm`'
   id: totrans-1734
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`from tqdm.notebook import tqdm`'
 - en: '`import math`'
   id: totrans-1735
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`import math`'
 - en: from`flax`import`jax_utils`
   id: totrans-1736
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: from`flax`import`jax_utils`
 - en: Download dataset
   id: totrans-1737
   prefs:
   - PREF_H2
   stylish: true
   type: TYPE_NORMAL
+  zh: 下载数据集
 - en: We will train the ResNet model to predict two classes from the cats and dogs dataset.
     Download and extract the cat and dog images.
   id: totrans-1738
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 我们将训练 ResNet 模型来预测来自猫和狗数据集的两类。下载并提取猫和狗的图像。
 - en: '`wget.download("https://ml.machinelearningnuggets.com/train.zi p")`'
   id: totrans-1739
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`wget.download("https://ml.machinelearningnuggets.com/train.zi p")`'
 - en: with`zipfile.ZipFile('train.zip', 'r') as zip_ref:`
   id: totrans-1740
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: with`zipfile.ZipFile('train.zip', 'r') as zip_ref:`
 - en: '`zip_ref.extractall(''.'')`'
   id: totrans-1741
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`zip_ref.extractall(''.'')`'
 - en: Loading dataset in Flax
   id: totrans-1742
   prefs:
   - PREF_H2
   stylish: true
   type: TYPE_NORMAL
+  zh: 在 Flax 中加载数据集
 - en: Since JAX and Flax don't ship with any data loaders, we use data loading utilities
     from PyTorch or TensorFlow. When using PyTorch, we start by creating a dataset
     class.
@@ -10966,66 +11592,79 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 由于 JAX 和 Flax 不包含任何数据加载器，我们使用 PyTorch 或 TensorFlow 中的数据加载工具。当使用 PyTorch 时，我们首先创建一个数据集类。
 - en: '`class CatsDogsDataset(Dataset):`'
   id: totrans-1744
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`class CatsDogsDataset(Dataset):`'
 - en: '`def __init__(self, root_dir, annotation_file, transform=Non`'
   id: totrans-1745
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`def __init__(self, root_dir, annotation_file, transform=Non`'
 - en: 'e):'
   id: totrans-1746
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 'e):'
 - en: '`self.root_dir = root_dir`'
   id: totrans-1747
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`self.root_dir = root_dir`'
 - en: '`self.annotations = pd.read_csv(annotation_file) self.transform = transform`'
   id: totrans-1748
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`self.annotations = pd.read_csv(annotation_file) self.transform = transform`'
 - en: '`def __len__(self):return len(self.annotations)`'
   id: totrans-1749
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`def __len__(self):return len(self.annotations)`'
 - en: '`def __getitem__(self, index):`'
   id: totrans-1750
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`def __getitem__(self, index):`'
 - en: '`img_id = self.annotations.iloc[index, 0]`'
   id: totrans-1751
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`img_id = self.annotations.iloc[index, 0]`'
 - en: '`img = Image.open(os.path.join(self.root_dir, img_id)).c`'
   id: totrans-1752
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`img = Image.open(os.path.join(self.root_dir, img_id)).c`'
 - en: '`convert("RGB")`'
   id: totrans-1753
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`convert("RGB")`'
 - en: '`y_label = torch.tensor(float(self.annotations.iloc[inde`'
   id: totrans-1754
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`y_label = torch.tensor(float(self.annotations.iloc[inde`'
 - en: x, 1]))
   id: totrans-1755
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: x, 1]))
 - en: 'if self.transform is not None: img = self.transform(img)return (img, y_label)Next,
     create a Pandas DataFrame containing the image paths and labels.'
   id: totrans-1756
@@ -11270,32 +11909,38 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 我们需要模型参数和批次统计来创建训练状态函数。我们可以通过将模型初始化为`[train]`为`[False]`来访问这些内容。
 - en: '`key = jax.random.PRNGKey(0)`'
   id: totrans-1801
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`key = jax.random.PRNGKey(0)`'
 - en: '`variables = model.init(key, jnp.ones([1, size_image, size_image, 3]), train=False)`'
   id: totrans-1802
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`variables = model.init(key, jnp.ones([1, size_image, size_image, 3]), train=False)`'
 - en: 'The `create` method of TrainState expects the following parameters: The `[apply_fn]` –
     model apply function. The model parameters– `[variables[''params'']]`.'
   id: totrans-1803
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`TrainState`的`create`方法需要以下参数：`[apply_fn]`– 模型应用函数。模型参数– `variables[''params'']`。'
 - en: The optimizer, usually defined using Optax.
   id: totrans-1804
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 优化器通常使用Optax定义。
 - en: The batch statistics– `variables['batch_stats']`.
   id: totrans-1805
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 批次统计– `variables['batch_stats']`。
 - en: We apply `[pmap]` to this function to create a distributed version of the training
     state.  `[pmap]` compiles the function for execution on multiple devices such
     as multiple GPUs and TPUs.
@@ -11303,55 +11948,66 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 我们对这个函数应用`[pmap]`来创建一个分布式版本的训练状态。 `[pmap]` 编译该函数以在多个设备上执行，例如多个GPU和TPU。
 - en: '`import functools`'
   id: totrans-1807
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`import functools`'
 - en: '`@functools.partial(jax.pmap)`'
   id: totrans-1808
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`@functools.partial(jax.pmap)`'
 - en: '`def create_train_state(rng):`'
   id: totrans-1809
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`def create_train_state(rng):`'
 - en: '"""Creates initial `TrainState`."""'
   id: totrans-1810
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '"""创建初始的`TrainState`。"""'
 - en: '`return TrainState.create(apply_fn = model.apply,params = variables[''params''],tx
     = optax.adam(0.01,0.9),batch_stats = variables[''batch_stats''])`'
   id: totrans-1811
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`return TrainState.create(apply_fn = model.apply,params = variables[''params''],tx
+    = optax.adam(0.01,0.9),batch_stats = variables[''batch_stats''])`'
 - en: '**Apply model function**'
   id: totrans-1812
   prefs:
   - PREF_H2
   stylish: true
   type: TYPE_NORMAL
+  zh: '**应用模型函数**'
 - en: 'Next, define a parallel model training function. Pass an `[axis_name]` so you
     can use that to aggregate the metrics from all the devices. The function:'
   id: totrans-1813
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 接下来，定义一个并行模型训练函数。传递一个`[axis_name]`以便您可以使用它来聚合来自所有设备的指标。该函数：
 - en: Computes the loss.
   id: totrans-1814
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 计算损失。
 - en: Computes predictions from all devices by calculating the average of the probabilities
     using `[jax.lax.pmean()]` .
   id: totrans-1815
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 通过计算使用`[jax.lax.pmean()]` 的概率的平均值来从所有设备上计算预测。
 - en: When applying the model, we also include the batch statistics and the random
     number for  `[DropOut]`. Since this is the training function, the `[train]` parameter
     is `[True]`. The `[batch_stats]` are also included when computing the gradients.
@@ -11361,18 +12017,24 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 在应用模型时，我们还包括了批次统计和`[DropOut]`的随机数。由于这是训练函数，`[train]`参数是`[True]`。在计算梯度时，也包括了`[batch_stats]`。`[update_model]`函数应用计算得到的梯度–
+    更新模型参数。
 - en: '`@functools.partial(jax.pmap, axis_name=''ensemble'')` `def apply_model(state,
     images, labels):` `def loss_fn(params,batch_stats):`'
   id: totrans-1817
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`@functools.partial(jax.pmap, axis_name=''ensemble'')` `def apply_model(state,
+    images, labels):` `def loss_fn(params,batch_stats):`'
 - en: '`logits, batch_stats = model.apply({''params'': params, ''batch_stats'': batch_stats},
     images, train=True, rngs={''dropout'': jax.random.PRNGKey(0)}, mutable=[''batch_stats''])'
   id: totrans-1818
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`logits, batch_stats = model.apply({''params'': params, ''batch_stats'': batch_stats},
+    images, train=True, rngs={''dropout'': jax.random.PRNGKey(0)}, mutable=[''batch_stats''])`'
 - en: '`one_hot = jax.nn.one_hot(labels, num_classes)` `loss = optax.softmax_cross_entropy(logits=logits,
     labels=one_hot).mean()` return loss, `(logits, batch_stats)` `(loss, (logits,
     batch_stats)), grads = jax.value_and_grad(loss_fn, has_aux=True)(state.params,state.batch_stats)`
@@ -11383,12 +12045,19 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`one_hot = jax.nn.one_hot(labels, num_classes)` `loss = optax.softmax_cross_entropy(logits=logits,
+    labels=one_hot).mean()` 返回损失，`(logits, batch_stats)` `(loss, (logits, batch_stats)),
+    grads = jax.value_and_grad(loss_fn, has_aux=True)(state.params,state.batch_stats)`
+    `probs = jax.lax.pmean(jax.nn.softmax(logits), axis_name=''ensemble'')` `accuracy
+    = jnp.mean(jnp.argmax(probs, -1) == labels)` 返回梯度，`损失，准确率@jax.pmap` `def update_model(state,
+    grads):` 应用梯度 `return state.apply_gradients(grads=grads)`'
 - en: '**TensorBoard in Flax**'
   id: totrans-1820
   prefs:
   - PREF_H2
   stylish: true
   type: TYPE_NORMAL
+  zh: '**在Flax中使用TensorBoard**'
 - en: The next step is to train the ResNet model. However, you might be interested
     in tracking the training using `[TensorBoard]`. In that case, you have to configure
     TensorBoard. You can write the metrics to TensorBoard using the PyTorch `SummaryWriter`.
@@ -11396,28 +12065,34 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 下一步是训练ResNet模型。但是，您可能有兴趣使用`[TensorBoard]`跟踪训练。在这种情况下，您需要配置TensorBoard。您可以使用PyTorch的`SummaryWriter`将指标写入TensorBoard。
 - en: '`rm -rf ./flax_logs/`'
   id: totrans-1822
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`rm -rf ./flax_logs/`'
 - en: '`from torch.utils.tensorboard import SummaryWriter` `import torchvision.transforms.functional
     as F` `logdir = "flax_logs"`'
   id: totrans-1823
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`from torch.utils.tensorboard import SummaryWriter` `import torchvision.transforms.functional
+    as F` `logdir = "flax_logs"`'
 - en: '`writer = SummaryWriter(logdir)`'
   id: totrans-1824
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`writer = SummaryWriter(logdir)`'
 - en: '**Train Flax ResNet model**'
   id: totrans-1825
   prefs:
   - PREF_H2
   stylish: true
   type: TYPE_NORMAL
+  zh: '**训练Flax ResNet模型**'
 - en: Let's train the ResNet model on the entire training set and evaluate it on a
     subset of the test set. You can also evaluate it on the whole test set. Replicate
     the test set to the available devices.
@@ -11425,83 +12100,100 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 让我们在整个训练集上训练 ResNet 模型，并在测试集的子集上进行评估。您也可以在整个测试集上进行评估。将测试集复制到可用设备上。
 - en: '`(test_images, test_labels) = next(iter(validation_loader))` `test_images =
     test_images / 255.0`'
   id: totrans-1827
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`(test_images, test_labels) = next(iter(validation_loader))` `test_images =
+    test_images / 255.0`'
 - en: '`test_images = np.array(jax_utils.replicate(test_images))` `test_labels = np.array(jax_utils.replicate(test_labels))`'
   id: totrans-1828
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`test_images = np.array(jax_utils.replicate(test_images))` `test_labels = np.array(jax_utils.replicate(test_labels))`'
 - en: Create some lists to hold the training and evaluation metrics.
   id: totrans-1829
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 创建一些列表以保存训练和评估指标。
 - en: '`epoch_loss = []`'
   id: totrans-1830
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`epoch_loss = []`'
 - en: '`epoch_accuracy = []` `testing_accuracy = []` `testing_loss = []`'
   id: totrans-1831
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`epoch_accuracy = []` `testing_accuracy = []` `testing_loss = []`'
 - en: 'Next, define the ResNet model training function. The function does the following:'
   id: totrans-1832
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 接下来，定义 ResNet 模型训练函数。该函数执行以下操作：
 - en: Loops through the training dataset and scales it.
   id: totrans-1833
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 循环遍历训练数据集并对其进行缩放。
 - en: Replicates the data on the available devices.
   id: totrans-1834
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 在可用设备上复制数据。
 - en: Applies the model on the dataset and computes the metrics. Obtains the metrics
     from the devices
   id: totrans-1835
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 在数据集上应用模型并计算指标。从设备获取指标
 - en: '`using jax_utils.unreplicate.`'
   id: totrans-1836
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`using jax_utils.unreplicate.`'
 - en: Appends the metrics to a list.
   id: totrans-1837
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 将指标附加到列表。
 - en: Computes the mean of the loss and accuracy to obtain the metrics for each epoch.
   id: totrans-1838
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 计算损失和准确度的均值以获取每个 epoch 的指标。
 - en: Applies the model to the test set and obtains the metrics.
   id: totrans-1839
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 将模型应用于测试集并获取指标。
 - en: Append the test metrics to a list.
   id: totrans-1840
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 将测试指标附加到列表。
 - en: Writes the training and evaluation metrics to TensorBaord.
   id: totrans-1841
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 将训练和评估指标写入 TensorBaord。
 - en: 'Prints the training and evaluation metrics.def `train_one_epoch(state, dataloader,num_epochs):
     """Train for 1 epoch on the training set."""for epoch in range(num_epochs):for
     cnt, (images, labels) in tqdm(enumerate(dataloade r), total=(math.ceil(len(train_set)/batch_size))):`'
@@ -11509,78 +12201,95 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 打印训练和评估指标。
 - en: '`images = images / 255.0`'
   id: totrans-1843
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`images = images / 255.0`'
 - en: '`images = jax_utils.replicate(images)`'
   id: totrans-1844
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`images = jax_utils.replicate(images)`'
 - en: '`labels = jax_utils.replicate(labels)`'
   id: totrans-1845
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`labels = jax_utils.replicate(labels)`'
 - en: '`grads, loss, accuracy = apply_model(state, images,`'
   id: totrans-1846
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`grads, loss, accuracy = apply_model(state, images,`'
 - en: '`labels)state = update_model(state, grads)`'
   id: totrans-1847
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`labels)state = update_model(state, grads)`'
 - en: '`epoch_loss.append(jax_utils.unreplicate(loss)) epoch_accuracy.append(jax_utils.unreplicate(accuracy))
     train_loss = np.mean(epoch_loss)`'
   id: totrans-1848
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`epoch_loss.append(jax_utils.unreplicate(loss)) epoch_accuracy.append(jax_utils.unreplicate(accuracy))
+    train_loss = np.mean(epoch_loss)`'
 - en: '`train_accuracy = np.mean(epoch_accuracy)`'
   id: totrans-1849
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`train_accuracy = np.mean(epoch_accuracy)`'
 - en: '`_`, `test_loss`, `test_accuracy` = `jax_utils.unreplicate(app ly_model(state,
     test_images, test_labels))`'
   id: totrans-1850
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`_`, `test_loss`, `test_accuracy` = `jax_utils.unreplicate(app ly_model(state,
+    test_images, test_labels))`'
 - en: '`testing_accuracy.append(test_accuracy)`'
   id: totrans-1851
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`testing_accuracy.append(test_accuracy)`'
 - en: '`testing_loss.append(test_loss)`'
   id: totrans-1852
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`testing_loss.append(test_loss)`'
 - en: '`writer.add_scalar(''Loss/train'', np.array(train_loss), e poch)`'
   id: totrans-1853
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`writer.add_scalar(''Loss/train'', np.array(train_loss), e poch)`'
 - en: '`writer.add_scalar(''Loss/test'', np.array(test_loss), epo ch)`'
   id: totrans-1854
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`writer.add_scalar(''Loss/test'', np.array(test_loss), epo ch)`'
 - en: '`writer.add_scalar(''Accuracy/train'', np.array(train_accu racy), epoch)`'
   id: totrans-1855
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`writer.add_scalar(''Accuracy/train'', np.array(train_accu racy), epoch)`'
 - en: '`writer.add_scalar(''Accuracy/test'', np.array(test_accura cy), epoch)`'
   id: totrans-1856
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`writer.add_scalar(''Accuracy/test'', np.array(test_accura cy), epoch)`'
 - en: '`print(f"Epoch: {epoch + 1}, train loss: {train_loss:.4 f}, train accuracy:
     {train_accuracy * 100:.4f}, test loss: {tes t_loss:.4f}, test accuracy: {test_accuracy*
     100:.4f}", flush=Tr ue)`'
@@ -11588,52 +12297,64 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`print(f"Epoch: {epoch + 1}, train loss: {train_loss:.4 f}, train accuracy:
+    {train_accuracy * 100:.4f}, test loss: {tes t_loss:.4f}, test accuracy: {test_accuracy*
+    100:.4f}", flush=Tr ue)`'
 - en: return `state, epoch_loss, epoch_accuracy, testing_accuracy, testing_lossCreate
     a training state by generating random numbers equivalent to the number of devices.`
   id: totrans-1858
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 返回 `state, epoch_loss, epoch_accuracy, testing_accuracy, testing_loss` 通过生成与设备数量相同的随机数来创建训练状态。
 - en: '`seed = 0`'
   id: totrans-1859
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`seed = 0`'
 - en: '`rng = jax.random.PRNGKey(seed)`'
   id: totrans-1860
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`rng = jax.random.PRNGKey(seed)`'
 - en: '`rng, init_rng = jax.random.split(rng)`'
   id: totrans-1861
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`rng, init_rng = jax.random.split(rng)`'
 - en: '`state = create_train_state(jax.random.split(init_rng, jax.devic e_count()))`'
   id: totrans-1862
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`state = create_train_state(jax.random.split(init_rng, jax.devic e_count()))`'
 - en: '`del init_rng # Must not be used anymore.`'
   id: totrans-1863
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`del init_rng # Must not be used anymore.`'
 - en: Train the ResNet model by passing the training data and the number of epochs.
   id: totrans-1864
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 通过传递训练数据和 epochs 数量来训练 ResNet 模型。
 - en: '`start = time.time()`'
   id: totrans-1865
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`start = time.time()`'
 - en: '`num_epochs = 30`'
   id: totrans-1866
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`num_epochs = 30`'
 - en: '`state, epoch_loss, epoch_accuracy, testing_accuracy, testing_lo ss = train_one_epoch(state,
     train_loader,num_epochs) print("Total time: ", time.time() - start, "seconds")`'
   id: totrans-1867
@@ -11952,193 +12673,231 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`from flax.training import train_state from flax import linen as nn`'
 - en: '`from flax.core import FrozenDict,frozen_dict from functools import partial`'
   id: totrans-1927
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`from flax.core import FrozenDict,frozen_dict from functools import partial`'
 - en: '`import os`'
   id: totrans-1928
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`import os`'
 - en: '`import torch`'
   id: totrans-1929
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`import torch`'
 - en: '`from torch.utils.data import DataLoader from torchvision import transforms`'
   id: totrans-1930
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`from torch.utils.data import DataLoader from torchvision import transforms`'
 - en: '`from torch.utils.data import Dataset import matplotlib.pyplot as plt`'
   id: totrans-1931
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`from torch.utils.data import Dataset import matplotlib.pyplot as plt`'
 - en: '`%matplotlib inline`'
   id: totrans-1932
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`%matplotlib inline`'
 - en: ignore harmless warnings
   id: totrans-1933
   prefs:
   - PREF_H1
   stylish: true
   type: TYPE_NORMAL
+  zh: 忽略无害的警告
 - en: '`import warnings`'
   id: totrans-1934
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`import warnings`'
 - en: '`warnings.filterwarnings("ignore")`'
   id: totrans-1935
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`warnings.filterwarnings("ignore")`'
 - en: Download dataset
   id: totrans-1936
   prefs:
   - PREF_H2
   stylish: true
   type: TYPE_NORMAL
+  zh: 下载数据集
 - en: We will fine-tune the ResNet model to predict two classes from the cats and
     dogs dataset. Download and extract the cat and dog images.
   id: totrans-1937
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 我们将微调 ResNet 模型以预测来自猫狗数据集的两个类。下载并提取猫和狗的图像。
 - en: '`pip install wget`'
   id: totrans-1938
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`pip install wget`'
 - en: '`import wget`'
   id: totrans-1939
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`import wget`'
 - en: '`wget.download("https://ml.machinelearningnuggets.com/train.zi p")`'
   id: totrans-1940
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`wget.download("https://ml.machinelearningnuggets.com/train.zi p")`'
 - en: '`import zipfile`'
   id: totrans-1941
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`import zipfile`'
 - en: '`with zipfile.ZipFile(''train.zip'', ''r'') as zip_ref:`'
   id: totrans-1942
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`with zipfile.ZipFile(''train.zip'', ''r'') as zip_ref:`'
 - en: '`zip_ref.extractall(''.'')`'
   id: totrans-1943
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`zip_ref.extractall(''.'')`'
 - en: Data loading in JAX
   id: totrans-1944
   prefs:
   - PREF_H2
   stylish: true
   type: TYPE_NORMAL
+  zh: 在 JAX 中加载数据
 - en: JAX doesn't ship with data loading utilities. We use existing data loaders in TensorFlow and
     PyTorch to load the data. Let's use PyTorch to load the image data.
   id: totrans-1945
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: JAX 不包含数据加载工具。我们使用现有的 TensorFlow 和 PyTorch 数据加载器加载数据。让我们使用 PyTorch 加载图像数据。
 - en: The first step is to create a PyTorch [Dataset] class.
   id: totrans-1946
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 第一步是创建一个 PyTorch [数据集] 类。
 - en: class CatsDogsDataset(Dataset):`
   id: totrans-1947
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: class CatsDogsDataset(Dataset):`
 - en: def __init__(self, root_dir, annotation_file, transform=Non
   id: totrans-1948
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: def __init__(self, root_dir, annotation_file, transform=Non
 - en: 'e):'
   id: totrans-1949
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 'e):'
 - en: self.root_dir = root_dir
   id: totrans-1950
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: self.root_dir = root_dir
 - en: self.annotations = pd.read_csv(annotation_file) self.transform = transform
   id: totrans-1951
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: self.annotations = pd.read_csv(annotation_file) self.transform = transform
 - en: '`def __len__(self):return len(self.annotations)`'
   id: totrans-1952
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`def __len__(self):return len(self.annotations)`'
 - en: '`def __getitem__(self, index):`'
   id: totrans-1953
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`def __getitem__(self, index):`'
 - en: img_id = self.annotations.iloc[index, 0]
   id: totrans-1954
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: img_id = self.annotations.iloc[index, 0]
 - en: img = Image.open(os.path.join(self.root_dir, img_id)).c
   id: totrans-1955
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: img = Image.open(os.path.join(self.root_dir, img_id)).c
 - en: '`onvert("RGB")`'
   id: totrans-1956
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`onvert("RGB")`'
 - en: '`y_label = torch.tensor(float(self.annotations.iloc[inde`'
   id: totrans-1957
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`y_label = torch.tensor(float(self.annotations.iloc[inde`'
 - en: '`x, 1])`'
   id: totrans-1958
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`x, 1])`'
 - en: 'if self.transform is not None: img = self.transform(img) return (img, y_label)'
   id: totrans-1959
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 如果 self.transform 不为空：img = self.transform(img) return (img, y_label)
 - en: '**Data processing**'
   id: totrans-1960
   prefs:
   - PREF_H2
   stylish: true
   type: TYPE_NORMAL
+  zh: '**数据处理**'
 - en: Next, create a Pandas DataFrame with the image paths and labels.
   id: totrans-1961
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 接下来，使用图像路径和标签创建一个 Pandas DataFrame。
 - en: '`train_df = pd.DataFrame(columns=["img_path","label"]) train_df["img_path"]
     = os.listdir("train/") for idx, i in enumerate(os.listdir("train/")):`'
   id: totrans-1962
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`train_df = pd.DataFrame(columns=["img_path","label"]) train_df["img_path"]
+    = os.listdir("train/") for idx, i in enumerate(os.listdir("train/")):`'
 - en: if "cat" in i:`train_df["label"][idx] = 0if "dog" in i:train_df["label"][idx]
     = 1train_df.to_csv (r'train_csv.csv', index = False, header=True)![](../images/00056.jpeg)Define
     a function to stack the data and return the images and labels as a NumPy array.
@@ -12146,154 +12905,186 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 如果 "cat" 在 i 中：`train_df["label"][idx] = 0if "dog" 在 i 中：train_df["label"][idx]
+    = 1train_df.to_csv (r'train_csv.csv', index = False, header=True)![](../images/00056.jpeg)定义一个函数来堆叠数据并将图像和标签作为
+    NumPy 数组返回。
 - en: '`def custom_collate_fn(batch):`'
   id: totrans-1964
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`def custom_collate_fn(batch):`'
 - en: '`transposed_data = list(zip(*batch))`'
   id: totrans-1965
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`transposed_data = list(zip(*batch))`'
 - en: '`labels = np.array(transposed_data[1])`'
   id: totrans-1966
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`labels = np.array(transposed_data[1])`'
 - en: imgs = np.stack(transposed_data[0])
   id: totrans-1967
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: imgs = np.stack(transposed_data[0])
 - en: return imgs, labels
   id: totrans-1968
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 返回图像和标签作为 NumPy 数组
 - en: Let's also resize the images to ensure they are the same size. Define the size
     in a configuration dictionary. We'll use the other config variables later.
   id: totrans-1969
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 我们还需要调整图像大小以确保它们的尺寸一致。在配置字典中定义尺寸。稍后我们将使用其他配置变量。
 - en: config = {
   id: totrans-1970
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: config = {
 - en: '''NUM_LABELS'': 2,'
   id: totrans-1971
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '''标签数量'': 2,'
 - en: '''BATCH_SIZE'': 32,'
   id: totrans-1972
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '''批处理大小'': 32,'
 - en: '''N_EPOCHS'': 5,'
   id: totrans-1973
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '''训练周期'': 5,'
 - en: '`''LR'': 0.001,`'
   id: totrans-1974
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`''学习速率'': 0.001,`'
 - en: '`''IMAGE_SIZE'': 224,`'
   id: totrans-1975
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`''图像尺寸'': 224,`'
 - en: '`''WEIGHT_DECAY'': 1e-5, ''FREEZE_BACKBONE'': True,`'
   id: totrans-1976
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`''权重衰减'': 1e-5, ''冻结骨干网络'': True,`'
 - en: '}'
   id: totrans-1977
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '}'
 - en: Resize the images using PyTorch transforms. Next, use the CatsDogsDataset class
     to define the training and testing data loaders.
   id: totrans-1978
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 使用 PyTorch 转换调整图像大小。接下来，使用 CatsDogsDataset 类定义训练和测试数据加载器。
 - en: '`transform = transforms.Compose([`'
   id: totrans-1979
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`transform = transforms.Compose([`'
 - en: transforms.Resize((config["IMAGE_SIZE"],config["IMAGE_SIZ
   id: totrans-1980
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: transforms.Resize((config["IMAGE_SIZE"],config["IMAGE_SIZ
 - en: '`E"]))`,'
   id: totrans-1981
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`E"]))`,'
 - en: np.array])
   id: totrans-1982
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`np.array`'
 - en: dataset = CatsDogsDataset("train","train_csv.csv",transform=tra
   id: totrans-1983
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: dataset = CatsDogsDataset("train","train_csv.csv",transform=tra
 - en: nsform)
   id: totrans-1984
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: nsform)
 - en: '`train_set`, `validation_set = torch.utils.data.random_split(datas`'
   id: totrans-1985
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`train_set`, `validation_set = torch.utils.data.random_split(datas`'
 - en: '`et,[20000,5000])`'
   id: totrans-1986
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`et,[20000,5000])`'
 - en: '`train_loader = DataLoader(dataset=train_set, collate_fn=custom_`'
   id: totrans-1987
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`train_loader = DataLoader(dataset=train_set, collate_fn=custom_`'
 - en: collate_fn,shuffle=True, batch_size=config["BATCH_SIZE"])
   id: totrans-1988
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: collate_fn,shuffle=True, batch_size=config["BATCH_SIZE"])
 - en: '`validation_loader = DataLoader(dataset=validation_set,collate_f`'
   id: totrans-1989
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`validation_loader = DataLoader(dataset=validation_set,collate_f`'
 - en: n=custom_collate_fn, shuffle=False, batch_size=config["BATCH_SI
   id: totrans-1990
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: n=custom_collate_fn, shuffle=False, batch_size=config["BATCH_SI
 - en: '`ZE"])`'
   id: totrans-1991
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`ZE"])`'
 - en: '**ResNet model definition**'
   id: totrans-1992
   prefs:
   - PREF_H2
   stylish: true
   type: TYPE_NORMAL
+  zh: '**ResNet模型定义**'
 - en: Pre-trained ResNet models are trained on many classes. However, the dataset
     we have has two classes. We, therefore, use the ResNet as the backbone and define
     a custom classification layer.
@@ -12301,152 +13092,182 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 预训练的ResNet模型在许多类上进行了训练。但是，我们的数据集只有两类。因此，我们使用ResNet作为主干，并定义一个自定义分类层。
 - en: '**Create head network**'
   id: totrans-1994
   prefs:
   - PREF_H2
   stylish: true
   type: TYPE_NORMAL
+  zh: '**创建头部网络**'
 - en: Create a head network with output as per the problem, in this case, a binary
     image classification.
   id: totrans-1995
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 创建一个头部网络，输出与问题相符，本例中为二进制图像分类。
 - en: '"""'
   id: totrans-1996
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '"""'
 - en: reference - https://www.kaggle.com/code/alexlwh/happywhale-flax
   id: totrans-1997
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 参考 - https://www.kaggle.com/code/alexlwh/happywhale-flax
 - en: '`-jax-tpu-gpu-resnet-baseline`'
   id: totrans-1998
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`-jax-tpu-gpu-resnet-baseline`'
 - en: '"""'
   id: totrans-1999
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '"""'
 - en: '`class Head(nn.Module):`'
   id: totrans-2000
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`class Head(nn.Module):`'
 - en: '''''''head model''''''`batch_norm_cls: partial = partial(nn.BatchNorm, momentum=0.`'
   id: totrans-2001
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '''''''head model''''''`batch_norm_cls: partial = partial(nn.BatchNorm, momentum=0.`'
 - en: 9)
   id: totrans-2002
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 9)
 - en: '@nn.compact'
   id: totrans-2003
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '@nn.compact'
 - en: '`def __call__(self, inputs, train: bool):`'
   id: totrans-2004
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`def __call__(self, inputs, train: bool):`'
 - en: output_n = inputs.shape[-1]x = self.batch_norm_cls(use_running_average=not train)
   id: totrans-2005
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: output_n = inputs.shape[-1]x = self.batch_norm_cls(use_running_average=not train)
 - en: '`(inputs)'
   id: totrans-2006
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`(inputs)'
 - en: '`x = nn.Dropout(rate=0.25)(x, deterministic=not train) x = nn.Dense(features=output_n)(x)'
   id: totrans-2007
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`x = nn.Dropout(rate=0.25)(x, deterministic=not train) x = nn.Dense(features=output_n)(x)'
 - en: '`x = nn.relu(x)'
   id: totrans-2008
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`x = nn.relu(x)'
 - en: '`x = self.batch_norm_cls(use_running_average=not train)'
   id: totrans-2009
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`x = self.batch_norm_cls(use_running_average=not train)'
 - en: '`(x)'
   id: totrans-2010
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`(x)'
 - en: '`x = nn.Dropout(rate=0.5)(x, deterministic=not train) x = nn.Dense(features=config["NUM_LABELS"])(x)
     return x'
   id: totrans-2011
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`x = nn.Dropout(rate=0.5)(x, deterministic=not train) x = nn.Dense(features=config["NUM_LABELS"])(x)
+    return x'
 - en: '**Combine ResNet backbone with head**'
   id: totrans-2012
   prefs:
   - PREF_H2
   stylish: true
   type: TYPE_NORMAL
+  zh: '**将ResNet主干与头部模型结合**'
 - en: Combine the pre-trained ResNet backbone with the custom head you created above.
   id: totrans-2013
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 将预训练的ResNet主干与您上面创建的自定义头部结合。
 - en: '`class Model(nn.Module):'
   id: totrans-2014
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`class Model(nn.Module):'
 - en: '```Combines backbone and head model``` backbone: Sequential'
   id: totrans-2015
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '```结合主干和头部模型``` backbone: Sequential'
 - en: 'head: Head'
   id: totrans-2016
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 'head: Head'
 - en: 'def __call__(self, inputs, train: bool): x = self.backbone(inputs)'
   id: totrans-2017
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 'def __call__(self, inputs, train: bool): x = self.backbone(inputs)'
 - en: average pool layer
   id: totrans-2018
   prefs:
   - PREF_H1
   stylish: true
   type: TYPE_NORMAL
+  zh: 平均池化层
 - en: x = jnp.mean(x, axis=(1, 2)) x = self.head(x, train)
   id: totrans-2019
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: x = jnp.mean(x, axis=(1, 2)) x = self.head(x, train)
 - en: return x
   id: totrans-2020
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 返回 x
 - en: '**Load pre-trained ResNet 50**'
   id: totrans-2021
   prefs:
   - PREF_H2
   stylish: true
   type: TYPE_NORMAL
+  zh: '**加载预训练的ResNet 50**'
 - en: Next, create a function that loads the pre-trained ResNet model. Omit the last
     two layers of the network because we have defined a custom head. The function
     returns the ResNet model and its parameters. The model parameters are obtained
@@ -12455,53 +13276,64 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 接下来，创建一个函数，加载预训练的ResNet模型。省略网络的最后两层，因为我们已定义了一个自定义头部。该函数返回ResNet模型及其参数。使用 [slice_variables] 函数获取模型参数。
 - en: '```def get_backbone_and_params(model_arch: str):```'
   id: totrans-2023
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '```def get_backbone_and_params(model_arch: str):```'
 - en: '```'
   id: totrans-2024
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '```'
 - en: Get backbone and params
   id: totrans-2025
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 获取主干和参数
 - en: 1\. Loads pretrained model (resnet50)
   id: totrans-2026
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 1\. 加载预训练模型(resnet50)
 - en: '2\. Get model and param structure except last 2 layers 3\. Extract the corresponding
     subset of the variables dict INPUT : model_arch'
   id: totrans-2027
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 2\. 获取模型和参数结构，除了最后2层 3\. 提取变量字典的相应子集 输入：model_arch
 - en: RETURNS backbone , backbone_params
   id: totrans-2028
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: RETURNS backbone , backbone_params
 - en: '```'
   id: totrans-2029
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '```'
 - en: '`if model_arch == ''resnet50'':'
   id: totrans-2030
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`if model_arch == ''resnet50'':'
 - en: resnet_tmpl, params = pretrained_resnet(50) model = resnet_tmpl()else:raise
     NotImplementedError
   id: totrans-2031
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: resnet_tmpl, params = pretrained_resnet(50) model = resnet_tmpl()else:raise
+    NotImplementedError
 - en: get model & param structure for backbone start, end = 0, len(model.layers) -
     2 backbone = Sequential(model.layers[start:end]) backbone_params = slice_variables(params,
     start, end) return backbone, backbone_params
@@ -12510,88 +13342,106 @@
   - PREF_H1
   stylish: true
   type: TYPE_NORMAL
+  zh: 获取主干模型及其参数结构的起始点和结束点 = 0, len(model.layers) - 2 backbone = Sequential(model.layers[start:end])
+    backbone_params = slice_variables(params, start, end) return backbone, backbone_params
 - en: Get model and variables
   id: totrans-2033
   prefs:
   - PREF_H2
   stylish: true
   type: TYPE_NORMAL
+  zh: 获取模型和变量
 - en: 'Use the above function to create the final model. Define a function that:'
   id: totrans-2034
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 使用上述函数创建最终模型。定义一个函数：
 - en: Initializes the network's input.
   id: totrans-2035
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 初始化网络的输入。
 - en: Obtains the ResNet backbone and its parameters. Passes the input to the backbone
     and gets the output.
   id: totrans-2036
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 获取ResNet主干及其参数。将输入传递给主干并获取输出。
 - en: Initializes the network's head. Creates the final model using backbone and head.
   id: totrans-2037
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 初始化网络的头部。使用主干和头部创建最终模型。
 - en: Combines the parameters from backbone and head.
   id: totrans-2038
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 结合来自主干和头部的参数。
 - en: '```def get_model_and_variables(model_arch: str, head_init_key: in t):```'
   id: totrans-2039
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '```def get_model_and_variables(model_arch: str, head_init_key: in t):```'
 - en: '```'
   id: totrans-2040
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '```'
 - en: Get model and variables
   id: totrans-2041
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: Get model and variables
 - en: 1\. Initialise inputs(shape=(1,image_size,image_size,3))
   id: totrans-2042
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 1\. 初始化输入(shape=(1,image_size,image_size,3))
 - en: 2\. Get backbone and params
   id: totrans-2043
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 2\. Get backbone and params
 - en: 3\. Apply backbone model and get outputs
   id: totrans-2044
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 3\. Apply backbone model and get outputs
 - en: 4\. Initialise head
   id: totrans-2045
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 4\. Initialise head
 - en: 5\. Create final model using backbone and head
   id: totrans-2046
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 5\. Create final model using backbone and head
 - en: 6\. Combine params from backbone and head
   id: totrans-2047
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 6\. Combine params from backbone and head
 - en: INPUT model_arch, head_init_key RETURNS model, variables '''
   id: totrans-2048
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: INPUT model_arch, head_init_key RETURNS model, variables '''
 - en: '#backboneinputs = jnp.ones((1, config[''IMAGE_SIZE''],config[''IMAGE_SI ZE''],
     3), jnp.float32)backbone, backbone_params = get_backbone_and_params(model_a rch)
     key = jax.random.PRNGKey(head_init_key)backbone_output = backbone.apply(backbone_params,
@@ -12601,61 +13451,77 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '#backboneinputs = jnp.ones((1, config[''IMAGE_SIZE''],config[''IMAGE_SI ZE''],
+    3), jnp.float32)backbone, backbone_params = get_backbone_and_params(model_a rch)
+    key = jax.random.PRNGKey(head_init_key)backbone_output = backbone.apply(backbone_params,
+    inputs, m utable=False)#headhead_inputs = jnp.ones((1, backbone_output.shape[-1]),
+    jnp. float32)head = Head()head_params = head.init(key, head_inputs, train=False)'
 - en: '#final model'
   id: totrans-2050
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '#final model'
 - en: model = Model(backbone, head)
   id: totrans-2051
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: model = Model(backbone, head)
 - en: variables = FrozenDict({
   id: totrans-2052
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: variables = FrozenDict({
 - en: '`''params'': {'
   id: totrans-2053
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`''params'': {'
 - en: '`''backbone'': backbone_params[''params''], ''head'': head_params[''params'']'
   id: totrans-2054
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`''backbone'': backbone_params[''params''], ''head'': head_params[''params'']'
 - en: '},'
   id: totrans-2055
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '},'
 - en: '`''batch_stats'': {'
   id: totrans-2056
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`''batch_stats'': {'
 - en: '''backbone'': backbone_params[''batch_stats''], ''head'': head_params[''batch_stats'']'
   id: totrans-2057
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`''backbone'': backbone_params[''batch_stats''], ''head'': head_params[''batch_stats'']'
 - en: '}'
   id: totrans-2058
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '}'
 - en: '})'
   id: totrans-2059
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '})'
 - en: return model, variables
   id: totrans-2060
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: return model, variables
 - en: All names relating to the backbone network are prefixed with the name [backbone].
     You can use any name, but all backbone variable names should be the same. This
     is important when freezing layers, as we'll see later.
@@ -12663,18 +13529,22 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 所有与骨干网络相关的名称都以“backbone”作为前缀。您可以使用任何名称，但所有骨干变量名称应该相同。在冻结层时，这一点非常重要，正如我们将在后面看到的那样。
 - en: Next, use the function defined above to create the model.model, variables =
     get_model_and_variables('resnet50', 0) ![](../images/00057.jpeg)
   id: totrans-2062
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 接下来，使用上述定义的函数创建模型。model, variables = get_model_and_variables('resnet50', 0)
+    ![](../images/00057.jpeg)
 - en: Zero gradients
   id: totrans-2063
   prefs:
   - PREF_H2
   stylish: true
   type: TYPE_NORMAL
+  zh: Zero gradients
 - en: Since we are applying transfer learning, we need to ensure that the backbone
     is not updated. Otherwise, we'll be training the network from scratch. We want
     to take advantage of the pre-trained weights and use them as a feature extractor for
@@ -12684,309 +13554,373 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 由于我们正在应用迁移学习，需要确保不更新骨干网络。否则，我们将从头开始训练网络。我们希望利用预训练的权重，并将它们用作网络的特征提取器。为此，我们冻结所有以“backbone”和“head”开头的层的参数。
 - en: with [backbone]. As a result, these parameters will not be updated during training.
   id: totrans-2065
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: with [backbone]. As a result, these parameters will not be updated during training.
 - en: '"""'
   id: totrans-2066
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '"""'
 - en: reference - https://github.com/deepmind/optax/issues/159#issuec omment-896459491
   id: totrans-2067
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 参考 - https://github.com/deepmind/optax/issues/159#issuec omment-896459491
 - en: '"""'
   id: totrans-2068
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '"""'
 - en: 'def zero_grads():'
   id: totrans-2069
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 'def zero_grads():'
 - en: ''''''''
   id: totrans-2070
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: ''''''''
 - en: Zero out the previous gradient computation
   id: totrans-2071
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: Zero out the previous gradient computation
 - en: '```'
   id: totrans-2072
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '```'
 - en: 'def init_fn(_):'
   id: totrans-2073
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 'def init_fn(_):'
 - en: return ()
   id: totrans-2074
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 返回()
 - en: 'def update_fn(updates, state, params=None):'
   id: totrans-2075
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 'def update_fn(updates, state, params=None):'
 - en: return jax.tree_map(jnp.zeros_like, updates), () return optax.GradientTransformation(init_fn,
     update_fn)
   id: totrans-2076
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: return jax.tree_map(jnp.zeros_like, updates), () return optax.GradientTransformation(init_fn,
+    update_fn)
 - en: '"""'
   id: totrans-2077
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '"""'
 - en: reference - https://colab.research.google.com/drive/1g_pt2Rc3bv 6H6qchvGHD-BpgF-Pt4vrC#scrollTo=TqDvTL_tIQCH&line=2&uniqifier=1
     """
   id: totrans-2078
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 参考 - https://colab.research.google.com/drive/1g_pt2Rc3bv 6H6qchvGHD-BpgF-Pt4vrC#scrollTo=TqDvTL_tIQCH&line=2&uniqifier=1
+    """
 - en: 'def create_mask(params, label_fn):'
   id: totrans-2079
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 'def create_mask(params, label_fn):'
 - en: 'def _map(params, mask, label_fn):for k in params:if label_fn(k):'
   id: totrans-2080
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 'def _map(params, mask, label_fn):for k in params:if label_fn(k):'
 - en: mask[k] = 'zero'
   id: totrans-2081
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: mask[k] = 'zero'
 - en: 'else:'
   id: totrans-2082
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 'else:'
 - en: 'if isinstance(params[k], FrozenDict): mask[k] = {}'
   id: totrans-2083
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 'if isinstance(params[k], FrozenDict): mask[k] = {}'
 - en: _map(params[k], mask[k], label_fn)
   id: totrans-2084
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: _map(params[k], mask[k], label_fn)
 - en: 'else:'
   id: totrans-2085
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 'else:'
 - en: mask[k] = 'adam'
   id: totrans-2086
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: mask[k] = 'adam'
 - en: mask = {}
   id: totrans-2087
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: mask = {}
 - en: _map(params, mask, label_fn)
   id: totrans-2088
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: _map(params, mask, label_fn)
 - en: return frozen_dict.freeze(mask)
   id: totrans-2089
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: return frozen_dict.freeze(mask)
 - en: Define Flax optimizer
   id: totrans-2090
   prefs:
   - PREF_H2
   stylish: true
   type: TYPE_NORMAL
+  zh: 定义 Flax 优化器
 - en: Create an optimizer that will only be applied to the head and not backbone layers.
     This is done using the optax.multi_transform while passing the desired transformations.
   id: totrans-2091
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 创建一个仅应用于头部而不是骨干层的优化器。这是通过 optax.multi_transform 实现的，同时传递所需的变换。
 - en: adamw = optax.adamw(
   id: totrans-2092
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: adamw = optax.adamw(
 - en: learning_rate=config['LR'],
   id: totrans-2093
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: learning_rate=config['LR'],
 - en: b1=0.9, b2=0.999,
   id: totrans-2094
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: b1=0.9, b2=0.999,
 - en: eps=1e-6, weight_decay=1e-2
   id: totrans-2095
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: eps=1e-6, weight_decay=1e-2
 - en: )
   id: totrans-2096
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: )
 - en: optimizer = optax.multi_transform(
   id: totrans-2097
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: optimizer = optax.multi_transform(
 - en: '{''adam'': adamw, ''zero'': zero_grads()},'
   id: totrans-2098
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '{''adam'': adamw, ''zero'': zero_grads()},'
 - en: 'create_mask(variables[''params''], lambda s: s.startswith(''ba ckbone''))'
   id: totrans-2099
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 'create_mask(variables[''params''], lambda s: s.startswith(''ba ckbone''))'
 - en: )
   id: totrans-2100
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: )
 - en: Define Flax loss function
   id: totrans-2101
   prefs:
   - PREF_H2
   stylish: true
   type: TYPE_NORMAL
+  zh: 定义 Flax 损失函数
 - en: Next, define the function to compute the loss function.
   id: totrans-2102
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 下一步，定义计算损失函数的函数。
 - en: 'def cross_entropy_loss(*, logits, labels):'
   id: totrans-2103
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 'def cross_entropy_loss(*, logits, labels):'
 - en: labels_onehot = jax.nn.one_hot(labels, num_classes=config["NU
   id: totrans-2104
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: labels_onehot = jax.nn.one_hot(labels, num_classes=config["NU
 - en: M_LABELS"])
   id: totrans-2105
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: M_LABELS"])
 - en: return optax.softmax_cross_entropy(logits=logits, labels=labe
   id: totrans-2106
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: return optax.softmax_cross_entropy(logits=logits, labels=labe
 - en: ls_onehot).mean()
   id: totrans-2107
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: ls_onehot).mean()
 - en: 'When computing the loss during training, set [train] to [True]. You also have
     to:'
   id: totrans-2108
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`在训练过程中计算损失时，将[train]设置为[True]。您还需要：`'
 - en: Set the batch_statsDefine the random number for the [dropout] layers. Set the [batch_stats] as
     mutable.
   id: totrans-2109
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 设置[batch_stats]定义[dropout]层的随机数。将[batch_stats]设置为可变。
 - en: 'def compute_loss(params, batch_stats, images, labels): logits,batch_stats =
     model.apply({''params'': params,''batch_s'
   id: totrans-2110
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 'def compute_loss(params, batch_stats, images, labels): logits,batch_stats =
+    model.apply({''params'': params,''batch_s'
 - en: 'tats'': batch_stats},images, train=True,rngs={''dropout'': jax.ran'
   id: totrans-2111
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 'tats'': batch_stats},images, train=True,rngs={''dropout'': jax.ran'
 - en: dom.PRNGKey(0)}, mutable=['batch_stats'])
   id: totrans-2112
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: dom.PRNGKey(0)}, mutable=['batch_stats'])
 - en: loss = cross_entropy_loss(logits=logits, labels=labels) return loss, (logits,
     batch_stats)
   id: totrans-2113
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: loss = cross_entropy_loss(logits=logits, labels=labels) return loss, (logits,
+    batch_stats)
 - en: Define Flax metrics
   id: totrans-2114
   prefs:
   - PREF_H2
   stylish: true
   type: TYPE_NORMAL
+  zh: 定义Flax指标
 - en: '`Using the loss function, define a function that will return the loss and accuracy
     during training.`'
   id: totrans-2115
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`使用损失函数，定义一个函数，在训练期间返回损失和准确度。`'
 - en: '`def compute_metrics(*, logits, labels):`'
   id: totrans-2116
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`def compute_metrics(*, logits, labels):`'
 - en: '`loss = cross_entropy_loss(logits=logits, labels=labels) accuracy = jnp.mean(jnp.argmax(logits,
     -1) == labels) metrics = {`'
   id: totrans-2117
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`loss = cross_entropy_loss(logits=logits, labels=labels) accuracy = jnp.mean(jnp.argmax(logits,
+    -1) == labels) metrics = {`'
 - en: '`''loss'': loss,`'
   id: totrans-2118
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`''loss'': loss,`'
 - en: '`''accuracy'': accuracy,`'
   id: totrans-2119
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`''accuracy'': accuracy,`'
 - en: '`}`'
   id: totrans-2120
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`}`'
 - en: '`return metrics`'
   id: totrans-2121
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`return metrics`'
 - en: '**Create Flax training state**'
   id: totrans-2122
   prefs:
   - PREF_H2
   stylish: true
   type: TYPE_NORMAL
+  zh: '**创建Flax训练状态**'
 - en: '`Flax provides a training state for storing training information. In this case,
     we add the [batch_stats] information.class TrainState(train_state.TrainState):
     batch_stats: FrozenDict`'
@@ -12994,42 +13928,50 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`Flax提供一个训练状态来存储训练信息。在这种情况下，我们添加[batch_stats]信息。`'
 - en: '`state = TrainState.create(`'
   id: totrans-2124
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`state = TrainState.create(`'
 - en: '`apply_fn = model.apply,`'
   id: totrans-2125
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`apply_fn = model.apply,`'
 - en: '`params = variables[''params''],`'
   id: totrans-2126
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`params = variables[''params''],`'
 - en: '`tx = optimizer,`'
   id: totrans-2127
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`tx = optimizer,`'
 - en: '`batch_stats = variables[''batch_stats''],`'
   id: totrans-2128
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`batch_stats = variables[''batch_stats''],`'
 - en: '`)`'
   id: totrans-2129
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`)`'
 - en: '**Training step**'
   id: totrans-2130
   prefs:
   - PREF_H2
   stylish: true
   type: TYPE_NORMAL
+  zh: '**训练步骤**'
 - en: '`The training step receives the images and labels and computes the gradient
     with respect to the model parameters. It then returns the new state and the model
     metrics.`'
@@ -13037,100 +13979,121 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`训练步骤接收图像和标签，并计算相对于模型参数的梯度。然后返回新的状态和模型指标。`'
 - en: '`@jax.jit`'
   id: totrans-2132
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`@jax.jit`'
 - en: '`def train_step(state: TrainState,images, labels):`'
   id: totrans-2133
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`def train_step(state: TrainState,images, labels):`'
 - en: '"""Train for a single step."""'
   id: totrans-2134
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '"""训练单步。"""'
 - en: '`(batch_loss, (logits, batch_stats)), grads= jax.value_and_gra d(compute_loss,
     has_aux=True)(state.params,state.batch_stats, i mages,labels)`'
   id: totrans-2135
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`(batch_loss, (logits, batch_stats)), grads= jax.value_and_gra d(compute_loss,
+    has_aux=True)(state.params,state.batch_stats, i mages,labels)`'
 - en: '`state = state.apply_gradients(grads=grads)`'
   id: totrans-2136
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`state = state.apply_gradients(grads=grads)`'
 - en: '`metrics = compute_metrics(logits=logits, labels=labels)`'
   id: totrans-2137
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`metrics = compute_metrics(logits=logits, labels=labels)`'
 - en: '`return state, metrics`'
   id: totrans-2138
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`return state, metrics`'
 - en: '`To train the network for one epoch, loop through the training data while applying
     the training step.`'
   id: totrans-2139
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`要训练网络一个epoch，循环遍历训练数据并应用训练步骤。`'
 - en: '`def train_one_epoch(state, dataloader):`'
   id: totrans-2140
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`def train_one_epoch(state, dataloader):`'
 - en: '"""Train for 1 epoch on the training set.""" batch_metrics = []'
   id: totrans-2141
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '"""在训练集上训练1个epoch。""" batch_metrics = []'
 - en: '`for cnt, (images, labels) in enumerate(dataloader):`'
   id: totrans-2142
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`for cnt, (images, labels) in enumerate(dataloader):`'
 - en: '`images = images / 255.0`'
   id: totrans-2143
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`images = images / 255.0`'
 - en: '`state, metrics = train_step(state, images, labels) batch_metrics.append(metrics)`'
   id: totrans-2144
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`state, metrics = train_step(state, images, labels) batch_metrics.append(metrics)`'
 - en: '`batch_metrics_np = jax.device_get(batch_metrics) epoch_metrics_np = {k: np.mean([metrics[k]
     for metrics in batch_metrics_n`'
   id: totrans-2145
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`batch_metrics_np = jax.device_get(batch_metrics) epoch_metrics_np = {k: np.mean([metrics[k]
+    for metrics in batch_metrics_n`'
 - en: '`p])`'
   id: totrans-2146
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`p])`'
 - en: '`for k in batch_metrics_np[0] }`'
   id: totrans-2147
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`for k in batch_metrics_np[0] }`'
 - en: '`return state, epoch_metrics_np`'
   id: totrans-2148
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`return state, epoch_metrics_np`'
 - en: '**Evaluation step**'
   id: totrans-2149
   prefs:
   - PREF_H2
   stylish: true
   type: TYPE_NORMAL
+  zh: '**评估步骤**'
 - en: '`The model evaluation steps accept the test labels and images and applies them
     to the network. It then returns the model evaluation metrics. During evaluation,
     set the [train] parameter to [False]. You''ll also define the [batch_stats] and
@@ -13139,6 +14102,7 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`模型评估步骤接受测试标签和图像，并将其应用于网络。然后返回模型评估指标。在评估过程中，将[train]参数设为[False]。还需定义[batch_stats]和[dropout]层的随机数。`'
 - en: '`@jax.jitdef eval_step(batch_stats, params, images, labels): logits = model.apply({''params'':
     params,''batch_stats'': batch _stats}, images, train=False,rngs={''dropout'':
     jax.random.PRNGKe y(0)})return compute_metrics(logits=logits, labels=labels)`'
@@ -13146,77 +14110,94 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`@jax.jitdef eval_step(batch_stats, params, images, labels): logits = model.apply({''params'':
+    params,''batch_stats'': batch _stats}, images, train=False,rngs={''dropout'':
+    jax.random.PRNGKe y(0)})return compute_metrics(logits=logits, labels=labels)`'
 - en: '`def evaluate_model(state, test_imgs, test_lbls):`'
   id: totrans-2152
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`def evaluate_model(state, test_imgs, test_lbls):`'
 - en: '"""Evaluate on the validation set."""'
   id: totrans-2153
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '"""在验证集上进行评估。"""'
 - en: '`metrics = eval_step(state.batch_stats,state.params, test_im`'
   id: totrans-2154
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`metrics = eval_step(state.batch_stats,state.params, test_im`'
 - en: '`gs, test_lbls)`'
   id: totrans-2155
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`gs, test_lbls)`'
 - en: '`metrics = jax.device_get(metrics)`'
   id: totrans-2156
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`metrics = jax.device_get(metrics)`'
 - en: '`metrics = jax.tree_map(lambda x: x.item(), metrics) return metrics`'
   id: totrans-2157
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`metrics = jax.tree_map(lambda x: x.item(), metrics) return metrics`'
 - en: '**Train ResNet model in Flax**'
   id: totrans-2158
   prefs:
   - PREF_H2
   stylish: true
   type: TYPE_NORMAL
+  zh: '**在Flax中训练ResNet模型**'
 - en: '`Train the ResNet model by applying the [train_one_epoch] function for the
     desired number of epochs. This is a few epochs since we are finetuning the network.`'
   id: totrans-2159
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 通过应用`[train_one_epoch]`函数来训练ResNet模型。由于我们在微调网络，所以只需要几个epochs。
 - en: '**Set up TensorBoard in Flax**'
   id: totrans-2160
   prefs:
   - PREF_H2
   stylish: true
   type: TYPE_NORMAL
+  zh: '**在Flax中设置TensorBoard**'
 - en: '`To monitor model training via TensorBoard, you can write the training and
     validation metrics to TensorBoard.`'
   id: totrans-2161
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`要通过TensorBoard监控模型训练，可以将训练和验证指标写入TensorBoard。`'
 - en: '`from torch.utils.tensorboard import SummaryWriter import torchvision.transforms.functional
     as F logdir = "flax_logs"`'
   id: totrans-2162
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`from torch.utils.tensorboard import SummaryWriter import torchvision.transforms.functional
+    as F logdir = "flax_logs"`'
 - en: '`writer = SummaryWriter(logdir)`'
   id: totrans-2163
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`writer = SummaryWriter(logdir)`'
 - en: Train model
   id: totrans-2164
   prefs:
   - PREF_H2
   stylish: true
   type: TYPE_NORMAL
+  zh: 训练模型
 - en: '`Define a function to train and evaluate the model while writing the metrics
     to TensorBoard.(test_images, test_labels) = next(iter(validation_loader)) test_images
     = test_images / 255.0`'
@@ -13224,67 +14205,82 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`定义一个函数来训练和评估模型，并将指标写入TensorBoard。(test_images, test_labels) = next(iter(validation_loader))
+    test_images = test_images / 255.0`'
 - en: '`training_loss = [] training_accuracy = [] testing_loss = []`'
   id: totrans-2166
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`training_loss = [] training_accuracy = [] testing_loss = []`'
 - en: '`testing_accuracy = []`'
   id: totrans-2167
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`testing_accuracy = []`'
 - en: '`def train_model(epochs):for epoch in range(1, epochs + 1):train_state, train_metrics
     = train_one_epoch(state, tra`'
   id: totrans-2168
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`def train_model(epochs):for epoch in range(1, epochs + 1):train_state, train_metrics
+    = train_one_epoch(state, tra`'
 - en: '`in_loader)`'
   id: totrans-2169
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`in_loader)`'
 - en: '`training_loss.append(train_metrics[''loss'']) training_accuracy.append(train_metrics[''accuracy''])`'
   id: totrans-2170
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`training_loss.append(train_metrics[''loss'']) training_accuracy.append(train_metrics[''accuracy''])`'
 - en: '`test_metrics = evaluate_model(train_state, test_images, test_labels)`'
   id: totrans-2171
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`test_metrics = evaluate_model(train_state, test_images, test_labels)`'
 - en: '`testing_loss.append(test_metrics[''loss''])`'
   id: totrans-2172
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`testing_loss.append(test_metrics[''loss''])`'
 - en: '`testing_accuracy.append(test_metrics[''accuracy''])`'
   id: totrans-2173
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`testing_accuracy.append(test_metrics[''accuracy''])`'
 - en: '`writer.add_scalar(''Loss/train'', train_metrics[''loss''], epoch)`'
   id: totrans-2174
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`writer.add_scalar(''Loss/train'', train_metrics[''loss''], epoch)`'
 - en: '`writer.add_scalar(''Loss/test'', test_metrics[''loss''], epoch)`'
   id: totrans-2175
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`writer.add_scalar(''Loss/test'', test_metrics[''loss''], epoch)`'
 - en: '`writer.add_scalar(''Accuracy/train'', train_metrics[''accu racy''], epoch)`'
   id: totrans-2176
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`writer.add_scalar(''Accuracy/train'', train_metrics[''accu racy''], epoch)`'
 - en: '`writer.add_scalar(''Accuracy/test'', test_metrics[''accura cy''], epoch)`'
   id: totrans-2177
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`writer.add_scalar(''Accuracy/test'', test_metrics[''accura cy''], epoch)`'
 - en: '`print(f"Epoch: {epoch}, training loss: {train_metrics [''loss'']}, training
     accuracy: {train_metrics[''accuracy''] * 10 0}, validation loss: {test_metrics[''loss'']},
     validation accurac y: {test_metrics[''accuracy''] * 100}")`'
@@ -13292,113 +14288,137 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`print(f"Epoch: {epoch}, training loss: {train_metrics [''loss'']}, training
+    accuracy: {train_metrics[''accuracy''] * 10 0}, validation loss: {test_metrics[''loss'']},
+    validation accurac y: {test_metrics[''accuracy''] * 100}")`'
 - en: '`return train_stateRun the training function. trained_model_state = train_model(config["N_EPOCHS"])`'
   id: totrans-2179
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`return train_stateRun the training function. trained_model_state = train_model(config["N_EPOCHS"])`'
 - en: Save Flax model
   id: totrans-2180
   prefs:
   - PREF_H2
   stylish: true
   type: TYPE_NORMAL
+  zh: 保存Flax模型
 - en: Use the `[save_checkpoint]` to save a trained Flax model.
   id: totrans-2181
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 使用`[save_checkpoint]`保存训练后的Flax模型。
 - en: '`from flax.training import checkpoints`'
   id: totrans-2182
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`from flax.training import checkpoints`'
 - en: '`ckpt_dir = ''model_checkpoint/''`'
   id: totrans-2183
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`ckpt_dir = ''model_checkpoint/''`'
 - en: '`checkpoints.save_checkpoint(ckpt_dir=ckpt_dir,`'
   id: totrans-2184
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`checkpoints.save_checkpoint(ckpt_dir=ckpt_dir,`'
 - en: '`target=trained_model_state, step=100,`'
   id: totrans-2185
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`target=trained_model_state, step=100,`'
 - en: '`prefix=''resnet_model'', overwrite=True`'
   id: totrans-2186
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`prefix=''resnet_model'', overwrite=True`'
 - en: '`)`'
   id: totrans-2187
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`)`'
 - en: Load saved Flax model
   id: totrans-2188
   prefs:
   - PREF_H2
   stylish: true
   type: TYPE_NORMAL
+  zh: 加载保存的Flax模型
 - en: A saved Flax model is loaded using the `[restore_checkpoint]` method.
   id: totrans-2189
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 使用`[restore_checkpoint]`方法加载保存的Flax模型。
 - en: '`loaded_model = checkpoints.restore_checkpoint('
   id: totrans-2190
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`loaded_model = checkpoints.restore_checkpoint('
 - en: '`ckpt_dir=ckpt_dir, target=state, prefix=''resnet_mod`'
   id: totrans-2191
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`ckpt_dir=ckpt_dir, target=state, prefix=''resnet_mod`'
 - en: '`el'') loaded_model`'
   id: totrans-2192
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`el'') loaded_model`'
 - en: Evaluate Flax ResNet model
   id: totrans-2193
   prefs:
   - PREF_H2
   stylish: true
   type: TYPE_NORMAL
+  zh: 评估Flax ResNet模型
 - en: '`To evaluate a Flax model, pass the test and training data to`'
   id: totrans-2194
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`要评估Flax模型，请将测试和训练数据传递给`'
 - en: '`the evalaute_model function.evaluate_model(loaded_model,test_images, test_labels)
     ![](../images/00058.gif)`'
   id: totrans-2195
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`the evalaute_model function.evaluate_model(loaded_model,test_images, test_labels)
+    ![](../images/00058.gif)`'
 - en: Visualize model performance
   id: totrans-2196
   prefs:
   - PREF_H2
   stylish: true
   type: TYPE_NORMAL
+  zh: 可视化模型性能
 - en: You can check the network's performance via TensorBoard or plot the metrics
     using Matplotlib.
   id: totrans-2197
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 你可以通过TensorBoard检查网络的性能，或者使用Matplotlib绘制指标。
 - en: Final thoughts
   id: totrans-2198
   prefs:
   - PREF_H2
   stylish: true
   type: TYPE_NORMAL
+  zh: Final thoughts
 - en: 'You can apply transfer learning to take advantage of pre-trained models and
     get results with minimal effort. You have learned how to train a ResNet model
     in Flax. Specially, you have covered:'
@@ -13406,63 +14426,76 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 可以应用迁移学习来利用预训练模型，并且只需付出最小的努力就能获得结果。你已经学会了如何在Flax中训练ResNet模型。具体来说，你已经覆盖了：
 - en: '`How to define the ResNet model in Flax.`'
   id: totrans-2200
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`How to define the ResNet model in Flax.`'
 - en: How to freeze the layers of the ResNet network.
   id: totrans-2201
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 如何冻结ResNet网络的层。
 - en: '`Training a ResNet model on custom data in Flax.`'
   id: totrans-2202
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`Training a ResNet model on custom data in Flax.`'
 - en: '`Saving and loading a ResNet model in Flax.`'
   id: totrans-2203
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`Saving and loading a ResNet model in Flax.`'
 - en: Elegy(High-level API for deep learning in JAX & Flax)
   id: totrans-2204
   prefs:
   - PREF_H2
   stylish: true
   type: TYPE_NORMAL
+  zh: Elegy(High-level API for deep learning in JAX & Flax)
 - en: '`Training deep learning networks in Flax is done in a couple of steps. It involves
     creating the following functions:`'
   id: totrans-2205
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`Training deep learning networks in Flax is done in a couple of steps. It involves
+    creating the following functions:`'
 - en: Model definition.
   id: totrans-2206
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: Model definition.
 - en: '`Compute metrics.`'
   id: totrans-2207
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`Compute metrics.`'
 - en: '`Training state.`'
   id: totrans-2208
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`Training state.`'
 - en: Training step.
   id: totrans-2209
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: Training step.
 - en: Training and evaluation function.
   id: totrans-2210
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: Training and evaluation function.
 - en: '`Flax and JAX give more control in defining and training deep learning networks.
     However, this comes with more verbosity. Enter Elegy. Elegy is a high-level API
     for creating deep learning networks in JAX. Elegy''s API is like the one in Keras.`'
@@ -13470,205 +14503,253 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`Flax and JAX give more control in defining and training deep learning networks.
+    However, this comes with more verbosity. Enter Elegy. Elegy is a high-level API
+    for creating deep learning networks in JAX. Elegy''s API is like the one in Keras.`'
 - en: '`Let''s look at how to use Elegy to define and train deep learning networks
     in Flax.`'
   id: totrans-2212
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`Let''s look at how to use Elegy to define and train deep learning networks
+    in Flax.`'
 - en: '`Data pre-processing`'
   id: totrans-2213
   prefs:
   - PREF_H2
   stylish: true
   type: TYPE_NORMAL
+  zh: '`Data pre-processing`'
 - en: '`To make this illustration concrete, we''ll use the movie review data from
     Kaggle to create an LSTM network in Flax.`'
   id: totrans-2214
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`To make this illustration concrete, we''ll use the movie review data from
+    Kaggle to create an LSTM network in Flax.`'
 - en: '`The first step is to download and extract the data.`'
   id: totrans-2215
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`The first step is to download and extract the data.`'
 - en: '`import os`'
   id: totrans-2216
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`import os`'
 - en: '`import kaggle`'
   id: totrans-2217
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`import kaggle`'
 - en: '`Obtain from https://www.kaggle.com/username/account os.environ["KAGGLE_USERNAME"]="KAGGLE_USERNAME"`'
   id: totrans-2218
   prefs:
   - PREF_H1
   stylish: true
   type: TYPE_NORMAL
+  zh: '`Obtain from https://www.kaggle.com/username/account os.environ["KAGGLE_USERNAME"]="KAGGLE_USERNAME"`'
 - en: '`os.environ["KAGGLE_KEY"]="KAGGLE_KEY"`'
   id: totrans-2219
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`os.environ["KAGGLE_KEY"]="KAGGLE_KEY"`'
 - en: '`!kaggle datasets download lakshmi25npathi/imdb-dataset-of-50k-m ovie-reviews`'
   id: totrans-2220
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`!kaggle datasets download lakshmi25npathi/imdb-dataset-of-50k-m ovie-reviews`'
 - en: '`import zipfile`'
   id: totrans-2221
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`import zipfile`'
 - en: '`with zipfile.ZipFile(''imdb-dataset-of-50k-movie-reviews.zip'',`'
   id: totrans-2222
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`with zipfile.ZipFile(''imdb-dataset-of-50k-movie-reviews.zip'',`'
 - en: '`''r'') as zip_ref:zip_ref.extractall(''imdb-dataset-of-50k-movie-reviews'')Next,
     we define the following processing steps:`'
   id: totrans-2223
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`''r'') as zip_ref:zip_ref.extractall(''imdb-dataset-of-50k-movie-reviews'')Next,
+    we define the following processing steps:`'
 - en: '`Split the data into a training and testing set. Remove stopwords from the
     data.`'
   id: totrans-2224
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`Split the data into a training and testing set. Remove stopwords from the
+    data.`'
 - en: '`Clean the data by removing punctuations and other special characters.`'
   id: totrans-2225
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: 清理数据，去除标点和其他特殊字符。
 - en: '`Convert the data to a TensorFlow dataset.`'
   id: totrans-2226
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`Convert the data to a TensorFlow dataset.`'
 - en: '`Conver the data to numerical representation using the Keras vectorization
     layer.`'
   id: totrans-2227
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`Conver the data to numerical representation using the Keras vectorization
+    layer.`'
 - en: '`import numpy as np`'
   id: totrans-2228
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`import numpy as np`'
 - en: '`import pandas as pd`'
   id: totrans-2229
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`import pandas as pd`'
 - en: '`from numpy import array`'
   id: totrans-2230
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`from numpy import array`'
 - en: '`import tensorflow_datasets as tfds`'
   id: totrans-2231
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`import tensorflow_datasets as tfds`'
 - en: '`import tensorflow as tf`'
   id: totrans-2232
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`import tensorflow as tf`'
 - en: '`from sklearn.model_selection import train_test_split from sklearn.preprocessing
     import LabelEncoder import matplotlib.pyplot as plt`'
   id: totrans-2233
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`from sklearn.model_selection import train_test_split from sklearn.preprocessing
+    import LabelEncoder import matplotlib.pyplot as plt`'
 - en: '`from sklearn.model_selection import train_test_split import tensorflow as
     tf`'
   id: totrans-2234
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`from sklearn.model_selection import train_test_split import tensorflow as
+    tf`'
 - en: '`df = pd.read_csv("imdb-dataset-of-50k-movie-reviews/IMDB Datase t.csv")`'
   id: totrans-2235
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`df = pd.read_csv("imdb-dataset-of-50k-movie-reviews/IMDB Datase t.csv")`'
 - en: '`import nltk`'
   id: totrans-2236
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`import nltk`'
 - en: '`from nltk.corpus import stopwords`'
   id: totrans-2237
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`from nltk.corpus import stopwords`'
 - en: '`nltk.download(''stopwords'')`'
   id: totrans-2238
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`nltk.download(''stopwords'')`'
 - en: '`def remove_stop_words(review):`'
   id: totrans-2239
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`def remove_stop_words(review):`'
 - en: '`review_minus_sw = []`'
   id: totrans-2240
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`review_minus_sw = []`'
 - en: '`stop_words = stopwords.words(''english'')`'
   id: totrans-2241
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`stop_words = stopwords.words(''english'')`'
 - en: '`review = review.split()`'
   id: totrans-2242
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`review = review.split()`'
 - en: '`cleaned_review = [review_minus_sw.append(word) for word in`'
   id: totrans-2243
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`cleaned_review = [review_minus_sw.append(word) for word in`'
 - en: '`review if word not in stop_words]`'
   id: totrans-2244
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`review if word not in stop_words]`'
 - en: '`cleaned_review = '' ''.join(review_minus_sw)`'
   id: totrans-2245
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`cleaned_review = '' ''.join(review_minus_sw)`'
 - en: '`return cleaned_review`'
   id: totrans-2246
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`return cleaned_review`'
 - en: '`df[''review''] = df[''review''].apply(remove_stop_words) labelencoder = LabelEncoder()`'
   id: totrans-2247
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`df[''review''] = df[''review''].apply(remove_stop_words) labelencoder = LabelEncoder()`'
 - en: '`df = df.assign(sentiment = labelencoder.fit_transform(df["senti ment"]))`'
   id: totrans-2248
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`df = df.assign(sentiment = labelencoder.fit_transform(df["senti ment"]))`'
 - en: '`df = df.drop_duplicates()`'
   id: totrans-2249
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`df = df.drop_duplicates()`'
 - en: '`docs = df[''review'']`'
   id: totrans-2250
   prefs: []
