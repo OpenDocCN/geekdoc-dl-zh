@@ -12512,267 +12512,328 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
-- en: ds = training_data.prefetch(1)
+- en: '`ds = training_data.prefetch(1)`'
   id: totrans-2263
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: ds = ds.repeat(3)
+- en: '`ds = ds.repeat(3)`'
   id: totrans-2264
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: 'ds = ds.shuffle(3, reshuffle_each_iteration=True) # tfds.dataset_as_numpy converts
-    the tf.data.Dataset into an'
+- en: '`ds = ds.shuffle(3, reshuffle_each_iteration=True)` # `tfds.dataset_as_numpy`
+    converts the `tf.data.Dataset` into an'
   id: totrans-2265
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: iterable of NumPy arraysreturn tfds.as_numpy(ds)
+- en: '`iterable of NumPy arraysreturn tfds.as_numpy(ds)`'
   id: totrans-2266
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: '**Model definition in Elegy**'
   id: totrans-2267
   prefs:
   - PREF_H2
+  stylish: true
   type: TYPE_NORMAL
-- en: Start by installing Elegy, Flax, and JAX.pip install -U elegy flax jax jaxlibNext,
-    define the LSTM model.
+- en: Start by installing `Elegy`, `Flax`, and `JAX`.`pip install -U elegy flax jax
+    jaxlib`Next, define the LSTM model.
   id: totrans-2268
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: import jax
+- en: '`import jax`'
   id: totrans-2269
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: import jax.numpy as jnp import elegy as eg
+- en: '`import jax.numpy as jnp import elegy as eg`'
   id: totrans-2270
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: from flax import linen as nn
+- en: '`from flax import linen as nn`'
   id: totrans-2271
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: 'class LSTMModel(nn.Module):'
+- en: '`class LSTMModel(nn.Module):`'
   id: totrans-2272
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: 'def setup(self):'
+- en: '`def setup(self):`'
   id: totrans-2273
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: 'self.embedding = nn.Embed(max_features, max_len) lstm_layer = nn.scan(nn.OptimizedLSTMCell,
-    variable_broadcast="params", split_rngs={"params": False}, in_axes=1,'
+- en: '`self.embedding = nn.Embed(max_features, max_len)` `lstm_layer = nn.scan(nn.OptimizedLSTMCell,
+    variable_broadcast="params", split_rngs={"params": False}, in_axes=1,`'
   id: totrans-2274
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: out_axes=1,
+- en: '`out_axes=1,`'
   id: totrans-2275
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: length=max_len,
+- en: '`length=max_len,`'
   id: totrans-2276
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: reverse=False)
+- en: '`reverse=False)`'
   id: totrans-2277
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: self.lstm1 = lstm_layer()
+- en: '`self.lstm1 = lstm_layer()`'
   id: totrans-2278
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: self.dense1 = nn.Dense(256)
+- en: '`self.dense1 = nn.Dense(256)`'
   id: totrans-2279
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: self.lstm2 = lstm_layer()
+- en: '`self.lstm2 = lstm_layer()`'
   id: totrans-2280
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: self.dense2 = nn.Dense(128)
+- en: '`self.dense2 = nn.Dense(128)`'
   id: totrans-2281
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: self.lstm3 = lstm_layer()
+- en: '`self.lstm3 = lstm_layer()`'
   id: totrans-2282
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: self.dense3 = nn.Dense(64)
+- en: '`self.dense3 = nn.Dense(64)`'
   id: totrans-2283
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: self.dense4 = nn.Dense(2)
+- en: '`self.dense4 = nn.Dense(2)`'
   id: totrans-2284
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: '@nn.rematdef __call__(self, x_batch): x = self.embedding(x_batch)'
+- en: '`@nn.rematdef __call__(self, x_batch): x = self.embedding(x_batch)`'
   id: totrans-2285
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: carry, hidden = nn.OptimizedLSTMCell.initialize_carry(j ax.random.PRNGKey(0),
-    batch_dims=(len(x_batch),), size=128)
+- en: '`carry, hidden = nn.OptimizedLSTMCell.initialize_carry(j ax.random.PRNGKey(0),
+    batch_dims=(len(x_batch),), size=128)`'
   id: totrans-2286
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: (carry, hidden), x = self.lstm1((carry, hidden), x)
+- en: '`(carry, hidden)`, `x = self.lstm1((carry, hidden), x)`'
   id: totrans-2287
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: x = self.dense1(x) x = nn.relu(x)
+- en: '`x = self.dense1(x) x = nn.relu(x)`'
   id: totrans-2288
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: carry, hidden = nn.OptimizedLSTMCell.initialize_carry(j ax.random.PRNGKey(0),
-    batch_dims=(len(x_batch),), size=64)
+- en: '`carry, hidden = nn.OptimizedLSTMCell.initialize_carry(j ax.random.PRNGKey(0),
+    batch_dims=(len(x_batch),), size=64)`'
   id: totrans-2289
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: (carry, hidden), x = self.lstm2((carry, hidden), x)
+- en: '`(carry, hidden), x = self.lstm2((carry, hidden), x)`'
   id: totrans-2290
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: x = self.dense2(x) x = nn.relu(x)
+- en: '`x = self.dense2(x) x = nn.relu(x)`'
   id: totrans-2291
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: carry, hidden = nn.OptimizedLSTMCell.initialize_carry(j ax.random.PRNGKey(0),
-    batch_dims=(len(x_batch),), size=32)
+- en: '`carry, hidden = nn.OptimizedLSTMCell.initialize_carry(j ax.random.PRNGKey(0),
+    batch_dims=(len(x_batch),), size=32)`'
   id: totrans-2292
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: (carry, hidden), x = self.lstm3((carry, hidden), x)
+- en: '`(carry, hidden), x = self.lstm3((carry, hidden), x)`'
   id: totrans-2293
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: x = self.dense3(x)
+- en: '`x = self.dense3(x)`'
   id: totrans-2294
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: x = nn.relu(x)
+- en: '`x = nn.relu(x)`'
   id: totrans-2295
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: x = self.dense4(x[:, -1]) return nn.log_softmax(x)
+- en: '`x = self.dense4(x[:, -1]) return nn.log_softmax(x)`'
   id: totrans-2296
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: Let's now create an Elegy model using the above network. As you can see, the
-    loss and metrics are defined like in Keras. The model compilation is done in the
-    constructor, so you don't have to do this manually.
+    loss and metrics are defined like in `Keras`. The model compilation is done in
+    the constructor, so you don't have to do this manually.
   id: totrans-2297
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: import optax
+- en: '`import optax`'
   id: totrans-2298
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: model = eg.Model(
+- en: '`model = eg.Model(`'
   id: totrans-2299
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: module=LSTMModel(),
+- en: '`module=LSTMModel(),`'
   id: totrans-2300
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: loss=[
+- en: '`loss=[`'
   id: totrans-2301
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: eg.losses.Crossentropy(), eg.regularizers.L2(l=1e-4), ],
+- en: '`eg.losses.Crossentropy()`, `eg.regularizers.L2(l=1e-4)`, ],'
   id: totrans-2302
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: metrics=eg.metrics.Accuracy(),
+- en: '`metrics=eg.metrics.Accuracy(),`'
   id: totrans-2303
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: optimizer=optax.adam(1e-3), )
+- en: '`optimizer=optax.adam(1e-3), )`'
   id: totrans-2304
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: '**Elegy model summary**'
   id: totrans-2305
   prefs:
   - PREF_H2
+  stylish: true
   type: TYPE_NORMAL
-- en: Like in Keras, we can print the model's summary. model.summary(jnp.array(X_train_padded[:64]))
+- en: Like in Keras, we can print the model's summary. `model.summary(jnp.array(X_train_padded[:64]))`
     ![](../images/00059.jpeg)
   id: totrans-2306
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: '**Distributed training in Elegy**'
   id: totrans-2307
   prefs:
   - PREF_H2
+  stylish: true
   type: TYPE_NORMAL
 - en: To train models in a distributed manner in Flax, we define parallel versions
     of our model training functions.
   id: totrans-2308
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: However, with Elegy, we call the [distributed] method.model = model.distributed()
+- en: However, with Elegy, we call the `[distributed]` method.`model = model.distributed()`
   id: totrans-2309
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: '**Keras-like callbacks in Flax**'
   id: totrans-2310
   prefs:
   - PREF_H2
+  stylish: true
   type: TYPE_NORMAL
 - en: 'Elegy supports callbacks similar to Keras callbacks. In this case, we train
     the model with the following callbacks:'
   id: totrans-2311
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: TensorBoard.
+- en: '`TensorBoard.`'
   id: totrans-2312
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: Model checkpoint.
+- en: '`Model checkpoint.`'
   id: totrans-2313
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: Early stopping.callbacks = [ eg.callbacks.TensorBoard("summaries"), eg.callbacks.ModelCheckpoint("models/high-level",
-    save_best_only=True),eg.callbacks.EarlyStopping(monitor = 'val_loss',pa tience=10)]
+- en: '`Early stopping.callbacks = [ eg.callbacks.TensorBoard("summaries"), eg.callbacks.ModelCheckpoint("models/high-level",
+    save_best_only=True),eg.callbacks.EarlyStopping(monitor = ''val_loss'',pa tience=10)]`'
   id: totrans-2314
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: '**Train Elegy models**'
   id: totrans-2315
   prefs:
   - PREF_H2
+  stylish: true
   type: TYPE_NORMAL
-- en: 'Elegy provides the [fit] method for training models. The method supports the
-    following data sources:'
+- en: 'Elegy provides the `[fit]` method for training models. The method supports
+    the following data sources:'
   id: totrans-2316
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: Tensorflow Dataset.
+- en: '`Tensorflow Dataset.`'
   id: totrans-2317
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: Pytorch DataLoader
+- en: '`Pytorch DataLoader`'
   id: totrans-2318
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: Elegy DataLoader, and
+- en: '`Elegy DataLoader, and`'
   id: totrans-2319
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: Python Generators.
+- en: '`Python Generators.`'
   id: totrans-2320
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: history = model.fit(
+- en: '`history = model.fit(`'
   id: totrans-2321
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: training_data,
+- en: '`training_data,`'
   id: totrans-2322
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: epochs=100,
+- en: '`epochs=100,`'
   id: totrans-2323
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: validation_data=(validation_data), callbacks=callbacks,
   id: totrans-2324

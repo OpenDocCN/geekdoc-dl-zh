@@ -1,168 +1,240 @@
-- en: 'Chapter 1: What is Jax?'
+- en: '`Chapter 1: What is Jax?`'
+  id: totrans-0
   prefs:
   - PREF_H1
+  stylish: true
   type: TYPE_NORMAL
-- en: '* * *'
+- en: '`* * *`'
+  id: totrans-1
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: Welcome to the revolution of numerical computing! In this chapter, we'll unravel
-    the magic behind Jax—a game-changer in the world of mathematical problem-solving.
+- en: '`Welcome to the revolution of numerical computing! In this chapter, we''ll
+    unravel the magic behind Jax—a game-changer in the world of mathematical problem-solving.
     Discover how Jax seamlessly blends simplicity and power, reshaping how we approach
-    complex algorithms.
+    complex algorithms.`'
+  id: totrans-2
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: 1.1 A Brief Overview of Jax
+- en: '`1.1 A Brief Overview of Jax`'
+  id: totrans-3
   prefs:
   - PREF_H2
+  stylish: true
   type: TYPE_NORMAL
 - en: 'Jax isn''t just another library; it''s a powerhouse transforming the way we
     crunch numbers. At its core, Jax is a high-performance numerical computation library,
     and here''s why it''s a game-changer:'
+  id: totrans-4
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: Simplicity Meets Power
+- en: '`Simplicity Meets Power`'
+  id: totrans-5
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: Jax is your go-to for numerical computations that demand both simplicity and
     computational muscle. It seamlessly blends the user-friendly syntax of NumPy with
     the raw power of XLA (Accelerated Linear Algebra).
+  id: totrans-6
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: Automatic Differentiation Magic
+- en: '`Automatic Differentiation Magic`'
+  id: totrans-7
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: One standout feature is automatic differentiation. Imagine effortlessly computing
     gradients without breaking a sweat. Jax does just that, making it a go-to for
     machine learning tasks where gradients are the unsung heroes.
+  id: totrans-8
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: XLA Acceleration for the Win
+- en: '`XLA Acceleration for the Win`'
+  id: totrans-9
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: Jax isn't content with just being fast; it's turbocharged with XLA Acceleration.
     This means your numerical computations get a boost with just-in-time (JIT) compilation,
     optimizing performance for different hardware, be it GPUs or TPUs.
+  id: totrans-10
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: NumPy's Spirit Lives On
+- en: '`NumPy''s Spirit Lives On`'
+  id: totrans-11
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: If you're already a NumPy aficionado, transitioning to Jax is a breeze. Jax
     adopts NumPy's syntax, making it feel like a familiar friend. You get the simplicity
     you love without sacrificing performance.
+  id: totrans-12
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: A Glimpse into Jax's Impact
+- en: '`A Glimpse into Jax''s Impact`'
+  id: totrans-13
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: Jax isn't confined to niche applications. It's a key player in the machine learning
     arena, offering rapid prototyping, scalability, and versatility. Whether you're
     building neural networks or solving complex scientific problems, Jax is your trusty
     companion.
+  id: totrans-14
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: In a nutshell, Jax is rewriting the rules of numerical computation. It's fast,
     it's friendly, and it's flexing its muscles in the realm of machine learning and
     beyond. Simply put, Jax is where simplicity meets computational might.
+  id: totrans-15
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: 1.2 Jax as a High-Performance Numerical Computation Library
+- en: '`1.2 Jax as a High-Performance Numerical Computation Library`'
+  id: totrans-16
   prefs:
   - PREF_H2
+  stylish: true
   type: TYPE_NORMAL
 - en: Jax isn't just another library; it's the heavyweight champion in the ring of
     numerical computation. Picture it as a turbocharged engine for your mathematical
     operations, designed to handle complex computations with finesse and speed.
+  id: totrans-17
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: The High-Performance Edge
+- en: '`The High-Performance Edge`'
+  id: totrans-18
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: What sets Jax apart is its commitment to high-performance computing. It's not
     satisfied with merely getting the job done; it does so at warp speed. This makes
     it the go-to choice for tasks where every computational millisecond counts.
+  id: totrans-19
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: A Symphony of Numerical Prowess
+- en: '`A Symphony of Numerical Prowess`'
+  id: totrans-20
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: Consider Jax your conductor in the orchestra of numerical operations. Whether
     you're dealing with intricate algorithms or crunching massive datasets, Jax orchestrates
     the calculations, ensuring they resonate with efficiency and precision.
+  id: totrans-21
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: Beyond Basic Computation
+- en: '`Beyond Basic Computation`'
+  id: totrans-22
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: Jax isn't confined to basic arithmetic; it's a playground for advanced mathematical
     gymnastics. From linear algebra to intricate differential equations, Jax flexes
     its muscles, turning your mathematical ideas into computational reality.
+  id: totrans-23
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: Your Ally in Machine Learning Domains
+  id: totrans-24
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: In the ever-evolving landscape of machine learning, Jax stands tall. It's not
     just about computing; it's about enabling breakthroughs. With Jax, building and
     training neural networks becomes a seamless journey, where performance meets innovation.
+  id: totrans-25
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: As we embark on this exploration of Jax, remember it's not just a library; it's
     a numerical haven. Whether you're a seasoned researcher or a curious beginner,
     Jax opens the door to a world where numerical computations are not just tasks
     but exhilarating experiences.
+  id: totrans-26
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: 1.3 Benefits of Using Jax for Machine Learning
+  id: totrans-27
   prefs:
   - PREF_H2
+  stylish: true
   type: TYPE_NORMAL
 - en: '1\. Effortless Gradients: In the realm of machine learning, gradients are gold.
     Jax simplifies this intricate process by handling automatic differentiation seamlessly.
     Imagine training your models without the headache of manually computing derivatives.
     With Jax, it''s a breeze.'
+  id: totrans-28
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: '2\. Versatility Across Architectures: Jax doesn''t play favorites with hardware.
     Whether you''re team GPU, TPU, or CPU, Jax''s compatibility ensures your machine
     learning models run efficiently across different architectures. It''s the flexibility
     you need in a diverse computing landscape.'
+  id: totrans-29
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: '3\. NumPy''s Intuitive Embrace: For those fluent in NumPy, transitioning to
     Jax feels like a smooth dance. Jax adopts NumPy''s intuitive syntax, making the
     learning curve gentle. You get the simplicity of NumPy with an added turbo boost
     for machine learning tasks.'
+  id: totrans-30
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: '4\. Rapid Prototyping, Swift Iterations: In the fast-paced world of machine
     learning research, speed matters. Jax''s simplicity and automatic differentiation
     make it a hot pick for rapid prototyping. Iterate swiftly, experiment freely,
     and let Jax keep up with your pace.'
+  id: totrans-31
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: 5\.  Scalability to Big Data Realms: Got big data? No problem. Jax scales gracefully.
     Its integration with XLA ensures your machine learning models can handle large
     datasets efficiently, opening the door to tackling complex problems without sacrificing
     performance.
+  id: totrans-32
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: '6\. Beyond the Gradient Descent: Jax doesn''t stop at gradients. It''s your
     partner in crime for a variety of machine learning tasks. Whether it''s building
     neural networks, experimenting with different architectures, or fine-tuning models,
     Jax is your versatile sidekick.'
+  id: totrans-33
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: In the dynamic arena of machine learning, Jax emerges as a reliable ally. It's
     not just about making things easier; it's about empowering you to push the boundaries
     of what's achievable. With Jax, machine learning becomes a journey of exploration,
     where the benefits unfold with each line of code.
+  id: totrans-34
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: 'As we wrap up, remember this: Jax is not just a library; it''s a symphony of
     numerical elegance. Automatic Differentiation, XLA Acceleration, and NumPy-style
     simplicity are the instruments that compose this powerful melody. Brace yourself
     for a paradigm shift in machine learning and beyond. The future of numerical computing
-    has a new name—Jax. Let''s dive into its depths and unlock limitless possibilities!'
+    has a new name—`Jax`. Let''s dive into its depths and unlock limitless possibilities!'
+  id: totrans-35
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
