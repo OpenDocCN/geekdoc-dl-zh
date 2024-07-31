@@ -2080,31 +2080,37 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`AdamW是带有权重衰减正则化的Adam。权重衰减正则化通过惩罚成本函数在反向传播过程中使权重变小。这导致权重变小，从而导致更好的泛化。在某些情况下，与L2正则化的Adam相比，使用解耦权重衰减的Adam会导致更好的结果。`'
 - en: from `flax.training` import `train_state`
   id: totrans-288
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: from `flax.training` import `train_state`
 - en: 'def `create_train_state`(rng):'
   id: totrans-289
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`def `create_train_state`(rng):`'
 - en: '"""Creates initial `TrainState`."""'
   id: totrans-290
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '"""创建初始`TrainState`。"""'
 - en: model = `LSTMModel()``
   id: totrans-291
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: model = `LSTMModel()``
 - en: params = `model.init`(rng, `jnp.array(X_train_padded[0]))['param`
   id: totrans-292
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: params = `model.init`(rng, `jnp.array(X_train_padded[0]))['param`
 - en: '`s'']tx = optax.adamw(0.001,0.9,0.999,1e-07)return train_state.TrainState.create(apply_fn=model.apply,
     params=params, tx=tx)![](../images/00009.jpeg) **`Learning curves (top row) and
     generalization results (bottom row) obtained by a 26 2x96d ResNet trained with
@@ -2115,104 +2121,127 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`s'']tx = optax.adamw(0.001,0.9,0.999,1e-07)return train_state.TrainState.create(apply_fn=model.apply,
+    params=params, tx=tx)![](../images/00009.jpeg) **`学习曲线（顶部行）和在CIFAR-10上使用Adam和AdamW训练的26
+    2x96d ResNet的泛化结果（底部行）`**  **## `RAdam – 矫正的Adam优化器`** `RAdam旨在解决应用自适应学习率时在早期训练阶段出现的大方差。from
+    `flax.training` import `train_state`'
 - en: '`def create_train_state(rng, learning_rate):`'
   id: totrans-294
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`def create_train_state(rng, learning_rate):`'
 - en: '"""Creates initial `TrainState`."""'
   id: totrans-295
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '"""创建初始`TrainState`。"""'
 - en: '`cnn = CNN()`'
   id: totrans-296
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`cnn = CNN()`'
 - en: '`params = cnn.init(rng, jnp.ones([1, size_image, size_image,`'
   id: totrans-297
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`params = cnn.init(rng, jnp.ones([1, size_image, size_image,`'
 - en: '`3]))[''params'']`'
   id: totrans-298
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`3]))[''params'']`'
 - en: '`tx = optax.radam(learning_rate)`'
   id: totrans-299
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`tx = optax.radam(learning_rate)`'
 - en: '`return train_state.TrainState.create(`'
   id: totrans-300
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`return train_state.TrainState.create(`'
 - en: '`apply_fn=cnn.apply, params=params, tx=tx)`'
   id: totrans-301
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`apply_fn=cnn.apply, params=params, tx=tx)`'
 - en: '**AdaFactor**'
   id: totrans-302
   prefs:
   - PREF_H2
   stylish: true
   type: TYPE_NORMAL
+  zh: '**AdaFactor**'
 - en: '`AdaFactor is used for training large neural networks because it is implemented
     to reduce memory utilization.from flax.training import train_state`'
   id: totrans-303
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`AdaFactor用于训练大型神经网络，因为它实现了减少内存使用。from flax.training import train_state`'
 - en: '`def create_train_state(rng, learning_rate):`'
   id: totrans-304
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`def create_train_state(rng, learning_rate):`'
 - en: '"""Creates initial `TrainState`."""'
   id: totrans-305
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '"""创建初始`TrainState`。"""'
 - en: '`cnn = CNN()`'
   id: totrans-306
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`cnn = CNN()`'
 - en: '`params = cnn.init(rng, jnp.ones([1, size_image, size_image,`'
   id: totrans-307
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`params = cnn.init(rng, jnp.ones([1, size_image, size_image,`'
 - en: '`3]))[''params'']`'
   id: totrans-308
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`3]))[''params'']`'
 - en: '`tx = optax.adafactor(learning_rate)`'
   id: totrans-309
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`tx = optax.adafactor(learning_rate)`'
 - en: '`return train_state.TrainState.create(`'
   id: totrans-310
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`return train_state.TrainState.create(`'
 - en: '`apply_fn=cnn.apply, params=params, tx=tx)`'
   id: totrans-311
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`apply_fn=cnn.apply, params=params, tx=tx)`'
 - en: '**Fromage**'
   id: totrans-312
   prefs:
   - PREF_H2
   stylish: true
   type: TYPE_NORMAL
+  zh: '**Fromage**'
 - en: '`Fromage introduces a distance function on deep neural networks called* **deep
     relative trust**. *It requires little to no learning rate tuning.from flax.training
     import train_state`'
@@ -2220,43 +2249,53 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`Fromage引入了一种称为“深度相对信任”的深度神经网络上的距离函数。它几乎不需要学习率调整。from flax.training import
+    train_state`'
 - en: '`def create_train_state(rng, learning_rate): """Creates initial `TrainState`."""
     cnn = CNN()`'
   id: totrans-314
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`def create_train_state(rng, learning_rate): """创建初始`TrainState`。""" cnn =
+    CNN()`'
 - en: '`params = cnn.init(rng, jnp.ones([1, size_image, size_image,`'
   id: totrans-315
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`params = cnn.init(rng, jnp.ones([1, size_image, size_image,`'
 - en: '`3]))[''params'']`'
   id: totrans-316
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`3]))[''params'']`'
 - en: '`tx = optax.fromage(learning_rate)`'
   id: totrans-317
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`tx = optax.fromage(learning_rate)`'
 - en: '`return train_state.TrainState.create(`'
   id: totrans-318
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`return train_state.TrainState.create(`'
 - en: '`apply_fn=cnn.apply, params=params, tx=tx)`'
   id: totrans-319
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`apply_fn=cnn.apply, params=params, tx=tx)`'
 - en: '**Lamb – Layerwise adaptive large batch optimization**'
   id: totrans-320
   prefs:
   - PREF_H2
   stylish: true
   type: TYPE_NORMAL
+  zh: '**Lamb – 层自适应大批量优化**'
 - en: '`Lamb aims to enable the training of deep neural networks by computing gradients
     using large mini-batches. It leads to good performance on attention-based models
     such as Transformers and ResNet-50.`'
@@ -2264,57 +2303,68 @@
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`Lamb旨在通过使用大型小批量计算梯度来训练深度神经网络。它在基于注意力的模型（如Transformers和ResNet-50）上表现良好。`'
 - en: '`from flax.training import train_state`'
   id: totrans-322
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`from flax.training import train_state`'
 - en: '`def create_train_state(rng, learning_rate):`'
   id: totrans-323
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`def create_train_state(rng, learning_rate):`'
 - en: '"""Creates initial `TrainState`."""'
   id: totrans-324
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '"""创建初始`TrainState`。"""'
 - en: '`cnn = CNN()`'
   id: totrans-325
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`cnn = CNN()`'
 - en: '`params = cnn.init(rng, jnp.ones([1, size_image, size_image,`'
   id: totrans-326
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`params = cnn.init(rng, jnp.ones([1, size_image, size_image,`'
 - en: '`3]))[''params'']`'
   id: totrans-327
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`3]))[''params'']`'
 - en: '`tx = optax.lamb(learning_rate)`'
   id: totrans-328
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`tx = optax.lamb(learning_rate)`'
 - en: '`return train_state.TrainState.create(`'
   id: totrans-329
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`return train_state.TrainState.create(`'
 - en: '`apply_fn=cnn.apply, params=params, tx=tx)`'
   id: totrans-330
   prefs: []
   stylish: true
   type: TYPE_NORMAL
+  zh: '`apply_fn=cnn.apply, params=params, tx=tx)`'
 - en: '**Lars – Layer-wise Adaptive Rate Scaling**'
   id: totrans-331
   prefs:
   - PREF_H2
   stylish: true
   type: TYPE_NORMAL
+  zh: '**Lars – 层自适应速率缩放**'
 - en: '`Lars is inspired by Lamb to scale SGD to large batch sizes. Lars has been
     used to train AlexNet with an 8K batch size and Resnet-50 with a 32K batch size
     without degrading the accuracy. from flax.training import train_state`'
