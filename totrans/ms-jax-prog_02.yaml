@@ -1,11 +1,13 @@
-- en: 'Chapter 2: Getting Started with Jax'
+- en: '`Chapter 2: Getting Started with Jax`'
   id: totrans-0
   prefs:
   - PREF_H1
+  stylish: true
   type: TYPE_NORMAL
 - en: '* * *'
   id: totrans-1
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: Welcome to the launchpad of your Jax adventure! In this chapter, we're gearing
     up for the ride into Jax programming. Buckle up as we set the stage, install the
@@ -13,11 +15,13 @@
     coding.
   id: totrans-2
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: 2.1 Setting up the Jax Environment
+- en: '`2.1 Setting up the Jax Environment`'
   id: totrans-3
   prefs:
   - PREF_H2
+  stylish: true
   type: TYPE_NORMAL
 - en: Before we embark on the Jax journey, let's ensure our toolkit is ready for action.
     Setting up the Jax environment is a crucial first step, and in this section, we'll
@@ -25,85 +29,103 @@
     libraries, let's make sure you're well-equipped to unleash the power of Jax.
   id: totrans-4
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: 'Setting the Stage: Choosing Your Platform'
   id: totrans-5
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: Jax is flexible, catering to various platforms such as macOS, Linux, and Windows.
     Ensure you're on the right track by checking your operating system's compatibility
     and hardware requirements.
   id: totrans-6
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: 'Step 1: Install Python'
   id: totrans-7
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: Jax relies on Python, so if you don't have it installed, now's the time. Ensure
     you have Python 3.7 or later. You can download the latest version from the official
     Python website.
   id: totrans-8
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: 'Step 2: Install Jax'
   id: totrans-9
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: With Python in place, use the pip package installer to get Jax.
   id: totrans-10
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: 'Open your terminal or command prompt and type: `pip install jax`'
   id: totrans-11
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: 'Step 3: Confirm Installation'
   id: totrans-12
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: 'Make sure Jax is properly installed by opening a Python interpreter and typing:
     `import jax; print(jax.__version__)` This should display the installed Jax version.'
   id: totrans-13
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: 'Equipping Your Toolbox: Installing Essential Libraries'
   id: totrans-14
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: Jax teams up with other libraries to enhance functionality. Let's install the
     essential ones.
   id: totrans-15
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: 'Step 1: Install NumPy'
   id: totrans-16
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: 'NumPy is Jax''s right-hand companion for numerical operations. Install it using:
     `pip install numpy`'
   id: totrans-17
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: 'Step 2: Optional Libraries'
   id: totrans-18
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: Consider additional libraries for extended capabilities. For example, Matplotlib
     for plotting and scikit-learn for machine learning. Install them as needed.
   id: totrans-19
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: With your Jax environment set up and essential libraries in place, you're armed
     and ready. The journey ahead involves crafting code, exploring data structures,
     and tapping into the power of Jax.
   id: totrans-20
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: 2.2 Writing Basic Jax Programs Using NumPy-Style Syntax
+- en: '`2.2 Writing Basic Jax Programs Using NumPy-Style Syntax`'
   id: totrans-21
   prefs:
   - PREF_H2
+  stylish: true
   type: TYPE_NORMAL
 - en: Now that our Jax environment is up and running, it's time to get hands-on with
     some basic Jax programs. In this section, we'll explore the NumPy-style syntax
@@ -111,63 +133,77 @@
     some code and unleash the simplicity of Jax.
   id: totrans-22
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: 'Step 1: Importing Jax'
   id: totrans-23
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: Start by importing the Jax library. This sets the stage for all your numerical
     computations in the Jax style.
   id: totrans-24
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: import jax
+- en: '`import jax`'
   id: totrans-25
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: 'Step 2: Creating Arrays'
   id: totrans-26
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: Jax adopts the NumPy-style syntax for creating arrays. Let's dive in and create
     a simple array.
   id: totrans-27
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: Creating a Jax array
+- en: '`Creating a Jax array`'
   id: totrans-28
   prefs:
   - PREF_H1
+  stylish: true
   type: TYPE_NORMAL
-- en: x = jax.numpy.array([1, 2, 3])
+- en: '`x = jax.numpy.array([1, 2, 3])`'
   id: totrans-29
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: 'Step 3: Performing Operations'
   id: totrans-30
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: The beauty of Jax lies in its ability to perform operations on arrays with the
     ease of NumPy.
   id: totrans-31
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: Let's apply a mathematical function to our array.
   id: totrans-32
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: Applying a sine function to the array
   id: totrans-33
   prefs:
   - PREF_H1
+  stylish: true
   type: TYPE_NORMAL
-- en: y = jax.numpy.sin(x) + 2
+- en: '`y = jax.numpy.sin(x) + 2`'
   id: totrans-34
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: 'Step 4: Printing Results'
   id: totrans-35
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: Now, let's print the results and witness the outcome of our Jax computations.
   id: totrans-36

@@ -1,179 +1,275 @@
-- en: 'Chapter 3: Jax Fundamentals: Automatic Differentiation and XLA'
+- en: '`Chapter 3: Jax Fundamentals: Automatic Differentiation and XLA`'
+  id: totrans-0
   prefs:
   - PREF_H1
+  stylish: true
   type: TYPE_NORMAL
-- en: '* * *'
+- en: '`* * *`'
+  id: totrans-1
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: Welcome to the powerhouse duo of Jax – Automatic Differentiation and XLA. In
-    this chapter, we're about to unravel the magic behind Jax's lightning-fast performance.
-    Automatic Differentiation frees you from the gradient grind, while XLA takes your
-    code to the performance stratosphere.
+- en: '`Welcome to the powerhouse duo of Jax – Automatic Differentiation and XLA.
+    In this chapter, we''re about to unravel the magic behind Jax''s lightning-fast
+    performance. Automatic Differentiation frees you from the gradient grind, while
+    XLA takes your code to the performance stratosphere.`'
+  id: totrans-2
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: 3.1 Exploring Automatic Differentiation Automatic Differentiation (AD) is the
-    engine that powers efficient gradient computation in Jax. It's the tool that liberates
-    you from manually computing derivatives, a task often prone to errors and complexity.
+- en: '`3.1 Exploring Automatic Differentiation Automatic Differentiation (AD) is
+    the engine that powers efficient gradient computation in Jax. It''s the tool that
+    liberates you from manually computing derivatives, a task often prone to errors
+    and complexity.`'
+  id: totrans-3
   prefs:
   - PREF_H2
+  stylish: true
   type: TYPE_NORMAL
-- en: 'Automatic Differentiation in Action: The Core Concept'
+- en: '`Automatic Differentiation in Action: The Core Concept`'
+  id: totrans-4
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: At its core, Automatic Differentiation is about computing derivatives of functions
-    with respect to their inputs. Jax adopts a method called "forward-mode" AD, which
-    efficiently computes the derivatives by traversing the computation graph in the
-    forward direction. This method allows Jax to calculate gradients with remarkable
+    with respect to their inputs. Jax adopts a method called `"forward-mode" AD`,
+    which efficiently computes the derivatives by traversing the computation graph
+    in the forward direction. This method allows Jax to calculate gradients with remarkable
     efficiency.
+  id: totrans-5
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: 'Code Example: Automatic Differentiation in Jax'
+- en: '`Code Example: Automatic Differentiation in Jax`'
+  id: totrans-6
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: 'Let''s see how Jax performs automatic differentiation in a simple example:'
+- en: '`Let''s see how Jax performs automatic differentiation in a simple example:`'
+  id: totrans-7
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: import jax
+- en: '`import jax`'
+  id: totrans-8
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: Define a function
+- en: '`Define a function`'
+  id: totrans-9
   prefs:
   - PREF_H1
+  stylish: true
   type: TYPE_NORMAL
-- en: 'def simple_function(x):'
+- en: '`def simple_function(x):`'
+  id: totrans-10
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: return x2 + jax.numpy.sin(x)
+- en: return`x2 + jax.numpy.sin(x)`
+  id: totrans-11
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: Calculate the gradient using Jax's automatic differentiation
+- en: '`Calculate the gradient using Jax''s automatic differentiation`'
+  id: totrans-12
   prefs:
   - PREF_H1
+  stylish: true
   type: TYPE_NORMAL
-- en: gradient = jax.grad(simple_function)
+- en: '`gradient = jax.grad(simple_function)`'
+  id: totrans-13
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: Evaluate the gradient at a specific point
+- en: '`Evaluate the gradient at a specific point`'
+  id: totrans-14
   prefs:
   - PREF_H1
+  stylish: true
   type: TYPE_NORMAL
-- en: result = gradient(2.0)
+- en: '`result = gradient(2.0)`'
+  id: totrans-15
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: print("Gradient at x = 2.0:", result)
+- en: '`print("Gradient at x = 2.0:", result)`'
+  id: totrans-16
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: In this example, Jax's `grad` function is used to automatically compute the
+- en: '`In this example, Jax''s `grad` function is used to automatically compute the
     gradient of the `simple_function`. The result is the derivative of the function
-    at the specified point.
+    at the specified point.`'
+  id: totrans-17
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: 'Efficiency and Flexibility: Jax''s AD Superpowers'
+- en: '`Efficiency and Flexibility: Jax''s AD Superpowers`'
+  id: totrans-18
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: Jax's Automatic Differentiation isn't just efficient; it's also highly flexible.
-    It seamlessly handles functions with multiple inputs and outputs, making it a
-    powerful tool for machine learning tasks. Whether you're dealing with simple mathematical
-    functions or complex neural networks, Jax's AD has you covered.
+- en: '`Jax''s Automatic Differentiation isn''t just efficient; it''s also highly
+    flexible. It seamlessly handles functions with multiple inputs and outputs, making
+    it a powerful tool for machine learning tasks. Whether you''re dealing with simple
+    mathematical functions or complex neural networks, Jax''s AD has you covered.`'
+  id: totrans-19
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: Automatic Differentiation in Jax is the superhero that swoops in to handle the
-    heavy lifting of gradient computation. It liberates you from the intricacies of
-    manual differentiation, allowing you to focus on the creative aspects of model
-    design.
+- en: '`Automatic Differentiation in Jax is the superhero that swoops in to handle
+    the heavy lifting of gradient computation. It liberates you from the intricacies
+    of manual differentiation, allowing you to focus on the creative aspects of model
+    design.`'
+  id: totrans-20
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: 3.2 Role of XLA in Jax Performance Optimization
+- en: '`3.2 Role of XLA in Jax Performance Optimization`'
+  id: totrans-21
   prefs:
   - PREF_H2
+  stylish: true
   type: TYPE_NORMAL
-- en: In the realm of Jax performance optimization, Accelerated Linear Algebra (XLA)
+- en: '`In the realm of Jax performance optimization, Accelerated Linear Algebra (XLA)
     stands as the unsung hero. XLA serves as the powerhouse that transforms your Jax
     code into high-performance machine code, specifically tailored to the hardware
-    architecture.
+    architecture.`'
+  id: totrans-22
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: 'XLA at a Glance: Transforming Jax Code for Performance'
+- en: '`XLA at a Glance: Transforming Jax Code for Performance`'
+  id: totrans-23
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: XLA acts as a compiler for Jax, translating your numerical computations into
+- en: '`XLA acts as a compiler for Jax, translating your numerical computations into
     optimized machine code. Its goal is to make your code run faster by leveraging
     hardware-specific optimizations. This is particularly crucial for tasks involving
-    linear algebra, where XLA shines the brightest.
+    linear algebra, where XLA shines the brightest.`'
+  id: totrans-24
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: 'Code Example: Unleashing XLA''s Power'
+- en: '`Code Example: Unleashing XLA''s Power`'
+  id: totrans-25
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: 'Let''s witness the impact of XLA in a simple matrix multiplication example:'
+- en: '`Let''s witness the impact of XLA in a simple matrix multiplication example:`'
+  id: totrans-26
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: import jax.numpy as jnp
+- en: '`import jax.numpy as jnp`'
+  id: totrans-27
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: import jax
+- en: '`import jax`'
+  id: totrans-28
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: 'def matmul(A, B):'
+- en: '`def matmul(A, B):`'
+  id: totrans-29
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: return A @ B
+- en: '`return A @ B`'
+  id: totrans-30
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: '@jax.jit'
+- en: '`@jax.jit`'
+  id: totrans-31
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: 'def optimized_matmul(A, B):'
+- en: '`def optimized_matmul(A, B):`'
+  id: totrans-32
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: return A @ B
+- en: '`return A @ B`'
+  id: totrans-33
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: A = jnp.array([[1, 2], [3, 4]])
+- en: '`A = jnp.array([[1, 2], [3, 4]])`'
+  id: totrans-34
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: B = jnp.array([[5, 6], [7, 8]])
+- en: '`B = jnp.array([[5, 6], [7, 8]])`'
+  id: totrans-35
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: Unoptimized matrix multiplication
+  id: totrans-36
   prefs:
   - PREF_H1
+  stylish: true
   type: TYPE_NORMAL
-- en: C = matmul(A, B)
+- en: '`C = matmul(A, B)`'
+  id: totrans-37
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: print("Unoptimized Result:")
+- en: '`print("Unoptimized Result:")`'
+  id: totrans-38
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: print(C)
+- en: '`print(C)`'
+  id: totrans-39
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: XLA-optimized matrix multiplication
+  id: totrans-40
   prefs:
   - PREF_H1
+  stylish: true
   type: TYPE_NORMAL
-- en: D = optimized_matmul(A, B)
+- en: '`D = optimized_matmul(A, B)`'
+  id: totrans-41
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: print("\nXLA-Optimized Result:")
+- en: '`print("\nXLA-Optimized Result:")`'
+  id: totrans-42
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: print(D)
+- en: '`print(D)`'
+  id: totrans-43
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: The matmul function performs a matrix multiplication without XLA optimization.
-    The optimized_matmul function uses @jax.jit to enable XLA optimization. When you
-    run this code, you'll notice that optimized_matmul significantly outperforms matmul.
+- en: The `matmul` function performs a matrix multiplication without XLA optimization.
+    The `optimized_matmul` function uses `@jax.jit` to enable XLA optimization. When
+    you run this code, you'll notice that `optimized_matmul` significantly outperforms
+    `matmul`.
+  id: totrans-44
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: 'Witnessing the Impact: Unoptimized vs. XLA-Optimized'
+  id: totrans-45
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: Running this code, you'll observe the difference in performance between the
     unoptimized and XLA-optimized matrix multiplication. The XLA-optimized version
     should demonstrate significantly faster execution, showcasing the tangible benefits
     of XLA in Jax.
+  id: totrans-46
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: XLA's role in Jax performance optimization is transformative. By intelligently
     compiling your code for specific hardware, XLA unlocks the full potential of Jax.
@@ -181,226 +277,353 @@
     in numerical computations. It's a game-changer in the world of Jax programming,
     and by embracing XLA, you're propelling your code to new heights of performance
     excellence.
+  id: totrans-47
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: 3.3 Leveraging XLA to Accelerate Numerical Computations and Deep Learning Models
+- en: '`3.3 Leveraging XLA to Accelerate Numerical Computations and Deep Learning
+    Models`'
+  id: totrans-48
   prefs:
   - PREF_H2
+  stylish: true
   type: TYPE_NORMAL
-- en: In the context of Jax, the role of Accelerated Linear Algebra (XLA) is paramount.
+- en: In the context of Jax, the role of Accelerated Linear Algebra (`XLA`) is paramount.
     This section illuminates the practical application of XLA, showcasing how it optimizes
     numerical computations and propels the efficiency of deep learning models.
+  id: totrans-49
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: 'XLA''s Impact on Numerical Computations: Precision and Speed'
+  id: totrans-50
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: XLA serves as a catalyst for elevating the efficiency of various numerical computations.
     Its ability to harness hardware-specific optimizations ensures a substantial boost
     in performance. From intricate mathematical problem-solving to the optimization
     of linear systems, XLA contributes to precision and speed.
+  id: totrans-51
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: 'Code Example: Accelerating Numerical Computations with XLA'
+  id: totrans-52
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: 'Illustrating the impact of XLA on numerical computations through a succinct
     example:'
+  id: totrans-53
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: import jax.numpy as jnp
+- en: '`import jax.numpy as jnp`'
+  id: totrans-54
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: import jax
+- en: '`import jax`'
+  id: totrans-55
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: Unoptimized numerical computation function
+  id: totrans-56
   prefs:
   - PREF_H1
+  stylish: true
   type: TYPE_NORMAL
-- en: 'def numerical_computation(x, y):'
+- en: '`def numerical_computation(x, y):`'
+  id: totrans-57
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: return jnp.exp(x) + jnp.sin(y)
+- en: '`return jnp.exp(x) + jnp.sin(y)`'
+  id: totrans-58
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: XLA-optimized version using @jax.jit
+- en: XLA-optimized version using `@jax.jit`
+  id: totrans-59
   prefs:
   - PREF_H1
+  stylish: true
   type: TYPE_NORMAL
-- en: '@jax.jit'
+- en: '`@jax.jit`'
+  id: totrans-60
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: 'def xla_optimized_computation(x, y):'
+- en: '`def xla_optimized_computation(x, y):`'
+  id: totrans-61
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: return jnp.exp(x) + jnp.sin(y)
+- en: '`return jnp.exp(x) + jnp.sin(y)`'
+  id: totrans-62
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: Input values
+  id: totrans-63
   prefs:
   - PREF_H1
+  stylish: true
   type: TYPE_NORMAL
-- en: x_value = 2.0
+- en: '`x_value = 2.0`'
+  id: totrans-64
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: y_value = 1.5
+- en: '`y_value = 1.5`'
+  id: totrans-65
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: Unoptimized numerical computation
+  id: totrans-66
   prefs:
   - PREF_H1
+  stylish: true
   type: TYPE_NORMAL
-- en: result_unoptimized = numerical_computation(x_value, y_value)
+- en: '`result_unoptimized = numerical_computation(x_value, y_value)`'
+  id: totrans-67
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: print("Unoptimized Result:", result_unoptimized)
+- en: '`print("Unoptimized Result:", result_unoptimized)`'
+  id: totrans-68
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: XLA-Optimized numerical computation
+  id: totrans-69
   prefs:
   - PREF_H1
+  stylish: true
   type: TYPE_NORMAL
-- en: result_xla_optimized = xla_optimized_computation(x_value, y_value)
+- en: '`result_xla_optimized = xla_optimized_computation(x_value, y_value)`'
+  id: totrans-70
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: print("XLA-Optimized Result:", result_xla_optimized)
+- en: '`print("XLA-Optimized Result:", result_xla_optimized)`'
+  id: totrans-71
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: This example distinguishes the unoptimized function from its XLA-optimized counterpart,
     emphasizing the tangible impact on computational efficiency.
+  id: totrans-72
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: 'XLA in Deep Learning: Elevating Model Performance'
+  id: totrans-73
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: In the realm of deep learning, XLA emerges as a transformative asset. It meticulously
     optimizes both the training and inference stages of neural networks, ensuring
     accelerated performance on GPUs and TPUs. The result is expedited model training,
     swifter predictions, and an overall enhanced deep learning experience.
+  id: totrans-74
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: XLA's strategic integration into Jax projects marks a decisive step toward achieving
     computational excellence. As we incorporate XLA into our workflows, we celebrate
     the heightened speed and efficiency it injects into our code. Whether confronting
     intricate mathematical challenges or navigating the complexities of deep learning,
     XLA is the instrumental force propelling our code towards optimal performance.
+  id: totrans-75
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: 'Coding Challenge: Matrix Power and XLA Optimization'
+- en: '**Coding Challenge**: Matrix Power and XLA Optimization'
+  id: totrans-76
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: 'Create a Jax program that calculates the power of a matrix and then optimize
     it using XLA to observe the performance difference. Use the following matrix as
     an example:'
+  id: totrans-77
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: import jax
+- en: '`import jax`'
+  id: totrans-78
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: import jax.numpy as jnp
+- en: '`import jax.numpy as jnp`'
+  id: totrans-79
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: Matrix definition
+- en: '**Matrix definition**'
+  id: totrans-80
   prefs:
   - PREF_H1
+  stylish: true
   type: TYPE_NORMAL
-- en: matrix = jnp.array([[2, 3], [1, 4]])
+- en: '`matrix = jnp.array([[2, 3], [1, 4]])`'
+  id: totrans-81
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: Solution
+- en: '**Solution**'
+  id: totrans-82
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: import jax
+- en: '`import jax`'
+  id: totrans-83
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: import jax.numpy as jnp
+- en: '`import jax.numpy as jnp`'
+  id: totrans-84
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: Matrix definition
+- en: '**Matrix definition**'
+  id: totrans-85
   prefs:
   - PREF_H1
+  stylish: true
   type: TYPE_NORMAL
-- en: matrix = jnp.array([[2, 3], [1, 4]])
+- en: '`matrix = jnp.array([[2, 3], [1, 4]])`'
+  id: totrans-86
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: Function to calculate matrix power
+- en: '**Function to calculate matrix power**'
+  id: totrans-87
   prefs:
   - PREF_H1
+  stylish: true
   type: TYPE_NORMAL
-- en: 'def matrix_power(A, n):'
+- en: '`def matrix_power`(A, n):'
+  id: totrans-88
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: result = jnp.eye(A.shape[0])
+- en: '`result = jnp.eye(A.shape[0])`'
+  id: totrans-89
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: 'for _ in range(n):'
+- en: '`for _ in range(n):`'
+  id: totrans-90
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: result = result @ A
+- en: '`result = result @ A`'
+  id: totrans-91
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: return result
+- en: '`return result`'
+  id: totrans-92
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: XLA-optimized version using @jax.jit
+- en: '**XLA-optimized version using `@jax.jit`**'
+  id: totrans-93
   prefs:
   - PREF_H1
+  stylish: true
   type: TYPE_NORMAL
-- en: '@jax.jit'
+- en: '`@jax.jit`'
+  id: totrans-94
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: 'def xla_optimized_matrix_power(A, n):'
+- en: '`def xla_optimized_matrix_power`(A, n):'
+  id: totrans-95
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: result = jnp.eye(A.shape[0])
+- en: '`result = jnp.eye(A.shape[0])`'
+  id: totrans-96
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: 'for _ in range(n):'
+- en: '`for _ in range(n):`'
+  id: totrans-97
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: result = result @ A
+- en: '`result = result @ A`'
+  id: totrans-98
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: return result
+- en: '`return result`'
+  id: totrans-99
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: 'Challenge: Calculate matrix power without XLA optimization'
+- en: '**Challenge**: Calculate matrix power without XLA optimization'
+  id: totrans-100
   prefs:
   - PREF_H1
+  stylish: true
   type: TYPE_NORMAL
-- en: power_result_unoptimized = matrix_power(matrix, 5)
+- en: '`power_result_unoptimized = matrix_power(matrix, 5)`'
+  id: totrans-101
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: print("Unoptimized Matrix Power Result:")
+- en: '`print("Unoptimized Matrix Power Result:")`'
+  id: totrans-102
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: print(power_result_unoptimized)
+- en: '`print(power_result_unoptimized)`'
+  id: totrans-103
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: 'Challenge: Calculate matrix power with XLA optimization'
+- en: '**Challenge**: Calculate matrix power with XLA optimization'
+  id: totrans-104
   prefs:
   - PREF_H1
+  stylish: true
   type: TYPE_NORMAL
-- en: power_result_xla_optimized = xla_optimized_matrix_power(matrix, 5)
+- en: '`power_result_xla_optimized = xla_optimized_matrix_power(matrix, 5)`'
+  id: totrans-105
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: print("\nXLA-Optimized Matrix Power Result:")
+- en: '`print("\nXLA-Optimized Matrix Power Result:")`'
+  id: totrans-106
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: print(power_result_xla_optimized)
+- en: '`print(power_result_xla_optimized)`'
+  id: totrans-107
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: In this challenge, you are tasked with calculating the power of the given matrix
     without and with XLA optimization. Observe the performance difference between
     the unoptimized and XLA-optimized versions. Feel free to experiment with different
     matrix sizes and power values to explore XLA's impact on computational efficiency.
+  id: totrans-108
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: And there you have it – the dynamic duo that propels Jax to unparalleled heights.
     Automatic Differentiation handles gradients effortlessly, and XLA turns your code
     into a performance masterpiece. As you continue your journey with Jax, remember,
     this chapter's insights are your key to unlocking Jax's full potential. Fasten
     your seatbelt; the road ahead is paved with innovation and efficiency!
+  id: totrans-109
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
