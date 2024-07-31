@@ -2,10 +2,12 @@
   id: totrans-0
   prefs:
   - PREF_H1
+  stylish: true
   type: TYPE_NORMAL
 - en: '* * *'
   id: totrans-1
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: Welcome to the practical side of Jax! In this chapter, we'll explore how Jax
     becomes a powerhouse for real-world applications in deep learning. From image
@@ -13,11 +15,13 @@
     its muscles to tackle diverse tasks, proving its versatility in the hands of developers.
   id: totrans-2
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: 7.1 Image Classification Models with Jax
   id: totrans-3
   prefs:
   - PREF_H2
+  stylish: true
   type: TYPE_NORMAL
 - en: Image classification is a fundamental task in deep learning, and with Jax's
     capabilities, constructing powerful models becomes both efficient and effective.
@@ -25,184 +29,228 @@
     model using Convolutional Neural Networks (CNNs) in Jax.
   id: totrans-4
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: 1\. Importing Necessary Libraries
   id: totrans-5
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: Begin by importing the required libraries. Jax, together with libraries like
     NumPy and Jax's neural network module `flax`, provides a solid foundation for
     creating sophisticated models.
   id: totrans-6
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: import jax
+- en: '`import jax`'
   id: totrans-7
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: import jax.numpy as jnp
+- en: '`import jax.numpy as jnp`'
   id: totrans-8
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: from flax import linen as nn
+- en: '`from flax import linen as nn`'
   id: totrans-9
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: 2\. Defining the CNN Model
   id: totrans-10
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: Constructing the CNN architecture is straightforward with Jax. Here, we define
     a simple CNN using the `nn.Conv` and `nn.Dense` layers.
   id: totrans-11
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: 'class CNNModel(nn.Module):'
+- en: 'class `CNNModel(nn.Module)`:'
   id: totrans-12
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: 'features: int'
+- en: '`features: int`'
   id: totrans-13
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: 'def setup(self):'
+- en: '`def setup(self):`'
   id: totrans-14
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: self.conv1 = nn.Conv(features=self.features, kernel_size=(3, 3))
+- en: '`self.conv1 = nn.Conv(features=self.features, kernel_size=(3, 3))`'
   id: totrans-15
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: self.conv2 = nn.Conv(features=self.features * 2, kernel_size=(3, 3))
+- en: '`self.conv2 = nn.Conv(features=self.features * 2, kernel_size=(3, 3))`'
   id: totrans-16
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: self.flatten = nn.Flatten()
+- en: '`self.flatten = nn.Flatten()`'
   id: totrans-17
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: self.dense = nn.Dense(features=10)
+- en: '`self.dense = nn.Dense(features=10)`'
   id: totrans-18
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: 'def __call__(self, x):'
+- en: '`def __call__(self, x):`'
   id: totrans-19
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: x = self.conv1(x)
+- en: '`x = self.conv1(x)`'
   id: totrans-20
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: x = self.conv2(x)
+- en: '`x = self.conv2(x)`'
   id: totrans-21
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: x = self.flatten(x)
+- en: '`x = self.flatten(x)`'
   id: totrans-22
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: return self.dense(x)
+- en: '`return self.dense(x)`'
   id: totrans-23
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: 3\. Initializing the Model
   id: totrans-24
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: Initialize the model with random parameters. Jax allows for easy parameter initialization
     using its PRNG key.
   id: totrans-25
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: key = jax.random.PRNGKey(42)
+- en: '`key = jax.random.PRNGKey(42)`'
   id: totrans-26
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: input_shape = (1, 28, 28, 1)  # Assuming grayscale images of size 28x28
+- en: '`input_shape = (1, 28, 28, 1)`  # Assuming grayscale images of size 28x28'
   id: totrans-27
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: model = CNNModel(features=32)
+- en: '`model = CNNModel(features=32)`'
   id: totrans-28
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: params = model.init(key, jnp.ones(input_shape))
+- en: '`params = model.init(key, jnp.ones(input_shape))`'
   id: totrans-29
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: 4\. Forward Pass
   id: totrans-30
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: Perform a forward pass to check if the model processes inputs correctly.
   id: totrans-31
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: input_data = jnp.ones(input_shape)
+- en: '`input_data = jnp.ones(input_shape)`'
   id: totrans-32
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: output = model.apply(params, input_data)
+- en: '`output = model.apply(params, input_data)`'
   id: totrans-33
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: print("Model Output Shape:", output.shape)
+- en: '`print("Model Output Shape:", output.shape)`'
   id: totrans-34
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: 5\. Training Loop
   id: totrans-35
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: To train the model, set up a training loop using Jax's automatic differentiation
     and an optimizer like SGD.
   id: totrans-36
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: 'def loss_fn(params, input_data, targets):'
+- en: '`def loss_fn(params, input_data, targets):`'
   id: totrans-37
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: predictions = model.apply(params, input_data)
+- en: '`predictions = model.apply(params, input_data)`'
   id: totrans-38
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: loss = jnp.mean(jax.nn.softmax_cross_entropy_with_logits(targets, predictions))
+- en: '`loss = jnp.mean(jax.nn.softmax_cross_entropy_with_logits(targets, predictions))`'
   id: totrans-39
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: return loss
+- en: '`return loss`'
   id: totrans-40
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: grad_fn = jax.grad(loss_fn)
+- en: '`grad_fn = jax.grad(loss_fn)`'
   id: totrans-41
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: learning_rate = 0.01
+- en: '`learning_rate = 0.01`'
   id: totrans-42
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: optimizer = jax.optimizers.sgd(learning_rate)
+- en: '`optimizer = jax.optimizers.sgd(learning_rate)`'
   id: totrans-43
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: Inside the training loop, update parameters using optimizer and gradients.
   id: totrans-44
   prefs:
   - PREF_H1
+  stylish: true
   type: TYPE_NORMAL
 - en: 'for epoch in range(num_epochs):'
   id: totrans-45
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: grad = grad_fn(params, input_data, targets)
+- en: '`grad = grad_fn(params, input_data, targets)`'
   id: totrans-46
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: optimizer = optimizer.apply_gradient(grad)
+- en: '`optimizer = optimizer.apply_gradient(grad)`'
   id: totrans-47
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: Building image classification models with Jax is a seamless process. The modular
     design and concise syntax allow for quick experimentation and efficient development.
@@ -211,189 +259,234 @@
     implement and train image classification models for various applications.
   id: totrans-48
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: 7.2 NLP Models for Text Classification and Sentiment Analysis
   id: totrans-49
   prefs:
   - PREF_H2
+  stylish: true
   type: TYPE_NORMAL
 - en: Natural Language Processing (NLP) tasks, such as text classification and sentiment
     analysis, are at the core of language understanding. Let's explore how to implement
     NLP models for these tasks using Jax.
   id: totrans-50
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: 1\. Importing Necessary Libraries
   id: totrans-51
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: Begin by importing the required libraries, including Jax, NumPy, and the relevant
     modules from `flax` for neural network building.
   id: totrans-52
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: import jax
+- en: '`import jax`'
   id: totrans-53
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: import jax.numpy as jnp
+- en: '`import jax.numpy as jnp`'
   id: totrans-54
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: from flax import linen as nn
+- en: '`from flax import linen as nn`'
   id: totrans-55
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: 2\. Defining an RNN Model for Text Classification
   id: totrans-56
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: For text classification, Recurrent Neural Networks (RNNs) are effective. Define
     an RNN model using Jax's `flax.linen` module.
   id: totrans-57
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: 'class RNNModel(nn.Module):'
+- en: '`class RNNModel(nn.Module):`'
   id: totrans-58
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: 'vocab_size: int'
+- en: '`vocab_size: int`'
   id: totrans-59
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: 'hidden_size: int'
+- en: '`hidden_size: int`'
   id: totrans-60
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: 'def setup(self):'
+- en: '`def setup(self):`'
   id: totrans-61
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: self.embedding = nn.Embed(vocab_size=self.vocab_size, features=self.hidden_size)
+- en: '`self.embedding = nn.Embed(vocab_size=self.vocab_size, features=self.hidden_size)`'
   id: totrans-62
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: self.rnn = nn.LSTMCell(name="lstm")
+- en: '`self.rnn = nn.LSTMCell(name="lstm")`'
   id: totrans-63
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: self.dense = nn.Dense(features=2)  # Assuming binary classification
+- en: '`self.dense = nn.Dense(features=2)`  # Assuming binary classification'
   id: totrans-64
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: 'def __call__(self, x):'
+- en: '`def __call__(self, x):`'
   id: totrans-65
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: x = self.embedding(x)
+- en: '`x = self.embedding(x)`'
   id: totrans-66
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: h = None
+- en: '`h = None`'
   id: totrans-67
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: 'for _ in range(x.shape[1]):'
   id: totrans-68
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: h = self.rnn(h, x[:, _])
+- en: '`h = self.rnn(h, x[:, _])`'
   id: totrans-69
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: return self.dense(h)
+- en: '`return self.dense(h)`'
   id: totrans-70
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: 3\. Initializing and Forward Pass
   id: totrans-71
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: Initialize the model and perform a forward pass to check its output shape.
   id: totrans-72
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: key = jax.random.PRNGKey(42)
+- en: '`key = jax.random.PRNGKey(42)`'
   id: totrans-73
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: seq_len, batch_size = 20, 64
+- en: '`seq_len, batch_size = 20, 64`'
   id: totrans-74
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: model = RNNModel(vocab_size=10000, hidden_size=64)
+- en: '`model = RNNModel(vocab_size=10000, hidden_size=64)`'
   id: totrans-75
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: params = model.init(key, jnp.ones((batch_size, seq_len)))
+- en: '`params = model.init(key, jnp.ones((batch_size, seq_len)))`'
   id: totrans-76
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: input_data = jnp.ones((batch_size, seq_len), dtype=jnp.int32)
+- en: '`input_data = jnp.ones((batch_size, seq_len), dtype=jnp.int32)`'
   id: totrans-77
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: output = model.apply(params, input_data)
+- en: '`output = model.apply(params, input_data)`'
   id: totrans-78
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: print("Model Output Shape:", output.shape)
+- en: '`print("Model Output Shape:", output.shape)`'
   id: totrans-79
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: 4\. Training Loop for Sentiment Analysis
   id: totrans-80
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: For sentiment analysis, define a simple training loop using Jax's automatic
     differentiation and an optimizer like SGD.
   id: totrans-81
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: 'def loss_fn(params, input_data, targets):'
+- en: '`def loss_fn(params, input_data, targets):`'
   id: totrans-82
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: predictions = model.apply(params, input_data)
+- en: '`predictions = model.apply(params, input_data)`'
   id: totrans-83
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: loss = jnp.mean(jax.nn.softmax_cross_entropy_with_logits(targets, predictions))
+- en: '`loss = jnp.mean(jax.nn.softmax_cross_entropy_with_logits(targets, predictions))`'
   id: totrans-84
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: return loss
+- en: '`return loss`'
   id: totrans-85
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: grad_fn = jax.grad(loss_fn)
+- en: '`grad_fn = jax.grad(loss_fn)`'
   id: totrans-86
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: learning_rate = 0.01
+- en: '`learning_rate = 0.01`'
   id: totrans-87
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: optimizer = jax.optimizers.sgd(learning_rate)
+- en: '`optimizer = jax.optimizers.sgd(learning_rate)`'
   id: totrans-88
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: Inside the training loop, update parameters using optimizer and gradients.
   id: totrans-89
   prefs:
   - PREF_H1
+  stylish: true
   type: TYPE_NORMAL
 - en: 'for epoch in range(num_epochs):'
   id: totrans-90
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: grad = grad_fn(params, input_data, targets)
+- en: '`grad = grad_fn(params, input_data, targets)`'
   id: totrans-91
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: optimizer = optimizer.apply_gradient(grad)
+- en: '`optimizer = optimizer.apply_gradient(grad)`'
   id: totrans-92
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: Implementing NLP models for text classification and sentiment analysis with
     Jax is straightforward. The modular structure of Jax's `flax` allows you to define
@@ -401,242 +494,300 @@
     for building and experimenting with NLP models tailored to your specific applications.
   id: totrans-93
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: 7.3 Developing Generative Models for Realistic Images and Text
   id: totrans-94
   prefs:
   - PREF_H2
+  stylish: true
   type: TYPE_NORMAL
 - en: Generative models are the artists of the AI world, creating new content that
     mirrors the patterns learned during training. Let's develop generative models
     using Jax for both images and text!
   id: totrans-95
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: 1\. Building a Variational Autoencoder (VAE) for Image Generation
   id: totrans-96
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: Variational Autoencoders (VAEs) are excellent for generating realistic images.
     Define a VAE model using Jax and Flax.
   id: totrans-97
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: 'class VAE(nn.Module):'
+- en: '`class VAE(nn.Module):`'
   id: totrans-98
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: 'latent_dim: int = 50'
+- en: '`latent_dim: int = 50`'
   id: totrans-99
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: 'def setup(self):'
+- en: '`def setup(self):`'
   id: totrans-100
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: self.encoder = nn.Sequential([nn.Dense(256), nn.relu, nn.Dense(2 * self.latent_dim)])
+- en: '`self.encoder = nn.Sequential([nn.Dense(256), nn.relu, nn.Dense(2 * self.latent_dim)])`'
   id: totrans-101
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: self.decoder = nn.Sequential([nn.Dense(256), nn.relu, nn.Dense(784), nn.sigmoid])
+- en: '`self.decoder = nn.Sequential([nn.Dense(256), nn.relu, nn.Dense(784), nn.sigmoid])`'
   id: totrans-102
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: 'def __call__(self, x):'
+- en: '`def __call__(self, x):`'
   id: totrans-103
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: mean, log_std = jnp.split(self.encoder(x), 2, axis=-1)
+- en: '`mean, log_std = jnp.split(self.encoder(x), 2, axis=-1)`'
   id: totrans-104
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: std = jnp.exp(log_std)
+- en: '`std = jnp.exp(log_std)`'
   id: totrans-105
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: eps = jax.random.normal(self.make_rng(), mean.shape)
+- en: '`eps = jax.random.normal(self.make_rng(), mean.shape)`'
   id: totrans-106
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: z = mean + std * eps
+- en: '`z = mean + std * eps`'
   id: totrans-107
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: reconstruction = self.decoder(z)
+- en: '`reconstruction = self.decoder(z)`'
   id: totrans-108
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: return reconstruction, mean, log_std
+- en: '`return reconstruction, mean, log_std`'
   id: totrans-109
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: 2\. Training the VAE for Image Generation
   id: totrans-110
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: Define a training loop for the VAE model using a dataset like MNIST.
   id: totrans-111
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: Assume `train_images` is the training dataset.
   id: totrans-112
   prefs:
   - PREF_H1
+  stylish: true
   type: TYPE_NORMAL
-- en: vae = VAE()
+- en: '`vae = VAE()`'
   id: totrans-113
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: params = vae.init(jax.random.PRNGKey(42), jnp.ones((28 * 28,)))
+- en: '`params = vae.init(jax.random.PRNGKey(42), jnp.ones((28 * 28,)))`'
   id: totrans-114
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: optimizer = jax.optimizers.adam(learning_rate=0.001)
+- en: '`optimizer = jax.optimizers.adam(learning_rate=0.001)`'
   id: totrans-115
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: 'def loss_fn(params, images):'
+- en: '`def loss_fn(params, images):`'
   id: totrans-116
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: reconstructions, mean, log_std = vae.apply(params, images)
+- en: '`reconstructions, mean, log_std = vae.apply(params, images)`'
   id: totrans-117
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: '# Define the reconstruction loss and KL divergence term here.'
   id: totrans-118
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: reconstruction_loss = ...
+- en: '`reconstruction_loss = ...`'
   id: totrans-119
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: kl_divergence = ...
+- en: '`kl_divergence = ...`'
   id: totrans-120
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: return reconstruction_loss + kl_divergence
+- en: '`return reconstruction_loss + kl_divergence`'
   id: totrans-121
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: 'for epoch in range(num_epochs):'
+- en: '`for epoch in range(num_epochs):`'
   id: totrans-122
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: grad = jax.grad(loss_fn)(params, train_images)
+- en: '`grad = jax.grad(loss_fn)(params, train_images)`'
   id: totrans-123
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: optimizer = optimizer.apply_gradient(grad)
+- en: '`optimizer = optimizer.apply_gradient(grad)`'
   id: totrans-124
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: 3\. Creating Text with a Generative Adversarial Network (GAN)
   id: totrans-125
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: Generative Adversarial Networks (GANs) excel at generating realistic text. Define
     a simple GAN model for text generation.
   id: totrans-126
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: 'class GAN(nn.Module):'
+- en: '`class GAN(nn.Module):`'
   id: totrans-127
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: 'latent_dim: int = 100'
+- en: '`latent_dim: int = 100`'
   id: totrans-128
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: 'def setup(self):'
+- en: '`def setup(self):`'
   id: totrans-129
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: self.generator = nn.Sequential([nn.Dense(256), nn.relu, nn.Dense(784)])
+- en: '`self.generator = nn.Sequential([nn.Dense(256), nn.relu, nn.Dense(784)])`'
   id: totrans-130
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: self.discriminator = nn.Sequential([nn.Dense(256), nn.relu, nn.Dense(1), nn.sigmoid])
+- en: '`self.discriminator = nn.Sequential([nn.Dense(256), nn.relu, nn.Dense(1), nn.sigmoid])`'
   id: totrans-131
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: 'def __call__(self, z):'
+- en: '`def __call__(self, z):`'
   id: totrans-132
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: fake_data = self.generator(z)
+- en: '`fake_data = self.generator(z)`'
   id: totrans-133
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: return fake_data
+- en: '`return fake_data`'
   id: totrans-134
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: 'def discriminate(self, x):'
+- en: '`def discriminate(self, x):`'
   id: totrans-135
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: return self.discriminator(x)
+- en: '`return self.discriminator(x)`'
   id: totrans-136
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: 4\. Training the GAN for Text Generation
   id: totrans-137
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: Train the GAN model using a suitable loss function, often involving adversarial
     and reconstruction components.
   id: totrans-138
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: gan = GAN()
+- en: '`gan = GAN()`'
   id: totrans-139
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: params = gan.init(jax.random.PRNGKey(42), jnp.ones((gan.latent_dim,)))
+- en: '`params = gan.init(jax.random.PRNGKey(42), jnp.ones((gan.latent_dim,)))`'
   id: totrans-140
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: optimizer = jax.optimizers.adam(learning_rate=0.0002, beta1=0.5, beta2=0.999)
+- en: '`optimizer = jax.optimizers.adam(learning_rate=0.0002, beta1=0.5, beta2=0.999)`'
   id: totrans-141
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: 'def loss_fn(params, real_data):'
+- en: '`def loss_fn(params, real_data):`'
   id: totrans-142
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: fake_data = gan.apply(params, jax.random.normal(jax.random.PRNGKey(42), (batch_size,
-    gan.latent_dim)))
+- en: '`fake_data = gan.apply(params, jax.random.normal(jax.random.PRNGKey(42), (batch_size,
+    gan.latent_dim)))`'
   id: totrans-143
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: '# Define the adversarial and reconstruction loss components here.'
   id: totrans-144
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: adversarial_loss = ...
+- en: '`adversarial_loss = ...`'
   id: totrans-145
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: reconstruction_loss = ...
+- en: '`reconstruction_loss = ...`'
   id: totrans-146
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: return adversarial_loss + reconstruction_loss
+- en: '`return adversarial_loss + reconstruction_loss`'
   id: totrans-147
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: 'for epoch in range(num_epochs):'
+- en: '`for epoch in range(num_epochs):`'
   id: totrans-148
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: grad = jax.grad(loss_fn)(params, real_data)
+- en: '`grad = jax.grad(loss_fn)(params, real_data)`'
   id: totrans-149
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: optimizer = optimizer.apply_gradient(grad)
+- en: '`optimizer = optimizer.apply_gradient(grad)`'
   id: totrans-150
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: Developing generative models with Jax empowers you to create diverse and realistic
     content, whether it's images or text. The flexibility and expressiveness of Jax's
@@ -644,246 +795,303 @@
     your generative models.
   id: totrans-151
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: 'Coding Challenge 7: Image Generation with Variational Autoencoder (VAE)'
+- en: '`Coding Challenge 7: Image Generation with Variational Autoencoder (VAE)`'
   id: totrans-152
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: Implement a Variational Autoencoder (VAE) using Jax and Flax for image generation.
     Use a dataset of your choice, such as MNIST, for training the VAE. After training,
     generate new images with the trained VAE.
   id: totrans-153
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: Solution
   id: totrans-154
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: Here's a basic implementation of a VAE in Jax and Flax. Please note that this
     is a simplified example, and you may need to adapt it based on your specific dataset
     and requirements.
   id: totrans-155
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: import jax
+- en: '`import jax`'
   id: totrans-156
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: import jax.numpy as jnp
+- en: '`import jax.numpy as jnp`'
   id: totrans-157
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: import flax
+- en: '`import flax`'
   id: totrans-158
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: from flax import linen as nn
+- en: '`from flax import linen as nn`'
   id: totrans-159
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: from flax.training import train_state
+- en: '`from flax.training import train_state`'
   id: totrans-160
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: Define the VAE model
   id: totrans-161
   prefs:
   - PREF_H1
+  stylish: true
   type: TYPE_NORMAL
-- en: 'class VAE(nn.Module):'
+- en: '`class VAE(nn.Module):`'
   id: totrans-162
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: 'latent_dim: int = 20'
+- en: '`latent_dim: int = 20`'
   id: totrans-163
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: 'def setup(self):'
+- en: '`def setup(self):`'
   id: totrans-164
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: self.encoder = nn.Sequential([nn.Conv(32, (3, 3)), nn.relu, nn.Conv(64, (3,
-    3)), nn.relu, nn.flatten,
+- en: '`self.encoder = nn.Sequential([nn.Conv(32, (3, 3)), nn.relu, nn.Conv(64, (3,
+    3)), nn.relu, nn.flatten,`'
   id: totrans-165
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: nn.Dense(2 * self.latent_dim)])
+- en: '`nn.Dense(2 * self.latent_dim)])`'
   id: totrans-166
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: self.decoder = nn.Sequential([nn.Dense(7 * 7 * 64), nn.relu, nn.reshape((7,
-    7, 64)),
+- en: '`self.decoder = nn.Sequential([nn.Dense(7 * 7 * 64), nn.relu, nn.reshape((7,
+    7, 64)),`'
   id: totrans-167
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: nn.ConvTranspose(32, (3, 3)), nn.relu, nn.ConvTranspose(1, (3, 3)), nn.sigmoid])
+- en: '`nn.ConvTranspose(32, (3, 3)), nn.relu, nn.ConvTranspose(1, (3, 3)), nn.sigmoid])`'
   id: totrans-168
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: 'def __call__(self, x):'
+- en: '`def __call__(self, x):`'
   id: totrans-169
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: mean, log_std = jnp.split(self.encoder(x), 2, axis=-1)
+- en: '`mean, log_std = jnp.split(self.encoder(x), 2, axis=-1)`'
   id: totrans-170
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: std = jnp.exp(log_std)
+- en: '`std = jnp.exp(log_std)`'
   id: totrans-171
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: eps = jax.random.normal(self.make_rng(), mean.shape)
+- en: '`eps = jax.random.normal(self.make_rng(), mean.shape)`'
   id: totrans-172
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: z = mean + std * eps
+- en: '`z = mean + std * eps`'
   id: totrans-173
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: reconstruction = self.decoder(z)
+- en: '`reconstruction = self.decoder(z)`'
   id: totrans-174
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: return reconstruction, mean, log_std
+- en: '`return reconstruction, mean, log_std`'
   id: totrans-175
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: Define training and evaluation steps
   id: totrans-176
   prefs:
   - PREF_H1
+  stylish: true
   type: TYPE_NORMAL
-- en: 'def train_step(state, batch):'
+- en: '`def train_step(state, batch):`'
   id: totrans-177
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: 'def loss_fn(params):'
+- en: '`def loss_fn(params):`'
   id: totrans-178
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: 'reconstructions, mean, log_std = vae.apply({''params'': params}, batch[''image''])'
+- en: '`reconstructions, mean, log_std = vae.apply({''params'': params}, batch[''image''])`'
   id: totrans-179
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: '# Define the reconstruction loss and KL divergence term here.'
+- en: '`# Define the reconstruction loss and KL divergence term here.`'
   id: totrans-180
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: reconstruction_loss = jnp.mean((reconstructions - batch['image'])  2)
+- en: '`reconstruction_loss = jnp.mean((reconstructions - batch[''image''])  2)`'
   id: totrans-181
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: kl_divergence = -0.5 * jnp.mean(1 + 2 * log_std - mean2 - jnp.exp(2 * log_std))
+- en: '`kl_divergence = -0.5 * jnp.mean(1 + 2 * log_std - mean2 - jnp.exp(2 * log_std))`'
   id: totrans-182
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: return reconstruction_loss + kl_divergence
+- en: '`return reconstruction_loss + kl_divergence`'
   id: totrans-183
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: grad = jax.grad(loss_fn)(state.params)
+- en: '`grad = jax.grad(loss_fn)(state.params)`'
   id: totrans-184
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: new_state = state.apply_gradient(grad)
+- en: '`new_state = state.apply_gradient(grad)`'
   id: totrans-185
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: return new_state
+- en: '`return new_state`'
   id: totrans-186
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: 'def eval_step(params, batch):'
+- en: '`def eval_step(params, batch):`'
   id: totrans-187
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: 'reconstructions, _, _ = vae.apply({''params'': params}, batch[''image''])'
+- en: '`reconstructions, _, _ = vae.apply({''params'': params}, batch[''image''])`'
   id: totrans-188
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: reconstruction_loss = jnp.mean((reconstructions - batch['image'])  2)
+- en: '`reconstruction_loss = jnp.mean((reconstructions - batch[''image''])  2)`'
   id: totrans-189
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: return reconstruction_loss
+- en: '`return reconstruction_loss`'
   id: totrans-190
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: Load your dataset (e.g., MNIST)
   id: totrans-191
   prefs:
   - PREF_H1
+  stylish: true
   type: TYPE_NORMAL
 - en: '...'
   id: totrans-192
   prefs:
   - PREF_H1
+  stylish: true
   type: TYPE_NORMAL
 - en: Initialize the VAE and optimizer
   id: totrans-193
   prefs:
   - PREF_H1
+  stylish: true
   type: TYPE_NORMAL
-- en: vae = VAE()
+- en: '`vae = VAE()`'
   id: totrans-194
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: params = vae.init(jax.random.PRNGKey(42), jnp.ones((28, 28, 1)))
+- en: '`params = vae.init(jax.random.PRNGKey(42), jnp.ones((28, 28, 1)))`'
   id: totrans-195
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: optimizer = flax.optim.Adam(learning_rate=0.001).create(params)
+- en: '`optimizer = flax.optim.Adam(learning_rate=0.001).create(params)`'
   id: totrans-196
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: Training loop
   id: totrans-197
   prefs:
   - PREF_H1
+  stylish: true
   type: TYPE_NORMAL
-- en: 'for epoch in range(num_epochs):'
+- en: '`for epoch in range(num_epochs):`'
   id: totrans-198
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: '# Iterate over batches'
+- en: '`# Iterate over batches`'
   id: totrans-199
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: 'for batch in batches:'
+- en: '`for batch in batches:`'
   id: totrans-200
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: state = train_step(state, batch)
+- en: '`state = train_step(state, batch)`'
   id: totrans-201
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: '# Evaluate on a validation set (optional)'
+- en: '`# Evaluate on a validation set (optional)`'
   id: totrans-202
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
-- en: validation_loss = jnp.mean([eval_step(state.params, val_batch) for val_batch
-    in validation_batches])
+- en: '`validation_loss = jnp.mean([eval_step(state.params, val_batch) for val_batch
+    in validation_batches])`'
   id: totrans-203
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: Generate new images after training
   id: totrans-204
   prefs:
   - PREF_H1
+  stylish: true
   type: TYPE_NORMAL
-- en: new_images, _, _ = vae.apply(state.params, jax.random.normal(jax.random.PRNGKey(42),
-    (num_generated_images, vae.latent_dim)))
+- en: '`new_images, _, _ = vae.apply(state.params, jax.random.normal(jax.random.PRNGKey(42),
+    (num_generated_images, vae.latent_dim)))`'
   id: totrans-205
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: Challenge Extension
   id: totrans-206
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: Experiment with different hyperparameters, architectures, or datasets to improve
     the VAE's performance and generate more diverse and realistic images.
   id: totrans-207
   prefs: []
+  stylish: true
   type: TYPE_NORMAL
 - en: Jax empowers you to turn deep learning concepts into reality. As we've seen
     in this chapter, you can leverage Jax's capabilities to build robust models for
