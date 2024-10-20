@@ -1,3 +1,4 @@
++   [Algolia 博客中文翻译](docs/algolia-blog/README.md)
 +   [AssemblyAI 博客中文翻译](docs/assemblyai/README.md)
 +   [COT 专栏中文翻译](docs/cot-col/README.md)
 +   [DataCamp 博客中文翻译](docs/datacamp/README.md)

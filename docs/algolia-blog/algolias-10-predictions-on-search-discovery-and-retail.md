@@ -1,0 +1,16 @@
+# Algolia 对搜索、发现和零售的 10 个预测
+
+> 原文：<https://www.algolia.com/blog/algolia/algolias-10-predictions-on-search-discovery-and-retail/>
+
+外面的温度开始下降，随着零售商准备打折和转移商品，冬季节日展示越来越早出现。这也是一年中我们的顾客为节日旺季做准备的时候。我们想后退一步，寻找明年可能的模式和趋势——我们称之为“预测季”。
+
+作为搜索和发现创新的先驱和 [电子商务](https://www.algolia.com/industries-and-solutions/ecommerce/) 玩家的热情技术合作伙伴，我们 Algolia 知道我们有责任展望 2023 年及以后的前景。所以，事不宜迟，下面是我们对搜索、发现和零售业未来的十个预测:
+
+1.  **M & A 势头:** 并购一直 [相对于疫情之前的水平，今年相当平静](https://www.pwc.com/gx/en/news-room/press-releases/2022/global-m-and-a-industry-trends-2022-midyear-outlook.html) ，因为投资者一直很谨慎，专注于保存资金。我们预计活动将会增加。证据？我们最新收购的[Search . io](https://www.algolia.com/about/news/algolia-disrupts-market-with-search-io-acquisition-ushering-in-a-new-era-of-search-and-discovery/)…an M&这一举动帮助我们创建了世界上第一个也是唯一一个在单个 API 中结合关键字和 [矢量搜索](https://www.algolia.com/blog/ai/vectors-vs-hashes/) 的混合搜索引擎。
+2.  抑制通货膨胀:从商品到汽油的高价格已经把消费者推到了边缘，因为他们不断地重新评估他们的支出预算。消费者不想减少购买(尤其是假期即将来临)，所以他们将依靠信贷来度过任何艰难时期。
+3.  **说到通货膨胀，我们看到了零售商专注于其 [普通品牌产品](https://progressivegrocer.com/consumer-spending-edges-higher-august) 的机会，比如家庭用品、服装和杂货，与名牌相比，这些产品以对通货膨胀有利的价格提供了巨大的价值。**
+***   **关注搜索成熟度** :没有数据提供相关结果，你不可能有好的 [搜索体验](https://www.algolia.com/blog/ux/how-to-create-the-best-search-engine-experience/) 。品牌和零售商在他们的搜索和发现中已经越来越意识到这一差距，并正在努力收集和提炼适当的信息，以提供更好的客户体验，尽可能挤压所有可能的转换..*   **机器学习接管** : [机器学习](https://www.algolia.com/blog/product/new-ai-capabilities-available-to-algolia-customers-query-categorization/) 将接管零售商自动管理库存的方式，通过匹配实时数据来提供和推动更好的决策。随着员工成本的增加和利润率的压力，品牌将依赖于更加自动化的流程。*   **混合搜索将占据主导地位** :为了让客户体验更上一层楼，预测意图和上下文含义是吸引消费者并向购物车中添加商品的关键——进入混合搜索。将他们带到与他们的搜索查询略有相似的商品的页面已经不够了，零售商需要不断地 [改进他们的搜索能力](https://www.algolia.com/blog/ux/what-are-personalized-recommendations-and-how-can-they-boost-engagement-and-conversion/) 以准确地提供客户想要的东西，以及他们可能想要与他们最初购买的商品相匹配的东西——即使他们很难描述他们需要什么。*   **混合购物的兴起:** 消费者想要他们现在想要的东西，所以网上或店内缺货不会阻止他们今天得到他们需要的东西。 [试试网上，店内提货](https://www.voguebusiness.com/consumers/hybrid-shopping-retails-big-story-this-holiday-season) 势头越来越猛，很可能在一年中最繁忙的购物季造成混乱。如果消费者在网上买不到他们想要的东西，他们就会跑到商店去找，这就要求零售商完善他们的全渠道战略。*   **视觉搜索提速** :截至 2022 年 8 月， [30%的美国成年人](https://protect-us.mimecast.com/s/f12BCxkyBBTJqBMqH833ah?domain=insiderintelligence.com) 使用过视觉搜索购物。视觉搜索通过人工智能使用现实生活中的图像来指导用户的搜索查询，而不是文本。智能手机和 Pinterest 等社交媒体平台正在采用这种策略让用户购物——只需拍一张照片或点击你在 feed 中看到的照片，你就会被重定向到有该商品出售的网站。*   **在线购物并未消亡** :尽管最近 [Meta](https://www.modernretail.co/technology/despite-investments-from-tech-giants-live-shopping-is-still-struggling-to-take-off-in-the-u-s/) 和 Instagram 停止了在美国的在线购物计划，但社交商务仍然是零售商的一项资产——尤其是[【Tik Tok】](https://protect-us.mimecast.com/s/o0Q2CyPzDDFNmJXmUMd4KM?domain=cnbc.com)。*   **语音搜索是发现资产**:“Alexa，请把洗发水加到我的购物清单里。”这是一个为顾客提供充足选择的机会，他们可以选择购买哪种洗发水。如果一个品牌针对 [语音搜索](https://www.searchenginejournal.com/what-is-voice-search/463344/) 进行了优化，那么它应该能够让自己的洗发水产品排在顾客考虑列表的首位。基于发现的查询是品牌认知和购物车转换的重要机会。**
+
+ **对于搜索和发现来说，未来是光明而令人兴奋的，每天都有新的功能被构建出来。在过去的几年里，搜索和发现已经越来越接近于希望获得新客户和吸引现有客户的企业的优先事项列表的顶端。2022 年对搜索来说是革命性的一年，我们只会继续前进，让我们搜索信息、产品和娱乐的方式变得更好。
+
+想了解更多关于搜索发现如何让您的组织受益的信息吗？碰上一些神奇的阿洛利亚专家为 [做了一个现场演示](https://www.algolia.com/demorequest/) 。**
