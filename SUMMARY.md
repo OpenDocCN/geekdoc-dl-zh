@@ -1,3 +1,4 @@
++   [LEO AI 笔记](docs/ai-leo/README.md)
 +   [Algolia 博客中文翻译](docs/algolia-blog/README.md)
 +   [AssemblyAI 博客中文翻译](docs/assemblyai/README.md)
 +   [COT 专栏中文翻译](docs/cot-col/README.md)
@@ -11,5 +12,7 @@
 +   [精通 JAX 编程](docs/ms-jax-prog/README.md)
 +   [NeptuneAI 博客中文翻译](docs/neptuneai/README.md)
 +   [PaperSpace 博客中文翻译](docs/paperspace/README.md)
++   [PyTorch 从零到全部](docs/pt-0toall/README.md)
 +   [PyImgSearch 博客中文翻译](docs/pyimagesearch/README.md)
++   [TensorFlow 从零到全部](docs/tf-0toall/README.md)
 +   [TensorFlow Rager 教程](docs/tf-eager-tut/README.md)
