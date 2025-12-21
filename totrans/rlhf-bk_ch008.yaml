@@ -1,0 +1,324 @@
+- en: Regularization
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Throughout the RLHF optimization, many regularization steps are used to prevent
+    over-optimization of the reward model. Over-optimization in these contexts looks
+    like models that output nonsensical text. Some examples of optimization “off the
+    rails” are that models can output followable math reasoning with extremely incorrect
+    answers, repeated text, switching languages, or excessive special characters.
+    This chapter covers the different methods that’re used to control the optimization
+    of models.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The most popular variant, used in most RLHF implementations at the time of writing,
+    is a KL distance from the current policy to a reference policy across generated
+    samples. “KL distance” is a colloquial term for expressing the *optimization distance*
+    within the training process, even though KL divergence—the underlying mathematical
+    method for measuring the separation of two probability distributions—does not
+    satisfy the formal properties required to be a true distance metric (it is simply
+    easier to call the number a distance than a numeric measure of distributional
+    difference). Many other regularization techniques have emerged in the literature
+    to then disappear in the next model iteration in that line of research. That is
+    to say that regularization outside the core KL distance from generations is often
+    used to stabilize experimental setups that can then be simplified in the next
+    generation. Still, it is important to understand tools to constrain optimization
+    in RLHF.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '*Throughout this chapter, we use <semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics>
+    to denote prompts and <semantics><mi>y</mi><annotation encoding="application/x-tex">y</annotation></semantics>
+    to denote completions. This notation is common in the language model literature,
+    where methods operate on full prompt-completion pairs rather than individual tokens.*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The general formulation, when used in an RLHF framework with a reward model,
+    <semantics><msub><mi>r</mi><mi>θ</mi></msub><annotation encoding="application/x-tex">r_\theta</annotation></semantics>
+    is as follows:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: <semantics><mrow><mi>r</mi><mo>=</mo><msub><mi>r</mi><mi>θ</mi></msub><mo>−</mo><mi>λ</mi><msub><mi>r</mi><mtext
+    mathvariant="normal">reg.</mtext></msub><mrow><mo stretchy="false" form="prefix">(</mo><mn>22</mn><mo
+    stretchy="false" form="postfix">)</mo></mrow></mrow> <annotation encoding="application/x-tex">r
+    = r_\theta - \lambda r_{\text{reg.}} \qquad{(22)}</annotation></semantics>
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'With the reference implementation being:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: <semantics><mrow><mi>r</mi><mo>=</mo><msub><mi>r</mi><mi>θ</mi></msub><mo>−</mo><msub><mi>λ</mi><mtext
+    mathvariant="normal">KL</mtext></msub><msub><mi>𝒟</mi><mtext mathvariant="normal">KL</mtext></msub><mrow><mo
+    stretchy="true" form="prefix">(</mo><msub><mi>π</mi><mtext mathvariant="normal">RL</mtext></msub><mo
+    stretchy="false" form="prefix">(</mo><mi>y</mi><mo>∣</mo><mi>x</mi><mo stretchy="false"
+    form="postfix">)</mo><mo stretchy="false" form="postfix">∥</mo><msub><mi>π</mi><mtext
+    mathvariant="normal">ref</mtext></msub><mo stretchy="false" form="prefix">(</mo><mi>y</mi><mo>∣</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo><mo stretchy="true" form="postfix">)</mo></mrow><mrow><mo
+    stretchy="false" form="prefix">(</mo><mn>23</mn><mo stretchy="false" form="postfix">)</mo></mrow></mrow>
+    <annotation encoding="application/x-tex">r = r_\theta - \lambda_{\text{KL}} \mathcal{D}_{\text{KL}}
+    \left( \pi_{\text{RL}}(y \mid x) \, \| \, \pi_{\text{ref}}(y \mid x) \right) \qquad{(23)}</annotation></semantics>
+  prefs: []
+  type: TYPE_NORMAL
+- en: KL Divergences in RL Optimization
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'For mathematical definitions, see Chapter 3 on Problem Setup. Recall that a
+    KL divergence measure of probability difference is defined as follows:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: <semantics><mrow><msub><mi>𝒟</mi><mtext mathvariant="normal">KL</mtext></msub><mo
+    stretchy="false" form="prefix">(</mo><mi>P</mi><mo stretchy="false" form="prefix">|</mo><mo
+    stretchy="false" form="prefix">|</mo><mi>Q</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><munder><mo>∑</mo><mrow><mi>x</mi><mo>∈</mo><mi>𝒳</mi></mrow></munder><mi>P</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mrow><mi
+    mathvariant="normal">log</mi><mo>⁡</mo></mrow><mrow><mo stretchy="true" form="prefix">(</mo><mfrac><mrow><mi>P</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo></mrow><mrow><mi>Q</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo></mrow></mfrac><mo
+    stretchy="true" form="postfix">)</mo></mrow><mrow><mo stretchy="false" form="prefix">(</mo><mn>24</mn><mo
+    stretchy="false" form="postfix">)</mo></mrow></mrow> <annotation encoding="application/x-tex">\mathcal{D}_{\text{KL}}(P
+    || Q) = \sum_{x \in \mathcal{X}} P(x) \log \left(\frac{P(x)}{Q(x)}\right) \qquad{(24)}</annotation></semantics>
+  prefs: []
+  type: TYPE_NORMAL
+- en: In RLHF, the two distributions of interest are often the distribution of the
+    new model version, say <semantics><mrow><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">P(x)</annotation></semantics>,
+    and a distribution of the reference policy, say <semantics><mrow><mi>Q</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation
+    encoding="application/x-tex">Q(x)</annotation></semantics>. Different optimizers
+    use different KL directions. Throughout this book, the most common “KL Penalty”
+    that is used is called the reverse KL to the reference policy. In practice, this
+    reduces to a Monte Carlo estimate that samples tokens from the RL model and computes
+    probabilities from the reference model. Intuitively, this reverse KL has a numerical
+    property that applies a large penalty when the new model, <semantics><mi>P</mi><annotation
+    encoding="application/x-tex">P</annotation></semantics> or <semantics><msub><mi>π</mi><mtext
+    mathvariant="normal">RL</mtext></msub><annotation encoding="application/x-tex">\pi_{\text{RL}}</annotation></semantics>,
+    puts substantial probability mass where the original reference model assigns low
+    probability.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The other KL direction is still often used in ML, e.g. in the internal trust
+    region calculation of some RL algorithms. This penalty intuitively penalizes the
+    new model when its update does *not* apply probability to a high-likelihood region
+    in <semantics><mi>Q</mi><annotation encoding="application/x-tex">Q</annotation></semantics>
+    or <semantics><msub><mi>π</mi><mtext mathvariant="normal">ref</mtext></msub><annotation
+    encoding="application/x-tex">\pi_{\text{ref}}</annotation></semantics>. This is
+    closer to an objective used for distillation or behavioral cloning.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Reference Model to Generations
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: KL penalties are most commonly implemented by comparing the distance between
+    the generated tokens during training to a static reference model. The intuition
+    is that the model you’re training from has a style that you would like to stay
+    close to. This reference model is most often the instruction tuned model, but
+    can also be a previous RL checkpoint. With simple substitution, the model we are
+    sampling from becomes <semantics><mrow><msub><mi>π</mi><mtext mathvariant="normal">RL</mtext></msub><mo
+    stretchy="false" form="prefix">(</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation
+    encoding="application/x-tex">\pi_{\text{RL}}(x)</annotation></semantics> and <semantics><mrow><msub><mi>π</mi><mtext
+    mathvariant="normal">ref</mtext></msub><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\pi_{\text{ref}}(x)</annotation></semantics>,
+    shown above in eq. [23](ch008.xhtml#eq:kl_standard) (often <semantics><mi>P</mi><annotation
+    encoding="application/x-tex">P</annotation></semantics>, and <semantics><mi>Q</mi><annotation
+    encoding="application/x-tex">Q</annotation></semantics>, in standard definitions,
+    when applied for RL KL penalties). Such a KL divergence penalty was first applied
+    to dialogue agents well before the popularity of large language models [[162]](ch021.xhtml#ref-jaques2017sequence),
+    yet KL control was quickly established as a core technique for fine-tuning pretrained
+    models [[163]](ch021.xhtml#ref-jaques2020human).
+  prefs: []
+  type: TYPE_NORMAL
+- en: Implementation Example
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: 'In practice, the implementation of KL divergence is often approximated [[164]](ch021.xhtml#ref-schulman2016klapprox),
+    making the implementation far simpler. With the above definition, the summation
+    of KL can be converted to an expectation when sampling directly from the distribution
+    <semantics><mrow><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">P(x)</annotation></semantics>.
+    In this case, the distribution <semantics><mrow><mi>P</mi><mo stretchy="false"
+    form="prefix">(</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation
+    encoding="application/x-tex">P(x)</annotation></semantics> is the generative distribution
+    of the model currently being trained (i.e. not the reference model). Then, the
+    computation for KL divergence changes to the following:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: <semantics><mrow><msub><mi>𝒟</mi><mtext mathvariant="normal">KL</mtext></msub><mo
+    stretchy="false" form="prefix">(</mo><mi>P</mi><mo stretchy="false" form="prefix">|</mo><mo
+    stretchy="false" form="prefix">|</mo><mi>Q</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><msub><mi>𝔼</mi><mrow><mi>x</mi><mo>∼</mo><mi>P</mi></mrow></msub><mrow><mo
+    stretchy="true" form="prefix">[</mo><mi mathvariant="normal">log</mi><mi>P</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mo>−</mo><mi
+    mathvariant="normal">log</mi><mi>Q</mi><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo><mo stretchy="true" form="postfix">]</mo></mrow><mi>.</mi><mrow><mo
+    stretchy="false" form="prefix">(</mo><mn>25</mn><mo stretchy="false" form="postfix">)</mo></mrow></mrow>
+    <annotation encoding="application/x-tex">\mathcal{D}_{\text{KL}}(P \,||\, Q) =
+    \mathbb{E}_{x \sim P} \left[ \log P(x) - \log Q(x) \right]. \qquad{(25)}</annotation></semantics>
+  prefs: []
+  type: TYPE_NORMAL
+- en: This mode is far simpler to implement, particularly when dealing directly with
+    log probabilities used frequently in language model training.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs: []
+  type: TYPE_PRE
+- en: Some example implementations include [TRL](https://github.com/huggingface/trl/blob/5c21de30ae210e4251ead85517ba8dfe3f210e81/trl/trainer/ppo_trainer.py#L1150)
+    and [Hamish Ivison’s Jax Code](https://github.com/hamishivi/EasyLM/blob/main/EasyLM/models/llama/llama_train_ppo.py#L278).
+  prefs: []
+  type: TYPE_NORMAL
+- en: Pretraining Gradients
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'Another way of viewing regularization is that you may have a *dataset* that
+    you want the model to remain close to, as done in InstructGPT [[3]](ch021.xhtml#ref-ouyang2022training)
+    “in order to fix the performance regressions on public NLP datasets”. To implement
+    this, they modify the training objective for RLHF. Taking eq. [22](ch008.xhtml#eq:rl_start),
+    we can transform this into an objective function to optimize by sampling from
+    the RL policy model, completions <semantics><mi>y</mi><annotation encoding="application/x-tex">y</annotation></semantics>
+    from prompts <semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics>
+    in the RL dataset used for RLHF, which yields: <semantics><mrow><mi>J</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>θ</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><msub><mi>𝔼</mi><mrow><mo
+    stretchy="false" form="prefix">(</mo><mi>x</mi><mo>,</mo><mi>y</mi><mo stretchy="false"
+    form="postfix">)</mo><mo>∼</mo><msub><mi>𝒟</mi><msub><mi>π</mi><mrow><mtext mathvariant="normal">RL</mtext><mo>,</mo><mi>θ</mi></mrow></msub></msub></mrow></msub><mrow><mo
+    stretchy="true" form="prefix">[</mo><msub><mi>r</mi><mi>θ</mi></msub><mo stretchy="false"
+    form="prefix">(</mo><mi>y</mi><mo>∣</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mo>−</mo><mi>λ</mi><msub><mi>r</mi><mtext
+    mathvariant="normal">reg.</mtext></msub><mo stretchy="true" form="postfix">]</mo></mrow><mrow><mo
+    stretchy="false" form="prefix">(</mo><mn>26</mn><mo stretchy="false" form="postfix">)</mo></mrow></mrow>
+    <annotation encoding="application/x-tex">J(\theta) = \mathbb{E}_{(x,y) \sim \mathcal{D}_{\pi_{\text{RL},\theta}}}
+    \left[ r_{\theta}(y \mid x) - \lambda r_{\text{reg.}} \right] \qquad{(26)}</annotation></semantics>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Then, we can add an additional reward for higher probabilities on the standard
+    autoregressive next-token prediction loss used at pretraining, over a set of documents
+    sampled from the pretraining corpus (or another dataset) to maintain textual coherence:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: <semantics><mrow><mi>J</mi><mo stretchy="false" form="prefix">(</mo><mi>θ</mi><mo
+    stretchy="false" form="postfix">)</mo><mo>=</mo><msub><mi>𝔼</mi><mrow><mo stretchy="false"
+    form="prefix">(</mo><mi>x</mi><mo>,</mo><mi>y</mi><mo stretchy="false" form="postfix">)</mo><mo>∼</mo><msub><mi>𝒟</mi><msub><mi>π</mi><mrow><mtext
+    mathvariant="normal">RL</mtext><mo>,</mo><mi>θ</mi></mrow></msub></msub></mrow></msub><mrow><mo
+    stretchy="true" form="prefix">[</mo><msub><mi>r</mi><mi>θ</mi></msub><mo stretchy="false"
+    form="prefix">(</mo><mi>y</mi><mo>∣</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mo>−</mo><mi>λ</mi><msub><mi>r</mi><mtext
+    mathvariant="normal">reg.</mtext></msub><mo stretchy="true" form="postfix">]</mo></mrow><mo>+</mo><mi>γ</mi><msub><mi>𝔼</mi><mrow><mi>x</mi><mo>∼</mo><msub><mi>𝒟</mi><mtext
+    mathvariant="normal">pretrain</mtext></msub></mrow></msub><mrow><mo stretchy="true"
+    form="prefix">[</mo><mi mathvariant="normal">log</mi><mo stretchy="false" form="prefix">(</mo><msub><mi>π</mi><mrow><mtext
+    mathvariant="normal">RL</mtext><mo>,</mo><mi>θ</mi></mrow></msub><mo stretchy="false"
+    form="prefix">(</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mo stretchy="false"
+    form="postfix">)</mo><mo stretchy="true" form="postfix">]</mo></mrow><mrow><mo
+    stretchy="false" form="prefix">(</mo><mn>27</mn><mo stretchy="false" form="postfix">)</mo></mrow></mrow>
+    <annotation encoding="application/x-tex">J(\theta) = \mathbb{E}_{(x,y) \sim \mathcal{D}_{\pi_{\text{RL},\theta}}}
+    \left[ r_{\theta}(y \mid x) - \lambda r_{\text{reg.}} \right] + \gamma \mathbb{E}_{x
+    \sim \mathcal{D}_{\text{pretrain}}} \left[ \log(\pi_{\text{RL},\theta}(x)) \right]
+    \qquad{(27)}</annotation></semantics>
+  prefs: []
+  type: TYPE_NORMAL
+- en: Recent work proposed using a negative log-likelihood term to balance the optimization
+    of Direct Preference Optimization (DPO) [[165]](ch021.xhtml#ref-pang2024iterative).
+    Given the pairwise nature of the DPO loss, the same loss modification can be made
+    to reward model training, constraining the model to predict accurate text (rumors
+    from laboratories that did not publish the work).
+  prefs: []
+  type: TYPE_NORMAL
+- en: The optimization follows as a modification to DPO. <semantics><mrow><msub><mi>ℒ</mi><mtext
+    mathvariant="normal">DPO+NLL</mtext></msub><mo>=</mo><msub><mi>ℒ</mi><mtext mathvariant="normal">DPO</mtext></msub><mo
+    stretchy="false" form="prefix">(</mo><msubsup><mi>c</mi><mi>i</mi><mi>w</mi></msubsup><mo>,</mo><msubsup><mi>y</mi><mi>i</mi><mi>w</mi></msubsup><mo>,</mo><msubsup><mi>c</mi><mi>i</mi><mi>l</mi></msubsup><mo>,</mo><msubsup><mi>y</mi><mi>i</mi><mi>l</mi></msubsup><mo>∣</mo><msub><mi>x</mi><mi>i</mi></msub><mo
+    stretchy="false" form="postfix">)</mo><mo>+</mo><mi>α</mi><msub><mi>ℒ</mi><mtext
+    mathvariant="normal">NLL</mtext></msub><mo stretchy="false" form="prefix">(</mo><msubsup><mi>c</mi><mi>i</mi><mi>w</mi></msubsup><mo>,</mo><msubsup><mi>y</mi><mi>i</mi><mi>w</mi></msubsup><mo>∣</mo><msub><mi>x</mi><mi>i</mi></msub><mo
+    stretchy="false" form="postfix">)</mo><mrow><mo stretchy="false" form="prefix">(</mo><mn>28</mn><mo
+    stretchy="false" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\mathcal{L}_{\text{DPO+NLL}}
+    = \mathcal{L}_{\text{DPO}}(c_i^w, y_i^w, c_i^l, y_i^l \mid x_i) + \alpha \mathcal{L}_{\text{NLL}}(c_i^w,
+    y_i^w \mid x_i) \qquad{(28)}</annotation></semantics>
+  prefs: []
+  type: TYPE_NORMAL
+- en: <semantics><mrow><mo>=</mo><mi>−</mi><mrow><mi mathvariant="normal">log</mi><mo>⁡</mo></mrow><mi>σ</mi><mrow><mo
+    stretchy="true" form="prefix">(</mo><mi>β</mi><mi mathvariant="normal">log</mi><mfrac><mrow><msub><mi>P</mi><mi>θ</mi></msub><mo
+    stretchy="false" form="prefix">(</mo><msubsup><mi>c</mi><mi>i</mi><mi>w</mi></msubsup><mo>,</mo><msubsup><mi>y</mi><mi>i</mi><mi>w</mi></msubsup><mo>∣</mo><msub><mi>x</mi><mi>i</mi></msub><mo
+    stretchy="false" form="postfix">)</mo></mrow><mrow><msub><mi>P</mi><mtext mathvariant="normal">ref.</mtext></msub><mo
+    stretchy="false" form="prefix">(</mo><msubsup><mi>c</mi><mi>i</mi><mi>w</mi></msubsup><mo>,</mo><msubsup><mi>y</mi><mi>i</mi><mi>w</mi></msubsup><mo>∣</mo><msub><mi>x</mi><mi>i</mi></msub><mo
+    stretchy="false" form="postfix">)</mo></mrow></mfrac><mo>−</mo><mi>β</mi><mi mathvariant="normal">log</mi><mfrac><mrow><msub><mi>P</mi><mi>θ</mi></msub><mo
+    stretchy="false" form="prefix">(</mo><msubsup><mi>c</mi><mi>i</mi><mi>l</mi></msubsup><mo>,</mo><msubsup><mi>y</mi><mi>i</mi><mi>l</mi></msubsup><mo>∣</mo><msub><mi>x</mi><mi>i</mi></msub><mo
+    stretchy="false" form="postfix">)</mo></mrow><mrow><msub><mi>P</mi><mtext mathvariant="normal">ref.</mtext></msub><mo
+    stretchy="false" form="prefix">(</mo><msubsup><mi>c</mi><mi>i</mi><mi>l</mi></msubsup><mo>,</mo><msubsup><mi>y</mi><mi>i</mi><mi>l</mi></msubsup><mo>∣</mo><msub><mi>x</mi><mi>i</mi></msub><mo
+    stretchy="false" form="postfix">)</mo></mrow></mfrac><mo stretchy="true" form="postfix">)</mo></mrow><mo>−</mo><mi>α</mi><mfrac><mrow><mrow><mi
+    mathvariant="normal">log</mi><mo>⁡</mo></mrow><msub><mi>P</mi><mi>θ</mi></msub><mo
+    stretchy="false" form="prefix">(</mo><msubsup><mi>c</mi><mi>i</mi><mi>w</mi></msubsup><mo>,</mo><msubsup><mi>y</mi><mi>i</mi><mi>w</mi></msubsup><mo>∣</mo><msub><mi>x</mi><mi>i</mi></msub><mo
+    stretchy="false" form="postfix">)</mo></mrow><mrow><mo stretchy="false" form="prefix">|</mo><msubsup><mi>c</mi><mi>i</mi><mi>w</mi></msubsup><mo
+    stretchy="false" form="prefix">|</mo><mi>+</mi><mo stretchy="false" form="prefix">|</mo><msubsup><mi>y</mi><mi>i</mi><mi>w</mi></msubsup><mo
+    stretchy="false" form="prefix">|</mo></mrow></mfrac><mo>,</mo><mrow><mo stretchy="false"
+    form="prefix">(</mo><mn>29</mn><mo stretchy="false" form="postfix">)</mo></mrow></mrow>
+    <annotation encoding="application/x-tex">= -\log \sigma \left( \beta \log \frac{P_\theta(c_i^w,
+    y_i^w \mid x_i)}{P_{\text{ref.}}(c_i^w, y_i^w \mid x_i)} - \beta \log \frac{P_\theta(c_i^l,
+    y_i^l \mid x_i)}{P_{\text{ref.}}(c_i^l, y_i^l \mid x_i)} \right) - \alpha \frac{\log
+    P_\theta(c_i^w, y_i^w \mid x_i)}{|c_i^w| + |y_i^w|}, \qquad{(29)}</annotation></semantics>
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'where <semantics><msub><mi>P</mi><mi>θ</mi></msub><annotation encoding="application/x-tex">P_{\theta}</annotation></semantics>
+    is the trainable policy model, <semantics><msub><mi>P</mi><mtext mathvariant="normal">ref.</mtext></msub><annotation
+    encoding="application/x-tex">P_{\text{ref.}}</annotation></semantics> is a fixed
+    reference model (often the SFT checkpoint), and <semantics><mrow><mo stretchy="false"
+    form="prefix">(</mo><msubsup><mi>c</mi><mi>i</mi><mi>w</mi></msubsup><mo>,</mo><msubsup><mi>y</mi><mi>i</mi><mi>w</mi></msubsup><mo
+    stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">(c_i^w,
+    y_i^w)</annotation></semantics> and <semantics><mrow><mo stretchy="false" form="prefix">(</mo><msubsup><mi>c</mi><mi>i</mi><mi>l</mi></msubsup><mo>,</mo><msubsup><mi>y</mi><mi>i</mi><mi>l</mi></msubsup><mo
+    stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">(c_i^l,
+    y_i^l)</annotation></semantics> denote the winning and losing completions for
+    prompt <semantics><msub><mi>x</mi><mi>i</mi></msub><annotation encoding="application/x-tex">x_i</annotation></semantics>.
+    The first term is the standard DPO logistic loss: it increases the margin between
+    the win and loss using the difference of log-likelihood ratios, <semantics><mrow><mrow><mi
+    mathvariant="normal">log</mi><mo>⁡</mo></mrow><mstyle displaystyle="false"><mfrac><msub><mi>P</mi><mi>θ</mi></msub><msub><mi>P</mi><mtext
+    mathvariant="normal">ref.</mtext></msub></mfrac></mstyle></mrow><annotation encoding="application/x-tex">\log
+    \tfrac{P_{\theta}}{P_{\text{ref.}}}</annotation></semantics>, and <semantics><mi>β</mi><annotation
+    encoding="application/x-tex">\beta</annotation></semantics> controls how strongly
+    this preference signal pulls away from the reference. The second term is a length-normalized
+    negative log-likelihood penalty on the winning completion, weighted by <semantics><mi>α</mi><annotation
+    encoding="application/x-tex">\alpha</annotation></semantics>, which helps keep
+    the preferred text high-likelihood in an absolute language modeling sense rather
+    than only relatively better than the rejected sample.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Other Regularization
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Controlling the optimization is less well defined in other parts of the RLHF
+    stack. Most reward models have no regularization beyond the standard contrastive
+    loss function. Direct Alignment Algorithms handle regularization to KL divergences
+    differently, through the <semantics><mi>β</mi><annotation encoding="application/x-tex">\beta</annotation></semantics>
+    parameter (see the chapter on Direct Alignment).
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Llama 2 proposed a margin loss for reward model training [[44]](ch021.xhtml#ref-touvron2023llama):'
+  prefs: []
+  type: TYPE_NORMAL
+- en: <semantics><mrow><mi>ℒ</mi><mo stretchy="false" form="prefix">(</mo><mi>θ</mi><mo
+    stretchy="false" form="postfix">)</mo><mo>=</mo><mi>−</mi><mrow><mi mathvariant="normal">log</mi><mo>⁡</mo></mrow><mrow><mo
+    stretchy="true" form="prefix">(</mo><mi>σ</mi><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>r</mi><mi>θ</mi></msub><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mi>c</mi></msub><mo>∣</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo><mo>−</mo><msub><mi>r</mi><mi>θ</mi></msub><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mi>r</mi></msub><mo>∣</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo><mo>−</mo><mi>m</mi><mo stretchy="false"
+    form="prefix">(</mo><msub><mi>y</mi><mi>c</mi></msub><mo>,</mo><msub><mi>y</mi><mi>r</mi></msub><mo
+    stretchy="false" form="postfix">)</mo><mo stretchy="true" form="postfix">)</mo></mrow><mo
+    stretchy="true" form="postfix">)</mo></mrow><mrow><mo stretchy="false" form="prefix">(</mo><mn>30</mn><mo
+    stretchy="false" form="postfix">)</mo></mrow></mrow> <annotation encoding="application/x-tex">\mathcal{L}(\theta)
+    = - \log \left( \sigma \left( r_{\theta}(y_c \mid x) - r_{\theta}(y_r \mid x)
+    - m(y_c, y_r) \right) \right) \qquad{(30)}</annotation></semantics>
+  prefs: []
+  type: TYPE_NORMAL
+- en: where <semantics><mrow><mi>m</mi><mo stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mi>c</mi></msub><mo>,</mo><msub><mi>y</mi><mi>r</mi></msub><mo
+    stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">m(y_c,
+    y_r)</annotation></semantics> is the margin between two datapoints <semantics><msub><mi>y</mi><mi>c</mi></msub><annotation
+    encoding="application/x-tex">y_c</annotation></semantics> and <semantics><msub><mi>y</mi><mi>r</mi></msub><annotation
+    encoding="application/x-tex">y_r</annotation></semantics> representing numerical
+    difference in delta between the ratings of two annotators. This is either achieved
+    by having annotators rate the outputs on a numerical scale or by using a quantified
+    ranking method, such as [Likert scales](https://en.wikipedia.org/wiki/Likert_scale).
+  prefs: []
+  type: TYPE_NORMAL
+- en: Reward margins have been used heavily in the direct alignment literature, such
+    as Reward weighted DPO, ‘’Reward-aware Preference Optimization’’ (RPO), which
+    integrates reward model scores into the update rule following a DPO loss [[25]](ch021.xhtml#ref-adler2024nemotron),
+    or REBEL [[166]](ch021.xhtml#ref-gao2024rebel) that has a reward delta weighting
+    in a regression-loss formulation.
+  prefs: []
+  type: TYPE_NORMAL

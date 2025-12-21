@@ -1,0 +1,2401 @@
+- en: Reinforcement Learning (i.e. Policy Gradient Algorithms)
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: In the RLHF process, the reinforcement learning algorithm slowly updates the
+    model’s weights with respect to feedback from a reward model. The policy – the
+    model being trained – generates completions to prompts in the training set, then
+    the reward model scores them, and then the reinforcement learning optimizer takes
+    gradient steps based on this information. This chapter explains the mathematics
+    and trade-offs across various algorithms used to learn from the signal the reward
+    model gives to on-policy data. These algorithms are run for a period of many epochs,
+    often thousands or millions of batches across a larger set of prompts, with gradient
+    updates in between each of them.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The algorithms that popularized RLHF for language models were policy-gradient
+    reinforcement learning algorithms. These algorithms, such as Proximal Policy Optimization
+    (PPO), Group Relative Policy Optimization (GRPO), and REINFORCE, use recently
+    generated samples to update their model (rather than storing scores in a replay
+    buffer like algorithms, e.g. Deep Q-Networks, DQN, used in popular projects such
+    as AlphaGo). In this section we will cover the fundamentals of the policy gradient
+    algorithms and how they are used in the modern RLHF framework.
+  prefs: []
+  type: TYPE_NORMAL
+- en: At a machine learning level, this section is the subject with the highest complexity
+    in the RLHF process. Though, as with most modern AI models, the largest determining
+    factor on its success is the data provided as inputs to the process.
+  prefs: []
+  type: TYPE_NORMAL
+- en: When RLHF came onto the scene with ChatGPT, it was largely known that they used
+    a variant of PPO, and many initial efforts were built upon that. Over time, multiple
+    research projects showed the promise of REINFORCE-style algorithms [[178]](ch021.xhtml#ref-ahmadian2024back)
+    [[111]](ch021.xhtml#ref-wang2024helpsteer2p), touted for its simplicity over PPO
+    without a reward model (saves memory and therefore the number of GPUs required)
+    and with simpler value estimation (no Generalized Advantage Estimation, GAE, which
+    is a method to compute advantages used for variance reduction in policy gradient
+    algorithms). More algorithms have emerged, including Group Relative Policy Optimization,
+    which is particularly popular with reasoning tasks, but in general many of these
+    algorithms can be tuned to fit a specific task. In this chapter, we cover the
+    core policy gradient setup and the three algorithms mentioned above due to their
+    central role in the establishment of a canonical RLHF literature.
+  prefs: []
+  type: TYPE_NORMAL
+- en: For definitions of symbols, see the problem setup chapter.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '*This chapter uses <semantics><mrow><mo stretchy="false" form="prefix">(</mo><mi>s</mi><mo>,</mo><mi>a</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">(s,
+    a)</annotation></semantics> notation from the reinforcement learning literature,
+    where <semantics><mi>s</mi><annotation encoding="application/x-tex">s</annotation></semantics>
+    denotes states and <semantics><mi>a</mi><annotation encoding="application/x-tex">a</annotation></semantics>
+    denotes actions. In the language model context, you will often see <semantics><mrow><mo
+    stretchy="false" form="prefix">(</mo><mi>x</mi><mo>,</mo><mi>y</mi><mo stretchy="false"
+    form="postfix">)</mo></mrow><annotation encoding="application/x-tex">(x, y)</annotation></semantics>
+    instead, where <semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics>
+    is the prompt and <semantics><mi>y</mi><annotation encoding="application/x-tex">y</annotation></semantics>
+    is the completion. The <semantics><mrow><mo stretchy="false" form="prefix">(</mo><mi>s</mi><mo>,</mo><mi>a</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">(s,
+    a)</annotation></semantics> framing is more general—these algorithms were designed
+    for sequential decision problems where actions are taken at each timestep. However,
+    many RLHF implementations treat the entire completion as a single action, making
+    the <semantics><mrow><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo>,</mo><mi>y</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">(x,
+    y)</annotation></semantics> notation equally valid.*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Policy Gradient Algorithms
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'Reinforcement learning algorithms are designed to maximize the future, discounted
+    reward across a trajectory of states, <semantics><mrow><mi>s</mi><mo>∈</mo><mi>𝒮</mi></mrow><annotation
+    encoding="application/x-tex">s \in \mathcal{S}</annotation></semantics>, and actions,
+    <semantics><mrow><mi>a</mi><mo>∈</mo><mi>𝒜</mi></mrow><annotation encoding="application/x-tex">a
+    \in \mathcal{A}</annotation></semantics> (for more notation, see Chapter 3, Definitions).
+    The objective of the agent, often called the *return*, is the sum of discounted
+    future rewards (where <semantics><mrow><mi>γ</mi><mo>∈</mo><mo stretchy="false"
+    form="prefix">[</mo><mn>0</mn><mo>,</mo><mn>1</mn><mo stretchy="false" form="postfix">]</mo></mrow><annotation
+    encoding="application/x-tex">\gamma\in [0,1]</annotation></semantics> is a factor
+    that prioritizes near-term rewards) at a given time <semantics><mi>t</mi><annotation
+    encoding="application/x-tex">t</annotation></semantics>:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: <semantics><mrow><msub><mi>G</mi><mi>t</mi></msub><mo>=</mo><msub><mi>R</mi><mrow><mi>t</mi><mo>+</mo><mn>1</mn></mrow></msub><mo>+</mo><mi>γ</mi><msub><mi>R</mi><mrow><mi>t</mi><mo>+</mo><mn>2</mn></mrow></msub><mo>+</mo><mi>⋯</mi><mo>=</mo><munderover><mo>∑</mo><mrow><mi>k</mi><mo>=</mo><mn>0</mn></mrow><mo
+    accent="false">∞</mo></munderover><msup><mi>γ</mi><mi>k</mi></msup><msub><mi>R</mi><mrow><mi>t</mi><mo>+</mo><mi>k</mi><mo>+</mo><mn>1</mn></mrow></msub><mi>.</mi><mrow><mo
+    stretchy="false" form="prefix">(</mo><mn>33</mn><mo stretchy="false" form="postfix">)</mo></mrow></mrow><annotation
+    encoding="application/x-tex">G_t = R_{t+1} + \gamma R_{t+2} + \cdots = \sum_{k=0}^\infty
+    \gamma^k R_{t+k+1}.\qquad{(33)}</annotation></semantics>
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The return definition can also be estimated as: <semantics><mrow><msub><mi>G</mi><mi>t</mi></msub><mo>=</mo><mi>γ</mi><msub><mi>G</mi><mrow><mi>t</mi><mo>+</mo><mn>1</mn></mrow></msub><mo>+</mo><msub><mi>R</mi><mrow><mi>t</mi><mo>+</mo><mn>1</mn></mrow></msub><mi>.</mi><mrow><mo
+    stretchy="false" form="prefix">(</mo><mn>34</mn><mo stretchy="false" form="postfix">)</mo></mrow></mrow><annotation
+    encoding="application/x-tex">G_{t} = \gamma{G_{t+1}} + R_{t+1}.\qquad{(34)}</annotation></semantics>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'This return is the basis for learning a value function <semantics><mrow><mi>V</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>s</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation
+    encoding="application/x-tex">V(s)</annotation></semantics> that is the estimated
+    future return given a current state:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: <semantics><mrow><mi>V</mi><mo stretchy="false" form="prefix">(</mo><mi>s</mi><mo
+    stretchy="false" form="postfix">)</mo><mo>=</mo><mi>𝔼</mi><mo minsize="120%" maxsize="120%"
+    stretchy="true" form="prefix">[</mo><msub><mi>G</mi><mi>t</mi></msub><mo stretchy="false"
+    form="prefix">|</mo><msub><mi>S</mi><mi>t</mi></msub><mo>=</mo><mi>s</mi><mo minsize="120%"
+    maxsize="120%" stretchy="true" form="postfix">]</mo><mi>.</mi><mrow><mo stretchy="false"
+    form="prefix">(</mo><mn>35</mn><mo stretchy="false" form="postfix">)</mo></mrow></mrow><annotation
+    encoding="application/x-tex">V(s) = \mathbb{E}\big[G_t | S_t = s \big].\qquad{(35)}</annotation></semantics>
+  prefs: []
+  type: TYPE_NORMAL
+- en: All policy gradient algorithms optimize a policy <semantics><mrow><msub><mi>π</mi><mi>θ</mi></msub><mo
+    stretchy="false" form="prefix">(</mo><mi>a</mi><mo>∣</mo><mi>s</mi><mo stretchy="false"
+    form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\pi_\theta(a\mid
+    s)</annotation></semantics> to maximize expected return; this objective can be
+    expressed using the induced value function <semantics><mrow><msup><mi>V</mi><msub><mi>π</mi><mi>θ</mi></msub></msup><mo
+    stretchy="false" form="prefix">(</mo><mi>s</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation
+    encoding="application/x-tex">V^{\pi_\theta}(s)</annotation></semantics>.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Where <semantics><mrow><msup><mi>d</mi><msub><mi>π</mi><mi>θ</mi></msub></msup><mo
+    stretchy="false" form="prefix">(</mo><mi>s</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation
+    encoding="application/x-tex">d^{\pi_\theta}(s)</annotation></semantics> is the
+    state-visitation distribution induced by policy <semantics><mrow><msub><mi>π</mi><mi>θ</mi></msub><mo
+    stretchy="false" form="prefix">(</mo><mi>a</mi><mo>∣</mo><mi>s</mi><mo stretchy="false"
+    form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\pi_\theta(a
+    \mid s)</annotation></semantics>, the objective we maximize can be written as:
+    <semantics><mrow><mi>J</mi><mo stretchy="false" form="prefix">(</mo><mi>θ</mi><mo
+    stretchy="false" form="postfix">)</mo><mo>=</mo><munder><mo>∑</mo><mi>s</mi></munder><msup><mi>d</mi><msub><mi>π</mi><mi>θ</mi></msub></msup><mo
+    stretchy="false" form="prefix">(</mo><mi>s</mi><mo stretchy="false" form="postfix">)</mo><msup><mi>V</mi><msub><mi>π</mi><mi>θ</mi></msub></msup><mo
+    stretchy="false" form="prefix">(</mo><mi>s</mi><mo stretchy="false" form="postfix">)</mo><mo>,</mo><mrow><mo
+    stretchy="false" form="prefix">(</mo><mn>36</mn><mo stretchy="false" form="postfix">)</mo></mrow></mrow>
+    <annotation encoding="application/x-tex">J(\theta) \;=\; \sum_{s} d^{\pi_\theta}(s)
+    V^{\pi_\theta}(s), \qquad{(36)}</annotation></semantics>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'In a finite MDP this is a sum over all states, but in practice we never compute
+    it exactly. Instead, we estimate it from data by sampling rollouts from the current
+    policy. In RLHF this typically means sampling prompts <semantics><msub><mi>x</mi><mi>i</mi></msub><annotation
+    encoding="application/x-tex">x_i</annotation></semantics> from a dataset and generating
+    completions <semantics><mrow><msub><mi>y</mi><mi>i</mi></msub><mo>∼</mo><msub><mi>π</mi><mi>θ</mi></msub><mo
+    stretchy="false" form="prefix">(</mo><mi>⋅</mi><mo>∣</mo><msub><mi>x</mi><mi>i</mi></msub><mo
+    stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">y_i
+    \sim \pi_\theta(\cdot\mid x_i)</annotation></semantics>, then taking an empirical
+    average such as:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: <semantics><mrow><mover><mi>J</mi><mo accent="true">̂</mo></mover><mo stretchy="false"
+    form="prefix">(</mo><mi>θ</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mfrac><mn>1</mn><mi>B</mi></mfrac><munderover><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>B</mi></munderover><mi>R</mi><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>x</mi><mi>i</mi></msub><mo>,</mo><msub><mi>y</mi><mi>i</mi></msub><mo
+    stretchy="false" form="postfix">)</mo><mo>,</mo></mrow> <annotation encoding="application/x-tex">\hat{J}(\theta)
+    = \frac{1}{B}\sum_{i=1}^{B} R(x_i, y_i),</annotation></semantics>
+  prefs: []
+  type: TYPE_NORMAL
+- en: or, in an MDP view with per-step rewards,
+  prefs: []
+  type: TYPE_NORMAL
+- en: <semantics><mrow><mover><mi>J</mi><mo accent="true">̂</mo></mover><mo stretchy="false"
+    form="prefix">(</mo><mi>θ</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mfrac><mn>1</mn><mi>B</mi></mfrac><munderover><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>B</mi></munderover><munderover><mo>∑</mo><mrow><mi>t</mi><mo>=</mo><mn>0</mn></mrow><msub><mi>T</mi><mi>i</mi></msub></munderover><msup><mi>γ</mi><mi>t</mi></msup><msub><mi>r</mi><mrow><mi>i</mi><mo>,</mo><mi>t</mi></mrow></msub><mi>.</mi></mrow>
+    <annotation encoding="application/x-tex">\hat{J}(\theta) = \frac{1}{B}\sum_{i=1}^{B}
+    \sum_{t=0}^{T_i} \gamma^t r_{i,t}.</annotation></semantics>
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The core of policy gradient algorithms is computing the gradient with respect
+    to the finite-time expected return over the current policy. With this expected
+    return, <semantics><mi>J</mi><annotation encoding="application/x-tex">J</annotation></semantics>,
+    the parameter update can be computed as follows, where <semantics><mi>α</mi><annotation
+    encoding="application/x-tex">\alpha</annotation></semantics> is the learning rate:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: <semantics><mrow><mi>θ</mi><mo>←</mo><mi>θ</mi><mo>+</mo><mi>α</mi><msub><mi>∇</mi><mi>θ</mi></msub><mi>J</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>θ</mi><mo stretchy="false" form="postfix">)</mo><mrow><mo
+    stretchy="false" form="prefix">(</mo><mn>37</mn><mo stretchy="false" form="postfix">)</mo></mrow></mrow><annotation
+    encoding="application/x-tex">\theta \leftarrow \theta + \alpha \nabla_\theta J(\theta)\qquad{(37)}</annotation></semantics>
+  prefs: []
+  type: TYPE_NORMAL
+- en: The core implementation detail is how to compute said gradient.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Another way to pose the RL objective we want to maximize is as follows: <semantics><mrow><mi>J</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>θ</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><msub><mi>𝔼</mi><mrow><mi>τ</mi><mo>∼</mo><msub><mi>π</mi><mi>θ</mi></msub></mrow></msub><mrow><mo
+    stretchy="true" form="prefix">[</mo><mi>R</mi><mo stretchy="false" form="prefix">(</mo><mi>τ</mi><mo
+    stretchy="false" form="postfix">)</mo><mo stretchy="true" form="postfix">]</mo></mrow><mo>,</mo><mrow><mo
+    stretchy="false" form="prefix">(</mo><mn>38</mn><mo stretchy="false" form="postfix">)</mo></mrow></mrow>
+    <annotation encoding="application/x-tex">J(\theta) = \mathbb{E}_{\tau \sim \pi_\theta}
+    \left[ R(\tau) \right], \qquad{(38)}</annotation></semantics>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'where <semantics><mrow><mi>τ</mi><mo>=</mo><mo stretchy="false" form="prefix">(</mo><msub><mi>s</mi><mn>0</mn></msub><mo>,</mo><msub><mi>a</mi><mn>0</mn></msub><mo>,</mo><msub><mi>s</mi><mn>1</mn></msub><mo>,</mo><msub><mi>a</mi><mn>1</mn></msub><mo>,</mo><mi>…</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\tau
+    = (s_0, a_0, s_1, a_1, \ldots)</annotation></semantics> is a trajectory and <semantics><mrow><mi>R</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>τ</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><msubsup><mo>∑</mo><mrow><mi>t</mi><mo>=</mo><mn>0</mn></mrow><mi>∞</mi></msubsup><msub><mi>r</mi><mi>t</mi></msub></mrow><annotation
+    encoding="application/x-tex">R(\tau) = \sum_{t=0}^\infty r_t</annotation></semantics>
+    is the total reward of the trajectory. Alternatively, we can write the expectation
+    as an integral over all possible trajectories: <semantics><mrow><mi>J</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>θ</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><msub><mo>∫</mo><mi>τ</mi></msub><msub><mi>p</mi><mi>θ</mi></msub><mo
+    stretchy="false" form="prefix">(</mo><mi>τ</mi><mo stretchy="false" form="postfix">)</mo><mi>R</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>τ</mi><mo stretchy="false" form="postfix">)</mo><mi>d</mi><mi>τ</mi><mrow><mo
+    stretchy="false" form="prefix">(</mo><mn>39</mn><mo stretchy="false" form="postfix">)</mo></mrow></mrow>
+    <annotation encoding="application/x-tex">J(\theta) = \int_\tau p_\theta (\tau)
+    R(\tau) d\tau \qquad{(39)}</annotation></semantics>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Notice that we can express the trajectory probability as follows, where <semantics><mrow><msub><mi>π</mi><mi>θ</mi></msub><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>a</mi><mi>t</mi></msub><mo stretchy="false"
+    form="prefix">|</mo><msub><mi>s</mi><mi>t</mi></msub><mo stretchy="false" form="postfix">)</mo><mi>p</mi><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>s</mi><mrow><mi>t</mi><mo>+</mo><mn>1</mn></mrow></msub><mo
+    stretchy="false" form="prefix">|</mo><msub><mi>s</mi><mi>t</mi></msub><mo>,</mo><msub><mi>a</mi><mi>t</mi></msub><mo
+    stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\pi_\theta(a_t|s_t)
+    p(s_{t+1}|s_t, a_t)</annotation></semantics> is the transition probability to
+    a group of next states from one state and action: <semantics><mrow><msub><mi>p</mi><mi>θ</mi></msub><mo
+    stretchy="false" form="prefix">(</mo><mi>τ</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mi>p</mi><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>s</mi><mn>0</mn></msub><mo stretchy="false"
+    form="postfix">)</mo><munderover><mo>∏</mo><mrow><mi>t</mi><mo>=</mo><mn>0</mn></mrow><mo
+    accent="false">∞</mo></munderover><msub><mi>π</mi><mi>θ</mi></msub><mo stretchy="false"
+    form="prefix">(</mo><msub><mi>a</mi><mi>t</mi></msub><mo stretchy="false" form="prefix">|</mo><msub><mi>s</mi><mi>t</mi></msub><mo
+    stretchy="false" form="postfix">)</mo><mi>p</mi><mo stretchy="false" form="prefix">(</mo><msub><mi>s</mi><mrow><mi>t</mi><mo>+</mo><mn>1</mn></mrow></msub><mo
+    stretchy="false" form="prefix">|</mo><msub><mi>s</mi><mi>t</mi></msub><mo>,</mo><msub><mi>a</mi><mi>t</mi></msub><mo
+    stretchy="false" form="postfix">)</mo><mo>,</mo><mrow><mo stretchy="false" form="prefix">(</mo><mn>40</mn><mo
+    stretchy="false" form="postfix">)</mo></mrow></mrow> <annotation encoding="application/x-tex">p_\theta
+    (\tau) = p(s_0) \prod_{t=0}^\infty \pi_\theta(a_t|s_t) p(s_{t+1}|s_t, a_t), \qquad{(40)}</annotation></semantics>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'If we take the gradient of the objective (eq. [38](ch011.xhtml#eq:policy_objective_expectation))
+    with respect to the policy parameters <semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics>:
+    <semantics><mrow><msub><mi>∇</mi><mi>θ</mi></msub><mi>J</mi><mo stretchy="false"
+    form="prefix">(</mo><mi>θ</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><msub><mo>∫</mo><mi>τ</mi></msub><msub><mi>∇</mi><mi>θ</mi></msub><msub><mi>p</mi><mi>θ</mi></msub><mo
+    stretchy="false" form="prefix">(</mo><mi>τ</mi><mo stretchy="false" form="postfix">)</mo><mi>R</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>τ</mi><mo stretchy="false" form="postfix">)</mo><mi>d</mi><mi>τ</mi><mrow><mo
+    stretchy="false" form="prefix">(</mo><mn>41</mn><mo stretchy="false" form="postfix">)</mo></mrow></mrow>
+    <annotation encoding="application/x-tex">\nabla_\theta J(\theta) = \int_\tau \nabla_\theta
+    p_\theta (\tau) R(\tau) d\tau \qquad{(41)}</annotation></semantics>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Notice that we can use the [log-derivative trick](https://andrewcharlesjones.github.io/journal/log-derivative.html)
+    in order to rewrite the gradient of the integral as an expectation: <semantics><mrow><mtable><mtr><mtd
+    columnalign="right" style="text-align: right"><msub><mi>∇</mi><mi>θ</mi></msub><mrow><mi
+    mathvariant="normal">log</mi><mo>⁡</mo></mrow><msub><mi>p</mi><mi>θ</mi></msub><mo
+    stretchy="false" form="prefix">(</mo><mi>τ</mi><mo stretchy="false" form="postfix">)</mo></mtd><mtd
+    columnalign="left" style="text-align: left"><mo>=</mo><mfrac><mrow><msub><mi>∇</mi><mi>θ</mi></msub><msub><mi>p</mi><mi>θ</mi></msub><mo
+    stretchy="false" form="prefix">(</mo><mi>τ</mi><mo stretchy="false" form="postfix">)</mo></mrow><mrow><msub><mi>p</mi><mi>θ</mi></msub><mo
+    stretchy="false" form="prefix">(</mo><mi>τ</mi><mo stretchy="false" form="postfix">)</mo></mrow></mfrac></mtd><mtd
+    columnalign="right" style="text-align: right"><mtext mathvariant="normal">(from
+    chain rule)</mtext></mtd></mtr><mtr><mtd columnalign="right" style="text-align:
+    right"><mo>⟹</mo><msub><mi>∇</mi><mi>θ</mi></msub><msub><mi>p</mi><mi>θ</mi></msub><mo
+    stretchy="false" form="prefix">(</mo><mi>τ</mi><mo stretchy="false" form="postfix">)</mo></mtd><mtd
+    columnalign="left" style="text-align: left"><mo>=</mo><msub><mi>p</mi><mi>θ</mi></msub><mo
+    stretchy="false" form="prefix">(</mo><mi>τ</mi><mo stretchy="false" form="postfix">)</mo><msub><mi>∇</mi><mi>θ</mi></msub><mrow><mi
+    mathvariant="normal">log</mi><mo>⁡</mo></mrow><msub><mi>p</mi><mi>θ</mi></msub><mo
+    stretchy="false" form="prefix">(</mo><mi>τ</mi><mo stretchy="false" form="postfix">)</mo></mtd><mtd
+    columnalign="right" style="text-align: right"><mtext mathvariant="normal">(rearranging)</mtext></mtd></mtr></mtable><mrow><mo
+    stretchy="false" form="prefix">(</mo><mn>42</mn><mo stretchy="false" form="postfix">)</mo></mrow></mrow>
+    <annotation encoding="application/x-tex">\begin{aligned} \nabla_\theta \log p_\theta(\tau)
+    &= \frac{\nabla_\theta p_\theta(\tau)}{p_\theta(\tau)} &\text{(from chain rule)}
+    \\ \implies \nabla_\theta p_\theta(\tau) &= p_\theta(\tau) \nabla_\theta \log
+    p_\theta(\tau) &\text{(rearranging)} \end{aligned} \qquad{(42)}</annotation></semantics>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Using this log-derivative trick: <semantics><mrow><mtable><mtr><mtd columnalign="right"
+    style="text-align: right; padding-right: 0"><msub><mi>∇</mi><mi>θ</mi></msub><mi>J</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>θ</mi><mo stretchy="false" form="postfix">)</mo></mtd><mtd
+    columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><msub><mo>∫</mo><mi>τ</mi></msub><msub><mi>∇</mi><mi>θ</mi></msub><msub><mi>p</mi><mi>θ</mi></msub><mo
+    stretchy="false" form="prefix">(</mo><mi>τ</mi><mo stretchy="false" form="postfix">)</mo><mi>R</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>τ</mi><mo stretchy="false" form="postfix">)</mo><mi>d</mi><mi>τ</mi></mtd></mtr><mtr><mtd
+    columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><msub><mo>∫</mo><mi>τ</mi></msub><msub><mi>p</mi><mi>θ</mi></msub><mo
+    stretchy="false" form="prefix">(</mo><mi>τ</mi><mo stretchy="false" form="postfix">)</mo><msub><mi>∇</mi><mi>θ</mi></msub><mrow><mi
+    mathvariant="normal">log</mi><mo>⁡</mo></mrow><msub><mi>p</mi><mi>θ</mi></msub><mo
+    stretchy="false" form="prefix">(</mo><mi>τ</mi><mo stretchy="false" form="postfix">)</mo><mi>R</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>τ</mi><mo stretchy="false" form="postfix">)</mo><mi>d</mi><mi>τ</mi></mtd></mtr><mtr><mtd
+    columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><msub><mi>𝔼</mi><mrow><mi>τ</mi><mo>∼</mo><msub><mi>π</mi><mi>θ</mi></msub></mrow></msub><mrow><mo
+    stretchy="true" form="prefix">[</mo><msub><mi>∇</mi><mi>θ</mi></msub><mi mathvariant="normal">log</mi><msub><mi>p</mi><mi>θ</mi></msub><mo
+    stretchy="false" form="prefix">(</mo><mi>τ</mi><mo stretchy="false" form="postfix">)</mo><mi>R</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>τ</mi><mo stretchy="false" form="postfix">)</mo><mo
+    stretchy="true" form="postfix">]</mo></mrow></mtd></mtr></mtable><mrow><mo stretchy="false"
+    form="prefix">(</mo><mn>43</mn><mo stretchy="false" form="postfix">)</mo></mrow></mrow>
+    <annotation encoding="application/x-tex">\begin{aligned} \nabla_\theta J(\theta)
+    &= \int_\tau \nabla_\theta p_\theta (\tau) R(\tau) d\tau \\ &= \int_\tau p_\theta
+    (\tau) \nabla_\theta \log p_\theta (\tau) R(\tau) d\tau \\ &= \mathbb{E}_{\tau
+    \sim \pi_\theta} \left[ \nabla_\theta \log p_\theta (\tau) R(\tau) \right] \end{aligned}
+    \qquad{(43)}</annotation></semantics>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Where the final step uses the definition of an expectation under the trajectory
+    distribution <semantics><mrow><msub><mi>p</mi><mi>θ</mi></msub><mo stretchy="false"
+    form="prefix">(</mo><mi>τ</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation
+    encoding="application/x-tex">p_\theta(\tau)</annotation></semantics>: for any
+    function <semantics><mi>f</mi><annotation encoding="application/x-tex">f</annotation></semantics>,
+    <semantics><mrow><msub><mi>𝔼</mi><mrow><mi>τ</mi><mo>∼</mo><msub><mi>p</mi><mi>θ</mi></msub></mrow></msub><mo
+    stretchy="false" form="prefix">[</mo><mi>f</mi><mo stretchy="false" form="prefix">(</mo><mi>τ</mi><mo
+    stretchy="false" form="postfix">)</mo><mo stretchy="false" form="postfix">]</mo><mo>=</mo><msub><mo>∫</mo><mi>τ</mi></msub><mi>f</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>τ</mi><mo stretchy="false" form="postfix">)</mo><msub><mi>p</mi><mi>θ</mi></msub><mo
+    stretchy="false" form="prefix">(</mo><mi>τ</mi><mo stretchy="false" form="postfix">)</mo><mi>d</mi><mi>τ</mi></mrow><annotation
+    encoding="application/x-tex">\mathbb{E}_{\tau \sim p_\theta}[f(\tau)] = \int_\tau
+    f(\tau)\,p_\theta(\tau)\,d\tau</annotation></semantics> (or a sum in the discrete
+    case). Writing it as an expectation is useful because we can approximate it with
+    Monte Carlo rollouts, e.g., <semantics><mrow><mfrac><mn>1</mn><mi>B</mi></mfrac><msubsup><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>B</mi></msubsup><mi>f</mi><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>τ</mi><mi>i</mi></msub><mo stretchy="false"
+    form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\frac{1}{B}\sum_{i=1}^{B}
+    f(\tau_i)</annotation></semantics> for trajectories <semantics><mrow><msub><mi>τ</mi><mi>i</mi></msub><mo>∼</mo><msub><mi>π</mi><mi>θ</mi></msub></mrow><annotation
+    encoding="application/x-tex">\tau_i \sim \pi_\theta</annotation></semantics>.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Back to the derivation, expanding the log probability of the trajectory:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: <semantics><mrow><mrow><mi mathvariant="normal">log</mi><mo>⁡</mo></mrow><msub><mi>p</mi><mi>θ</mi></msub><mo
+    stretchy="false" form="prefix">(</mo><mi>τ</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mrow><mi
+    mathvariant="normal">log</mi><mo>⁡</mo></mrow><mi>p</mi><mo stretchy="false" form="prefix">(</mo><msub><mi>s</mi><mn>0</mn></msub><mo
+    stretchy="false" form="postfix">)</mo><mo>+</mo><munderover><mo>∑</mo><mrow><mi>t</mi><mo>=</mo><mn>0</mn></mrow><mo
+    accent="false">∞</mo></munderover><mrow><mi mathvariant="normal">log</mi><mo>⁡</mo></mrow><msub><mi>π</mi><mi>θ</mi></msub><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>a</mi><mi>t</mi></msub><mo stretchy="false"
+    form="prefix">|</mo><msub><mi>s</mi><mi>t</mi></msub><mo stretchy="false" form="postfix">)</mo><mo>+</mo><munderover><mo>∑</mo><mrow><mi>t</mi><mo>=</mo><mn>0</mn></mrow><mo
+    accent="false">∞</mo></munderover><mrow><mi mathvariant="normal">log</mi><mo>⁡</mo></mrow><mi>p</mi><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>s</mi><mrow><mi>t</mi><mo>+</mo><mn>1</mn></mrow></msub><mo
+    stretchy="false" form="prefix">|</mo><msub><mi>s</mi><mi>t</mi></msub><mo>,</mo><msub><mi>a</mi><mi>t</mi></msub><mo
+    stretchy="false" form="postfix">)</mo></mrow> <annotation encoding="application/x-tex">\log
+    p_\theta (\tau) = \log p(s_0) + \sum_{t=0}^\infty \log \pi_\theta(a_t|s_t) + \sum_{t=0}^\infty
+    \log p(s_{t+1}|s_t, a_t)</annotation></semantics>
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Now, if we take the gradient of the above, we get:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: <semantics><mrow><msub><mi>∇</mi><mi>θ</mi></msub><mrow><mi mathvariant="normal">log</mi><mo>⁡</mo></mrow><mi>p</mi><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>s</mi><mn>0</mn></msub><mo stretchy="false"
+    form="postfix">)</mo><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">\nabla_\theta
+    \log p(s_0) = 0</annotation></semantics> (initial state doesn’t depend on <semantics><mi>θ</mi><annotation
+    encoding="application/x-tex">\theta</annotation></semantics>)
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: <semantics><mrow><msub><mi>∇</mi><mi>θ</mi></msub><mrow><mi mathvariant="normal">log</mi><mo>⁡</mo></mrow><mi>p</mi><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>s</mi><mrow><mi>t</mi><mo>+</mo><mn>1</mn></mrow></msub><mo
+    stretchy="false" form="prefix">|</mo><msub><mi>s</mi><mi>t</mi></msub><mo>,</mo><msub><mi>a</mi><mi>t</mi></msub><mo
+    stretchy="false" form="postfix">)</mo><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">\nabla_\theta
+    \log p(s_{t+1}|s_t, a_t) = 0</annotation></semantics> (environment transition
+    dynamics don’t depend on <semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics>)
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: only <semantics><mrow><msub><mi>∇</mi><mi>θ</mi></msub><mrow><mi mathvariant="normal">log</mi><mo>⁡</mo></mrow><msub><mi>π</mi><mi>θ</mi></msub><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>a</mi><mi>t</mi></msub><mo stretchy="false"
+    form="prefix">|</mo><msub><mi>s</mi><mi>t</mi></msub><mo stretchy="false" form="postfix">)</mo></mrow><annotation
+    encoding="application/x-tex">\nabla_\theta \log \pi_\theta(a_t|s_t)</annotation></semantics>
+    survives
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Therefore, the gradient of the log probability of the trajectory simplifies
+    to: <semantics><mrow><msub><mi>∇</mi><mi>θ</mi></msub><mrow><mi mathvariant="normal">log</mi><mo>⁡</mo></mrow><msub><mi>p</mi><mi>θ</mi></msub><mo
+    stretchy="false" form="prefix">(</mo><mi>τ</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><munderover><mo>∑</mo><mrow><mi>t</mi><mo>=</mo><mn>0</mn></mrow><mo
+    accent="false">∞</mo></munderover><msub><mi>∇</mi><mi>θ</mi></msub><mrow><mi mathvariant="normal">log</mi><mo>⁡</mo></mrow><msub><mi>π</mi><mi>θ</mi></msub><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>a</mi><mi>t</mi></msub><mo stretchy="false"
+    form="prefix">|</mo><msub><mi>s</mi><mi>t</mi></msub><mo stretchy="false" form="postfix">)</mo></mrow>
+    <annotation encoding="application/x-tex">\nabla_\theta \log p_\theta (\tau) =
+    \sum_{t=0}^\infty \nabla_\theta \log \pi_\theta(a_t|s_t)</annotation></semantics>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Substituting this back in eq. [43](ch011.xhtml#eq:policy_gradient_expectation),
+    we get: <semantics><mrow><msub><mi>∇</mi><mi>θ</mi></msub><mi>J</mi><mo stretchy="false"
+    form="prefix">(</mo><mi>θ</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><msub><mi>𝔼</mi><mrow><mi>τ</mi><mo>∼</mo><msub><mi>π</mi><mi>θ</mi></msub></mrow></msub><mrow><mo
+    stretchy="true" form="prefix">[</mo><munderover><mo>∑</mo><mrow><mi>t</mi><mo>=</mo><mn>0</mn></mrow><mo
+    accent="false">∞</mo></munderover><msub><mi>∇</mi><mi>θ</mi></msub><mi mathvariant="normal">log</mi><msub><mi>π</mi><mi>θ</mi></msub><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>a</mi><mi>t</mi></msub><mo stretchy="false"
+    form="prefix">|</mo><msub><mi>s</mi><mi>t</mi></msub><mo stretchy="false" form="postfix">)</mo><mi>R</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>τ</mi><mo stretchy="false" form="postfix">)</mo><mo
+    stretchy="true" form="postfix">]</mo></mrow></mrow> <annotation encoding="application/x-tex">\nabla_\theta
+    J(\theta) = \mathbb{E}_{\tau \sim \pi_\theta} \left[ \sum_{t=0}^\infty \nabla_\theta
+    \log \pi_\theta(a_t|s_t) R(\tau) \right]</annotation></semantics>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Quite often, people use a more general formulation of the policy gradient:
+    <semantics><mrow><mi>g</mi><mo>=</mo><msub><mi>∇</mi><mi>θ</mi></msub><mi>J</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>θ</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><msub><mi>𝔼</mi><mrow><mi>τ</mi><mo>∼</mo><msub><mi>π</mi><mi>θ</mi></msub></mrow></msub><mrow><mo
+    stretchy="true" form="prefix">[</mo><munderover><mo>∑</mo><mrow><mi>t</mi><mo>=</mo><mn>0</mn></mrow><mo
+    accent="false">∞</mo></munderover><msub><mi>∇</mi><mi>θ</mi></msub><mi mathvariant="normal">log</mi><msub><mi>π</mi><mi>θ</mi></msub><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>a</mi><mi>t</mi></msub><mo stretchy="false"
+    form="prefix">|</mo><msub><mi>s</mi><mi>t</mi></msub><mo stretchy="false" form="postfix">)</mo><msub><mi
+    mathvariant="normal">Ψ</mi><mi>t</mi></msub><mo stretchy="true" form="postfix">]</mo></mrow><mrow><mo
+    stretchy="false" form="prefix">(</mo><mn>44</mn><mo stretchy="false" form="postfix">)</mo></mrow></mrow>
+    <annotation encoding="application/x-tex">g = \nabla_\theta J(\theta) = \mathbb{E}_{\tau
+    \sim \pi_\theta} \left[ \sum_{t=0}^\infty \nabla_\theta \log \pi_\theta(a_t|s_t)
+    \Psi_t \right] \qquad{(44)}</annotation></semantics>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Where <semantics><msub><mi mathvariant="normal">Ψ</mi><mi>t</mi></msub><annotation
+    encoding="application/x-tex">\Psi_t</annotation></semantics> can be the following
+    (where the rewards can also often be discounted by <semantics><mi>γ</mi><annotation
+    encoding="application/x-tex">\gamma</annotation></semantics>), a taxonomy adopted
+    from Schulman et al. 2015 [[179]](ch021.xhtml#ref-schulman2015high):'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '<semantics><mrow><mi>R</mi><mo stretchy="false" form="prefix">(</mo><mi>τ</mi><mo
+    stretchy="false" form="postfix">)</mo><mo>=</mo><msubsup><mo>∑</mo><mrow><mi>t</mi><mo>=</mo><mn>0</mn></mrow><mi>∞</mi></msubsup><msub><mi>r</mi><mi>t</mi></msub></mrow><annotation
+    encoding="application/x-tex">R(\tau) = \sum_{t=0}^{\infty} r_t</annotation></semantics>:
+    total reward of the trajectory.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '<semantics><mrow><msubsup><mo>∑</mo><mrow><msup><mi>t</mi><mo>′</mo></msup><mo>=</mo><mi>t</mi></mrow><mi>∞</mi></msubsup><msub><mi>r</mi><msup><mi>t</mi><mo>′</mo></msup></msub></mrow><annotation
+    encoding="application/x-tex">\sum_{t''=t}^{\infty} r_{t''}</annotation></semantics>:
+    reward following action <semantics><msub><mi>a</mi><mi>t</mi></msub><annotation
+    encoding="application/x-tex">a_t</annotation></semantics>, also described as the
+    return, <semantics><mi>G</mi><annotation encoding="application/x-tex">G</annotation></semantics>.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '<semantics><mrow><msubsup><mo>∑</mo><mrow><msup><mi>t</mi><mo>′</mo></msup><mo>=</mo><mi>t</mi></mrow><mi>∞</mi></msubsup><msub><mi>r</mi><msup><mi>t</mi><mo>′</mo></msup></msub><mo>−</mo><mi>b</mi><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>s</mi><mi>t</mi></msub><mo stretchy="false"
+    form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\sum_{t''=t}^{\infty}
+    r_{t''} - b(s_t)</annotation></semantics>: baselined version of previous formula.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '<semantics><mrow><msup><mi>Q</mi><mi>π</mi></msup><mo stretchy="false" form="prefix">(</mo><msub><mi>s</mi><mi>t</mi></msub><mo>,</mo><msub><mi>a</mi><mi>t</mi></msub><mo
+    stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">Q^{\pi}(s_t,
+    a_t)</annotation></semantics>: state-action value function.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '<semantics><mrow><msup><mi>A</mi><mi>π</mi></msup><mo stretchy="false" form="prefix">(</mo><msub><mi>s</mi><mi>t</mi></msub><mo>,</mo><msub><mi>a</mi><mi>t</mi></msub><mo
+    stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">A^{\pi}(s_t,
+    a_t)</annotation></semantics>: advantage function, which yields the lowest possible
+    theoretical variance if it can be computed accurately.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '<semantics><mrow><msub><mi>r</mi><mi>t</mi></msub><mo>+</mo><msup><mi>V</mi><mi>π</mi></msup><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>s</mi><mrow><mi>t</mi><mo>+</mo><mn>1</mn></mrow></msub><mo
+    stretchy="false" form="postfix">)</mo><mo>−</mo><msup><mi>V</mi><mi>π</mi></msup><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>s</mi><mi>t</mi></msub><mo stretchy="false"
+    form="postfix">)</mo></mrow><annotation encoding="application/x-tex">r_t + V^{\pi}(s_{t+1})
+    - V^{\pi}(s_t)</annotation></semantics>: Temporal Difference (TD) residual.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: The *baseline* is a value used to reduce variance of policy updates (more on
+    this below).
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'For language models, some of these concepts do not make as much sense. For
+    example, for a deterministic policy <semantics><mi>π</mi><annotation encoding="application/x-tex">\pi</annotation></semantics>
+    the state value is <semantics><mrow><msup><mi>V</mi><mi>π</mi></msup><mo stretchy="false"
+    form="prefix">(</mo><mi>s</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><msup><mi>Q</mi><mi>π</mi></msup><mo
+    stretchy="false" form="prefix">(</mo><mi>s</mi><mo>,</mo><mi>π</mi><mo stretchy="false"
+    form="prefix">(</mo><mi>s</mi><mo stretchy="false" form="postfix">)</mo><mo stretchy="false"
+    form="postfix">)</mo></mrow><annotation encoding="application/x-tex">V^{\pi}(s)
+    = Q^{\pi}(s, \pi(s))</annotation></semantics> (and for the optimal value function
+    one has <semantics><mrow><msup><mi>V</mi><mo>*</mo></msup><mo stretchy="false"
+    form="prefix">(</mo><mi>s</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><msub><mrow><mi
+    mathvariant="normal">max</mi><mo>⁡</mo></mrow><mi>a</mi></msub><msup><mi>Q</mi><mo>*</mo></msup><mo
+    stretchy="false" form="prefix">(</mo><mi>s</mi><mo>,</mo><mi>a</mi><mo stretchy="false"
+    form="postfix">)</mo></mrow><annotation encoding="application/x-tex">V^*(s)=\max_a
+    Q^*(s,a)</annotation></semantics>). For a stochastic policy, the analogous identity
+    is <semantics><mrow><msup><mi>V</mi><mi>π</mi></msup><mo stretchy="false" form="prefix">(</mo><mi>s</mi><mo
+    stretchy="false" form="postfix">)</mo><mo>=</mo><msub><mi>𝔼</mi><mrow><mi>a</mi><mo>∼</mo><mi>π</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>⋅</mi><mo>∣</mo><mi>s</mi><mo stretchy="false"
+    form="postfix">)</mo></mrow></msub><mo stretchy="false" form="prefix">[</mo><msup><mi>Q</mi><mi>π</mi></msup><mo
+    stretchy="false" form="prefix">(</mo><mi>s</mi><mo>,</mo><mi>a</mi><mo stretchy="false"
+    form="postfix">)</mo><mo stretchy="false" form="postfix">]</mo></mrow><annotation
+    encoding="application/x-tex">V^{\pi}(s) = \mathbb{E}_{a \sim \pi(\cdot\mid s)}[Q^{\pi}(s,a)]</annotation></semantics>.
+    If we define <semantics><mrow><mi>s</mi><mo>+</mo><mi>a</mi></mrow><annotation
+    encoding="application/x-tex">s+a</annotation></semantics> as the continuation
+    <semantics><mi>a</mi><annotation encoding="application/x-tex">a</annotation></semantics>
+    to the prompt <semantics><mi>s</mi><annotation encoding="application/x-tex">s</annotation></semantics>,
+    then <semantics><mrow><mi>Q</mi><mo stretchy="false" form="prefix">(</mo><mi>s</mi><mo>,</mo><mi>a</mi><mo
+    stretchy="false" form="postfix">)</mo><mo>=</mo><mi>V</mi><mo stretchy="false"
+    form="prefix">(</mo><mi>s</mi><mo>+</mo><mi>a</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation
+    encoding="application/x-tex">Q(s, a) = V(s+a)</annotation></semantics>, which
+    gives a different advantage trick:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: <semantics><mrow><mi>A</mi><mo stretchy="false" form="prefix">(</mo><mi>s</mi><mo>,</mo><mi>a</mi><mo
+    stretchy="false" form="postfix">)</mo><mo>=</mo><mi>Q</mi><mo stretchy="false"
+    form="prefix">(</mo><mi>s</mi><mo>,</mo><mi>a</mi><mo stretchy="false" form="postfix">)</mo><mo>−</mo><mi>V</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>s</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mi>V</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>s</mi><mo>+</mo><mi>a</mi><mo stretchy="false"
+    form="postfix">)</mo><mo>−</mo><mi>V</mi><mo stretchy="false" form="prefix">(</mo><mi>s</mi><mo
+    stretchy="false" form="postfix">)</mo><mo>=</mo><mi>r</mi><mo>+</mo><mi>γ</mi><mi>V</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>s</mi><mo>+</mo><mi>a</mi><mo stretchy="false"
+    form="postfix">)</mo><mo>−</mo><mi>V</mi><mo stretchy="false" form="prefix">(</mo><mi>s</mi><mo
+    stretchy="false" form="postfix">)</mo><mrow><mo stretchy="false" form="prefix">(</mo><mn>45</mn><mo
+    stretchy="false" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">A(s,a)
+    = Q(s,a) - V(s) = V(s + a) - V(s) = r + \gamma V(s + a) - V(s)\qquad{(45)}</annotation></semantics>
+  prefs: []
+  type: TYPE_NORMAL
+- en: Which is a combination of the reward, the value of the prompt, and the discounted
+    value of the entire utterance.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Vanilla Policy Gradient
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: 'The vanilla policy gradient implementation optimizes the above expression for
+    <semantics><mrow><mi>J</mi><mo stretchy="false" form="prefix">(</mo><mi>θ</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">J(\theta)</annotation></semantics>
+    by differentiating with respect to the policy parameters. A simple version, with
+    respect to the overall return, is:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: <semantics><mrow><msub><mi>∇</mi><mi>θ</mi></msub><mi>J</mi><mo stretchy="false"
+    form="prefix">(</mo><mi>θ</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><msub><mi>𝔼</mi><mi>τ</mi></msub><mrow><mo
+    stretchy="true" form="prefix">[</mo><munderover><mo>∑</mo><mrow><mi>t</mi><mo>=</mo><mn>0</mn></mrow><mi>T</mi></munderover><msub><mi>∇</mi><mi>θ</mi></msub><mi
+    mathvariant="normal">log</mi><msub><mi>π</mi><mi>θ</mi></msub><mo stretchy="false"
+    form="prefix">(</mo><msub><mi>a</mi><mi>t</mi></msub><mo stretchy="false" form="prefix">|</mo><msub><mi>s</mi><mi>t</mi></msub><mo
+    stretchy="false" form="postfix">)</mo><msub><mi>R</mi><mi>t</mi></msub><mo stretchy="true"
+    form="postfix">]</mo></mrow><mrow><mo stretchy="false" form="prefix">(</mo><mn>46</mn><mo
+    stretchy="false" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\nabla_\theta
+    J(\theta) = \mathbb{E}_\tau \left[ \sum_{t=0}^T \nabla_\theta \log \pi_\theta(a_t|s_t)
+    R_t \right]\qquad{(46)}</annotation></semantics>
+  prefs: []
+  type: TYPE_NORMAL
+- en: A common problem with vanilla policy gradient algorithms is the high variance
+    in gradient updates, which can be mitigated in multiple ways. The high variance
+    comes from the gradient updates being computed from estimating the return <semantics><mi>G</mi><annotation
+    encoding="application/x-tex">G</annotation></semantics> from an often small set
+    of rollouts in the environment that tend to be susceptible to noise (e.g. the
+    stochastic nature of generating from language models with temperature <semantics><mrow><mo>></mo><mn>0</mn></mrow><annotation
+    encoding="application/x-tex">>0</annotation></semantics>). The variance across
+    return estimates is higher in domains with sparse rewards, as more of the samples
+    are 0 or 1, rather than closely clustered. In order to alleviate this, various
+    techniques are used to normalize the value estimation, called *baselines*. Baselines
+    accomplish this in multiple ways, effectively normalizing by the value of the
+    state relative to the downstream action (e.g. in the case of Advantage, which
+    is the difference between the Q value and the value). The simplest baselines are
+    averages over the batch of rewards or a moving average. Even these baselines can
+    de-bias the gradients so <semantics><mrow><msub><mi>𝔼</mi><mrow><mi>a</mi><mo>∼</mo><mi>π</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>a</mi><mo stretchy="false" form="prefix">|</mo><mi>s</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow></msub><mo stretchy="false" form="prefix">[</mo><msub><mi>∇</mi><mi>θ</mi></msub><mrow><mi
+    mathvariant="normal">log</mi><mo>⁡</mo></mrow><msub><mi>π</mi><mi>θ</mi></msub><mo
+    stretchy="false" form="prefix">(</mo><mi>a</mi><mo stretchy="false" form="prefix">|</mo><mi>s</mi><mo
+    stretchy="false" form="postfix">)</mo><mo stretchy="false" form="postfix">]</mo><mo>=</mo><mn>0</mn></mrow><annotation
+    encoding="application/x-tex">\mathbb{E}_{a \sim \pi(a|s)}[\nabla_\theta \log \pi_\theta(a|s)]
+    = 0</annotation></semantics>, improving the learning signal substantially.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Many of the policy gradient algorithms discussed in this chapter build on the
+    advantage formulation of policy gradient:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: <semantics><mrow><msub><mi>∇</mi><mi>θ</mi></msub><mi>J</mi><mo stretchy="false"
+    form="prefix">(</mo><mi>θ</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><msub><mi>𝔼</mi><mi>τ</mi></msub><mrow><mo
+    stretchy="true" form="prefix">[</mo><munderover><mo>∑</mo><mrow><mi>t</mi><mo>=</mo><mn>0</mn></mrow><mi>T</mi></munderover><msub><mi>∇</mi><mi>θ</mi></msub><mi
+    mathvariant="normal">log</mi><msub><mi>π</mi><mi>θ</mi></msub><mo stretchy="false"
+    form="prefix">(</mo><msub><mi>a</mi><mi>t</mi></msub><mo stretchy="false" form="prefix">|</mo><msub><mi>s</mi><mi>t</mi></msub><mo
+    stretchy="false" form="postfix">)</mo><msup><mi>A</mi><msub><mi>π</mi><mi>θ</mi></msub></msup><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>s</mi><mi>t</mi></msub><mo>,</mo><msub><mi>a</mi><mi>t</mi></msub><mo
+    stretchy="false" form="postfix">)</mo><mo stretchy="true" form="postfix">]</mo></mrow><mrow><mo
+    stretchy="false" form="prefix">(</mo><mn>47</mn><mo stretchy="false" form="postfix">)</mo></mrow></mrow><annotation
+    encoding="application/x-tex">\nabla_\theta J(\theta) = \mathbb{E}_\tau \left[
+    \sum_{t=0}^T \nabla_\theta \log \pi_\theta(a_t|s_t) A^{\pi_\theta}(s_t, a_t) \right]\qquad{(47)}</annotation></semantics>
+  prefs: []
+  type: TYPE_NORMAL
+- en: REINFORCE
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: 'The algorithm REINFORCE is likely a backronym, but the components of the algorithm
+    it represents are quite relevant for modern reinforcement learning algorithms.
+    Defined in the seminal paper *Simple statistical gradient-following algorithms
+    for connectionist reinforcement learning* [[180]](ch021.xhtml#ref-williams1992simple):'
+  prefs: []
+  type: TYPE_NORMAL
+- en: The name is an acronym for “REward Increment = Nonnegative Factor X Offset Reinforcement
+    X Characteristic Eligibility.”
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: 'The three components of this are how to do the *reward increment*, a.k.a. the
+    policy gradient step. It has three pieces to the update rule:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Nonnegative factor: This is the learning rate (step size) that must be a positive
+    number, e.g. <semantics><mi>α</mi><annotation encoding="application/x-tex">\alpha</annotation></semantics>
+    below.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Offset Reinforcement: This is a baseline <semantics><mi>b</mi><annotation encoding="application/x-tex">b</annotation></semantics>
+    or other normalizing factor of the reward to improve stability.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Characteristic Eligibility: This is how the learning becomes attributed per
+    token. It can be a general value, <semantics><mi>e</mi><annotation encoding="application/x-tex">e</annotation></semantics>
+    per parameter, but is often log probabilities of the policy in modern equations.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Thus, the form looks quite familiar:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: <semantics><mrow><msub><mi mathvariant="normal">Δ</mi><mi>θ</mi></msub><mo>=</mo><mi>α</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>r</mi><mo>−</mo><mi>b</mi><mo stretchy="false"
+    form="postfix">)</mo><mi>e</mi><mrow><mo stretchy="false" form="prefix">(</mo><mn>48</mn><mo
+    stretchy="false" form="postfix">)</mo></mrow></mrow> <annotation encoding="application/x-tex">\Delta_\theta
+    = \alpha(r - b)e \qquad{(48)}</annotation></semantics>
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'With more modern notation and the generalized return <semantics><mi>G</mi><annotation
+    encoding="application/x-tex">G</annotation></semantics>, the REINFORCE operator
+    appears as:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: <semantics><mrow><msub><mi>∇</mi><mi>θ</mi></msub><mi>J</mi><mo stretchy="false"
+    form="prefix">(</mo><mi>θ</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><msub><mi>𝔼</mi><mrow><mi>τ</mi><mo>∼</mo><msub><mi>π</mi><mi>θ</mi></msub></mrow></msub><mo
+    minsize="180%" maxsize="180%" stretchy="true" form="prefix">[</mo><munderover><mo>∑</mo><mrow><mi>t</mi><mo>=</mo><mn>0</mn></mrow><mi>T</mi></munderover><msub><mi>∇</mi><mi>θ</mi></msub><mrow><mi
+    mathvariant="normal">log</mi><mo>⁡</mo></mrow><msub><mi>π</mi><mi>θ</mi></msub><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>a</mi><mi>t</mi></msub><mo>∣</mo><msub><mi>s</mi><mi>t</mi></msub><mo
+    stretchy="false" form="postfix">)</mo><mo stretchy="false" form="prefix">(</mo><msub><mi>G</mi><mi>t</mi></msub><mo>−</mo><mi>b</mi><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>s</mi><mi>t</mi></msub><mo stretchy="false"
+    form="postfix">)</mo><mo stretchy="false" form="postfix">)</mo><mo minsize="180%"
+    maxsize="180%" stretchy="true" form="postfix">]</mo><mo>,</mo><mrow><mo stretchy="false"
+    form="prefix">(</mo><mn>49</mn><mo stretchy="false" form="postfix">)</mo></mrow></mrow>
+    <annotation encoding="application/x-tex">\nabla_{\theta}\,J(\theta) \;=\; \mathbb{E}_{\tau
+    \sim \pi_{\theta}}\!\Big[ \sum_{t=0}^{T} \nabla_{\theta} \log \pi_{\theta}(a_t
+    \mid s_t)\,(G_t - b(s_t)) \Big], \qquad{(49)}</annotation></semantics>
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Here, the value <semantics><mrow><msub><mi>G</mi><mi>t</mi></msub><mo>−</mo><mi>b</mi><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>s</mi><mi>t</mi></msub><mo stretchy="false"
+    form="postfix">)</mo></mrow><annotation encoding="application/x-tex">G_t - b(s_t)</annotation></semantics>
+    is the *advantage* of the policy at the current state, so we can reformulate the
+    policy gradient in a form that we continue later with the advantage, <semantics><mi>A</mi><annotation
+    encoding="application/x-tex">A</annotation></semantics>:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: <semantics><mrow><msub><mi>∇</mi><mi>θ</mi></msub><mi>J</mi><mo stretchy="false"
+    form="prefix">(</mo><mi>θ</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><msub><mi>𝔼</mi><mrow><mi>τ</mi><mo>∼</mo><msub><mi>π</mi><mi>θ</mi></msub></mrow></msub><mo
+    minsize="180%" maxsize="180%" stretchy="true" form="prefix">[</mo><munderover><mo>∑</mo><mrow><mi>t</mi><mo>=</mo><mn>0</mn></mrow><mi>T</mi></munderover><msub><mi>∇</mi><mi>θ</mi></msub><mrow><mi
+    mathvariant="normal">log</mi><mo>⁡</mo></mrow><msub><mi>π</mi><mi>θ</mi></msub><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>a</mi><mi>t</mi></msub><mo>∣</mo><msub><mi>s</mi><mi>t</mi></msub><mo
+    stretchy="false" form="postfix">)</mo><msub><mi>A</mi><mi>t</mi></msub><mo minsize="180%"
+    maxsize="180%" stretchy="true" form="postfix">]</mo><mo>,</mo><mrow><mo stretchy="false"
+    form="prefix">(</mo><mn>50</mn><mo stretchy="false" form="postfix">)</mo></mrow></mrow>
+    <annotation encoding="application/x-tex">\nabla_{\theta}\,J(\theta) \;=\; \mathbb{E}_{\tau
+    \sim \pi_{\theta}}\!\Big[ \sum_{t=0}^{T} \nabla_{\theta} \log \pi_{\theta}(a_t
+    \mid s_t)\,A_t \Big], \qquad{(50)}</annotation></semantics>
+  prefs: []
+  type: TYPE_NORMAL
+- en: REINFORCE is a specific implementation of vanilla policy gradient that uses
+    a Monte Carlo estimator of the gradient.
+  prefs: []
+  type: TYPE_NORMAL
+- en: REINFORCE Leave One Out (RLOO)
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: The core implementation detail of REINFORCE Leave One Out versus standard REINFORCE
+    is that it takes the average reward of the *other* samples in the batch to compute
+    the baseline – rather than averaging over all rewards in the batch [[181]](ch021.xhtml#ref-huang2024putting),
+    [[178]](ch021.xhtml#ref-ahmadian2024back), [[182]](ch021.xhtml#ref-kool2019buy).
+  prefs: []
+  type: TYPE_NORMAL
+- en: Crucially, this only works when generating multiple trajectories (completions)
+    per state (prompt), which is common practice in multiple domains of finetuning
+    language models with RL.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Specifically, for the REINFORCE Leave-One-Out (RLOO) baseline, given <semantics><mi>K</mi><annotation
+    encoding="application/x-tex">K</annotation></semantics> sampled trajectories (actions
+    taken conditioned on a prompt) <semantics><mrow><msub><mi>a</mi><mn>1</mn></msub><mo>,</mo><mi>…</mi><mo>,</mo><msub><mi>a</mi><mi>K</mi></msub></mrow><annotation
+    encoding="application/x-tex">a_1, \dots, a_K</annotation></semantics>, to a given
+    prompt <semantics><mi>s</mi><annotation encoding="application/x-tex">s</annotation></semantics>
+    we define the baseline explicitly as the following *per-prompt*:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: <semantics><mrow><mi>b</mi><mo stretchy="false" form="prefix">(</mo><mi>s</mi><mo>,</mo><msub><mi>a</mi><mi>k</mi></msub><mo
+    stretchy="false" form="postfix">)</mo><mo>=</mo><mfrac><mn>1</mn><mrow><mi>K</mi><mo>−</mo><mn>1</mn></mrow></mfrac><munderover><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn><mo>,</mo><mi>i</mi><mo>≠</mo><mi>k</mi></mrow><mi>K</mi></munderover><mi>R</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>s</mi><mo>,</mo><msub><mi>a</mi><mi>i</mi></msub><mo
+    stretchy="false" form="postfix">)</mo><mo>,</mo><mrow><mo stretchy="false" form="prefix">(</mo><mn>51</mn><mo
+    stretchy="false" form="postfix">)</mo></mrow></mrow> <annotation encoding="application/x-tex">b(s,
+    a_k) = \frac{1}{K-1}\sum_{i=1, i\neq k}^{K} R(s, a_i), \qquad{(51)}</annotation></semantics>
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'resulting in the advantage:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: <semantics><mrow><mi>A</mi><mo stretchy="false" form="prefix">(</mo><mi>s</mi><mo>,</mo><msub><mi>a</mi><mi>k</mi></msub><mo
+    stretchy="false" form="postfix">)</mo><mo>=</mo><mi>R</mi><mo stretchy="false"
+    form="prefix">(</mo><mi>s</mi><mo>,</mo><msub><mi>a</mi><mi>k</mi></msub><mo stretchy="false"
+    form="postfix">)</mo><mo>−</mo><mi>b</mi><mo stretchy="false" form="prefix">(</mo><mi>s</mi><mo>,</mo><msub><mi>a</mi><mi>k</mi></msub><mo
+    stretchy="false" form="postfix">)</mo><mi>.</mi><mrow><mo stretchy="false" form="prefix">(</mo><mn>52</mn><mo
+    stretchy="false" form="postfix">)</mo></mrow></mrow> <annotation encoding="application/x-tex">A(s,
+    a_k) = R(s, a_k) - b(s, a_k). \qquad{(52)}</annotation></semantics>
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Equivalently, this can be expressed as:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: <semantics><mrow><mi>A</mi><mo stretchy="false" form="prefix">(</mo><mi>s</mi><mo>,</mo><msub><mi>a</mi><mi>k</mi></msub><mo
+    stretchy="false" form="postfix">)</mo><mo>=</mo><mfrac><mi>K</mi><mrow><mi>K</mi><mo>−</mo><mn>1</mn></mrow></mfrac><mrow><mo
+    stretchy="true" form="prefix">(</mo><mi>R</mi><mo stretchy="false" form="prefix">(</mo><mi>s</mi><mo>,</mo><msub><mi>a</mi><mi>k</mi></msub><mo
+    stretchy="false" form="postfix">)</mo><mo>−</mo><mfrac><mn>1</mn><mi>K</mi></mfrac><munderover><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>K</mi></munderover><mi>R</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>s</mi><mo>,</mo><msub><mi>a</mi><mi>i</mi></msub><mo
+    stretchy="false" form="postfix">)</mo><mo stretchy="true" form="postfix">)</mo></mrow><mi>.</mi><mrow><mo
+    stretchy="false" form="prefix">(</mo><mn>53</mn><mo stretchy="false" form="postfix">)</mo></mrow></mrow>
+    <annotation encoding="application/x-tex">A(s, a_k) = \frac{K}{K - 1}\left(R(s,
+    a_k) - \frac{1}{K}\sum_{i=1}^{K} R(s, a_i)\right). \qquad{(53)}</annotation></semantics>
+  prefs: []
+  type: TYPE_NORMAL
+- en: This is a simple, low-variance *per-prompt* advantage estimate that is closely
+    related to the group-relative advantage used in Group Relative Policy Optimization,
+    GRPO (discussed shortly, after Proximal Policy Optimization, PPO). In practice,
+    GRPO-style training mainly differs in how it applies the KL regularizer (as an
+    explicit loss term vs. folded into the reward) and whether it uses PPO-style ratio
+    clipping. To be specific, the canonical GRPO implementation applies the KL penalty
+    at the loss level, where the derivation for RLOO or traditional policy-gradients
+    apply the KL penalty to the reward itself. With the transition from RLHF to reasoning
+    and reinforcement learning with verifiable rewards (RLVR), the prevalence of KL
+    penalties has decreased overall, with many reasoning adaptations of RLHF code
+    turning them off entirely. Still, the advantage from RLOO could be combined with
+    the clipping of PPO, showing how similar many of these algorithms are.
+  prefs: []
+  type: TYPE_NORMAL
+- en: RLOO and other algorithms that do not use a value network – an additional model
+    copy (a critic) that predicts a scalar value <semantics><mrow><mi>V</mi><mo stretchy="false"
+    form="prefix">(</mo><msub><mi>s</mi><mi>t</mi></msub><mo stretchy="false" form="postfix">)</mo></mrow><annotation
+    encoding="application/x-tex">V(s_t)</annotation></semantics> per token – assign
+    the same sequence-level advantage (or reward) to every token when computing the
+    loss. Algorithms that use a learned value network, such as PPO, assign a different
+    value to every token individually, discounting from the final reward achieved
+    at the EOS token. With a KL distance penalty, RLOO aggregates the per-token KL
+    over the completion and folds that scalar into the sequence reward, so the resulting
+    advantage is broadcast to all tokens. PPO subtracts a per-token KL from the per-token
+    reward before computing <semantics><msub><mi>A</mi><mi>t</mi></msub><annotation
+    encoding="application/x-tex">A_t</annotation></semantics>, giving token-level
+    credit assignment. GRPO typically retains a sequence-level advantage but adds
+    a separate per-token term to the loss, rather than subtracting it from the reward.
+    These details and trade-offs are discussed later in the chapter.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Proximal Policy Optimization
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: 'Proximal Policy Optimization (PPO) [[183]](ch021.xhtml#ref-schulman2017proximal)
+    is one of the foundational algorithms behind Deep RL’s successes (such as OpenAI’s
+    Five, which mastered DOTA 2 [[184]](ch021.xhtml#ref-berner2019dota) and large
+    amounts of research). The objective that PPO maximizes, with respect to the advantages
+    and the policy probabilities, is as follows:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: <semantics><mrow><mi>J</mi><mo stretchy="false" form="prefix">(</mo><mi>θ</mi><mo
+    stretchy="false" form="postfix">)</mo><mo>=</mo><mrow><mi mathvariant="normal">min</mi><mo>⁡</mo></mrow><mrow><mo
+    stretchy="true" form="prefix">(</mo><mfrac><mrow><msub><mi>π</mi><mi>θ</mi></msub><mo
+    stretchy="false" form="prefix">(</mo><mi>a</mi><mo stretchy="false" form="prefix">|</mo><mi>s</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow><mrow><msub><mi>π</mi><msub><mi>θ</mi><mtext
+    mathvariant="normal">old</mtext></msub></msub><mo stretchy="false" form="prefix">(</mo><mi>a</mi><mo
+    stretchy="false" form="prefix">|</mo><mi>s</mi><mo stretchy="false" form="postfix">)</mo></mrow></mfrac><mi>A</mi><mo>,</mo><mtext
+    mathvariant="normal">clip</mtext><mrow><mo stretchy="true" form="prefix">(</mo><mfrac><mrow><msub><mi>π</mi><mi>θ</mi></msub><mo
+    stretchy="false" form="prefix">(</mo><mi>a</mi><mo stretchy="false" form="prefix">|</mo><mi>s</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow><mrow><msub><mi>π</mi><msub><mi>θ</mi><mtext
+    mathvariant="normal">old</mtext></msub></msub><mo stretchy="false" form="prefix">(</mo><mi>a</mi><mo
+    stretchy="false" form="prefix">|</mo><mi>s</mi><mo stretchy="false" form="postfix">)</mo></mrow></mfrac><mo>,</mo><mn>1</mn><mo>−</mo><mi>ε</mi><mo>,</mo><mn>1</mn><mo>+</mo><mi>ε</mi><mo
+    stretchy="true" form="postfix">)</mo></mrow><mi>A</mi><mo stretchy="true" form="postfix">)</mo></mrow><mi>.</mi><mrow><mo
+    stretchy="false" form="prefix">(</mo><mn>54</mn><mo stretchy="false" form="postfix">)</mo></mrow></mrow><annotation
+    encoding="application/x-tex">J(\theta) = \min\left(\frac{\pi_\theta(a|s)}{\pi_{\theta_{\text{old}}}(a|s)}A,
+    \text{clip} \left( \frac{\pi_\theta(a|s)}{\pi_{\theta_{\text{old}}}(a|s)}, 1-\varepsilon,
+    1+\varepsilon \right) A \right).\qquad{(54)}</annotation></semantics>
+  prefs: []
+  type: TYPE_NORMAL
+- en: Here, <semantics><mrow><msub><mi>π</mi><mi>θ</mi></msub><mo stretchy="false"
+    form="prefix">(</mo><mi>a</mi><mo stretchy="false" form="prefix">|</mo><mi>s</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\pi_\theta(a|s)</annotation></semantics>
+    is the current policy being optimized and <semantics><mrow><msub><mi>π</mi><msub><mi>θ</mi><mtext
+    mathvariant="normal">old</mtext></msub></msub><mo stretchy="false" form="prefix">(</mo><mi>a</mi><mo
+    stretchy="false" form="prefix">|</mo><mi>s</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation
+    encoding="application/x-tex">\pi_{\theta_{\text{old}}}(a|s)</annotation></semantics>
+    is the policy that was used to collect the training data (i.e., the policy from
+    the previous iteration). The ratio between these two policies emerges from *importance
+    sampling*, which allows us to reuse data collected under an old policy to estimate
+    gradients for a new policy.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Recall from the advantage formulation of the policy gradient (eq. [47](ch011.xhtml#eq:advantage_policy_gradient))
+    that we have: <semantics><mrow><msub><mi>∇</mi><mi>θ</mi></msub><mi>J</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>θ</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><msub><mi>𝔼</mi><mrow><mi>τ</mi><mo>∼</mo><msub><mi>π</mi><mi>θ</mi></msub></mrow></msub><mrow><mo
+    stretchy="true" form="prefix">[</mo><munderover><mo>∑</mo><mrow><mi>t</mi><mo>=</mo><mn>0</mn></mrow><mi>T</mi></munderover><msub><mi>∇</mi><mi>θ</mi></msub><mi
+    mathvariant="normal">log</mi><msub><mi>π</mi><mi>θ</mi></msub><mo stretchy="false"
+    form="prefix">(</mo><msub><mi>a</mi><mi>t</mi></msub><mo stretchy="false" form="prefix">|</mo><msub><mi>s</mi><mi>t</mi></msub><mo
+    stretchy="false" form="postfix">)</mo><msup><mi>A</mi><msub><mi>π</mi><mi>θ</mi></msub></msup><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>s</mi><mi>t</mi></msub><mo>,</mo><msub><mi>a</mi><mi>t</mi></msub><mo
+    stretchy="false" form="postfix">)</mo><mo stretchy="true" form="postfix">]</mo></mrow><mi>.</mi></mrow><annotation
+    encoding="application/x-tex">\nabla_\theta J(\theta) = \mathbb{E}_{\tau \sim \pi_\theta}
+    \left[ \sum_{t=0}^T \nabla_\theta \log \pi_\theta(a_t|s_t) A^{\pi_\theta}(s_t,
+    a_t) \right].</annotation></semantics>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: This expectation is taken over trajectories sampled from <semantics><msub><mi>π</mi><mi>θ</mi></msub><annotation
+    encoding="application/x-tex">\pi_\theta</annotation></semantics>, but in practice
+    we want to take multiple gradient steps on a batch of data that was collected
+    from a fixed policy <semantics><msub><mi>π</mi><msub><mi>θ</mi><mtext mathvariant="normal">old</mtext></msub></msub><annotation
+    encoding="application/x-tex">\pi_{\theta_{\text{old}}}</annotation></semantics>.
+    To correct for this distribution mismatch, we multiply by the importance weight
+    <semantics><mfrac><mrow><msub><mi>π</mi><mi>θ</mi></msub><mo stretchy="false"
+    form="prefix">(</mo><mi>a</mi><mo stretchy="false" form="prefix">|</mo><mi>s</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow><mrow><msub><mi>π</mi><msub><mi>θ</mi><mtext
+    mathvariant="normal">old</mtext></msub></msub><mo stretchy="false" form="prefix">(</mo><mi>a</mi><mo
+    stretchy="false" form="prefix">|</mo><mi>s</mi><mo stretchy="false" form="postfix">)</mo></mrow></mfrac><annotation
+    encoding="application/x-tex">\frac{\pi_\theta(a|s)}{\pi_{\theta_{\text{old}}}(a|s)}</annotation></semantics>,
+    which reweights samples to account for how much more or less likely they are under
+    the current policy versus the data-collection policy. Without constraints, optimizing
+    this importance-weighted objective can lead to destructively large policy updates
+    when the ratio diverges far from 1\. PPO addresses this by clipping the ratio
+    to the range <semantics><mrow><mo stretchy="false" form="prefix">[</mo><mn>1</mn><mo>−</mo><mi>ε</mi><mo>,</mo><mn>1</mn><mo>+</mo><mi>ε</mi><mo
+    stretchy="false" form="postfix">]</mo></mrow><annotation encoding="application/x-tex">[1-\varepsilon,
+    1+\varepsilon]</annotation></semantics>, ensuring that the policy cannot change
+    too drastically in a single update.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'For completeness, PPO is typically written as an *expected* clipped surrogate
+    objective over timesteps:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: <semantics><mrow><mi>J</mi><mo stretchy="false" form="prefix">(</mo><mi>θ</mi><mo
+    stretchy="false" form="postfix">)</mo><mo>=</mo><msub><mi>𝔼</mi><mi>t</mi></msub><mrow><mo
+    stretchy="true" form="prefix">[</mo><mi mathvariant="normal">min</mi><mrow><mo
+    stretchy="true" form="prefix">(</mo><msub><mi>r</mi><mi>t</mi></msub><mo stretchy="false"
+    form="prefix">(</mo><mi>θ</mi><mo stretchy="false" form="postfix">)</mo><msub><mi>A</mi><mi>t</mi></msub><mo>,</mo><mtext
+    mathvariant="normal">clip</mtext><mo stretchy="false" form="prefix">(</mo><msub><mi>r</mi><mi>t</mi></msub><mo
+    stretchy="false" form="prefix">(</mo><mi>θ</mi><mo stretchy="false" form="postfix">)</mo><mo>,</mo><mn>1</mn><mo>−</mo><mi>ε</mi><mo>,</mo><mn>1</mn><mo>+</mo><mi>ε</mi><mo
+    stretchy="false" form="postfix">)</mo><msub><mi>A</mi><mi>t</mi></msub><mo stretchy="true"
+    form="postfix">)</mo></mrow><mo stretchy="true" form="postfix">]</mo></mrow><mo>,</mo><msub><mi>R</mi><mi>t</mi></msub><mo
+    stretchy="false" form="prefix">(</mo><mi>θ</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mfrac><mrow><msub><mi>π</mi><mi>θ</mi></msub><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>a</mi><mi>t</mi></msub><mo>∣</mo><msub><mi>s</mi><mi>t</mi></msub><mo
+    stretchy="false" form="postfix">)</mo></mrow><mrow><msub><mi>π</mi><msub><mi>θ</mi><mtext
+    mathvariant="normal">old</mtext></msub></msub><mo stretchy="false" form="prefix">(</mo><msub><mi>a</mi><mi>t</mi></msub><mo>∣</mo><msub><mi>s</mi><mi>t</mi></msub><mo
+    stretchy="false" form="postfix">)</mo></mrow></mfrac><mi>.</mi><mrow><mo stretchy="false"
+    form="prefix">(</mo><mn>55</mn><mo stretchy="false" form="postfix">)</mo></mrow></mrow>
+    <annotation encoding="application/x-tex">J(\theta) = \mathbb{E}_{t}\left[ \min\left(r_t(\theta)A_t,\
+    \text{clip}(r_t(\theta),1-\varepsilon,1+\varepsilon)A_t\right) \right], \qquad
+    R_t(\theta)=\frac{\pi_\theta(a_t\mid s_t)}{\pi_{\theta_{\text{old}}}(a_t\mid s_t)}.
+    \qquad{(55)}</annotation></semantics>
+  prefs: []
+  type: TYPE_NORMAL
+- en: The objective is often converted into a loss function by simply adding a negative
+    sign, which makes the optimizer seek to make it as negative as possible.
+  prefs: []
+  type: TYPE_NORMAL
+- en: For language models, the objective (or loss) is computed per token, which intuitively
+    can be grounded in how one would compute the probability of the entire sequence
+    of autoregressive predictions – by a product of probabilities. From there, the
+    common implementation is with *log-probabilities* that make the computation simpler
+    to perform in modern language modeling frameworks.
+  prefs: []
+  type: TYPE_NORMAL
+- en: <semantics><mrow><mi>J</mi><mo stretchy="false" form="prefix">(</mo><mi>θ</mi><mo
+    stretchy="false" form="postfix">)</mo><mo>=</mo><mfrac><mn>1</mn><mrow><mo stretchy="false"
+    form="prefix">|</mo><mi>a</mi><mo stretchy="false" form="prefix">|</mo></mrow></mfrac><munderover><mo>∑</mo><mrow><mi>t</mi><mo>=</mo><mn>0</mn></mrow><mrow><mo
+    stretchy="false" form="prefix">|</mo><mi>a</mi><mo stretchy="false" form="prefix">|</mo></mrow></munderover><mrow><mi
+    mathvariant="normal">min</mi><mo>⁡</mo></mrow><mrow><mo stretchy="true" form="prefix">(</mo><mfrac><mrow><msub><mi>π</mi><mi>θ</mi></msub><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>a</mi><mi>t</mi></msub><mo stretchy="false"
+    form="prefix">|</mo><msub><mi>s</mi><mi>t</mi></msub><mo stretchy="false" form="postfix">)</mo></mrow><mrow><msub><mi>π</mi><msub><mi>θ</mi><mtext
+    mathvariant="normal">old</mtext></msub></msub><mo stretchy="false" form="prefix">(</mo><msub><mi>a</mi><mi>t</mi></msub><mo
+    stretchy="false" form="prefix">|</mo><msub><mi>s</mi><mi>t</mi></msub><mo stretchy="false"
+    form="postfix">)</mo></mrow></mfrac><msub><mi>A</mi><mi>t</mi></msub><mo>,</mo><mtext
+    mathvariant="normal">clip</mtext><mrow><mo stretchy="true" form="prefix">(</mo><mfrac><mrow><msub><mi>π</mi><mi>θ</mi></msub><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>a</mi><mi>t</mi></msub><mo stretchy="false"
+    form="prefix">|</mo><msub><mi>s</mi><mi>t</mi></msub><mo stretchy="false" form="postfix">)</mo></mrow><mrow><msub><mi>π</mi><msub><mi>θ</mi><mtext
+    mathvariant="normal">old</mtext></msub></msub><mo stretchy="false" form="prefix">(</mo><msub><mi>a</mi><mi>t</mi></msub><mo
+    stretchy="false" form="prefix">|</mo><msub><mi>s</mi><mi>t</mi></msub><mo stretchy="false"
+    form="postfix">)</mo></mrow></mfrac><mo>,</mo><mn>1</mn><mo>−</mo><mi>ε</mi><mo>,</mo><mn>1</mn><mo>+</mo><mi>ε</mi><mo
+    stretchy="true" form="postfix">)</mo></mrow><msub><mi>A</mi><mi>t</mi></msub><mo
+    stretchy="true" form="postfix">)</mo></mrow><mi>.</mi><mrow><mo stretchy="false"
+    form="prefix">(</mo><mn>56</mn><mo stretchy="false" form="postfix">)</mo></mrow></mrow>
+    <annotation encoding="application/x-tex">J(\theta) = \frac{1}{|a|} \sum_{t=0}^{|a|}
+    \min\left(\frac{\pi_\theta(a_{t}|s_t)}{\pi_{\theta_{\text{old}}}(a_{t}|s_t)}A_{t},
+    \text{clip} \left( \frac{\pi_\theta(a_{t}|s_t)}{\pi_{\theta_{\text{old}}}(a_{t}|s_t)},
+    1-\varepsilon, 1+\varepsilon \right) A_{t} \right). \qquad{(56)}</annotation></semantics>
+  prefs: []
+  type: TYPE_NORMAL
+- en: This is the per-token version of PPO, which also applies to other policy-gradient
+    methods, but is explored further later in the implementation section of this chapter.
+    Here, the term for averaging by the number of tokens in the action, <semantics><mfrac><mn>1</mn><mrow><mo
+    stretchy="false" form="prefix">|</mo><mi>a</mi><mo stretchy="false" form="prefix">|</mo></mrow></mfrac><annotation
+    encoding="application/x-tex">\frac{1}{|a|}</annotation></semantics>, comes from
+    common implementation practices, but is not in a formal derivation of the loss
+    (shown in [[185]](ch021.xhtml#ref-liu2025understanding)).
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Here we will explain the different cases this loss function triggers given
+    various advantages and policy ratios. At an implementation level, the inner computations
+    for PPO involve two main terms: 1) a standard policy gradient with a learned advantage
+    and 2) a clipped policy gradient based on a maximum step size.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'To understand how different situations emerge, we can define the policy ratio
+    as:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: <semantics><mrow><mi>R</mi><mo stretchy="false" form="prefix">(</mo><mi>θ</mi><mo
+    stretchy="false" form="postfix">)</mo><mo>=</mo><mfrac><mrow><msub><mi>π</mi><mi>θ</mi></msub><mo
+    stretchy="false" form="prefix">(</mo><mi>a</mi><mo stretchy="false" form="prefix">|</mo><mi>s</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow><mrow><msub><mi>π</mi><msub><mi>θ</mi><mtext
+    mathvariant="normal">old</mtext></msub></msub><mo stretchy="false" form="prefix">(</mo><mi>a</mi><mo
+    stretchy="false" form="prefix">|</mo><mi>s</mi><mo stretchy="false" form="postfix">)</mo></mrow></mfrac><mrow><mo
+    stretchy="false" form="prefix">(</mo><mn>57</mn><mo stretchy="false" form="postfix">)</mo></mrow></mrow><annotation
+    encoding="application/x-tex">R(\theta) = \frac{\pi_\theta(a|s)}{\pi_{\theta_{\text{old}}}(a|s)}\qquad{(57)}</annotation></semantics>
+  prefs: []
+  type: TYPE_NORMAL
+- en: The policy ratio is a centerpiece of PPO and related algorithms. It emerges
+    from computing the gradient of a policy and controls the parameter updates in
+    a very intuitive way. For any batch of data, the policy ratio starts at 1 for
+    the first gradient step for that batch, since <semantics><msub><mi>π</mi><mi>θ</mi></msub><annotation
+    encoding="application/x-tex">\pi_{\theta}</annotation></semantics> is the same
+    as <semantics><msub><mi>π</mi><msub><mi>θ</mi><mtext mathvariant="normal">old</mtext></msub></msub><annotation
+    encoding="application/x-tex">\pi_{\theta_{\text{old}}}</annotation></semantics>
+    at this point. Then, in the next gradient step, the policy ratio will be above
+    one if that gradient step increased the likelihood of certain tokens with an associated
+    positive advantage, or less than one for the other case. A common practice is
+    to take 1-4 gradient steps per batch with policy gradient algorithms before updating
+    <semantics><msub><mi>π</mi><msub><mi>θ</mi><mtext mathvariant="normal">old</mtext></msub></msub><annotation
+    encoding="application/x-tex">\pi_{\theta_{\text{old}}}</annotation></semantics>.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Understanding the PPO Objective
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: Overall, the PPO objective can be visualized by two lines of a plot of objective
+    versus policy ratio, which is shown in fig. [15](#fig:ppo-obj). The PPO objective
+    is maximized by changing the probability of the sampled actions. Numerically,
+    the objective controls for both positive and negative advantage cases by clever
+    use of the minimum operation, making it so the update is at most pushed by an
+    epsilon distance away from a policy ratio of 1.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Within the trust region, PPO operates the same as other policy gradient algorithms.
+    This is by design! The trust region is a concept used to cap the maximum step
+    size of PPO and its peer algorithms for stability of updates. The core of the
+    PPO algorithm, the clip and min/max functions, is to define this region. The objective
+    becomes flat outside of it.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The idea of a “trust region” comes from the numerical optimization literature
+    [[186]](ch021.xhtml#ref-nocedal2006numerical), but was popularized within Deep
+    RL from the algorithm Trust Region Policy Optimization (TRPO), which is accepted
+    as the predecessor to PPO [[187]](ch021.xhtml#ref-schulman2015trust). The trust
+    region is the area where the full policy-gradient steps are applied, as the updates
+    are not “clipped” by the max/min operations of the PPO objective.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 15: Visualization of the different regions of the PPO objective for
+    a hypothetical advantage. The “trust region” would be described as the region
+    where the log-ratio is within 1\pm\varepsilon.](../media/file13.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Figure 15: Visualization of the different regions of the PPO objective for
+    a hypothetical advantage. The “trust region” would be described as the region
+    where the log-ratio is within <semantics><mrow><mn>1</mn><mo>±</mo><mi>ε</mi></mrow><annotation
+    encoding="application/x-tex">1\pm\varepsilon</annotation></semantics>.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The policy ratio and advantage together can occur in a few different configurations.
+    We will split the cases into two groups: positive and negative advantage.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Positive Advantage (<semantics><mrow><msub><mi>A</mi><mi>t</mi></msub><mo>></mo><mn>0</mn></mrow><annotation
+    encoding="application/x-tex">A_t > 0</annotation></semantics>)**'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'This means that the action taken was beneficial according to the value function,
+    and we want to increase the likelihood of taking that action in the future. Now,
+    let’s look at different cases for the policy ratio <semantics><mrow><mi>R</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>θ</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation
+    encoding="application/x-tex">R(\theta)</annotation></semantics>:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '<semantics><mrow><mi>R</mi><mo stretchy="false" form="prefix">(</mo><mi>θ</mi><mo
+    stretchy="false" form="postfix">)</mo><mo><</mo><mn>1</mn><mo>−</mo><mi>ε</mi></mrow><annotation
+    encoding="application/x-tex">R(\theta) < 1 - \varepsilon</annotation></semantics>:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**Interpretation**: Action is less likely with the new policy than the old
+    policy'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Unclipped Term**: <semantics><mrow><mi>R</mi><mo stretchy="false" form="prefix">(</mo><mi>θ</mi><mo
+    stretchy="false" form="postfix">)</mo><msub><mi>A</mi><mi>t</mi></msub></mrow><annotation
+    encoding="application/x-tex">R(\theta) A_t</annotation></semantics>'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Clipped Term**: <semantics><mrow><mo stretchy="false" form="prefix">(</mo><mn>1</mn><mo>−</mo><mi>ε</mi><mo
+    stretchy="false" form="postfix">)</mo><msub><mi>A</mi><mi>t</mi></msub></mrow><annotation
+    encoding="application/x-tex">(1 - \varepsilon) A_t</annotation></semantics>'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Objective**: <semantics><mrow><mi>R</mi><mo stretchy="false" form="prefix">(</mo><mi>θ</mi><mo
+    stretchy="false" form="postfix">)</mo><msub><mi>A</mi><mi>t</mi></msub></mrow><annotation
+    encoding="application/x-tex">R(\theta) A_t</annotation></semantics>'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Gradient**: <semantics><mrow><msub><mi>∇</mi><mi>θ</mi></msub><mi>R</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>θ</mi><mo stretchy="false" form="postfix">)</mo><msub><mi>A</mi><mi>t</mi></msub><mo>≠</mo><mn>0</mn></mrow><annotation
+    encoding="application/x-tex">\nabla_\theta R(\theta) A_t \neq 0</annotation></semantics>'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**What happens**: Normal policy-gradient update - increase likelihood of action'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '<semantics><mrow><mn>1</mn><mo>−</mo><mi>ε</mi><mo>≤</mo><mi>R</mi><mo stretchy="false"
+    form="prefix">(</mo><mi>θ</mi><mo stretchy="false" form="postfix">)</mo><mo>≤</mo><mn>1</mn><mo>+</mo><mi>ε</mi></mrow><annotation
+    encoding="application/x-tex">1 - \varepsilon \leq R(\theta) \leq 1 + \varepsilon</annotation></semantics>:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**Interpretation**: Action is almost equally likely with the new policy as
+    the old policy'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Unclipped Term**: <semantics><mrow><mi>R</mi><mo stretchy="false" form="prefix">(</mo><mi>θ</mi><mo
+    stretchy="false" form="postfix">)</mo><msub><mi>A</mi><mi>t</mi></msub></mrow><annotation
+    encoding="application/x-tex">R(\theta) A_t</annotation></semantics>'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Clipped Term**: <semantics><mrow><mi>R</mi><mo stretchy="false" form="prefix">(</mo><mi>θ</mi><mo
+    stretchy="false" form="postfix">)</mo><msub><mi>A</mi><mi>t</mi></msub></mrow><annotation
+    encoding="application/x-tex">R(\theta) A_t</annotation></semantics>'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Objective**: <semantics><mrow><mi>R</mi><mo stretchy="false" form="prefix">(</mo><mi>θ</mi><mo
+    stretchy="false" form="postfix">)</mo><msub><mi>A</mi><mi>t</mi></msub></mrow><annotation
+    encoding="application/x-tex">R(\theta) A_t</annotation></semantics>'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Gradient**: <semantics><mrow><msub><mi>∇</mi><mi>θ</mi></msub><mi>R</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>θ</mi><mo stretchy="false" form="postfix">)</mo><msub><mi>A</mi><mi>t</mi></msub><mo>≠</mo><mn>0</mn></mrow><annotation
+    encoding="application/x-tex">\nabla_\theta R(\theta) A_t \neq 0</annotation></semantics>'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**What happens**: Normal policy-gradient update - increase likelihood of action'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '<semantics><mrow><mn>1</mn><mo>+</mo><mi>ε</mi><mo><</mo><mi>R</mi><mo stretchy="false"
+    form="prefix">(</mo><mi>θ</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation
+    encoding="application/x-tex">1 + \varepsilon < R(\theta)</annotation></semantics>:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**Interpretation**: Action is more likely with the new policy than the old
+    policy'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Unclipped Term**: <semantics><mrow><mi>R</mi><mo stretchy="false" form="prefix">(</mo><mi>θ</mi><mo
+    stretchy="false" form="postfix">)</mo><msub><mi>A</mi><mi>t</mi></msub></mrow><annotation
+    encoding="application/x-tex">R(\theta) A_t</annotation></semantics>'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Clipped Term**: <semantics><mrow><mo stretchy="false" form="prefix">(</mo><mn>1</mn><mo>+</mo><mi>ε</mi><mo
+    stretchy="false" form="postfix">)</mo><msub><mi>A</mi><mi>t</mi></msub></mrow><annotation
+    encoding="application/x-tex">(1 + \varepsilon) A_t</annotation></semantics>'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Objective**: <semantics><mrow><mo stretchy="false" form="prefix">(</mo><mn>1</mn><mo>+</mo><mi>ε</mi><mo
+    stretchy="false" form="postfix">)</mo><msub><mi>A</mi><mi>t</mi></msub></mrow><annotation
+    encoding="application/x-tex">(1 + \varepsilon) A_t</annotation></semantics>'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Gradient**: <semantics><mrow><msub><mi>∇</mi><mi>θ</mi></msub><mo stretchy="false"
+    form="prefix">(</mo><mn>1</mn><mo>+</mo><mi>ε</mi><mo stretchy="false" form="postfix">)</mo><msub><mi>A</mi><mi>t</mi></msub><mo>=</mo><mn>0</mn></mrow><annotation
+    encoding="application/x-tex">\nabla_\theta (1 + \varepsilon) A_t = 0</annotation></semantics>'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**What happens**: NO UPDATE - action is already more likely under the new policy'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'To summarize, when the advantage is positive (<semantics><mrow><msub><mi>A</mi><mi>t</mi></msub><mo>></mo><mn>0</mn></mrow><annotation
+    encoding="application/x-tex">A_t>0</annotation></semantics>), we want to boost
+    the probability of the action. Therefore:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: We perform gradient steps only in the case when <semantics><mrow><msub><mi>π</mi><mtext
+    mathvariant="normal">new</mtext></msub><mo stretchy="false" form="prefix">(</mo><mi>a</mi><mo
+    stretchy="false" form="postfix">)</mo><mo>≤</mo><mo stretchy="false" form="prefix">(</mo><mn>1</mn><mo>+</mo><mi>ε</mi><mo
+    stretchy="false" form="postfix">)</mo><msub><mi>π</mi><mtext mathvariant="normal">old</mtext></msub><mo
+    stretchy="false" form="prefix">(</mo><mi>a</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation
+    encoding="application/x-tex">\pi_{\text{new}}(a) \leq (1+\varepsilon) \pi_{\text{old}}(a)</annotation></semantics>.
+    Intuitively, we want to boost the probability of the action, since the advantage
+    was positive, but not boost it so much that we have made it substantially more
+    likely.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Crucially, when <semantics><mrow><msub><mi>π</mi><mtext mathvariant="normal">new</mtext></msub><mo
+    stretchy="false" form="prefix">(</mo><mi>a</mi><mo stretchy="false" form="postfix">)</mo><mo>></mo><mo
+    stretchy="false" form="prefix">(</mo><mn>1</mn><mo>+</mo><mi>ε</mi><mo stretchy="false"
+    form="postfix">)</mo><msub><mi>π</mi><mtext mathvariant="normal">old</mtext></msub><mo
+    stretchy="false" form="prefix">(</mo><mi>a</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation
+    encoding="application/x-tex">\pi_{\text{new}}(a) > (1+\varepsilon) \pi_{\text{old}}(a)</annotation></semantics>,
+    then we don’t perform any update, and the gradient of the clipped objective is
+    <semantics><mn>0</mn><annotation encoding="application/x-tex">0</annotation></semantics>.
+    Intuitively, the action is already more expressed with the new policy, so we don’t
+    want to over-reinforce it.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Negative Advantage (<semantics><mrow><msub><mi>A</mi><mi>t</mi></msub><mo><</mo><mn>0</mn></mrow><annotation
+    encoding="application/x-tex">A_t < 0</annotation></semantics>)**'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'This means that the action taken was detrimental according to the value function,
+    and we want to decrease the likelihood of taking that action in the future. Now,
+    let’s look at different cases for the policy ratio <semantics><mrow><mi>R</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>θ</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation
+    encoding="application/x-tex">R(\theta)</annotation></semantics>:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '<semantics><mrow><mi>R</mi><mo stretchy="false" form="prefix">(</mo><mi>θ</mi><mo
+    stretchy="false" form="postfix">)</mo><mo><</mo><mn>1</mn><mo>−</mo><mi>ε</mi></mrow><annotation
+    encoding="application/x-tex">R(\theta) < 1 - \varepsilon</annotation></semantics>:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**Interpretation**: Action is less likely with the new policy than the old
+    policy'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Unclipped Term**: <semantics><mrow><mi>R</mi><mo stretchy="false" form="prefix">(</mo><mi>θ</mi><mo
+    stretchy="false" form="postfix">)</mo><msub><mi>A</mi><mi>t</mi></msub></mrow><annotation
+    encoding="application/x-tex">R(\theta) A_t</annotation></semantics>'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Clipped Term**: <semantics><mrow><mo stretchy="false" form="prefix">(</mo><mn>1</mn><mo>−</mo><mi>ε</mi><mo
+    stretchy="false" form="postfix">)</mo><msub><mi>A</mi><mi>t</mi></msub></mrow><annotation
+    encoding="application/x-tex">(1 - \varepsilon) A_t</annotation></semantics>'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Objective**: <semantics><mrow><mo stretchy="false" form="prefix">(</mo><mn>1</mn><mo>−</mo><mi>ε</mi><mo
+    stretchy="false" form="postfix">)</mo><msub><mi>A</mi><mi>t</mi></msub></mrow><annotation
+    encoding="application/x-tex">(1 - \varepsilon) A_t</annotation></semantics>'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Gradient**: <semantics><mrow><msub><mi>∇</mi><mi>θ</mi></msub><mo stretchy="false"
+    form="prefix">(</mo><mn>1</mn><mo>−</mo><mi>ε</mi><mo stretchy="false" form="postfix">)</mo><msub><mi>A</mi><mi>t</mi></msub><mo>=</mo><mn>0</mn></mrow><annotation
+    encoding="application/x-tex">\nabla_\theta (1 - \varepsilon) A_t = 0</annotation></semantics>'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**What happens**: NO UPDATE - action is already less likely under the new policy'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '<semantics><mrow><mn>1</mn><mo>−</mo><mi>ε</mi><mo>≤</mo><mi>R</mi><mo stretchy="false"
+    form="prefix">(</mo><mi>θ</mi><mo stretchy="false" form="postfix">)</mo><mo>≤</mo><mn>1</mn><mo>+</mo><mi>ε</mi></mrow><annotation
+    encoding="application/x-tex">1 - \varepsilon \leq R(\theta) \leq 1 + \varepsilon</annotation></semantics>:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**Interpretation**: Action is almost equally likely with the new policy as
+    the old policy'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Unclipped Term**: <semantics><mrow><mi>R</mi><mo stretchy="false" form="prefix">(</mo><mi>θ</mi><mo
+    stretchy="false" form="postfix">)</mo><msub><mi>A</mi><mi>t</mi></msub></mrow><annotation
+    encoding="application/x-tex">R(\theta) A_t</annotation></semantics>'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Clipped Term**: <semantics><mrow><mi>R</mi><mo stretchy="false" form="prefix">(</mo><mi>θ</mi><mo
+    stretchy="false" form="postfix">)</mo><msub><mi>A</mi><mi>t</mi></msub></mrow><annotation
+    encoding="application/x-tex">R(\theta) A_t</annotation></semantics>'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Objective**: <semantics><mrow><mi>R</mi><mo stretchy="false" form="prefix">(</mo><mi>θ</mi><mo
+    stretchy="false" form="postfix">)</mo><msub><mi>A</mi><mi>t</mi></msub></mrow><annotation
+    encoding="application/x-tex">R(\theta) A_t</annotation></semantics>'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Gradient**: <semantics><mrow><msub><mi>∇</mi><mi>θ</mi></msub><mi>R</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>θ</mi><mo stretchy="false" form="postfix">)</mo><msub><mi>A</mi><mi>t</mi></msub><mo>≠</mo><mn>0</mn></mrow><annotation
+    encoding="application/x-tex">\nabla_\theta R(\theta) A_t \neq 0</annotation></semantics>'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**What happens**: Normal policy-gradient update - decrease likelihood of action'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '<semantics><mrow><mn>1</mn><mo>+</mo><mi>ε</mi><mo><</mo><mi>R</mi><mo stretchy="false"
+    form="prefix">(</mo><mi>θ</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation
+    encoding="application/x-tex">1 + \varepsilon < R(\theta)</annotation></semantics>:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**Interpretation**: Action is more likely with the new policy than the old
+    policy'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Unclipped Term**: <semantics><mrow><mi>R</mi><mo stretchy="false" form="prefix">(</mo><mi>θ</mi><mo
+    stretchy="false" form="postfix">)</mo><msub><mi>A</mi><mi>t</mi></msub></mrow><annotation
+    encoding="application/x-tex">R(\theta) A_t</annotation></semantics>'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Clipped Term**: <semantics><mrow><mo stretchy="false" form="prefix">(</mo><mn>1</mn><mo>+</mo><mi>ε</mi><mo
+    stretchy="false" form="postfix">)</mo><msub><mi>A</mi><mi>t</mi></msub></mrow><annotation
+    encoding="application/x-tex">(1 + \varepsilon) A_t</annotation></semantics>'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Objective**: <semantics><mrow><mi>R</mi><mo stretchy="false" form="prefix">(</mo><mi>θ</mi><mo
+    stretchy="false" form="postfix">)</mo><msub><mi>A</mi><mi>t</mi></msub></mrow><annotation
+    encoding="application/x-tex">R(\theta) A_t</annotation></semantics>'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Gradient**: <semantics><mrow><msub><mi>∇</mi><mi>θ</mi></msub><mi>R</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>θ</mi><mo stretchy="false" form="postfix">)</mo><msub><mi>A</mi><mi>t</mi></msub><mo>≠</mo><mn>0</mn></mrow><annotation
+    encoding="application/x-tex">\nabla_\theta R(\theta) A_t \neq 0</annotation></semantics>'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**What happens**: Normal policy-gradient update - decrease likelihood of action'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'To summarize, when the advantage is negative (<semantics><mrow><msub><mi>A</mi><mi>t</mi></msub><mo><</mo><mn>0</mn></mrow><annotation
+    encoding="application/x-tex">A_t < 0</annotation></semantics>), we want to decrease
+    the probability of the action. Therefore:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: We perform gradient steps only in the case when <semantics><mrow><msub><mi>π</mi><mtext
+    mathvariant="normal">new</mtext></msub><mo stretchy="false" form="prefix">(</mo><mi>a</mi><mo
+    stretchy="false" form="postfix">)</mo><mo>≥</mo><mo stretchy="false" form="prefix">(</mo><mn>1</mn><mo>−</mo><mi>ε</mi><mo
+    stretchy="false" form="postfix">)</mo><msub><mi>π</mi><mtext mathvariant="normal">old</mtext></msub><mo
+    stretchy="false" form="prefix">(</mo><mi>a</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation
+    encoding="application/x-tex">\pi_{\text{new}}(a) \geq (1-\varepsilon) \pi_{\text{old}}(a)</annotation></semantics>.
+    Intuitively, we want to decrease the probability of the action, since the advantage
+    was negative, and we do so proportional to the advantage.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Crucially, when <semantics><mrow><msub><mi>π</mi><mtext mathvariant="normal">new</mtext></msub><mo
+    stretchy="false" form="prefix">(</mo><mi>a</mi><mo stretchy="false" form="postfix">)</mo><mo><</mo><mo
+    stretchy="false" form="prefix">(</mo><mn>1</mn><mo>−</mo><mi>ε</mi><mo stretchy="false"
+    form="postfix">)</mo><msub><mi>π</mi><mtext mathvariant="normal">old</mtext></msub><mo
+    stretchy="false" form="prefix">(</mo><mi>a</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation
+    encoding="application/x-tex">\pi_{\text{new}}(a) < (1-\varepsilon) \pi_{\text{old}}(a)</annotation></semantics>,
+    then we don’t perform any update, and the gradient of the clipped objective is
+    <semantics><mn>0</mn><annotation encoding="application/x-tex">0</annotation></semantics>.
+    Intuitively, the action is already less likely under the new policy, so we don’t
+    want to over-suppress it.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: It is crucial to remember that PPO within the trust region is roughly the same
+    as standard forms of policy gradient.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Value Functions and PPO
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: The value function within PPO is an additional copy of the model that is used
+    to predict the value per token. The value of a token (or state) in traditional
+    RL is predicting the future return from that moment, often with discounting. This
+    value in PPO is used as a learned baseline, representing an evolution of the simple
+    Monte Carlo version used with REINFORCE (which doesn’t need the learned value
+    network). This highlights how PPO is an evolution of REINFORCE and vanilla policy-gradient
+    in multiple forms, across the optimization form, baseline, etc. In practice, with
+    PPO and other algorithms used for language models, this is predicting the return
+    of each token after the deduction of KL penalties (the per-token loss includes
+    the KL from the reward traditionally, as discussed).
+  prefs: []
+  type: TYPE_NORMAL
+- en: There are a few different methods (or targets) used to learn the value functions.
+    Generalized Advantage Estimation (GAE) is considered the state-of-the-art and
+    canonical implementation in modern systems, but it carries more complexity by
+    computing the value prediction error over multiple steps – see the later section
+    on GAE in this chapter. A value function can also be learned with Monte Carlo
+    estimates from the rollouts used to update the policy. PPO has two losses – one
+    to learn the value function and another to use that value function to update the
+    policy.
+  prefs: []
+  type: TYPE_NORMAL
+- en: A simple example implementation of a value network loss is shown below.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs: []
+  type: TYPE_PRE
+- en: Group Relative Policy Optimization
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: 'Group Relative Policy Optimization (GRPO) is introduced in DeepSeekMath [[188]](ch021.xhtml#ref-shao2024deepseekmath),
+    and used in other DeepSeek works, e.g. DeepSeek-V3 [[189]](ch021.xhtml#ref-liu2024deepseek)
+    and DeepSeek-R1 [[61]](ch021.xhtml#ref-guo2025deepseek). GRPO can be viewed as
+    a PPO-inspired algorithm with a very similar surrogate loss, but it avoids learning
+    a value function with another copy of the original policy language model (or another
+    checkpoint for initialization). This brings two posited benefits:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Avoiding the challenge of learning a value function from a LM backbone, where
+    research hasn’t established best practices.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Saves memory by not needing to keep the extra set of model weights in memory
+    (going from needing the current policy, the reference policy, and a value function,
+    to just the first two copies).
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: GRPO does this by simplifying the value estimation and assigning the same value
+    to every token in the episode (i.e. in the completion to a prompt, each token
+    gets assigned the same value rather than discounted rewards in a standard value
+    function) by estimating the advantage or baseline. The estimate is done by collecting
+    multiple completions (<semantics><msub><mi>a</mi><mi>i</mi></msub><annotation
+    encoding="application/x-tex">a_i</annotation></semantics>) and rewards (<semantics><msub><mi>r</mi><mi>i</mi></msub><annotation
+    encoding="application/x-tex">r_i</annotation></semantics>), i.e. a Monte Carlo
+    estimate, from the same initial state / prompt (<semantics><mi>s</mi><annotation
+    encoding="application/x-tex">s</annotation></semantics>).
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'To state this formally, the GRPO objective is very similar to the PPO objective
+    above. For GRPO, the objective (or loss) is accumulated over a group of completions
+    <semantics><mrow><mo stretchy="false" form="prefix">{</mo><msub><mi>a</mi><mn>1</mn></msub><mo>,</mo><msub><mi>a</mi><mn>2</mn></msub><mo>,</mo><mi>.</mi><mi>.</mi><mi>.</mi><mo>,</mo><msub><mi>a</mi><mi>G</mi></msub><mo
+    stretchy="false" form="postfix">}</mo></mrow><annotation encoding="application/x-tex">\{a_1,
+    a_2, ..., a_G\}</annotation></semantics> to a given prompt <semantics><mi>s</mi><annotation
+    encoding="application/x-tex">s</annotation></semantics>. Here, we show the GRPO
+    objective:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: <semantics><mrow><mi>J</mi><mo stretchy="false" form="prefix">(</mo><mi>θ</mi><mo
+    stretchy="false" form="postfix">)</mo><mo>=</mo><mfrac><mn>1</mn><mi>G</mi></mfrac><munderover><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>G</mi></munderover><mrow><mo
+    stretchy="true" form="prefix">(</mo><mi mathvariant="normal">min</mi><mrow><mo
+    stretchy="true" form="prefix">(</mo><mfrac><mrow><msub><mi>π</mi><mi>θ</mi></msub><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>a</mi><mi>i</mi></msub><mo stretchy="false"
+    form="prefix">|</mo><mi>s</mi><mo stretchy="false" form="postfix">)</mo></mrow><mrow><msub><mi>π</mi><msub><mi>θ</mi><mtext
+    mathvariant="normal">old</mtext></msub></msub><mo stretchy="false" form="prefix">(</mo><msub><mi>a</mi><mi>i</mi></msub><mo
+    stretchy="false" form="prefix">|</mo><mi>s</mi><mo stretchy="false" form="postfix">)</mo></mrow></mfrac><msub><mi>A</mi><mi>i</mi></msub><mo>,</mo><mtext
+    mathvariant="normal">clip</mtext><mrow><mo stretchy="true" form="prefix">(</mo><mfrac><mrow><msub><mi>π</mi><mi>θ</mi></msub><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>a</mi><mi>i</mi></msub><mo stretchy="false"
+    form="prefix">|</mo><mi>s</mi><mo stretchy="false" form="postfix">)</mo></mrow><mrow><msub><mi>π</mi><msub><mi>θ</mi><mtext
+    mathvariant="normal">old</mtext></msub></msub><mo stretchy="false" form="prefix">(</mo><msub><mi>a</mi><mi>i</mi></msub><mo
+    stretchy="false" form="prefix">|</mo><mi>s</mi><mo stretchy="false" form="postfix">)</mo></mrow></mfrac><mo>,</mo><mn>1</mn><mo>−</mo><mi>ε</mi><mo>,</mo><mn>1</mn><mo>+</mo><mi>ε</mi><mo
+    stretchy="true" form="postfix">)</mo></mrow><msub><mi>A</mi><mi>i</mi></msub><mo
+    stretchy="true" form="postfix">)</mo></mrow><mo>−</mo><mi>β</mi><msub><mi>𝒟</mi><mtext
+    mathvariant="normal">KL</mtext></msub><mo stretchy="false" form="prefix">(</mo><msub><mi>π</mi><mi>θ</mi></msub><mo
+    stretchy="false" form="prefix">|</mo><mo stretchy="false" form="prefix">|</mo><msub><mi>π</mi><mtext
+    mathvariant="normal">ref</mtext></msub><mo stretchy="false" form="postfix">)</mo><mo
+    stretchy="true" form="postfix">)</mo></mrow><mi>.</mi><mrow><mo stretchy="false"
+    form="prefix">(</mo><mn>58</mn><mo stretchy="false" form="postfix">)</mo></mrow></mrow><annotation
+    encoding="application/x-tex">J(\theta) = \frac{1}{G}\sum_{i=1}^G \left(\min\left(\frac{\pi_\theta(a_i|s)}{\pi_{\theta_{\text{old}}}(a_i|s)}A_i,
+    \text{clip} \left( \frac{\pi_\theta(a_i|s)}{\pi_{\theta_{\text{old}}}(a_i|s)},
+    1-\varepsilon, 1+\varepsilon \right) A_i \right) - \beta \mathcal{D}_{\text{KL}}(\pi_\theta||\pi_{\text{ref}})\right).\qquad{(58)}</annotation></semantics>
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Note that relative to PPO, the standard implementation of GRPO includes the
+    KL distance in the loss. As above, we can expand this into a per-token computation:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: <semantics><mrow><mi>J</mi><mo stretchy="false" form="prefix">(</mo><mi>θ</mi><mo
+    stretchy="false" form="postfix">)</mo><mo>=</mo><mfrac><mn>1</mn><mi>G</mi></mfrac><munderover><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>G</mi></munderover><mfrac><mn>1</mn><mrow><mo
+    stretchy="false" form="prefix">|</mo><msub><mi>a</mi><mi>i</mi></msub><mo stretchy="false"
+    form="prefix">|</mo></mrow></mfrac><munderover><mo>∑</mo><mrow><mi>t</mi><mo>=</mo><mn>1</mn></mrow><mrow><mo
+    stretchy="false" form="prefix">|</mo><msub><mi>a</mi><mi>i</mi></msub><mo stretchy="false"
+    form="prefix">|</mo></mrow></munderover><mrow><mo stretchy="true" form="prefix">(</mo><mi
+    mathvariant="normal">min</mi><mrow><mo stretchy="true" form="prefix">(</mo><mfrac><mrow><msub><mi>π</mi><mi>θ</mi></msub><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>a</mi><mrow><mi>i</mi><mo>,</mo><mi>t</mi></mrow></msub><mo
+    stretchy="false" form="prefix">|</mo><msub><mi>s</mi><mi>i</mi></msub><mo stretchy="false"
+    form="postfix">)</mo></mrow><mrow><msub><mi>π</mi><msub><mi>θ</mi><mtext mathvariant="normal">old</mtext></msub></msub><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>a</mi><mrow><mi>i</mi><mo>,</mo><mi>t</mi></mrow></msub><mo
+    stretchy="false" form="prefix">|</mo><msub><mi>s</mi><mi>i</mi></msub><mo stretchy="false"
+    form="postfix">)</mo></mrow></mfrac><msub><mi>A</mi><mrow><mi>i</mi><mo>,</mo><mi>t</mi></mrow></msub><mo>,</mo><mtext
+    mathvariant="normal">clip</mtext><mrow><mo stretchy="true" form="prefix">(</mo><mfrac><mrow><msub><mi>π</mi><mi>θ</mi></msub><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>a</mi><mrow><mi>i</mi><mo>,</mo><mi>t</mi></mrow></msub><mo
+    stretchy="false" form="prefix">|</mo><msub><mi>s</mi><mi>i</mi></msub><mo stretchy="false"
+    form="postfix">)</mo></mrow><mrow><msub><mi>π</mi><msub><mi>θ</mi><mtext mathvariant="normal">old</mtext></msub></msub><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>a</mi><mrow><mi>i</mi><mo>,</mo><mi>t</mi></mrow></msub><mo
+    stretchy="false" form="prefix">|</mo><msub><mi>s</mi><mi>i</mi></msub><mo stretchy="false"
+    form="postfix">)</mo></mrow></mfrac><mo>,</mo><mn>1</mn><mo>−</mo><mi>ε</mi><mo>,</mo><mn>1</mn><mo>+</mo><mi>ε</mi><mo
+    stretchy="true" form="postfix">)</mo></mrow><msub><mi>A</mi><mrow><mi>i</mi><mo>,</mo><mi>t</mi></mrow></msub><mo
+    stretchy="true" form="postfix">)</mo></mrow><mo>−</mo><mi>β</mi><msub><mi>𝒟</mi><mtext
+    mathvariant="normal">KL</mtext></msub><mo stretchy="false" form="prefix">(</mo><msub><mi>π</mi><mi>θ</mi></msub><mo
+    stretchy="false" form="prefix">(</mo><mi>⋅</mi><mo stretchy="false" form="prefix">|</mo><msub><mi>s</mi><mi>i</mi></msub><mo
+    stretchy="false" form="postfix">)</mo><mo stretchy="false" form="prefix">|</mo><mo
+    stretchy="false" form="prefix">|</mo><msub><mi>π</mi><mtext mathvariant="normal">ref</mtext></msub><mo
+    stretchy="false" form="prefix">(</mo><mi>⋅</mi><mo stretchy="false" form="prefix">|</mo><msub><mi>s</mi><mi>i</mi></msub><mo
+    stretchy="false" form="postfix">)</mo><mo stretchy="false" form="postfix">)</mo><mo
+    stretchy="true" form="postfix">)</mo></mrow><mrow><mo stretchy="false" form="prefix">(</mo><mn>59</mn><mo
+    stretchy="false" form="postfix">)</mo></mrow></mrow> <annotation encoding="application/x-tex">J(\theta)
+    = \frac{1}{G}\sum_{i=1}^G \frac{1}{|a_i|} \sum_{t=1}^{|a_i|} \left( \min\left(\frac{\pi_\theta(a_{i,t}|s_{i})}{\pi_{\theta_{\text{old}}}(a_{i,t}|s_{i})}A_{i,t},
+    \text{clip} \left( \frac{\pi_\theta(a_{i,t}|s_{i})}{\pi_{\theta_{\text{old}}}(a_{i,t}|s_{i})},
+    1-\varepsilon, 1+\varepsilon \right) A_{i,t} \right) - \beta \mathcal{D}_{\text{KL}}(\pi_\theta(\cdot|s_{i})||\pi_{\text{ref}}(\cdot|s_{i}))
+    \right) \qquad{(59)}</annotation></semantics>
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'With the advantage computation for the completion index <semantics><mi>i</mi><annotation
+    encoding="application/x-tex">i</annotation></semantics>:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: <semantics><mrow><msub><mi>A</mi><mi>i</mi></msub><mo>=</mo><mfrac><mrow><msub><mi>r</mi><mi>i</mi></msub><mo>−</mo><mtext
+    mathvariant="normal">mean</mtext><mo stretchy="false" form="prefix">(</mo><mrow><msub><mi>r</mi><mn>1</mn></msub><mo>,</mo><msub><mi>r</mi><mn>2</mn></msub><mo>,</mo><mi>⋯</mi><mo>,</mo><msub><mi>r</mi><mi>G</mi></msub></mrow><mo
+    stretchy="false" form="postfix">)</mo></mrow><mrow><mtext mathvariant="normal">std</mtext><mo
+    stretchy="false" form="prefix">(</mo><mrow><msub><mi>r</mi><mn>1</mn></msub><mo>,</mo><msub><mi>r</mi><mn>2</mn></msub><mo>,</mo><mi>⋯</mi><mo>,</mo><msub><mi>r</mi><mi>G</mi></msub></mrow><mo
+    stretchy="false" form="postfix">)</mo></mrow></mfrac><mi>.</mi><mrow><mo stretchy="false"
+    form="prefix">(</mo><mn>60</mn><mo stretchy="false" form="postfix">)</mo></mrow></mrow><annotation
+    encoding="application/x-tex">A_i = \frac{r_i - \text{mean}({r_1, r_2, \cdots,
+    r_G})}{\text{std}({r_1, r_2, \cdots, r_G})}.\qquad{(60)}</annotation></semantics>
+  prefs: []
+  type: TYPE_NORMAL
+- en: Intuitively, the GRPO update is comparing multiple answers to a single question
+    within a batch. The model learns to become more like the answers marked as correct
+    and less like the others. This is a very simple way to compute the advantage,
+    which is the measure of how much better a specific action is than the average
+    at a given state. Relative to PPO, REINFORCE, and broadly RLHF performed with
+    a reward model rating (relative to output reward), GRPO is often run with a far
+    higher number of samples per prompt because the advantage is entirely about the
+    relative value of a completion to its peers from that prompt. Here, the current
+    policy generates multiple responses to a given prompt, and the group-wise GRPO
+    advantage estimate is given valuable context. PPO and vanilla policy-gradient
+    algorithms were designed to accurately estimate the reward of every completion
+    (in fact, more completions can do little to improve the value estimate in some
+    cases). GRPO and its variants are particularly well-suited to modern language
+    model tools, where multiple completions to a given prompt is very natural (especially
+    when compared to, e.g., multiple actions from a set environment state in a robotic
+    task).
+  prefs: []
+  type: TYPE_NORMAL
+- en: The advantage computation for GRPO has trade-offs in its biases. The normalization
+    by standard deviation is rewarding questions in a batch that have a low variation
+    in answer correctness. For questions with either nearly all correct or all incorrect
+    answers, the standard deviation will be lower and the advantage will be higher.
+    [[185]](ch021.xhtml#ref-liu2025understanding) proposes removing the standard deviation
+    term given this bias, but this comes at the cost of down-weighing questions that
+    were all incorrect with a few correct answers, which could be seen as valuable
+    learning signal for the model. Those high-variance prompts can be exactly the
+    hardest cases, where only a few sampled completions find the correct answer and
+    provide a strong training signal.
+  prefs: []
+  type: TYPE_NORMAL
+- en: eq. [60](ch011.xhtml#eq:GRPO_ADV) is the implementation of GRPO when working
+    with outcome supervision (either a standard reward model or a single verifiable
+    reward) and a different implementation is needed with process supervision. In
+    this case, GRPO computes the advantage as the sum of the normalized rewards for
+    the following reasoning steps.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Finally, GRPO’s advantage estimation can also be applied without the PPO clipping
+    to more vanilla versions of policy gradient (e.g. REINFORCE), but it is not the
+    canonical form. As an example of how these algorithms are intertwined, we can
+    show that the advantage estimation in a variant of GRPO, Dr. GRPO (GRPO Done Right)
+    [[185]](ch021.xhtml#ref-liu2025understanding), is equivalent to the RLOO estimation
+    (which uses the average reward of other samples as its baseline) up to a constant
+    scaling factor (which normally does not matter due to implementation details to
+    normalize the advantage). Dr. GRPO removes the standard deviation normalization
+    term from eq. [60](ch011.xhtml#eq:GRPO_ADV) – note that this also scales the advantage
+    *up*, which is equivalent to increasing the GRPO learning rate on samples with
+    a variance in answer scores. This addresses a bias towards questions with low
+    reward variance – i.e. almost all the answers are right or wrong – but comes at
+    a potential cost where problems where just one sample gets the answer right are
+    important to learn from. The Dr. GRPO advantage for completion <semantics><mi>i</mi><annotation
+    encoding="application/x-tex">i</annotation></semantics> within a group of size
+    <semantics><mi>G</mi><annotation encoding="application/x-tex">G</annotation></semantics>
+    is defined as:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: <semantics><mrow><msub><mover><mi>A</mi><mo accent="true">̃</mo></mover><mi>i</mi></msub><mo>=</mo><msub><mi>r</mi><mi>i</mi></msub><mo>−</mo><mtext
+    mathvariant="normal">mean</mtext><mo stretchy="false" form="prefix">(</mo><mrow><msub><mi>r</mi><mn>1</mn></msub><mo>,</mo><msub><mi>r</mi><mn>2</mn></msub><mo>,</mo><mi>⋯</mi><mo>,</mo><msub><mi>r</mi><mi>G</mi></msub></mrow><mo
+    stretchy="false" form="postfix">)</mo><mo>=</mo><msub><mi>r</mi><mi>i</mi></msub><mo>−</mo><mfrac><mn>1</mn><mi>G</mi></mfrac><munderover><mo>∑</mo><mrow><mi>j</mi><mo>=</mo><mn>1</mn></mrow><mi>G</mi></munderover><msub><mi>r</mi><mi>j</mi></msub><mrow><mo
+    stretchy="false" form="prefix">(</mo><mn>61</mn><mo stretchy="false" form="postfix">)</mo></mrow></mrow>
+    <annotation encoding="application/x-tex">\tilde{A}_i = r_i - \text{mean}({r_1,
+    r_2, \cdots, r_G}) = r_i - \frac{1}{G}\sum_{j=1}^G r_j \qquad{(61)}</annotation></semantics>
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Here, in the same notation, we can recall the RLOO advantage estimation as:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: <semantics><mrow><msubsup><mi>A</mi><mi>i</mi><mtext mathvariant="normal">RLOO</mtext></msubsup><mo>=</mo><msub><mi>r</mi><mi>i</mi></msub><mo>−</mo><mfrac><mn>1</mn><mrow><mi>G</mi><mo>−</mo><mn>1</mn></mrow></mfrac><munderover><mo>∑</mo><mrow><mi>j</mi><mo>=</mo><mn>1</mn><mo>,</mo><mi>i</mi><mo>≠</mo><mi>j</mi></mrow><mi>G</mi></munderover><msub><mi>r</mi><mi>j</mi></msub><mrow><mo
+    stretchy="false" form="prefix">(</mo><mn>62</mn><mo stretchy="false" form="postfix">)</mo></mrow></mrow>
+    <annotation encoding="application/x-tex">A_i^\text{RLOO} = r_i - \frac{1}{G-1}\sum_{j=1,
+    i\neq j}^G r_j \qquad{(62)}</annotation></semantics>
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Thus, if we multiply the Dr. GRPO advantage definition by <semantics><mfrac><mi>G</mi><mrow><mi>G</mi><mo>−</mo><mn>1</mn></mrow></mfrac><annotation
+    encoding="application/x-tex">\frac{G}{G-1}</annotation></semantics> we can see
+    a scaled equivalence:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '<semantics><mrow><mtable><mtr><mtd columnalign="right" style="text-align: right;
+    padding-right: 0"><mfrac><mi>G</mi><mrow><mi>G</mi><mo>−</mo><mn>1</mn></mrow></mfrac><msub><mover><mi>A</mi><mo
+    accent="true">̃</mo></mover><mi>i</mi></msub></mtd><mtd columnalign="left" style="text-align:
+    left; padding-left: 0"><mo>=</mo><mfrac><mi>G</mi><mrow><mi>G</mi><mo>−</mo><mn>1</mn></mrow></mfrac><mrow><mo
+    stretchy="true" form="prefix">(</mo><msub><mi>r</mi><mi>i</mi></msub><mo>−</mo><mfrac><mn>1</mn><mi>G</mi></mfrac><munderover><mo>∑</mo><mrow><mi>j</mi><mo>=</mo><mn>1</mn></mrow><mi>G</mi></munderover><msub><mi>r</mi><mi>j</mi></msub><mo
+    stretchy="true" form="postfix">)</mo></mrow></mtd></mtr><mtr><mtd columnalign="left"
+    style="text-align: left; padding-left: 0"><mo>=</mo><mfrac><mi>G</mi><mrow><mi>G</mi><mo>−</mo><mn>1</mn></mrow></mfrac><msub><mi>r</mi><mi>i</mi></msub><mo>−</mo><mfrac><mn>1</mn><mrow><mi>G</mi><mo>−</mo><mn>1</mn></mrow></mfrac><munderover><mo>∑</mo><mrow><mi>j</mi><mo>=</mo><mn>1</mn></mrow><mi>G</mi></munderover><msub><mi>r</mi><mi>j</mi></msub></mtd></mtr><mtr><mtd
+    columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mfrac><mi>G</mi><mrow><mi>G</mi><mo>−</mo><mn>1</mn></mrow></mfrac><msub><mi>r</mi><mi>i</mi></msub><mo>−</mo><mfrac><mn>1</mn><mrow><mi>G</mi><mo>−</mo><mn>1</mn></mrow></mfrac><munderover><mo>∑</mo><mrow><mi>j</mi><mo>=</mo><mn>1</mn><mo>,</mo><mi>j</mi><mo>≠</mo><mi>i</mi></mrow><mi>G</mi></munderover><msub><mi>r</mi><mi>j</mi></msub><mo>−</mo><mfrac><mn>1</mn><mrow><mi>G</mi><mo>−</mo><mn>1</mn></mrow></mfrac><msub><mi>r</mi><mi>i</mi></msub></mtd></mtr><mtr><mtd
+    columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><msub><mi>r</mi><mi>i</mi></msub><mrow><mo
+    stretchy="true" form="prefix">(</mo><mfrac><mi>G</mi><mrow><mi>G</mi><mo>−</mo><mn>1</mn></mrow></mfrac><mo>−</mo><mfrac><mn>1</mn><mrow><mi>G</mi><mo>−</mo><mn>1</mn></mrow></mfrac><mo
+    stretchy="true" form="postfix">)</mo></mrow><mo>−</mo><mfrac><mn>1</mn><mrow><mi>G</mi><mo>−</mo><mn>1</mn></mrow></mfrac><munderover><mo>∑</mo><mrow><mi>j</mi><mo>=</mo><mn>1</mn><mo>,</mo><mi>j</mi><mo>≠</mo><mi>i</mi></mrow><mi>G</mi></munderover><msub><mi>r</mi><mi>j</mi></msub></mtd></mtr><mtr><mtd
+    columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><msub><mi>r</mi><mi>i</mi></msub><mo>−</mo><mfrac><mn>1</mn><mrow><mi>G</mi><mo>−</mo><mn>1</mn></mrow></mfrac><munderover><mo>∑</mo><mrow><mi>j</mi><mo>=</mo><mn>1</mn><mo>,</mo><mi>j</mi><mo>≠</mo><mi>i</mi></mrow><mi>G</mi></munderover><msub><mi>r</mi><mi>j</mi></msub></mtd></mtr><mtr><mtd
+    columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><msubsup><mi>A</mi><mi>i</mi><mtext
+    mathvariant="normal">RLOO</mtext></msubsup></mtd></mtr></mtable><mrow><mo stretchy="false"
+    form="prefix">(</mo><mn>63</mn><mo stretchy="false" form="postfix">)</mo></mrow></mrow>
+    <annotation encoding="application/x-tex">\begin{aligned} \frac{G}{G-1} \tilde{A}_i
+    &= \frac{G}{G-1} \left( r_i - \frac{1}{G}\sum_{j=1}^G r_j \right) \\ &= \frac{G}{G-1}
+    r_i - \frac{1}{G-1} \sum_{j=1}^G r_j \\ &= \frac{G}{G-1} r_i - \frac{1}{G-1} \sum_{j=1,
+    j\neq i}^G r_j - \frac{1}{G-1} r_i \\ &= r_i \left( \frac{G}{G-1} - \frac{1}{G-1}
+    \right) - \frac{1}{G-1} \sum_{j=1, j\neq i}^G r_j \\ &= r_i - \frac{1}{G-1} \sum_{j=1,
+    j\neq i}^G r_j \\ &= A_i^{\text{RLOO}} \end{aligned} \qquad{(63)}</annotation></semantics>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Implementation
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Compared to the original Deep RL literature where many of these algorithms were
+    developed, implementing RL for optimizing language models or other large AI models
+    requires many small implementation details. In this section, we highlight some
+    key factors that differentiate the implementations of popular algorithms.
+  prefs: []
+  type: TYPE_NORMAL
+- en: There are many other small details that go into this training. For example,
+    when doing RLHF with language models a crucial step is generating text that will
+    then be rated by the reward model. Under normal circumstances, the model should
+    generate an end-of-sequence (EOS) token indicating it finished generating, but
+    a common practice is to put a hard cap on generation length to efficiently utilize
+    infrastructure. A failure mode of RLHF is that the model is regularly truncated
+    in its answers, driving the ratings from the reward model out of distribution
+    and to unpredictable scores. The solution to this is to *only* run reward model
+    scoring on the `eos_token`, and to otherwise assign a penalty to the model for
+    generating too long.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The popular open-source tools for RLHF have a large variance in implementation
+    details across the algorithms (see table 10 in [[190]](ch021.xhtml#ref-ivison2024unpacking)).
+    Some decisions not covered here include:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Value network initialization**: The internal learned value network used by
+    PPO and other similar algorithms can be started from a different model of the
+    same architecture or randomly selected weights. This can have a large impact on
+    performance. The standard established in InstructGPT [[3]](ch021.xhtml#ref-ouyang2022training)
+    (and re-used in Tülu 3 for its work on RLVR [[6]](ch021.xhtml#ref-lambert2024t))
+    is to initialize the value network from the reward model used during RLHF. Others
+    have used the previous checkpoint to RLHF training (normally an SFT model) with
+    a value head appened randomly initialized, or fully re-initialized language models
+    (less common as it will take longer for RLHF to converge, but possible).'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Reward normalization, reward whitening, and/or advantage whitening**: Normalization
+    bounds all the values from the RM (or environment) to be between 0 and 1, which
+    can help with learning stability. [Whitening](https://en.wikipedia.org/wiki/Whitening_transformation)
+    goes further by transforming rewards or advantage estimates to have zero mean
+    and unit variance, providing an even stronger boost to stability.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Different KL estimators**: With complex language models, precisely computing
+    the KL divergence between models can be complex, so multiple approximations are
+    used to substitute for an exact calculation [[164]](ch021.xhtml#ref-schulman2016klapprox).'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**KL controllers**: Original implementations of PPO and related algorithms
+    had dynamic controllers that targeted specific KLs and changed the penalty based
+    on recent measurements. Most modern RLHF implementations use static KL penalties,
+    but this can also vary.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: For more details on implementation details for RLHF, see [[191]](ch021.xhtml#ref-huang2024n).
+    For further information on the algorithms, see [[192]](ch021.xhtml#ref-weng2018PG).
+  prefs: []
+  type: TYPE_NORMAL
+- en: Policy Gradient Basics
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: 'A simple implementation of policy gradient, using advantages to estimate the
+    gradient to prepare for advanced algorithms such as PPO and GRPO follows:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE1]'
+  prefs: []
+  type: TYPE_PRE
+- en: Ratio here is the (per-token) probability ratio (often computed from a log-probability
+    difference) of the new policy model probabilities relative to the reference model.
+  prefs: []
+  type: TYPE_NORMAL
+- en: In order to understand this equation, it is good to understand different cases
+    that can fall within a batch of updates. Remember that we want the loss to *decrease*
+    as the model gets better at the task.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Case 1: Positive advantage, so the action was better than the expected value
+    of the state. We want to reinforce this. In this case, the model will make this
+    more likely with the negative sign. To do so, it’ll increase the logratio. A positive
+    logratio, or sum of log probabilities of the tokens, means that the model is more
+    likely to generate those tokens.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Case 2: Negative advantage, so the action was worse than the expected value
+    of the state. This follows very similarly. Here, the loss will be positive if
+    the new model was more likely, so the model will try to make it so the policy
+    parameters make this completion less likely.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Case 3: Zero advantage, so no update is needed. The loss is zero, don’t change
+    the policy model.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Loss Aggregation
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: 'The question when implementing any policy gradient algorithm with language
+    models is: How do you aggregate per-token losses into a final scalar loss? Given
+    per-token losses <semantics><msub><mi>ℓ</mi><mrow><mi>i</mi><mo>,</mo><mi>t</mi></mrow></msub><annotation
+    encoding="application/x-tex">\ell_{i,t}</annotation></semantics> for sample <semantics><mi>i</mi><annotation
+    encoding="application/x-tex">i</annotation></semantics> at token <semantics><mi>t</mi><annotation
+    encoding="application/x-tex">t</annotation></semantics>, with completion lengths
+    <semantics><mrow><mo stretchy="false" form="prefix">|</mo><msub><mi>a</mi><mi>i</mi></msub><mo
+    stretchy="false" form="prefix">|</mo></mrow><annotation encoding="application/x-tex">|a_i|</annotation></semantics>
+    and batch size <semantics><mi>B</mi><annotation encoding="application/x-tex">B</annotation></semantics>,
+    there are three main strategies:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Strategy 1: Per-sequence normalization** (standard GRPO; also used in some
+    PPO implementations)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: <semantics><mrow><mi>L</mi><mo>=</mo><mfrac><mn>1</mn><mi>B</mi></mfrac><munderover><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>B</mi></munderover><mfrac><mn>1</mn><mrow><mo
+    stretchy="false" form="prefix">|</mo><msub><mi>a</mi><mi>i</mi></msub><mo stretchy="false"
+    form="prefix">|</mo></mrow></mfrac><munderover><mo>∑</mo><mrow><mi>t</mi><mo>=</mo><mn>1</mn></mrow><mrow><mo
+    stretchy="false" form="prefix">|</mo><msub><mi>a</mi><mi>i</mi></msub><mo stretchy="false"
+    form="prefix">|</mo></mrow></munderover><msub><mi>ℓ</mi><mrow><mi>i</mi><mo>,</mo><mi>t</mi></mrow></msub></mrow><annotation
+    encoding="application/x-tex">L = \frac{1}{B} \sum_{i=1}^{B} \frac{1}{|a_i|} \sum_{t=1}^{|a_i|}
+    \ell_{i,t}</annotation></semantics>
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Each sequence contributes equally to the batch loss, regardless of length.
+    In code:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE2]'
+  prefs: []
+  type: TYPE_PRE
+- en: '**Strategy 2: Per-token normalization** (DAPO [[193]](ch021.xhtml#ref-yu2025dapo))'
+  prefs: []
+  type: TYPE_NORMAL
+- en: <semantics><mrow><mi>L</mi><mo>=</mo><mfrac><mrow><munderover><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>B</mi></munderover><munderover><mo>∑</mo><mrow><mi>t</mi><mo>=</mo><mn>1</mn></mrow><mrow><mo
+    stretchy="false" form="prefix">|</mo><msub><mi>a</mi><mi>i</mi></msub><mo stretchy="false"
+    form="prefix">|</mo></mrow></munderover><msub><mi>ℓ</mi><mrow><mi>i</mi><mo>,</mo><mi>t</mi></mrow></msub></mrow><mrow><munderover><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>B</mi></munderover><mo
+    stretchy="false" form="prefix">|</mo><msub><mi>a</mi><mi>i</mi></msub><mo stretchy="false"
+    form="prefix">|</mo></mrow></mfrac></mrow><annotation encoding="application/x-tex">L
+    = \frac{\sum_{i=1}^{B} \sum_{t=1}^{|a_i|} \ell_{i,t}}{\sum_{i=1}^{B} |a_i|}</annotation></semantics>
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Each token contributes equally; longer sequences have proportionally more influence
+    on the gradient. In code:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE3]'
+  prefs: []
+  type: TYPE_PRE
+- en: '**Strategy 3: Fixed-length normalization** (Dr. GRPO [[185]](ch021.xhtml#ref-liu2025understanding))'
+  prefs: []
+  type: TYPE_NORMAL
+- en: <semantics><mrow><mi>L</mi><mo>=</mo><mfrac><mn>1</mn><mi>B</mi></mfrac><munderover><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>B</mi></munderover><mfrac><mn>1</mn><msub><mi>L</mi><mi
+    mathvariant="normal">max</mi></msub></mfrac><munderover><mo>∑</mo><mrow><mi>t</mi><mo>=</mo><mn>1</mn></mrow><mrow><mo
+    stretchy="false" form="prefix">|</mo><msub><mi>a</mi><mi>i</mi></msub><mo stretchy="false"
+    form="prefix">|</mo></mrow></munderover><msub><mi>ℓ</mi><mrow><mi>i</mi><mo>,</mo><mi>t</mi></mrow></msub></mrow><annotation
+    encoding="application/x-tex">L = \frac{1}{B} \sum_{i=1}^{B} \frac{1}{L_{\max}}
+    \sum_{t=1}^{|a_i|} \ell_{i,t}</annotation></semantics>
+  prefs: []
+  type: TYPE_NORMAL
+- en: Normalizes by max sequence length <semantics><msub><mi>L</mi><mi mathvariant="normal">max</mi></msub><annotation
+    encoding="application/x-tex">L_{\max}</annotation></semantics>, equalizing the
+    per-token scale across sequences while still letting longer sequences contribute
+    more total gradient because they contain more active tokens.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Note that `completion_mask` in the code above is a matrix of 1s and 0s, where
+    the prompt tokens are masked out (0s) because we don’t want the model to learn
+    from predicting prompt tokens.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Why does this matter?
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: 'Intuitively, per-sequence normalization (Strategy 1) seems best since we care
+    about *outcomes*, not individual tokens. However, this introduces subtle biases
+    based on sequence length, which can cause the model to overthink of down-weight
+    strategies that naturally need to use more tokens, depending on the direction
+    of the bias. Consider two sequences of different lengths with per-token losses:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE4]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'With **Strategy 1** (per-sequence): The batch loss is <semantics><mrow><mo
+    stretchy="false" form="prefix">(</mo><mn>2.8</mn><mo>+</mo><mn>1.9</mn><mo stretchy="false"
+    form="postfix">)</mo><mi>/</mi><mn>2</mn><mo>=</mo><mn>2.35</mn></mrow><annotation
+    encoding="application/x-tex">(2.8 + 1.9)/2 = 2.35</annotation></semantics>, and
+    crucially, each token in the short sequence receives a larger gradient than tokens
+    in the long sequence.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'With **Strategy 2** (per-token): The batch loss is <semantics><mrow><mo stretchy="false"
+    form="prefix">(</mo><mn>14</mn><mo>+</mo><mn>19</mn><mo stretchy="false" form="postfix">)</mo><mi>/</mi><mn>15</mn><mo>=</mo><mn>2.2</mn></mrow><annotation
+    encoding="application/x-tex">(14 + 19)/15 = 2.2</annotation></semantics>, and
+    all tokens receive equal gradient magnitude.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'With **Strategy 3** (fixed-length with <semantics><mrow><msub><mi>L</mi><mi
+    mathvariant="normal">max</mi></msub><mo>=</mo><mn>10</mn></mrow><annotation encoding="application/x-tex">L_{\max}=10</annotation></semantics>):
+    The short sequence contributes <semantics><mn>1.4</mn><annotation encoding="application/x-tex">1.4</annotation></semantics>
+    and the long sequence contributes <semantics><mn>1.9</mn><annotation encoding="application/x-tex">1.9</annotation></semantics>,
+    balancing per-token gradients while still weighting by sequence.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: For a more complete example showing how these strategies affect gradients, see
+    the script below.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE5]'
+  prefs: []
+  type: TYPE_PRE
+- en: The output shows that with Strategy 1 (`masked_mean`), the short sequence has
+    larger per-token gradients (0.25) than the long sequence (0.14). Strategies 2
+    and 3 equalize the per-token gradients across sequences. Note that these results
+    can vary substantially if gradient accumulation is used, where the gradients are
+    summed across multiple minibatches before taking a backward step—in this case,
+    the balance between shorter and longer sequences can flip.
+  prefs: []
+  type: TYPE_NORMAL
+- en: In practice, the best strategy depends on the specific training setup. Often
+    in RLHF the method with the best numerical stability or the least variance in
+    loss is preferred.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Related: MDP vs Bandit Framing'
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: The choice of loss aggregation connects to a deeper distinction in how we frame
+    the RL problem. The **MDP (token-level)** view treats each token <semantics><msub><mi>a</mi><mi>t</mi></msub><annotation
+    encoding="application/x-tex">a_t</annotation></semantics> as an action with state
+    <semantics><msub><mi>s</mi><mi>t</mi></msub><annotation encoding="application/x-tex">s_t</annotation></semantics>
+    being the running prefix. In practice, this is the framing used when we compute
+    token-level advantages with a learned value function <semantics><mrow><mi>V</mi><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>s</mi><mi>t</mi></msub><mo stretchy="false"
+    form="postfix">)</mo></mrow><annotation encoding="application/x-tex">V(s_t)</annotation></semantics>
+    (e.g., GAE [[179]](ch021.xhtml#ref-schulman2015high)) and apply KL penalties per
+    token. PPO with a learned value network is the canonical example [[183]](ch021.xhtml#ref-schulman2017proximal).
+  prefs: []
+  type: TYPE_NORMAL
+- en: In contrast, the **bandit (sequence-level)** view treats the whole completion
+    as a single action with one scalar reward <semantics><mi>R</mi><annotation encoding="application/x-tex">R</annotation></semantics>.
+    In code, this means computing a sequence-level advantage <semantics><msub><mi>A</mi><mtext
+    mathvariant="normal">seq</mtext></msub><annotation encoding="application/x-tex">A_{\text{seq}}</annotation></semantics>
+    and broadcasting it to all tokens. RLOO and GRPO-style advantages are often used
+    in this bandit-style setting [[182]](ch021.xhtml#ref-kool2019buy) [[178]](ch021.xhtml#ref-ahmadian2024back)
+    [[188]](ch021.xhtml#ref-shao2024deepseekmath). Direct alignment methods like DPO
+    and A-LoL also define sequence-level objectives, although they are not policy-gradient
+    estimators [[194]](ch021.xhtml#ref-baheti2023leftover).
+  prefs: []
+  type: TYPE_NORMAL
+- en: Note that many GRPO implementations use a bandit-style advantage *and* add a
+    separate per-token KL term in the loss, while many PPO/RLOO implementations fold
+    KL into the reward before computing advantages; both conventions exist in practice.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Asynchronicity
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: The default implementation for policy-gradient algorithms is what is called
+    **on-policy** execution, where the actions (generations) taken by the agent (language
+    model) are scored before updating the model. The theoretical derivations of policy-gradient
+    rely on all actions being exactly on-policy where the model is always up to date
+    with the results from the latest trials/roll-outs. In practice, maintaining exact
+    on-policy execution substantially slows training [[195]](ch021.xhtml#ref-noukhovitch2024asynchronous)—and
+    perfect synchronization is technically impossible regardless. Therefore, all of
+    the recent empirical results with language models tend to be slightly outside
+    of the theoretical proofs. What happens in practice is designing the algorithms
+    and systems for what actually works.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 16: A comparison of the generation-update phases for synchronous or
+    asynchronous RL training following Noukhovitch et al. 2024.](../media/file14.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Figure 16: A comparison of the generation-update phases for synchronous or
+    asynchronous RL training following Noukhovitch et al. 2024.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: The common solution used is to constantly run inference and training on separate
+    GPU nodes with software designed to efficiently run both, as shown in the bottom
+    of fig. [16](#fig:async). Common practice in popular open-source RL tools for
+    language models is to use a distributed process management library such as Ray
+    to hand information off between the policy-gradient learning loop and the inference
+    loop using an efficient inference engine, e.g., VLLM. In these setups, the GPUs
+    dedicated to taking the RL steps are called the “leaners” and the GPUs dedicated
+    to sampling from the language model are called the “actors” The primary challenges
+    faced when making training more asynchronous are keeping training stable and maintaining
+    learning signal.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 17: An example distributed RL system, where two queues are managed
+    to pass data to the learner and actor GPUs, which can both be synchonized with
+    a distributed computing library such as Ray. Olmo Team 2025, license CC-BY.](../media/file15.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Figure 17: An example distributed RL system, where two queues are managed to
+    pass data to the learner and actor GPUs, which can both be synchonized with a
+    distributed computing library such as Ray. Olmo Team 2025, license CC-BY.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: These systems are designed and implemented with the presumption that nearly
+    on-policy data is good enough for stable learning. Here, the generation and update
+    phases can easily be synced to avoid idle compute on either piece of the training
+    system, which would be passing model weights from the leaners to the actors in
+    fig. [17](#fig:async_system). With reasoning models, the extremely long inference
+    characteristics of problems requiring 10K to 100K+ tokens per answer makes the
+    generation of roll-outs a far stronger bottleneck. A common problem when training
+    reasoning models on more synchronous RL infrastructure is that an answer to one
+    prompt in the batch can take substantially more time to generate (either through
+    more tokens or more tool calls), resulting in the majority of the allocated compute
+    being idle until it completes. A second solution to this length mismatch issue,
+    called sequence-level packing, is to stack shorter samples within a batch with
+    clever masking to enable continued roll-outs from the model and better distribute
+    length normalization across samples within a batch. The full complexity of distributed
+    RL infrastructure is out of scope for this book, as it can cause many other subtle
+    issues that slow down training or cause instability.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Following the emergence of these reasoning models, further interest has been
+    taken to make the training and inference loops fully off-policy, where training
+    batches for the policy gradient updates are filled with the most recently completed
+    roll-outs across multiple instances generating answers [[196]](ch021.xhtml#ref-wu2025llamarl)
+    [[197]](ch021.xhtml#ref-fu2025areal). Fully asynchronous training would also enable
+    scaling RL training runs across multiple datacenters more easily due to the option
+    of increasing the time between weight syncs between the learner node (taking policy
+    gradient steps) and the actor (trying to solve problems) [[198]](ch021.xhtml#ref-primeintellectteam2025intellect2reasoningmodeltrained).
+  prefs: []
+  type: TYPE_NORMAL
+- en: Related methods are exploring fully off-policy policy gradient algorithms [[199]](ch021.xhtml#ref-roux2025tapered).
+  prefs: []
+  type: TYPE_NORMAL
+- en: Proximal Policy Optimization
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: There are many, many implementations of PPO available. The core *loss* computation
+    is shown below. Crucial to stable performance is also the *value* computation,
+    where multiple options exist (including multiple options for the *value model*
+    loss).
+  prefs: []
+  type: TYPE_NORMAL
+- en: Note that the reference policy (or old logprobs) here are from the time the
+    generations were sampled and not necessarily the reference policy. The reference
+    policy is only used for the KL distance constraint/penalty.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE6]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'The core piece to understand with PPO is how the policy gradient loss is updated.
+    Focus on these three lines:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE7]'
+  prefs: []
+  type: TYPE_PRE
+- en: '`pg_losses1` is the vanilla advantage-weighted policy gradient loss. `pg_losses2`
+    applies the same formula but with the probability ratio clamped to the range <semantics><mrow><mo
+    stretchy="false" form="prefix">[</mo><mn>1</mn><mo>−</mo><mi>ε</mi><mo>,</mo><mn>1</mn><mo>+</mo><mi>ε</mi><mo
+    stretchy="false" form="postfix">]</mo></mrow><annotation encoding="application/x-tex">[1-\varepsilon,
+    1+\varepsilon]</annotation></semantics>, limiting how much the policy can change
+    in a single update.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: The key insight is taking `torch.max` of the two losses. Because we’re minimizing
+    a *negative* loss (recall the negative sign in front of advantages), taking the
+    maximum selects the more pessimistic gradient—the one that produces a smaller
+    policy update. When the advantage is positive (good action), clipping prevents
+    the policy from increasing that action’s probability too aggressively. When the
+    advantage is negative (bad action), clipping prevents over-correction in the other
+    direction.
+  prefs: []
+  type: TYPE_NORMAL
+- en: By clamping the log-probability ratio, PPO bounds how far the policy can drift
+    from the version that generated the training data, stabilizing learning without
+    requiring an explicit trust region computation.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The code above also shows PPO learning a value function alongside the policy,
+    which adds implementation complexity, but the clipped objective is the core mechanism.
+  prefs: []
+  type: TYPE_NORMAL
+- en: PPO/GRPO simplification with 1 gradient step per sample (no clipping)
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: 'PPO (and GRPO) implementations can be handled much more elegantly if the hyperparameter
+    “number of gradient steps per sample” is equal to 1\. Many typical values for
+    this are from 2-4 or higher. In the main PPO or GRPO equations, see eq. [54](ch011.xhtml#eq:PPO_EQN),
+    the “reference” policy is the previous parameters – those used to generate the
+    completions or actions. Thus, if only one gradient step is taken, <semantics><mrow><msub><mi>π</mi><mi>θ</mi></msub><mo>=</mo><msub><mi>π</mi><msub><mi>θ</mi><mtext
+    mathvariant="normal">old</mtext></msub></msub></mrow><annotation encoding="application/x-tex">\pi_\theta
+    = \pi_{\theta_{\text{old}}}</annotation></semantics>, and the update rule reduces
+    to the following (the notation <semantics><mrow><mo stretchy="false" form="prefix">[</mo><msub><mo
+    stretchy="false" form="postfix">]</mo><mi>∇</mi></msub></mrow><annotation encoding="application/x-tex">[]_\nabla</annotation></semantics>
+    indicates a stop gradient):'
+  prefs: []
+  type: TYPE_NORMAL
+- en: <semantics><mrow><mi>J</mi><mo stretchy="false" form="prefix">(</mo><mi>θ</mi><mo
+    stretchy="false" form="postfix">)</mo><mo>=</mo><mfrac><mn>1</mn><mi>G</mi></mfrac><munderover><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>G</mi></munderover><mrow><mo
+    stretchy="true" form="prefix">(</mo><mfrac><mrow><msub><mi>π</mi><mi>θ</mi></msub><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>a</mi><mi>i</mi></msub><mo stretchy="false"
+    form="prefix">|</mo><mi>s</mi><mo stretchy="false" form="postfix">)</mo></mrow><msub><mrow><mo
+    stretchy="true" form="prefix">[</mo><msub><mi>π</mi><mi>θ</mi></msub><mo stretchy="false"
+    form="prefix">(</mo><msub><mi>a</mi><mi>i</mi></msub><mo stretchy="false" form="prefix">|</mo><mi>s</mi><mo
+    stretchy="false" form="postfix">)</mo><mo stretchy="true" form="postfix">]</mo></mrow><mi>∇</mi></msub></mfrac><msub><mi>A</mi><mi>i</mi></msub><mo>−</mo><mi>β</mi><msub><mi>𝒟</mi><mtext
+    mathvariant="normal">KL</mtext></msub><mo stretchy="false" form="prefix">(</mo><msub><mi>π</mi><mi>θ</mi></msub><mo
+    stretchy="false" form="prefix">|</mo><mo stretchy="false" form="prefix">|</mo><msub><mi>π</mi><mtext
+    mathvariant="normal">ref</mtext></msub><mo stretchy="false" form="postfix">)</mo><mo
+    stretchy="true" form="postfix">)</mo></mrow><mi>.</mi><mrow><mo stretchy="false"
+    form="prefix">(</mo><mn>64</mn><mo stretchy="false" form="postfix">)</mo></mrow></mrow><annotation
+    encoding="application/x-tex">J(\theta) = \frac{1}{G}\sum_{i=1}^G \left(\frac{\pi_\theta(a_i|s)}{\left[\pi_{\theta}(a_i|s)\right]_\nabla}A_i
+    - \beta \mathcal{D}_{\text{KL}}(\pi_\theta||\pi_{\text{ref}})\right). \qquad{(64)}</annotation></semantics>
+  prefs: []
+  type: TYPE_NORMAL
+- en: This leads to PPO or GRPO implementations where the second policy gradient and
+    clipping logic can be omitted, making the optimizer far closer to standard policy
+    gradient.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Group Relative Policy Optimization
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: 'The DeepSeekMath paper describes some implementation details of GRPO that differ
+    from PPO [[188]](ch021.xhtml#ref-shao2024deepseekmath), especially if comparing
+    to a standard application of PPO from Deep RL rather than language models. For
+    example, the KL penalty within the RLHF optimization (recall the KL penalty is
+    also used when training reasoning models on verifiable rewards without a reward
+    model) is applied directly in the loss update rather than to the reward function.
+    Where the standard KL penalty application for RLHF is applied as <semantics><mrow><mi>r</mi><mo>=</mo><msub><mi>r</mi><mi>θ</mi></msub><mo>−</mo><mi>β</mi><msub><mi>𝒟</mi><mtext
+    mathvariant="normal">KL</mtext></msub></mrow><annotation encoding="application/x-tex">r=r_\theta
+    - \beta \mathcal{D}_{\text{KL}}</annotation></semantics>, the GRPO implementation
+    is along the lines of:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: <semantics><mrow><mi>L</mi><mo>=</mo><msub><mi>L</mi><mtext mathvariant="normal">policy
+    gradient</mtext></msub><mo>+</mo><mi>β</mi><mo>*</mo><msub><mi>𝒟</mi><mtext mathvariant="normal">KL</mtext></msub></mrow>
+    <annotation encoding="application/x-tex">L = L_{\text{policy gradient}} + \beta
+    * \mathcal{D}_{\text{KL}}</annotation></semantics>
+  prefs: []
+  type: TYPE_NORMAL
+- en: Though, there are multiple ways to implement this. Traditionally, the KL distance
+    is computed with respect to each token in the completion to a prompt <semantics><mi>s</mi><annotation
+    encoding="application/x-tex">s</annotation></semantics>. For reasoning training,
+    multiple completions are sampled from one prompt, and there are multiple prompts
+    in one batch, so the KL distance will have a shape of [B, L, N], where B is the
+    batch size, L is the sequence length, and N is the number of completions per prompt.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Putting it together, using the first loss accumulation, the pseudocode can be
+    written as below.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE8]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'For more details on how to interpret this code, see the PPO section above.
+    The core differences from the PPO example are:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Advantage computation**: GRPO normalizes rewards relative to the group (mean
+    and std across generations for the same prompt) rather than using a learned value
+    function as baseline.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**No value network**: GRPO removes the value model entirely, eliminating `vf_loss`
+    and the associated complexity.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**KL penalty placement**: GRPO adds the KL penalty directly to the loss rather
+    than subtracting it from the reward (this is the standard implementation, but
+    more versions exist on how the KL is applied).'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: RLOO vs. GRPO
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: 'The advantage updates for RLOO follow very closely to GRPO, highlighting the
+    conceptual similarity of the algorithm when taken separately from the PPO style
+    clipping and KL penalty details. Specifically, for RLOO, the advantage is computed
+    relative to a baseline that is extremely similar to that of GRPO – the completion
+    reward relative to the others for that same question. Concisely, the RLOO advantage
+    estimate follows as (expanded from [TRL](https://github.com/huggingface/trl/blob/bfe20756082488350091352d1cdc19c172e42cd8/trl/trainer/rloo_trainer.py#L433)’s
+    implementation):'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE9]'
+  prefs: []
+  type: TYPE_PRE
+- en: The rest of the implementation details for RLOO follow the other trade-offs
+    of implementing policy-gradient.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Auxiliary Topics
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: In order to master the application of policy-gradient algorithms, there are
+    countless other considerations. Here we consider some of the long-tail of complexities
+    in successfully deploying a policy-gradient RL algorithm.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Comparing Algorithms
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: Here’s a summary of some of the discussed material (and foreshadowing to coming
+    material on Direct Preference Optimization) when applied to RLHF. Here, on- or
+    off-policy indicates the derivation (where most are applied slightly off-policy
+    in practice). A reference policy here indicates if it is required for the optimization
+    itself, rather than for a KL penalty.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Table 5: Comparing policy gradient algorithms (and friends).'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '| Method | Type | Reward Model | Value Function | Reference Policy | Core Loss
+    <semantics><mrow><mi>ℒ</mi><mo stretchy="false" form="prefix">(</mo><mi>θ</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\mathcal{L}(\theta)</annotation></semantics>
+    |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- | --- | --- | --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| **REINFORCE** | On-policy | Yes | No | No | <semantics><mrow><mi>−</mi><mfrac><mn>1</mn><mi>T</mi></mfrac><msubsup><mo>∑</mo><mrow><mi>t</mi><mo>=</mo><mn>1</mn></mrow><mi>T</mi></msubsup><mrow><mi
+    mathvariant="normal">log</mi><mo>⁡</mo></mrow><msub><mi>π</mi><mi>θ</mi></msub><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>a</mi><mi>t</mi></msub><mo>∣</mo><msub><mi>s</mi><mi>t</mi></msub><mo
+    stretchy="false" form="postfix">)</mo><mo minsize="120%" maxsize="120%" stretchy="true"
+    form="prefix">(</mo><msub><mi>G</mi><mi>t</mi></msub><mo>−</mo><mi>b</mi><mo stretchy="false"
+    form="prefix">(</mo><msub><mi>s</mi><mi>t</mi></msub><mo stretchy="false" form="postfix">)</mo><mo
+    minsize="120%" maxsize="120%" stretchy="true" form="postfix">)</mo></mrow><annotation
+    encoding="application/x-tex">-\frac{1}{T}\sum_{t=1}^{T}\log \pi_\theta(a_t\mid
+    s_t)\,\big(G_t - b(s_t)\big)</annotation></semantics> |'
+  prefs: []
+  type: TYPE_TB
+- en: '| **RLOO** | On-policy | Yes | No | No | <semantics><mrow><mi>−</mi><mfrac><mn>1</mn><mi>K</mi></mfrac><msubsup><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>K</mi></msubsup><msub><mo>∑</mo><mi>t</mi></msub><mrow><mi
+    mathvariant="normal">log</mi><mo>⁡</mo></mrow><msub><mi>π</mi><mi>θ</mi></msub><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>a</mi><mrow><mi>i</mi><mo>,</mo><mi>t</mi></mrow></msub><mo>∣</mo><msub><mi>s</mi><mrow><mi>i</mi><mo>,</mo><mi>t</mi></mrow></msub><mo
+    stretchy="false" form="postfix">)</mo><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>R</mi><mi>i</mi></msub><mo>−</mo><mfrac><mn>1</mn><mrow><mi>K</mi><mo>−</mo><mn>1</mn></mrow></mfrac><msub><mo>∑</mo><mrow><mi>j</mi><mo>≠</mo><mi>i</mi></mrow></msub><msub><mi>R</mi><mi>j</mi></msub><mo
+    stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">-\frac{1}{K}\sum_{i=1}^{K}\sum_t
+    \log \pi_\theta(a_{i,t}\mid s_{i,t})\left(R_i-\frac{1}{K-1}\sum_{j\neq i}R_j\right)</annotation></semantics>
+    |'
+  prefs: []
+  type: TYPE_TB
+- en: '| **PPO** | On-policy | Yes | Yes | Yes | <semantics><mrow><mi>−</mi><mfrac><mn>1</mn><mi>T</mi></mfrac><msubsup><mo>∑</mo><mrow><mi>t</mi><mo>=</mo><mn>1</mn></mrow><mi>T</mi></msubsup><mrow><mi
+    mathvariant="normal">min</mi><mo>⁡</mo></mrow><mo minsize="120%" maxsize="120%"
+    stretchy="true" form="prefix">(</mo><msub><mi>ρ</mi><mi>t</mi></msub><msub><mi>A</mi><mi>t</mi></msub><mo>,</mo><mrow><mi
+    mathvariant="normal">c</mi><mi mathvariant="normal">l</mi><mi mathvariant="normal">i</mi><mi
+    mathvariant="normal">p</mi></mrow><mo stretchy="false" form="prefix">(</mo><msub><mi>ρ</mi><mi>t</mi></msub><mo>,</mo><mn>1</mn><mo>−</mo><mi>ε</mi><mo>,</mo><mn>1</mn><mo>+</mo><mi>ε</mi><mo
+    stretchy="false" form="postfix">)</mo><msub><mi>A</mi><mi>t</mi></msub><mo minsize="120%"
+    maxsize="120%" stretchy="true" form="postfix">)</mo><mo>;</mo><msub><mi>ρ</mi><mi>t</mi></msub><mo>=</mo><mfrac><mrow><msub><mi>π</mi><mi>θ</mi></msub><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>a</mi><mi>t</mi></msub><mo>∣</mo><msub><mi>s</mi><mi>t</mi></msub><mo
+    stretchy="false" form="postfix">)</mo></mrow><mrow><msub><mi>π</mi><msub><mi>θ</mi><mtext
+    mathvariant="normal">old</mtext></msub></msub><mo stretchy="false" form="prefix">(</mo><msub><mi>a</mi><mi>t</mi></msub><mo>∣</mo><msub><mi>s</mi><mi>t</mi></msub><mo
+    stretchy="false" form="postfix">)</mo></mrow></mfrac></mrow><annotation encoding="application/x-tex">-\frac{1}{T}\sum_{t=1}^{T}\min\!\big(\rho_t
+    A_t,\ \mathrm{clip}(\rho_t,1-\varepsilon,1+\varepsilon) A_t\big);\ \rho_t = \frac{\pi_\theta(a_t\mid
+    s_t)}{\pi_{\theta_{\text{old}}}(a_t\mid s_t)}</annotation></semantics> |'
+  prefs: []
+  type: TYPE_TB
+- en: '| **GRPO** | On-policy | Yes | No | Yes | <semantics><mrow><mi>−</mi><mfrac><mn>1</mn><mi>G</mi></mfrac><msubsup><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>G</mi></msubsup><mrow><mi
+    mathvariant="normal">min</mi><mo>⁡</mo></mrow><mo minsize="120%" maxsize="120%"
+    stretchy="true" form="prefix">(</mo><msub><mi>ρ</mi><mi>i</mi></msub><msub><mi>A</mi><mi>i</mi></msub><mo>,</mo><mrow><mi
+    mathvariant="normal">c</mi><mi mathvariant="normal">l</mi><mi mathvariant="normal">i</mi><mi
+    mathvariant="normal">p</mi></mrow><mo stretchy="false" form="prefix">(</mo><msub><mi>ρ</mi><mi>i</mi></msub><mo>,</mo><mn>1</mn><mo>−</mo><mi>ε</mi><mo>,</mo><mn>1</mn><mo>+</mo><mi>ε</mi><mo
+    stretchy="false" form="postfix">)</mo><msub><mi>A</mi><mi>i</mi></msub><mo minsize="120%"
+    maxsize="120%" stretchy="true" form="postfix">)</mo><mo>;</mo><msub><mi>ρ</mi><mi>i</mi></msub><mo>=</mo><mfrac><mrow><msub><mi>π</mi><mi>θ</mi></msub><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>a</mi><mi>i</mi></msub><mo>∣</mo><mi>s</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow><mrow><msub><mi>π</mi><msub><mi>θ</mi><mtext
+    mathvariant="normal">old</mtext></msub></msub><mo stretchy="false" form="prefix">(</mo><msub><mi>a</mi><mi>i</mi></msub><mo>∣</mo><mi>s</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow></mfrac><mo>,</mo><msub><mi>A</mi><mi>i</mi></msub><mo>=</mo><mfrac><mrow><msub><mi>r</mi><mi>i</mi></msub><mo>−</mo><mrow><mi
+    mathvariant="normal">m</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">a</mi><mi
+    mathvariant="normal">n</mi></mrow><mo stretchy="false" form="prefix">(</mo><msub><mi>r</mi><mrow><mn>1</mn><mo>:</mo><mi>G</mi></mrow></msub><mo
+    stretchy="false" form="postfix">)</mo></mrow><mrow><mrow><mi mathvariant="normal">s</mi><mi
+    mathvariant="normal">t</mi><mi mathvariant="normal">d</mi></mrow><mo stretchy="false"
+    form="prefix">(</mo><msub><mi>r</mi><mrow><mn>1</mn><mo>:</mo><mi>G</mi></mrow></msub><mo
+    stretchy="false" form="postfix">)</mo></mrow></mfrac></mrow><annotation encoding="application/x-tex">-\frac{1}{G}\sum_{i=1}^{G}\min\!\big(\rho_i
+    A_i,\ \mathrm{clip}(\rho_i,1-\varepsilon,1+\varepsilon) A_i\big);\ \rho_i = \frac{\pi_\theta(a_i\mid
+    s)}{\pi_{\theta_{\text{old}}}(a_i\mid s)},\ A_i = \frac{r_i-\mathrm{mean}(r_{1:G})}{\mathrm{std}(r_{1:G})}</annotation></semantics>
+    |'
+  prefs: []
+  type: TYPE_TB
+- en: '| **DPO** | Off-policy | No | No | Yes | <semantics><mrow><mi>−</mi><msub><mi>𝔼</mi><mrow><mo
+    stretchy="false" form="prefix">(</mo><mi>x</mi><mo>,</mo><msup><mi>y</mi><mi>w</mi></msup><mo>,</mo><msup><mi>y</mi><mi>l</mi></msup><mo
+    stretchy="false" form="postfix">)</mo></mrow></msub><mrow><mo stretchy="true"
+    form="prefix">[</mo><mi mathvariant="normal">log</mi><mi>σ</mi><mo minsize="120%"
+    maxsize="120%" stretchy="true" form="prefix">(</mo><mi>β</mi><mo stretchy="false"
+    form="prefix">[</mo><mi mathvariant="normal">Δ</mi><mi mathvariant="normal">log</mi><msub><mi>π</mi><mi>θ</mi></msub><mo
+    stretchy="false" form="prefix">(</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mo>−</mo><mi
+    mathvariant="normal">Δ</mi><mi mathvariant="normal">log</mi><msub><mi>π</mi><mrow><mi
+    mathvariant="normal">r</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">f</mi></mrow></msub><mo
+    stretchy="false" form="prefix">(</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mo
+    stretchy="false" form="postfix">]</mo><mo minsize="120%" maxsize="120%" stretchy="true"
+    form="postfix">)</mo><mo stretchy="true" form="postfix">]</mo></mrow></mrow><annotation
+    encoding="application/x-tex">-\mathbb{E}_{(x,y^{w},y^{l})}\!\left[\log \sigma\!\big(\beta[\Delta\log
+    \pi_\theta(x)-\Delta\log \pi_{\mathrm{ref}}(x)]\big)\right]</annotation></semantics>
+    |'
+  prefs: []
+  type: TYPE_TB
+- en: Generalized Advantage Estimation (GAE)
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: Generalized Advantage Estimation (GAE) is an alternate method to compute the
+    advantage for policy gradient algorithms [[179]](ch021.xhtml#ref-schulman2015high)
+    that better balances the bias-variance tradeoff. Traditional single-step advantage
+    estimates can introduce too much bias, while using complete trajectories can suffer
+    from high variance. GAE computes an exponentially-weighted average of multi-step
+    advantage estimates, where the <semantics><mi>λ</mi><annotation encoding="application/x-tex">\lambda</annotation></semantics>
+    hyperparameter controls the bias-variance tradeoff—ranging from single-step TD
+    (<semantics><mrow><mi>λ</mi><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">\lambda=0</annotation></semantics>)
+    to full trajectory returns (<semantics><mrow><mi>λ</mi><mo>=</mo><mn>1</mn></mrow><annotation
+    encoding="application/x-tex">\lambda=1</annotation></semantics>).
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Advantage estimates can take many forms, but we can define a <semantics><mi>n</mi><annotation
+    encoding="application/x-tex">n</annotation></semantics> step advantage estimator
+    (similar to the TD residual at the beginning of the chapter) as follows:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '<semantics><mrow><msubsup><mover><mi>A</mi><mo accent="true">̂</mo></mover><mi>t</mi><mrow><mo
+    stretchy="false" form="prefix">(</mo><mi>n</mi><mo stretchy="false" form="postfix">)</mo></mrow></msubsup><mo>=</mo><mrow><mo
+    stretchy="true" form="prefix">{</mo><mtable><mtr><mtd columnalign="left" style="text-align:
+    left"><msub><mi>r</mi><mi>t</mi></msub><mo>+</mo><mi>γ</mi><mi>V</mi><mo stretchy="false"
+    form="prefix">(</mo><msub><mi>s</mi><mrow><mi>t</mi><mo>+</mo><mn>1</mn></mrow></msub><mo
+    stretchy="false" form="postfix">)</mo><mo>−</mo><mi>V</mi><mo stretchy="false"
+    form="prefix">(</mo><msub><mi>s</mi><mi>t</mi></msub><mo stretchy="false" form="postfix">)</mo><mo>,</mo></mtd><mtd
+    columnalign="left" style="text-align: left"><mi>n</mi><mo>=</mo><mn>1</mn></mtd></mtr><mtr><mtd
+    columnalign="left" style="text-align: left"><msub><mi>r</mi><mi>t</mi></msub><mo>+</mo><mi>γ</mi><msub><mi>r</mi><mrow><mi>t</mi><mo>+</mo><mn>1</mn></mrow></msub><mo>+</mo><msup><mi>γ</mi><mn>2</mn></msup><mi>V</mi><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>s</mi><mrow><mi>t</mi><mo>+</mo><mn>2</mn></mrow></msub><mo
+    stretchy="false" form="postfix">)</mo><mo>−</mo><mi>V</mi><mo stretchy="false"
+    form="prefix">(</mo><msub><mi>s</mi><mi>t</mi></msub><mo stretchy="false" form="postfix">)</mo><mo>,</mo></mtd><mtd
+    columnalign="left" style="text-align: left"><mi>n</mi><mo>=</mo><mn>2</mn></mtd></mtr><mtr><mtd
+    columnalign="left" style="text-align: left"><mi>⋮</mi></mtd></mtr><mtr><mtd columnalign="left"
+    style="text-align: left"><msub><mi>r</mi><mi>t</mi></msub><mo>+</mo><mi>γ</mi><msub><mi>r</mi><mrow><mi>t</mi><mo>+</mo><mn>1</mn></mrow></msub><mo>+</mo><msup><mi>γ</mi><mn>2</mn></msup><msub><mi>r</mi><mrow><mi>t</mi><mo>+</mo><mn>2</mn></mrow></msub><mo>+</mo><mi>⋯</mi><mo>−</mo><mi>V</mi><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>s</mi><mi>t</mi></msub><mo stretchy="false"
+    form="postfix">)</mo><mo>,</mo></mtd><mtd columnalign="left" style="text-align:
+    left"><mi>n</mi><mo>=</mo><mi>∞</mi></mtd></mtr></mtable></mrow><mrow><mo stretchy="false"
+    form="prefix">(</mo><mn>65</mn><mo stretchy="false" form="postfix">)</mo></mrow></mrow>
+    <annotation encoding="application/x-tex">\hat{A}_t^{(n)} = \begin{cases} r_t +
+    \gamma V(s_{t+1}) - V(s_t), & n = 1 \\ r_t + \gamma r_{t+1} + \gamma^2 V(s_{t+2})
+    - V(s_t), & n = 2 \\ \vdots \\ r_t + \gamma r_{t+1} + \gamma^2 r_{t+2} + \cdots
+    - V(s_t), & n = \infty \end{cases} \qquad{(65)}</annotation></semantics>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Here a shorter <semantics><mi>n</mi><annotation encoding="application/x-tex">n</annotation></semantics>
+    will have lower variance but higher bias as we are attributing more learning power
+    to each trajectory – it can overfit. GAE attempts to generalize this formulation
+    into a weighted multi-step average instead of a specific <semantics><mi>n</mi><annotation
+    encoding="application/x-tex">n</annotation></semantics>. To start, we must define
+    the temporal difference (TD) residual of predicted value.
+  prefs: []
+  type: TYPE_NORMAL
+- en: <semantics><mrow><msubsup><mi>δ</mi><mi>t</mi><mi>V</mi></msubsup><mo>=</mo><msub><mi>r</mi><mi>t</mi></msub><mo>+</mo><mi>γ</mi><mi>V</mi><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>s</mi><mrow><mi>t</mi><mo>+</mo><mn>1</mn></mrow></msub><mo
+    stretchy="false" form="postfix">)</mo><mo>−</mo><mi>V</mi><mo stretchy="false"
+    form="prefix">(</mo><msub><mi>s</mi><mi>t</mi></msub><mo stretchy="false" form="postfix">)</mo><mrow><mo
+    stretchy="false" form="prefix">(</mo><mn>66</mn><mo stretchy="false" form="postfix">)</mo></mrow></mrow>
+    <annotation encoding="application/x-tex">\delta_t^V = r_t + \gamma V(s_{t+1})
+    - V(s_t) \qquad{(66)}</annotation></semantics>
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'To utilize this, we introduce another variable <semantics><mi>λ</mi><annotation
+    encoding="application/x-tex">\lambda</annotation></semantics> as the GAE mixing
+    parameter. This folds into an exponential decay of future advantages we wish to
+    estimate:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '<semantics><mrow><mtable><mtr><mtd columnalign="left" style="text-align: left"><msubsup><mover><mi>A</mi><mo
+    accent="true">̂</mo></mover><mi>t</mi><mrow><mi>G</mi><mi>A</mi><mi>E</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>γ</mi><mo>,</mo><mi>λ</mi><mo stretchy="false"
+    form="postfix">)</mo></mrow></msubsup><mo>=</mo><mo stretchy="false" form="prefix">(</mo><mn>1</mn><mo>−</mo><mi>λ</mi><mo
+    stretchy="false" form="postfix">)</mo><mo stretchy="false" form="prefix">(</mo><msubsup><mover><mi>A</mi><mo
+    accent="true">̂</mo></mover><mi>t</mi><mrow><mo stretchy="false" form="prefix">(</mo><mn>1</mn><mo
+    stretchy="false" form="postfix">)</mo></mrow></msubsup><mo>+</mo><mi>λ</mi><msubsup><mover><mi>A</mi><mo
+    accent="true">̂</mo></mover><mi>t</mi><mrow><mo stretchy="false" form="prefix">(</mo><mn>2</mn><mo
+    stretchy="false" form="postfix">)</mo></mrow></msubsup><mo>+</mo><msup><mi>λ</mi><mn>2</mn></msup><msubsup><mover><mi>A</mi><mo
+    accent="true">̂</mo></mover><mi>t</mi><mrow><mo stretchy="false" form="prefix">(</mo><mn>3</mn><mo
+    stretchy="false" form="postfix">)</mo></mrow></msubsup><mo>+</mo><mi>⋯</mi><mo
+    stretchy="false" form="postfix">)</mo></mtd></mtr><mtr><mtd columnalign="left"
+    style="text-align: left"><mo>=</mo><mo stretchy="false" form="prefix">(</mo><mn>1</mn><mo>−</mo><mi>λ</mi><mo
+    stretchy="false" form="postfix">)</mo><mo stretchy="false" form="prefix">(</mo><msubsup><mi>δ</mi><mi>t</mi><mi>V</mi></msubsup><mo>+</mo><mi>λ</mi><mo
+    stretchy="false" form="prefix">(</mo><msubsup><mi>δ</mi><mi>t</mi><mi>V</mi></msubsup><mo>+</mo><mi>γ</mi><msubsup><mi>δ</mi><mrow><mi>t</mi><mo>+</mo><mn>1</mn></mrow><mi>V</mi></msubsup><mo
+    stretchy="false" form="postfix">)</mo><mo>+</mo><msup><mi>λ</mi><mn>2</mn></msup><mo
+    stretchy="false" form="prefix">(</mo><msubsup><mi>δ</mi><mi>t</mi><mi>V</mi></msubsup><mo>+</mo><mi>γ</mi><msubsup><mi>δ</mi><mrow><mi>t</mi><mo>+</mo><mn>1</mn></mrow><mi>V</mi></msubsup><mo>+</mo><msup><mi>γ</mi><mn>2</mn></msup><msubsup><mi>δ</mi><mrow><mi>t</mi><mo>+</mo><mn>2</mn></mrow><mi>V</mi></msubsup><mo
+    stretchy="false" form="postfix">)</mo><mo>+</mo><mi>⋯</mi><mo stretchy="false"
+    form="postfix">)</mo></mtd></mtr><mtr><mtd columnalign="left" style="text-align:
+    left"><mo>=</mo><mo stretchy="false" form="prefix">(</mo><mn>1</mn><mo>−</mo><mi>λ</mi><mo
+    stretchy="false" form="postfix">)</mo><mo stretchy="false" form="prefix">(</mo><msubsup><mi>δ</mi><mi>t</mi><mi>V</mi></msubsup><mo
+    stretchy="false" form="prefix">(</mo><mn>1</mn><mo>+</mo><mi>λ</mi><mo>+</mo><msup><mi>λ</mi><mn>2</mn></msup><mo>+</mo><mi>⋯</mi><mo
+    stretchy="false" form="postfix">)</mo><mo>+</mo><mi>γ</mi><msubsup><mi>δ</mi><mrow><mi>t</mi><mo>+</mo><mn>1</mn></mrow><mi>V</mi></msubsup><mo
+    stretchy="false" form="prefix">(</mo><mi>λ</mi><mo>+</mo><msup><mi>λ</mi><mn>2</mn></msup><mo>+</mo><mi>⋯</mi><mo
+    stretchy="false" form="postfix">)</mo><mo>+</mo><mi>⋯</mi><mo stretchy="false"
+    form="postfix">)</mo></mtd></mtr><mtr><mtd columnalign="left" style="text-align:
+    left"><mo>=</mo><mo stretchy="false" form="prefix">(</mo><mn>1</mn><mo>−</mo><mi>λ</mi><mo
+    stretchy="false" form="postfix">)</mo><mo stretchy="false" form="prefix">(</mo><msubsup><mi>δ</mi><mi>t</mi><mi>V</mi></msubsup><mfrac><mn>1</mn><mrow><mn>1</mn><mo>−</mo><mi>λ</mi></mrow></mfrac><mo>+</mo><mi>γ</mi><msubsup><mi>δ</mi><mrow><mi>t</mi><mo>+</mo><mn>1</mn></mrow><mi>V</mi></msubsup><mfrac><mi>λ</mi><mrow><mn>1</mn><mo>−</mo><mi>λ</mi></mrow></mfrac><mo>+</mo><mi>⋯</mi><mo
+    stretchy="false" form="postfix">)</mo></mtd></mtr><mtr><mtd columnalign="left"
+    style="text-align: left"><mo>=</mo><munderover><mo>∑</mo><mrow><mi>l</mi><mo>=</mo><mn>0</mn></mrow><mo
+    accent="false">∞</mo></munderover><mo stretchy="false" form="prefix">(</mo><mi>γ</mi><mi>λ</mi><msup><mo
+    stretchy="false" form="postfix">)</mo><mi>l</mi></msup><msubsup><mi>δ</mi><mrow><mi>t</mi><mo>+</mo><mi>l</mi></mrow><mi>V</mi></msubsup></mtd></mtr></mtable><mrow><mo
+    stretchy="false" form="prefix">(</mo><mn>67</mn><mo stretchy="false" form="postfix">)</mo></mrow></mrow>
+    <annotation encoding="application/x-tex">\begin{array}{l} \hat{A}_t^{GAE(\gamma,\lambda)}
+    = (1-\lambda)(\hat{A}_t^{(1)} + \lambda\hat{A}_t^{(2)} + \lambda^2\hat{A}_t^{(3)}
+    + \cdots) \\ = (1-\lambda)(\delta_t^V + \lambda(\delta_t^V + \gamma\delta_{t+1}^V)
+    + \lambda^2(\delta_t^V + \gamma\delta_{t+1}^V + \gamma^2\delta_{t+2}^V) + \cdots)
+    \\ = (1-\lambda)(\delta_t^V(1 + \lambda + \lambda^2 + \cdots) + \gamma\delta_{t+1}^V(\lambda
+    + \lambda^2 + \cdots) + \cdots) \\ = (1-\lambda)(\delta_t^V\frac{1}{1-\lambda}
+    + \gamma\delta_{t+1}^V\frac{\lambda}{1-\lambda} + \cdots) \\ = \sum_{l=0}^{\infty}(\gamma\lambda)^l\delta_{t+l}^V
+    \end{array} \qquad{(67)}</annotation></semantics>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Intuitively, this can be used to average multi-step estimates of Advantage
+    in an elegant fashion. An example implementation is shown below:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE10]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*For further reading, see [[200]](ch021.xhtml#ref-seita2017gae).*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Double Regularization
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: We’ve seen in this chapter two types of regularization. One is built into algorithms
+    like PPO with step-size constraints, and the other is a KL divergence based distance
+    penalty relative to the start of the optimization.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Many popular policy gradient algorithms from Deep Reinforcement Learning, including
+    PPO and its predecessors, originated due to the need to control the learning process
+    of the agent. In RLHF, as discussed extensively in Chapter 8 on Regularization
+    and in Chapter 4 on Problem Formulation, there is a built-in regularization term
+    via the distance penalty relative to the original policy one is finetuning. In
+    this view, a large part of the difference between algorithms like PPO (which have
+    internal step-size regularization) and REINFORCE (which is simpler, and to which
+    PPO reduces under certain hyperparameters) is far less meaningful for finetuning
+    language models than training agents from scratch.
+  prefs: []
+  type: TYPE_NORMAL
+- en: In PPO, the objective that handles capping the step-size of the update is known
+    as the [surrogate objective](https://huggingface.co/blog/deep-rl-ppo#introducing-the-clipped-surrogate-objective).
+    To monitor how much the PPO regularization is impacting updates in RLHF, one can
+    look at the clip fraction variable in many popular implementations, which is the
+    percentage of samples in the batch where the gradients are clipped by this regularizer
+    in PPO. These gradients are *reduced* to a maximum value.
+  prefs: []
+  type: TYPE_NORMAL
+- en: In practice with language models, algorithms like PPO and GRPO are run with
+    only one gradient step per batch, which means that the PPO-native regularization
+    is never applied (as clipping can only occur within a batch when the policy changes
+    substantially) and the KL distances penalties predominate.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Further Reading
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: 'As RLHF has cemented itself at the center of modern post-training, other policy-gradient
+    RL algorithms and RL algorithms generally have been proposed to improve the training
+    process, but they have not had a central role in governing best practices. Examples
+    for further reading include:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Pairwise Proximal Policy Optimization (P3O)** [[201]](ch021.xhtml#ref-wu2023pairwise)
+    uses pairwise data directly in a PPO-style policy update without learning an intermediate
+    reward model.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Off-policy policy-gradient algorithms could enable further asynchronous training,
+    such as **Contrastive Policy Gradient (CoPG)** [[202]](ch021.xhtml#ref-flet2024contrastive)
+    (a generalization of the direct alignment algorithm IPO and vanilla policy gradient),
+    which was used by Cohere for their Command A model [[58]](ch021.xhtml#ref-cohere2025command).
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Other implementations of REINFORCE algorithms have been designed for language
+    models, such as **ReMax** [[203]](ch021.xhtml#ref-li2023remax), which implements
+    a baseline normalization designed specifically to accommodate the sources of uncertainty
+    from reward model inference.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Some foundation models, such as Apple Intelligence Foundation Models [[204]](ch021.xhtml#ref-gunter2024apple)
+    or Kimi k1.5 reasoning model [[205]](ch021.xhtml#ref-team2025kimi), have used
+    variants of **Mirror Descent Policy Optimization (MDPO)** [[206]](ch021.xhtml#ref-tomar2020mirror).
+    Research is still developing further on the fundamentals here [[207]](ch021.xhtml#ref-zhang2025improving),
+    but Mirror Descent is an optimization method rather than directly a policy gradient
+    algorithm. What is important here is that it is substituted in very similarly
+    to existing RL infrastructure.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Decoupled Clip and Dynamic sAmpling Policy Optimization (DAPO)** proposes
+    4 modifications to GRPO to better suit reasoning language models, where long traces
+    are needed and new, underutilized tokens need to be increased in probability [[193]](ch021.xhtml#ref-yu2025dapo).
+    The changes are: 1, have two different clip hyperparameters, <semantics><msub><mi>ε</mi><mtext
+    mathvariant="normal">low</mtext></msub><annotation encoding="application/x-tex">\varepsilon_\text{low}</annotation></semantics>
+    and <semantics><msub><mi>ε</mi><mtext mathvariant="normal">high</mtext></msub><annotation
+    encoding="application/x-tex">\varepsilon_\text{high}</annotation></semantics>,
+    so clipping on the positive side of the logratio can take bigger steps for better
+    exploration; 2, dynamic sampling, which removes all samples with reward = 0 or
+    reward = 1 for all samples in the batch (no learning signal); 3, use the per token
+    loss as discussed above in Implementation: GRPO; and 4, a soft penalty on samples
+    that are too long to avoid trying to learn from truncated answers.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Value-based Augmented Proximal Policy Optimization (VAPO)** [[208]](ch021.xhtml#ref-yuan2025vapo)
+    combines optimizations from DAPO (including clip-higher, token level policy-gradient,
+    and different length normalization) with insights from Value-Calibrated PPO [[209]](ch021.xhtml#ref-yuan2025s)
+    to pretrain the value function and length-adaptive GAE to show the promise of
+    value base methods relative to GRPO.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL

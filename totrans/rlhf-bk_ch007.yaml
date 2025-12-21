@@ -1,0 +1,756 @@
+- en: Reward Modeling
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Reward models are core to the modern approach to RLHF by being where the complex
+    human preferences are learned. They are what enable our models to learn from hard
+    to specify signals. They compress complex features in the data into a representation
+    that can be used in downstream training – a sort of magic that once again shows
+    the complex capacity of modern deep learning. These models act as the proxy objectives
+    by which the core optimization is done, as studied in the following chapters.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Reward models broadly have historically been used extensively in reinforcement
+    learning research as a proxy for environment rewards [[55]](ch021.xhtml#ref-sutton2018reinforcement).
+    Reward models were proposed, in their modern form, as a tool for studying the
+    value alignment problem [[33]](ch021.xhtml#ref-leike2018scalable). These models
+    tend to take in some sort of input and output a single scalar value of reward.
+    This reward can take multiple forms – in traditional RL problems it was attempting
+    to approximate the exact environment reward for the problem, but we will see in
+    RLHF that reward models actually output a probability of a certain input being
+    “of high quality” (i.e. the chosen answer among a pairwise preference relation).
+    The practice of reward modeling for RLHF is closely related to inverse reinforcement
+    learning, where the problem is to approximate an agent’s reward function given
+    trajectories of behavior [[96]](ch021.xhtml#ref-ng2000algorithms), and other areas
+    of deep reinforcement learning. The high level problem statement is the same,
+    but the implementation and focus areas are entirely different, so they’re often
+    considered as totally separate areas of study.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The most common reward model, often called a Bradley-Terry reward model and
+    the primary focus of this chapter, predicts the probability that a piece of text
+    was close to a “preferred” piece of text from the training comparisons. Later
+    in this section we also compare these to Outcome Reward Models (ORMs), Process
+    Reward Model (PRM), and other types of reward models.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '*Throughout this chapter, we use <semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics>
+    to denote prompts and <semantics><mi>y</mi><annotation encoding="application/x-tex">y</annotation></semantics>
+    to denote completions. This notation is common in the language model literature,
+    where methods operate on full prompt-completion pairs rather than individual tokens.*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Training Reward Models
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'The canonical implementation of a reward model is derived from the Bradley-Terry
+    model of preference [[125]](ch021.xhtml#ref-BradleyTerry). There are two popular
+    expressions for how to train a standard reward model for RLHF – they are mathematically
+    equivalent. To start, a Bradley-Terry model of preferences defines the probability
+    that, in a pairwise comparison between two items <semantics><mi>i</mi><annotation
+    encoding="application/x-tex">i</annotation></semantics> and <semantics><mi>j</mi><annotation
+    encoding="application/x-tex">j</annotation></semantics>, a judge prefers <semantics><mi>i</mi><annotation
+    encoding="application/x-tex">i</annotation></semantics> over <semantics><mi>j</mi><annotation
+    encoding="application/x-tex">j</annotation></semantics>:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: <semantics><mrow><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mi>i</mi><mo>></mo><mi>j</mi><mo
+    stretchy="false" form="postfix">)</mo><mo>=</mo><mfrac><msub><mi>p</mi><mi>i</mi></msub><mrow><msub><mi>p</mi><mi>i</mi></msub><mo>+</mo><msub><mi>p</mi><mi>j</mi></msub></mrow></mfrac><mi>.</mi><mrow><mo
+    stretchy="false" form="prefix">(</mo><mn>11</mn><mo stretchy="false" form="postfix">)</mo></mrow></mrow><annotation
+    encoding="application/x-tex">P(i > j) = \frac{p_i}{p_i + p_j}.\qquad{(11)}</annotation></semantics>
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The Bradley-Terry model assumes that each item has a latent strength <semantics><mrow><msub><mi>p</mi><mi>i</mi></msub><mo>></mo><mn>0</mn></mrow><annotation
+    encoding="application/x-tex">p_i > 0</annotation></semantics>, and that observed
+    preferences are a noisy reflection of these underlying strengths. It is common
+    to reparametrize the Bradley-Terry model with unbounded scores, where <semantics><mrow><msub><mi>p</mi><mi>i</mi></msub><mo>=</mo><msup><mi>e</mi><msub><mi>r</mi><mi>i</mi></msub></msup></mrow><annotation
+    encoding="application/x-tex">p_i = e^{r_i}</annotation></semantics>, which results
+    in the following form:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: <semantics><mrow><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mi>i</mi><mo>></mo><mi>j</mi><mo
+    stretchy="false" form="postfix">)</mo><mo>=</mo><mfrac><msup><mi>e</mi><msub><mi>r</mi><mi>i</mi></msub></msup><mrow><msup><mi>e</mi><msub><mi>r</mi><mi>i</mi></msub></msup><mo>+</mo><msup><mi>e</mi><msub><mi>r</mi><mi>j</mi></msub></msup></mrow></mfrac><mo>=</mo><mi>σ</mi><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>r</mi><mi>i</mi></msub><mo>−</mo><msub><mi>r</mi><mi>j</mi></msub><mo
+    stretchy="false" form="postfix">)</mo><mi>.</mi><mrow><mo stretchy="false" form="prefix">(</mo><mn>12</mn><mo
+    stretchy="false" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">P(i
+    > j) = \frac{e^{r_i}}{e^{r_i} + e^{r_j}} = \sigma(r_i-r_j).\qquad{(12)}</annotation></semantics>
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Only differences in scores matter: adding the same constant to all <semantics><msub><mi>r</mi><mi>i</mi></msub><annotation
+    encoding="application/x-tex">r_i</annotation></semantics> leaves <semantics><mrow><mi>P</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>i</mi><mo>></mo><mi>j</mi><mo stretchy="false"
+    form="postfix">)</mo></mrow><annotation encoding="application/x-tex">P(i > j)</annotation></semantics>
+    unchanged. These forms are not a law of nature, but a useful approximation of
+    human preferences that often works well in RLHF.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: To train a reward model, we must formulate a loss function that satisfies the
+    above relation. In practice, this is done by converting a language model into
+    a model that outputs a scalar score, often via a small linear head that produces
+    a single logit. Given a prompt <semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics>
+    and two sampled completions <semantics><msub><mi>y</mi><mn>1</mn></msub><annotation
+    encoding="application/x-tex">y_1</annotation></semantics> and <semantics><msub><mi>y</mi><mn>2</mn></msub><annotation
+    encoding="application/x-tex">y_2</annotation></semantics>, we score both with
+    a reward model <semantics><msub><mi>r</mi><mi>θ</mi></msub><annotation encoding="application/x-tex">r_\theta</annotation></semantics>
+    and write the conditional scores as <semantics><mrow><msub><mi>r</mi><mi>θ</mi></msub><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mi>i</mi></msub><mo>∣</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">r_\theta(y_i
+    \mid x)</annotation></semantics>.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The probability of success for a given reward model in a pairwise comparison
+    becomes:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: <semantics><mrow><mi>P</mi><mo stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mn>1</mn></msub><mo>></mo><msub><mi>y</mi><mn>2</mn></msub><mo>∣</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo><mo>=</mo><mfrac><mrow><mrow><mi mathvariant="normal">exp</mi><mo>⁡</mo></mrow><mrow><mo
+    stretchy="true" form="prefix">(</mo><msub><mi>r</mi><mi>θ</mi></msub><mo stretchy="false"
+    form="prefix">(</mo><msub><mi>y</mi><mn>1</mn></msub><mo>∣</mo><mi>x</mi><mo stretchy="false"
+    form="postfix">)</mo><mo stretchy="true" form="postfix">)</mo></mrow></mrow><mrow><mrow><mi
+    mathvariant="normal">exp</mi><mo>⁡</mo></mrow><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>r</mi><mi>θ</mi></msub><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mn>1</mn></msub><mo>∣</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo><mo stretchy="true" form="postfix">)</mo></mrow><mo>+</mo><mrow><mi
+    mathvariant="normal">exp</mi><mo>⁡</mo></mrow><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>r</mi><mi>θ</mi></msub><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mn>2</mn></msub><mo>∣</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo><mo stretchy="true" form="postfix">)</mo></mrow></mrow></mfrac><mi>.</mi><mrow><mo
+    stretchy="false" form="prefix">(</mo><mn>13</mn><mo stretchy="false" form="postfix">)</mo></mrow></mrow><annotation
+    encoding="application/x-tex">P(y_1 > y_2 \mid x) = \frac{\exp\left(r_\theta(y_1
+    \mid x)\right)}{\exp\left(r_\theta(y_1 \mid x)\right) + \exp\left(r_\theta(y_2
+    \mid x)\right)}.\qquad{(13)}</annotation></semantics>
+  prefs: []
+  type: TYPE_NORMAL
+- en: We denote the preferred completion as <semantics><msub><mi>y</mi><mi>c</mi></msub><annotation
+    encoding="application/x-tex">y_c</annotation></semantics> (chosen) and the rejected
+    completion as <semantics><msub><mi>y</mi><mi>r</mi></msub><annotation encoding="application/x-tex">y_r</annotation></semantics>.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Then, by maximizing the log-likelihood of the above function (or alternatively
+    minimizing the negative log-likelihood), we can arrive at the loss function to
+    train a reward model:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '<semantics><mrow><mtable><mtr><mtd columnalign="right" style="text-align: right;
+    padding-right: 0"><msup><mi>θ</mi><mo>*</mo></msup><mo>=</mo><mrow><mi mathvariant="normal">arg</mi><mo>⁡</mo></mrow><munder><mi
+    mathvariant="normal">max</mi><mi>θ</mi></munder><mi>P</mi><mo stretchy="false"
+    form="prefix">(</mo><msub><mi>y</mi><mi>c</mi></msub><mo>></mo><msub><mi>y</mi><mi>r</mi></msub><mo>∣</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo></mtd><mtd columnalign="left" style="text-align:
+    left; padding-left: 0"><mo>=</mo><mrow><mi mathvariant="normal">arg</mi><mo>⁡</mo></mrow><munder><mi
+    mathvariant="normal">max</mi><mi>θ</mi></munder><mfrac><mrow><mrow><mi mathvariant="normal">exp</mi><mo>⁡</mo></mrow><mrow><mo
+    stretchy="true" form="prefix">(</mo><msub><mi>r</mi><mi>θ</mi></msub><mo stretchy="false"
+    form="prefix">(</mo><msub><mi>y</mi><mi>c</mi></msub><mo>∣</mo><mi>x</mi><mo stretchy="false"
+    form="postfix">)</mo><mo stretchy="true" form="postfix">)</mo></mrow></mrow><mrow><mrow><mi
+    mathvariant="normal">exp</mi><mo>⁡</mo></mrow><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>r</mi><mi>θ</mi></msub><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mi>c</mi></msub><mo>∣</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo><mo stretchy="true" form="postfix">)</mo></mrow><mo>+</mo><mrow><mi
+    mathvariant="normal">exp</mi><mo>⁡</mo></mrow><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>r</mi><mi>θ</mi></msub><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mi>r</mi></msub><mo>∣</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo><mo stretchy="true" form="postfix">)</mo></mrow></mrow></mfrac></mtd></mtr><mtr><mtd
+    columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mrow><mi
+    mathvariant="normal">arg</mi><mo>⁡</mo></mrow><munder><mi mathvariant="normal">max</mi><mi>θ</mi></munder><mfrac><mrow><mrow><mi
+    mathvariant="normal">exp</mi><mo>⁡</mo></mrow><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>r</mi><mi>θ</mi></msub><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mi>c</mi></msub><mo>∣</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo><mo stretchy="true" form="postfix">)</mo></mrow></mrow><mrow><mrow><mi
+    mathvariant="normal">exp</mi><mo>⁡</mo></mrow><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>r</mi><mi>θ</mi></msub><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mi>c</mi></msub><mo>∣</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo><mo stretchy="true" form="postfix">)</mo></mrow><mrow><mo
+    stretchy="true" form="prefix">(</mo><mn>1</mn><mo>+</mo><mfrac><mrow><mrow><mi
+    mathvariant="normal">exp</mi><mo>⁡</mo></mrow><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>r</mi><mi>θ</mi></msub><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mi>r</mi></msub><mo>∣</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo><mo stretchy="true" form="postfix">)</mo></mrow></mrow><mrow><mrow><mi
+    mathvariant="normal">exp</mi><mo>⁡</mo></mrow><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>r</mi><mi>θ</mi></msub><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mi>c</mi></msub><mo>∣</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo><mo stretchy="true" form="postfix">)</mo></mrow></mrow></mfrac><mo
+    stretchy="true" form="postfix">)</mo></mrow></mrow></mfrac></mtd></mtr><mtr><mtd
+    columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mrow><mi
+    mathvariant="normal">arg</mi><mo>⁡</mo></mrow><munder><mi mathvariant="normal">max</mi><mi>θ</mi></munder><mfrac><mn>1</mn><mrow><mn>1</mn><mo>+</mo><mfrac><mrow><mrow><mi
+    mathvariant="normal">exp</mi><mo>⁡</mo></mrow><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>r</mi><mi>θ</mi></msub><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mi>r</mi></msub><mo>∣</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo><mo stretchy="true" form="postfix">)</mo></mrow></mrow><mrow><mrow><mi
+    mathvariant="normal">exp</mi><mo>⁡</mo></mrow><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>r</mi><mi>θ</mi></msub><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mi>c</mi></msub><mo>∣</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo><mo stretchy="true" form="postfix">)</mo></mrow></mrow></mfrac></mrow></mfrac></mtd></mtr><mtr><mtd
+    columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mrow><mi
+    mathvariant="normal">arg</mi><mo>⁡</mo></mrow><munder><mi mathvariant="normal">max</mi><mi>θ</mi></munder><mfrac><mn>1</mn><mrow><mn>1</mn><mo>+</mo><mrow><mi
+    mathvariant="normal">exp</mi><mo>⁡</mo></mrow><mrow><mo stretchy="true" form="prefix">(</mo><mi>−</mi><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>r</mi><mi>θ</mi></msub><mo stretchy="false"
+    form="prefix">(</mo><msub><mi>y</mi><mi>c</mi></msub><mo>∣</mo><mi>x</mi><mo stretchy="false"
+    form="postfix">)</mo><mo>−</mo><msub><mi>r</mi><mi>θ</mi></msub><mo stretchy="false"
+    form="prefix">(</mo><msub><mi>y</mi><mi>r</mi></msub><mo>∣</mo><mi>x</mi><mo stretchy="false"
+    form="postfix">)</mo><mo stretchy="false" form="postfix">)</mo><mo stretchy="true"
+    form="postfix">)</mo></mrow></mrow></mfrac></mtd></mtr><mtr><mtd columnalign="left"
+    style="text-align: left; padding-left: 0"><mo>=</mo><mrow><mi mathvariant="normal">arg</mi><mo>⁡</mo></mrow><munder><mi
+    mathvariant="normal">max</mi><mi>θ</mi></munder><mi>σ</mi><mrow><mo stretchy="true"
+    form="prefix">(</mo><msub><mi>r</mi><mi>θ</mi></msub><mo stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mi>c</mi></msub><mo>∣</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo><mo>−</mo><msub><mi>r</mi><mi>θ</mi></msub><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mi>r</mi></msub><mo>∣</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo><mo stretchy="true" form="postfix">)</mo></mrow></mtd></mtr><mtr><mtd
+    columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mrow><mi
+    mathvariant="normal">arg</mi><mo>⁡</mo></mrow><munder><mi mathvariant="normal">min</mi><mi>θ</mi></munder><mo>−</mo><mrow><mi
+    mathvariant="normal">log</mi><mo>⁡</mo></mrow><mrow><mo stretchy="true" form="prefix">(</mo><mi>σ</mi><mrow><mo
+    stretchy="true" form="prefix">(</mo><msub><mi>r</mi><mi>θ</mi></msub><mo stretchy="false"
+    form="prefix">(</mo><msub><mi>y</mi><mi>c</mi></msub><mo>∣</mo><mi>x</mi><mo stretchy="false"
+    form="postfix">)</mo><mo>−</mo><msub><mi>r</mi><mi>θ</mi></msub><mo stretchy="false"
+    form="prefix">(</mo><msub><mi>y</mi><mi>r</mi></msub><mo>∣</mo><mi>x</mi><mo stretchy="false"
+    form="postfix">)</mo><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="true"
+    form="postfix">)</mo></mrow></mtd></mtr></mtable><mrow><mo stretchy="false" form="prefix">(</mo><mn>14</mn><mo
+    stretchy="false" form="postfix">)</mo></mrow></mrow> <annotation encoding="application/x-tex">\begin{aligned}
+    \theta^* = \arg\max_\theta P(y_c > y_r \mid x) &= \arg\max_\theta \frac{\exp\left(r_\theta(y_c
+    \mid x)\right)}{\exp\left(r_\theta(y_c \mid x)\right) + \exp\left(r_\theta(y_r
+    \mid x)\right)} \\ &= \arg\max_\theta \frac{\exp\left(r_\theta(y_c \mid x)\right)}{\exp\left(r_\theta(y_c
+    \mid x)\right)\left(1 + \frac{\exp\left(r_\theta(y_r \mid x)\right)}{\exp\left(r_\theta(y_c
+    \mid x)\right)}\right)} \\ &= \arg\max_\theta \frac{1}{1 + \frac{\exp\left(r_\theta(y_r
+    \mid x)\right)}{\exp\left(r_\theta(y_c \mid x)\right)}} \\ &= \arg\max_\theta
+    \frac{1}{1 + \exp\left(-(r_\theta(y_c \mid x) - r_\theta(y_r \mid x))\right)}
+    \\ &= \arg\max_\theta \sigma \left( r_\theta(y_c \mid x) - r_\theta(y_r \mid x)
+    \right) \\ &= \arg\min_\theta - \log \left( \sigma \left(r_\theta(y_c \mid x)
+    - r_\theta(y_r \mid x)\right) \right) \end{aligned} \qquad{(14)}</annotation></semantics>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The first form, as in [[3]](ch021.xhtml#ref-ouyang2022training) and other works:
+    <semantics><mrow><mi>ℒ</mi><mo stretchy="false" form="prefix">(</mo><mi>θ</mi><mo
+    stretchy="false" form="postfix">)</mo><mo>=</mo><mi>−</mi><mrow><mi mathvariant="normal">log</mi><mo>⁡</mo></mrow><mrow><mo
+    stretchy="true" form="prefix">(</mo><mi>σ</mi><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>r</mi><mi>θ</mi></msub><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mi>c</mi></msub><mo>∣</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo><mo>−</mo><msub><mi>r</mi><mi>θ</mi></msub><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mi>r</mi></msub><mo>∣</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo><mo stretchy="true" form="postfix">)</mo></mrow><mo
+    stretchy="true" form="postfix">)</mo></mrow><mrow><mo stretchy="false" form="prefix">(</mo><mn>15</mn><mo
+    stretchy="false" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\mathcal{L}(\theta)
+    = - \log \left( \sigma \left( r_{\theta}(y_c \mid x) - r_{\theta}(y_r \mid x)
+    \right) \right)\qquad{(15)}</annotation></semantics>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Second, as in [[18]](ch021.xhtml#ref-askell2021general) and other works: <semantics><mrow><mi>ℒ</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>θ</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mrow><mi
+    mathvariant="normal">log</mi><mo>⁡</mo></mrow><mrow><mo stretchy="true" form="prefix">(</mo><mn>1</mn><mo>+</mo><msup><mi>e</mi><mrow><msub><mi>r</mi><mi>θ</mi></msub><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mi>r</mi></msub><mo>∣</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo><mo>−</mo><msub><mi>r</mi><mi>θ</mi></msub><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mi>c</mi></msub><mo>∣</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow></msup><mo stretchy="true" form="postfix">)</mo></mrow><mrow><mo
+    stretchy="false" form="prefix">(</mo><mn>16</mn><mo stretchy="false" form="postfix">)</mo></mrow></mrow><annotation
+    encoding="application/x-tex">\mathcal{L}(\theta) = \log \left( 1 + e^{r_{\theta}(y_r
+    \mid x) - r_{\theta}(y_c \mid x)} \right)\qquad{(16)}</annotation></semantics>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: These are equivalent by letting <semantics><mrow><mi mathvariant="normal">Δ</mi><mo>=</mo><msub><mi>r</mi><mi>θ</mi></msub><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mi>c</mi></msub><mo>∣</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo><mo>−</mo><msub><mi>r</mi><mi>θ</mi></msub><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mi>r</mi></msub><mo>∣</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\Delta
+    = r_{\theta}(y_c \mid x) - r_{\theta}(y_r \mid x)</annotation></semantics> and
+    using <semantics><mrow><mi>σ</mi><mo stretchy="false" form="prefix">(</mo><mi
+    mathvariant="normal">Δ</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mfrac><mn>1</mn><mrow><mn>1</mn><mo>+</mo><msup><mi>e</mi><mrow><mi>−</mi><mi
+    mathvariant="normal">Δ</mi></mrow></msup></mrow></mfrac></mrow><annotation encoding="application/x-tex">\sigma(\Delta)
+    = \frac{1}{1 + e^{-\Delta}}</annotation></semantics>, which implies <semantics><mrow><mi>−</mi><mrow><mi
+    mathvariant="normal">log</mi><mo>⁡</mo></mrow><mi>σ</mi><mo stretchy="false" form="prefix">(</mo><mi
+    mathvariant="normal">Δ</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mrow><mi
+    mathvariant="normal">log</mi><mo>⁡</mo></mrow><mo stretchy="false" form="prefix">(</mo><mn>1</mn><mo>+</mo><msup><mi>e</mi><mrow><mi>−</mi><mi
+    mathvariant="normal">Δ</mi></mrow></msup><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mrow><mi
+    mathvariant="normal">log</mi><mo>⁡</mo></mrow><mrow><mo stretchy="true" form="prefix">(</mo><mn>1</mn><mo>+</mo><msup><mi>e</mi><mrow><msub><mi>r</mi><mi>θ</mi></msub><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mi>r</mi></msub><mo>∣</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo><mo>−</mo><msub><mi>r</mi><mi>θ</mi></msub><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mi>c</mi></msub><mo>∣</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow></msup><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation
+    encoding="application/x-tex">-\log\sigma(\Delta) = \log(1 + e^{-\Delta}) = \log\left(1
+    + e^{r_{\theta}(y_r \mid x) - r_{\theta}(y_c \mid x)}\right)</annotation></semantics>.
+    They both appear in the RLHF literature.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Architecture
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: The most common way reward models are implemented is through an abstraction
+    similar to Transformer’s `AutoModelForSequenceClassification`, which appends a
+    small linear head to the language model that performs classification between two
+    outcomes – chosen and rejected. At inference time, the model outputs the *probability
+    that the piece of text is chosen* as a single logit from the model.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Other implementation options exist, such as just taking a linear layer directly
+    from the final embeddings, but they are less common in open tooling.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Implementation Example
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'Implementing the reward modeling loss is quite simple. More of the implementation
+    challenge is on setting up a separate data loader and inference pipeline. Given
+    the correct dataloader with tokenized, chosen and rejected prompts with completions,
+    the loss is implemented as:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'As for the bigger picture, this is often within a causal language model that
+    has an additional head added (and learned with the above loss) that transitions
+    from the final hidden state to the score of the inputs. This model will have a
+    structure as follows:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE1]'
+  prefs: []
+  type: TYPE_PRE
+- en: In this section and what follows, most of the implementation complexity for
+    reward models (and much of post-training) is around constructing the data-loaders
+    correctly and distributed learning systems. Note, when training reward models,
+    the most common practice is to train for only 1 epoch to avoid overfitting.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Variants
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Reward modeling is a relatively under-explored area of RLHF. The traditional
+    reward modeling loss has been modified in many popular works, but the modifications
+    have not solidified into a single best practice.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Preference Margin Loss
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: 'In the case where annotators are providing either scores or rankings on a Likert
+    Scale, the magnitude of the relational quantities can be used in training. The
+    most common practice is to binarize the data along the preference direction, reducing
+    the mixed information of relative ratings or the strength of the ranking to just
+    chosen and rejected completions. The additional information, such as the magnitude
+    of the preference, has been used to improve model training, but it has not converged
+    as a standard practice. Llama 2 proposes using the margin between two datapoints,
+    <semantics><mrow><mi>m</mi><mo stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mi>c</mi></msub><mo>,</mo><msub><mi>y</mi><mi>r</mi></msub><mo
+    stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">m(y_c,
+    y_r)</annotation></semantics>, to distinguish the magnitude of preference:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: <semantics><mrow><mi>ℒ</mi><mo stretchy="false" form="prefix">(</mo><mi>θ</mi><mo
+    stretchy="false" form="postfix">)</mo><mo>=</mo><mi>−</mi><mrow><mi mathvariant="normal">log</mi><mo>⁡</mo></mrow><mrow><mo
+    stretchy="true" form="prefix">(</mo><mi>σ</mi><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>r</mi><mi>θ</mi></msub><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mi>c</mi></msub><mo>∣</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo><mo>−</mo><msub><mi>r</mi><mi>θ</mi></msub><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mi>r</mi></msub><mo>∣</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo><mo>−</mo><mi>m</mi><mo stretchy="false"
+    form="prefix">(</mo><msub><mi>y</mi><mi>c</mi></msub><mo>,</mo><msub><mi>y</mi><mi>r</mi></msub><mo
+    stretchy="false" form="postfix">)</mo><mo stretchy="true" form="postfix">)</mo></mrow><mo
+    stretchy="true" form="postfix">)</mo></mrow><mrow><mo stretchy="false" form="prefix">(</mo><mn>17</mn><mo
+    stretchy="false" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\mathcal{L}(\theta)
+    = - \log \left( \sigma \left( r_{\theta}(y_c \mid x) - r_{\theta}(y_r \mid x)
+    - m(y_c, y_r) \right) \right)\qquad{(17)}</annotation></semantics>
+  prefs: []
+  type: TYPE_NORMAL
+- en: For example, each completion is often given a ranking from 1 to 5 in terms of
+    quality. In the case where the chosen sample was assigned a score of 5 and rejected
+    a score of 2, the margin <semantics><mrow><mi>m</mi><mo stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mi>c</mi></msub><mo>,</mo><msub><mi>y</mi><mi>r</mi></msub><mo
+    stretchy="false" form="postfix">)</mo><mo>=</mo><mn>5</mn><mo>−</mo><mn>2</mn><mo>=</mo><mn>3</mn></mrow><annotation
+    encoding="application/x-tex">m(y_c, y_r)= 5 - 2 = 3</annotation></semantics>.
+    Other functions for computing margins can be explored.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Note that in Llama 3 the margin term was removed as the team observed diminishing
+    improvements after scaling.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Balancing Multiple Comparisons Per Prompt
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: 'InstructGPT studies the impact of using a variable number of completions per
+    prompt, yet balancing them in the reward model training [[3]](ch021.xhtml#ref-ouyang2022training).
+    To do this, they weight the loss updates per comparison per prompt. At an implementation
+    level, this can be done automatically by including all examples with the same
+    prompt in the same training batch, naturally weighing the different pairs – not
+    doing this caused overfitting to the prompts. The loss function becomes:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: <semantics><mrow><mi>ℒ</mi><mo stretchy="false" form="prefix">(</mo><mi>θ</mi><mo
+    stretchy="false" form="postfix">)</mo><mo>=</mo><mi>−</mi><mfrac><mn>1</mn><mrow><mo
+    stretchy="true" form="prefix">(</mo><mfrac linethickness="0"><mi>K</mi><mn>2</mn></mfrac><mo
+    stretchy="true" form="postfix">)</mo></mrow></mfrac><msub><mi>𝔼</mi><mrow><mo
+    stretchy="false" form="prefix">(</mo><mi>x</mi><mo>,</mo><msub><mi>y</mi><mi>c</mi></msub><mo>,</mo><msub><mi>y</mi><mi>r</mi></msub><mo
+    stretchy="false" form="postfix">)</mo><mo>∼</mo><mi>D</mi></mrow></msub><mrow><mi
+    mathvariant="normal">log</mi><mo>⁡</mo></mrow><mrow><mo stretchy="true" form="prefix">(</mo><mi>σ</mi><mrow><mo
+    stretchy="true" form="prefix">(</mo><msub><mi>r</mi><mi>θ</mi></msub><mo stretchy="false"
+    form="prefix">(</mo><msub><mi>y</mi><mi>c</mi></msub><mo>∣</mo><mi>x</mi><mo stretchy="false"
+    form="postfix">)</mo><mo>−</mo><msub><mi>r</mi><mi>θ</mi></msub><mo stretchy="false"
+    form="prefix">(</mo><msub><mi>y</mi><mi>r</mi></msub><mo>∣</mo><mi>x</mi><mo stretchy="false"
+    form="postfix">)</mo><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="true"
+    form="postfix">)</mo></mrow><mrow><mo stretchy="false" form="prefix">(</mo><mn>18</mn><mo
+    stretchy="false" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\mathcal{L}(\theta)
+    = - \frac{1}{\binom{K}{2}} \mathbb{E}_{(x, y_c, y_r)\sim D} \log \left( \sigma
+    \left( r_{\theta}(y_c \mid x) - r_{\theta}(y_r \mid x) \right) \right)\qquad{(18)}</annotation></semantics>
+  prefs: []
+  type: TYPE_NORMAL
+- en: K-wise Loss Function
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: There are many other formulations that can create suitable models of human preferences
+    for RLHF. One such example, used in the popular, early RLHF’d models Starling
+    7B and 34B [[126]](ch021.xhtml#ref-zhu2024starling), is a K-wise loss function
+    based on the Plackett-Luce model [[127]](ch021.xhtml#ref-liu2019learning).
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Zhu et al. 2023 [[128]](ch021.xhtml#ref-zhu2023principled) formalizes the setup
+    as follows. With a prompt, or state, <semantics><msup><mi>s</mi><mi>i</mi></msup><annotation
+    encoding="application/x-tex">s^i</annotation></semantics>, <semantics><mi>K</mi><annotation
+    encoding="application/x-tex">K</annotation></semantics> actions <semantics><mrow><mo
+    stretchy="false" form="prefix">(</mo><msubsup><mi>a</mi><mn>0</mn><mi>i</mi></msubsup><mo>,</mo><msubsup><mi>a</mi><mn>1</mn><mi>i</mi></msubsup><mo>,</mo><mi>⋯</mi><mo>,</mo><msubsup><mi>a</mi><mrow><mi>K</mi><mo>−</mo><mn>1</mn></mrow><mi>i</mi></msubsup><mo
+    stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">(a_0^i,
+    a_1^i, \cdots, a_{K-1}^i)</annotation></semantics> are sampled from <semantics><mrow><mi>P</mi><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>a</mi><mn>0</mn></msub><mo>,</mo><mi>⋯</mi><mo>,</mo><msub><mi>a</mi><mrow><mi>K</mi><mo>−</mo><mn>1</mn></mrow></msub><mo
+    stretchy="false" form="prefix">|</mo><msup><mi>s</mi><mi>i</mi></msup><mo stretchy="false"
+    form="postfix">)</mo></mrow><annotation encoding="application/x-tex">P(a_0,\cdots,a_{K-1}|s^i)</annotation></semantics>.
+    Then, labelers are used to rank preferences with <semantics><mrow><msup><mi>σ</mi><mi>i</mi></msup><mo>:</mo><mo
+    stretchy="false" form="prefix">[</mo><mi>K</mi><mo stretchy="false" form="postfix">]</mo><mo>↦</mo><mo
+    stretchy="false" form="prefix">[</mo><mi>K</mi><mo stretchy="false" form="postfix">]</mo></mrow><annotation
+    encoding="application/x-tex">\sigma^i: [K] \mapsto [K]</annotation></semantics>
+    is a function representing action rankings, where <semantics><mrow><msup><mi>σ</mi><mi>i</mi></msup><mo
+    stretchy="false" form="prefix">(</mo><mn>0</mn><mo stretchy="false" form="postfix">)</mo></mrow><annotation
+    encoding="application/x-tex">\sigma^i(0)</annotation></semantics> is the most
+    preferred action. This yields a preference model capturing the following:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: <semantics><mrow><mi>P</mi><mo stretchy="false" form="prefix">(</mo><msup><mi>σ</mi><mi>i</mi></msup><mo
+    stretchy="false" form="prefix">|</mo><msup><mi>s</mi><mi>i</mi></msup><mo>,</mo><msubsup><mi>a</mi><mn>0</mn><mi>i</mi></msubsup><mo>,</mo><msubsup><mi>a</mi><mn>1</mn><mi>i</mi></msubsup><mo>,</mo><mi>…</mi><mo>,</mo><msubsup><mi>a</mi><mrow><mi>K</mi><mo>−</mo><mn>1</mn></mrow><mi>i</mi></msubsup><mo
+    stretchy="false" form="postfix">)</mo><mo>=</mo><munderover><mo>∏</mo><mrow><mi>k</mi><mo>=</mo><mn>0</mn></mrow><mrow><mi>K</mi><mo>−</mo><mn>1</mn></mrow></munderover><mfrac><mrow><mrow><mi
+    mathvariant="normal">exp</mi><mo>⁡</mo></mrow><mo stretchy="false" form="prefix">(</mo><msub><mi>r</mi><mrow><mi>θ</mi><mo>⋆</mo></mrow></msub><mo
+    stretchy="false" form="prefix">(</mo><msup><mi>s</mi><mi>i</mi></msup><mo>,</mo><msubsup><mi>a</mi><mrow><msup><mi>σ</mi><mi>i</mi></msup><mo
+    stretchy="false" form="prefix">(</mo><mi>k</mi><mo stretchy="false" form="postfix">)</mo></mrow><mi>i</mi></msubsup><mo
+    stretchy="false" form="postfix">)</mo><mo stretchy="false" form="postfix">)</mo></mrow><mrow><munderover><mo>∑</mo><mrow><mi>j</mi><mo>=</mo><mi>k</mi></mrow><mrow><mi>K</mi><mo>−</mo><mn>1</mn></mrow></munderover><mrow><mi
+    mathvariant="normal">exp</mi><mo>⁡</mo></mrow><mo stretchy="false" form="prefix">(</mo><msub><mi>r</mi><mrow><mi>θ</mi><mo>⋆</mo></mrow></msub><mo
+    stretchy="false" form="prefix">(</mo><msup><mi>s</mi><mi>i</mi></msup><mo>,</mo><msubsup><mi>a</mi><mrow><msup><mi>σ</mi><mi>i</mi></msup><mo
+    stretchy="false" form="prefix">(</mo><mi>j</mi><mo stretchy="false" form="postfix">)</mo></mrow><mi>i</mi></msubsup><mo
+    stretchy="false" form="postfix">)</mo><mo stretchy="false" form="postfix">)</mo></mrow></mfrac><mrow><mo
+    stretchy="false" form="prefix">(</mo><mn>19</mn><mo stretchy="false" form="postfix">)</mo></mrow></mrow><annotation
+    encoding="application/x-tex">P(\sigma^i|s^i,a_0^i,a_1^i,\ldots,a_{K-1}^i) = \prod_{k=0}^{K-1}
+    \frac{\exp(r_{\theta\star}(s^i,a_{\sigma^i(k)}^i))}{\sum_{j=k}^{K-1}\exp(r_{\theta\star}(s^i,a_{\sigma^i(j)}^i))}\qquad{(19)}</annotation></semantics>
+  prefs: []
+  type: TYPE_NORMAL
+- en: When <semantics><mrow><mi>K</mi><mo>=</mo><mn>2</mn></mrow><annotation encoding="application/x-tex">K
+    = 2</annotation></semantics>, this reduces to the Bradley-Terry (BT) model for
+    pairwise comparisons. Regardless, once trained, these models are used similarly
+    to other reward models during RLHF training.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Outcome Reward Models
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: The majority of *preference tuning* for language models and other AI systems
+    is done with the Bradley Terry models discussed above. For reasoning heavy tasks,
+    one can use an Outcome Reward Model (ORM). The training data for an ORM is constructed
+    in a similar manner to standard preference tuning. Here, we have a problem statement
+    or prompt, <semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics>
+    and two completions <semantics><msub><mi>y</mi><mn>1</mn></msub><annotation encoding="application/x-tex">y_1</annotation></semantics>
+    and <semantics><msub><mi>y</mi><mn>2</mn></msub><annotation encoding="application/x-tex">y_2</annotation></semantics>.
+    The inductive bias used here is that one completion should be a correct solution
+    to the problem and one incorrect, resulting in <semantics><mrow><mo stretchy="false"
+    form="prefix">(</mo><msub><mi>y</mi><mi>c</mi></msub><mo>,</mo><msub><mi>y</mi><mrow><mi>i</mi><mi>c</mi></mrow></msub><mo
+    stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">(y_c,y_{ic})</annotation></semantics>.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The shape of the models used is very similar to a standard reward model, with
+    a linear layer appended to a model that can output a single logit (in the case
+    of an RM) – with an ORM, the training objective that follows is slightly different
+    [[129]](ch021.xhtml#ref-cobbe2021gsm8k):'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[We] train verifiers with a joint objective where the model learns to label
+    a model completion as correct or incorrect, in addition to the original language
+    modeling objective. Architecturally, this means our verifiers are language models,
+    with a small scalar head that outputs predictions on a per-token basis. We implement
+    this scalar head as a single bias parameter and single gain parameter that operate
+    on the logits outputted by the language model’s final unembedding layer.'
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: 'To translate, this is implemented as a language modeling head that can predict
+    two classes per token (1 for correct, 0 for incorrect), rather than a classification
+    head of a traditional RM that outputs one logit for the entire sequence. Formally,
+    following [[130]](ch021.xhtml#ref-lyu2025exploring) this can be shown as:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: <semantics><mrow><msub><mi>ℒ</mi><mtext mathvariant="normal">CE</mtext></msub><mo
+    stretchy="false" form="prefix">(</mo><mi>θ</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mi>−</mi><msub><mi>𝔼</mi><mrow><mo
+    stretchy="false" form="prefix">(</mo><mi>s</mi><mo>,</mo><mi>r</mi><mo stretchy="false"
+    form="postfix">)</mo><mo>∼</mo><mi>𝒟</mi></mrow></msub><mo stretchy="false" form="prefix">[</mo><mi>r</mi><mrow><mi
+    mathvariant="normal">log</mi><mo>⁡</mo></mrow><msub><mi>p</mi><mi>θ</mi></msub><mo
+    stretchy="false" form="prefix">(</mo><mi>s</mi><mo stretchy="false" form="postfix">)</mo><mo>+</mo><mo
+    stretchy="false" form="prefix">(</mo><mn>1</mn><mo>−</mo><mi>r</mi><mo stretchy="false"
+    form="postfix">)</mo><mrow><mi mathvariant="normal">log</mi><mo>⁡</mo></mrow><mo
+    stretchy="false" form="prefix">(</mo><mn>1</mn><mo>−</mo><msub><mi>p</mi><mi>θ</mi></msub><mo
+    stretchy="false" form="prefix">(</mo><mi>s</mi><mo stretchy="false" form="postfix">)</mo><mo
+    stretchy="false" form="postfix">)</mo><mo stretchy="false" form="postfix">]</mo><mrow><mo
+    stretchy="false" form="prefix">(</mo><mn>20</mn><mo stretchy="false" form="postfix">)</mo></mrow></mrow><annotation
+    encoding="application/x-tex">\mathcal{L}_{\text{CE}}(\theta) = -\mathbb{E}_{(s,r)\sim
+    \mathcal{D}}[r\log p_\theta(s) + (1-r)\log(1-p_\theta(s))]\qquad{(20)}</annotation></semantics>
+  prefs: []
+  type: TYPE_NORMAL
+- en: where <semantics><mrow><mi>r</mi><mo>∈</mo><mrow><mn>0</mn><mo>,</mo><mn>1</mn></mrow></mrow><annotation
+    encoding="application/x-tex">r \in {0,1}</annotation></semantics> is a binary
+    label where 1 applies to a correct answer to a given prompt and 0 applies to an
+    incorrect, and <semantics><mrow><msub><mi>p</mi><mi>θ</mi></msub><mo stretchy="false"
+    form="prefix">(</mo><mi>s</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation
+    encoding="application/x-tex">p_\theta(s)</annotation></semantics> is the scalar
+    proportional to predicted probability of correctness from the model being trained.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Implementing an outcome reward model (and other types, as we’ll see with the
+    Process Reward Model) involves applying the cross-entropy loss per-token based
+    on if the completion is a correct sample. This is far closer to the language modeling
+    loss, where it does not need the structured chosen-rejected nature of standard
+    Bradley-Terry reward models.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The model structure could follow as:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE2]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'A simplified version of the loss follows:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE3]'
+  prefs: []
+  type: TYPE_PRE
+- en: The important intuition here is that an ORM will output a probability of correctness
+    at every token in the sequence. This can be a noisy process, as the updates and
+    loss propagates per token depending on outcomes and attention mappings.
+  prefs: []
+  type: TYPE_NORMAL
+- en: These models have continued in use, but are less supported in open-source RLHF
+    tools. For example, the same type of ORM was used in the seminal work *Let’s Verify
+    Step by Step* [[45]](ch021.xhtml#ref-lightman2023let), but without the language
+    modeling prediction piece of the loss. Then, the final loss is a cross entropy
+    loss on every token predicting if the final answer is correct.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Given the lack of support, the term outcome reward model (ORM) has been used
+    in multiple ways. Some literature, e.g. [[130]](ch021.xhtml#ref-lyu2025exploring),
+    continues to use the original definition from Cobbe et al. 2021\. Others do not.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Process Reward Models
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Process Reward Models (PRMs), originally called Process-supervised Reward Models,
+    are reward models trained to output scores at every *step* in a chain of thought
+    reasoning process. These differ from a standard RM that outputs a score only at
+    an EOS token or a ORM that outputs a score at every token. Process Reward Models
+    require supervision at the end of each reasoning step, and then are trained similarly
+    where the tokens in the step are trained to their relevant target – the target
+    is the step in PRMs and the entire response for ORMs.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Following [[45]](ch021.xhtml#ref-lightman2023let), a binary-labeled PRM is
+    commonly optimized with a per-step cross-entropy loss:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: <semantics><mrow><msub><mi>ℒ</mi><mtext mathvariant="normal">PRM</mtext></msub><mo
+    stretchy="false" form="prefix">(</mo><mi>θ</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mi>−</mi><msub><mi>𝔼</mi><mrow><mo
+    stretchy="false" form="prefix">(</mo><mi>x</mi><mo>,</mo><mi>s</mi><mo stretchy="false"
+    form="postfix">)</mo><mo>∼</mo><mi>𝒟</mi></mrow></msub><mrow><mo stretchy="true"
+    form="prefix">[</mo><munderover><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>K</mi></munderover><msub><mi>y</mi><msub><mi>s</mi><mi>i</mi></msub></msub><mi
+    mathvariant="normal">log</mi><msub><mi>r</mi><mi>θ</mi></msub><mo stretchy="false"
+    form="prefix">(</mo><msub><mi>s</mi><mi>i</mi></msub><mo>∣</mo><mi>x</mi><mo stretchy="false"
+    form="postfix">)</mo><mo>+</mo><mo stretchy="false" form="prefix">(</mo><mn>1</mn><mo>−</mo><msub><mi>y</mi><msub><mi>s</mi><mi>i</mi></msub></msub><mo
+    stretchy="false" form="postfix">)</mo><mi mathvariant="normal">log</mi><mrow><mo
+    stretchy="true" form="prefix">(</mo><mn>1</mn><mo>−</mo><msub><mi>r</mi><mi>θ</mi></msub><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>s</mi><mi>i</mi></msub><mo>∣</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo><mo stretchy="true" form="postfix">)</mo></mrow><mo
+    stretchy="true" form="postfix">]</mo></mrow><mrow><mo stretchy="false" form="prefix">(</mo><mn>21</mn><mo
+    stretchy="false" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\mathcal{L}_{\text{PRM}}(\theta)
+    = - \mathbb{E}_{(x, s) \sim \mathcal{D}} \left[ \sum_{i=1}^{K} y_{s_i} \log r_\theta(s_i
+    \mid x) + (1 - y_{s_i}) \log \left(1 - r_\theta(s_i \mid x)\right) \right] \qquad{(21)}</annotation></semantics>
+  prefs: []
+  type: TYPE_NORMAL
+- en: where <semantics><mi>s</mi><annotation encoding="application/x-tex">s</annotation></semantics>
+    is a sampled chain-of-thought with <semantics><mi>K</mi><annotation encoding="application/x-tex">K</annotation></semantics>
+    annotated steps, <semantics><mrow><msub><mi>y</mi><msub><mi>s</mi><mi>i</mi></msub></msub><mo>∈</mo><mo
+    stretchy="false" form="prefix">{</mo><mn>0</mn><mo>,</mo><mn>1</mn><mo stretchy="false"
+    form="postfix">}</mo></mrow><annotation encoding="application/x-tex">y_{s_i} \in
+    \{0,1\}</annotation></semantics> denotes whether the <semantics><mi>i</mi><annotation
+    encoding="application/x-tex">i</annotation></semantics>-th step is correct, and
+    <semantics><mrow><msub><mi>r</mi><mi>θ</mi></msub><mo stretchy="false" form="prefix">(</mo><msub><mi>s</mi><mi>i</mi></msub><mo>∣</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">r_\theta(s_i
+    \mid x)</annotation></semantics> is the PRM’s predicted probability that step
+    <semantics><msub><mi>s</mi><mi>i</mi></msub><annotation encoding="application/x-tex">s_i</annotation></semantics>
+    is valid conditioned on the original prompt <semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics>.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Here’s an example of how this per-step label can be packaged in a trainer,
+    from HuggingFace’s TRL (Transformer Reinforcement Learning) [[42]](ch021.xhtml#ref-vonwerra2022trl):'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE4]'
+  prefs: []
+  type: TYPE_PRE
+- en: Traditionally PRMs are trained with a language modeling head that outputs a
+    token only at the end of a reasoning step, e.g. at the token corresponding to
+    a double new line or other special token. These predictions tend to be -1 for
+    incorrect, 0 for neutral, and 1 for correct. These labels do not necessarily tie
+    with whether or not the model is on the right path, but if the step is correct.
+  prefs: []
+  type: TYPE_NORMAL
+- en: An example construction of a PRM is shown below.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE5]'
+  prefs: []
+  type: TYPE_PRE
+- en: The core loss function looks very similar to outcome reward models, with the
+    labels being applied at different intervals.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE6]'
+  prefs: []
+  type: TYPE_PRE
+- en: Reward Models vs. Outcome RMs vs. Process RMs vs. Value Functions
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: The various types of reward models covered indicate the spectrum of ways that
+    “quality” can be measured in RLHF and other post-training methods. Below, a summary
+    of what the models predict and how they are trained.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Table 4: Comparing types of reward models.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '| Model Class | What They Predict | How They Are Trained | LM structure |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- | --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| **Reward Models** | Quality of text via probability of chosen response at
+    EOS token | Contrastive loss between pairwise (or N-wise) comparisons between
+    completions | Regression or classification head on top of LM features |'
+  prefs: []
+  type: TYPE_TB
+- en: '| **Outcome Reward Models** | Probability that an answer is correct per-token
+    | Labeled outcome pairs (e.g., success/failure on verifiable domains) | Language
+    modeling head per-token cross-entropy, where every label is the outcome level
+    label |'
+  prefs: []
+  type: TYPE_TB
+- en: '| **Process Reward Models** | A reward or score for intermediate steps at end
+    of reasoning steps | Trained using intermediate feedback or stepwise annotations
+    (trained per token in reasoning step) | Language modeling head only running inference
+    per reasoning step, predicts three classes -1, 0, 1 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| **Value Functions** | The expected return given the current state | Trained
+    via regression to each point in sequence | A classification with output per-token
+    |'
+  prefs: []
+  type: TYPE_TB
+- en: Some notes, given the above table has a lot of edge cases.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Both in preference tuning and reasoning training, the value functions often
+    have a discount factor of 1, which makes a value function even closer to an outcome
+    reward model, but with a different training loss.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: A process reward model can be supervised by doing rollouts from an intermediate
+    state and collecting outcome data. This blends multiple ideas, but if the *loss*
+    is per reasoning step labels, it is best referred to as a PRM.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Generative Reward Modeling
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'With the cost of preference data, a large research area emerged to use existing
+    language models as a judge of human preferences or in other evaluation settings
+    [[131]](ch021.xhtml#ref-zheng2023judging). The core idea is to prompt a language
+    model with instructions on how to judge, a prompt, and two completions (much as
+    would be done with human labelers). An example prompt, from one of the seminal
+    works here for the chat evaluation MT-Bench [[131]](ch021.xhtml#ref-zheng2023judging),
+    follows:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE7]'
+  prefs: []
+  type: TYPE_PRE
+- en: Given the efficacy of LLM-as-a-judge for evaluation, spawning many other evaluations
+    such as AlpacaEval [[132]](ch021.xhtml#ref-dubois2024length), Arena-Hard [[133]](ch021.xhtml#ref-li2024crowdsourced),
+    and WildBench [[134]](ch021.xhtml#ref-lin2024wildbench), many began using LLM-as-a-judge
+    instead of reward models to create and use preference data.
+  prefs: []
+  type: TYPE_NORMAL
+- en: An entire field of study has emerged to study how to use so called “Generative
+    Reward Models” [[135]](ch021.xhtml#ref-mahan2024generative) [[136]](ch021.xhtml#ref-zhang2024generative)
+    [[137]](ch021.xhtml#ref-ankner2024critique) (including models trained *specifically*
+    to be effective judges [[138]](ch021.xhtml#ref-kim2023prometheus)), but on RM
+    evaluations they tend to be behind existing reward models, showing that reward
+    modeling is an important technique for current RLHF.
+  prefs: []
+  type: TYPE_NORMAL
+- en: A common trick to improve the robustness of LLM-as-a-judge workflows is to use
+    a sampling temperature of 0 to reduce variance of ratings.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Further Reading
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: The academic literature for reward modeling established itself in 2024\. The
+    bulk of progress in reward modeling early on has been in establishing benchmarks
+    and identifying behavior modes. The first RM benchmark, RewardBench, provided
+    common infrastructure for testing reward models [[139]](ch021.xhtml#ref-lambert2024rewardbench).
+    Since then, RM evaluation has expanded to be similar to the types of evaluations
+    available to general post-trained models, where some evaluations test the accuracy
+    of prediction on domains with known true answers [[139]](ch021.xhtml#ref-lambert2024rewardbench)
+    or those more similar to “vibes” performed with LLM-as-a-judge or correlations
+    to other benchmarks [[140]](ch021.xhtml#ref-wen2024rethinking).
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Examples of new benchmarks include:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Text-only (general chat / preferences):** RMB [[141]](ch021.xhtml#ref-zhou2024rmb),
+    RewardBench2 [[112]](ch021.xhtml#ref-malik2025rewardbench), Preference Proxy Evaluations
+    [[142]](ch021.xhtml#ref-frick2024evaluate), or RM-Bench [[143]](ch021.xhtml#ref-liu2024rm).'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Specialized text-only (math, etc.):** multilingual reward bench (M-RewardBench)
+    [[144]](ch021.xhtml#ref-gureja2024m), RAG-RewardBench for retrieval augmented
+    generation (RAG) [[145]](ch021.xhtml#ref-jin2024rag), ReWordBench for typos [[146]](ch021.xhtml#ref-wu2025rewordbench),
+    RewardMATH [[147]](ch021.xhtml#ref-kim2024evaluating), or AceMath-RewardBench
+    [[148]](ch021.xhtml#ref-liu2024acemath).'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Process RMs:** PRM Bench [[149]](ch021.xhtml#ref-song2025prmbench) or ProcessBench
+    [[150]](ch021.xhtml#ref-zheng2024processbench) and visual benchmarks of VisualProcessBench
+    [[151]](ch021.xhtml#ref-wang2025visualprm) or ViLBench [[152]](ch021.xhtml#ref-tu2025vilbench).'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Agentic RMs:** Agent-RewardBench [[153]](ch021.xhtml#ref-men2025agentrewardbench)
+    or CUARewardBench [[154]](ch021.xhtml#ref-lin2025cuarewardbench).'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Multimodal:** MJ-Bench [[155]](ch021.xhtml#ref-chen2024mj), Multimodal RewardBench
+    [[156]](ch021.xhtml#ref-yasunaga2025multimodal), VL RewardBench [[157]](ch021.xhtml#ref-li2024vlrewardbench),
+    or VLRMBench [[158]](ch021.xhtml#ref-ruan2025vlrmbench).'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: To understand progress on *training* reward models, one can reference new reward
+    model training methods, with aspect-conditioned models [[159]](ch021.xhtml#ref-wang2024interpretable),
+    high quality human datasets [[160]](ch021.xhtml#ref-wang2024helpsteer2) [[111]](ch021.xhtml#ref-wang2024helpsteer2p),
+    scaling experiments [[25]](ch021.xhtml#ref-adler2024nemotron), extensive experimentation
+    [[44]](ch021.xhtml#ref-touvron2023llama), or debiasing data [[161]](ch021.xhtml#ref-park2024offsetbias).
+  prefs: []
+  type: TYPE_NORMAL

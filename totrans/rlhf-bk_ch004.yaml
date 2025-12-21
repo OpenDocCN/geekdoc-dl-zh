@@ -1,0 +1,538 @@
+- en: Training Overview
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: In this chapter we provide a cursory overview of RLHF training, before getting
+    into the specifics later in the book. RLHF, while optimizing a simple loss function,
+    involves training multiple, different AI models in sequence and then linking them
+    together in a complex, online optimization.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Here, we introduce the core objective of RLHF, which is optimizing a proxy of
+    reward of human preferences with a distance-based regularizer (along with showing
+    how it relates to classical RL problems). Then we showcase canonical recipes which
+    use RLHF to create leading models to show how RLHF fits in with the rest of post-training
+    methods. These example recipes will serve as references for later in the book,
+    where we describe different optimization choices you have when doing RLHF, and
+    we will point back to how different key models used different steps in training.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Problem Formulation
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'The optimization of reinforcement learning from human feedback (RLHF) builds
+    on top of the standard RL setup. In RL, an agent takes actions <semantics><msub><mi>a</mi><mi>t</mi></msub><annotation
+    encoding="application/x-tex">a_t</annotation></semantics> sampled from a policy
+    <semantics><mrow><mi>π</mi><mo stretchy="false" form="prefix">(</mo><msub><mi>a</mi><mi>t</mi></msub><mo>∣</mo><msub><mi>s</mi><mi>t</mi></msub><mo
+    stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\pi(a_t\mid
+    s_t)</annotation></semantics> given the state of the environment <semantics><msub><mi>s</mi><mi>t</mi></msub><annotation
+    encoding="application/x-tex">s_t</annotation></semantics> to maximize reward <semantics><mrow><mi>r</mi><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>s</mi><mi>t</mi></msub><mo>,</mo><msub><mi>a</mi><mi>t</mi></msub><mo
+    stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">r(s_t,a_t)</annotation></semantics>
+    [[55]](ch021.xhtml#ref-sutton2018reinforcement). Traditionally, the environment
+    evolves according to transition (dynamics) <semantics><mrow><mi>p</mi><mo stretchy="false"
+    form="prefix">(</mo><msub><mi>s</mi><mrow><mi>t</mi><mo>+</mo><mn>1</mn></mrow></msub><mo>∣</mo><msub><mi>s</mi><mi>t</mi></msub><mo>,</mo><msub><mi>a</mi><mi>t</mi></msub><mo
+    stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">p(s_{t+1}\mid
+    s_t, a_t)</annotation></semantics> with an initial state distribution <semantics><mrow><msub><mi>ρ</mi><mn>0</mn></msub><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>s</mi><mn>0</mn></msub><mo stretchy="false"
+    form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\rho_0(s_0)</annotation></semantics>.
+    Together, the policy and dynamics induce a trajectory distribution:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: <semantics><mrow><msub><mi>p</mi><mi>π</mi></msub><mo stretchy="false" form="prefix">(</mo><mi>τ</mi><mo
+    stretchy="false" form="postfix">)</mo><mo>=</mo><msub><mi>ρ</mi><mn>0</mn></msub><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>s</mi><mn>0</mn></msub><mo stretchy="false"
+    form="postfix">)</mo><munderover><mo>∏</mo><mrow><mi>t</mi><mo>=</mo><mn>0</mn></mrow><mrow><mi>T</mi><mo>−</mo><mn>1</mn></mrow></munderover><mi>π</mi><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>a</mi><mi>t</mi></msub><mo>∣</mo><msub><mi>s</mi><mi>t</mi></msub><mo
+    stretchy="false" form="postfix">)</mo><mi>p</mi><mo stretchy="false" form="prefix">(</mo><msub><mi>s</mi><mrow><mi>t</mi><mo>+</mo><mn>1</mn></mrow></msub><mo>∣</mo><msub><mi>s</mi><mi>t</mi></msub><mo>,</mo><msub><mi>a</mi><mi>t</mi></msub><mo
+    stretchy="false" form="postfix">)</mo><mi>.</mi><mrow><mo stretchy="false" form="prefix">(</mo><mn>7</mn><mo
+    stretchy="false" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">p_{\pi}(\tau)=\rho_0(s_0)\prod_{t=0}^{T-1}\pi(a_t\mid
+    s_t)\,p(s_{t+1}\mid s_t,a_t).\qquad{(7)}</annotation></semantics>
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Across a finite episode with horizon <semantics><mi>T</mi><annotation encoding="application/x-tex">T</annotation></semantics>,
+    the goal of an RL agent is to solve the following optimization:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: <semantics><mrow><mi>J</mi><mo stretchy="false" form="prefix">(</mo><mi>π</mi><mo
+    stretchy="false" form="postfix">)</mo><mo>=</mo><msub><mi>𝔼</mi><mrow><mi>τ</mi><mo>∼</mo><msub><mi>p</mi><mi>π</mi></msub></mrow></msub><mrow><mo
+    stretchy="true" form="prefix">[</mo><munderover><mo>∑</mo><mrow><mi>t</mi><mo>=</mo><mn>0</mn></mrow><mrow><mi>T</mi><mo>−</mo><mn>1</mn></mrow></munderover><msup><mi>γ</mi><mi>t</mi></msup><mi>r</mi><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>s</mi><mi>t</mi></msub><mo>,</mo><msub><mi>a</mi><mi>t</mi></msub><mo
+    stretchy="false" form="postfix">)</mo><mo stretchy="true" form="postfix">]</mo></mrow><mo>,</mo><mrow><mo
+    stretchy="false" form="prefix">(</mo><mn>8</mn><mo stretchy="false" form="postfix">)</mo></mrow></mrow><annotation
+    encoding="application/x-tex">J(\pi) = \mathbb{E}_{\tau \sim p_{\pi}} \left[ \sum_{t=0}^{T-1}
+    \gamma^t r(s_t, a_t) \right],\qquad{(8)}</annotation></semantics>
+  prefs: []
+  type: TYPE_NORMAL
+- en: For continuing tasks, one often takes <semantics><mrow><mi>T</mi><mo>→</mo><mi>∞</mi></mrow><annotation
+    encoding="application/x-tex">T\to\infty</annotation></semantics> and relies on
+    discounting (<semantics><mrow><mi>γ</mi><mo><</mo><mn>1</mn></mrow><annotation
+    encoding="application/x-tex">\gamma<1</annotation></semantics>) to keep the objective
+    well-defined. <semantics><mi>γ</mi><annotation encoding="application/x-tex">\gamma</annotation></semantics>
+    is a discount factor from 0 to 1 that balances the desirability of near- versus
+    future-rewards. Multiple methods for optimizing this expression are discussed
+    in Chapter 11.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 2: Standard RL loop](../media/file1.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Figure 2: Standard RL loop'
+  prefs: []
+  type: TYPE_NORMAL
+- en: A standard illustration of the RL loop is shown in fig. [2](#fig:rl) and (compare
+    this to the RLHF loop in fig. [3](#fig:rlhf)).
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Example RL Task: CartPole'
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: To make the transition function concrete, consider the classic *CartPole* (inverted
+    pendulum) control task.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**State (<semantics><msub><mi>s</mi><mi>t</mi></msub><annotation encoding="application/x-tex">s_t</annotation></semantics>)**:
+    the cart position/velocity and pole angle/angular velocity,'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: <semantics><mrow><msub><mi>s</mi><mi>t</mi></msub><mo>=</mo><mo stretchy="false"
+    form="prefix">(</mo><msub><mi>x</mi><mi>t</mi></msub><mo>,</mo><msub><mover><mi>x</mi><mo
+    accent="true">̇</mo></mover><mi>t</mi></msub><mo>,</mo><msub><mi>θ</mi><mi>t</mi></msub><mo>,</mo><msub><mover><mi>θ</mi><mo
+    accent="true">̇</mo></mover><mi>t</mi></msub><mo stretchy="false" form="postfix">)</mo><mi>.</mi></mrow><annotation
+    encoding="application/x-tex">s_t = (x_t,\,\dot{x}_t,\,\theta_t,\,\dot{\theta}_t).</annotation></semantics>
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: '**Action (<semantics><msub><mi>a</mi><mi>t</mi></msub><annotation encoding="application/x-tex">a_t</annotation></semantics>)**:
+    apply a left/right horizontal force to the cart, e.g. <semantics><mrow><msub><mi>a</mi><mi>t</mi></msub><mo>∈</mo><mo
+    stretchy="false" form="prefix">{</mo><mi>−</mi><mi>F</mi><mo>,</mo><mi>+</mi><mi>F</mi><mo
+    stretchy="false" form="postfix">}</mo></mrow><annotation encoding="application/x-tex">a_t
+    \in \{-F, +F\}</annotation></semantics>.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Reward (<semantics><mi>r</mi><annotation encoding="application/x-tex">r</annotation></semantics>)**:
+    a simple reward is <semantics><mrow><msub><mi>r</mi><mi>t</mi></msub><mo>=</mo><mn>1</mn></mrow><annotation
+    encoding="application/x-tex">r_t = 1</annotation></semantics> each step the pole
+    remains balanced and the cart stays on the track (e.g. <semantics><mrow><mo stretchy="false"
+    form="prefix">|</mo><msub><mi>x</mi><mi>t</mi></msub><mo stretchy="false" form="prefix">|</mo><mo>≤</mo><mn>2.4</mn></mrow><annotation
+    encoding="application/x-tex">|x_t| \le 2.4</annotation></semantics> and <semantics><mrow><mo
+    stretchy="false" form="prefix">|</mo><msub><mi>θ</mi><mi>t</mi></msub><mo stretchy="false"
+    form="prefix">|</mo><mo>≤</mo><msup><mn>12</mn><mo>∘</mo></msup></mrow><annotation
+    encoding="application/x-tex">|\theta_t| \le 12^\circ</annotation></semantics>),
+    and the episode terminates when either bound is violated.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Dynamics / transition (<semantics><mrow><mi>p</mi><mo stretchy="false" form="prefix">(</mo><msub><mi>s</mi><mrow><mi>t</mi><mo>+</mo><mn>1</mn></mrow></msub><mo>∣</mo><msub><mi>s</mi><mi>t</mi></msub><mo>,</mo><msub><mi>a</mi><mi>t</mi></msub><mo
+    stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">p(s_{t+1}\mid
+    s_t,a_t)</annotation></semantics>)**: in many environments the dynamics are deterministic
+    (so <semantics><mi>p</mi><annotation encoding="application/x-tex">p</annotation></semantics>
+    is a point mass) and can be written as <semantics><mrow><msub><mi>s</mi><mrow><mi>t</mi><mo>+</mo><mn>1</mn></mrow></msub><mo>=</mo><mi>f</mi><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>s</mi><mi>t</mi></msub><mo>,</mo><msub><mi>a</mi><mi>t</mi></msub><mo
+    stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">s_{t+1}
+    = f(s_t,a_t)</annotation></semantics> via Euler integration with step size <semantics><mrow><mi
+    mathvariant="normal">Δ</mi><mi>t</mi></mrow><annotation encoding="application/x-tex">\Delta
+    t</annotation></semantics>. A standard simplified CartPole update uses constants
+    cart mass <semantics><msub><mi>m</mi><mi>c</mi></msub><annotation encoding="application/x-tex">m_c</annotation></semantics>,
+    pole mass <semantics><msub><mi>m</mi><mi>p</mi></msub><annotation encoding="application/x-tex">m_p</annotation></semantics>,
+    pole half-length <semantics><mi>l</mi><annotation encoding="application/x-tex">l</annotation></semantics>,
+    and gravity <semantics><mi>g</mi><annotation encoding="application/x-tex">g</annotation></semantics>:'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: <semantics><mrow><mtext mathvariant="normal">temp</mtext><mo>=</mo><mfrac><mrow><msub><mi>a</mi><mi>t</mi></msub><mo>+</mo><msub><mi>m</mi><mi>p</mi></msub><mi>l</mi><msubsup><mover><mi>θ</mi><mo
+    accent="true">̇</mo></mover><mi>t</mi><mn>2</mn></msubsup><mrow><mi mathvariant="normal">sin</mi><mo>⁡</mo></mrow><msub><mi>θ</mi><mi>t</mi></msub></mrow><mrow><msub><mi>m</mi><mi>c</mi></msub><mo>+</mo><msub><mi>m</mi><mi>p</mi></msub></mrow></mfrac></mrow><annotation
+    encoding="application/x-tex">\text{temp} = \frac{a_t + m_p l\,\dot{\theta}_t^2\sin\theta_t}{m_c
+    + m_p}</annotation></semantics>
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: <semantics><mrow><msub><mover><mi>θ</mi><mo accent="true">̈</mo></mover><mi>t</mi></msub><mo>=</mo><mfrac><mrow><mi>g</mi><mrow><mi
+    mathvariant="normal">sin</mi><mo>⁡</mo></mrow><msub><mi>θ</mi><mi>t</mi></msub><mo>−</mo><mrow><mi
+    mathvariant="normal">cos</mi><mo>⁡</mo></mrow><msub><mi>θ</mi><mi>t</mi></msub><mtext
+    mathvariant="normal">temp</mtext></mrow><mrow><mi>l</mi><mrow><mo stretchy="true"
+    form="prefix">(</mo><mstyle displaystyle="false"><mfrac><mn>4</mn><mn>3</mn></mfrac></mstyle><mo>−</mo><mfrac><mrow><msub><mi>m</mi><mi>p</mi></msub><msup><mrow><mi
+    mathvariant="normal">cos</mi><mo>⁡</mo></mrow><mn>2</mn></msup><msub><mi>θ</mi><mi>t</mi></msub></mrow><mrow><msub><mi>m</mi><mi>c</mi></msub><mo>+</mo><msub><mi>m</mi><mi>p</mi></msub></mrow></mfrac><mo
+    stretchy="true" form="postfix">)</mo></mrow></mrow></mfrac></mrow><annotation
+    encoding="application/x-tex">\ddot{\theta}_t = \frac{g\sin\theta_t - \cos\theta_t\,\text{temp}}{l\left(\tfrac{4}{3}
+    - \frac{m_p\cos^2\theta_t}{m_c + m_p}\right)}</annotation></semantics>
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: <semantics><mrow><msub><mover><mi>x</mi><mo accent="true">̈</mo></mover><mi>t</mi></msub><mo>=</mo><mtext
+    mathvariant="normal">temp</mtext><mo>−</mo><mfrac><mrow><msub><mi>m</mi><mi>p</mi></msub><mi>l</mi><msub><mover><mi>θ</mi><mo
+    accent="true">̈</mo></mover><mi>t</mi></msub><mrow><mi mathvariant="normal">cos</mi><mo>⁡</mo></mrow><msub><mi>θ</mi><mi>t</mi></msub></mrow><mrow><msub><mi>m</mi><mi>c</mi></msub><mo>+</mo><msub><mi>m</mi><mi>p</mi></msub></mrow></mfrac></mrow><annotation
+    encoding="application/x-tex">\ddot{x}_t = \text{temp} - \frac{m_p l\,\ddot{\theta}_t\cos\theta_t}{m_c
+    + m_p}</annotation></semantics>
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: <semantics><mrow><msub><mi>x</mi><mrow><mi>t</mi><mo>+</mo><mn>1</mn></mrow></msub><mo>=</mo><msub><mi>x</mi><mi>t</mi></msub><mo>+</mo><mi
+    mathvariant="normal">Δ</mi><mi>t</mi><msub><mover><mi>x</mi><mo accent="true">̇</mo></mover><mi>t</mi></msub><mo>,</mo><msub><mover><mi>x</mi><mo
+    accent="true">̇</mo></mover><mrow><mi>t</mi><mo>+</mo><mn>1</mn></mrow></msub><mo>=</mo><msub><mover><mi>x</mi><mo
+    accent="true">̇</mo></mover><mi>t</mi></msub><mo>+</mo><mi mathvariant="normal">Δ</mi><mi>t</mi><msub><mover><mi>x</mi><mo
+    accent="true">̈</mo></mover><mi>t</mi></msub><mo>,</mo></mrow><annotation encoding="application/x-tex">x_{t+1}=x_t+\Delta
+    t\,\dot{x}_t,\quad \dot{x}_{t+1}=\dot{x}_t+\Delta t\,\ddot{x}_t,</annotation></semantics>
+    <semantics><mrow><msub><mi>θ</mi><mrow><mi>t</mi><mo>+</mo><mn>1</mn></mrow></msub><mo>=</mo><msub><mi>θ</mi><mi>t</mi></msub><mo>+</mo><mi
+    mathvariant="normal">Δ</mi><mi>t</mi><msub><mover><mi>θ</mi><mo accent="true">̇</mo></mover><mi>t</mi></msub><mo>,</mo><msub><mover><mi>θ</mi><mo
+    accent="true">̇</mo></mover><mrow><mi>t</mi><mo>+</mo><mn>1</mn></mrow></msub><mo>=</mo><msub><mover><mi>θ</mi><mo
+    accent="true">̇</mo></mover><mi>t</mi></msub><mo>+</mo><mi mathvariant="normal">Δ</mi><mi>t</mi><msub><mover><mi>θ</mi><mo
+    accent="true">̈</mo></mover><mi>t</mi></msub><mi>.</mi></mrow><annotation encoding="application/x-tex">\theta_{t+1}=\theta_t+\Delta
+    t\,\dot{\theta}_t,\quad \dot{\theta}_{t+1}=\dot{\theta}_t+\Delta t\,\ddot{\theta}_t.</annotation></semantics>
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: 'This is a concrete instance of the general setup above: the policy chooses
+    <semantics><msub><mi>a</mi><mi>t</mi></msub><annotation encoding="application/x-tex">a_t</annotation></semantics>,
+    the transition function advances the state, and the reward is accumulated over
+    the episode.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Manipulating the Standard RL Setup
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: 'The RL formulation for RLHF is seen as a less open-ended problem, where a few
+    key pieces of RL are set to specific definitions in order to accommodate language
+    models. There are multiple core changes from the standard RL setup to that of
+    RLHF: Table tbl. [1](ch004.xhtml#tbl:rl-vs-rlhf) summarizes these differences
+    between standard RL and the RLHF setup used for language models.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Switching from a reward function to a reward model.** In RLHF, a learned
+    model of human preferences, <semantics><mrow><msub><mi>r</mi><mi>θ</mi></msub><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>s</mi><mi>t</mi></msub><mo>,</mo><msub><mi>a</mi><mi>t</mi></msub><mo
+    stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">r_\theta(s_t,
+    a_t)</annotation></semantics> (or any other classification model) is used instead
+    of an environmental reward function. This gives the designer a substantial increase
+    in the flexibility of the approach and control over the final results, but at
+    the cost of implementation complexity. In standard RL, the reward is seen as a
+    static piece of the environment that cannot be changed or manipulated by the person
+    designing the learning agent.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**No state transitions exist.** In RLHF, the initial states for the domain
+    are prompts sampled from a training dataset and the “action” is the completion
+    to said prompt. During standard practices, this action does not impact the next
+    state and is only scored by the reward model.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**Response level rewards.** Often referred to as a bandit problem, RLHF attribution
+    of reward is done for an entire sequence of actions, composed of multiple generated
+    tokens, rather than in a fine-grained manner.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Table 1: Key differences between standard RL and RLHF for language models.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '| Aspect | Standard RL | RLHF (language models) |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| Reward signal | Environment reward function <semantics><mrow><mi>r</mi><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>s</mi><mi>t</mi></msub><mo>,</mo><msub><mi>a</mi><mi>t</mi></msub><mo
+    stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">r(s_t,a_t)</annotation></semantics>
+    | Learned reward / preference model <semantics><mrow><msub><mi>r</mi><mi>θ</mi></msub><mo
+    stretchy="false" form="prefix">(</mo><mi>x</mi><mo>,</mo><mi>y</mi><mo stretchy="false"
+    form="postfix">)</mo></mrow><annotation encoding="application/x-tex">r_\theta(x,y)</annotation></semantics>
+    (prompt <semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics>,
+    completion <semantics><mi>y</mi><annotation encoding="application/x-tex">y</annotation></semantics>)
+    |'
+  prefs: []
+  type: TYPE_TB
+- en: '| State transition | Yes: dynamics <semantics><mrow><mi>p</mi><mo stretchy="false"
+    form="prefix">(</mo><msub><mi>s</mi><mrow><mi>t</mi><mo>+</mo><mn>1</mn></mrow></msub><mo>∣</mo><msub><mi>s</mi><mi>t</mi></msub><mo>,</mo><msub><mi>a</mi><mi>t</mi></msub><mo
+    stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">p(s_{t+1}\mid
+    s_t,a_t)</annotation></semantics> | Typically no: prompts <semantics><mi>x</mi><annotation
+    encoding="application/x-tex">x</annotation></semantics> sampled from a dataset;
+    the completion does not define the next prompt |'
+  prefs: []
+  type: TYPE_TB
+- en: '| Action | Single environment action <semantics><msub><mi>a</mi><mi>t</mi></msub><annotation
+    encoding="application/x-tex">a_t</annotation></semantics> | A completion <semantics><mi>y</mi><annotation
+    encoding="application/x-tex">y</annotation></semantics> (a sequence of tokens)
+    sampled from <semantics><mrow><msub><mi>π</mi><mi>θ</mi></msub><mo stretchy="false"
+    form="prefix">(</mo><mi>⋅</mi><mo>∣</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation
+    encoding="application/x-tex">\pi_\theta(\cdot\mid x)</annotation></semantics>
+    |'
+  prefs: []
+  type: TYPE_TB
+- en: '| Reward granularity | Often per-step / fine-grained | Usually response-level
+    (bandit-style) over the full completion |'
+  prefs: []
+  type: TYPE_TB
+- en: '| Horizon | Multi-step episode (<semantics><mrow><mi>T</mi><mo>></mo><mn>1</mn></mrow><annotation
+    encoding="application/x-tex">T>1</annotation></semantics>) | Often single-step
+    (<semantics><mrow><mi>T</mi><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">T=1</annotation></semantics>),
+    though multi-turn can be modeled as longer-horizon |'
+  prefs: []
+  type: TYPE_TB
+- en: 'Given the single-turn nature of the problem, the optimization can be re-written
+    without the time horizon and discount factor (and the reward models): <semantics><mrow><mi>J</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>π</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><msub><mi>𝔼</mi><mrow><mi>τ</mi><mo>∼</mo><mi>π</mi></mrow></msub><mrow><mo
+    stretchy="true" form="prefix">[</mo><msub><mi>r</mi><mi>θ</mi></msub><mo stretchy="false"
+    form="prefix">(</mo><msub><mi>s</mi><mi>t</mi></msub><mo>,</mo><msub><mi>a</mi><mi>t</mi></msub><mo
+    stretchy="false" form="postfix">)</mo><mo stretchy="true" form="postfix">]</mo></mrow><mi>.</mi><mrow><mo
+    stretchy="false" form="prefix">(</mo><mn>9</mn><mo stretchy="false" form="postfix">)</mo></mrow></mrow><annotation
+    encoding="application/x-tex">J(\pi) = \mathbb{E}_{\tau \sim \pi} \left[r_\theta(s_t,
+    a_t) \right].\qquad{(9)}</annotation></semantics>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: In many ways, the result is that while RLHF is heavily inspired by RL optimizers
+    and problem formulations, the actual implementation is very distinct from traditional
+    RL.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 3: Standard RLHF loop](../media/file2.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Figure 3: Standard RLHF loop'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Finetuning and Regularization
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: 'In traditional RL problems, the agent must learn from a randomly initialized
+    policy, but with RLHF, we start from a strong pretrained base model with many
+    initial capabilities. This strong prior for RLHF induces a need to control the
+    optimization from drifting too far from the initial policy. In order to succeed
+    in a finetuning regime, RLHF techniques employ multiple types of regularization
+    to control the optimization. The goal is to allow the reward maximization to still
+    occur without the model succumbing to over-optimization, as discussed in Chapter
+    18\. The most common change to the optimization function is to add a distance
+    penalty on the difference between the current RLHF policy and the starting point
+    of the optimization:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: <semantics><mrow><mi>J</mi><mo stretchy="false" form="prefix">(</mo><mi>π</mi><mo
+    stretchy="false" form="postfix">)</mo><mo>=</mo><msub><mi>𝔼</mi><mrow><mi>τ</mi><mo>∼</mo><mi>π</mi></mrow></msub><mrow><mo
+    stretchy="true" form="prefix">[</mo><msub><mi>r</mi><mi>θ</mi></msub><mo stretchy="false"
+    form="prefix">(</mo><msub><mi>s</mi><mi>t</mi></msub><mo>,</mo><msub><mi>a</mi><mi>t</mi></msub><mo
+    stretchy="false" form="postfix">)</mo><mo stretchy="true" form="postfix">]</mo></mrow><mo>−</mo><mi>β</mi><msub><mi>𝒟</mi><mtext
+    mathvariant="normal">KL</mtext></msub><mo stretchy="false" form="prefix">(</mo><msub><mi>π</mi><mtext
+    mathvariant="normal">RL</mtext></msub><mo stretchy="false" form="prefix">(</mo><mi>⋅</mi><mo
+    stretchy="false" form="prefix">|</mo><msub><mi>s</mi><mi>t</mi></msub><mo stretchy="false"
+    form="postfix">)</mo><mo stretchy="false" form="postfix">∥</mo><msub><mi>π</mi><mtext
+    mathvariant="normal">ref</mtext></msub><mo stretchy="false" form="prefix">(</mo><mi>⋅</mi><mo
+    stretchy="false" form="prefix">|</mo><msub><mi>s</mi><mi>t</mi></msub><mo stretchy="false"
+    form="postfix">)</mo><mo stretchy="false" form="postfix">)</mo><mi>.</mi><mrow><mo
+    stretchy="false" form="prefix">(</mo><mn>10</mn><mo stretchy="false" form="postfix">)</mo></mrow></mrow><annotation
+    encoding="application/x-tex">J(\pi) = \mathbb{E}_{\tau \sim \pi} \left[r_\theta(s_t,
+    a_t)\right] - \beta \mathcal{D}_{\text{KL}}(\pi_{\text{RL}}(\cdot|s_t) \| \pi_{\text{ref}}(\cdot|s_t)).\qquad{(10)}</annotation></semantics>
+  prefs: []
+  type: TYPE_NORMAL
+- en: Within this formulation, a lot of study into RLHF training goes into understanding
+    how to spend a certain “KL budget” as measured by a distance from the initial
+    model. For more details, see Chapter 8 on Regularization.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Optimization Tools
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: 'In this book, we detail many popular techniques for solving this optimization
+    problem. The popular tools of post-training include:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Reward modeling** (Chapter 7): Where a model is trained to capture the signal
+    from collected preference data and can then output a scalar reward indicating
+    the quality of future text.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Instruction finetuning** (Chapter 9): A prerequisite to RLHF where models
+    are taught the question-answer format used in the majority of language modeling
+    interactions today by imitating preselected examples.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Rejection sampling** (Chapter 10): The most basic RLHF technique where candidate
+    completions for instruction finetuning are filtered by a reward model imitating
+    human preferences.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Policy gradients** (Chapter 11): The reinforcement learning algorithms used
+    in the seminal examples of RLHF to update parameters of a language model with
+    respect to the signal from a reward model.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Direct alignment algorithms** (Chapter 12): Algorithms that directly optimize
+    a policy from pairwise preference data, rather than learning an intermediate reward
+    model to then optimize later.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Modern RLHF-trained models always utilize instruction finetuning followed by
+    a mixture of the other optimization options.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Canonical Training Recipes
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Over time various models have been identified as canonical recipes for RLHF
+    specifically or post-training generally. These recipes reflect data practices
+    and model abilities at the time. As the recipes age, training models with the
+    same characteristics becomes easier and takes fewer data. There is a general trend
+    of post-training involving more optimization steps with more training algorithms
+    across more diverse training datasets and evaluations.
+  prefs: []
+  type: TYPE_NORMAL
+- en: InstructGPT
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: 'Around the time ChatGPT first came out, the widely accepted (“canonical”) method
+    for post-training an LM had three major steps, with RLHF being the central piece
+    [[56]](ch021.xhtml#ref-lambert2022illustrating) [[3]](ch021.xhtml#ref-ouyang2022training)
+    [[5]](ch021.xhtml#ref-bai2022training). The three steps taken on top of a “base”
+    language model (the next-token prediction model trained on large-scale web text)
+    are summarized below in fig. [4](#fig:rlhf-basic-repeat):'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Instruction tuning on ~10K examples**: This teaches the model to follow the
+    question-answer format and teaches some basic skills from primarily human-written
+    data.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**Training a reward model on ~100K pairwise prompts**: This model is trained
+    from the instruction-tuned checkpoint and captures the diverse values one wishes
+    to model in their final training. The reward model is the optimization target
+    for RLHF.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**Training the instruction-tuned model with RLHF on another ~100K prompts**:
+    The model is optimized against the reward model with a set of prompts that the
+    model generates over before receiving ratings.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Once RLHF was done, the model was ready to be deployed to users. This recipe
+    is the foundation of modern RLHF, but recipes have evolved substantially to include
+    more stages and more data.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 4: A rendition of the early, three stage RLHF process with SFT, a
+    reward model, and then optimization.](../media/file0.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Figure 4: A rendition of the early, three stage RLHF process with SFT, a reward
+    model, and then optimization.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Tülu 3
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: Modern versions of post-training involve many, many more model versions and
+    training stages (i.e. well more than the 5 RLHF steps documented for Llama 2 [[44]](ch021.xhtml#ref-touvron2023llama)).
+    An example is shown below in fig. [5](#fig:rlhf-complex) where the model undergoes
+    numerous training iterations before convergence.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 5: A rendition of modern post-training with many rounds.](../media/file3.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Figure 5: A rendition of modern post-training with many rounds.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: The most complex models trained in this era and onwards have not released full
+    details of their training process. Leading models such as ChatGPT or Claude circa
+    2025 involve many, iterative rounds of training. This can even include techniques
+    that train specialized models and then merge the weights together to get a final
+    model capable on many subtasks [[57]](ch021.xhtml#ref-li2022branch) (e.g. Cohere’s
+    Command A [[58]](ch021.xhtml#ref-cohere2025command)).
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 6: A summary of the Tülu 3 recipe with target skills and multi-step
+    training recipe. Lambert et al. 2024, License CC-BY.](../media/file4.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Figure 6: A summary of the Tülu 3 recipe with target skills and multi-step
+    training recipe. Lambert et al. 2024, License CC-BY.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'A fully open example version of this multi-stage version of post-training where
+    RLHF plays a major role is Tülu 3\. The Tülu 3 recipe consists of three stages:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Instruction tuning on ~1M examples**: This primarily synthetic data from
+    a mix of frontier models such as GPT-4o and Llama 3.1 405B teaches the model general
+    instruction following and serves as the foundation of a variety of capabilities
+    such as mathematics or coding.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**On-policy preference data on ~1M preference pairs**: This stage substantially
+    boosts the chattiness (e.g. ChatBotArena or AlpacaEval 2) of the model while also
+    improving skills mentioned above in the instruction tuning stage.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**Reinforcement Learning with Verifiable Rewards on ~10K prompts**: This stage
+    is a small scale reinforcement learning run to boost core skills such as mathematics
+    while maintaining overall performance (and is now seen as a precursor to modern
+    reasoning models such as DeepSeek R1).'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: The recipe has been successfully applied to Llama 3.1 [[6]](ch021.xhtml#ref-lambert2024t),
+    OLMo 2 [[59]](ch021.xhtml#ref-olmo20242), and SmolLM models [[60]](ch021.xhtml#ref-alrashed2024smoltulu).
+  prefs: []
+  type: TYPE_NORMAL
+- en: DeepSeek R1
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: 'With the rise of reasoning language models, such as OpenAI’s o1, the best practices
+    in post-training evolved again to re-order and redistribute compute across training
+    stages. The clearest documentation of a reasoning model post-training recipe is
+    DeepSeek R1 [[61]](ch021.xhtml#ref-guo2025deepseek), which has been mirrored by
+    Alibaba’s larger Qwen 3 models (i.e. only the 32B and 225B MoE models) [[62]](ch021.xhtml#ref-yang2025qwen3)
+    or Xiaomi’s MiMo 7B [[63]](ch021.xhtml#ref-xia2025mimo). The DeepSeek recipe follows:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**“Cold-start” of 100K+ on-policy reasoning samples**: This data is sampled
+    from an earlier RL checkpoint, R1-Zero, and heavily filtered to instill a specific
+    reasoning process on the model. DeepSeek uses the term cold-start to describe
+    how RL is learned from little supervised data.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**Large-scale reinforcement learning training**: This stage repeatedly covers
+    reasoning problems with the model, running RLVR “until convergence” on a variety
+    of benchmarks.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**Rejection sampling** on 3/4 reasoning problems and 1/4 general queries to
+    start the transition to a general-purpose model.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**Mixed reinforcement learning training** on reasoning problems (verifiable
+    rewards) with general preference tuning reward models to polish the model.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: As above, there are evolutions of the recipe, particularly with steps 3 and
+    4 to finalize the model before exposing it to users. Many models start with tailored
+    instruction datasets with Chain of Thought sequences that are heavily filtered
+    and polished from existing models, providing a fast step to strong behaviors with
+    SFT alone before moving onto RL [[64]](ch021.xhtml#ref-seed2025seed).
+  prefs: []
+  type: TYPE_NORMAL
