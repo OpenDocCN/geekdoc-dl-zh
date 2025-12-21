@@ -1,0 +1,686 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xml:lang="en-US">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <title>ch008.xhtml</title>
+  <style>
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+/*
+ * Custom CSS file. Override it as you like.
+ *
+ * Credits to @killercup (https://gist.github.com/killercup); Extracted from this Gist:
+ *   https://gist.github.com/killercup/5917178
+ * Substantial modifications made by natolambert
+ */
+
+html {
+    font-size: 100%;
+    overflow-y: scroll;
+    -webkit-text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%;
+}
+
+body {
+    color: #444;
+    font-family: Georgia, Palatino, 'Palatino Linotype', Times, 'Times New Roman', serif;
+    font-size: 12px;
+    line-height: 1.7;
+    padding: 1em;
+    margin: auto;
+    max-width: 42em;
+    background: #fefefe;
+}
+
+a {
+    color: #0645ad;
+    text-decoration: none;
+}
+
+a:visited {
+    color: #0b0080;
+}
+
+a:hover {
+    color: #06e;
+}
+
+a:active {
+    color: #faa700;
+}
+
+a:focus {
+    outline: thin dotted;
+}
+
+*::-moz-selection {
+    background: rgba(255, 255, 0, 0.3);
+    color: #000;
+}
+
+*::selection {
+    background: rgba(255, 255, 0, 0.3);
+    color: #000;
+}
+
+a::-moz-selection {
+    background: rgba(255, 255, 0, 0.3);
+    color: #0645ad;
+}
+
+a::selection {
+    background: rgba(255, 255, 0, 0.3);
+    color: #0645ad;
+}
+
+p {
+    margin: 1em 0;
+}
+
+img {
+    max-width: 100%;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    color: #111;
+    line-height: 125%;
+    margin-top: 2em;
+    font-weight: normal;
+    position: relative;
+}
+
+/* Heading anchor link styles */
+.header-anchor {
+    opacity: 0;
+    font-size: 0.8em;
+    vertical-align: middle;
+    position: absolute;
+    margin-left: 0.3em;
+    transition: opacity 0.2s ease-in-out;
+}
+
+h2:hover .header-anchor,
+h3:hover .header-anchor,
+h4:hover .header-anchor,
+h5:hover .header-anchor,
+h6:hover .header-anchor {
+    opacity: 1;
+}
+
+h4,
+h5,
+h6 {
+    font-weight: bold;
+}
+
+h1 {
+    font-size: 2.5em;
+}
+
+h1.title {
+    hyphens: none;
+    -webkit-hyphens: none;
+    -moz-hyphens: none;
+    -ms-hyphens: none;
+    word-break: keep-all;
+}
+
+h2 {
+    font-size: 2em;
+}
+
+h3 {
+    font-size: 1.5em;
+}
+
+h4 {
+    font-size: 1.2em;
+}
+
+h5 {
+    font-size: 1em;
+}
+
+h6 {
+    font-size: 0.9em;
+}
+
+blockquote {
+    color: #666666;
+    margin: 0;
+    padding-left: 3em;
+    border-left: 0.5em #EEE solid;
+}
+
+hr {
+    display: block;
+    height: 2px;
+    border: 0;
+    border-top: 1px solid #aaa;
+    border-bottom: 1px solid #eee;
+    margin: 1em 0;
+    padding: 0;
+}
+
+pre,
+code,
+kbd,
+samp {
+    color: #000;
+    font-family: monospace, monospace;
+    _font-family: 'courier new', monospace;
+    font-size: 0.98em;
+}
+
+pre {
+    white-space: pre;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+
+b,
+strong {
+    font-weight: bold;
+}
+
+dfn {
+    font-style: italic;
+}
+
+ins {
+    background: #ff9;
+    color: #000;
+    text-decoration: none;
+}
+
+mark {
+    background: #ff0;
+    color: #000;
+    font-style: italic;
+    font-weight: bold;
+}
+
+sub,
+sup {
+    font-size: 75%;
+    line-height: 0;
+    position: relative;
+    vertical-align: baseline;
+}
+
+sup {
+    top: -0.5em;
+}
+
+sub {
+    bottom: -0.25em;
+}
+
+ul,
+ol {
+    margin: 1em 0;
+    padding: 0 0 0 2em;
+}
+
+li p:last-child {
+    margin-bottom: 0;
+}
+
+ul ul,
+ol ol {
+    margin: .3em 0;
+}
+
+dl {
+    margin-bottom: 1em;
+}
+
+dt {
+    font-weight: bold;
+    margin-bottom: .8em;
+}
+
+dd {
+    margin: 0 0 .8em 2em;
+}
+
+dd:last-child {
+    margin-bottom: 0;
+}
+
+img {
+    border: 0;
+    -ms-interpolation-mode: bicubic;
+    vertical-align: middle;
+}
+
+figure {
+    display: block;
+    text-align: center;
+    margin: 1em 0;
+}
+
+figure img {
+    border: none;
+    margin: 0 auto;
+}
+
+figcaption {
+    font-size: 0.8em;
+    font-style: italic;
+    margin: 0 0 .8em;
+}
+
+/* for html tables */
+table {
+    margin-bottom: 2em;
+    border-bottom: 1px solid #ddd;
+    border-right: 1px solid #ddd;
+    border-spacing: 0;
+    box-shadow: none;
+    border: none;
+    border-collapse: collapse;
+    margin-left: auto;
+    margin-right: auto;
+    width: auto; /* Keeps natural width; wrapper handles overflow */
+    display: table;
+}
+
+th {
+    padding: 12px;
+    text-align: center;
+    background-color: #eee;
+    border: 1px solid #ddd;
+}
+
+td {
+    padding: 12px;
+    text-align: left; /* Keeps data cells left-aligned */
+    border: 1px solid #ddd;
+    vertical-align: top;
+}
+
+.table-scroll {
+    max-width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    margin: 1.5em auto 2em;
+}
+
+.table-scroll table {
+    margin: 0 auto;
+    display: table;
+    width: auto;
+    width: fit-content;
+    width: max-content;
+}
+
+.table-wrap {
+    margin: 1.5em auto 2em;
+}
+
+.table-wrap table {
+    margin: 0 auto;
+}
+
+.table-scroll::-webkit-scrollbar {
+    height: 8px;
+}
+
+.table-scroll::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+}
+
+.table-scroll::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.05);
+}
+
+.author {
+    font-size: 1.2em;
+    text-align: center;
+}
+
+/* Target only mobile screens */
+@media only screen and (max-width: 479px) {
+    body {
+        font-size: 14px;
+    }
+}
+
+@media only screen and (min-width: 480px) {
+    body {
+        font-size: 15px;
+    }
+}
+
+@media only screen and (min-width: 768px) {
+    body {
+        font-size: 16px;
+    }
+}
+
+@media print {
+    * {
+        background: transparent !important;
+        color: black !important;
+        filter: none !important;
+        -ms-filter: none !important;
+    }
+    body {
+        font-size: 12pt;
+        max-width: 100%;
+    }
+    a,
+    a:visited {
+        text-decoration: underline;
+    }
+    hr {
+        height: 1px;
+        border: 0;
+        border-bottom: 1px solid black;
+    }
+    a[href]:after {
+        content: " (" attr(href) ")";
+    }
+    abbr[title]:after {
+        content: " (" attr(title) ")";
+    }
+    .ir a:after,
+    a[href^="javascript:"]:after,
+    a[href^="#"]:after {
+        content: "";
+    }
+    pre,
+    blockquote {
+        border: 1px solid #999;
+        padding-right: 1em;
+        page-break-inside: avoid;
+    }
+    tr,
+    img {
+        page-break-inside: avoid;
+    }
+    img {
+        max-width: 100% !important;
+    }
+    @page :left {
+        margin: 15mm 20mm 15mm 10mm;
+    }
+    @page :right {
+        margin: 15mm 10mm 15mm 20mm;
+    }
+    p,
+    h2,
+    h3 {
+        orphans: 3;
+        widows: 3;
+    }
+    h2,
+    h3 {
+        page-break-after: avoid;
+    }
+}
+
+.dropdown-content {
+  display: none;
+}
+
+
+
+thead {
+    background-color: #f5f5f5;
+}
+
+
+.dropdown-content.open {
+  display: block;
+  max-height: 2000px;
+}
+/* Header Nav Block */
+    .chapter-nav {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        /* grid-template-rows: auto auto;  */
+        gap: 0.5rem;
+        padding: 0.5rem;
+        max-width: 1200px;
+        text-align: left;
+    }  
+    .section {
+        background-color: #ffffff;
+        padding-top: 5px;
+        padding-right: 12px;
+        padding-bottom: 8px;
+        padding-left: 12px;
+        border-radius: 5px;
+        text-align: left;
+    }
+  .dropdown-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-out;
+    background: #f8f8f8;  /* Unified with section background */
+  }
+  /* dropdown row */
+  .dropdown-button {
+    width: 100%;
+    text-align: left;
+    padding: 0.5rem;
+    background: #f8f8f8;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    border: none;
+    font-size: 0.9rem;
+  }
+  /* carrot button */
+  .dropdown-button .chevron {
+    width: 14px;
+    height: 14px;
+    transition: transform 0.2s;
+  }
+  /* dropdown animation */
+  .dropdown-button[aria-expanded="true"] .chevron {
+    transform: rotate(180deg);
+  }
+  .section h3 {
+    font-weight: bold;
+    font-size: 0.8rem;
+    margin-top: 5px;
+    margin-bottom: 5px;  /* or whatever bottom spacing you prefer */
+  }
+  .section ol, .section ul {
+    margin: 0;
+    padding-left: 20px;
+    text-align: left;
+  }
+  .section li {
+    font-size: 12px;
+    line-height: 1.3;
+    margin-bottom: 3px;
+    text-align: left;
+  }
+  .section a {
+    color: #0066cc;
+    text-decoration: none;
+  }
+  .section a:hover {
+    text-decoration: underline;
+  }
+
+  /* Mobile Responsiveness */
+  @media screen and (max-width: 768px) {
+    .chapter-nav {
+      grid-template-columns: 1fr;
+    }
+    .section {
+      margin-bottom: 10px;
+    }
+    .section p {
+      font-size: 16px;
+    }
+    .section li {
+      font-size: 14px;
+    }
+  }  </style>
+  <link rel="stylesheet" type="text/css" href="../styles/stylesheet1.css" />
+</head>
+<body epub:type="bodymatter">
+<section id="regularization" class="level1">
+<h1>Regularization</h1>
+<p>Throughout the RLHF optimization, many regularization steps are used to prevent over-optimization of the reward model. Over-optimization in these contexts looks like models that output nonsensical text. Some examples of optimization “off the rails” are that models can output followable math reasoning with extremely incorrect answers, repeated text, switching languages, or excessive special characters. This chapter covers the different methods that’re used to control the optimization of models.</p>
+<p>The most popular variant, used in most RLHF implementations at the time of writing, is a KL distance from the current policy to a reference policy across generated samples. “KL distance” is a colloquial term for expressing the <em>optimization distance</em> within the training process, even though KL divergence—the underlying mathematical method for measuring the separation of two probability distributions—does not satisfy the formal properties required to be a true distance metric (it is simply easier to call the number a distance than a numeric measure of distributional difference). Many other regularization techniques have emerged in the literature to then disappear in the next model iteration in that line of research. That is to say that regularization outside the core KL distance from generations is often used to stabilize experimental setups that can then be simplified in the next generation. Still, it is important to understand tools to constrain optimization in RLHF.</p>
+<p><em>Throughout this chapter, we use <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics></math> to denote prompts and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>y</mi><annotation encoding="application/x-tex">y</annotation></semantics></math> to denote completions. This notation is common in the language model literature, where methods operate on full prompt-completion pairs rather than individual tokens.</em></p>
+<p>The general formulation, when used in an RLHF framework with a reward model, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>r</mi><mi>θ</mi></msub><annotation encoding="application/x-tex">r_\theta</annotation></semantics></math> is as follows:</p>
+<p><span id="eq:rl_start"><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>r</mi><mo>=</mo><msub><mi>r</mi><mi>θ</mi></msub><mo>−</mo><mi>λ</mi><msub><mi>r</mi><mtext mathvariant="normal">reg.</mtext></msub><mspace width="2.0em"></mspace><mrow><mo stretchy="false" form="prefix">(</mo><mn>22</mn><mo stretchy="false" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex"> r = r_\theta - \lambda r_{\text{reg.}} \qquad{(22)}</annotation></semantics></math></span></p>
+<p>With the reference implementation being:</p>
+<p><span id="eq:kl_standard"><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>r</mi><mo>=</mo><msub><mi>r</mi><mi>θ</mi></msub><mo>−</mo><msub><mi>λ</mi><mtext mathvariant="normal">KL</mtext></msub><msub><mi>𝒟</mi><mtext mathvariant="normal">KL</mtext></msub><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>π</mi><mtext mathvariant="normal">RL</mtext></msub><mo stretchy="false" form="prefix">(</mo><mi>y</mi><mo>∣</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mspace width="0.167em"></mspace><mo stretchy="false" form="postfix">∥</mo><mspace width="0.167em"></mspace><msub><mi>π</mi><mtext mathvariant="normal">ref</mtext></msub><mo stretchy="false" form="prefix">(</mo><mi>y</mi><mo>∣</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mo stretchy="true" form="postfix">)</mo></mrow><mspace width="2.0em"></mspace><mrow><mo stretchy="false" form="prefix">(</mo><mn>23</mn><mo stretchy="false" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">
+r = r_\theta - \lambda_{\text{KL}} \mathcal{D}_{\text{KL}} \left( \pi_{\text{RL}}(y \mid x) \, \| \, \pi_{\text{ref}}(y \mid x) \right)
+\qquad{(23)}</annotation></semantics></math></span></p>
+<section id="kl-divergences-in-rl-optimization" class="level2">
+<h2>KL Divergences in RL Optimization</h2>
+<p>For mathematical definitions, see Chapter 3 on Problem Setup. Recall that a KL divergence measure of probability difference is defined as follows:</p>
+<p><span id="eq:kl_distance_regularization"><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>𝒟</mi><mtext mathvariant="normal">KL</mtext></msub><mo stretchy="false" form="prefix">(</mo><mi>P</mi><mo stretchy="false" form="prefix">|</mo><mo stretchy="false" form="prefix">|</mo><mi>Q</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><munder><mo>∑</mo><mrow><mi>x</mi><mo>∈</mo><mi>𝒳</mi></mrow></munder><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mrow><mi mathvariant="normal">log</mi><mo>&#8289;</mo></mrow><mrow><mo stretchy="true" form="prefix">(</mo><mfrac><mrow><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo></mrow><mrow><mi>Q</mi><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo></mrow></mfrac><mo stretchy="true" form="postfix">)</mo></mrow><mspace width="2.0em"></mspace><mrow><mo stretchy="false" form="prefix">(</mo><mn>24</mn><mo stretchy="false" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex"> \mathcal{D}_{\text{KL}}(P || Q) = \sum_{x \in \mathcal{X}} P(x) \log \left(\frac{P(x)}{Q(x)}\right) \qquad{(24)}</annotation></semantics></math></span></p>
+<p>In RLHF, the two distributions of interest are often the distribution of the new model version, say <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">P(x)</annotation></semantics></math>, and a distribution of the reference policy, say <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>Q</mi><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">Q(x)</annotation></semantics></math>. Different optimizers use different KL directions. Throughout this book, the most common “KL Penalty” that is used is called the reverse KL to the reference policy. In practice, this reduces to a Monte Carlo estimate that samples tokens from the RL model and computes probabilities from the reference model. Intuitively, this reverse KL has a numerical property that applies a large penalty when the new model, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>P</mi><annotation encoding="application/x-tex">P</annotation></semantics></math> or <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>π</mi><mtext mathvariant="normal">RL</mtext></msub><annotation encoding="application/x-tex">\pi_{\text{RL}}</annotation></semantics></math>, puts substantial probability mass where the original reference model assigns low probability.</p>
+<p>The other KL direction is still often used in ML, e.g. in the internal trust region calculation of some RL algorithms. This penalty intuitively penalizes the new model when its update does <em>not</em> apply probability to a high-likelihood region in <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Q</mi><annotation encoding="application/x-tex">Q</annotation></semantics></math> or <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>π</mi><mtext mathvariant="normal">ref</mtext></msub><annotation encoding="application/x-tex">\pi_{\text{ref}}</annotation></semantics></math>. This is closer to an objective used for distillation or behavioral cloning.</p>
+<section id="reference-model-to-generations" class="level3">
+<h3>Reference Model to Generations</h3>
+<p>KL penalties are most commonly implemented by comparing the distance between the generated tokens during training to a static reference model. The intuition is that the model you’re training from has a style that you would like to stay close to. This reference model is most often the instruction tuned model, but can also be a previous RL checkpoint. With simple substitution, the model we are sampling from becomes <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>π</mi><mtext mathvariant="normal">RL</mtext></msub><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\pi_{\text{RL}}(x)</annotation></semantics></math> and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>π</mi><mtext mathvariant="normal">ref</mtext></msub><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\pi_{\text{ref}}(x)</annotation></semantics></math>, shown above in eq. <a href="ch008.xhtml#eq:kl_standard">23</a> (often <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>P</mi><annotation encoding="application/x-tex">P</annotation></semantics></math>, and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Q</mi><annotation encoding="application/x-tex">Q</annotation></semantics></math>, in standard definitions, when applied for RL KL penalties). Such a KL divergence penalty was first applied to dialogue agents well before the popularity of large language models <span class="citation" data-cites="jaques2017sequence"><a href="ch021.xhtml#ref-jaques2017sequence">[162]</a></span>, yet KL control was quickly established as a core technique for fine-tuning pretrained models <span class="citation" data-cites="jaques2020human"><a href="ch021.xhtml#ref-jaques2020human">[163]</a></span>.</p>
+</section>
+<section id="implementation-example-1" class="level3">
+<h3>Implementation Example</h3>
+<p>In practice, the implementation of KL divergence is often approximated <span class="citation" data-cites="schulman2016klapprox"><a href="ch021.xhtml#ref-schulman2016klapprox">[164]</a></span>, making the implementation far simpler. With the above definition, the summation of KL can be converted to an expectation when sampling directly from the distribution <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">P(x)</annotation></semantics></math>. In this case, the distribution <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">P(x)</annotation></semantics></math> is the generative distribution of the model currently being trained (i.e. not the reference model). Then, the computation for KL divergence changes to the following:</p>
+<p><span id="eq:kl_expectation"><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>𝒟</mi><mtext mathvariant="normal">KL</mtext></msub><mo stretchy="false" form="prefix">(</mo><mi>P</mi><mspace width="0.167em"></mspace><mo stretchy="false" form="prefix">|</mo><mo stretchy="false" form="prefix">|</mo><mspace width="0.167em"></mspace><mi>Q</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><msub><mi>𝔼</mi><mrow><mi>x</mi><mo>∼</mo><mi>P</mi></mrow></msub><mrow><mo stretchy="true" form="prefix">[</mo><mi mathvariant="normal">log</mi><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mo>−</mo><mi mathvariant="normal">log</mi><mi>Q</mi><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mo stretchy="true" form="postfix">]</mo></mrow><mi>.</mi><mspace width="2.0em"></mspace><mrow><mo stretchy="false" form="prefix">(</mo><mn>25</mn><mo stretchy="false" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">
+\mathcal{D}_{\text{KL}}(P \,||\, Q) = \mathbb{E}_{x \sim P} \left[ \log P(x) - \log Q(x) \right].
+\qquad{(25)}</annotation></semantics></math></span></p>
+<p>This mode is far simpler to implement, particularly when dealing directly with log probabilities used frequently in language model training.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 1: sample (or otherwise generate) a sequence from your policy</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>generated_tokens <span class="op">=</span> model.generate(inputs)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 2: score that generated sequence under both models</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co">#    for autoregressive LMs, you usually do:</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co">#      inputs_for_scoring = generated_tokens[:, :-1]</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co">#      labels           = generated_tokens[:, 1:]</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>logits       <span class="op">=</span> model.forward(generated_tokens[:, :<span class="op">-</span><span class="dv">1</span>]).logits</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>ref_logits   <span class="op">=</span> ref_model.forward(generated_tokens[:, :<span class="op">-</span><span class="dv">1</span>]).logits</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="co"># convert to log-probs, then align labels to index into the logits</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>logprobs     <span class="op">=</span> F.log_softmax(logits, dim<span class="op">=-</span><span class="dv">1</span>)</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>ref_logprobs <span class="op">=</span> F.log_softmax(ref_logits, dim<span class="op">=-</span><span class="dv">1</span>)</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="co"># gather the log-probs of the actual next tokens</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>token_logprobs     <span class="op">=</span> logprobs.gather(<span class="op">-</span><span class="dv">1</span>, generated_tokens[:, <span class="dv">1</span>:].unsqueeze(<span class="op">-</span><span class="dv">1</span>)).squeeze(<span class="op">-</span><span class="dv">1</span>)</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>ref_token_logprobs <span class="op">=</span> ref_logprobs.gather(<span class="op">-</span><span class="dv">1</span>, generated_tokens[:, <span class="dv">1</span>:].unsqueeze(<span class="op">-</span><span class="dv">1</span>)).squeeze(<span class="op">-</span><span class="dv">1</span>)</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="co"># now you can sum (or average) those to get the sequence log-prob,</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="co"># and compute KL:</span></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>seq_logprob     <span class="op">=</span> token_logprobs.<span class="bu">sum</span>(dim<span class="op">=-</span><span class="dv">1</span>)</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>ref_seq_logprob <span class="op">=</span> ref_token_logprobs.<span class="bu">sum</span>(dim<span class="op">=-</span><span class="dv">1</span>)</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>kl_approx <span class="op">=</span> seq_logprob <span class="op">-</span> ref_seq_logprob</span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>kl_full   <span class="op">=</span> F.kl_div(ref_logprobs, logprobs, reduction<span class="op">=</span><span class="st">&#39;batchmean&#39;</span>)</span></code></pre></div>
+<p>Some example implementations include <a href="https://github.com/huggingface/trl/blob/5c21de30ae210e4251ead85517ba8dfe3f210e81/trl/trainer/ppo_trainer.py#L1150">TRL</a> and <a href="https://github.com/hamishivi/EasyLM/blob/main/EasyLM/models/llama/llama_train_ppo.py#L278">Hamish Ivison’s Jax Code</a>.</p>
+</section>
+</section>
+<section id="pretraining-gradients" class="level2">
+<h2>Pretraining Gradients</h2>
+<p>Another way of viewing regularization is that you may have a <em>dataset</em> that you want the model to remain close to, as done in InstructGPT <span class="citation" data-cites="ouyang2022training"><a href="ch021.xhtml#ref-ouyang2022training">[3]</a></span> “in order to fix the performance regressions on public NLP datasets”. To implement this, they modify the training objective for RLHF. Taking eq. <a href="ch008.xhtml#eq:rl_start">22</a>, we can transform this into an objective function to optimize by sampling from the RL policy model, completions <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>y</mi><annotation encoding="application/x-tex">y</annotation></semantics></math> from prompts <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics></math> in the RL dataset used for RLHF, which yields: <span id="eq:objective_regularization"><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>J</mi><mo stretchy="false" form="prefix">(</mo><mi>θ</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><msub><mi>𝔼</mi><mrow><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo>,</mo><mi>y</mi><mo stretchy="false" form="postfix">)</mo><mo>∼</mo><msub><mi>𝒟</mi><msub><mi>π</mi><mrow><mtext mathvariant="normal">RL</mtext><mo>,</mo><mi>θ</mi></mrow></msub></msub></mrow></msub><mrow><mo stretchy="true" form="prefix">[</mo><msub><mi>r</mi><mi>θ</mi></msub><mo stretchy="false" form="prefix">(</mo><mi>y</mi><mo>∣</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mo>−</mo><mi>λ</mi><msub><mi>r</mi><mtext mathvariant="normal">reg.</mtext></msub><mo stretchy="true" form="postfix">]</mo></mrow><mspace width="2.0em"></mspace><mrow><mo stretchy="false" form="prefix">(</mo><mn>26</mn><mo stretchy="false" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">
+J(\theta) = \mathbb{E}_{(x,y) \sim \mathcal{D}_{\pi_{\text{RL},\theta}}} \left[ r_{\theta}(y \mid x) - \lambda r_{\text{reg.}} \right]
+\qquad{(26)}</annotation></semantics></math></span></p>
+<p>Then, we can add an additional reward for higher probabilities on the standard autoregressive next-token prediction loss used at pretraining, over a set of documents sampled from the pretraining corpus (or another dataset) to maintain textual coherence:</p>
+<p><span id="eq:objective_pretraining"><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>J</mi><mo stretchy="false" form="prefix">(</mo><mi>θ</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><msub><mi>𝔼</mi><mrow><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo>,</mo><mi>y</mi><mo stretchy="false" form="postfix">)</mo><mo>∼</mo><msub><mi>𝒟</mi><msub><mi>π</mi><mrow><mtext mathvariant="normal">RL</mtext><mo>,</mo><mi>θ</mi></mrow></msub></msub></mrow></msub><mrow><mo stretchy="true" form="prefix">[</mo><msub><mi>r</mi><mi>θ</mi></msub><mo stretchy="false" form="prefix">(</mo><mi>y</mi><mo>∣</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mo>−</mo><mi>λ</mi><msub><mi>r</mi><mtext mathvariant="normal">reg.</mtext></msub><mo stretchy="true" form="postfix">]</mo></mrow><mo>+</mo><mi>γ</mi><msub><mi>𝔼</mi><mrow><mi>x</mi><mo>∼</mo><msub><mi>𝒟</mi><mtext mathvariant="normal">pretrain</mtext></msub></mrow></msub><mrow><mo stretchy="true" form="prefix">[</mo><mi mathvariant="normal">log</mi><mo stretchy="false" form="prefix">(</mo><msub><mi>π</mi><mrow><mtext mathvariant="normal">RL</mtext><mo>,</mo><mi>θ</mi></mrow></msub><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mo stretchy="false" form="postfix">)</mo><mo stretchy="true" form="postfix">]</mo></mrow><mspace width="2.0em"></mspace><mrow><mo stretchy="false" form="prefix">(</mo><mn>27</mn><mo stretchy="false" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">
+J(\theta) = \mathbb{E}_{(x,y) \sim \mathcal{D}_{\pi_{\text{RL},\theta}}} \left[ r_{\theta}(y \mid x) - \lambda r_{\text{reg.}} \right] + \gamma \mathbb{E}_{x \sim \mathcal{D}_{\text{pretrain}}} \left[ \log(\pi_{\text{RL},\theta}(x)) \right]
+\qquad{(27)}</annotation></semantics></math></span></p>
+<p>Recent work proposed using a negative log-likelihood term to balance the optimization of Direct Preference Optimization (DPO) <span class="citation" data-cites="pang2024iterative"><a href="ch021.xhtml#ref-pang2024iterative">[165]</a></span>. Given the pairwise nature of the DPO loss, the same loss modification can be made to reward model training, constraining the model to predict accurate text (rumors from laboratories that did not publish the work).</p>
+<p>The optimization follows as a modification to DPO. <span id="eq:dpo_nll"><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>ℒ</mi><mtext mathvariant="normal">DPO+NLL</mtext></msub><mo>=</mo><msub><mi>ℒ</mi><mtext mathvariant="normal">DPO</mtext></msub><mo stretchy="false" form="prefix">(</mo><msubsup><mi>c</mi><mi>i</mi><mi>w</mi></msubsup><mo>,</mo><msubsup><mi>y</mi><mi>i</mi><mi>w</mi></msubsup><mo>,</mo><msubsup><mi>c</mi><mi>i</mi><mi>l</mi></msubsup><mo>,</mo><msubsup><mi>y</mi><mi>i</mi><mi>l</mi></msubsup><mo>∣</mo><msub><mi>x</mi><mi>i</mi></msub><mo stretchy="false" form="postfix">)</mo><mo>+</mo><mi>α</mi><msub><mi>ℒ</mi><mtext mathvariant="normal">NLL</mtext></msub><mo stretchy="false" form="prefix">(</mo><msubsup><mi>c</mi><mi>i</mi><mi>w</mi></msubsup><mo>,</mo><msubsup><mi>y</mi><mi>i</mi><mi>w</mi></msubsup><mo>∣</mo><msub><mi>x</mi><mi>i</mi></msub><mo stretchy="false" form="postfix">)</mo><mspace width="2.0em"></mspace><mrow><mo stretchy="false" form="prefix">(</mo><mn>28</mn><mo stretchy="false" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\mathcal{L}_{\text{DPO+NLL}} = \mathcal{L}_{\text{DPO}}(c_i^w, y_i^w, c_i^l, y_i^l \mid x_i) + \alpha \mathcal{L}_{\text{NLL}}(c_i^w, y_i^w \mid x_i)
+\qquad{(28)}</annotation></semantics></math></span></p>
+<p><span id="eq:dpo_nll_expanded"><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>=</mo><mi>−</mi><mrow><mi mathvariant="normal">log</mi><mo>&#8289;</mo></mrow><mi>σ</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>β</mi><mi mathvariant="normal">log</mi><mfrac><mrow><msub><mi>P</mi><mi>θ</mi></msub><mo stretchy="false" form="prefix">(</mo><msubsup><mi>c</mi><mi>i</mi><mi>w</mi></msubsup><mo>,</mo><msubsup><mi>y</mi><mi>i</mi><mi>w</mi></msubsup><mo>∣</mo><msub><mi>x</mi><mi>i</mi></msub><mo stretchy="false" form="postfix">)</mo></mrow><mrow><msub><mi>P</mi><mtext mathvariant="normal">ref.</mtext></msub><mo stretchy="false" form="prefix">(</mo><msubsup><mi>c</mi><mi>i</mi><mi>w</mi></msubsup><mo>,</mo><msubsup><mi>y</mi><mi>i</mi><mi>w</mi></msubsup><mo>∣</mo><msub><mi>x</mi><mi>i</mi></msub><mo stretchy="false" form="postfix">)</mo></mrow></mfrac><mo>−</mo><mi>β</mi><mi mathvariant="normal">log</mi><mfrac><mrow><msub><mi>P</mi><mi>θ</mi></msub><mo stretchy="false" form="prefix">(</mo><msubsup><mi>c</mi><mi>i</mi><mi>l</mi></msubsup><mo>,</mo><msubsup><mi>y</mi><mi>i</mi><mi>l</mi></msubsup><mo>∣</mo><msub><mi>x</mi><mi>i</mi></msub><mo stretchy="false" form="postfix">)</mo></mrow><mrow><msub><mi>P</mi><mtext mathvariant="normal">ref.</mtext></msub><mo stretchy="false" form="prefix">(</mo><msubsup><mi>c</mi><mi>i</mi><mi>l</mi></msubsup><mo>,</mo><msubsup><mi>y</mi><mi>i</mi><mi>l</mi></msubsup><mo>∣</mo><msub><mi>x</mi><mi>i</mi></msub><mo stretchy="false" form="postfix">)</mo></mrow></mfrac><mo stretchy="true" form="postfix">)</mo></mrow><mo>−</mo><mi>α</mi><mfrac><mrow><mrow><mi mathvariant="normal">log</mi><mo>&#8289;</mo></mrow><msub><mi>P</mi><mi>θ</mi></msub><mo stretchy="false" form="prefix">(</mo><msubsup><mi>c</mi><mi>i</mi><mi>w</mi></msubsup><mo>,</mo><msubsup><mi>y</mi><mi>i</mi><mi>w</mi></msubsup><mo>∣</mo><msub><mi>x</mi><mi>i</mi></msub><mo stretchy="false" form="postfix">)</mo></mrow><mrow><mo stretchy="false" form="prefix">|</mo><msubsup><mi>c</mi><mi>i</mi><mi>w</mi></msubsup><mo stretchy="false" form="prefix">|</mo><mi>+</mi><mo stretchy="false" form="prefix">|</mo><msubsup><mi>y</mi><mi>i</mi><mi>w</mi></msubsup><mo stretchy="false" form="prefix">|</mo></mrow></mfrac><mo>,</mo><mspace width="2.0em"></mspace><mrow><mo stretchy="false" form="prefix">(</mo><mn>29</mn><mo stretchy="false" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">
+= -\log \sigma \left( \beta \log \frac{P_\theta(c_i^w, y_i^w \mid x_i)}{P_{\text{ref.}}(c_i^w, y_i^w \mid x_i)} - \beta \log \frac{P_\theta(c_i^l, y_i^l \mid x_i)}{P_{\text{ref.}}(c_i^l, y_i^l \mid x_i)} \right) - \alpha \frac{\log P_\theta(c_i^w, y_i^w \mid x_i)}{|c_i^w| + |y_i^w|},
+\qquad{(29)}</annotation></semantics></math></span></p>
+<p>where <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>P</mi><mi>θ</mi></msub><annotation encoding="application/x-tex">P_{\theta}</annotation></semantics></math> is the trainable policy model, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>P</mi><mtext mathvariant="normal">ref.</mtext></msub><annotation encoding="application/x-tex">P_{\text{ref.}}</annotation></semantics></math> is a fixed reference model (often the SFT checkpoint), and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">(</mo><msubsup><mi>c</mi><mi>i</mi><mi>w</mi></msubsup><mo>,</mo><msubsup><mi>y</mi><mi>i</mi><mi>w</mi></msubsup><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">(c_i^w, y_i^w)</annotation></semantics></math> and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">(</mo><msubsup><mi>c</mi><mi>i</mi><mi>l</mi></msubsup><mo>,</mo><msubsup><mi>y</mi><mi>i</mi><mi>l</mi></msubsup><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">(c_i^l, y_i^l)</annotation></semantics></math> denote the winning and losing completions for prompt <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>x</mi><mi>i</mi></msub><annotation encoding="application/x-tex">x_i</annotation></semantics></math>. The first term is the standard DPO logistic loss: it increases the margin between the win and loss using the difference of log-likelihood ratios, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi mathvariant="normal">log</mi><mo>&#8289;</mo></mrow><mstyle displaystyle="false"><mfrac><msub><mi>P</mi><mi>θ</mi></msub><msub><mi>P</mi><mtext mathvariant="normal">ref.</mtext></msub></mfrac></mstyle></mrow><annotation encoding="application/x-tex">\log \tfrac{P_{\theta}}{P_{\text{ref.}}}</annotation></semantics></math>, and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>β</mi><annotation encoding="application/x-tex">\beta</annotation></semantics></math> controls how strongly this preference signal pulls away from the reference. The second term is a length-normalized negative log-likelihood penalty on the winning completion, weighted by <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>α</mi><annotation encoding="application/x-tex">\alpha</annotation></semantics></math>, which helps keep the preferred text high-likelihood in an absolute language modeling sense rather than only relatively better than the rejected sample.</p>
+</section>
+<section id="other-regularization" class="level2">
+<h2>Other Regularization</h2>
+<p>Controlling the optimization is less well defined in other parts of the RLHF stack. Most reward models have no regularization beyond the standard contrastive loss function. Direct Alignment Algorithms handle regularization to KL divergences differently, through the <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>β</mi><annotation encoding="application/x-tex">\beta</annotation></semantics></math> parameter (see the chapter on Direct Alignment).</p>
+<p>Llama 2 proposed a margin loss for reward model training <span class="citation" data-cites="touvron2023llama"><a href="ch021.xhtml#ref-touvron2023llama">[44]</a></span>:</p>
+<p><span id="eq:margin_loss"><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>ℒ</mi><mo stretchy="false" form="prefix">(</mo><mi>θ</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mi>−</mi><mrow><mi mathvariant="normal">log</mi><mo>&#8289;</mo></mrow><mrow><mo stretchy="true" form="prefix">(</mo><mi>σ</mi><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>r</mi><mi>θ</mi></msub><mo stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mi>c</mi></msub><mo>∣</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mo>−</mo><msub><mi>r</mi><mi>θ</mi></msub><mo stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mi>r</mi></msub><mo>∣</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mo>−</mo><mi>m</mi><mo stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mi>c</mi></msub><mo>,</mo><msub><mi>y</mi><mi>r</mi></msub><mo stretchy="false" form="postfix">)</mo><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="true" form="postfix">)</mo></mrow><mspace width="2.0em"></mspace><mrow><mo stretchy="false" form="prefix">(</mo><mn>30</mn><mo stretchy="false" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">
+\mathcal{L}(\theta) = - \log \left( \sigma \left( r_{\theta}(y_c \mid x) - r_{\theta}(y_r \mid x) - m(y_c, y_r) \right) \right)
+\qquad{(30)}</annotation></semantics></math></span></p>
+<p>where <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>m</mi><mo stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mi>c</mi></msub><mo>,</mo><msub><mi>y</mi><mi>r</mi></msub><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">m(y_c, y_r)</annotation></semantics></math> is the margin between two datapoints <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>y</mi><mi>c</mi></msub><annotation encoding="application/x-tex">y_c</annotation></semantics></math> and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>y</mi><mi>r</mi></msub><annotation encoding="application/x-tex">y_r</annotation></semantics></math> representing numerical difference in delta between the ratings of two annotators. This is either achieved by having annotators rate the outputs on a numerical scale or by using a quantified ranking method, such as <a href="https://en.wikipedia.org/wiki/Likert_scale">Likert scales</a>.</p>
+<p>Reward margins have been used heavily in the direct alignment literature, such as Reward weighted DPO, ‘’Reward-aware Preference Optimization’’ (RPO), which integrates reward model scores into the update rule following a DPO loss <span class="citation" data-cites="adler2024nemotron"><a href="ch021.xhtml#ref-adler2024nemotron">[25]</a></span>, or REBEL <span class="citation" data-cites="gao2024rebel"><a href="ch021.xhtml#ref-gao2024rebel">[166]</a></span> that has a reward delta weighting in a regression-loss formulation.</p>
+</section>
+</section>
+</body>
+</html>

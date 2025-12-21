@@ -1,0 +1,940 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xml:lang="en-US">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <title>ch007.xhtml</title>
+  <style>
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+/*
+ * Custom CSS file. Override it as you like.
+ *
+ * Credits to @killercup (https://gist.github.com/killercup); Extracted from this Gist:
+ *   https://gist.github.com/killercup/5917178
+ * Substantial modifications made by natolambert
+ */
+
+html {
+    font-size: 100%;
+    overflow-y: scroll;
+    -webkit-text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%;
+}
+
+body {
+    color: #444;
+    font-family: Georgia, Palatino, 'Palatino Linotype', Times, 'Times New Roman', serif;
+    font-size: 12px;
+    line-height: 1.7;
+    padding: 1em;
+    margin: auto;
+    max-width: 42em;
+    background: #fefefe;
+}
+
+a {
+    color: #0645ad;
+    text-decoration: none;
+}
+
+a:visited {
+    color: #0b0080;
+}
+
+a:hover {
+    color: #06e;
+}
+
+a:active {
+    color: #faa700;
+}
+
+a:focus {
+    outline: thin dotted;
+}
+
+*::-moz-selection {
+    background: rgba(255, 255, 0, 0.3);
+    color: #000;
+}
+
+*::selection {
+    background: rgba(255, 255, 0, 0.3);
+    color: #000;
+}
+
+a::-moz-selection {
+    background: rgba(255, 255, 0, 0.3);
+    color: #0645ad;
+}
+
+a::selection {
+    background: rgba(255, 255, 0, 0.3);
+    color: #0645ad;
+}
+
+p {
+    margin: 1em 0;
+}
+
+img {
+    max-width: 100%;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    color: #111;
+    line-height: 125%;
+    margin-top: 2em;
+    font-weight: normal;
+    position: relative;
+}
+
+/* Heading anchor link styles */
+.header-anchor {
+    opacity: 0;
+    font-size: 0.8em;
+    vertical-align: middle;
+    position: absolute;
+    margin-left: 0.3em;
+    transition: opacity 0.2s ease-in-out;
+}
+
+h2:hover .header-anchor,
+h3:hover .header-anchor,
+h4:hover .header-anchor,
+h5:hover .header-anchor,
+h6:hover .header-anchor {
+    opacity: 1;
+}
+
+h4,
+h5,
+h6 {
+    font-weight: bold;
+}
+
+h1 {
+    font-size: 2.5em;
+}
+
+h1.title {
+    hyphens: none;
+    -webkit-hyphens: none;
+    -moz-hyphens: none;
+    -ms-hyphens: none;
+    word-break: keep-all;
+}
+
+h2 {
+    font-size: 2em;
+}
+
+h3 {
+    font-size: 1.5em;
+}
+
+h4 {
+    font-size: 1.2em;
+}
+
+h5 {
+    font-size: 1em;
+}
+
+h6 {
+    font-size: 0.9em;
+}
+
+blockquote {
+    color: #666666;
+    margin: 0;
+    padding-left: 3em;
+    border-left: 0.5em #EEE solid;
+}
+
+hr {
+    display: block;
+    height: 2px;
+    border: 0;
+    border-top: 1px solid #aaa;
+    border-bottom: 1px solid #eee;
+    margin: 1em 0;
+    padding: 0;
+}
+
+pre,
+code,
+kbd,
+samp {
+    color: #000;
+    font-family: monospace, monospace;
+    _font-family: 'courier new', monospace;
+    font-size: 0.98em;
+}
+
+pre {
+    white-space: pre;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+
+b,
+strong {
+    font-weight: bold;
+}
+
+dfn {
+    font-style: italic;
+}
+
+ins {
+    background: #ff9;
+    color: #000;
+    text-decoration: none;
+}
+
+mark {
+    background: #ff0;
+    color: #000;
+    font-style: italic;
+    font-weight: bold;
+}
+
+sub,
+sup {
+    font-size: 75%;
+    line-height: 0;
+    position: relative;
+    vertical-align: baseline;
+}
+
+sup {
+    top: -0.5em;
+}
+
+sub {
+    bottom: -0.25em;
+}
+
+ul,
+ol {
+    margin: 1em 0;
+    padding: 0 0 0 2em;
+}
+
+li p:last-child {
+    margin-bottom: 0;
+}
+
+ul ul,
+ol ol {
+    margin: .3em 0;
+}
+
+dl {
+    margin-bottom: 1em;
+}
+
+dt {
+    font-weight: bold;
+    margin-bottom: .8em;
+}
+
+dd {
+    margin: 0 0 .8em 2em;
+}
+
+dd:last-child {
+    margin-bottom: 0;
+}
+
+img {
+    border: 0;
+    -ms-interpolation-mode: bicubic;
+    vertical-align: middle;
+}
+
+figure {
+    display: block;
+    text-align: center;
+    margin: 1em 0;
+}
+
+figure img {
+    border: none;
+    margin: 0 auto;
+}
+
+figcaption {
+    font-size: 0.8em;
+    font-style: italic;
+    margin: 0 0 .8em;
+}
+
+/* for html tables */
+table {
+    margin-bottom: 2em;
+    border-bottom: 1px solid #ddd;
+    border-right: 1px solid #ddd;
+    border-spacing: 0;
+    box-shadow: none;
+    border: none;
+    border-collapse: collapse;
+    margin-left: auto;
+    margin-right: auto;
+    width: auto; /* Keeps natural width; wrapper handles overflow */
+    display: table;
+}
+
+th {
+    padding: 12px;
+    text-align: center;
+    background-color: #eee;
+    border: 1px solid #ddd;
+}
+
+td {
+    padding: 12px;
+    text-align: left; /* Keeps data cells left-aligned */
+    border: 1px solid #ddd;
+    vertical-align: top;
+}
+
+.table-scroll {
+    max-width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    margin: 1.5em auto 2em;
+}
+
+.table-scroll table {
+    margin: 0 auto;
+    display: table;
+    width: auto;
+    width: fit-content;
+    width: max-content;
+}
+
+.table-wrap {
+    margin: 1.5em auto 2em;
+}
+
+.table-wrap table {
+    margin: 0 auto;
+}
+
+.table-scroll::-webkit-scrollbar {
+    height: 8px;
+}
+
+.table-scroll::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+}
+
+.table-scroll::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.05);
+}
+
+.author {
+    font-size: 1.2em;
+    text-align: center;
+}
+
+/* Target only mobile screens */
+@media only screen and (max-width: 479px) {
+    body {
+        font-size: 14px;
+    }
+}
+
+@media only screen and (min-width: 480px) {
+    body {
+        font-size: 15px;
+    }
+}
+
+@media only screen and (min-width: 768px) {
+    body {
+        font-size: 16px;
+    }
+}
+
+@media print {
+    * {
+        background: transparent !important;
+        color: black !important;
+        filter: none !important;
+        -ms-filter: none !important;
+    }
+    body {
+        font-size: 12pt;
+        max-width: 100%;
+    }
+    a,
+    a:visited {
+        text-decoration: underline;
+    }
+    hr {
+        height: 1px;
+        border: 0;
+        border-bottom: 1px solid black;
+    }
+    a[href]:after {
+        content: " (" attr(href) ")";
+    }
+    abbr[title]:after {
+        content: " (" attr(title) ")";
+    }
+    .ir a:after,
+    a[href^="javascript:"]:after,
+    a[href^="#"]:after {
+        content: "";
+    }
+    pre,
+    blockquote {
+        border: 1px solid #999;
+        padding-right: 1em;
+        page-break-inside: avoid;
+    }
+    tr,
+    img {
+        page-break-inside: avoid;
+    }
+    img {
+        max-width: 100% !important;
+    }
+    @page :left {
+        margin: 15mm 20mm 15mm 10mm;
+    }
+    @page :right {
+        margin: 15mm 10mm 15mm 20mm;
+    }
+    p,
+    h2,
+    h3 {
+        orphans: 3;
+        widows: 3;
+    }
+    h2,
+    h3 {
+        page-break-after: avoid;
+    }
+}
+
+.dropdown-content {
+  display: none;
+}
+
+
+
+thead {
+    background-color: #f5f5f5;
+}
+
+
+.dropdown-content.open {
+  display: block;
+  max-height: 2000px;
+}
+/* Header Nav Block */
+    .chapter-nav {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        /* grid-template-rows: auto auto;  */
+        gap: 0.5rem;
+        padding: 0.5rem;
+        max-width: 1200px;
+        text-align: left;
+    }  
+    .section {
+        background-color: #ffffff;
+        padding-top: 5px;
+        padding-right: 12px;
+        padding-bottom: 8px;
+        padding-left: 12px;
+        border-radius: 5px;
+        text-align: left;
+    }
+  .dropdown-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-out;
+    background: #f8f8f8;  /* Unified with section background */
+  }
+  /* dropdown row */
+  .dropdown-button {
+    width: 100%;
+    text-align: left;
+    padding: 0.5rem;
+    background: #f8f8f8;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    border: none;
+    font-size: 0.9rem;
+  }
+  /* carrot button */
+  .dropdown-button .chevron {
+    width: 14px;
+    height: 14px;
+    transition: transform 0.2s;
+  }
+  /* dropdown animation */
+  .dropdown-button[aria-expanded="true"] .chevron {
+    transform: rotate(180deg);
+  }
+  .section h3 {
+    font-weight: bold;
+    font-size: 0.8rem;
+    margin-top: 5px;
+    margin-bottom: 5px;  /* or whatever bottom spacing you prefer */
+  }
+  .section ol, .section ul {
+    margin: 0;
+    padding-left: 20px;
+    text-align: left;
+  }
+  .section li {
+    font-size: 12px;
+    line-height: 1.3;
+    margin-bottom: 3px;
+    text-align: left;
+  }
+  .section a {
+    color: #0066cc;
+    text-decoration: none;
+  }
+  .section a:hover {
+    text-decoration: underline;
+  }
+
+  /* Mobile Responsiveness */
+  @media screen and (max-width: 768px) {
+    .chapter-nav {
+      grid-template-columns: 1fr;
+    }
+    .section {
+      margin-bottom: 10px;
+    }
+    .section p {
+      font-size: 16px;
+    }
+    .section li {
+      font-size: 14px;
+    }
+  }  </style>
+  <link rel="stylesheet" type="text/css" href="../styles/stylesheet1.css" />
+</head>
+<body epub:type="bodymatter">
+<section id="reward-modeling" class="level1">
+<h1>Reward Modeling</h1>
+<p>Reward models are core to the modern approach to RLHF by being where the complex human preferences are learned. They are what enable our models to learn from hard to specify signals. They compress complex features in the data into a representation that can be used in downstream training – a sort of magic that once again shows the complex capacity of modern deep learning. These models act as the proxy objectives by which the core optimization is done, as studied in the following chapters.</p>
+<p>Reward models broadly have historically been used extensively in reinforcement learning research as a proxy for environment rewards <span class="citation" data-cites="sutton2018reinforcement"><a href="ch021.xhtml#ref-sutton2018reinforcement">[55]</a></span>. Reward models were proposed, in their modern form, as a tool for studying the value alignment problem <span class="citation" data-cites="leike2018scalable"><a href="ch021.xhtml#ref-leike2018scalable">[33]</a></span>. These models tend to take in some sort of input and output a single scalar value of reward. This reward can take multiple forms – in traditional RL problems it was attempting to approximate the exact environment reward for the problem, but we will see in RLHF that reward models actually output a probability of a certain input being “of high quality” (i.e. the chosen answer among a pairwise preference relation). The practice of reward modeling for RLHF is closely related to inverse reinforcement learning, where the problem is to approximate an agent’s reward function given trajectories of behavior <span class="citation" data-cites="ng2000algorithms"><a href="ch021.xhtml#ref-ng2000algorithms">[96]</a></span>, and other areas of deep reinforcement learning. The high level problem statement is the same, but the implementation and focus areas are entirely different, so they’re often considered as totally separate areas of study.</p>
+<p>The most common reward model, often called a Bradley-Terry reward model and the primary focus of this chapter, predicts the probability that a piece of text was close to a “preferred” piece of text from the training comparisons. Later in this section we also compare these to Outcome Reward Models (ORMs), Process Reward Model (PRM), and other types of reward models. <!-- When not indicated, the reward models mentioned are those predicting preference between text. --></p>
+<p><em>Throughout this chapter, we use <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics></math> to denote prompts and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>y</mi><annotation encoding="application/x-tex">y</annotation></semantics></math> to denote completions. This notation is common in the language model literature, where methods operate on full prompt-completion pairs rather than individual tokens.</em></p>
+<section id="training-reward-models" class="level2">
+<h2>Training Reward Models</h2>
+<p>The canonical implementation of a reward model is derived from the Bradley-Terry model of preference <span class="citation" data-cites="BradleyTerry"><a href="ch021.xhtml#ref-BradleyTerry">[125]</a></span>. There are two popular expressions for how to train a standard reward model for RLHF – they are mathematically equivalent. To start, a Bradley-Terry model of preferences defines the probability that, in a pairwise comparison between two items <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>i</mi><annotation encoding="application/x-tex">i</annotation></semantics></math> and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>j</mi><annotation encoding="application/x-tex">j</annotation></semantics></math>, a judge prefers <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>i</mi><annotation encoding="application/x-tex">i</annotation></semantics></math> over <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>j</mi><annotation encoding="application/x-tex">j</annotation></semantics></math>:</p>
+<p><span id="eq:bradterry"><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mi>i</mi><mo>&gt;</mo><mi>j</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mfrac><msub><mi>p</mi><mi>i</mi></msub><mrow><msub><mi>p</mi><mi>i</mi></msub><mo>+</mo><msub><mi>p</mi><mi>j</mi></msub></mrow></mfrac><mi>.</mi><mspace width="2.0em"></mspace><mrow><mo stretchy="false" form="prefix">(</mo><mn>11</mn><mo stretchy="false" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">P(i &gt; j) = \frac{p_i}{p_i + p_j}.\qquad{(11)}</annotation></semantics></math></span></p>
+<p>The Bradley-Terry model assumes that each item has a latent strength <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>p</mi><mi>i</mi></msub><mo>&gt;</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">p_i &gt; 0</annotation></semantics></math>, and that observed preferences are a noisy reflection of these underlying strengths. It is common to reparametrize the Bradley-Terry model with unbounded scores, where <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>p</mi><mi>i</mi></msub><mo>=</mo><msup><mi>e</mi><msub><mi>r</mi><mi>i</mi></msub></msup></mrow><annotation encoding="application/x-tex">p_i = e^{r_i}</annotation></semantics></math>, which results in the following form:</p>
+<p><span id="eq:bradterry_unbounded"><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mi>i</mi><mo>&gt;</mo><mi>j</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mfrac><msup><mi>e</mi><msub><mi>r</mi><mi>i</mi></msub></msup><mrow><msup><mi>e</mi><msub><mi>r</mi><mi>i</mi></msub></msup><mo>+</mo><msup><mi>e</mi><msub><mi>r</mi><mi>j</mi></msub></msup></mrow></mfrac><mo>=</mo><mi>σ</mi><mo stretchy="false" form="prefix">(</mo><msub><mi>r</mi><mi>i</mi></msub><mo>−</mo><msub><mi>r</mi><mi>j</mi></msub><mo stretchy="false" form="postfix">)</mo><mi>.</mi><mspace width="2.0em"></mspace><mrow><mo stretchy="false" form="prefix">(</mo><mn>12</mn><mo stretchy="false" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">P(i &gt; j) = \frac{e^{r_i}}{e^{r_i} + e^{r_j}} = \sigma(r_i-r_j).\qquad{(12)}</annotation></semantics></math></span></p>
+<p>Only differences in scores matter: adding the same constant to all <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>r</mi><mi>i</mi></msub><annotation encoding="application/x-tex">r_i</annotation></semantics></math> leaves <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mi>i</mi><mo>&gt;</mo><mi>j</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">P(i &gt; j)</annotation></semantics></math> unchanged. These forms are not a law of nature, but a useful approximation of human preferences that often works well in RLHF.</p>
+<p>To train a reward model, we must formulate a loss function that satisfies the above relation. In practice, this is done by converting a language model into a model that outputs a scalar score, often via a small linear head that produces a single logit. Given a prompt <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics></math> and two sampled completions <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>y</mi><mn>1</mn></msub><annotation encoding="application/x-tex">y_1</annotation></semantics></math> and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>y</mi><mn>2</mn></msub><annotation encoding="application/x-tex">y_2</annotation></semantics></math>, we score both with a reward model <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>r</mi><mi>θ</mi></msub><annotation encoding="application/x-tex">r_\theta</annotation></semantics></math> and write the conditional scores as <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>r</mi><mi>θ</mi></msub><mo stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mi>i</mi></msub><mo>∣</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">r_\theta(y_i \mid x)</annotation></semantics></math>.</p>
+<p>The probability of success for a given reward model in a pairwise comparison becomes:</p>
+<p><span id="eq:bradterryrm"><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mn>1</mn></msub><mo>&gt;</mo><msub><mi>y</mi><mn>2</mn></msub><mo>∣</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mfrac><mrow><mrow><mi mathvariant="normal">exp</mi><mo>&#8289;</mo></mrow><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>r</mi><mi>θ</mi></msub><mo stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mn>1</mn></msub><mo>∣</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mo stretchy="true" form="postfix">)</mo></mrow></mrow><mrow><mrow><mi mathvariant="normal">exp</mi><mo>&#8289;</mo></mrow><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>r</mi><mi>θ</mi></msub><mo stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mn>1</mn></msub><mo>∣</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mo stretchy="true" form="postfix">)</mo></mrow><mo>+</mo><mrow><mi mathvariant="normal">exp</mi><mo>&#8289;</mo></mrow><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>r</mi><mi>θ</mi></msub><mo stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mn>2</mn></msub><mo>∣</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mo stretchy="true" form="postfix">)</mo></mrow></mrow></mfrac><mi>.</mi><mspace width="2.0em"></mspace><mrow><mo stretchy="false" form="prefix">(</mo><mn>13</mn><mo stretchy="false" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">P(y_1 &gt; y_2 \mid x) = \frac{\exp\left(r_\theta(y_1 \mid x)\right)}{\exp\left(r_\theta(y_1 \mid x)\right) + \exp\left(r_\theta(y_2 \mid x)\right)}.\qquad{(13)}</annotation></semantics></math></span></p>
+<p>We denote the preferred completion as <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>y</mi><mi>c</mi></msub><annotation encoding="application/x-tex">y_c</annotation></semantics></math> (chosen) and the rejected completion as <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>y</mi><mi>r</mi></msub><annotation encoding="application/x-tex">y_r</annotation></semantics></math>.</p>
+<p>Then, by maximizing the log-likelihood of the above function (or alternatively minimizing the negative log-likelihood), we can arrive at the loss function to train a reward model:</p>
+<p><span id="eq:bradterryrm_deriv"><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mtable><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><msup><mi>θ</mi><mo>*</mo></msup><mo>=</mo><mrow><mi mathvariant="normal">arg</mi><mo>&#8289;</mo></mrow><munder><mi mathvariant="normal">max</mi><mi>θ</mi></munder><mi>P</mi><mo stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mi>c</mi></msub><mo>&gt;</mo><msub><mi>y</mi><mi>r</mi></msub><mo>∣</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mrow><mi mathvariant="normal">arg</mi><mo>&#8289;</mo></mrow><munder><mi mathvariant="normal">max</mi><mi>θ</mi></munder><mfrac><mrow><mrow><mi mathvariant="normal">exp</mi><mo>&#8289;</mo></mrow><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>r</mi><mi>θ</mi></msub><mo stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mi>c</mi></msub><mo>∣</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mo stretchy="true" form="postfix">)</mo></mrow></mrow><mrow><mrow><mi mathvariant="normal">exp</mi><mo>&#8289;</mo></mrow><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>r</mi><mi>θ</mi></msub><mo stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mi>c</mi></msub><mo>∣</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mo stretchy="true" form="postfix">)</mo></mrow><mo>+</mo><mrow><mi mathvariant="normal">exp</mi><mo>&#8289;</mo></mrow><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>r</mi><mi>θ</mi></msub><mo stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mi>r</mi></msub><mo>∣</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mo stretchy="true" form="postfix">)</mo></mrow></mrow></mfrac></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mrow><mi mathvariant="normal">arg</mi><mo>&#8289;</mo></mrow><munder><mi mathvariant="normal">max</mi><mi>θ</mi></munder><mfrac><mrow><mrow><mi mathvariant="normal">exp</mi><mo>&#8289;</mo></mrow><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>r</mi><mi>θ</mi></msub><mo stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mi>c</mi></msub><mo>∣</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mo stretchy="true" form="postfix">)</mo></mrow></mrow><mrow><mrow><mi mathvariant="normal">exp</mi><mo>&#8289;</mo></mrow><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>r</mi><mi>θ</mi></msub><mo stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mi>c</mi></msub><mo>∣</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mo stretchy="true" form="postfix">)</mo></mrow><mrow><mo stretchy="true" form="prefix">(</mo><mn>1</mn><mo>+</mo><mfrac><mrow><mrow><mi mathvariant="normal">exp</mi><mo>&#8289;</mo></mrow><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>r</mi><mi>θ</mi></msub><mo stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mi>r</mi></msub><mo>∣</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mo stretchy="true" form="postfix">)</mo></mrow></mrow><mrow><mrow><mi mathvariant="normal">exp</mi><mo>&#8289;</mo></mrow><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>r</mi><mi>θ</mi></msub><mo stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mi>c</mi></msub><mo>∣</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mo stretchy="true" form="postfix">)</mo></mrow></mrow></mfrac><mo stretchy="true" form="postfix">)</mo></mrow></mrow></mfrac></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mrow><mi mathvariant="normal">arg</mi><mo>&#8289;</mo></mrow><munder><mi mathvariant="normal">max</mi><mi>θ</mi></munder><mfrac><mn>1</mn><mrow><mn>1</mn><mo>+</mo><mfrac><mrow><mrow><mi mathvariant="normal">exp</mi><mo>&#8289;</mo></mrow><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>r</mi><mi>θ</mi></msub><mo stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mi>r</mi></msub><mo>∣</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mo stretchy="true" form="postfix">)</mo></mrow></mrow><mrow><mrow><mi mathvariant="normal">exp</mi><mo>&#8289;</mo></mrow><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>r</mi><mi>θ</mi></msub><mo stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mi>c</mi></msub><mo>∣</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mo stretchy="true" form="postfix">)</mo></mrow></mrow></mfrac></mrow></mfrac></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mrow><mi mathvariant="normal">arg</mi><mo>&#8289;</mo></mrow><munder><mi mathvariant="normal">max</mi><mi>θ</mi></munder><mfrac><mn>1</mn><mrow><mn>1</mn><mo>+</mo><mrow><mi mathvariant="normal">exp</mi><mo>&#8289;</mo></mrow><mrow><mo stretchy="true" form="prefix">(</mo><mi>−</mi><mo stretchy="false" form="prefix">(</mo><msub><mi>r</mi><mi>θ</mi></msub><mo stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mi>c</mi></msub><mo>∣</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mo>−</mo><msub><mi>r</mi><mi>θ</mi></msub><mo stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mi>r</mi></msub><mo>∣</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mo stretchy="false" form="postfix">)</mo><mo stretchy="true" form="postfix">)</mo></mrow></mrow></mfrac></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mrow><mi mathvariant="normal">arg</mi><mo>&#8289;</mo></mrow><munder><mi mathvariant="normal">max</mi><mi>θ</mi></munder><mi>σ</mi><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>r</mi><mi>θ</mi></msub><mo stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mi>c</mi></msub><mo>∣</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mo>−</mo><msub><mi>r</mi><mi>θ</mi></msub><mo stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mi>r</mi></msub><mo>∣</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mo stretchy="true" form="postfix">)</mo></mrow></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mrow><mi mathvariant="normal">arg</mi><mo>&#8289;</mo></mrow><munder><mi mathvariant="normal">min</mi><mi>θ</mi></munder><mo>−</mo><mrow><mi mathvariant="normal">log</mi><mo>&#8289;</mo></mrow><mrow><mo stretchy="true" form="prefix">(</mo><mi>σ</mi><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>r</mi><mi>θ</mi></msub><mo stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mi>c</mi></msub><mo>∣</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mo>−</mo><msub><mi>r</mi><mi>θ</mi></msub><mo stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mi>r</mi></msub><mo>∣</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="true" form="postfix">)</mo></mrow></mtd></mtr></mtable><mspace width="2.0em"></mspace><mrow><mo stretchy="false" form="prefix">(</mo><mn>14</mn><mo stretchy="false" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">
+\begin{aligned}
+\theta^* = \arg\max_\theta P(y_c &gt; y_r \mid x) &amp;= \arg\max_\theta \frac{\exp\left(r_\theta(y_c \mid x)\right)}{\exp\left(r_\theta(y_c \mid x)\right) + \exp\left(r_\theta(y_r \mid x)\right)} \\
+&amp;= \arg\max_\theta \frac{\exp\left(r_\theta(y_c \mid x)\right)}{\exp\left(r_\theta(y_c \mid x)\right)\left(1 + \frac{\exp\left(r_\theta(y_r \mid x)\right)}{\exp\left(r_\theta(y_c \mid x)\right)}\right)} \\
+&amp;= \arg\max_\theta \frac{1}{1 + \frac{\exp\left(r_\theta(y_r \mid x)\right)}{\exp\left(r_\theta(y_c \mid x)\right)}} \\ 
+&amp;= \arg\max_\theta \frac{1}{1 + \exp\left(-(r_\theta(y_c \mid x) - r_\theta(y_r \mid x))\right)} \\
+&amp;= \arg\max_\theta \sigma \left( r_\theta(y_c \mid x) - r_\theta(y_r \mid x) \right) \\
+&amp;= \arg\min_\theta - \log \left( \sigma \left(r_\theta(y_c \mid x) - r_\theta(y_r \mid x)\right) \right)
+\end{aligned}
+\qquad{(14)}</annotation></semantics></math></span></p>
+<p>The first form, as in <span class="citation" data-cites="ouyang2022training"><a href="ch021.xhtml#ref-ouyang2022training">[3]</a></span> and other works: <span id="eq:rewardmodeling1"><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>ℒ</mi><mo stretchy="false" form="prefix">(</mo><mi>θ</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mi>−</mi><mrow><mi mathvariant="normal">log</mi><mo>&#8289;</mo></mrow><mrow><mo stretchy="true" form="prefix">(</mo><mi>σ</mi><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>r</mi><mi>θ</mi></msub><mo stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mi>c</mi></msub><mo>∣</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mo>−</mo><msub><mi>r</mi><mi>θ</mi></msub><mo stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mi>r</mi></msub><mo>∣</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="true" form="postfix">)</mo></mrow><mspace width="2.0em"></mspace><mrow><mo stretchy="false" form="prefix">(</mo><mn>15</mn><mo stretchy="false" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\mathcal{L}(\theta) = - \log \left( \sigma \left( r_{\theta}(y_c \mid x) - r_{\theta}(y_r \mid x) \right) \right)\qquad{(15)}</annotation></semantics></math></span></p>
+<p>Second, as in <span class="citation" data-cites="askell2021general"><a href="ch021.xhtml#ref-askell2021general">[18]</a></span> and other works: <span id="eq:rewardmodeling2"><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>ℒ</mi><mo stretchy="false" form="prefix">(</mo><mi>θ</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mrow><mi mathvariant="normal">log</mi><mo>&#8289;</mo></mrow><mrow><mo stretchy="true" form="prefix">(</mo><mn>1</mn><mo>+</mo><msup><mi>e</mi><mrow><msub><mi>r</mi><mi>θ</mi></msub><mo stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mi>r</mi></msub><mo>∣</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mo>−</mo><msub><mi>r</mi><mi>θ</mi></msub><mo stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mi>c</mi></msub><mo>∣</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo></mrow></msup><mo stretchy="true" form="postfix">)</mo></mrow><mspace width="2.0em"></mspace><mrow><mo stretchy="false" form="prefix">(</mo><mn>16</mn><mo stretchy="false" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\mathcal{L}(\theta) = \log \left( 1 + e^{r_{\theta}(y_r \mid x) - r_{\theta}(y_c \mid x)} \right)\qquad{(16)}</annotation></semantics></math></span></p>
+<p>These are equivalent by letting <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">Δ</mi><mo>=</mo><msub><mi>r</mi><mi>θ</mi></msub><mo stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mi>c</mi></msub><mo>∣</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mo>−</mo><msub><mi>r</mi><mi>θ</mi></msub><mo stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mi>r</mi></msub><mo>∣</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\Delta = r_{\theta}(y_c \mid x) - r_{\theta}(y_r \mid x)</annotation></semantics></math> and using <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>σ</mi><mo stretchy="false" form="prefix">(</mo><mi mathvariant="normal">Δ</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mfrac><mn>1</mn><mrow><mn>1</mn><mo>+</mo><msup><mi>e</mi><mrow><mi>−</mi><mi mathvariant="normal">Δ</mi></mrow></msup></mrow></mfrac></mrow><annotation encoding="application/x-tex">\sigma(\Delta) = \frac{1}{1 + e^{-\Delta}}</annotation></semantics></math>, which implies <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>−</mi><mrow><mi mathvariant="normal">log</mi><mo>&#8289;</mo></mrow><mi>σ</mi><mo stretchy="false" form="prefix">(</mo><mi mathvariant="normal">Δ</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mrow><mi mathvariant="normal">log</mi><mo>&#8289;</mo></mrow><mo stretchy="false" form="prefix">(</mo><mn>1</mn><mo>+</mo><msup><mi>e</mi><mrow><mi>−</mi><mi mathvariant="normal">Δ</mi></mrow></msup><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mrow><mi mathvariant="normal">log</mi><mo>&#8289;</mo></mrow><mrow><mo stretchy="true" form="prefix">(</mo><mn>1</mn><mo>+</mo><msup><mi>e</mi><mrow><msub><mi>r</mi><mi>θ</mi></msub><mo stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mi>r</mi></msub><mo>∣</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mo>−</mo><msub><mi>r</mi><mi>θ</mi></msub><mo stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mi>c</mi></msub><mo>∣</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo></mrow></msup><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">-\log\sigma(\Delta) = \log(1 + e^{-\Delta}) = \log\left(1 + e^{r_{\theta}(y_r \mid x) - r_{\theta}(y_c \mid x)}\right)</annotation></semantics></math>. They both appear in the RLHF literature.</p>
+</section>
+<section id="architecture" class="level2">
+<h2>Architecture</h2>
+<p>The most common way reward models are implemented is through an abstraction similar to Transformer’s <code>AutoModelForSequenceClassification</code>, which appends a small linear head to the language model that performs classification between two outcomes – chosen and rejected. At inference time, the model outputs the <em>probability that the piece of text is chosen</em> as a single logit from the model.</p>
+<p>Other implementation options exist, such as just taking a linear layer directly from the final embeddings, but they are less common in open tooling.</p>
+</section>
+<section id="implementation-example" class="level2">
+<h2>Implementation Example</h2>
+<p>Implementing the reward modeling loss is quite simple. More of the implementation challenge is on setting up a separate data loader and inference pipeline. Given the correct dataloader with tokenized, chosen and rejected prompts with completions, the loss is implemented as:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch.nn <span class="im">as</span> nn</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co"># inputs_chosen / inputs_rejected include the prompt tokens x and the respective</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># completion tokens (y_c or y_r) that the reward model scores jointly.</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>rewards_chosen <span class="op">=</span> model(<span class="op">**</span>inputs_chosen)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>rewards_rejected <span class="op">=</span> model(<span class="op">**</span>inputs_rejected)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>loss <span class="op">=</span> <span class="op">-</span>nn.functional.logsigmoid(rewards_chosen <span class="op">-</span> rewards_rejected).mean()</span></code></pre></div>
+<p>As for the bigger picture, this is often within a causal language model that has an additional head added (and learned with the above loss) that transitions from the final hidden state to the score of the inputs. This model will have a structure as follows:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch.nn <span class="im">as</span> nn</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch.nn.functional <span class="im">as</span> F</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> BradleyTerryRewardModel(nn.Module):</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    <span class="co">&quot;&quot;&quot;</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co">    Standard scalar reward model for Bradley-Terry preference learning.</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="co">    Usage (pairwise BT loss):</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="co">        rewards_chosen = model(**inputs_chosen)    # (batch,)</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="co">        rewards_rejected = model(**inputs_rejected)  # (batch,)</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="co">        loss = -F.logsigmoid(rewards_chosen - rewards_rejected).mean()</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="co">    &quot;&quot;&quot;</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, base_lm):</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>        <span class="bu">super</span>().<span class="fu">__init__</span>()</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.lm <span class="op">=</span> base_lm  <span class="co"># e.g., AutoModelForCausalLM</span></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.head <span class="op">=</span> nn.Linear(<span class="va">self</span>.lm.config.hidden_size, <span class="dv">1</span>)</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> _sequence_rep(<span class="va">self</span>, hidden, attention_mask):</span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>        <span class="co">&quot;&quot;&quot;</span></span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a><span class="co">        Get a single vector per sequence to score.</span></span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a><span class="co">        Default: last non-padding token (EOS token); if no mask, last token.</span></span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a><span class="co">        hidden: (batch, seq_len, hidden_size)</span></span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a><span class="co">        attention_mask: (batch, seq_len)</span></span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a><span class="co">        &quot;&quot;&quot;</span></span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Index of last non-pad token in each sequence</span></span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>        <span class="co"># attention_mask is 1 for real tokens, 0 for padding</span></span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>        lengths <span class="op">=</span> attention_mask.<span class="bu">sum</span>(dim<span class="op">=</span><span class="dv">1</span>) <span class="op">-</span> <span class="dv">1</span>  <span class="co"># (batch,)</span></span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>        batch_idx <span class="op">=</span> torch.arange(hidden.size(<span class="dv">0</span>), device<span class="op">=</span>hidden.device)</span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> hidden[batch_idx, lengths]  <span class="co"># (batch, hidden_size)</span></span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> forward(<span class="va">self</span>, input_ids, attention_mask):</span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>        <span class="co">&quot;&quot;&quot;</span></span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a><span class="co">        A forward pass designed to show inference structure of a standard reward model.</span></span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a><span class="co">        To train one, this function will need to be modified to compute rewards from both</span></span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a><span class="co">         chosen and rejected inputs, applying the loss above.</span></span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a><span class="co">        &quot;&quot;&quot;</span></span>
+<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a>        outputs <span class="op">=</span> <span class="va">self</span>.lm(</span>
+<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a>            input_ids<span class="op">=</span>input_ids,</span>
+<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a>            attention_mask<span class="op">=</span>attention_mask,</span>
+<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a>            output_hidden_states<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a>            return_dict<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb2-45"><a href="#cb2-45" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Final hidden states: (batch, seq_len, hidden_size)</span></span>
+<span id="cb2-46"><a href="#cb2-46" aria-hidden="true" tabindex="-1"></a>        hidden <span class="op">=</span> outputs.hidden_states[<span class="op">-</span><span class="dv">1</span>]</span>
+<span id="cb2-47"><a href="#cb2-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-48"><a href="#cb2-48" aria-hidden="true" tabindex="-1"></a>        <span class="co"># One scalar reward per sequence: (batch,)</span></span>
+<span id="cb2-49"><a href="#cb2-49" aria-hidden="true" tabindex="-1"></a>        seq_repr <span class="op">=</span> <span class="va">self</span>._sequence_rep(hidden, attention_mask)</span>
+<span id="cb2-50"><a href="#cb2-50" aria-hidden="true" tabindex="-1"></a>        rewards <span class="op">=</span> <span class="va">self</span>.head(seq_repr).squeeze(<span class="op">-</span><span class="dv">1</span>)</span>
+<span id="cb2-51"><a href="#cb2-51" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-52"><a href="#cb2-52" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> rewards</span></code></pre></div>
+<p>In this section and what follows, most of the implementation complexity for reward models (and much of post-training) is around constructing the data-loaders correctly and distributed learning systems. Note, when training reward models, the most common practice is to train for only 1 epoch to avoid overfitting.</p>
+</section>
+<section id="variants" class="level2">
+<h2>Variants</h2>
+<p>Reward modeling is a relatively under-explored area of RLHF. The traditional reward modeling loss has been modified in many popular works, but the modifications have not solidified into a single best practice.</p>
+<section id="preference-margin-loss" class="level3">
+<h3>Preference Margin Loss</h3>
+<p>In the case where annotators are providing either scores or rankings on a Likert Scale, the magnitude of the relational quantities can be used in training. The most common practice is to binarize the data along the preference direction, reducing the mixed information of relative ratings or the strength of the ranking to just chosen and rejected completions. The additional information, such as the magnitude of the preference, has been used to improve model training, but it has not converged as a standard practice. Llama 2 proposes using the margin between two datapoints, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>m</mi><mo stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mi>c</mi></msub><mo>,</mo><msub><mi>y</mi><mi>r</mi></msub><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">m(y_c, y_r)</annotation></semantics></math>, to distinguish the magnitude of preference:</p>
+<p><span id="eq:rewardmodelingmargin"><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>ℒ</mi><mo stretchy="false" form="prefix">(</mo><mi>θ</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mi>−</mi><mrow><mi mathvariant="normal">log</mi><mo>&#8289;</mo></mrow><mrow><mo stretchy="true" form="prefix">(</mo><mi>σ</mi><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>r</mi><mi>θ</mi></msub><mo stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mi>c</mi></msub><mo>∣</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mo>−</mo><msub><mi>r</mi><mi>θ</mi></msub><mo stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mi>r</mi></msub><mo>∣</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mo>−</mo><mi>m</mi><mo stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mi>c</mi></msub><mo>,</mo><msub><mi>y</mi><mi>r</mi></msub><mo stretchy="false" form="postfix">)</mo><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="true" form="postfix">)</mo></mrow><mspace width="2.0em"></mspace><mrow><mo stretchy="false" form="prefix">(</mo><mn>17</mn><mo stretchy="false" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\mathcal{L}(\theta) = - \log \left( \sigma \left( r_{\theta}(y_c \mid x) - r_{\theta}(y_r \mid x) - m(y_c, y_r) \right) \right)\qquad{(17)}</annotation></semantics></math></span></p>
+<p>For example, each completion is often given a ranking from 1 to 5 in terms of quality. In the case where the chosen sample was assigned a score of 5 and rejected a score of 2, the margin <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>m</mi><mo stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mi>c</mi></msub><mo>,</mo><msub><mi>y</mi><mi>r</mi></msub><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mn>5</mn><mo>−</mo><mn>2</mn><mo>=</mo><mn>3</mn></mrow><annotation encoding="application/x-tex">m(y_c, y_r)= 5 - 2 = 3</annotation></semantics></math>. Other functions for computing margins can be explored.</p>
+<p>Note that in Llama 3 the margin term was removed as the team observed diminishing improvements after scaling.</p>
+</section>
+<section id="balancing-multiple-comparisons-per-prompt" class="level3">
+<h3>Balancing Multiple Comparisons Per Prompt</h3>
+<p>InstructGPT studies the impact of using a variable number of completions per prompt, yet balancing them in the reward model training <span class="citation" data-cites="ouyang2022training"><a href="ch021.xhtml#ref-ouyang2022training">[3]</a></span>. To do this, they weight the loss updates per comparison per prompt. At an implementation level, this can be done automatically by including all examples with the same prompt in the same training batch, naturally weighing the different pairs – not doing this caused overfitting to the prompts. The loss function becomes:</p>
+<p><span id="eq:rewardmodelinginstructgpt"><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>ℒ</mi><mo stretchy="false" form="prefix">(</mo><mi>θ</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mi>−</mi><mfrac><mn>1</mn><mrow><mo stretchy="true" form="prefix">(</mo><mfrac linethickness="0"><mi>K</mi><mn>2</mn></mfrac><mo stretchy="true" form="postfix">)</mo></mrow></mfrac><msub><mi>𝔼</mi><mrow><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo>,</mo><msub><mi>y</mi><mi>c</mi></msub><mo>,</mo><msub><mi>y</mi><mi>r</mi></msub><mo stretchy="false" form="postfix">)</mo><mo>∼</mo><mi>D</mi></mrow></msub><mrow><mi mathvariant="normal">log</mi><mo>&#8289;</mo></mrow><mrow><mo stretchy="true" form="prefix">(</mo><mi>σ</mi><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>r</mi><mi>θ</mi></msub><mo stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mi>c</mi></msub><mo>∣</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mo>−</mo><msub><mi>r</mi><mi>θ</mi></msub><mo stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mi>r</mi></msub><mo>∣</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="true" form="postfix">)</mo></mrow><mspace width="2.0em"></mspace><mrow><mo stretchy="false" form="prefix">(</mo><mn>18</mn><mo stretchy="false" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\mathcal{L}(\theta) = - \frac{1}{\binom{K}{2}} \mathbb{E}_{(x, y_c, y_r)\sim D} \log \left( \sigma \left( r_{\theta}(y_c \mid x) - r_{\theta}(y_r \mid x) \right) \right)\qquad{(18)}</annotation></semantics></math></span></p>
+</section>
+<section id="k-wise-loss-function" class="level3">
+<h3>K-wise Loss Function</h3>
+<p>There are many other formulations that can create suitable models of human preferences for RLHF. One such example, used in the popular, early RLHF’d models Starling 7B and 34B <span class="citation" data-cites="zhu2024starling"><a href="ch021.xhtml#ref-zhu2024starling">[126]</a></span>, is a K-wise loss function based on the Plackett-Luce model <span class="citation" data-cites="liu2019learning"><a href="ch021.xhtml#ref-liu2019learning">[127]</a></span>.</p>
+<p>Zhu et al. 2023 <span class="citation" data-cites="zhu2023principled"><a href="ch021.xhtml#ref-zhu2023principled">[128]</a></span> formalizes the setup as follows. With a prompt, or state, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>s</mi><mi>i</mi></msup><annotation encoding="application/x-tex">s^i</annotation></semantics></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>K</mi><annotation encoding="application/x-tex">K</annotation></semantics></math> actions <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">(</mo><msubsup><mi>a</mi><mn>0</mn><mi>i</mi></msubsup><mo>,</mo><msubsup><mi>a</mi><mn>1</mn><mi>i</mi></msubsup><mo>,</mo><mi>⋯</mi><mo>,</mo><msubsup><mi>a</mi><mrow><mi>K</mi><mo>−</mo><mn>1</mn></mrow><mi>i</mi></msubsup><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">(a_0^i, a_1^i, \cdots, a_{K-1}^i)</annotation></semantics></math> are sampled from <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false" form="prefix">(</mo><msub><mi>a</mi><mn>0</mn></msub><mo>,</mo><mi>⋯</mi><mo>,</mo><msub><mi>a</mi><mrow><mi>K</mi><mo>−</mo><mn>1</mn></mrow></msub><mo stretchy="false" form="prefix">|</mo><msup><mi>s</mi><mi>i</mi></msup><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">P(a_0,\cdots,a_{K-1}|s^i)</annotation></semantics></math>. Then, labelers are used to rank preferences with <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>σ</mi><mi>i</mi></msup><mo>:</mo><mo stretchy="false" form="prefix">[</mo><mi>K</mi><mo stretchy="false" form="postfix">]</mo><mo>↦</mo><mo stretchy="false" form="prefix">[</mo><mi>K</mi><mo stretchy="false" form="postfix">]</mo></mrow><annotation encoding="application/x-tex">\sigma^i: [K] \mapsto [K]</annotation></semantics></math> is a function representing action rankings, where <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>σ</mi><mi>i</mi></msup><mo stretchy="false" form="prefix">(</mo><mn>0</mn><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\sigma^i(0)</annotation></semantics></math> is the most preferred action. This yields a preference model capturing the following:</p>
+<p><span id="eq:kwise_rm"><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false" form="prefix">(</mo><msup><mi>σ</mi><mi>i</mi></msup><mo stretchy="false" form="prefix">|</mo><msup><mi>s</mi><mi>i</mi></msup><mo>,</mo><msubsup><mi>a</mi><mn>0</mn><mi>i</mi></msubsup><mo>,</mo><msubsup><mi>a</mi><mn>1</mn><mi>i</mi></msubsup><mo>,</mo><mi>…</mi><mo>,</mo><msubsup><mi>a</mi><mrow><mi>K</mi><mo>−</mo><mn>1</mn></mrow><mi>i</mi></msubsup><mo stretchy="false" form="postfix">)</mo><mo>=</mo><munderover><mo>∏</mo><mrow><mi>k</mi><mo>=</mo><mn>0</mn></mrow><mrow><mi>K</mi><mo>−</mo><mn>1</mn></mrow></munderover><mfrac><mrow><mrow><mi mathvariant="normal">exp</mi><mo>&#8289;</mo></mrow><mo stretchy="false" form="prefix">(</mo><msub><mi>r</mi><mrow><mi>θ</mi><mo>⋆</mo></mrow></msub><mo stretchy="false" form="prefix">(</mo><msup><mi>s</mi><mi>i</mi></msup><mo>,</mo><msubsup><mi>a</mi><mrow><msup><mi>σ</mi><mi>i</mi></msup><mo stretchy="false" form="prefix">(</mo><mi>k</mi><mo stretchy="false" form="postfix">)</mo></mrow><mi>i</mi></msubsup><mo stretchy="false" form="postfix">)</mo><mo stretchy="false" form="postfix">)</mo></mrow><mrow><munderover><mo>∑</mo><mrow><mi>j</mi><mo>=</mo><mi>k</mi></mrow><mrow><mi>K</mi><mo>−</mo><mn>1</mn></mrow></munderover><mrow><mi mathvariant="normal">exp</mi><mo>&#8289;</mo></mrow><mo stretchy="false" form="prefix">(</mo><msub><mi>r</mi><mrow><mi>θ</mi><mo>⋆</mo></mrow></msub><mo stretchy="false" form="prefix">(</mo><msup><mi>s</mi><mi>i</mi></msup><mo>,</mo><msubsup><mi>a</mi><mrow><msup><mi>σ</mi><mi>i</mi></msup><mo stretchy="false" form="prefix">(</mo><mi>j</mi><mo stretchy="false" form="postfix">)</mo></mrow><mi>i</mi></msubsup><mo stretchy="false" form="postfix">)</mo><mo stretchy="false" form="postfix">)</mo></mrow></mfrac><mspace width="2.0em"></mspace><mrow><mo stretchy="false" form="prefix">(</mo><mn>19</mn><mo stretchy="false" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">P(\sigma^i|s^i,a_0^i,a_1^i,\ldots,a_{K-1}^i) = \prod_{k=0}^{K-1} \frac{\exp(r_{\theta\star}(s^i,a_{\sigma^i(k)}^i))}{\sum_{j=k}^{K-1}\exp(r_{\theta\star}(s^i,a_{\sigma^i(j)}^i))}\qquad{(19)}</annotation></semantics></math></span></p>
+<p>When <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>K</mi><mo>=</mo><mn>2</mn></mrow><annotation encoding="application/x-tex">K = 2</annotation></semantics></math>, this reduces to the Bradley-Terry (BT) model for pairwise comparisons. Regardless, once trained, these models are used similarly to other reward models during RLHF training.</p>
+</section>
+</section>
+<section id="outcome-reward-models" class="level2">
+<h2>Outcome Reward Models</h2>
+<!-- Huge thanks to Hangliang Ren, graduate student at Northeastern University for helping with this section (and PRMs), see https://github.com/myhott163com/RLHF_ORM_PRM -->
+<p>The majority of <em>preference tuning</em> for language models and other AI systems is done with the Bradley Terry models discussed above. For reasoning heavy tasks, one can use an Outcome Reward Model (ORM). The training data for an ORM is constructed in a similar manner to standard preference tuning. Here, we have a problem statement or prompt, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics></math> and two completions <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>y</mi><mn>1</mn></msub><annotation encoding="application/x-tex">y_1</annotation></semantics></math> and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>y</mi><mn>2</mn></msub><annotation encoding="application/x-tex">y_2</annotation></semantics></math>. The inductive bias used here is that one completion should be a correct solution to the problem and one incorrect, resulting in <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mi>c</mi></msub><mo>,</mo><msub><mi>y</mi><mrow><mi>i</mi><mi>c</mi></mrow></msub><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">(y_c,y_{ic})</annotation></semantics></math>.</p>
+<p>The shape of the models used is very similar to a standard reward model, with a linear layer appended to a model that can output a single logit (in the case of an RM) – with an ORM, the training objective that follows is slightly different <span class="citation" data-cites="cobbe2021gsm8k"><a href="ch021.xhtml#ref-cobbe2021gsm8k">[129]</a></span>:</p>
+<blockquote>
+<p>[We] train verifiers with a joint objective where the model learns to label a model completion as correct or incorrect, in addition to the original language modeling objective. Architecturally, this means our verifiers are language models, with a small scalar head that outputs predictions on a per-token basis. We implement this scalar head as a single bias parameter and single gain parameter that operate on the logits outputted by the language model’s final unembedding layer.</p>
+</blockquote>
+<p>To translate, this is implemented as a language modeling head that can predict two classes per token (1 for correct, 0 for incorrect), rather than a classification head of a traditional RM that outputs one logit for the entire sequence. Formally, following <span class="citation" data-cites="lyu2025exploring"><a href="ch021.xhtml#ref-lyu2025exploring">[130]</a></span> this can be shown as:</p>
+<p><span id="eq:orm_loss"><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>ℒ</mi><mtext mathvariant="normal">CE</mtext></msub><mo stretchy="false" form="prefix">(</mo><mi>θ</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mi>−</mi><msub><mi>𝔼</mi><mrow><mo stretchy="false" form="prefix">(</mo><mi>s</mi><mo>,</mo><mi>r</mi><mo stretchy="false" form="postfix">)</mo><mo>∼</mo><mi>𝒟</mi></mrow></msub><mo stretchy="false" form="prefix">[</mo><mi>r</mi><mrow><mi mathvariant="normal">log</mi><mo>&#8289;</mo></mrow><msub><mi>p</mi><mi>θ</mi></msub><mo stretchy="false" form="prefix">(</mo><mi>s</mi><mo stretchy="false" form="postfix">)</mo><mo>+</mo><mo stretchy="false" form="prefix">(</mo><mn>1</mn><mo>−</mo><mi>r</mi><mo stretchy="false" form="postfix">)</mo><mrow><mi mathvariant="normal">log</mi><mo>&#8289;</mo></mrow><mo stretchy="false" form="prefix">(</mo><mn>1</mn><mo>−</mo><msub><mi>p</mi><mi>θ</mi></msub><mo stretchy="false" form="prefix">(</mo><mi>s</mi><mo stretchy="false" form="postfix">)</mo><mo stretchy="false" form="postfix">)</mo><mo stretchy="false" form="postfix">]</mo><mspace width="2.0em"></mspace><mrow><mo stretchy="false" form="prefix">(</mo><mn>20</mn><mo stretchy="false" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\mathcal{L}_{\text{CE}}(\theta) = -\mathbb{E}_{(s,r)\sim \mathcal{D}}[r\log p_\theta(s) + (1-r)\log(1-p_\theta(s))]\qquad{(20)}</annotation></semantics></math></span></p>
+<p>where <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>r</mi><mo>∈</mo><mrow><mn>0</mn><mo>,</mo><mn>1</mn></mrow></mrow><annotation encoding="application/x-tex">r \in {0,1}</annotation></semantics></math> is a binary label where 1 applies to a correct answer to a given prompt and 0 applies to an incorrect, and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>p</mi><mi>θ</mi></msub><mo stretchy="false" form="prefix">(</mo><mi>s</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">p_\theta(s)</annotation></semantics></math> is the scalar proportional to predicted probability of correctness from the model being trained.</p>
+<p>Implementing an outcome reward model (and other types, as we’ll see with the Process Reward Model) involves applying the cross-entropy loss per-token based on if the completion is a correct sample. This is far closer to the language modeling loss, where it does not need the structured chosen-rejected nature of standard Bradley-Terry reward models.</p>
+<p>The model structure could follow as:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch.nn <span class="im">as</span> nn</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch.nn.functional <span class="im">as</span> F</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> OutcomeRewardModel(nn.Module):</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, base_lm):</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>        <span class="bu">super</span>().<span class="fu">__init__</span>()</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.lm <span class="op">=</span> base_lm  <span class="co"># e.g., AutoModelForCausalLM</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.head <span class="op">=</span> nn.Linear(<span class="va">self</span>.lm.config.hidden_size, <span class="dv">1</span>)</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> forward(<span class="va">self</span>, input_ids, attention_mask<span class="op">=</span><span class="va">None</span>, labels<span class="op">=</span><span class="va">None</span>):</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>        <span class="co">&quot;&quot;&quot;</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="co">        The input data here will be tokenized prompts and completions along with labels</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="co">         per prompt for correctness.</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="co">        &quot;&quot;&quot;</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>        outputs <span class="op">=</span> <span class="va">self</span>.lm(</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>            input_ids<span class="op">=</span>input_ids,</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>            attention_mask<span class="op">=</span>attention_mask,</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>            output_hidden_states<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>            return_dict<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Final hidden states: (batch, seq_len, hidden_size)</span></span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>        hidden <span class="op">=</span> outputs.hidden_states[<span class="op">-</span><span class="dv">1</span>]</span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>        <span class="co"># One scalar logit per token: (batch, seq_len)</span></span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>        logits <span class="op">=</span> <span class="va">self</span>.head(hidden).squeeze(<span class="op">-</span><span class="dv">1</span>)</span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Only compute loss on completion tokens (labels 0 or 1)</span></span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Prompt tokens have labels = -100</span></span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>        mask <span class="op">=</span> labels <span class="op">!=</span> <span class="op">-</span><span class="dv">100</span></span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> mask.<span class="bu">any</span>():</span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>            loss <span class="op">=</span> F.binary_cross_entropy_with_logits(</span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a>                logits[mask], labels[mask].<span class="bu">float</span>()</span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a>            )</span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> loss, logits</span></code></pre></div>
+<p>A simplified version of the loss follows:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Assume model already has: model.lm (backbone) + model.head</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>hidden <span class="op">=</span> model.lm(<span class="op">**</span>inputs, output_hidden_states<span class="op">=</span><span class="va">True</span>).hidden_states[<span class="op">-</span><span class="dv">1</span>]</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>logits_per_token <span class="op">=</span> model.head(hidden).squeeze(<span class="op">-</span><span class="dv">1</span>)  <span class="co"># (batch, seq_len)</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co"># This will sometimes be compressed as model.forward() in other implementations</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Binary labels: 1=correct, 0=incorrect (prompt tokens masked as -100)</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>mask <span class="op">=</span> labels <span class="op">!=</span> <span class="op">-</span><span class="dv">100</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>loss <span class="op">=</span> F.binary_cross_entropy_with_logits(</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    logits_per_token[mask], labels[mask].<span class="bu">float</span>()</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+<p>The important intuition here is that an ORM will output a probability of correctness at every token in the sequence. This can be a noisy process, as the updates and loss propagates per token depending on outcomes and attention mappings. <!-- On the other hand, this process is more computationally intensive. [@cobbe2021gsm8k] posits a few potential benefits to these models, such as (1) implementation of ORMs often being done with both the standard next-token language modelling loss and the reward modelling loss above in @eq:orm_loss and (2) the ORM design as a token-level loss outperforms completion-level loss calculation used in standard RMs. --></p>
+<p>These models have continued in use, but are less supported in open-source RLHF tools. For example, the same type of ORM was used in the seminal work <em>Let’s Verify Step by Step</em> <span class="citation" data-cites="lightman2023let"><a href="ch021.xhtml#ref-lightman2023let">[45]</a></span>, but without the language modeling prediction piece of the loss. Then, the final loss is a cross entropy loss on every token predicting if the final answer is correct.</p>
+<p>Given the lack of support, the term outcome reward model (ORM) has been used in multiple ways. Some literature, e.g. <span class="citation" data-cites="lyu2025exploring"><a href="ch021.xhtml#ref-lyu2025exploring">[130]</a></span>, continues to use the original definition from Cobbe et al. 2021. Others do not.</p>
+</section>
+<section id="process-reward-models" class="level2">
+<h2>Process Reward Models</h2>
+<p>Process Reward Models (PRMs), originally called Process-supervised Reward Models, are reward models trained to output scores at every <em>step</em> in a chain of thought reasoning process. These differ from a standard RM that outputs a score only at an EOS token or a ORM that outputs a score at every token. Process Reward Models require supervision at the end of each reasoning step, and then are trained similarly where the tokens in the step are trained to their relevant target – the target is the step in PRMs and the entire response for ORMs.</p>
+<p>Following <span class="citation" data-cites="lightman2023let"><a href="ch021.xhtml#ref-lightman2023let">[45]</a></span>, a binary-labeled PRM is commonly optimized with a per-step cross-entropy loss:</p>
+<p><span id="eq:prm_loss"><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>ℒ</mi><mtext mathvariant="normal">PRM</mtext></msub><mo stretchy="false" form="prefix">(</mo><mi>θ</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mi>−</mi><msub><mi>𝔼</mi><mrow><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo>,</mo><mi>s</mi><mo stretchy="false" form="postfix">)</mo><mo>∼</mo><mi>𝒟</mi></mrow></msub><mrow><mo stretchy="true" form="prefix">[</mo><munderover><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>K</mi></munderover><msub><mi>y</mi><msub><mi>s</mi><mi>i</mi></msub></msub><mi mathvariant="normal">log</mi><msub><mi>r</mi><mi>θ</mi></msub><mo stretchy="false" form="prefix">(</mo><msub><mi>s</mi><mi>i</mi></msub><mo>∣</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mo>+</mo><mo stretchy="false" form="prefix">(</mo><mn>1</mn><mo>−</mo><msub><mi>y</mi><msub><mi>s</mi><mi>i</mi></msub></msub><mo stretchy="false" form="postfix">)</mo><mi mathvariant="normal">log</mi><mrow><mo stretchy="true" form="prefix">(</mo><mn>1</mn><mo>−</mo><msub><mi>r</mi><mi>θ</mi></msub><mo stretchy="false" form="prefix">(</mo><msub><mi>s</mi><mi>i</mi></msub><mo>∣</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="true" form="postfix">]</mo></mrow><mspace width="2.0em"></mspace><mrow><mo stretchy="false" form="prefix">(</mo><mn>21</mn><mo stretchy="false" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\mathcal{L}_{\text{PRM}}(\theta) = - \mathbb{E}_{(x, s) \sim \mathcal{D}} \left[ \sum_{i=1}^{K} y_{s_i} \log r_\theta(s_i \mid x) + (1 - y_{s_i}) \log \left(1 - r_\theta(s_i \mid x)\right) \right] \qquad{(21)}</annotation></semantics></math></span></p>
+<p>where <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>s</mi><annotation encoding="application/x-tex">s</annotation></semantics></math> is a sampled chain-of-thought with <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>K</mi><annotation encoding="application/x-tex">K</annotation></semantics></math> annotated steps, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>y</mi><msub><mi>s</mi><mi>i</mi></msub></msub><mo>∈</mo><mo stretchy="false" form="prefix">{</mo><mn>0</mn><mo>,</mo><mn>1</mn><mo stretchy="false" form="postfix">}</mo></mrow><annotation encoding="application/x-tex">y_{s_i} \in \{0,1\}</annotation></semantics></math> denotes whether the <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>i</mi><annotation encoding="application/x-tex">i</annotation></semantics></math>-th step is correct, and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>r</mi><mi>θ</mi></msub><mo stretchy="false" form="prefix">(</mo><msub><mi>s</mi><mi>i</mi></msub><mo>∣</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">r_\theta(s_i \mid x)</annotation></semantics></math> is the PRM’s predicted probability that step <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>s</mi><mi>i</mi></msub><annotation encoding="application/x-tex">s_i</annotation></semantics></math> is valid conditioned on the original prompt <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics></math>.</p>
+<p>Here’s an example of how this per-step label can be packaged in a trainer, from HuggingFace’s TRL (Transformer Reinforcement Learning) <span class="citation" data-cites="vonwerra2022trl"><a href="ch021.xhtml#ref-vonwerra2022trl">[42]</a></span>:</p>
+<pre><code># Get the ID of the separator token and add it to the completions
+separator_ids = tokenizer.encode(step_separator, add_special_tokens=False)
+completions_ids = [completion + separator_ids for completion in completions_ids]
+
+# Create the label 
+labels = [[-100] * (len(completion) - 1) + [label] for completion, label in zip(completions_ids, labels)]</code></pre>
+<p>Traditionally PRMs are trained with a language modeling head that outputs a token only at the end of a reasoning step, e.g. at the token corresponding to a double new line or other special token. These predictions tend to be -1 for incorrect, 0 for neutral, and 1 for correct. These labels do not necessarily tie with whether or not the model is on the right path, but if the step is correct.</p>
+<p>An example construction of a PRM is shown below.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch.nn <span class="im">as</span> nn</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch.nn.functional <span class="im">as</span> F</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> ProcessRewardModel(nn.Module):</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, base_lm, num_classes<span class="op">=</span><span class="dv">3</span>):</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>        <span class="bu">super</span>().<span class="fu">__init__</span>()</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.lm <span class="op">=</span> base_lm  <span class="co"># e.g., AutoModelForCausalLM</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.head <span class="op">=</span> nn.Linear(<span class="va">self</span>.lm.config.hidden_size, num_classes)</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> forward(<span class="va">self</span>, input_ids, attention_mask<span class="op">=</span><span class="va">None</span>, labels<span class="op">=</span><span class="va">None</span>):</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>        <span class="co">&quot;&quot;&quot;</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a><span class="co">        The inputs are tokenizer prompts and completions, where the the end of a </span></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a><span class="co">         &quot;reasoning step&quot; is denoted by another non-padding token. </span></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a><span class="co">        labels will be a list of labels, True, False, and Neutral (3 labels) which</span></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a><span class="co">         will be predicted by the model.</span></span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a><span class="co">        &quot;&quot;&quot;</span></span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>        outputs <span class="op">=</span> <span class="va">self</span>.lm(</span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>            input_ids<span class="op">=</span>input_ids,</span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>            attention_mask<span class="op">=</span>attention_mask,</span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>            output_hidden_states<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>            return_dict<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Final hidden states: (batch, seq_len, hidden_size)</span></span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>        hidden <span class="op">=</span> outputs.hidden_states[<span class="op">-</span><span class="dv">1</span>]</span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a>        <span class="co"># One logit vector per token: (batch, seq_len, num_classes)</span></span>
+<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a>        logits <span class="op">=</span> <span class="va">self</span>.head(hidden)</span>
+<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Only compute loss at step boundaries (where labels != -100)</span></span>
+<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Labels map: -1 -&gt; 0, 0 -&gt; 1, 1 -&gt; 2 (class indices)</span></span>
+<span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a>        mask <span class="op">=</span> labels <span class="op">!=</span> <span class="op">-</span><span class="dv">100</span></span>
+<span id="cb6-31"><a href="#cb6-31" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> mask.<span class="bu">any</span>():</span>
+<span id="cb6-32"><a href="#cb6-32" aria-hidden="true" tabindex="-1"></a>            loss <span class="op">=</span> F.cross_entropy(</span>
+<span id="cb6-33"><a href="#cb6-33" aria-hidden="true" tabindex="-1"></a>                logits[mask], labels[mask]</span>
+<span id="cb6-34"><a href="#cb6-34" aria-hidden="true" tabindex="-1"></a>            )</span>
+<span id="cb6-35"><a href="#cb6-35" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> loss, logits</span></code></pre></div>
+<p>The core loss function looks very similar to outcome reward models, with the labels being applied at different intervals.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Assume model outputs 3-class logits per token</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>hidden <span class="op">=</span> model.lm(<span class="op">**</span>inputs, output_hidden_states<span class="op">=</span><span class="va">True</span>).hidden_states[<span class="op">-</span><span class="dv">1</span>]</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>logits <span class="op">=</span> model.head(hidden)  <span class="co"># (batch, seq_len, 3)</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="co"># 3-class labels at step boundaries only: 0=-1, 1=0, 2=1 (others masked as -100)</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>mask <span class="op">=</span> labels <span class="op">!=</span> <span class="op">-</span><span class="dv">100</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>loss <span class="op">=</span> F.cross_entropy(logits[mask], labels[mask])</span></code></pre></div>
+</section>
+<section id="reward-models-vs.-outcome-rms-vs.-process-rms-vs.-value-functions" class="level2">
+<h2>Reward Models vs. Outcome RMs vs. Process RMs vs. Value Functions</h2>
+<p>The various types of reward models covered indicate the spectrum of ways that “quality” can be measured in RLHF and other post-training methods. Below, a summary of what the models predict and how they are trained.</p>
+<div class="table-wrap">
+<table id="tbl:rm_compare">
+<caption>Table 4: Comparing types of reward models.</caption>
+<colgroup>
+<col style="width: 18%" />
+<col style="width: 27%" />
+<col style="width: 32%" />
+<col style="width: 21%" />
+</colgroup>
+<thead>
+<tr>
+<th>Model Class</th>
+<th>What They Predict</th>
+<th>How They Are Trained</th>
+<th>LM structure</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Reward Models</strong></td>
+<td>Quality of text via probability of chosen response at EOS token</td>
+<td>Contrastive loss between pairwise (or N-wise) comparisons between completions</td>
+<td>Regression or classification head on top of LM features</td>
+</tr>
+<tr>
+<td><strong>Outcome Reward Models</strong></td>
+<td>Probability that an answer is correct per-token</td>
+<td>Labeled outcome pairs (e.g., success/failure on verifiable domains)</td>
+<td>Language modeling head per-token cross-entropy, where every label is the outcome level label</td>
+</tr>
+<tr>
+<td><strong>Process Reward Models</strong></td>
+<td>A reward or score for intermediate steps at end of reasoning steps</td>
+<td>Trained using intermediate feedback or stepwise annotations (trained per token in reasoning step)</td>
+<td>Language modeling head only running inference per reasoning step, predicts three classes -1, 0, 1</td>
+</tr>
+<tr>
+<td><strong>Value Functions</strong></td>
+<td>The expected return given the current state</td>
+<td>Trained via regression to each point in sequence</td>
+<td>A classification with output per-token</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Some notes, given the above table has a lot of edge cases.</p>
+<ul>
+<li>Both in preference tuning and reasoning training, the value functions often have a discount factor of 1, which makes a value function even closer to an outcome reward model, but with a different training loss.</li>
+<li>A process reward model can be supervised by doing rollouts from an intermediate state and collecting outcome data. This blends multiple ideas, but if the <em>loss</em> is per reasoning step labels, it is best referred to as a PRM.</li>
+</ul>
+</section>
+<section id="generative-reward-modeling" class="level2">
+<h2>Generative Reward Modeling</h2>
+<p>With the cost of preference data, a large research area emerged to use existing language models as a judge of human preferences or in other evaluation settings <span class="citation" data-cites="zheng2023judging"><a href="ch021.xhtml#ref-zheng2023judging">[131]</a></span>. The core idea is to prompt a language model with instructions on how to judge, a prompt, and two completions (much as would be done with human labelers). An example prompt, from one of the seminal works here for the chat evaluation MT-Bench <span class="citation" data-cites="zheng2023judging"><a href="ch021.xhtml#ref-zheng2023judging">[131]</a></span>, follows:</p>
+<pre><code>[System]
+Please act as an impartial judge and evaluate the quality of the responses provided by two AI assistants to the user question displayed below.
+You should choose the assistant that follows the user&#39;s instructions and answers the user&#39;s question better.
+Your evaluation should consider factors such as the helpfulness, relevance, accuracy, depth, creativity, and level of detail of their responses.
+Begin your evaluation by comparing the two responses and provide a short explanation.
+Avoid any position biases and ensure that the order in which the responses were presented does not influence your decision.
+Do not allow the length of the responses to influence your evaluation.
+Do not favor certain names of the assistants.
+Be as objective as possible.
+After providing your explanation, output your final verdict by strictly following this format: &quot;[[A]]&quot; if assistant A is better, &quot;[[B]]&quot; if assistant B is better, and &quot;[[C]]&quot; for a tie.
+[User Question]
+{question}
+[The Start of Assistant A&#39;s Answer]
+{answer_a}
+[The End of Assistant A&#39;s Answer]
+[The Start of Assistant B&#39;s Answer]
+{answer_b}
+[The End of Assistant B&#39;s Answer]</code></pre>
+<p>Given the efficacy of LLM-as-a-judge for evaluation, spawning many other evaluations such as AlpacaEval <span class="citation" data-cites="dubois2024length"><a href="ch021.xhtml#ref-dubois2024length">[132]</a></span>, Arena-Hard <span class="citation" data-cites="li2024crowdsourced"><a href="ch021.xhtml#ref-li2024crowdsourced">[133]</a></span>, and WildBench <span class="citation" data-cites="lin2024wildbench"><a href="ch021.xhtml#ref-lin2024wildbench">[134]</a></span>, many began using LLM-as-a-judge instead of reward models to create and use preference data.</p>
+<p>An entire field of study has emerged to study how to use so called “Generative Reward Models” <span class="citation" data-cites="mahan2024generative"><a href="ch021.xhtml#ref-mahan2024generative">[135]</a></span> <span class="citation" data-cites="zhang2024generative"><a href="ch021.xhtml#ref-zhang2024generative">[136]</a></span> <span class="citation" data-cites="ankner2024critique"><a href="ch021.xhtml#ref-ankner2024critique">[137]</a></span> (including models trained <em>specifically</em> to be effective judges <span class="citation" data-cites="kim2023prometheus"><a href="ch021.xhtml#ref-kim2023prometheus">[138]</a></span>), but on RM evaluations they tend to be behind existing reward models, showing that reward modeling is an important technique for current RLHF.</p>
+<p>A common trick to improve the robustness of LLM-as-a-judge workflows is to use a sampling temperature of 0 to reduce variance of ratings.</p>
+</section>
+<section id="further-reading" class="level2">
+<h2>Further Reading</h2>
+<p>The academic literature for reward modeling established itself in 2024. The bulk of progress in reward modeling early on has been in establishing benchmarks and identifying behavior modes. The first RM benchmark, RewardBench, provided common infrastructure for testing reward models <span class="citation" data-cites="lambert2024rewardbench"><a href="ch021.xhtml#ref-lambert2024rewardbench">[139]</a></span>. Since then, RM evaluation has expanded to be similar to the types of evaluations available to general post-trained models, where some evaluations test the accuracy of prediction on domains with known true answers <span class="citation" data-cites="lambert2024rewardbench"><a href="ch021.xhtml#ref-lambert2024rewardbench">[139]</a></span> or those more similar to “vibes” performed with LLM-as-a-judge or correlations to other benchmarks <span class="citation" data-cites="wen2024rethinking"><a href="ch021.xhtml#ref-wen2024rethinking">[140]</a></span>.</p>
+<p>Examples of new benchmarks include:</p>
+<ul>
+<li><strong>Text-only (general chat / preferences):</strong> RMB <span class="citation" data-cites="zhou2024rmb"><a href="ch021.xhtml#ref-zhou2024rmb">[141]</a></span>, RewardBench2 <span class="citation" data-cites="malik2025rewardbench"><a href="ch021.xhtml#ref-malik2025rewardbench">[112]</a></span>, Preference Proxy Evaluations <span class="citation" data-cites="frick2024evaluate"><a href="ch021.xhtml#ref-frick2024evaluate">[142]</a></span>, or RM-Bench <span class="citation" data-cites="liu2024rm"><a href="ch021.xhtml#ref-liu2024rm">[143]</a></span>.</li>
+<li><strong>Specialized text-only (math, etc.):</strong> multilingual reward bench (M-RewardBench) <span class="citation" data-cites="gureja2024m"><a href="ch021.xhtml#ref-gureja2024m">[144]</a></span>, RAG-RewardBench for retrieval augmented generation (RAG) <span class="citation" data-cites="jin2024rag"><a href="ch021.xhtml#ref-jin2024rag">[145]</a></span>, ReWordBench for typos <span class="citation" data-cites="wu2025rewordbench"><a href="ch021.xhtml#ref-wu2025rewordbench">[146]</a></span>, RewardMATH <span class="citation" data-cites="kim2024evaluating"><a href="ch021.xhtml#ref-kim2024evaluating">[147]</a></span>, or AceMath-RewardBench <span class="citation" data-cites="liu2024acemath"><a href="ch021.xhtml#ref-liu2024acemath">[148]</a></span>.</li>
+<li><strong>Process RMs:</strong> PRM Bench <span class="citation" data-cites="song2025prmbench"><a href="ch021.xhtml#ref-song2025prmbench">[149]</a></span> or ProcessBench <span class="citation" data-cites="zheng2024processbench"><a href="ch021.xhtml#ref-zheng2024processbench">[150]</a></span> and visual benchmarks of VisualProcessBench <span class="citation" data-cites="wang2025visualprm"><a href="ch021.xhtml#ref-wang2025visualprm">[151]</a></span> or ViLBench <span class="citation" data-cites="tu2025vilbench"><a href="ch021.xhtml#ref-tu2025vilbench">[152]</a></span>.</li>
+<li><strong>Agentic RMs:</strong> Agent-RewardBench <span class="citation" data-cites="men2025agentrewardbench"><a href="ch021.xhtml#ref-men2025agentrewardbench">[153]</a></span> or CUARewardBench <span class="citation" data-cites="lin2025cuarewardbench"><a href="ch021.xhtml#ref-lin2025cuarewardbench">[154]</a></span>.</li>
+<li><strong>Multimodal:</strong> MJ-Bench <span class="citation" data-cites="chen2024mj"><a href="ch021.xhtml#ref-chen2024mj">[155]</a></span>, Multimodal RewardBench <span class="citation" data-cites="yasunaga2025multimodal"><a href="ch021.xhtml#ref-yasunaga2025multimodal">[156]</a></span>, VL RewardBench <span class="citation" data-cites="li2024vlrewardbench"><a href="ch021.xhtml#ref-li2024vlrewardbench">[157]</a></span>, or VLRMBench <span class="citation" data-cites="ruan2025vlrmbench"><a href="ch021.xhtml#ref-ruan2025vlrmbench">[158]</a></span>.</li>
+</ul>
+<p>To understand progress on <em>training</em> reward models, one can reference new reward model training methods, with aspect-conditioned models <span class="citation" data-cites="wang2024interpretable"><a href="ch021.xhtml#ref-wang2024interpretable">[159]</a></span>, high quality human datasets <span class="citation" data-cites="wang2024helpsteer2"><a href="ch021.xhtml#ref-wang2024helpsteer2">[160]</a></span> <span class="citation" data-cites="wang2024helpsteer2p"><a href="ch021.xhtml#ref-wang2024helpsteer2p">[111]</a></span>, scaling experiments <span class="citation" data-cites="adler2024nemotron"><a href="ch021.xhtml#ref-adler2024nemotron">[25]</a></span>, extensive experimentation <span class="citation" data-cites="touvron2023llama"><a href="ch021.xhtml#ref-touvron2023llama">[44]</a></span>, or debiasing data <span class="citation" data-cites="park2024offsetbias"><a href="ch021.xhtml#ref-park2024offsetbias">[161]</a></span>.</p>
+</section>
+</section>
+</body>
+</html>
