@@ -1,65 +1,97 @@
 - en: How to Profile TPU Programs
+  id: totrans-0
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
+  zh: 如何分析TPU程序
 - en: 原文：[https://jax-ml.github.io/scaling-book/profiling](https://jax-ml.github.io/scaling-book/profiling)
+  id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 原文：[https://jax-ml.github.io/scaling-book/profiling](https://jax-ml.github.io/scaling-book/profiling)
 - en: '<d-title>Part 9 of [How To Scale Your Model](/scaling-book) ([Part 8: Serving
     LLaMA](../applied-inference) | [Part 10: JAX](../jax-stuff))'
+  id: totrans-2
   prefs: []
   type: TYPE_NORMAL
+  zh: <d-title>《如何扩展你的模型》第9部分[如何扩展你的模型](/scaling-book) ([第8部分：服务LLaMA](../applied-inference)
+    | [第10部分：JAX](../jax-stuff))
 - en: 'So far this series has been entirely theoretical: back-of-the-envelope calculations
     based on hardware rooflines. That understanding gets you far but a lot of optimization
     comes down to practical details: how the XLA compiler works and how to use profiling
     tools like the JAX/Tensorboard Profiler to figure out what to do when it fails.
     We discuss this here.</d-title>  <d-byline><d-article><d-contents>### Contents'
+  id: totrans-3
   prefs: []
   type: TYPE_NORMAL
+  zh: 到目前为止，这个系列完全是理论性的：基于硬件性能上限的估算。这种理解可以让你走得很远，但很多优化都归结于实际细节：XLA编译器是如何工作的，以及如何使用像JAX/Tensorboard分析器这样的分析工具来找出当它失败时应该做什么。我们在这里讨论这个问题。</d-title>  <d-byline><d-article><d-contents>###
+    内容
 - en: '[A Thousand-Foot View of the TPU Software Stack](#a-thousand-foot-view-of-the-tpu-software-stack)[The
     TensorBoard Profiler: A Multi-Purpose TPU Profiler](#the-tensorboard-profiler-a-multi-purpose-tpu-profiler)'
+  id: totrans-4
   prefs: []
   type: TYPE_NORMAL
+  zh: '[TPU软件栈的千尺观](#a-thousand-foot-view-of-the-tpu-software-stack)[TensorBoard分析器：多用途TPU分析器](#the-tensorboard-profiler-a-multi-purpose-tpu-profiler)'
 - en: '[Trace Viewer](#trace-viewer)'
+  id: totrans-5
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '[跟踪查看器](#trace-viewer)'
 - en: '[How to read an XLA op](#how-to-read-an-xla-op)'
+  id: totrans-6
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '[如何阅读XLA操作](#how-to-read-an-xla-op)'
 - en: '[Graph Viewer](#graph-viewer)'
+  id: totrans-7
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '[图形查看器](#graph-viewer)'
 - en: '[Looking at a real(ish) example profile](#looking-at-a-real-ish-example-profile)'
+  id: totrans-8
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '[查看一个真实（几乎）的示例分析](#looking-at-a-real-ish-example-profile)'
 - en: '[Memory Profile](#memory-profile)'
+  id: totrans-9
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '[内存分析](#memory-profile)'
 - en: '[Worked Problems](#worked-problems)</d-contents>'
+  id: totrans-10
   prefs: []
   type: TYPE_NORMAL
+  zh: '[练习题](#worked-problems)</d-contents>'
 - en: A Thousand-Foot View of the TPU Software Stack
+  id: totrans-11
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: TPU软件栈的千尺观
 - en: Google exposes a bunch of APIs for programming TPUs, from high level JAX code
     to low level Pallas or HLO. Most programmers write JAX code exclusively, which
     lets you write abstract NumPy-style linear algebra programs that are compiled
     automatically to run efficiently on TPUs.
+  id: totrans-12
   prefs: []
   type: TYPE_NORMAL
+  zh: Google公开了一系列用于编程TPU的API，从高级JAX代码到低级Pallas或HLO。大多数程序员只写JAX代码，这让你可以编写抽象的NumPy风格的线性代数程序，这些程序会自动编译以在TPU上高效运行。
 - en: 'Here’s a simple example, a JAX program that multiplies two matrices together:'
+  id: totrans-13
   prefs: []
   type: TYPE_NORMAL
+  zh: 这里有一个简单的例子，一个乘以两个矩阵的JAX程序：
 - en: '[PRE0]'
+  id: totrans-14
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE0]'
 - en: 'By calling `jax.jit`, we tell JAX to trace this function and emit a lower-level
     IR called [StableHLO](https://openxla.org/stablehlo), a platform-agnostic IR for
     ML computation, which is in turn lowered to HLO by the XLA compiler. The compiler
@@ -69,22 +101,33 @@
     etc) in an LLVM-style graph view. For instance, here is an abridged version of
     the above program as HLO<d-footnote>To get this HLO, you can run `jax.jit(f).lower(*args,
     **kwargs).compile().as_text()`.</d-footnote>:'
+  id: totrans-15
   prefs: []
   type: TYPE_NORMAL
+  zh: 通过调用`jax.jit`，我们告诉JAX跟踪这个函数并生成一个称为[StableHLO](https://openxla.org/stablehlo)的更低级别的IR，这是一个用于机器学习的平台无关的IR，然后由XLA编译器将其降低到HLO。编译器运行多个遍历来确定融合、布局和其他因素，这些因素导致了在JAX分析中可观察到的HLO。这个HLO以LLVM风格的图形视图表示了JAX代码中的所有核心线性代数操作（矩阵乘法、逐点操作、卷积等）。例如，以下是上述程序作为HLO的简略版本：<d-footnote>要获取这个HLO，你可以运行`jax.jit(f).lower(*args,
+    **kwargs).compile().as_text()`。</d-footnote>
 - en: '[PRE1]'
+  id: totrans-16
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE1]'
 - en: We’ll explain the syntax of HLO in just a second, but for now just note that
     it actually matches the JAX code above fairly well. For instance,
+  id: totrans-17
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们将在下一秒解释HLO的语法，但在此之前，请注意它实际上与上面的JAX代码相当匹配。例如，
 - en: '[PRE2]'
+  id: totrans-18
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE2]'
 - en: is the actual matmul above that multiplies two f32 matrices along the 0 and
     1 dimension, respectively.
+  id: totrans-19
   prefs: []
   type: TYPE_NORMAL
+  zh: 是实际上的矩阵乘法，分别沿着0和1维度乘以两个f32矩阵。
 - en: '**To transform this HLO to code that can be executed on the TPU, the XLA compiler
     first lowers it to LLO** (low-level optimizer) IR. LLO programs the TPU directly,
     scheduling copies between memories, pushing arrays onto the systolic array, etc.
@@ -92,20 +135,27 @@
     off, and schedule DMAs that communicate between different pieces of TPU memory.
     Once this has been lowered to LLO, it is then compiled to machine code that is
     loaded into the TPU IMEM and executed.'
+  id: totrans-20
   prefs: []
   type: TYPE_NORMAL
+  zh: '**为了将此HLO转换为可以在TPU上执行的代码，XLA编译器首先将其降低到LLO**（低级优化器）IR。LLO直接编程TPU，在内存之间调度复制，将数组推送到阵列，等等。LLO代码包含将缓冲区推送到阵列、提取结果并调度在不同TPU内存部分之间通信的DMAs的原始代码。一旦降低到LLO，它就会被编译成加载到TPU
+    IMEM并执行的机器代码。'
 - en: When a program is running slower than we’d like, we primarily work with the
     JAX level to improve performance. Doing so, however, often requires us to understand
     some of the semantics of HLO and how the code is actually running on the TPU.
     When something goes wrong at a lower level, we pull yet another escape hatch and
     write custom kernels in [Pallas](https://jax.readthedocs.io/en/latest/pallas/tpu/details.html).
     To view the HLO of a program and its runtime statistics, we use the JAX profiler.
+  id: totrans-21
   prefs: []
   type: TYPE_NORMAL
+  zh: 当程序运行速度比我们期望的要慢时，我们主要与JAX级别合作以提高性能。然而，这样做通常需要我们理解一些HLO的语义以及代码在TPU上实际是如何运行的。当在较低级别出现问题时，我们会再找一个逃生口，并在[Pallas](https://jax.readthedocs.io/en/latest/pallas/tpu/details.html)中编写自定义内核。要查看程序的HLO及其运行时统计信息，我们使用JAX分析器。
 - en: 'The JAX Profiler: A Multi-Purpose TPU Profiler'
+  id: totrans-22
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: JAX分析器：多用途TPU分析器
 - en: JAX provides a multi-purpose TPU profiler with a bunch of useful tools for understanding
     what’s happening on the TPU when a program is run. You can use the `jax.profiler`
     module to trace a program as it’s running and record everything from the duration
@@ -113,162 +163,232 @@
     this code will dump a trace to a file in `/tmp/tensorboard` that can be viewed
     in TensorBoard ([here](https://docs.jax.dev/en/latest/profiling.html#tensorboard-profiling)
     is a step-by-step guide).
+  id: totrans-23
   prefs: []
   type: TYPE_NORMAL
+  zh: JAX提供了一个多用途的TPU分析器，包含一系列有用的工具，用于在程序运行时理解TPU上发生的情况。您可以使用`jax.profiler`模块在程序运行时跟踪程序，并记录每个子组件的持续时间、每个程序的HLO、内存使用情况等等。例如，此代码将跟踪输出到`/tmp/tensorboard`的文件中，可以在TensorBoard中查看（[这里](https://docs.jax.dev/en/latest/profiling.html#tensorboard-profiling)是一个逐步指南）。
 - en: '[PRE3]'
+  id: totrans-24
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE3]'
 - en: 'Here’s an overview of what you can do in the profiler:'
+  id: totrans-25
   prefs: []
   type: TYPE_NORMAL
+  zh: 下面是您可以在分析器中执行的操作概述：
 - en: <picture>![](../Images/7ca0d03081b27260888374f26a715b60.png)</picture>
+  id: totrans-26
   prefs: []
   type: TYPE_NORMAL
+  zh: <picture>![](../Images/7ca0d03081b27260888374f26a715b60.png)</picture>
 - en: 'Once in TensorBoard, the profiler has a few key tabs that help you understand
     your program:'
+  id: totrans-27
   prefs: []
   type: TYPE_NORMAL
+  zh: 一旦进入TensorBoard，分析器有几个关键标签可以帮助您理解您的程序：
 - en: '**Trace Viewer** shows a detailed timeline of what’s actually happening on
     the TPU as a timeline.'
+  id: totrans-28
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: '**跟踪查看器**显示了TPU上实际发生的详细时间线，作为一个时间线。'
 - en: '**Graph Viewer** shows the HLO graph, letting you see what parts of the program
     feed into each other and how things are sharded.'
+  id: totrans-29
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: '**图形查看器**显示了HLO图，让您看到程序的哪些部分相互输入，以及事物是如何分片的。'
 - en: '**Memory Profile and Memory Viewer:** these show how much memory your program
     is using.'
+  id: totrans-30
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: '**内存配置文件和内存查看器**：这些显示了您的程序使用了多少内存。'
 - en: While it’s slightly difficult to share profiles, [here](https://ui.perfetto.dev/#!/?s=fa9f13b487bde622707c1a503f9227c34594760a)
     is a Perfetto link that contains at least the Trace Viewer component for a simple
     Transformer. [This Colab](https://colab.research.google.com/drive/1_6krERgtolH7hbUIo7ewAMLlbA4fqEF8?usp=sharing)
     lets you generate the full JAX/TensorBoard trace and play around with it.
+  id: totrans-31
   prefs: []
   type: TYPE_NORMAL
+  zh: 虽然分享配置文件稍微有些困难，但[这里](https://ui.perfetto.dev/#!/?s=fa9f13b487bde622707c1a503f9227c34594760a)是一个Perfetto链接，其中包含至少一个简单转换器的跟踪查看器组件。[这个Colab](https://colab.research.google.com/drive/1_6krERgtolH7hbUIo7ewAMLlbA4fqEF8?usp=sharing)让您可以生成完整的JAX/TensorBoard跟踪并与之互动。
 - en: Trace Viewer
+  id: totrans-32
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 跟踪查看器
 - en: '**The Trace Viewer is probably the most useful part of the profiler.** The
     example below shows a simple Transformer with pieces annotated. Names come from
     labels provided in the code.'
+  id: totrans-33
   prefs: []
   type: TYPE_NORMAL
+  zh: '**跟踪查看器可能是分析器中最有用的部分**。下面的示例展示了一个带有注释片段的简单转换器。名称来自代码中提供的标签。'
 - en: <picture>![](../Images/4d7370d4f4d1b84ae2ee73be05bb8b03.png)</picture>
+  id: totrans-34
   prefs: []
   type: TYPE_NORMAL
+  zh: <picture>![](../Images/4d7370d4f4d1b84ae2ee73be05bb8b03.png)</picture>
 - en: 'The Trace Viewer shows a chronological timeline of all the actions on each
     TPU core. We’re only looking at TPU:0 here, since typically all TPUs execute the
     same instructions. A few key notes:'
+  id: totrans-35
   prefs: []
   type: TYPE_NORMAL
+  zh: 跟踪查看器显示了每个TPU核心上所有操作的按时间顺序的时间线。我们在这里只查看TPU:0，因为通常所有TPU都执行相同的指令。以下是一些要点：
 - en: The top row (XLA Ops) shows the actual TPU operations (the names are HLO names).
     Everything else is an approximate trace based on `jax.named_scope`, `jax.named_call`,
     and the Python stack trace.
+  id: totrans-36
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 顶部行（XLA Ops）显示了实际的TPU操作（名称是HLO名称）。其余一切都是基于`jax.named_scope`、`jax.named_call`和Python堆栈跟踪的近似跟踪。
 - en: Noting the repeated blocks, we can isolate a single layer here. We can also
     see (from looking at the code/understanding how a Transformer works) what parts
     are attention and what parts are MLPs.
+  id: totrans-37
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 注意重复的块，我们可以在这里隔离一个单独的层。我们还可以通过查看代码/理解Transformer的工作原理来了解哪些部分是注意力机制，哪些部分是MLP。
 - en: By clicking on an XLA op, we can view where in the code it comes from (useful
     for understanding the trace) and see links to the Graph viewer.
+  id: totrans-38
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 通过点击XLA操作，我们可以查看它在代码中的位置（对于理解跟踪很有用）并查看到图形查看器的链接。
 - en: '**Tip:** you can navigate the Trace Viewer using “video game” style controls,
     with A/D panning left and right, and W/S zooming in and out. These controls make
     navigating a lot easier.'
+  id: totrans-39
   prefs: []
   type: TYPE_NORMAL
+  zh: '**提示：** 您可以使用“视频游戏”风格的控件导航Trace Viewer，使用A/D键左右平移，使用W/S键放大和缩小。这些控件使导航变得更加容易。'
 - en: How to read an XLA op
+  id: totrans-40
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 如何阅读XLA操作
 - en: HLO isn’t actually very hard to read, and it’s very helpful for understanding
     what a given part of the trace above corresponds to. Here’s an example op called
     fusion.3.
+  id: totrans-41
   prefs: []
   type: TYPE_NORMAL
+  zh: HLO实际上并不难读，并且对于理解上述跟踪的某个部分非常有帮助。以下是一个名为fusion.3的示例操作。
 - en: '[PRE4]'
+  id: totrans-42
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE4]'
 - en: Let’s break this down into its pieces.
+  id: totrans-43
   prefs: []
   type: TYPE_NORMAL
+  zh: 让我们将这个分解成它的各个部分。
 - en: '**Op Name**: fusion.3'
+  id: totrans-44
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**操作名称：** fusion.3'
 - en: A dot or fusion op is a set of operations containing at most 1 matrix multiplication
     and possibly a bunch of related pointwise VPU-ops.
+  id: totrans-45
   prefs:
   - PREF_IND
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 点或融合操作是一组最多包含1次矩阵乘法和可能是一系列相关点积VPU操作的运算。
 - en: '**Shape/layout**: `bf16[32,32,4096]`'
+  id: totrans-46
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**形状/布局：** `bf16[32,32,4096]`'
 - en: This is the output shape of the op. We can see the dtype is bf16 (2 bytes per
     parameter) and `[32,32,4096]` is the shape.
+  id: totrans-47
   prefs:
   - PREF_IND
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 这是操作的输出形状。我们可以看到数据类型是bf16（每个参数2字节）并且`[32,32,4096]`是形状。
 - en: '**Layout:** `{2,1,0:T(8,128)(2,1)}`'
+  id: totrans-48
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**布局：** `{2,1,0:T(8,128)(2,1)}`'
 - en: '`{2,1,0:T(8,128)(2,1)}` tells us the order of the axes in memory (column major,
     row major, etc.) and the array padding. More below.'
+  id: totrans-49
   prefs:
   - PREF_IND
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '`{2,1,0:T(8,128)(2,1)}`告诉我们内存中轴的顺序（列主序，行主序等）以及数组填充。更多内容见下文。'
 - en: '**Memory location:** S(1)'
+  id: totrans-50
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**内存位置：** S(1)'
 - en: S(1) tells us this array lives in VMEM. S(0) (sometimes omitted) is HBM. S(2)
     and S(3) are other memory spaces.
+  id: totrans-51
   prefs:
   - PREF_IND
   - PREF_UL
   type: TYPE_NORMAL
+  zh: S(1)告诉我们这个数组位于VMEM中。S(0)（有时省略）是HBM。S(2)和S(3)是其他内存空间。
 - en: '**Arguments**: `bf16[32,32,8192]{2,1,0:T(8,128)(2,1)S(1)} %fusion.32`'
+  id: totrans-52
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**参数：** `bf16[32,32,8192]{2,1,0:T(8,128)(2,1)S(1)} %fusion.32`'
 - en: This op has one input, a bf16 array called fusion.32 with a particular shape.
     This tells us what function feeds into this one.
+  id: totrans-53
   prefs:
   - PREF_IND
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 这个操作有一个输入，一个名为fusion.32的bf16数组，具有特定的形状。这告诉我们什么函数输入到这个数组中。
 - en: 'Let’s try to understand this notation a little more. Let’s take this as a simple
     example:'
+  id: totrans-54
   prefs: []
   type: TYPE_NORMAL
+  zh: 让我们尝试更深入地理解这个符号。让我们以一个简单的例子为例：
 - en: '`f32[3,5]{1,0:T(2,2)}`'
+  id: totrans-55
   prefs: []
   type: TYPE_NORMAL
+  zh: '`f32[3,5]{1,0:T(2,2)}`'
 - en: 'which again tells us that this Op returns a float32 array of shape `[3, 5]`
     with a particular tiling `{1,0:T(2,2)}`. While tilings don’t matter *too* much,
     briefly, tilings tell us how an N-dimensional array is laid out sequentially in
     memory. Here’s a diagram showing how this array is laid out:'
+  id: totrans-56
   prefs: []
   type: TYPE_NORMAL
+  zh: 这再次告诉我们这个操作返回一个形状为`[3, 5]`的特定tiling `{1,0:T(2,2)}`的float32数组。虽然tiling不是非常重要，但简而言之，tiling告诉我们N维数组在内存中是如何顺序排列的。以下是一个显示此数组如何排列的图示：
 - en: <picture>![](../Images/39e893566682f211745ab800a3352350.png)</picture>
+  id: totrans-57
   prefs: []
   type: TYPE_NORMAL
+  zh: '![图片](../Images/39e893566682f211745ab800a3352350.png)'
 - en: 'Within `{1,0:T(2,2)}`, the `1,0` part tells us the ordering of array dimensions
     in physical memory, from most minor to most major. You can read this part from
     right to left and pick out the corresponding dimensions in `f32[3,5]` to figure
@@ -283,11 +403,20 @@
     inner `(2, 1)` tiling within that unit (used for bf16 so our loads are always
     multiples of 4 bytes). For example, here’s `bf16[4,8]{1,0,T(2,4)(2,1)}` (colors
     are (2,4) tiles, red boxes are (2,1) tiles):'
+  id: totrans-58
   prefs: []
   type: TYPE_NORMAL
+  zh: 在 `{1,0:T(2,2)}` 中，`1,0` 部分告诉我们数组维度在物理内存中的顺序，从最不重要的到最重要的。您可以从右向左读取这部分，并从 `f32[3,5]`
+    中挑选出相应的维度，以确定数组的物理布局。在这个例子中，物理布局是 `[3,5]`，与逻辑形状相同。之后，`T(2,2)` 告诉我们数组以 `(2, 2)`
+    的块进行铺砖，其中在每个块内，数组首先有行（**行主序**），然后是列，即 `(0, 0)` 后跟 `(0, 1)`，然后是 `(1, 0)` 和 `(1,1)`。由于
+    `T(2, 2)` 铺砖，数组被填充到 `[4, 6]`，其内存使用量增加了约 1.6 倍。对于上面给出的大的 bf16 数组 `bf16[32,32,8192]{2,1,0:T(8,128)(2,1)S(1)}`，我们执行
+    `T(8,128)(2,1)`，这告诉我们数组有两级铺砖，一个外部的 `(8, 128)` 铺砖和一个在该单元内部的 `(2, 1)` 铺砖（用于 bf16，因此我们的加载总是
+    4 字节的倍数）。例如，这里有 `bf16[4,8]{1,0,T(2,4)(2,1)}`（颜色是 (2,4) 块，红色框是 (2,1) 块）：
 - en: <picture>![](../Images/d0f53ac6802fd5ea002fff7bff2b63ea.png)</picture>
+  id: totrans-59
   prefs: []
   type: TYPE_NORMAL
+  zh: '![图片](../Images/d0f53ac6802fd5ea002fff7bff2b63ea.png)'
 - en: Tiling can affect how efficiently chunks of tensors can be loaded into VMEM
     and XLA will sometimes introduce copies that “retile” or “re-layout” a tensor
     inside a program, sometimes at non-trivial overhead.<d-footnote>JAX provides an
@@ -298,200 +427,307 @@
     may not be optimal. Instead, you can specify the input layouts as AUTO, and `jax.jit`
     will return a layout that the jitted program prefers. You can then explicitly
     load the tensor in that layout to avoid inducing copies within the program.</d-footnote>
+  id: totrans-60
   prefs: []
   type: TYPE_NORMAL
+  zh: 铺砖（tiling）会影响将张量块高效加载到 VMEM 中的方式，XLA 有时会引入复制操作，以“重新铺砖”或“重新布局”程序中的张量，有时会产生非平凡的额外开销。<d-footnote>JAX
+    提供了一个实验性功能来解决这个问题，允许 XLA 为程序的输入计算其“首选”布局。当您使用 `jax.jit` 对程序进行即时编译时，您通常传递“模拟”输入，告诉
+    JAX 期望的形状和 dtype。这些通常也携带可能不是最优的铺砖信息。相反，您可以指定输入布局为 AUTO，`jax.jit` 将返回 jitted 程序首选的布局。然后您可以显式地以该布局加载张量，以避免在程序中引起复制。</d-footnote>
 - en: Graph Viewer
+  id: totrans-61
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 图形查看器
 - en: 'While some of the fusions above can seem complicated, the XLA Graph Viewer
     makes them easier to parse. For example here’s the view of a fairly complicated
     fusion:'
+  id: totrans-62
   prefs: []
   type: TYPE_NORMAL
+  zh: 虽然上述一些融合可能看起来很复杂，但 XLA 图形查看器使它们更容易解析。例如，这里是一个相当复杂的融合的视图：
 - en: <picture>![](../Images/cb6f8c921a1f57c9bd1c39a69ad868cb.png)</picture>
+  id: totrans-63
   prefs: []
   type: TYPE_NORMAL
+  zh: '![图片](../Images/cb6f8c921a1f57c9bd1c39a69ad868cb.png)'
 - en: It’s really helpful to stare at a bunch of HLO graphs and try to map HLO ops
     onto the code you’re profiling. By hovering over a box you’ll often see the line
     of code where the function was defined.
+  id: totrans-64
   prefs: []
   type: TYPE_NORMAL
+  zh: 仔细观察一系列 HLO 图表并尝试将 HLO 操作映射到您正在分析的代码中，这非常有帮助。通过悬停在某个框上，您通常会看到定义该函数的代码行。
 - en: Looking at a real(ish) example profile
+  id: totrans-65
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 查看一个真实（几乎）的示例配置文件
 - en: '[This Colab](https://colab.research.google.com/drive/1_6krERgtolH7hbUIo7ewAMLlbA4fqEF8?usp=sharing)
     has an example profile for a fake Transformer. [Here’s](https://ui.perfetto.dev/#!/?s=fa9f13b487bde622707c1a503f9227c34594760a)
     a Perfetto link to at least see the Trace Viewer if you’re in a hurry. I’ve gone
     to more effort than usual to annotate the trace with `jax.named_scope` calls so
     you can identify what’s going on.'
+  id: totrans-66
   prefs: []
   type: TYPE_NORMAL
+  zh: '[这个 Colab](https://colab.research.google.com/drive/1_6krERgtolH7hbUIo7ewAMLlbA4fqEF8?usp=sharing)
+    有一个假 Transformer 的示例配置文件。[这里](https://ui.perfetto.dev/#!/?s=fa9f13b487bde622707c1a503f9227c34594760a)
+    是一个 Perfetto 链接，如果您很匆忙，至少可以查看 Trace 查看器。我已经比平时更努力地对跟踪进行了 `jax.named_scope` 调用的注释，以便您可以识别正在发生的事情。'
 - en: <picture>![](../Images/a54c6d9950d138820493c5c19de0cff6.png)</picture>
+  id: totrans-67
   prefs: []
   type: TYPE_NORMAL
+  zh: '![图片](../Images/a54c6d9950d138820493c5c19de0cff6.png)'
 - en: 'Take a look at the profile and try to really understand what each part is doing.
     Let’s break it down a bit, starting with the FFW block:'
+  id: totrans-68
   prefs: []
   type: TYPE_NORMAL
+  zh: 查看配置文件并尝试真正理解每一部分的作用。让我们先从FFW块开始分析：
 - en: <picture>![](../Images/7ebf5515776433b1baaac68e91082100.png)</picture>
+  id: totrans-69
   prefs: []
   type: TYPE_NORMAL
+  zh: <picture>![](../Images/7ebf5515776433b1baaac68e91082100.png)</picture>
 - en: Here we’ve zoomed into the FFW block. You’ll see the up-projection Op is a fusion
     (matmul) with inputs `bf16[8, 1024, 8192]` and `bf16[8192, 16384]` and output
     `bf16[32, 1024, 16384]`. I know (because I wrote this code) that this is a local
     view of a 4-way DP, 2-way MP sharded matmul, so we’re actually doing
+  id: totrans-70
   prefs: []
   type: TYPE_NORMAL
+  zh: 这里我们放大了FFW块。你会看到上投影操作是一个融合（矩阵乘法），输入为`bf16[8, 1024, 8192]`和`bf16[8192, 16384]`，输出为`bf16[32,
+    1024, 16384]`。我知道（因为我写了这段代码）这是一个4路DP、2路MP分片矩阵乘法的局部视图，所以我们实际上在做
 - en: '**X:** `bf16[32, 1024, 8192]` * **W[in]**: `bf16[8192, 32768]` -> **Tmp**:
     `bf16[32, 1024, 32768]`'
+  id: totrans-71
   prefs: []
   type: TYPE_NORMAL
+  zh: '**X:** `bf16[32, 1024, 8192]` * **W[in]**: `bf16[8192, 32768]` -> **Tmp**:
+    `bf16[32, 1024, 32768]`'
 - en: '**How long do we expect this to take?** First of all, our batch size per data
     parallel shard is `8 * 1024 = 8192`, so we should be solidly compute-bound. This
     is on 8 TPUv2 cores (freely available on Google Colab), so we expect it to take
     about `2 * 32 * 1024 * 8192 * 32768 / (23e12 * 8) = 95.6ms` which is pretty much
     exactly how long it takes (96ms). That’s great! That means we’re getting fantastic
     FLOPs utilization!'
+  id: totrans-72
   prefs: []
   type: TYPE_NORMAL
+  zh: '**我们预计这需要多长时间？** 首先，我们每个数据并行分片的大小是`8 * 1024 = 8192`，所以我们应该是计算受限的。这是在8个TPUv2核心上（在Google
+    Colab上免费可用），我们预计它需要大约`2 * 32 * 1024 * 8192 * 32768 / (23e12 * 8) = 95.6ms`，这几乎就是实际所需的时间（96ms）。太棒了！这意味着我们得到了惊人的FLOPs利用率！'
 - en: '**What about communication?** You’ll notice the little fusion hidden at the
     end of the second matmul. If we click on it, you’ll see'
+  id: totrans-73
   prefs: []
   type: TYPE_NORMAL
+  zh: '**关于通信方面呢？** 你会注意到在第二个矩阵乘法操作末尾隐藏的小融合。如果我们点击它，你会看到'
 - en: '[PRE5]'
+  id: totrans-74
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE5]'
 - en: which is basically a little ReduceScatter (here’s the GraphViewer);
+  id: totrans-75
   prefs: []
   type: TYPE_NORMAL
+  zh: 这基本上是一个小型的ReduceScatter（这里是有GraphViewer的图示）；
 - en: <picture>![](../Images/1ad0d538100c38142a79be15e5ae5f0c.png)</picture>
+  id: totrans-76
   prefs: []
   type: TYPE_NORMAL
+  zh: <picture>![](../Images/1ad0d538100c38142a79be15e5ae5f0c.png)</picture>
 - en: How long do we expect this to take? Well, we’re doing a ReduceScatter on a TPUv2
     4x2, which should require only one hop on 1.2e11 bidirectional bandwidth. The
     array has size `2*32*1024*8192` with the batch axis sharded 4 ways, so each shard
     is `2*8*1024*8192=134MB`. So this should take roughly 1.1ms. **How long does it
     actually take?** 1.13ms reported in the profile. So we’re really close to the
     roofline!
+  id: totrans-77
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们预计这需要多长时间？嗯，我们在TPUv2 4x2上执行ReduceScatter，这应该只需要1.2e11双向带宽的一次跳跃。数组大小为`2*32*1024*8192`，批处理轴以4种方式分片，所以每个分片大小为`2*8*1024*8192=134MB`。所以这应该大约需要1.1ms。**实际上需要多长时间？**
+    配置文件中报告为1.13ms。所以我们非常接近屋顶线！
 - en: '**Let’s look at attention too!** Here’s a profile of the attention component:'
+  id: totrans-78
   prefs: []
   type: TYPE_NORMAL
+  zh: '**让我们也看看注意力机制！** 这里是注意力组件的配置文件：'
 - en: <picture>![](../Images/96cab32e8daf46e2d4cf3c73054084b2.png)</picture>
+  id: totrans-79
   prefs: []
   type: TYPE_NORMAL
+  zh: <picture>![](../Images/96cab32e8daf46e2d4cf3c73054084b2.png)</picture>
 - en: I’ve clicked on the Q projection op, which uses a matrix \(W_Q\) of shape [d[model]
     = 8192, n[heads] = 32, d[qkv] = 256]. We’re Megatron sharding along the head dimension.
     Try to do the same exercise of calculating how long these should take.
+  id: totrans-80
   prefs: []
   type: TYPE_NORMAL
+  zh: 我点击了Q投影操作，它使用形状为[d[model] = 8192, n[heads] = 32, d[qkv] = 256]的矩阵\(W_Q\)。我们在头部维度上使用Megatron分片。尝试做同样的练习，计算这些操作需要多长时间。
 - en: Memory Profile
+  id: totrans-81
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 内存配置文件
 - en: The Memory Profile makes it easy to see the program memory as a function of
     time. This is helpful for debugging OOMs. You can see here about 7.5GB allocated
     to model parameters and about 10GB free. So we can fit a lot more into memory.
+  id: totrans-82
   prefs: []
   type: TYPE_NORMAL
+  zh: 内存配置文件使得程序内存随时间变化的情况变得容易观察。这对于调试OOMs很有帮助。你可以看到这里大约分配了7.5GB用于模型参数，大约有10GB空闲。所以我们可以将更多的内容放入内存中。
 - en: <picture>![](../Images/cdf86183a49c1b87ea3b05ed622deb5f.png)</picture>
+  id: totrans-83
   prefs: []
   type: TYPE_NORMAL
+  zh: <picture>![](../Images/cdf86183a49c1b87ea3b05ed622deb5f.png)</picture>
 - en: Worked Problems
+  id: totrans-84
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 工作问题
 - en: '**Question 1**: take a look at [this](https://colab.research.google.com/drive/1LfLO3OTr-_MWFPxUN36KJ3cqH0BcAoli?usp=sharing)
     Colab/profile and figure out what looks suspicious and what’s going on here. Can
     you tell me exactly what computations are happening and what each operation is
     doing? What are the true shapes of each matrix involved and how are they sharded?
     *Try looking at the profile first without reading the code.*'
+  id: totrans-85
   prefs: []
   type: TYPE_NORMAL
+  zh: '**问题1**：查看[这个](https://colab.research.google.com/drive/1LfLO3OTr-_MWFPxUN36KJ3cqH0BcAoli?usp=sharing)
+    Colab/profile，找出这里可疑的地方以及正在发生的事情。你能告诉我确切的计算过程以及每个操作的作用吗？涉及到的每个矩阵的真实形状是什么，它们是如何分片的？*首先尝试查看配置文件，而不阅读代码。*'
 - en: <picture>![](../Images/18f62042543044cd5cefa97614c1cbc2.png)</picture> <details><summary>Click
     here for the answer.</summary>
+  id: totrans-86
   prefs: []
   type: TYPE_NORMAL
+  zh: <picture>![](../Images/18f62042543044cd5cefa97614c1cbc2.png)</picture> <details><summary>点击这里查看答案。</summary>
 - en: 'This is two matrix multiplications, i.e. specifically this:'
+  id: totrans-87
   prefs: []
   type: TYPE_NORMAL
+  zh: 这实际上是两次矩阵乘法，即具体来说就是：
 - en: '[PRE6]'
+  id: totrans-88
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE6]'
 - en: 'You can see a reduce, two big fusions, and an all-reduce. The first big fusion
     is:'
+  id: totrans-89
   prefs: []
   type: TYPE_NORMAL
+  zh: 你可以看到一个 reduce，两个大的融合，以及一个 all-reduce。第一个大的融合是：
 - en: '`%fusion.1 = bf16[4096]{0:T(1024)(128)(2,1)} fusion(bf16[4096,8192]{1,0:T(8,128)(2,1)}
     %param.1, bf16[8192]{0:T(1024)(128)(2,1)} %reduce.6), kind=kLoop, calls=%fused_computation.1`'
+  id: totrans-90
   prefs: []
   type: TYPE_NORMAL
+  zh: '`%fusion.1 = bf16[4096]{0:T(1024)(128)(2,1)} fusion(bf16[4096,8192]{1,0:T(8,128)(2,1)}
+    %param.1, bf16[8192]{0:T(1024)(128)(2,1)} %reduce.6), kind=kLoop, calls=%fused_computation.1`'
 - en: which tells us the per-shard shape is `bf16[8192] * bf16[4096, 8192] -> bf16[4096]`
     (over the 8192 dimension). By observing the final AllReduce with `replica_groups=\{\{0,16,32,48,64,80,96,112\},
     ...\}`, we can tell we’re doing 8-way model parallelism, so the true shapes are
     `[8, 8192] * bf16[32,768, 8192] -> bf16[8, 32,768]`.</details>
+  id: totrans-91
   prefs: []
   type: TYPE_NORMAL
+  zh: 这告诉我们每个分片的大小是 `bf16[8192] * bf16[4096, 8192] -> bf16[4096]`（在 8192 维度上）。通过观察最后的
+    AllReduce，`replica_groups=\{\{0,16,32,48,64,80,96,112\}, ...\}`，我们可以知道我们正在进行 8
+    方模型并行，因此真正的形状是 `[8, 8192] * bf16[32,768, 8192] -> bf16[8, 32,768]`。</details>
 - en: '**Question 2:** [The Transformer Colab from earlier](https://colab.research.google.com/drive/1_6krERgtolH7hbUIo7ewAMLlbA4fqEF8?usp=sharing)
     implements a simple mock Transformer. Follow the instructions in the Colab and
     get a benchmark of the naive Transformer with GSPMD partitioning. How long does
     each part take? How long should it take? What sharding is being used. Try fixing
     the sharding! *Hint: use `jax.lax.with_sharding_constraints` to constrain the
     behavior. With this fix, what’s the best MXU you can get?*'
+  id: totrans-92
   prefs: []
   type: TYPE_NORMAL
+  zh: '**问题 2:** [之前提到的 Transformer Colab](https://colab.research.google.com/drive/1_6krERgtolH7hbUIo7ewAMLlbA4fqEF8?usp=sharing)
+    实现了一个简单的模拟 Transformer。按照 Colab 中的说明进行操作，获取具有 GSPMD 分区的朴素 Transformer 的基准。每个部分需要多长时间？应该需要多长时间？使用了哪种分片策略。尝试修复分片策略！*提示：使用
+    `jax.lax.with_sharding_constraints` 来约束行为。修复后，你能获得最佳的 MXU 吗？*'
 - en: 'For reference, the initial version gets roughly 184ms / layer and the optimized
     profile gets 67 ms / layer. Once you’ve done this, try staring at the profile
     and see if you can answer these questions purely from the profile:'
+  id: totrans-93
   prefs: []
   type: TYPE_NORMAL
+  zh: 作为参考，初始版本大约每层需要 184ms，优化后的配置文件每层需要 67ms。完成这些后，尝试仔细观察配置文件，看看你是否可以仅从配置文件中回答这些问题：
 - en: What sharding strategy is this?
+  id: totrans-94
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 这种分片策略是什么？
 - en: What is the batch size, \(d_\text{model}\), \(d_\text{ff}\)?
+  id: totrans-95
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 批大小是多少，\(d_\text{model}\)，\(d_\text{ff}\)？
 - en: What fraction of time is spent on attention vs. the MLP block?
+  id: totrans-96
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 在注意力机制与 MLP 块之间，花费的时间比例是多少？
 - en: What fraction of time should be spent on each op at the roofline?
+  id: totrans-97
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 在 roofline 上，每个操作应该花费多少时间比例？
 - en: '**Note:** since this problem was written, the XLA compiler has gotten better.
     The initial version is now at roughly 90ms / layer and the optimized profile is
     only about 10ms / layer better (80 ms / layer). Still, it’s worth playing with
     and seeing if you can do better.'
+  id: totrans-98
   prefs: []
   type: TYPE_NORMAL
+  zh: '**注意：** 自从这个问题被编写以来，XLA 编译器已经得到了改进。初始版本现在大约每层需要 90ms，优化后的配置文件每层仅比优化前好大约 10ms（80ms/层）。尽管如此，仍然值得尝试并看看你是否能做得更好。'
 - en: That’s all for Part 9\. For Part 10, with a deep dive into JAX parallelism,
     click [here](../jax-stuff).</d-article>  <d-appendix><d-footnote-list><d-citation-list>###
     Miscellaneous
+  id: totrans-99
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 第 9 部分到此结束。对于第 10 部分，深入了解 JAX 并行性，请点击[这里](../jax-stuff)。</d-article>  <d-appendix><d-footnote-list><d-citation-list>###
+    杂项
 - en: ^*Work done at Google DeepMind, now at MatX.
+  id: totrans-100
   prefs: []
   type: TYPE_NORMAL
+  zh: ^*在 Google DeepMind 完成的工作，现在在 MatX。
 - en: Citation
+  id: totrans-101
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 引用
 - en: 'For attribution in academic contexts, please cite this work as:'
+  id: totrans-102
   prefs: []
   type: TYPE_NORMAL
+  zh: 在学术环境中进行归属时，请引用这项工作如下：
 - en: '[PRE7]'
+  id: totrans-103
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE7]'
 - en: 'or as a BibTeX entry:'
+  id: totrans-104
   prefs: []
   type: TYPE_NORMAL
+  zh: 或者作为 BibTeX 条目：
 - en: '[PRE8]</d-citation-list></d-footnote-list></d-appendix> <d-bibliography src="/scaling-book/assets/bibliography/"></d-bibliography></d-byline>'
+  id: totrans-105
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE8]</d-citation-list></d-footnote-list></d-appendix> <d-bibliography src="/scaling-book/assets/bibliography/"></d-bibliography></d-byline>'

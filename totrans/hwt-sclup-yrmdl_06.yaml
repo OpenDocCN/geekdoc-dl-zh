@@ -1,60 +1,90 @@
 - en: How to Parallelize a Transformer for Training
+  id: totrans-0
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
+  zh: 如何并行化 Transformer 以进行训练
 - en: 原文：[https://jax-ml.github.io/scaling-book/training](https://jax-ml.github.io/scaling-book/training)
+  id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 原文：[https://jax-ml.github.io/scaling-book/training](https://jax-ml.github.io/scaling-book/training)
 - en: '<d-title>Part 5 of [How To Scale Your Model](/scaling-book) ([Part 4: Transformers](../transformers)
     | [Part 6: Training LLaMA](../applied-training))'
+  id: totrans-2
   prefs: []
   type: TYPE_NORMAL
+  zh: <d-title>《如何缩放您的模型》第 5 部分 [How To Scale Your Model](/scaling-book) ([第 4 部分：Transformer](../transformers)
+    | [第 6 部分：训练 LLaMA](../applied-training))
 - en: 'Here we discuss four main parallelism schemes used during LLM training: data
     parallelism, fully-sharded data parallelism (FSDP), tensor parallelism, and pipeline
     parallelism. For each, we calculate at what point we become bottlenecked by communication.</d-title>  <d-byline><d-article><d-contents>###
     Contents'
+  id: totrans-3
   prefs: []
   type: TYPE_NORMAL
+  zh: 在此，我们讨论了在 LLM 训练过程中使用的四种主要并行方案：数据并行、全分片数据并行（FSDP）、张量并行和流水线并行。对于每一种方案，我们计算在何时通信成为瓶颈。</d-title>  <d-byline><d-article><d-contents>###
+    内容
 - en: '[What Do We Mean By Scaling?](#what-do-we-mean-by-scaling)'
+  id: totrans-4
   prefs: []
   type: TYPE_NORMAL
+  zh: '[我们所说的“缩放”是什么意思？](#what-do-we-mean-by-scaling)'
 - en: '[Data Parallelism](#data-parallelism)'
+  id: totrans-5
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '[数据并行](#data-parallelism)'
 - en: '[Fully-Sharded Data Parallelism (FSDP)](#fully-sharded-data-parallelism-fsdp)'
+  id: totrans-6
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '[全分片数据并行（FSDP）](#fully-sharded-data-parallelism-fsdp)'
 - en: '[Tensor Parallelism](#tensor-parallelism)'
+  id: totrans-7
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '[张量并行](#tensor-parallelism)'
 - en: '[Combining FSDP and Tensor Parallelism](#combining-fsdp-and-tensor-parallelism)'
+  id: totrans-8
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '[结合 FSDP 和张量并行](#combining-fsdp-and-tensor-parallelism)'
 - en: '[Pipelining](#pipelining)'
+  id: totrans-9
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '[流水线](#pipelining)'
 - en: '[Scaling Across Pods](#scaling-across-pods)'
+  id: totrans-10
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '[跨 Pod 缩放](#scaling-across-pods)'
 - en: '[Takeaways from LLM Training on TPUs](#takeaways-from-llm-training-on-tpus)[Some
     Problems to Work](#some-problems-to-work)[Appendix](#appendix)'
+  id: totrans-11
   prefs: []
   type: TYPE_NORMAL
+  zh: '[LLM 在 TPU 上训练的启示](#takeaways-from-llm-training-on-tpus)[一些需要解决的问题](#some-problems-to-work)[附录](#appendix)'
 - en: '[Appendix A: Deriving the backward pass comms](#appendix-a-deriving-the-backward-pass-comms)</d-contents>'
+  id: totrans-12
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '[附录 A：推导反向传播通信](#appendix-a-deriving-the-backward-pass-comms)'
 - en: What Do We Mean By Scaling?
+  id: totrans-13
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 我们所说的“缩放”是什么意思？
 - en: The goal of “model scaling” is to be able to increase the number of chips used
     for training or inference while achieving a proportional, linear increase in throughput
     (we call this *strong scaling*). While performance on a single chip depends on
@@ -65,8 +95,13 @@
     As we saw in [Section 3](../sharding), sharded matrix multiplications often require
     expensive AllGathers or ReduceScatters that can block the TPUs from doing useful
     work. The goal of this section is to find out when these become *too expensive.*
+  id: totrans-14
   prefs: []
   type: TYPE_NORMAL
+  zh: “模型缩放”的目标是在保持吞吐量成比例、线性增加的同时，能够增加用于训练或推理的芯片数量（我们称之为 *强缩放*）。单个芯片的性能取决于内存带宽和浮点运算（FLOPs）之间的权衡，而集群级别的性能则取决于通过重叠有用的
+    FLOPs 来隐藏芯片间的通信。这并不简单，因为增加芯片数量会增加通信负载，同时减少我们可以用来隐藏通信的每个设备的计算量。正如我们在 [第 3 部分](../sharding)
+    中所看到的，分片矩阵乘法通常需要昂贵的 AllGathers 或 ReduceScatters，这可能会阻止 TPUs 进行有用的工作。本节的目标是找出这些操作何时变得
+    *过于昂贵*。
 - en: 'In this section, we’ll discuss four common parallelism schemes: (pure) **data
     parallelism, fully-sharded data parallelism** (FSDP / ZeRO sharding), **tensor
     parallelism** (also known as model parallelism), and (briefly) **pipeline parallelism**.
@@ -80,244 +115,379 @@
     solely on inter-chip communication costs, since as long as we have a large enough
     single-chip batch size, the transfer of data from HBM to MXU is already overlapped
     with computation.'
+  id: totrans-15
   prefs: []
   type: TYPE_NORMAL
+  zh: 在本节中，我们将讨论四种常见的并行方案：（纯）**数据并行**、**全分片数据并行**（FSDP / ZeRO 分片）、**张量并行**（也称为模型并行）以及（简要地）**流水线并行**。对于每一种方案，我们将展示我们承担的通信成本以及这种成本何时开始成为计算成本的瓶颈。<d-footnote>我们将重点关注通信界限——因为虽然内存容量限制很重要，但在使用重材料化（激活检查点）和预训练期间大量芯片时，它们通常不会对我们构成限制。我们也不会在这里讨论
+    MoE 的专家并行——这大大扩展了设计空间，只讨论密集 Transformer 的基本案例。</d-footnote>对于本节，你可以仅关注芯片间的通信成本，因为只要我们有足够大的单个芯片批量大小，从
+    HBM 到 MXU 的数据传输就已经与计算重叠了。
 - en: We’ll use the following notation to simplify calculations throughout this section.
+  id: totrans-16
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们将使用以下符号来简化本节中的计算。
 - en: '| Notation | Meaning (model parameters) |'
+  id: totrans-17
   prefs: []
   type: TYPE_TB
+  zh: '| 符号 | 意义（模型参数） |'
 - en: '| --- | --- |'
+  id: totrans-18
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- |'
 - en: '| D | **d**[model] ( the hidden dimension/residual stream dim) |'
+  id: totrans-19
   prefs: []
   type: TYPE_TB
+  zh: '| D | **d**[model]（隐藏维度/残差流维度） |'
 - en: '| F | **d**[ff] (the feed-forward dimension) |'
+  id: totrans-20
   prefs: []
   type: TYPE_TB
+  zh: '| F | **d**[ff]（前馈维度） |'
 - en: '| B | Batch dimension (number of tokens in the batch; total, not per-device)
     |'
+  id: totrans-21
   prefs: []
   type: TYPE_TB
+  zh: '| B | 批量维度（批中标记的数量；总数，而不是每个设备的数量） |'
 - en: '| T | Sequence length |'
+  id: totrans-22
   prefs: []
   type: TYPE_TB
+  zh: '| T | 序列长度 |'
 - en: '| L | Number of layers in the model |'
+  id: totrans-23
   prefs: []
   type: TYPE_TB
+  zh: '| L | 模型中的层数 |'
 - en: '| Notation | Meaning (hardware characteristic) |'
+  id: totrans-24
   prefs: []
   type: TYPE_TB
+  zh: '| 符号 | 意义（硬件特性） |'
 - en: '| --- | --- |'
+  id: totrans-25
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- |'
 - en: '| C | FLOPS/s per chip |'
+  id: totrans-26
   prefs: []
   type: TYPE_TB
+  zh: '| C | 每个芯片的 FLOPS/s |'
 - en: '| W | Network bandwidth (bidirectional, often subscripted as e.g. $W_{\text{ici}}$
     or $W_{\text{dcn}}$ |'
+  id: totrans-27
   prefs: []
   type: TYPE_TB
+  zh: '| W | 网络带宽（双向，通常下标，例如 $W_{\text{ici}}$ 或 $W_{\text{dcn}}$） |'
 - en: '| X | Number of chips along mesh axis X |'
+  id: totrans-28
   prefs: []
   type: TYPE_TB
+  zh: '| X | 沿着网格轴 X 的芯片数量 |'
 - en: '| Y | Number of chips along an alternate mesh axis, labeled Y |'
+  id: totrans-29
   prefs: []
   type: TYPE_TB
+  zh: '| Y | 沿着替代网格轴的芯片数量，标记为 Y |'
 - en: '| Z | Number of chips along a third mesh axis, labeled Z |'
+  id: totrans-30
   prefs: []
   type: TYPE_TB
+  zh: '| Z | 沿着第三个网格轴的芯片数量，标记为 Z |'
 - en: 'For simplicity’s sake, **we’ll approximate a Transformer as a stack of MLP
     blocks** — attention is a comparatively small fraction of the FLOPs for larger
     models as we saw in [Section 4](../transformers). We will also ignore the gating
     matmul, leaving us with the following simple structure for each layer:'
+  id: totrans-31
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了简化起见，**我们将将 Transformer 近似为 MLP 块的堆叠**——正如我们在[第 4 节](../transformers)中看到的那样，对于较大的模型，注意力占
+    FLOPs 的比例相对较小。我们还将忽略门控矩阵乘法，使得每一层的结构如下所示：
 - en: <picture>![](../Images/eb1f54687a79d899681b2bcb8a2f21c4.png)</picture>
+  id: totrans-32
   prefs: []
   type: TYPE_NORMAL
+  zh: <picture>![](../Images/eb1f54687a79d899681b2bcb8a2f21c4.png)</picture>
 - en: '**Figure:** a simplified Transformer layer. We treat each FFW block as a stack
     of two matrices **W[in]**: `bf16[D, F]` (up-projection) and **W[out]**: `bf16[F,
     D]` (down-projection) with an input **In**: `bf16[B, D]`.'
+  id: totrans-33
   prefs: []
   type: TYPE_NORMAL
+  zh: '**图：**一个简化的 Transformer 层。我们将每个 FFW 块视为两个矩阵 **W[in]**：`bf16[D, F]`（上投影）和 **W[out]**：`bf16[F,
+    D]`（下投影），输入为 **In**：`bf16[B, D]`。'
 - en: <details><summary>Here’s the full algorithm for our little Transformer with
     no parallelism.</summary>
+  id: totrans-34
   prefs: []
   type: TYPE_NORMAL
+  zh: <details><summary>以下是我们的小型 Transformer（无并行）的完整算法。</summary>
 - en: '**Forward pass:** need to compute Loss[B]'
+  id: totrans-35
   prefs: []
   type: TYPE_NORMAL
+  zh: '**正向传播：**需要计算 Loss[B]'
 - en: Tmp[B, F] = In[B, D] *[D] W[in][D, F]
+  id: totrans-36
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: Tmp[B, F] = In[B, D] *[D] W[in][D, F]
 - en: Out[B, D] = Tmp[B, F] *[F] W[out][F, D]
+  id: totrans-37
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: Out[B, D] = Tmp[B, F] *[F] W[out][F, D]
 - en: Loss[B] = …
+  id: totrans-38
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 损失[B] = …
 - en: '**Backward pass:** need to compute dW[out][F, D], dW[in][D, F]'
+  id: totrans-39
   prefs: []
   type: TYPE_NORMAL
+  zh: '**反向传播：**需要计算 dW[out][F, D]，dW[in][D, F]'
 - en: dOut[B, D] = …
+  id: totrans-40
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: dOut[B, D] = …
 - en: dW[out][F, D] = Tmp[B, F] *[B] dOut[B, D]
+  id: totrans-41
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: dW[out][F, D] = Tmp[B, F] *[B] dOut[B, D]
 - en: dTmp[B, F] = dOut[B, D] *[D] W[out][F, D]
+  id: totrans-42
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: dTmp[B, F] = dOut[B, D] *[D] W[out][F, D]
 - en: dW[in][D, F] = In[B, D] *[B] dTmp[B, F]
+  id: totrans-43
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: dW[in][D, F] = In[B, D] *[B] dTmp[B, F]
 - en: dIn[B, D] = dTmp[B, F] *[F] W[in][D, F] (*needed for previous layers*)
+  id: totrans-44
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: dIn[B, D] = dTmp[B, F] *[F] W[in][D, F]（用于前一层）
 - en: We provide this for comparison to the algorithms with communication added.</details>
+  id: totrans-45
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们提供这些算法以供比较，其中加入了通信。
 - en: Here are the 4 parallelism schemes we will discuss. Each scheme can be thought
     of as uniquely defined by a sharding for **In**, **W[in], W[out], and Out** in
     the above diagram.
+  id: totrans-46
   prefs: []
   type: TYPE_NORMAL
+  zh: 这里是我们将要讨论的 4 种并行方案。每种方案都可以被视为由上图中的 **In**、**W[in]**、**W[out]** 和 **Out** 的分片唯一定义。
 - en: '**1\. Data parallelism:** *activations sharded along batch, parameters and
     optimizer state are replicated on each device. Communication only occurs during
     the backwards pass.*'
+  id: totrans-47
   prefs: []
   type: TYPE_NORMAL
+  zh: '**1. 数据并行性：** *激活沿批量分片，参数和优化器状态在每个设备上复制。通信仅在反向传播期间发生。*'
 - en: \[\text{In}[B_X, D] \cdot_D W_\text{in}[D, F] \cdot_F W_\text{out}[F, D] \rightarrow
     \text{Out}[B_X, D]\]
+  id: totrans-48
   prefs: []
   type: TYPE_NORMAL
+  zh: \[\text{In}[B_X, D] \cdot_D W_\text{in}[D, F] \cdot_F W_\text{out}[F, D] \rightarrow
+    \text{Out}[B_X, D]\]
 - en: '**2\. Fully-sharded data parallelism (FSDP or ZeRO-3):** *activations sharded
     along batch (like pure data parallelism), parameters sharded along same mesh axis
     and AllGathered just-in-time before use in forward pass. Optimizer state also
     sharded along batch. Reduces duplicated memory.*'
+  id: totrans-49
   prefs: []
   type: TYPE_NORMAL
+  zh: '**2. 完全分片数据并行性（FSDP 或 ZeRO-3）：** *激活沿批量分片（类似于纯数据并行性），参数沿相同的网格轴分片并在正向传播中使用前即时
+    AllGather。优化器状态也沿批量分片。减少重复内存。*'
 - en: \[\text{In}[B_X, D] \cdot_D W_\text{in}[D_X, F] \cdot_F W_\text{out}[F, D_X]
     \rightarrow \text{Out}[B_X, D]\]
+  id: totrans-50
   prefs: []
   type: TYPE_NORMAL
+  zh: \[\text{In}[B_X, D] \cdot_D W_\text{in}[D_X, F] \cdot_F W_\text{out}[F, D_X]
+    \rightarrow \text{Out}[B_X, D]\]
 - en: '**3\. Tensor parallelism (also called Megatron sharding or model parallelism):**
     *activations sharded along D ($d_\text{model}$), parameters sharded along F ($d_{ff}$).
     AllGather and ReduceScatter activations before and after each block. Compatible
     with FSDP.*'
+  id: totrans-51
   prefs: []
   type: TYPE_NORMAL
+  zh: '**3. 张量并行性（也称为 Megatron 分片或模型并行性）：** *激活沿 D（$d_\text{model}$）分片，参数沿 F（$d_{ff}$）分片。在每个块前后进行
+    AllGather 和 ReduceScatter 激活。与 FSDP 兼容。*'
 - en: \[\text{In}[B, D_Y] \cdot_D W_\text{in}[D, F_Y] \cdot_F W_\text{out}[F_Y, D]
     \rightarrow \text{Out}[B, D_Y]\]
+  id: totrans-52
   prefs: []
   type: TYPE_NORMAL
+  zh: \[\text{In}[B, D_Y] \cdot_D W_\text{in}[D, F_Y] \cdot_F W_\text{out}[F_Y, D]
+    \rightarrow \text{Out}[B, D_Y]\]
 - en: '**4\. Pipeline parallelism:** *weights sharded along the layer dimension, activations
     microbatched and rolled along the layer dimension. Communication between pipeline
     stages is minimal (just moving activations over a single hop). To abuse notation:*'
+  id: totrans-53
   prefs: []
   type: TYPE_NORMAL
+  zh: '**4. 管道并行性：** *权重沿层维度分片，激活沿层维度微批处理并滚动。管道阶段之间的通信最小（只需移动激活一次）。为了滥用符号：*'
 - en: \[\text{In}[L_Z, B, D][i] \cdot_D W_\text{in}[L_Z, D, F][i] \cdot_F W_\text{out}[L_Z,
     F, D][i] \rightarrow \text{Out}[L_Z, B, D][i]\]
+  id: totrans-54
   prefs: []
   type: TYPE_NORMAL
+  zh: \[\text{In}[L_Z, B, D][i] \cdot_D W_\text{in}[L_Z, D, F][i] \cdot_F W_\text{out}[L_Z,
+    F, D][i] \rightarrow \text{Out}[L_Z, B, D][i]\]
 - en: Data Parallelism
+  id: totrans-55
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 数据并行性
 - en: '**Syntax:** \(\text{In}[B_X, D] \cdot_D W_\text{in}[D, F] \cdot_F W_\text{out}[F,
     D] \rightarrow \text{Out}[B_X, D]\)'
+  id: totrans-56
   prefs: []
   type: TYPE_NORMAL
+  zh: '**语法：** \(\text{In}[B_X, D] \cdot_D W_\text{in}[D, F] \cdot_F W_\text{out}[F,
+    D] \rightarrow \text{Out}[B_X, D]\)'
 - en: When your model fits on a single chip with even a tiny batch size (>240 tokens,
     so as to be compute-bound), **you should always use simple data parallelism.**
     Pure data parallelism splits our activations across any number of TPUs so long
     as the number of TPUs is smaller than our batch size. The forward pass involves
     no communication, but at the end of every step, **each TPU performs an AllReduce
     on its local gradients to synchronize them before updating the parameters.**
+  id: totrans-57
   prefs: []
   type: TYPE_NORMAL
+  zh: 当你的模型即使是在很小的批量大小（>240个标记，以便成为计算限制）下也能适应单个芯片时，**你应该始终使用简单的数据并行性。** 纯数据并行性将我们的激活分散到任意数量的
+    TPUs 上，只要 TPUs 的数量小于我们的批量大小。正向传播不涉及任何通信，但在每一步结束时，**每个 TPU 都对其局部梯度执行 AllReduce
+    操作以同步它们，然后更新参数。**
 - en: <picture>![](../Images/247da543cfe97f68f5b1d235460884aa.png)</picture>
+  id: totrans-58
   prefs: []
   type: TYPE_NORMAL
+  zh: <picture>![](../Images/247da543cfe97f68f5b1d235460884aa.png)</picture>
 - en: '**Figure:** a diagram of pure data parallelism (forward pass). Our activations
     (left) are fully sharded along the batch dimension and our weights are fully replicated,
     so each TPU has an identical copy of the weights. This means the total memory
     of our weights is increased by a factor of N, but no communication is required
     on the forward-pass.'
+  id: totrans-59
   prefs: []
   type: TYPE_NORMAL
+  zh: '**图：** 纯数据并行性的示意图（正向传播）。我们的激活（左侧）在批量维度上完全分片，我们的权重完全复制，因此每个 TPU 都有一个权重的相同副本。这意味着我们的权重总内存增加了
+    N 倍，但在正向传播中不需要通信。'
 - en: <details><summary>Here’s the full algorithm for the forward and backwards pass.
     We abuse notation to write dL/dOut as dOut, purely for compactness.</summary>
+  id: totrans-60
   prefs: []
   type: TYPE_NORMAL
+  zh: <details><summary>这里是正向和反向传播的完整算法。我们滥用符号，将 dL/dOut 写作 dOut，纯粹是为了简洁。</summary>
 - en: '**Pure Data Parallelism Algorithm:**'
+  id: totrans-61
   prefs: []
   type: TYPE_NORMAL
+  zh: '**纯数据并行性算法：**'
 - en: '**Forward pass:** need to compute Loss[B[X]]'
+  id: totrans-62
   prefs: []
   type: TYPE_NORMAL
+  zh: '**正向传播：** 需要计算 Loss[B[X]]'
 - en: Tmp[B[X], F] = In[B[X], D] *[D] W[in][D, F]
+  id: totrans-63
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: Tmp[B[X], F] = In[B[X], D] *[D] W[in][D, F]
 - en: Out[B[X], D] = Tmp[B[X], F] *[F] W[out][F, D]
+  id: totrans-64
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: Out[B[X], D] = Tmp[B[X], F] *[F] W[out][F, D]
 - en: Loss[B[X]] = …
+  id: totrans-65
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: Loss[B[X]] = …
 - en: '**Backward pass:** need to compute dW[out][F, D], dW[in][D, F]'
+  id: totrans-66
   prefs: []
   type: TYPE_NORMAL
+  zh: '**反向传播**：需要计算 dW[out][F, D]，dW[in][D, F]'
 - en: dOut[B[X], D] = …
+  id: totrans-67
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: dOut[B[X], D] = …
 - en: dW[out][F, D] {U[X]} = Tmp[B[X], F] *[B] dOut[B[X], D]
+  id: totrans-68
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: dW[out][F, D] {U[X]} = Tmp[B[X], F] *[B] dOut[B[X], D]
 - en: dW[out][F, D] = **AllReduce**(dW[out][F, D] {U[X]}) (*not on critical path,
     can be done async*)
+  id: totrans-69
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: dW[out][F, D] = **AllReduce**(dW[out][F, D] {U[X]}) (*不在关键路径上，可以异步执行*)
 - en: dTmp[B[X], F] = dOut[B[X], D] *[D] W[out][F, D]
+  id: totrans-70
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: dTmp[B[X], F] = dOut[B[X], D] *[D] W[out][F, D]
 - en: dW[in][D, F] {U[X]} = In[B[X], D] *[B] dTmp[B[X], F]
+  id: totrans-71
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: dW[in][D, F] {U[X]} = In[B[X], D] *[B] dTmp[B[X], F]
 - en: dW[in][D, F] = **AllReduce**(dW[in][D, F] {U[X]}) (*not on critical path, can
     be done async*)
+  id: totrans-72
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: dW[in][D, F] = **AllReduce**(dW[in][D, F] {U[X]}) (*不在关键路径上，可以异步执行*)
 - en: dIn[B[X], D] = dTmp[B[X], F] *[F] W[in][D, F] (*needed for previous layers*)
+  id: totrans-73
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: dIn[B[X], D] = dTmp[B[X], F] *[F] W[in][D, F] (*用于前一层*)
 - en: We ignore the details of the loss function and abbreviate $\text{Tmp} = W_\text{in}
     \cdot \text{In}$. Note that, although our final loss is the average **AllReduce**(Loss[B[X]]),
     we only need to compute the AllReduce on the backward pass when averaging weight
     gradients.</details>
+  id: totrans-74
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们忽略损失函数的细节，并简写 $\text{Tmp} = W_\text{in} \cdot \text{In}$。注意，尽管我们的最终损失是平均 **AllReduce**(Loss[B[X]]),
+    我们只需要在反向传播时计算平均权重梯度时的AllReduce。</details>
 - en: Note that the forward pass has no communication — **it’s all in the backward
     pass**! The backward pass also has the great property that the AllReduces aren’t
     in the “critical path”, meaning that each AllReduce can be performed whenever
@@ -325,15 +495,20 @@
     overall communication cost *can still bottleneck us* if it exceeds our total compute
     cost, but it is much more forgiving from an implementation standpoint. We’ll see
     that model/tensor parallelism doesn’t have this property.
+  id: totrans-75
   prefs: []
   type: TYPE_NORMAL
+  zh: 注意，正向传播没有通信——**所有操作都在反向传播中完成**！反向传播还有一个很好的特性，即AllReduce不在“关键路径”上，这意味着每个AllReduce都可以在方便的时候执行，不会阻止你执行后续操作。如果通信成本超过我们的总计算成本，整体通信成本
+    *仍然可能成为瓶颈*，但从实现的角度来看，它要宽容得多。我们将看到模型/张量并行没有这个特性。
 - en: '**Why do this?** Pure data parallelism reduces activation memory pressure by
     splitting our activations over the batch dimension, allowing us to almost arbitrarily
     increase batch size as long as we have more chips to split the batch dimension
     over. Especially during training when our activations often dominate our memory
     usage, this is very helpful.'
+  id: totrans-76
   prefs: []
   type: TYPE_NORMAL
+  zh: '**为什么这样做？** 纯数据并行通过将我们的激活分布在批量维度上，减少了激活内存压力，使我们能够几乎任意地增加批量大小，只要我们有更多的芯片来分割批量维度。特别是在训练期间，我们的激活往往占主导地位，这非常有帮助。'
 - en: '**Why not do this?** Pure data parallelism does nothing to reduce memory pressure
     from model parameters or optimizer states, which means pure data parallelism is
     rarely useful for interesting models at scale where our parameters + optimizer
@@ -343,24 +518,34 @@
     optimizer state is in float32, this gives us `2 + 8 = 10` bytes per parameters.</d-footnote>,
     the largest model we can fit has \(\text{TPU memory} / 10\) parameters, so e.g.
     on a TPUv5p chip with 96GB of HBM and pure data parallelism this is about 9B parameters.'
+  id: totrans-77
   prefs: []
   type: TYPE_NORMAL
+  zh: '**为什么不这样做？** 纯数据并行对减少模型参数或优化器状态带来的内存压力没有作用，这意味着纯数据并行对于有趣的大规模模型很少有用，在这些模型中，我们的参数加优化器状态不适合单个TPU。为了有一个规模感，如果我们用bf16参数和Adam优化器状态（fp32）进行训练<d-footnote>Adam存储参数，一阶和二阶累加器。由于参数在bfloat16中，优化器状态在float32中，这给我们每个参数`2
+    + 8 = 10`字节。</d-footnote>，我们可以适应的最大模型有 \(\text{TPU memory} / 10\) 个参数，例如，在一个TPUv5p芯片上，有96GB的HBM和纯数据并行，这大约是9B个参数。'
 - en: '**Takeaway**: the largest model we can train with Adam and pure data parallelism
     has \(\text{num_params} = \text{HBM per device} / 10\). For TPU v5p this is roughly
     9B parameters.<d-footnote>Note that this doesn''t include gradient checkpoints,
     so this wouldn''t actually be useful. This is an absolute lower bound with a batch
     of 1 token.</d-footnote>'
+  id: totrans-78
   prefs: []
   type: TYPE_NORMAL
+  zh: '**要点**：我们可以用Adam和纯数据并行训练的最大模型是 \(\text{num_params} = \text{HBM per device}
+    / 10\)。对于TPU v5p，这大约是9B个参数。<d-footnote>注意，这不包括梯度检查点，所以这实际上并不实用。这是一个绝对的下限，批量大小为1个标记。</d-footnote>'
 - en: '*To make this useful for real models during training, we’ll need to at least
     partly shard the model parameters or optimizer.*'
+  id: totrans-79
   prefs: []
   type: TYPE_NORMAL
+  zh: '*为了使这在对真实模型进行训练时有用，我们至少需要部分地分割模型参数或优化器.*'
 - en: '**When do we become bottlenecked by communication?** As we can see above, we
     have two AllReduces per layer, each of size \(2DF\) (for bf16 weights). When does
     data parallelism make us communication bound?'
+  id: totrans-80
   prefs: []
   type: TYPE_NORMAL
+  zh: '**何时我们成为通信瓶颈？** 如上所示，每层有两个AllReduce，每个大小为$2DF$（对于bf16权重）。何时数据并行使我们成为通信瓶颈？'
 - en: As in the table above, let $C$ = per-chip FLOPs, $W_{\text{ici}}$ = **bidirectional**
     network bandwidth, and $X$ = number of shards across which the batch is partitioned<d-footnote>We
     assume this partitioning is done over an ICI mesh, so the relevant network bandwidth
@@ -368,8 +553,10 @@
     relevant matmuls, \(T_\text{math}\), and the required communication time \(T_\text{comms}\).
     Since this parallelism scheme requires no communication in the forward pass, we
     only need to calculate these quantities for the backwards pass.
+  id: totrans-81
   prefs: []
   type: TYPE_NORMAL
+  zh: 如上表所示，设 $C$ = 每片芯片的FLOPs，$W_{\text{ici}}$ = **双向**网络带宽，$X$ = 批量划分的碎片数量<脚注>我们假设这种划分是在ICI网格上进行的，因此相关的网络带宽是$W_\text{ici}$</脚注>。让我们计算执行相关矩阵乘法所需的时间$T_\text{math}$和所需的通信时间$T_\text{comms}$。由于这种并行方案在正向传递中不需要通信，我们只需计算反向传递中的这些量。
 - en: '*Communication time:* From a previous section we know that the time required
     to perform an AllReduce in a 1D mesh depends only on the total bytes of the array
     being AllReduced and the ICI bandwidth $W_\text{ici}$; specifically the AllReduce
@@ -378,35 +565,56 @@
     AllReduce is for a weight matrix, i.e. an array of $DF$ parameters, or $2DF$ bytes.
     Putting this all together, the total time for the AllReduce in a single layer
     is'
+  id: totrans-82
   prefs: []
   type: TYPE_NORMAL
+  zh: '*通信时间:* 从前面的部分我们知道，在1D网格中执行AllReduce所需的时间只取决于要执行AllReduce的数组的总字节数和ICI带宽$W_\text{ici}$；具体来说，AllReduce时间是$2
+    \cdot \text{total bytes} / W_\text{ici}$。由于我们需要对$W_\text{in}$和$W_\text{out}$都进行AllReduce，因此每层有2个AllReduce。每个AllReduce都是一个权重矩阵，即$DF$个参数的数组，或$2DF$字节。将这些全部加起来，单个层中AllReduce的总时间是'
 - en: \[\begin{align} T_\text{comms} &= \frac{2 \cdot 2 \cdot 2 \cdot D \cdot F}{W_\text{ici}}.
     \\ \end{align}\]
+  id: totrans-83
   prefs: []
   type: TYPE_NORMAL
+  zh: \[\begin{align} T_\text{comms} &= \frac{2 \cdot 2 \cdot 2 \cdot D \cdot F}{W_\text{ici}}.
+    \\ \end{align}\]
 - en: '*Matmul time:* Each layer comprises two matmuls in the forward pass, or four
     matmuls in the backwards pass, each of which requires $2(B/X)DF$ FLOPs. Thus,
     for a single layer in the backward pass, we have'
+  id: totrans-84
   prefs: []
   type: TYPE_NORMAL
+  zh: '*矩阵乘法时间:* 每层在正向传递中包含两个矩阵乘法，或者在反向传递中包含四个矩阵乘法，每个矩阵乘法都需要$2(B/X)DF$ FLOPs。因此，对于反向传递中的单个层，我们有'
 - en: \[\begin{align} T_\text{math} &= \frac{2 \cdot 2 \cdot 2 \cdot B \cdot D \cdot
     F}{X \cdot C} \\ \end{align}\]
+  id: totrans-85
   prefs: []
   type: TYPE_NORMAL
+  zh: \[\begin{align} T_\text{math} &= \frac{2 \cdot 2 \cdot 2 \cdot B \cdot D \cdot
+    F}{X \cdot C} \\ \end{align}\]
 - en: 'Since we overlap, the total time per layer is the max of these two quantities:'
+  id: totrans-86
   prefs: []
   type: TYPE_NORMAL
+  zh: 由于我们重叠，每层的总时间是这两个量中的最大值：
 - en: \[\begin{aligned} T &\approx \max(\frac{8 \cdot B \cdot D \cdot F}{X \cdot C},
     \frac{8 \cdot D \cdot F}{W_\text{ici}}) \\ T &\approx 8 \cdot D \cdot F \cdot
     \max(\frac{B}{X \cdot C}, \frac{1}{W_\text{ici}}) \end{aligned}\]
+  id: totrans-87
   prefs: []
   type: TYPE_NORMAL
+  zh: \[\begin{aligned} T &\approx \max(\frac{8 \cdot B \cdot D \cdot F}{X \cdot C},
+    \frac{8 \cdot D \cdot F}{W_\text{ici}}) \\ T &\approx 8 \cdot D \cdot F \cdot
+    \max(\frac{B}{X \cdot C}, \frac{1}{W_\text{ici}}) \end{aligned}\]
 - en: We become compute-bound when \(T_\text{math}/T_\text{comms} > 1\), or when
+  id: totrans-88
   prefs: []
   type: TYPE_NORMAL
+  zh: 当$T_\text{math}/T_\text{comms} > 1$时，或者当
 - en: \[\begin{align} \frac{B}{X} > \frac{C}{W_\text{ici}}. \end{align}\]
+  id: totrans-89
   prefs: []
   type: TYPE_NORMAL
+  zh: \[\begin{align} \frac{B}{X} > \frac{C}{W_\text{ici}}. \end{align}\]
 - en: The upshot is that, to remain compute-bound with data parallelism, we need the
     per-device batch size \(B / X\) to exceed the ICI operational intensity, $C /
     W_\text{ici}$. This is ultimately a consequence of the fact that the computation
@@ -416,8 +624,12 @@
     $B > 240$; in that case as well, the rule came from the fact that computation
     time scaled with batch size while data-transfer size was (in the $B \ll F, D$
     regime) independent of batch size.
+  id: totrans-90
   prefs: []
   type: TYPE_NORMAL
+  zh: 结果是，为了在数据并行的情况下保持计算密集型，我们需要每个设备的批量大小$B / X$超过ICI的操作强度$C / W_\text{ici}$。这最终是这样一个事实的结果，即计算时间与每个设备的批量大小成比例，而通信时间与这个量无关（因为我们正在传输模型权重）。注意$B
+    > C/W_\text{ici}$条件与单设备计算密集型规则$B > 240$的相似性；在那样的情况下，规则来自计算时间与批量大小成比例，而数据传输大小（在$B
+    \ll F, D$范围内）与批量大小无关。
 - en: Let’s put in some real numbers to get a sense of scale. For TPUv5p, `C=4.6e14`
     and `W=2 * 9e10` for 1D data parallelism over ICI, so **our batch size per chip
     must be at least 2,550 to avoid being communication-bound**. Since we can do data
@@ -425,8 +637,12 @@
     to pure data parallelism, we 3x our bandwidth $W_\text{ici}$ and can scale down
     to only BS=850 per TPU or 7.6M tokens per batch per pod (of 8960 chips)! **This
     tells us that it’s fairly hard to become bottlenecked by pure data parallelism!**
+  id: totrans-91
   prefs: []
   type: TYPE_NORMAL
+  zh: 让我们用一些实际数字来感受一下规模。对于 TPUv5p，1D 数据并行在 ICI 上 `C=4.6e14` 和 `W=2 * 9e10`，因此**我们的每个芯片的批处理大小至少必须是
+    2,550，以避免成为通信瓶颈**。由于我们可以在多个轴上进行数据并行，如果我们将 TPUv5p pod 的所有三个轴都用于纯数据并行，我们将带宽 $W_\text{ici}$
+    增加 3 倍，并且可以将批处理大小降低到每个 TPU 850 或每个 pod（8960 个芯片）7.6M 个标记！**这告诉我们，很难仅通过纯数据并行成为瓶颈！**
 - en: '**Note [context parallelism]:** Throughout this section, $B$ always refers
     to the total batch size **in tokens**. Clearly, however, our batch is made up
     of many different sequences, so how does this work? As far as the MLP is concerned,
@@ -439,131 +655,191 @@
     overlapping FLOPs and comms (typically using something called “ring attention”).
     Throughout this section, we will just ignore our sequence dimension entirely and
     assume some amount of batch or sequence parallelism.'
+  id: totrans-92
   prefs: []
   type: TYPE_NORMAL
+  zh: '**关于上下文并行[注解]：** 在本节中，$B$ 总是指总批处理大小**在标记中**。显然，然而，我们的批处理由许多不同的序列组成，那么这是如何工作的呢？就
+    MLP 而言，**标记就是标记**！它们属于同一序列还是两个不同的序列无关紧要。因此，我们可以在批处理和序列维度上自由地进行数据并行：我们称之为上下文并行或序列并行，但你可以将其视为另一种数据并行。注意，由于我们在序列间进行一些计算，所以它比
+    MLP 更复杂，但这可以通过在注意期间收集 KVs 或 Qs 并仔细重叠 FLOPs 和 comms（通常使用所谓的“环形注意”）来处理。在本节中，我们将完全忽略序列维度，并假设一定量的批处理或序列并行。'
 - en: '**Note on multiple mesh axes:** We should quickly note how multiple axes affects
     the available bandwidth. When we use multiple mesh axes for a given parallelism
     strategy, we get more bandwidth.'
+  id: totrans-93
   prefs: []
   type: TYPE_NORMAL
+  zh: '**关于多个网格轴的注解：** 我们应该迅速指出多个轴如何影响可用带宽。当我们为给定的并行策略使用多个网格轴时，我们获得更多的带宽。'
 - en: '**Definition:** $M_X$ ($M_Y$, $M_Z$, etc.) is the number of hardware mesh axes
     that a given parallelism strategy spans.'
+  id: totrans-94
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**定义：** $M_X$ ($M_Y$, $M_Z$, 等.) 是一个给定的并行策略跨越的硬件网格轴的数量。'
 - en: '**Effect (bandwidth-bound):** Using $M$ axes provides ($\approx M$ times) aggregate
     link bandwidth, so collective time scales $\propto 1/M_X$.'
+  id: totrans-95
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**效果（带宽限制）：** 使用 $M$ 个轴提供了（约 $M$ 倍）的总链路带宽，因此集体时间与 $1/M_X$ 成正比。'
 - en: Fully-Sharded Data Parallelism (FSDP)
+  id: totrans-96
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 完全分片数据并行（FSDP）
 - en: '**Syntax:** \(\text{In}[B_X, D] \cdot_D W_\text{in}[D_X, F] \cdot_F W_\text{out}[F,
     D_X] \rightarrow \text{Out}[B_X, D]\)'
+  id: totrans-97
   prefs: []
   type: TYPE_NORMAL
+  zh: '**语法：** \(\text{In}[B_X, D] \cdot_D W_\text{in}[D_X, F] \cdot_F W_\text{out}[F,
+    D_X] \rightarrow \text{Out}[B_X, D]\)'
 - en: Fully-sharded data parallelism (often called FSDP or ZeRO-sharding<d-cite key="zero">)
     splits the model optimizer states and weights across the data parallel shards
     and efficiently gathers and scatters them as needed. **Compared to pure data parallelism,
     FSDP drastically reduces per-device memory usage and saves on backward pass FLOPs,
     with very minimal overhead.**</d-cite>
+  id: totrans-98
   prefs: []
   type: TYPE_NORMAL
+  zh: 完全分片数据并行（通常称为 FSDP 或 ZeRO 分片<sup><a id="zero" href="#zero">[1]</a></sup>）将模型优化器状态和权重分散到数据并行分片中，并按需高效地收集和分散它们。**与纯数据并行相比，FSDP
+    大幅减少了每个设备的内存使用，并在反向传播 FLOPs 上节省了资源，同时开销非常小。**
 - en: <picture>![](../Images/e44a47f82a0383bcf21a4dd457f88466.png)</picture>
+  id: totrans-99
   prefs: []
   type: TYPE_NORMAL
+  zh: <picture>![](../Images/e44a47f82a0383bcf21a4dd457f88466.png)</picture>
 - en: '**Figure:** FSDP shards the contracting dimension of Win and the output dimension
     of Wout along the data dimension. This reduces memory but (from Section 3) requires
     us to gather the weights for W before we perform the matmul. Note that the activations
     (left) <it>are not sharded along the contracting dimension</it>, which is what
     forces us to gather. **Note that our weight optimizer state is likewise sharded
     along the contracting dimension.**'
+  id: totrans-100
   prefs: []
   type: TYPE_NORMAL
+  zh: '**图：**FSDP沿着数据维度分片Win的收缩维度和Wout的输出维度。这减少了内存需求，但（从第3节）要求我们在执行矩阵乘法之前收集W的权重。请注意，激活（左侧）<it>不是沿着收缩维度分片</it>，这正是我们进行收集的原因。**注意，我们的权重优化器状态同样沿着收缩维度进行分片。**'
 - en: You’ll remember (from [Section 3](../sharding)) that an AllReduce can be decomposed
     into an AllGather and a ReduceScatter. This means that, instead of doing the full
     gradient AllReduce for standard data parallelism, we can shard the weights and
     optimizer states across chips, AllGather them at each layer during the forward
     pass and ReduceScatter across the weights during the backward pass at no extra
     cost.
+  id: totrans-101
   prefs: []
   type: TYPE_NORMAL
+  zh: 你会记得（从[第3节](../sharding)），AllReduce可以被分解为AllGather和ReduceScatter。这意味着，对于标准数据并行，我们不需要对全量梯度进行全量AllReduce，而可以在芯片间分片权重和优化器状态，在正向传播的每一层进行AllGather，在反向传播时无需额外成本地对权重进行ReduceScatter。
 - en: <details><summary>Here’s the full algorithm for FSDP.</summary>
+  id: totrans-102
   prefs: []
   type: TYPE_NORMAL
+  zh: <details><summary>这里是FSDP的完整算法。</summary>
 - en: '**Fully-Sharded Data Parallelism (FSDP):**'
+  id: totrans-103
   prefs: []
   type: TYPE_NORMAL
+  zh: '**全分片数据并行（FSDP）：**'
 - en: '**Forward pass:** need to compute Loss[B[X]]'
+  id: totrans-104
   prefs: []
   type: TYPE_NORMAL
+  zh: '**正向传播：**需要计算Loss[B[X]]'
 - en: W[in][D, F] = **AllGather**(W[in][D[X], F]) (*not on critical path, can do it
     during previous layer*)
+  id: totrans-105
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: W[in][D, F] = **AllGather**(W[in][D[X], F]) (*不在关键路径上，可以在前一层进行*)
 - en: Tmp[B[X], F] = In[B[X], D] *[D] W[in][D, F] (*can throw away W[in][D, F] now*)
+  id: totrans-106
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: Tmp[B[X], F] = In[B[X], D] *[D] W[in][D, F] (*现在可以丢弃W[in][D, F]了*)
 - en: W[out][F, D] = **AllGather**(W[out][F, D[X]]) (*not on critical path, can do
     it during previous layer*)
+  id: totrans-107
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: W[out][F, D] = **AllGather**(W[out][F, D[X]]) (*不在关键路径上，可以在前一层进行*)
 - en: Out[B[X], D] = Tmp[B[X], F] *[F] W[out][F, D]
+  id: totrans-108
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: Out[B[X], D] = Tmp[B[X], F] *[F] W[out][F, D]
 - en: Loss[B[X]] = …
+  id: totrans-109
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: Loss[B[X]] = …
 - en: '**Backward pass:** need to compute dW[out][F, D[X]], dW[in][D[X], F]'
+  id: totrans-110
   prefs: []
   type: TYPE_NORMAL
+  zh: '**反向传播：**需要计算dW[out][F, D[X]], dW[in][D[X], F]'
 - en: dOut[B[X], D] = …
+  id: totrans-111
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: dOut[B[X], D] = …
 - en: dW[out][F, D] {U[X]} = Tmp[B[X], F] *[B] dOut[B[X], D]
+  id: totrans-112
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: dW[out][F, D] {U[X]} = Tmp[B[X], F] *[B] dOut[B[X], D]
 - en: dW[out][F, D[X]] = **ReduceScatter**(dW[out][F, D] {U[X]}) (*not on critical
     path, can be done async*)
+  id: totrans-113
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: dW[out][F, D[X]] = **ReduceScatter**(dW[out][F, D] {U[X]}) (*不在关键路径上，可以异步进行*)
 - en: W[out][F, D] = **AllGather**(W[out][F, D[X]]) (*can be done ahead of time*)
+  id: totrans-114
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: W[out][F, D] = **AllGather**(W[out][F, D[X]]) (*可以提前进行*)
 - en: dTmp[B[X], F] = dOut[B[X], D] *[D] W[out][F, D] *(can throw away W[out][F, D]
     here)*
+  id: totrans-115
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 'dTmp[B[X], F] = dOut[B[X], D] *[D] W[out][F, D] *(这里可以丢弃W[out][F, D]*) '
 - en: dW[in][D,F] {U[X]} = dTmp[B[X], F] *[B] In[B[X], D]
+  id: totrans-116
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: dW[in][D,F] {U[X]} = dTmp[B[X], F] *[B] In[B[X], D]
 - en: dW[in][D[X], F] = **ReduceScatter**(dW[in][D, F] {U[X]}) *(not on critical path,
     can be done async)*
+  id: totrans-117
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: dW[in][D[X], F] = **ReduceScatter**(dW[in][D, F] {U[X]}) *(不在关键路径上，可以异步进行)*
 - en: W[in][D, F] = **AllGather**(W[in][D[X], F]) (*can be done ahead of time*)
+  id: totrans-118
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: W[in][D, F] = **AllGather**(W[in][D[X], F]) (*可以提前进行*)
 - en: dIn[B[X], D] = dTmp[B[X], F] *[F] W[in][D, F] (*needed for previous layers)
     (can throw away W[in][D, F] here*)</details>
+  id: totrans-119
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: dIn[B[X], D] = dTmp[B[X], F] *[F] W[in][D, F] (*用于前一层的计算) (这里可以丢弃W[in][D, F]*)</details>
 - en: This is also called “ZeRO Sharding”, from “ZeRo Overhead sharding” since we
     don’t perform any unnecessary compute or store any unnecessary state. ZeRO-{1,2,3}
     are used to refer to sharding the optimizer states, gradients, and weights in
@@ -574,8 +850,10 @@
     into an AllGather and a ReduceScatter, which have the same total comms volume.</d-footnote>,
     we can basically always do ZeRO-3 sharding, which shards the parameters, gradients,
     and optimizer states across a set of devices.
+  id: totrans-120
   prefs: []
   type: TYPE_NORMAL
+  zh: 这也被称为“ZeRO Sharding”，来源于“ZeRo Overhead sharding”，因为我们不执行任何不必要的计算或存储任何不必要的状态。ZeRO-{1,2,3}分别用来指代以这种方式对优化器状态、梯度和权重进行分片。由于所有这些都具有相同的通信成本<footnote>技术上，FSDP在正向传播中增加了纯DP没有的通信，但这与反向传播的比例相同，因此它应该不会对通信上限产生影响。关键在于ZeRO-3将反向传播的全量AllReduce转换为AllGather和ReduceScatter，它们的总通信量相同。</footnote>，我们基本上总是可以进行ZeRO-3分片，将参数、梯度和优化器状态跨设备分片。
 - en: '**Why would we do this?** Standard data parallelism involves a lot of duplicated
     work. Each TPU AllReduces the full gradient, then updates the full optimizer state
     (identical work on all TPUs), then updates the parameters (again, fully duplicated).
@@ -583,23 +861,37 @@
     you can ReduceScatter the gradients, update only your shard of the optimizer state,
     update a shard of the parameters, then AllGather the parameters as needed for
     your forward pass.'
+  id: totrans-121
   prefs: []
   type: TYPE_NORMAL
+  zh: '**我们为什么要这样做呢？** 标准数据并行涉及大量的重复工作。每个 TPU AllReduce 都会计算完整的梯度，然后更新完整的优化器状态（所有
+    TPUs 上相同的工作），然后更新参数（再次，完全重复）。对于 ZeRO 分片（梯度/优化器状态的分片），你可以使用 ReduceScatter 替代 AllReduce，只更新你的优化器状态分片，更新参数的一个分片，然后根据需要
+    AllGather 参数以进行正向传递。'
 - en: '**When do we become bottlenecked by communication?** Our relative FLOPs and
     comms costs are exactly the same as pure data parallelism, since each AllReduce
     in the backward pass has become an AllGather + ReduceScatter. Recall that an AllReduce
     is implemented as an AllGather and a ReduceScatter, each with half the cost. Here
     we model the forward pass since it has the same FLOPs-to-comms ratio as the backward
     pass:'
+  id: totrans-122
   prefs: []
   type: TYPE_NORMAL
+  zh: '**我们何时会因通信而成为瓶颈？** 由于反向传递中的每个 AllReduce 都变成了 AllGather + ReduceScatter，我们的相对
+    FLOPs 和通信成本与纯数据并行完全相同。回想一下，AllReduce 是通过 AllGather 和 ReduceScatter 实现的，每个都具有一半的成本。这里我们模拟正向传递，因为它具有与反向传递相同的
+    FLOPs 到通信的比率：'
 - en: \[\begin{aligned} T_\text{math} &= \frac{2 \cdot 2 \cdot B \cdot D \cdot F}{X
     \cdot C} \\ T_\text{comms} &= \frac{2 \cdot 2 \cdot D \cdot F}{W_\text{ici}} \\
     T &\approx \max\left(\frac{4 \cdot B \cdot D \cdot F}{X \cdot C}, \frac{4 \cdot
     D \cdot F}{W_\text{ici}}\right) \\ T &\approx 4 \cdot D \cdot F \cdot \max\left(\frac{B}{X
     \cdot C}, \frac{1}{W_\text{ici}}\right) \end{aligned}\]
+  id: totrans-123
   prefs: []
   type: TYPE_NORMAL
+  zh: \[\begin{aligned} T_\text{math} &= \frac{2 \cdot 2 \cdot B \cdot D \cdot F}{X
+    \cdot C} \\ T_\text{comms} &= \frac{2 \cdot 2 \cdot D \cdot F}{W_\text{ici}} \\
+    T &\approx \max\left(\frac{4 \cdot B \cdot D \cdot F}{X \cdot C}, \frac{4 \cdot
+    D \cdot F}{W_\text{ici}}\right) \\ T &\approx 4 \cdot D \cdot F \cdot \max\left(\frac{B}{X
+    \cdot C}, \frac{1}{W_\text{ici}}\right) \end{aligned}\]
 - en: Therefore, as with pure data-parallelism, we are compute bound when \(B / X
     > C / W_\text{ici}\), i.e. when the per-device batch size $B/X$ exceeds the “ICI
     operational intensity” $C/W_\text{ici}$ (`4.59e14 / 1.8e11 = 2550` for v5p). This
@@ -609,26 +901,39 @@
     amount of parameter and optimizer state memory! Though we did have to add communication
     to the forward pass, this cost is immaterial since it just overlaps with forward-pass
     FLOPs.
+  id: totrans-124
   prefs: []
   type: TYPE_NORMAL
+  zh: 因此，与纯数据并行一样，当 \(B / X > C / W_\text{ici}\) 时，即当每个设备的批量大小 $B/X$ 超过“ICI操作强度” $C/W_\text{ici}$（v5p
+    为 `4.59e14 / 1.8e11 = 2550`）时，我们处于计算限制状态。这对我们来说是个好消息，因为这意味着如果我们的每个设备的批量大小足够大，以至于纯数据并行处于计算限制状态，我们就可以——无需担心离开计算限制状态——简单地升级到
+    FSDP，从而节省大量的参数和优化器状态内存！尽管我们确实需要在正向传递中添加通信，但这种成本微不足道，因为它只是与正向传递的 FLOPs 重叠。
 - en: '**Takeaway:** Both FSDP and pure Data Parallelism become bandwidth bound on
     TPUv5 when the batch size per device is less than $2550 / M_X$, where $M_X$ is
     the number of mesh axes.'
+  id: totrans-125
   prefs: []
   type: TYPE_NORMAL
+  zh: '**总结：** 当每个设备的批量大小小于 $2550 / M_X$，其中 $M_X$ 是网格轴的数量时，FSDP 和纯数据并行在 TPUv5 上都会受到带宽限制。'
 - en: For example, DeepSeek-V2 (one of the only recent strong model to release information
     about its training batch size) used a batch size of ~40M tokens. **This would
     allow us to scale to roughly 47,000 chips, or around 5 TPUv5 pods, before we hit
     a bandwidth limit.**
+  id: totrans-126
   prefs: []
   type: TYPE_NORMAL
+  zh: 例如，DeepSeek-V2（最近唯一发布其训练批量大小信息的强大模型之一）使用了大约 ~40M 个标记的批量大小。**这将使我们能够扩展到大约 47,000
+    个芯片，或者大约 5 个 TPUv5 pod，在达到带宽限制之前。**
 - en: For LLaMA-3 70B, which was trained for approximately `6.3e24 (15e12 * 70e9 *
     6)` FLOPs, we could split a batch of 16M tokens over roughly `16e6 / (2550 / 3)
     = 18,823` chips (roughly 2 pods of 8960 chips), each with `4.59e14` FLOPs running
     at 50% peak FLOPs utilization (often called MFU), and **train it in approximately
     17 days**. Not bad! But let’s explore how we can do better.
+  id: totrans-127
   prefs: []
   type: TYPE_NORMAL
+  zh: 对于训练了大约 `6.3e24 (15e12 * 70e9 * 6)` FLOPs 的 LLaMA-3 70B，我们可以将 16M 个标记的批量大小分配到大约
+    `16e6 / (2550 / 3) = 18,823` 个芯片上（大约 2 个 pod 的 8960 个芯片），每个芯片有 `4.59e14` FLOPs，以
+    50% 的峰值 FLOPs 利用率运行（通常称为 MFU），**大约在 17 天内完成训练**。还不错！但让我们探索如何做得更好。
 - en: '**Note on critical batch size**: somewhat unintuitively, we become more communication
     bottlenecked as our total batch size decreases (with fixed chip number). Data
     parallelism and FSDP let us scale to arbitrarily many chips so long as we can
@@ -639,552 +944,822 @@
     a fixed batch size, determined by scaling laws, and a known (large) number of
     chips, and then aims to find a partitioning that allows us to fit that small batch
     size on so many chips.'
+  id: totrans-128
   prefs: []
   type: TYPE_NORMAL
+  zh: '**关于关键批次大小的说明**: 有些令人费解的是，随着我们的总批次大小（在芯片数量固定的情况下）减小，我们成为更多通信瓶颈（通信瓶颈）。数据并行和
+    FSDP 让我们能够扩展到任意多的芯片，只要我们能够不断增加我们的批次大小！然而，在实践中，随着批次大小的增加，我们往往会看到训练的回报递减，因为我们的梯度几乎无噪声。我们有时也会看到训练不稳定。因此，在“无限计算环境”中寻找最佳分片方案的博弈通常从一个固定的批次大小开始，这个批次大小由缩放定律确定，并且有一个已知的（大的）芯片数量，然后目标是找到一个分区，使我们能够将这个小批次大小适应这么多芯片。'
 - en: Tensor Parallelism
+  id: totrans-129
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 张量并行
 - en: '**Syntax:** \(\text{In}[B, D_Y] \cdot_D W_\text{in}[D, F_Y] \cdot_F W_\text{out}[F_Y,
     D] \rightarrow \text{Out}[B, D_Y]\) (we use \(Y\) to eventually combine with FSDP)'
+  id: totrans-130
   prefs: []
   type: TYPE_NORMAL
+  zh: '**语法:** \(\text{In}[B, D_Y] \cdot_D W_\text{in}[D, F_Y] \cdot_F W_\text{out}[F_Y,
+    D] \rightarrow \text{Out}[B, D_Y]\) (我们使用 \(Y\) 最终与 FSDP 结合)'
 - en: In a fully-sharded data-parallel AllReduce we move the weights across chips.
     We can also shard the feedforward dimension of the model and move the activations
     during the layer — this is called “1D model parallelism” or Megatron sharding<d-cite
     key="megatron">. This can unlock a smaller efficient batch size per pod. The figure
     below shows an example of a single matrix sharded in this way:</d-cite>
+  id: totrans-131
   prefs: []
   type: TYPE_NORMAL
+  zh: 在完全分片的数据并行 AllReduce 中，我们在芯片之间移动权重。我们还可以分片模型的正向维度，并在层中移动激活——这被称为“1D 模型并行”或 Megatron
+    分片<d-cite key="megatron">。这可以解锁每个 pod 更小的有效批次大小。下面的图示显示了以这种方式分片的单个矩阵的示例：</d-cite>
 - en: <picture>![](../Images/ec57e58fa5deb4d249e2dd3534270041.png)</picture>
+  id: totrans-132
   prefs: []
   type: TYPE_NORMAL
+  zh: <picture>![](../Images/ec57e58fa5deb4d249e2dd3534270041.png)</picture>
 - en: '**Figure:** an example of basic tensor parallelism. Since we''re only sharding
     our activations over Y (unlike in FSDP where we shard over X), we replicate our
     activations over X. Using our standard syntax, this is **A**[B, D[Y]] * **B**[D,
     F[Y]] -> **C**[B, F[Y]]. Because we''re only sharding over one of the contracting
     dimensions, we typically AllGather the activations **A** before the matmul.'
+  id: totrans-133
   prefs: []
   type: TYPE_NORMAL
+  zh: '**图示:** 基本张量并行的示例。由于我们只是在 Y 上分片我们的激活（与 FSDP 中的 X 分片不同），我们在 X 上复制我们的激活。使用我们的标准语法，这是
+    **A**[B, D[Y]] * **B**[D, F[Y]] -> **C**[B, F[Y]]。因为我们只在一个收缩维度上分片，所以我们通常在矩阵乘法之前
+    AllGather 激活 **A**。'
 - en: As noted, **In[B, D[Y]] *[D] W[in][D, F[Y]] *[F] W[out][F[Y], D] -> Out[B, D[Y]]
     means we have to gather our activations before the first matmul. This is cheaper
     than ZeRO sharding when the activations are smaller than the weights.** This is
     typically true only with some amount of ZeRO sharding added (which reduces the
     size of the gather). This is one of the reasons we tend to mix ZeRO sharding and
     tensor parallelism.
+  id: totrans-134
   prefs: []
   type: TYPE_NORMAL
+  zh: 如前所述，**In[B, D[Y]] *[D] W[in][D, F[Y]] *[F] W[out][F[Y], D] -> Out[B, D[Y]]
+    表示我们必须在第一次矩阵乘法之前收集我们的激活。当激活小于权重时，这比 ZeRO 分片更便宜。** 这通常只在添加了一定数量的 ZeRO 分片（这减少了收集的大小）时才成立。这是我们倾向于混合
+    ZeRO 分片和张量并行的原因之一。
 - en: <details><summary>Here’s the algorithm for tensor parallelism!</summary>
+  id: totrans-135
   prefs: []
   type: TYPE_NORMAL
+  zh: <details><summary>以下是张量并行的算法！</summary>
 - en: '**Tensor Parallelism:**'
+  id: totrans-136
   prefs: []
   type: TYPE_NORMAL
+  zh: '**张量并行:**'
 - en: '**Forward pass:** need to compute Loss[B]'
+  id: totrans-137
   prefs: []
   type: TYPE_NORMAL
+  zh: '**正向传播:** 需要计算 Loss[B]'
 - en: In[B, D] = **AllGather**(In[B, D[Y]]) *(on critical path)*
+  id: totrans-138
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: In[B, D] = **AllGather**(In[B, D[Y]]) *(在关键路径上)*
 - en: Tmp[B, F[Y]] = In[B, D] *[D] W[in][D, F[Y]] *(not sharded along contracting,
     so no comms)*
+  id: totrans-139
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: Tmp[B, F[Y]] = In[B, D] *[D] W[in][D, F[Y]] *(在收缩方向上未分片，因此没有通信)*
 - en: Out[B, D] {U[Y]} = Tmp[B, F[Y]] *[F] W[out][F[Y], D]
+  id: totrans-140
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: Out[B, D] {U[Y]} = Tmp[B, F[Y]] *[F] W[out][F[Y], D]
 - en: Out[B, D[Y]] = **ReduceScatter**(Out[B, D] {U[Y]}) *(on critical path)*
+  id: totrans-141
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: Out[B, D[Y]] = **ReduceScatter**(Out[B, D] {U[Y]}) *(在关键路径上)*
 - en: Loss[B] = …
+  id: totrans-142
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: Loss[B] = …
 - en: '**Backward pass:** need to compute dW[out][F[Y], D], dW[in][D, F[Y]]'
+  id: totrans-143
   prefs: []
   type: TYPE_NORMAL
+  zh: '**反向传播:** 需要计算 dW[out][F[Y], D], dW[in][D, F[Y]]'
 - en: dOut[B, D[Y]] = …
+  id: totrans-144
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: dOut[B, D[Y]] = …
 - en: dOut[B, D] = **AllGather**(dOut[B, D[Y]]) *(on critical path)*
+  id: totrans-145
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: dOut[B, D] = **AllGather**(dOut[B, D[Y]]) *(在关键路径上)*
 - en: dW[out][F[Y], D] = Tmp[B, F[Y]] *[B] dOut[B, D]
+  id: totrans-146
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: dW[out][F[Y], D] = Tmp[B, F[Y]] *[B] dOut[B, D]
 - en: dTmp[B, F[Y]] = dOut[B, D] *[D] W[out][F[Y], D] *(can throw away dOut[B, D]
     here)*
+  id: totrans-147
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 'dTmp[B, F[Y]] = dOut[B, D] *[D] W[out][F[Y], D] *(可以在这里丢弃 dOut[B, D])* '
 - en: In[B, D] = **AllGather**(In[B, D[Y]]) *(this can be skipped by sharing with
     (1) from the forward pass)*
+  id: totrans-148
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: In[B, D] = **AllGather**(In[B, D[Y]]) *(这可以通过与正向传递中的(1)共享来跳过)*
 - en: dW[in][D, F[Y]] = dTmp[B, F[Y]] *[B] In[B, D]
+  id: totrans-149
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: dW[in][D, F[Y]] = dTmp[B, F[Y]] *[B] In[B, D]
 - en: dIn[B, D] {U.Y} = dTmp[B, F[Y]] *[F] W[in][D, F[Y]] *(needed for previous layers)*
+  id: totrans-150
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: dIn[B, D] {U.Y} = dTmp[B, F[Y]] *[F] W[in][D, F[Y]] *(用于前一层)*
 - en: dIn[B, D[Y]] = **ReduceScatter**(dIn[B, D] {U.Y}) *(on critical path)*</details>
+  id: totrans-151
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: dIn[B, D[Y]] = **ReduceScatter**(dIn[B, D] {U.Y}) *(在关键路径上)*</details>
 - en: One nice thing about tensor parallelism is that it interacts nicely with the
     two matrices in our Transformer forward pass. Naively, we would do an AllReduce
     after each of the two matrices. But here we first do **In[B, D[Y]] * W[in][D,
     F[Y]] -> Tmp[B, F[Y]]** and then **Tmp[B, F[Y]] * W[out][F[Y], D] -> Out[B, D[Y]]**.
     This means we AllGather **In** at the beginning, and ReduceScatter **Out** at
     the end, rather than doing an AllReduce.
+  id: totrans-152
   prefs: []
   type: TYPE_NORMAL
+  zh: 张量并行的一个优点是它与我们的Transformer正向传递中的两个矩阵很好地相互作用。直观上，我们会在两个矩阵的每个之后都进行一次AllReduce。但在这里，我们首先进行**In[B,
+    D[Y]] * W[in][D, F[Y]] -> Tmp[B, F[Y]]**，然后**Tmp[B, F[Y]] * W[out][F[Y], D] ->
+    Out[B, D[Y]]**。这意味着我们在开始时对**In**进行AllGather，并在结束时对**Out**进行ReduceScatter，而不是进行一次AllReduce。
 - en: '**How costly is this?** Let’s only model the forward pass - the backwards pass
     is just the transpose of each operation here. In 1D tensor parallelism we AllGather
     the activations before the first matmul, and ReduceScatter them after the second,
     sending two bytes at a time (bf16). Let’s figure out when we’re bottlenecked by
     communication.'
+  id: totrans-153
   prefs: []
   type: TYPE_NORMAL
+  zh: '**这是多么昂贵？** 让我们只模拟正向传递 - 反向传递只是这里每个操作的转置。在1D张量并行中，我们在第一个矩阵乘法之前对激活进行AllGather，在第二个之后进行ReduceScatter，每次发送两个字节（bf16）。让我们找出我们何时受到通信瓶颈的限制。'
 - en: \[\begin{align} T_\text{math} & = \frac{4 \cdot B \cdot D \cdot F}{Y \cdot C}
     \\ T_\text{comms} & = \frac{2 \cdot 2 \cdot (B \cdot D)}{W_\text{ici}}\\ \textnormal{T}
     & \approx \max \left(\frac{4 \cdot B \cdot D \cdot F}{Y \cdot C}, \frac{2 \cdot
     2 \cdot (B \cdot D)}{W_\text{ici}}\right) \end{align}\]
+  id: totrans-154
   prefs: []
   type: TYPE_NORMAL
+  zh: \[\begin{align} T_\text{math} & = \frac{4 \cdot B \cdot D \cdot F}{Y \cdot C}
+    \\ T_\text{comms} & = \frac{2 \cdot 2 \cdot (B \cdot D)}{W_\text{ici}}\\ \textnormal{T}
+    & \approx \max \left(\frac{4 \cdot B \cdot D \cdot F}{Y \cdot C}, \frac{2 \cdot
+    2 \cdot (B \cdot D)}{W_\text{ici}}\right) \end{align}\]
 - en: 'Noting that we want compute cost to be greater than comms cost, we get:'
+  id: totrans-155
   prefs: []
   type: TYPE_NORMAL
+  zh: 注意到我们希望计算成本大于通信成本，我们得到：
 - en: \[\begin{align} \frac{4 \cdot B \cdot D \cdot F}{Y \cdot C} > \frac{2 \cdot
     2 \cdot (B \cdot D)}{W_\text{ici}} \end{align}\] \[\begin{align} \frac{F}{Y \cdot
     C} > \frac{1}{W_\text{ici}} \end{align}\] \[\begin{align} F > Y \cdot \frac{C}{W_\text{ici}}
     \end{align}\]
+  id: totrans-156
   prefs: []
   type: TYPE_NORMAL
+  zh: \[\begin{align} \frac{4 \cdot B \cdot D \cdot F}{Y \cdot C} > \frac{2 \cdot
+    2 \cdot (B \cdot D)}{W_\text{ici}} \end{align}\] \[\begin{align} \frac{F}{Y \cdot
+    C} > \frac{1}{W_\text{ici}} \end{align}\] \[\begin{align} F > Y \cdot \frac{C}{W_\text{ici}}
+    \end{align}\]
 - en: Thus for instance, for TPUv5p, $C / W_{ici} = 2550$ in bf16, so we can only
     do tensor parallelism up to $Y < F / 2550$. When we have multiple ICI axes, our
     $T_\text{comms}$ is reduced by a factor of $M_Y$, so we get $Y < M_Y \cdot F /
     2550$.
+  id: totrans-157
   prefs: []
   type: TYPE_NORMAL
+  zh: 因此，例如，对于TPUv5p，bf16中的\(C / W_{ici} = 2550\)，所以我们只能做到\(Y < F / 2550\)的张量并行。当我们有多个ICI轴时，我们的\(T_\text{comms}\)减少了一个因子\(M_Y\)，所以我们得到\(Y
+    < M_Y \cdot F / 2550\)。
 - en: '**Takeaway**: Tensor Parallelism becomes communication bound when $Y > M_Y
     \cdot F / 2550$. For most models this is between 8 and 16-way tensor parallelism.'
+  id: totrans-158
   prefs: []
   type: TYPE_NORMAL
+  zh: '**启示**：当\(Y > M_Y \cdot F / 2550\)时，张量并行变为通信受限。对于大多数模型，这通常是8到16路张量并行。'
 - en: '**Note that this doesn’t depend on the precision of the computation**, since
     e.g. for int8, on TPUv5p, \(C_\text{int8} / W_{ici}\) is \(5100\) instead of \(2550\)
     but the comms volume is also halved, so the two factors of two cancel.'
+  id: totrans-159
   prefs: []
   type: TYPE_NORMAL
+  zh: '**注意，这并不依赖于计算的精度**，例如，对于int8，在TPUv5p上，\(C_\text{int8} / W_{ici}\)是\(5100\)而不是\(2550\)，但通信量也减半，所以两个因子相抵消。'
 - en: '**Let’s think about some examples:**'
+  id: totrans-160
   prefs: []
   type: TYPE_NORMAL
+  zh: '**让我们考虑一些例子：**'
 - en: On TPUv5p with LLaMA 3-70B with \(D = 8192,\) \(F \approx 30,000\), we can comfortably
     do 8-way tensor parallelism, but will be communication bound on 16 way tensor
     parallelism. The required F for model 8 way model sharding is 20k.
+  id: totrans-161
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 在TPUv5p上使用LLaMA 3-70B，\(D = 8192\)，\(F \approx 30,000\)，我们可以轻松地进行8路张量并行，但在16路张量并行上将是通信受限。8路模型分片所需的F为20k。
 - en: For Gemma 7B, \(F \approx 50k\), so we become communication bound with 19-way
     tensor parallelism. That means we could likely do 16-way and still see good performance.
+  id: totrans-162
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 对于Gemma 7B，\(F \approx 50k\)，所以我们使用19路张量并行时将受到通信限制。这意味着我们可能仍然可以进行16路并行并看到良好的性能。
 - en: Combining FSDP and Tensor Parallelism
+  id: totrans-163
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 结合FSDP和张量并行
 - en: '**Syntax:** \(\text{In}[B_X, D_Y] \cdot_D W_\text{in}[D_X, F_Y] \cdot_F W_\text{out}[F_Y,
     D_X] \rightarrow \text{Out}[B_X, D_Y]\)'
+  id: totrans-164
   prefs: []
   type: TYPE_NORMAL
+  zh: '**语法：** \(\text{In}[B_X, D_Y] \cdot_D W_\text{in}[D_X, F_Y] \cdot_F W_\text{out}[F_Y,
+    D_X] \rightarrow \text{Out}[B_X, D_Y]\)'
 - en: The nice thing about FSDP and tensor parallelism is that they can be combined.
     By sharding **W[in]** and **W[out]** along both axes we both save memory and compute.
     Because we shard B along X, we reduce the size of the model-parallel AllGathers,
     and because we shard F along Y, we reduce the communication overhead of FSDP.
     This means a combination of the two can get us to an even lower effective batch
     size than we saw above.
+  id: totrans-165
   prefs: []
   type: TYPE_NORMAL
+  zh: FSDP和张量并行的优点是它们可以结合使用。通过在两个轴向上对 **W[in]** 和 **W[out]** 进行分片，我们既节省了内存又节省了计算。因为我们沿着X轴对B进行分片，我们减少了模型并行AllGathers的大小，因为我们沿着Y轴对F进行分片，我们减少了FSDP的通信开销。这意味着两者的结合可以让我们达到比上面看到的更低的实际批次大小。
 - en: <picture>![](../Images/6eacd53688da798804dea52a8ded97af.png)</picture>
+  id: totrans-166
   prefs: []
   type: TYPE_NORMAL
+  zh: <picture>![](../Images/6eacd53688da798804dea52a8ded97af.png)</picture>
 - en: '**Figure:** a diagram combining FSDP and tensor parallelism. Unlike the other
     cases, there is no duplication of model parameters.'
+  id: totrans-167
   prefs: []
   type: TYPE_NORMAL
+  zh: '**图示:** 结合FSDP和张量并行的示意图。与其他情况不同，没有模型参数的重复。'
 - en: <details><summary>Here’s the full algorithm for mixed FSDP + tensor parallelism.
     While we have a lot of communication, all our AllGathers and ReduceScatters are
     smaller because we have batch-sharded our activations and tensor sharded our weights
     much more!</summary>
+  id: totrans-168
   prefs: []
   type: TYPE_NORMAL
+  zh: <details><summary>以下是混合FSDP + 张量并行算法的完整内容。虽然我们有很多通信，但所有我们的AllGathers和ReduceScatters都更小，因为我们已经对我们的激活进行了批分片，对权重进行了张量分片！</summary>
 - en: '**Forward pass:** need to compute Loss[B]'
+  id: totrans-169
   prefs: []
   type: TYPE_NORMAL
+  zh: '**正向传播:** 需要计算 Loss[B]'
 - en: In[B[X], D] = **AllGather**[Y](In[B[X], D[Y]]) *(on critical path)*
+  id: totrans-170
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: In[B[X], D] = **AllGather**[Y](In[B[X], D[Y]]) *(在关键路径上)*
 - en: W[in][D, F[Y]] = **AllGather**[X](W[in][D[X], F[Y]]) *(can be done ahead of
     time)*
+  id: totrans-171
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: W[in][D, F[Y]] = **AllGather**[X](W[in][D[X], F[Y]]) *(可以提前完成)*
 - en: Tmp[B[X], F[Y]] = In[B[X], D] *[D] W[in][D, F[Y]]
+  id: totrans-172
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: Tmp[B[X], F[Y]] = In[B[X], D] *[D] W[in][D, F[Y]]
 - en: W[out][F[Y], D] = **AllGather**[X](W[out][F[Y], D[X]]) *(can be done ahead of
     time)*
+  id: totrans-173
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: W[out][F[Y], D] = **AllGather**[X](W[out][F[Y], D[X]]) *(可以提前完成)*
 - en: Out[B[X], D] {U.Y} = Tmp[B[X], F[Y]] *[F] W[out][F[Y], D]
+  id: totrans-174
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: Out[B[X], D] {U.Y} = Tmp[B[X], F[Y]] *[F] W[out][F[Y], D]
 - en: Out[B[X], D[Y]] = **ReduceScatter**[Y](Out[B[X], D] {U.Y}) *(on critical path)*
+  id: totrans-175
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: Out[B[X], D[Y]] = **ReduceScatter**[Y](Out[B[X], D] {U.Y}) *(在关键路径上)*
 - en: Loss[B[X]] = …
+  id: totrans-176
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: Loss[B[X]] = …
 - en: '**Backward pass:** need to compute dW[out][F[Y], D[X]], dW[in][D[X], F[Y]]'
+  id: totrans-177
   prefs: []
   type: TYPE_NORMAL
+  zh: '**反向传播:** 需要计算 dW[out][F[Y], D[X]], dW[in][D[X], F[Y]]'
 - en: dOut[B[X], D[Y]] = …
+  id: totrans-178
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: dOut[B[X], D[Y]] = …
 - en: dOut[B[X], D] = **AllGather**[Y](dOut[B[X], D[Y]]) *(on critical path)*
+  id: totrans-179
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: dOut[B[X], D] = **AllGather**[Y](dOut[B[X], D[Y]]) *(在关键路径上)*
 - en: dW[out][F[Y], D] {U.X} = Tmp[B[X], F[Y]] *[B] dOut[B[X], D]
+  id: totrans-180
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: dW[out][F[Y], D] {U.X} = Tmp[B[X], F[Y]] *[B] dOut[B[X], D]
 - en: dW[out][F[Y], D[X]] = **ReduceScatter**[X](dW[out][F[Y], D] {U.X})
+  id: totrans-181
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: dW[out][F[Y], D[X]] = **ReduceScatter**[X](dW[out][F[Y], D] {U.X})
 - en: W[out][F[Y], D] = **AllGather**[X](W[out][F[Y], D[X]]) *(can be done ahead of
     time)*
+  id: totrans-182
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: W[out][F[Y], D] = **AllGather**[X](W[out][F[Y], D[X]]) *(可以提前完成)*
 - en: dTmp[B[X], F[Y]] = dOut[B[X], D] *[D] W[out][F[Y], D] *(can throw away dOut[B,
     D] here)*
+  id: totrans-183
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 'dTmp[B[X], F[Y]] = dOut[B[X], D] *[D] W[out][F[Y], D] *(可以在这里丢弃dOut[B, D])* '
 - en: In[B[X], D] = **AllGather**[Y](In[B[X], D[Y]]) *(not on critical path + this
     can be shared with (2) from the previous layer)*
+  id: totrans-184
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: In[B[X], D] = **AllGather**[Y](In[B[X], D[Y]]) *(不在关键路径上 + 这可以与上一层的(2)共享)*
 - en: dW[in][D, F[Y]] {U.X} = dTmp[B[X], F[Y]] *[B] In[B[X], D]
+  id: totrans-185
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: dW[in][D, F[Y]] {U.X} = dTmp[B[X], F[Y]] *[B] In[B[X], D]
 - en: dW[in][D[X], F[Y]] = **ReduceScatter**[X](dW[in][D, F[Y]] {U.X})
+  id: totrans-186
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: dW[in][D[X], F[Y]] = **ReduceScatter**[X](dW[in][D, F[Y]] {U.X})
 - en: W[in][D, F[Y]] = **AllGather**[X](W[in][D[X], F[Y]]) *(can be done ahead of
     time)*
+  id: totrans-187
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: W[in][D, F[Y]] = **AllGather**[X](W[in][D[X], F[Y]]) *(可以提前完成)*
 - en: dIn[B[X], D] {U.Y} = dTmp[B[X], F[Y]] *[F] W[in][D, F[Y]] *(needed for previous
     layers)*
+  id: totrans-188
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: dIn[B[X], D] {U.Y} = dTmp[B[X], F[Y]] *[F] W[in][D, F[Y]] *(needed for previous
+    layers)*
 - en: dIn[B[X], D[Y]] = **ReduceScatter**[Y](dIn[B[X], D] {U.Y}) *(on critical path)*</details>
+  id: totrans-189
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: dIn[B[X], D[Y]] = **ReduceScatter**[Y](dIn[B[X], D] {U.Y}) *(在关键路径上)*</details>
 - en: '**What’s the right combination of FSDP and TP?** A simple but key maxim is
     that FSDP moves weights and tensor parallelism moves activations. That means as
     our batch size shrinks (especially as we do more data parallelism), tensor parallelism
     becomes cheaper because our activations per-shard are smaller.'
+  id: totrans-190
   prefs: []
   type: TYPE_NORMAL
+  zh: '**FSDP和TP的正确组合是什么？** 一个简单但关键的原则是，FSDP移动权重，而张量并行移动激活。这意味着随着我们的批次大小缩小（尤其是当我们进行更多数据并行时），张量并行变得更加便宜，因为我们的每个分片激活更小。'
 - en: Tensor parallelism performs \(\mathbf{AllGather}_Y([B_X, D_Y])\) which shrinks
     as \(X\) grows.
+  id: totrans-191
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 张量并行执行 \(\mathbf{AllGather}_Y([B_X, D_Y])\)，随着 \(X\) 的增长而缩小。
 - en: FSDP performs \(\mathbf{AllGather}_X([D_X, F_Y])\) which shrinks as \(Y\) grows.
+  id: totrans-192
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: FSDP执行 \(\mathbf{AllGather}_X([D_X, F_Y])\)，随着 \(Y\) 的增长而缩小。
 - en: 'Thus by combining both we can push our minimum batch size per replica down
     even more. We can calculate the optimal amount of FSDP and TP in the same way
     as above:'
+  id: totrans-193
   prefs: []
   type: TYPE_NORMAL
+  zh: 因此，通过结合两者，我们可以将每个副本的最小批次大小进一步降低。我们可以像上面一样计算最优的FSDP和TP数量：
 - en: Let \(X\) be the number of chips dedicated to FSDP and \(Y\) be the number of
     chips dedicated to tensor parallelism. Let \(N\) be the total number of chips
     in our slice with \(N=XY\). Let \(M_X\) and \(M_Y\) be the number of mesh axes
     over which we do FSDP and TP respectively (these should roughly sum to 3). We’ll
     purely model the forward pass since it has the most communication per FLOP. Then
     adding up the comms in the algorithm above, we have
+  id: totrans-194
   prefs: []
   type: TYPE_NORMAL
+  zh: 令$X$为专门用于FSDP的芯片数量，$Y$为专门用于张量并行的芯片数量。令$N$为我们切片中总芯片数量，其中$N=XY$。令$M_X$和$M_Y$分别为我们进行FSDP和TP的网格轴数量（这些应该大致相加为3）。我们将纯粹模拟正向传递，因为它每FLOP的通信量最大。然后，将算法中的通信量加起来，我们有
 - en: \[T_\text{FSDP comms}(B, X, Y) = \frac{2\cdot 2\cdot D \cdot F}{Y \cdot W_\text{ici}
     \cdot M_X}\] \[T_\text{TP comms}(B, X, Y) = \frac{2 \cdot 2 \cdot B \cdot D}{X
     \cdot W_\text{ici} \cdot M_Y}\]
+  id: totrans-195
   prefs: []
   type: TYPE_NORMAL
+  zh: \[T_\text{FSDP comms}(B, X, Y) = \frac{2\cdot 2\cdot D \cdot F}{Y \cdot W_\text{ici}
+    \cdot M_X}\] \[T_\text{TP comms}(B, X, Y) = \frac{2 \cdot 2 \cdot B \cdot D}{X
+    \cdot W_\text{ici} \cdot M_Y}\]
 - en: And likewise our total FLOPs time is
+  id: totrans-196
   prefs: []
   type: TYPE_NORMAL
+  zh: 同样，我们的总FLOPs时间是
 - en: \[T_\text{math} = \frac{2\cdot 2 \cdot B \cdot D \cdot F}{N \cdot C}.\]
+  id: totrans-197
   prefs: []
   type: TYPE_NORMAL
+  zh: \[T_\text{math} = \frac{2\cdot 2 \cdot B \cdot D \cdot F}{N \cdot C}.\]
 - en: 'To simplify the analysis, we make two assumptions: first, we allow $X$ and
     $Y$ to take on non-integer values (as long as they are positive and satisfy $XY=N$);
     second, we assume that we can fully overlap comms on the $X$ and $Y$ axis with
     each other. Under the second assumption, the total comms time is'
+  id: totrans-198
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了简化分析，我们做出两个假设：首先，我们允许$X$和$Y$取非整数值（只要它们是正数并且满足$XY=N$）；其次，我们假设我们可以完全重叠$X$和$Y$轴上的通信。在第二个假设下，总的通信时间是
 - en: \[T_\text{comms} = \max\left(T_\text{FSDP comms}, T_\text{TP comms}\right)\]
+  id: totrans-199
   prefs: []
   type: TYPE_NORMAL
+  zh: \[T_\text{comms} = \max\left(T_\text{FSDP comms}, T_\text{TP comms}\right)\]
 - en: 'Before we ask under what conditions we’ll be compute-bound, let’s find the
     optimal values for $X$ and $Y$ to minimize our total communication. Since our
     FLOPs is independent of $X$ and $Y$, the optimal settings are those that simply
     minimize comms. To do this, let’s write $T_\text{comms}$ above in terms of $X$
     and $N$ (which is held fixed, as it’s the number of chips in our system) rather
     than $X$ and $Y$:'
+  id: totrans-200
   prefs: []
   type: TYPE_NORMAL
+  zh: 在我们询问在什么条件下我们会成为计算受限之前，让我们找到$X$和$Y$的最佳值以最小化我们的总通信。由于我们的FLOPs与$X$和$Y$无关，最佳设置是那些仅最小化通信的设置。为此，让我们将$T_\text{comms}$以上用$X$和$N$（它是我们系统中芯片的数量，因此是固定的）而不是$X$和$Y$来表示：
 - en: \[T_\text{comms} (X) = \frac{4D}{W_\text{ici}} \max\left(\frac{F \cdot X}{N
     \cdot M_X}, \frac{B}{X \cdot M_Y}\right)\]
+  id: totrans-201
   prefs: []
   type: TYPE_NORMAL
+  zh: \[T_\text{comms} (X) = \frac{4D}{W_\text{ici}} \max\left(\frac{F \cdot X}{N
+    \cdot M_X}, \frac{B}{X \cdot M_Y}\right)\]
 - en: Because $T_\text{FSDP comms}$ is monotonically increasing in $X$, and $T_\text{TP
     comms}$ is monotonically decreasing in $X$, the maximum must be minimized when
     $T_\text{FSDP comms} = T_\text{TP comms}$, which occurs when
+  id: totrans-202
   prefs: []
   type: TYPE_NORMAL
+  zh: 由于$T_\text{FSDP comms}$在$X$上是单调递增的，而$T_\text{TP comms}$在$X$上是单调递减的，所以当$T_\text{FSDP
+    comms} = T_\text{TP comms}$时，最大值必须最小化，这发生在
 - en: \[\begin{align*} \frac{FX_{opt}}{M_X} = \frac{BN}{X_{opt} M_Y} \rightarrow \\
     X_{opt} = \sqrt{\frac{B}{F} \frac{M_X}{M_Y} N} \end{align*}\]
+  id: totrans-203
   prefs: []
   type: TYPE_NORMAL
+  zh: \[\begin{align*} \frac{FX_{opt}}{M_X} = \frac{BN}{X_{opt} M_Y} \rightarrow \\
+    X_{opt} = \sqrt{\frac{B}{F} \frac{M_X}{M_Y} N} \end{align*}\]
 - en: This is super useful! This tells us, for a given $B$, $F$, and $N$, what amount
     of FSDP is optimal. Let’s get a sense of scale. Plugging in realistic values,
     namely $N = 64$ (corresponding to a 4x4x4 array of chips), $B=48,000$, $F=32768$,
     gives roughly $X\approx 13.9$. So we would choose $X$ to be 16 and $Y$ to be 4,
     close to our calculated optimum.
+  id: totrans-204
   prefs: []
   type: TYPE_NORMAL
+  zh: 这非常有用！这告诉我们，对于给定的$B$，$F$和$N$，最佳的FSDP数量是多少。让我们了解一下规模。将现实值代入，即$N = 64$（对应于4x4x4的芯片阵列），$B=48,000$，$F=32768$，大约得到$X\approx
+    13.9$。因此，我们会选择$X$为16，$Y$为4，接近我们计算出的最佳值。
 - en: '**Takeaway:** in general, during training, the optimal amount of FSDP is \(X_{opt}
     = \sqrt{\frac{B}{F} \frac{M_X}{M_Y} N}\).'
+  id: totrans-205
   prefs: []
   type: TYPE_NORMAL
+  zh: '**要点**：在一般情况下，在训练过程中，最佳的FSDP数量是\(X_{opt} = \sqrt{\frac{B}{F} \frac{M_X}{M_Y}
+    N}\)。'
 - en: 'Now let’s return to the question we’ve been asking of all our parallelism strategies:
     **under what conditions will we be compute-bound?** Since we can overlap FLOPs
     and comms, we are compute-bound when'
+  id: totrans-206
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在让我们回到我们一直在问的所有并行策略的问题：**在什么条件下我们会成为计算受限？**由于我们可以重叠FLOPs和通信，当
 - en: \[\max\left(T_\text{FSDP comms}, T_\text{TP comms}\right) < T_\text{math}\]
+  id: totrans-207
   prefs: []
   type: TYPE_NORMAL
+  zh: \[\max\left(T_\text{FSDP comms}, T_\text{TP comms}\right) < T_\text{math}\]
 - en: 'By letting $\alpha \equiv C / W_\text{ici}$, the ICI arithmetic intensity,
     we can simplify:'
+  id: totrans-208
   prefs: []
   type: TYPE_NORMAL
+  zh: 通过让$\alpha \equiv C / W_\text{ici}$，即ICI算术强度，我们可以简化：
 - en: \[\max\left(\frac{F}{Y \cdot M_X}, \frac{B}{X \cdot M_Y}\right) < \frac{B \cdot
     F}{N \cdot \alpha}\]
+  id: totrans-209
   prefs: []
   type: TYPE_NORMAL
+  zh: \[\max\left(\frac{F}{Y \cdot M_X}, \frac{B}{X \cdot M_Y}\right) < \frac{B \cdot
+    F}{N \cdot \alpha}\]
 - en: Since we calculated $X_{opt}$ to make the LHS maximum equal, we can just plug
     it into either side (noting that $Y_{opt} = N/X_{opt}$), i.e.
+  id: totrans-210
   prefs: []
   type: TYPE_NORMAL
+  zh: 由于我们计算$X_{opt}$是为了使左侧最大值相等，我们可以将其代入任一边（注意$Y_{opt} = N/X_{opt}$），即
 - en: \[\frac{F}{N \cdot W_\text{ici} \cdot M_X} \sqrt{\frac{B}{F} \frac{M_X}{M_Y}
     N} < \frac{B \cdot F}{N \cdot C}\]
+  id: totrans-211
   prefs: []
   type: TYPE_NORMAL
+  zh: \[\frac{F}{N \cdot W_\text{ici} \cdot M_X} \sqrt{\frac{B}{F} \frac{M_X}{M_Y}
+    N} < \frac{B \cdot F}{N \cdot C}\]
 - en: Further simplifying, we find that
+  id: totrans-212
   prefs: []
   type: TYPE_NORMAL
+  zh: 进一步简化，我们发现
 - en: \[\sqrt{\frac{B\cdot F}{M_X \cdot M_Y \cdot N}} < \frac{B \cdot F}{N \cdot \alpha},\]
+  id: totrans-213
   prefs: []
   type: TYPE_NORMAL
+  zh: \[\sqrt{\frac{B\cdot F}{M_X \cdot M_Y \cdot N}} < \frac{B \cdot F}{N \cdot \alpha},\]
 - en: 'where the left-hand-side is proportional to the communication time and the
     right-hand-side is proportional to the computation time. Note that while the computation
     time scales linearly with the batch size (as it does regardless of parallelism),
     the communication time scales as the square root of the batch size. The ratio
     of the computation to communication time thus also scales as the square of the
     batch size:'
+  id: totrans-214
   prefs: []
   type: TYPE_NORMAL
+  zh: 其中，左侧与通信时间成正比，右侧与计算时间成正比。请注意，虽然计算时间与批量大小的线性关系成正比（无论并行与否），但通信时间与批量大小的平方根成正比。因此，计算时间与通信时间的比率也随批量大小的平方增长：
 - en: \[\frac{T_\text{math}}{T_\text{comms}} = \frac{\sqrt{BF}\sqrt{M_X M_Y}}{\alpha
     \sqrt{N}}.\]
+  id: totrans-215
   prefs: []
   type: TYPE_NORMAL
+  zh: \[\frac{T_\text{math}}{T_\text{comms}} = \frac{\sqrt{BF}\sqrt{M_X M_Y}}{\alpha
+    \sqrt{N}}.\]
 - en: To ensure that this ratio is greater than one so we are compute bound, we require
+  id: totrans-216
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了确保这个比率大于1，我们达到计算受限，我们需要
 - en: \[\frac{B}{N} > \frac{\alpha^2}{M_X M_Y F}\]
+  id: totrans-217
   prefs: []
   type: TYPE_NORMAL
+  zh: \[\frac{B}{N} > \frac{\alpha^2}{M_X M_Y F}\]
 - en: To get approximate numbers, again plug in $F=32,768$, $\alpha=2550$, and $M_X
     M_Y=2$ (as it must be for a 3D mesh). This gives roughly $B/N > 99$. This roughly
     wins us a factor of eight compared to the purely data parallel (or FSDP) case,
     where assuming a 3D mesh we calculate that $B/N$ must exceed about $850$ to be
     compute bound.
+  id: totrans-218
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了得到近似数值，再次将$F=32,768$，$\alpha=2550$，和$M_X M_Y=2$（因为对于3D网格来说必须是这样）代入。这大约给出$B/N
+    > 99$。这大约比纯数据并行（或FSDP）的情况多出八倍，在纯数据并行的情况下，假设3D网格，我们计算出$B/N$必须超过约850才能达到计算受限。
 - en: '**Takeaway:** combining tensor parallelism with FSDP allows us to drop to a
     $B/N$ of \(2550^2 / 2F\). This lets us handle a batch of as little as 100 per
     chip, which is roughly a factor of eight smaller than we could achieve with just
     FSDP.'
+  id: totrans-219
   prefs: []
   type: TYPE_NORMAL
+  zh: '**总结：** 将张量并行性与FSDP结合使用，使我们能够将$B/N$降低到\(2550^2 / 2F\)。这使得我们能够处理每个芯片上尽可能少的100个批次，这大约是我们仅使用FSDP所能达到的数量的八分之一。'
 - en: Below we plot the ratio of FLOPs to comms time for mixed FSDP + TP, comparing
     it both to only tensor parallelism (TP) and only data parallelism (FSDP), on a
     representative 4x4x4 chip array. While pure FSDP parallelism dominates for very
     large batch sizes, in the regime where batch size over number of chips is between
     roughly 100 and 850, a mixed FSDP + TP strategy is required in order to be compute-bound.
+  id: totrans-220
   prefs: []
   type: TYPE_NORMAL
+  zh: 在下图中，我们绘制了混合FSDP + TP的FLOPs与通信时间的比率，同时将其与仅张量并行（TP）和仅数据并行（FSDP）进行了比较，在一个代表性的4x4x4芯片阵列上。虽然对于非常大的批次大小，纯FSDP并行性占主导地位，但在批次大小与芯片数量的比率在约100到850之间的范围内，需要混合FSDP
+    + TP策略才能达到计算受限。
 - en: <picture>![](../Images/027b4417cbe69303b6e05599e1915217.png)</picture>
+  id: totrans-221
   prefs: []
   type: TYPE_NORMAL
+  zh: <picture>![](../Images/027b4417cbe69303b6e05599e1915217.png)</picture>
 - en: '**Figure:** ratio of FLOPs to comms time for optimal mixed FSDP/TP on a TPUv5p
     4x4x4 slice with F=30k. As expected, tensor parallelism has a fixed ratio with
     batch size; ideal mixed FSDP + TP scales with $\sqrt{B}$, and FSDP scales with
     $B$. However, in intermediate batch size regimes, only FSDP + TP achieves a ratio
     greater than unity.'
+  id: totrans-222
   prefs: []
   type: TYPE_NORMAL
+  zh: '**图：** 在TPUv5p 4x4x4切片上，最优混合FSDP/TP的FLOPs与通信时间比率。正如预期的那样，张量并行性与批量大小的比率是固定的；理想的混合FSDP
+    + TP随$\sqrt{B}$增长，而FSDP随$B$增长。然而，在中间批量大小的范围内，只有FSDP + TP实现了大于1的比率。'
 - en: Here’s another example of TPU v5p 16x16x16 showing the FLOPs and comms time
     as a function of batch size for different sharding schemes.
+  id: totrans-223
   prefs: []
   type: TYPE_NORMAL
+  zh: 这里是另一个TPU v5p 16x16x16的例子，展示了不同分片方案下，批量大小的FLOPs和通信时间。
 - en: <picture>![](../Images/5743d1cae6e202117fb66be625bee528.png)</picture>
+  id: totrans-224
   prefs: []
   type: TYPE_NORMAL
+  zh: <picture>![](../Images/5743d1cae6e202117fb66be625bee528.png)</picture>
 - en: '**Figure:** time taken for communication with different parallelism schemes.
     The black dashed line is the time taken by the matrix multiplication FLOPs, so
     any curve above this line is comms-bound. We note that all strategies become comms-bound
     below batch size 6e5, which is in line with our expected 4096 * 2550^2 / (2 *
     8192 * 4) = 4e5.'
+  id: totrans-225
   prefs: []
   type: TYPE_NORMAL
+  zh: '**图：** 不同并行方案下的通信时间。黑色虚线是矩阵乘法FLOPs所需的时间，因此任何高于此线的曲线都是通信受限。我们注意到，所有策略在批次大小低于6e5时都变为通信受限，这与我们的预期4096
+    * 2550^2 / (2 * 8192 * 4) = 4e5相符。'
 - en: The black curve is the amount of time spent on model FLOPs, meaning any batch
     size where this is lower than all comms costs is strictly comms bound. You’ll
     notice the black curve intersects the green curve at about `4e5`, as predicted.
+  id: totrans-226
   prefs: []
   type: TYPE_NORMAL
+  zh: 黑色曲线表示在模型FLOPs上花费的时间，这意味着任何这个值低于所有通信成本的批量大小都是严格受通信限制的。你会注意到黑色曲线在大约 `4e5` 处与绿色曲线相交，正如预测的那样。
 - en: 'Here’s an interactive animation to play with this, showing the total compute
     time and communication time for different batch sizes:'
+  id: totrans-227
   prefs: []
   type: TYPE_NORMAL
+  zh: 这里有一个交互式动画，可以用来玩这个，显示不同批量大小下的总计算时间和通信时间：
 - en: You’ll notice this generally agrees with the above (minimum around FSDP=256,
     TP=16), plus or minus some wiggle factor for some slight differences in the number
     of axes for each.
+  id: totrans-228
   prefs: []
   type: TYPE_NORMAL
+  zh: 你会注意到这通常与上面的一致（最小值约为FSDP=256，TP=16），加上一些波动因素，以反映每个轴数的一些细微差异。
 - en: Pipelining
+  id: totrans-229
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 流水线
 - en: 'You’ll probably notice we’ve avoided talking about pipelining at all in the
     previous sections. Pipelining is a dominant strategy for GPU parallelism that
     is somewhat less essential on TPUs. Briefly, pipelined training involves splitting
     the layers of a model across multiple devices and passing the activations between
     pipeline stages during the forward and backward pass. The algorithm is something
     like:'
+  id: totrans-230
   prefs: []
   type: TYPE_NORMAL
+  zh: 你可能会注意到，在前面的章节中我们几乎没有提到流水线。流水线是GPU并行化的主要策略，在TPU上则不那么关键。简而言之，流水线训练涉及将模型的层分布在多个设备上，并在正向和反向传递期间在流水线阶段之间传递激活。算法类似于：
 - en: Initialize your data on TPU 0 with your weights sharded across the layer dimension
     ($W_\text{in}[L_Z, D_X, F_Y]$ for pipelining with FSDP and tensor parallelism).
+  id: totrans-231
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 在TPU 0上初始化你的数据，并将权重在层维度上分片（对于使用FSDP和张量并行的流水线，$W_\text{in}[L_Z, D_X, F_Y]$）。
 - en: Perform the first layer on TPU 0, then copy the resulting activations to TPU
     1, and repeat until you get to the last TPU.
+  id: totrans-232
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 在TPU 0上执行第一层，然后将生成的激活复制到TPU 1，并重复，直到达到最后一个TPU。
 - en: Compute the loss function and its derivative $\partial L / \partial x_L$.
+  id: totrans-233
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 计算损失函数及其导数 $\partial L / \partial x_L$。
 - en: For the last pipeline stage, compute the derivatives $\partial L / \partial
     W_L$ and $\partial L / \partial x_{L-1}$, then copy $\partial L / \partial x_{L-1}$
     to the previous pipeline stage and repeat until you reach TPU 0.
+  id: totrans-234
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 对于最后一个管道阶段，计算导数 $\partial L / \partial W_L$ 和 $\partial L / \partial x_{L-1}$，然后将
+    $\partial L / \partial x_{L-1}$ 复制到上一个管道阶段，并重复，直到达到TPU 0。
 - en: <details><summary>Here is some (working) Python pseudo-code</summary>
+  id: totrans-235
   prefs: []
   type: TYPE_NORMAL
+  zh: <details><summary>以下是一些（工作）Python伪代码</summary>
 - en: This pseudocode should run on a Cloud TPU VM. While it’s not very efficient
     or realistic, it gives you a sense how data is being propagated across devices.
+  id: totrans-236
   prefs: []
   type: TYPE_NORMAL
+  zh: 这段伪代码应该在Cloud TPU VM上运行。虽然它并不非常高效或现实，但它能让你了解数据如何在设备之间传播。
 - en: '[PRE0]</details>'
+  id: totrans-237
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE0]</details>'
 - en: '**Why is this a good idea?** Pipelining is great for many reasons: it has a
     low communication cost between pipeline stages, meaning you can train very large
     models even with low bandwidth interconnects. This is often very useful on GPUs
     since they are not densely connected by ICI in the way TPUs are.'
+  id: totrans-238
   prefs: []
   type: TYPE_NORMAL
+  zh: '**为什么这是一个好主意？** 流水线有很多优点：它具有低通信成本，这意味着即使使用低带宽互连，你也可以训练非常大的模型。这在GPU上非常有用，因为它们不像TPU那样通过ICI密集连接。'
 - en: '**Why is this difficult/annoying?** You might have noticed in the pseudocode
     above that TPU 0 is almost always idle! It’s only doing work on the very first
     and last step of the pipeline. The period of idleness is called a pipeline bubble
     and is very annoying to deal with. Typically we try to mitigate this first with
     microbatching, which sends multiple small batches through the pipeline, keeping
     TPU 0 utilized for at least a larger fraction of the total step time.'
+  id: totrans-239
   prefs: []
   type: TYPE_NORMAL
+  zh: '**为什么这很难/令人烦恼？** 你可能已经注意到上面的伪代码中，TPU 0 几乎总是空闲！它只在管道的第一个和最后一个步骤上工作。空闲的这段时间被称为管道气泡，处理起来非常令人烦恼。通常我们首先尝试通过微批处理来减轻这种情况，即通过管道发送多个小批量，使TPU
+    0 至少在总步骤时间中占更大的比例。'
 - en: A second approach is to carefully overlap the forward matmul $W_i @ x_i$, the
     backward $dx$ matmul $W_i @ \partial L / \partial x_{i+1}$, and the $dW$ matmul
     $\partial L / \partial x_{i+1} @ x_i$. Since each of these requires some FLOPs,
     we can overlap them to fully hide the bubble. Here’s a plot from the recent DeepSeek
     v3 paper <d-cite key="DeepSeek3">showing their “bubble-free” pipeline schedule:</d-cite>
+  id: totrans-240
   prefs: []
   type: TYPE_NORMAL
+  zh: 第二种方法是将前向矩阵乘法 $W_i @ x_i$、反向 $dx$ 矩阵乘法 $W_i @ \partial L / \partial x_{i+1}$
+    和 $dW$ 矩阵乘法 $\partial L / \partial x_{i+1} @ x_i$ 仔细重叠。由于这些都需要一些FLOPs，我们可以重叠它们来完全隐藏气泡。以下是来自最近DeepSeek
+    v3论文的图表，展示了他们的“无气泡”管道调度计划：<d-cite key="DeepSeek3">:</d-cite>
 - en: <picture>![](../Images/c6c3dffa7f4f492be02e5eee7a940268.png)</picture>
+  id: totrans-241
   prefs: []
   type: TYPE_NORMAL
+  zh: <picture>![](../Images/c6c3dffa7f4f492be02e5eee7a940268.png)</picture>
 - en: '**Figure:** the DeepSeek v3 pipeline schedule (from their [recent paper](https://arxiv.org/pdf/2412.19437)).
     Orange is the forward matmul, green is the dL/dx matmul, and blue is the dL/dW
     matmul. By prioritizing the backwards dL/dx multiplications, we can avoid "stranding"
     FLOPs.'
+  id: totrans-242
   prefs: []
   type: TYPE_NORMAL
+  zh: '**图：** DeepSeek v3流水线调度（来自他们的[最近论文](https://arxiv.org/pdf/2412.19437)）。橙色是前向矩阵乘法，绿色是dL/dx矩阵乘法，蓝色是dL/dW矩阵乘法。通过优先处理反向dL/dx乘法，我们可以避免“闲置”FLOPs。'
 - en: Because it is less critical for TPUs (which have larger interconnected pods),
     we won’t delve into this as deeply, but it’s a good exercise to understand the
     key pipelining bottlenecks.
+  id: totrans-243
   prefs: []
   type: TYPE_NORMAL
+  zh: 由于对于TPU（具有更大的互联pod）来说这不太关键，所以我们不会深入探讨这个问题，但了解关键流水线瓶颈是一个很好的练习。
 - en: Scaling Across Pods
+  id: totrans-244
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 跨Pod扩展
 - en: The largest possible TPU slice is a TPU v5p SuperPod with 8960 chips (and 2240
     hosts). When we want to scale beyond this size, we need to cross the Data-Center
     Networking (DCN) boundary. Each TPU host comes equipped with one or several NICs
@@ -1192,114 +1767,168 @@
     As noted in the [TPU Section](../tpus), each host has about 200Gbps (25GB/s) of
     full-duplex DCN bandwidth, which is about 6.25GB/s full-duplex (egress) bandwidth
     per TPU.
+  id: totrans-245
   prefs: []
   type: TYPE_NORMAL
+  zh: 最大的TPU切片是一个包含8960个芯片（和2240个主机）的TPU v5p SuperPod。当我们想要扩展到这个大小之上时，我们需要跨越数据中心网络（DCN）边界。每个TPU主机都配备了一个或多个网络接口卡（NICs），通过以太网将主机连接到其他TPU
+    v5p pods。如[TPU部分](../tpus)所述，每个主机大约有200Gbps（25GB/s）的全双工DCN带宽，这大约是每个TPU 6.25GB/s的全双工（出站）带宽。
 - en: 'Typically, when scaling beyond a single pod, we do some form of model parallelism
     or FSDP within the ICI domain, and then pure data parallelism across multiple
     pods. Let $N$ be the number of TPUs we want to scale to and $M$ be the number
     of TPUs per ICI-connected slice. To do an AllReduce over DCN, we can do a ring-reduction
     over the set of pods, giving us (in the backward pass):'
+  id: totrans-246
   prefs: []
   type: TYPE_NORMAL
+  zh: 通常，当我们扩展到单个pod之外时，我们会在ICI域内进行某种形式的模型并行或FSDP，然后在多个pod之间进行纯数据并行。设 $N$ 为我们想要扩展到的TPU数量，$M$
+    为每个ICI连接切片的TPU数量。为了在DCN上执行AllReduce，我们可以在pod集合上执行环减法，给我们（在反向传递中）：
 - en: \[T_\text{math} = \frac{2 \cdot 2 \cdot 2 \cdot BDF}{N \cdot C}\] \[T_\text{comms}
     = \frac{2 \cdot 2 \cdot 2 \cdot DF}{M \cdot W_\text{dcn}}\]
+  id: totrans-247
   prefs: []
   type: TYPE_NORMAL
+  zh: \[T_\text{math} = \frac{2 \cdot 2 \cdot 2 \cdot BDF}{N \cdot C}\] \[T_\text{comms}
+    = \frac{2 \cdot 2 \cdot 2 \cdot DF}{M \cdot W_\text{dcn}}\]
 - en: The comms bandwidth scales with $M$, since unlike ICI the total bandwidth grows
     as we grow our ICI domain and acquire more NICs. Simplifying, we find that $T_\text{math}
     > T_\text{comms}$ when
+  id: totrans-248
   prefs: []
   type: TYPE_NORMAL
+  zh: 通信带宽随着 $M$ 的增加而增加，因为与ICI不同，总带宽随着我们扩展ICI域并获取更多NICs而增长。简化后，我们发现当 $T_\text{math}
+    > T_\text{comms}$ 时，
 - en: \[\frac{B}{\text{slice}} > \frac{C}{W_\text{dcn}}\]
+  id: totrans-249
   prefs: []
   type: TYPE_NORMAL
+  zh: \[\frac{B}{\text{slice}} > \frac{C}{W_\text{dcn}}\]
 - en: For TPU v5p, the $\frac{C}{W_\text{dcn}}$ is about `4.46e14 / 6.25e9 = 71,360`.
     This tells us that to efficiently scale over DCN, there is a minimum batch size
     per ICI domain needed to egress each node.
+  id: totrans-250
   prefs: []
   type: TYPE_NORMAL
+  zh: 对于TPU v5p，$\frac{C}{W_\text{dcn}}$ 大约是 `4.46e14 / 6.25e9 = 71,360`。这告诉我们，为了有效地在DCN上扩展，每个ICI域需要有一个最小的批量大小，以便每个节点出站。
 - en: '**How much of a problem is this?** To take a specific example, say we want
     to train LLaMA-3 70B on TPU v5p with a BS of 2M tokens. LLaMA-3 70B has $F\approx
     30,000$. From the above sections, we know the following:'
+  id: totrans-251
   prefs: []
   type: TYPE_NORMAL
+  zh: '**这个问题有多严重？** 以一个具体的例子来说，假设我们想在TPU v5p上使用2M个标记的BS训练LLaMA-3 70B。LLaMA-3 70B有
+    $F \approx 30,000$。从上面的章节中，我们知道以下信息：'
 - en: We can do Tensor Parallelism up to above $Y = M_Y \cdot F / 2550 \approxeq 11
     \cdot M_Y$.
+  id: totrans-252
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 我们可以进行高达 $Y = M_Y \cdot F / 2550 \approx 11 \cdot M_Y$ 的张量并行。
 - en: We can do FSDP so long as $B / N > 2550 / M_X$. That means if we want to train
     with BS=2M and 3 axes of data parallelism, we’d at most be able to use $\approx
     2400$ chips, roughly a quarter of a TPU v5p pod.
+  id: totrans-253
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 只要 $B / N > 2550 / M_X$，我们就可以进行FSDP。这意味着如果我们想使用BS=2M和3个数据并行轴进行训练，我们最多只能使用约2400个芯片，大约是TPU
+    v5p pod的四分之一。
 - en: When we combine FSDP + Tensor Parallelism, become comms-bound when we have $B
     / N < 2550^2 / 2 * 30,000 = 108$, so this lets us scale to roughly 18k chips!
     However, the maximum size of a TPU v5p pod is 8k chips, so beyond that we have
     to use DCN.
+  id: totrans-254
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 当我们结合FSDP + 张量并行时，当 $B / N < 2550^2 / 2 * 30,000 = 108$ 时，我们变得通信受限，这使我们能够扩展到大约18k个芯片！然而，TPU
+    v5p pod的最大大小是8k个芯片，所以超过这个大小我们就必须使用DCN。
 - en: The TLDR is that we have a nice recipe for training with BS=1M, using roughly
     X (FSDP) = 1024 and Y (TP) = 8, but with BS=2M we need to use DCN. As noted above,
     we have a DCN arithmetic intensity of $\text{71,360}$, so we just need to make
     sure our batch size per ICI domain is greater than this. This is trivial for us,
     since with 2 pods we’d have a per-pod BS of 1M, and a per GPu batch size of 111,
     which is great (maybe cutting it a bit close, but theoretially sound).
+  id: totrans-255
   prefs: []
   type: TYPE_NORMAL
+  zh: 简而言之，我们有一个很好的BS=1M的训练配方，使用大约X（FSDP）=1024和Y（TP）=8，但BS=2M时我们需要使用DCN。如上所述，我们有一个DCN算术强度为$\text{71,360}$，所以我们只需要确保每个ICI域的批量大小大于这个值。这对我们来说很简单，因为有了2个Pod，每个Pod的BS将是1M，每个GPU的批量大小将是111，这很好（可能有点接近，但从理论上来说是合理的）。
 - en: '**Takeaway:** Scaling across multiple TPU pods is fairly straightforward using
     pure data parallelism so long as our per-pod batch size is at least 71k tokens.'
+  id: totrans-256
   prefs: []
   type: TYPE_NORMAL
+  zh: '**要点**：只要每个Pod的批量大小至少为71k个标记，使用纯数据并行跨多个TPU Pod扩展相对简单。'
 - en: Takeaways from LLM Training on TPUs
+  id: totrans-257
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 在TPU上训练LLM的要点
 - en: Increasing parallelism or reducing batch size both tend to make us more communication-bound
     because they reduce the amount of compute performed per chip.
+  id: totrans-258
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 增加并行度或减少批量大小都会使我们更受通信限制，因为它们减少了每个芯片上执行的计算量。
 - en: Up to a reasonable context length (~32k) we can get away with modeling a Transformer
     as a stack of MLP blocks and define each of several parallelism schemes by how
     they shard the two/three main matmuls per layer.
+  id: totrans-259
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 在合理的内容长度（约32k）内，我们可以将Transformer建模为MLP块的堆叠，并通过它们如何分片每层的两个/三个主要矩阵来定义几种并行方案。
 - en: During training there are 4 main parallelism schemes we consider, each of which
     has its own bandwidth and compute requirements (data parallelism, FSDP, tensor
     parallelism).
+  id: totrans-260
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 在训练过程中，我们考虑了4种主要的并行方案，每种方案都有自己的带宽和计算需求（数据并行、FSDP、张量并行）。
 - en: '| **Strategy** | **Description** |'
+  id: totrans-261
   prefs: []
   type: TYPE_TB
+  zh: '| **策略** | **描述** |'
 - en: '| --- | --- |'
+  id: totrans-262
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- |'
 - en: '| **Data Parallelism** | Activations are batch sharded, everything else is
     fully-replicated, we all-reduce gradients during the backward pass. |'
+  id: totrans-263
   prefs: []
   type: TYPE_TB
+  zh: '| **数据并行** | 激活是批量分片，其他一切都是完全复制的，我们在反向传播期间进行all-reduce梯度。 |'
 - en: '| **FSDP** | Activations, weights, and optimizer are batch sharded, weights
     are gathered just before use, gradients are reduce-scattered. |'
+  id: totrans-264
   prefs: []
   type: TYPE_TB
+  zh: '| **FSDP** | 激活、权重和优化器都是批量分片，权重在使用前收集，梯度是reduce-scattered。 |'
 - en: '| **Tensor Parallelism (aka Megatron, Model)** | Activations are sharded along
     \(d_\text{model}\), weights are sharded along \(d_{ff}\), activations are gathered
     before W[in], the result reduce-scattered after W[out]. |'
+  id: totrans-265
   prefs: []
   type: TYPE_TB
+  zh: '| **张量并行（又称Megatron，模型）** | 激活沿\(d_\text{model}\)分片，权重沿\(d_{ff}\)分片，在W[in]之前收集激活，在W[out]之后reduce-scattered。
+    |'
 - en: '| **Mixed FSDP + Tensor Parallelism** | Both of the above, where FSDP gathers
     the model sharded weights. |'
+  id: totrans-266
   prefs: []
   type: TYPE_TB
+  zh: '| **混合FSDP + 张量并行** | 上述两种，其中FSDP收集模型分片权重。 |'
 - en: 'And here are the “formulas” for each method:'
+  id: totrans-267
   prefs: []
   type: TYPE_NORMAL
+  zh: 这里是每种方法的“公式”：
 - en: \[\small \begin{array}{cc} \text{Strategy} & \text{Formula}\\ \hline \text{DP}
     & \text{In}[B_X, D] \cdot_D W_\text{in}[D, F] \cdot_F W_\text{out}[F, D] \rightarrow
     \text{Out}[B_X, D] \\ \text{FSDP} & \text{In}[B_X, D] \cdot_D W_\text{in}[D_X,
@@ -1308,128 +1937,195 @@
     \text{Out}[B, D_Y] \\ \text{TP + FSDP} & \text{In}[B_X, D_Y] \cdot_D W_\text{in}[D_X,
     F_Y] \cdot_F W_\text{out}[F_Y, D_X] \rightarrow \text{Out}[B_X, D_Y] \\ \hline
     \end{array}\]
+  id: totrans-268
   prefs: []
   type: TYPE_NORMAL
+  zh: \[\small \begin{array}{cc} \text{策略} & \text{公式}\\ \hline \text{DP} & \text{In}[B_X,
+    D] \cdot_D W_\text{in}[D, F] \cdot_F W_\text{out}[F, D] \rightarrow \text{Out}[B_X,
+    D] \\ \text{FSDP} & \text{In}[B_X, D] \cdot_D W_\text{in}[D_X, F] \cdot_F W_\text{out}[F,
+    D_X] \rightarrow \text{Out}[B_X, D] \\ \text{TP} & \text{In}[B, D_Y] \cdot_D W_\text{in}[D,
+    F_Y] \cdot_F W_\text{out}[F_Y, D] \rightarrow \text{Out}[B, D_Y] \\ \text{TP +
+    FSDP} & \text{In}[B_X, D_Y] \cdot_D W_\text{in}[D_X, F_Y] \cdot_F W_\text{out}[F_Y,
+    D_X] \rightarrow \text{Out}[B_X, D_Y] \\ \hline \end{array}\]
 - en: Each of these strategies has a limit at which it becomes network/communication
     bound, based on their per-device compute and comms. Here’s compute and comms per-layer,
     assuming \(X\) is FSDP and \(Y\) is tensor parallelism.
+  id: totrans-269
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 这些策略中的每一个都有一个限制，当它们的每个设备的计算和通信达到这个限制时，它们就会变成网络/通信受限。这里假设\(X\)是FSDP，\(Y\)是张量并行，以下是每层的计算和通信。
 - en: \[\small \begin{array}{ccc} \text{Strategy} & \text{Compute per layer} & \text{Comms
     per layer} \\ & \text{(ignoring gating einsum)} & \text{(bytes, forward + backward
     pass)}\\ \hline \text{DP} & 4BDF/X + 8BDF/X & 0 + 8DF \\ \text{FSDP} & 4BDF/X
     + 8BDF/X & 4DF + 8DF \\ \text{TP} & 4BDF/Y + 8BDF/Y & 4BD + 4BD \\ \text{FSDP
     + TP} & 4BDF/(XY) + 8BDF/(XY) & (4BD/X + 4DF/Y) + (8BD/X + 8DF/Y) \\ \hline \end{array}\]
+  id: totrans-270
   prefs: []
   type: TYPE_NORMAL
+  zh: \[\small \begin{array}{ccc} \text{策略} & \text{每层的计算} & \text{每层的通信} \\ & \text{(忽略门控einstein求和)}
+    & \text{(字节，正向和反向传递)}\\ \hline \text{DP} & 4BDF/X + 8BDF/X & 0 + 8DF \\ \text{FSDP}
+    & 4BDF/X + 8BDF/X & 4DF + 8DF \\ \text{TP} & 4BDF/Y + 8BDF/Y & 4BD + 4BD \\ \text{FSDP
+    + TP} & 4BDF/(XY) + 8BDF/(XY) & (4BD/X + 4DF/Y) + (8BD/X + 8DF/Y) \\ \hline \end{array}\]
 - en: Pure data parallelism is rarely useful because the model and its optimizer state
     use bytes = 10x parameter count. This means we can rarely fit more than a few
     billion parameters in memory.
+  id: totrans-271
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 纯数据并行很少有用，因为模型及其优化器状态使用的字节数是参数数量的10倍。这意味着我们很少能在内存中拟合超过几十亿个参数。
 - en: Data parallelism and FSDP become comms bound when the \(\text{batch size per
     shard} < C / W\), the arithmetic intensity of the network. For ICI this is 2,550
     and for DCN this is 75,000\. This can be increased with more parallel axes.
+  id: totrans-272
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 当每个分片的数据批量大小小于 \(C / W\)，即网络的算术强度时，数据并行和FSDP会变成通信限制。对于ICI来说这是2,550，对于DCN来说这是75,000。这可以通过更多的并行轴来增加。
 - en: Tensor parallelism becomes comms bound when \(\lvert Y\rvert > F / 2550\). **This
     is around 8-16 way for most models.** This is independent of the batch size.
+  id: totrans-273
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 当 \(\lvert Y\rvert > F / 2550\) 时，张量并行会变成通信限制。**这对于大多数模型来说大约是8-16路。**这与批量大小无关。
 - en: Mixed FSDP + tensor parallelism allows us to drop the batch size to as low as
     \(2550^2 / 2F \approx 100\). This is remarkably low.
+  id: totrans-274
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 混合FSDP + 张量并行使我们能够将批量大小降低到 \(2550^2 / 2F \approx 100\)。这非常低。
 - en: Data parallelism across pods requires a minimum batch size per pod of roughly
     75,000 before becoming DCN-bound.
+  id: totrans-275
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 在Pod之间进行数据并行需要每个Pod的最小批量大小约为75,000，才能达到DCN限制。
 - en: Basically, if your batch sizes are big or your model is small, things are simple.
     You can either do data parallelism or FSDP + data parallelism across DCN. The
     middle section is where things get interesting.
+  id: totrans-276
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 基本上，如果你的批量大小很大或你的模型很小，事情很简单。你可以进行数据并行或DCN上的FSDP + 数据并行。中间部分是事情变得有趣的地方。
 - en: Some Problems to Work
+  id: totrans-277
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 一些需要解决的问题
 - en: 'Let’s use LLaMA-2 13B as a basic model for this section. Here are the model
     details:'
+  id: totrans-278
   prefs: []
   type: TYPE_NORMAL
+  zh: 让我们使用LLaMA-2 13B作为本节的基本模型。以下是模型详细信息：
 - en: '| hyperparam | value |'
+  id: totrans-279
   prefs: []
   type: TYPE_TB
+  zh: '| hyperparam | value |'
 - en: '| --- | --- |'
+  id: totrans-280
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- |'
 - en: '| L | 40 |'
+  id: totrans-281
   prefs: []
   type: TYPE_TB
+  zh: '| L | 40 |'
 - en: '| D | 5,120 |'
+  id: totrans-282
   prefs: []
   type: TYPE_TB
+  zh: '| D | 5,120 |'
 - en: '| F | 13824 |'
+  id: totrans-283
   prefs: []
   type: TYPE_TB
+  zh: '| F | 13824 |'
 - en: '| N | 40 |'
+  id: totrans-284
   prefs: []
   type: TYPE_TB
+  zh: '| N | 40 |'
 - en: '| K | 40 |'
+  id: totrans-285
   prefs: []
   type: TYPE_TB
+  zh: '| K | 40 |'
 - en: '| H | 128 |'
+  id: totrans-286
   prefs: []
   type: TYPE_TB
+  zh: '| H | 128 |'
 - en: '| V | 32,000 |'
+  id: totrans-287
   prefs: []
   type: TYPE_TB
+  zh: '| V | 32,000 |'
 - en: LLaMA-2 has separate embedding and output matrices and a gated MLP block.
+  id: totrans-288
   prefs: []
   type: TYPE_NORMAL
+  zh: LLaMA-2有独立的嵌入和输出矩阵以及一个门控MLP块。
 - en: '**Question 1:** How many parameters does LLaMA-2 13B have (I know that’s silly
     but do the math)? *Note that, as in [Transformer Math](../transformers), LLaMA-3
     has 3 big FFW matrices, two up-projection and one down-projection. We ignored
     the two “gating” einsum matrices in this section, but they behave the same as
     W[in] in this section.*'
+  id: totrans-289
   prefs: []
   type: TYPE_NORMAL
+  zh: '**问题1：** LLaMA-2 13B有多少个参数（我知道这很傻，但做一下数学计算）？*注意，正如在[Transformer Math](../transformers)中，LLaMA-3有3个大FFW矩阵，两个上投影和一个下投影。在本节中，我们忽略了两个“门控”einstein求和矩阵，但它们在本节中的行为与W[in]相同。*'
 - en: <details><summary>Click here for the answer.</summary>
+  id: totrans-290
   prefs: []
   type: TYPE_NORMAL
+  zh: <details><summary>点击此处查看答案。</summary>
 - en: 'FFW parameters: \(3LDF\) = `8.5e9`'
+  id: totrans-291
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: FFW参数：\(3LDF\) = `8.5e9`
 - en: 'Attention parameters: \(4DNHL\) = `4.2e9`'
+  id: totrans-292
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 注意力参数：\(4DNHL\) = `4.2e9`
 - en: 'Vocabulary parameters: \(2VD\) = `0.3e9`'
+  id: totrans-293
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 词汇参数：\(2VD\) = `0.3e9`
 - en: 'Total: `8.5e9 + 4.2e9 + 0.39e9 = 13.1e9`, as expected!</details>'
+  id: totrans-294
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 总计：`8.5e9 + 4.2e9 + 0.39e9 = 13.1e9`，正如预期的那样！</details>
 - en: '**Question 2:** Let’s assume we’re training with BS=16M tokens and using Adam.
     Ignoring parallelism for a moment, how much total memory is used by the model’s
     parameters, optimizer state, and activations? *Assume we store the parameters
     in bf16 and the optimizer state in fp32 and checkpoint activations three times
     per layer (after the three big matmuls).*'
+  id: totrans-295
   prefs: []
   type: TYPE_NORMAL
+  zh: '**问题2：** 假设我们使用BS=16M tokens和Adam进行训练。暂时忽略并行性，模型参数、优化器状态和激活总共使用了多少内存？*假设我们将参数存储在bf16中，将优化器状态存储在fp32中，并将每层的激活每三次存储（在三个大的矩阵乘法之后）。*'
 - en: <details><summary>Click here for the answer.</summary>
+  id: totrans-296
   prefs: []
   type: TYPE_NORMAL
+  zh: <details><summary>点击此处查看答案。</summary>
 - en: The total memory used for the parameters (bf16) and the two optimizer states
     (fp32, the first and second moment accumulators) is `(2 + 4 + 4) * 13e9 ~ 130GB`.
     The activations after the first two matmuls are shaped $BF$ and after the last
@@ -1437,44 +2133,63 @@
     $2 \cdot L \cdot (BD + 2 * BF) = 2LB \cdot (D + 2F)$ or `2 * 40 * 16e6 * 5,120
     * (1 + 2 * 2.7) ~ 4.2e13 = 42TB`, since `B=16e6`. All other activations are more
     or less negligible.</details>
+  id: totrans-297
   prefs: []
   type: TYPE_NORMAL
+  zh: 用于参数（bf16）和两个优化器状态（fp32，第一和第二矩累计器）的总内存是`(2 + 4 + 4) * 13e9 ~ 130GB`。在第一个两个矩阵乘法之后的激活形状是$BF$，在最后一个矩阵乘法之后是$BD$（根据上面的Transformer图），所以bf16的总内存是$2
+    \cdot L \cdot (BD + 2 * BF) = 2LB \cdot (D + 2F)$或`2 * 40 * 16e6 * 5,120 * (1
+    + 2 * 2.7) ~ 4.2e13 = 42TB`，因为`B=16e6`。所有其他激活量或多或少可以忽略不计。</details>
 - en: '**Question 3:** Assume we want to train with 32k sequence length and a total
     batch size of 3M tokens on a TPUv5p 16x16x16 slice. Assume we want to use bfloat16
     weights and a float32 optimizer, as above.'
+  id: totrans-298
   prefs: []
   type: TYPE_NORMAL
+  zh: '**问题3**：假设我们想在TPUv5p 16x16x16切片上使用32k序列长度和3M标记的总批量大大小进行训练。假设我们想使用bfloat16权重和float32优化器，如上所述。'
 - en: Can we use pure data parallelism? Why or why not?
+  id: totrans-299
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 我们能否使用纯数据并行？为什么或为什么不？
 - en: Can we use pure FSDP? Why or why not? With pure FSDP, how much memory will be
     used per device (assume we do gradient checkpointing only after the 3 big FFW
     matrices).
+  id: totrans-300
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 我们能否使用纯FSDP？为什么或为什么不？使用纯FSDP，每个设备将使用多少内存（假设我们只在3个大FFW矩阵之后进行梯度检查点）？
 - en: Can we use mixed FSDP + tensor parallelism? Why or why not? If so, what should
     $X$ and $Y$ be? How much memory will be stored per device? Using only roofline
     FLOPs estimates and ignoring attention, how long will each training step take
     at 40% MFU?
+  id: totrans-301
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 我们能否使用混合FSDP + 张量并行？为什么或为什么不？如果是这样，$X$和$Y$应该是多少？每个设备将存储多少内存？仅使用屋顶线FLOPs估计并忽略注意力，每个训练步骤在40%
+    MFU下将花费多长时间？
 - en: <details><summary>Click here for the answer.</summary>
+  id: totrans-302
   prefs: []
   type: TYPE_NORMAL
+  zh: <details><summary>点击此处查看答案。</summary>
 - en: First, let’s write down some numbers. With 32k sequence length and a 3M batch
     size, we have a sequence batch size of 96\. On a TPU v5p 16x16x16 slice, we have
     `393TB` of HBM.
+  id: totrans-303
   prefs: []
   type: TYPE_NORMAL
+  zh: 首先，让我们写下一些数字。在32k序列长度和3M批量大小的条件下，我们有一个序列批量大小的96。在一个TPU v5p 16x16x16切片上，我们有`393TB`的HBM。
 - en: We can’t use pure data parallelism, because it replicates the parameters and
     optimizer states on each chip, which are already around 130GB (from Q2) which
     is more HBM than we have per-chip (96GB).
+  id: totrans-304
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 我们不能使用纯数据并行，因为它在每个芯片上复制了参数和优化器状态，这些状态已经大约有130GB（来自Q2），这比我们每个芯片的HBM（96GB）还要多。
 - en: Let’s start by looking purely at memory. Replacing BS=16M with 3M in Q2, we
     get `~7.86e12` total checkpoint activations, and with the 1.3e11 optimizer state
     this brings us to almost exactly 8e12 = 8TB. The TPUv5p slice has `393TB` of HBM
@@ -1483,68 +2198,103 @@
     a minimum batch size of `850 * 4096 = 3.48M` tokens. That’s slightly above our
     3M batch size. So we’re actually comms-bound, which is sad. So the general answer
     is **no, we cannot do FSDP alone**.
+  id: totrans-305
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 让我们先纯粹地看看内存。在Q2中将BS=16M替换为3M，我们得到`~7.86e12`的总检查点激活量，加上1.3e11的优化器状态，这使我们几乎正好达到8e12
+    = 8TB。TPUv5p切片总共有`393TB`的HBM，所以我们安全地低于HBM限制。接下来，让我们看看我们是否会受到通信或计算的约束。在4096个芯片和3个并行轴的情况下，我们可以进行最小批量大小的`850
+    * 4096 = 3.48M`个标记。这略高于我们的3M批量大小的限制。所以实际上我们是通信受限的，这是令人遗憾的。所以一般的答案是**我们不能单独使用FSDP**。
 - en: Now we know our primary concern is being comms-bound, so let’s plug in some
     numbers. First of all, we know from above that our per-chip batch size with mixed
     FSDP + tensor parallelism needs to be above $2550^2 / 2F = 235$ here. That means
     we can in theory do this! Let’s figure out how much of each.
+  id: totrans-306
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 现在我们知道我们的主要问题是通信受限，所以让我们插入一些数字。首先，我们知道从上面来看，我们的每个芯片的批量大大小于混合FSDP + 张量并行需要超过$2550^2
+    / 2F = 235$。这意味着理论上我们可以做到这一点！让我们弄清楚每一部分是多少。
 - en: We have the rule $X_{opt} = \sqrt((F / B) * (M_X / M_Y) * N)$, so here we have
     `sqrt(3e6 * 2 * 4096 / 13824) = 1333`, meaning we’ll do roughly 1024 way DP and
     4 way TP. Per TPU memory will be as in (2), and step time will just be `6 * 3e6
     * 13e9 / (4096 * 4.6e14 * 0.4) = 300ms`.</details>
+  id: totrans-307
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们有规则$X_{opt} = \sqrt((F / B) * (M_X / M_Y) * N)$，所以这里我们有`sqrt(3e6 * 2 * 4096
+    / 13824) = 1333`，这意味着我们将大约进行1024路DP和4路TP。每个TPU的内存将如(2)所示，步骤时间将是`6 * 3e6 * 13e9
+    / (4096 * 4.6e14 * 0.4) = 300ms`。</details>
 - en: That’s it for Part 5! For Part 6, which applies this content to real LLaMA models,
     [click here](../applied-training)!
+  id: totrans-308
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 这就是第5部分的内容！对于第6部分，它将此内容应用于实际的LLaMA模型，[点击此处](../applied-training)！
 - en: Appendix
+  id: totrans-309
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 附录
 - en: 'Appendix A: Deriving the backward pass comms'
+  id: totrans-310
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 附录A：推导反向传播通信
 - en: Above, we simplified the Transformer layer forward pass as Out[B, D] = In[B,
     D] *[D] W[in][D, F] *[F] W[out][F, D]. How do we derive the comms necessary for
     the backwards pass?
+  id: totrans-311
   prefs: []
   type: TYPE_NORMAL
+  zh: 在上面，我们将 Transformer 层的前向传播简化为 Out[B, D] = In[B, D] *[D] W[in][D, F] *[F] W[out][F,
+    D]。我们如何推导反向传播所需的通信？
 - en: 'This follows fairly naturally from the rule in the previous section for a single
     matmul **Y = X * A**:'
+  id: totrans-312
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是从上一节中关于单个矩阵乘法规则 Y = X * A 的规则中相当自然地得出的：
 - en: \[\frac{dL}{dA} = \frac{dL}{dY}\frac{dY}{dA} = X^T \left(\frac{dL}{dY}\right)\]
     \[\frac{dL}{dX} = \frac{dL}{dY}\frac{dY}{dX} = \left(\frac{dL}{dY}\right) A^T\]
+  id: totrans-313
   prefs: []
   type: TYPE_NORMAL
+  zh: \[\frac{dL}{dA} = \frac{dL}{dY}\frac{dY}{dA} = X^T \left(\frac{dL}{dY}\right)\]
+    \[\frac{dL}{dX} = \frac{dL}{dY}\frac{dY}{dX} = \left(\frac{dL}{dY}\right) A^T\]
 - en: 'Using this, we get the following formulas (letting Tmp[B, F] stand for In[B,
     D] * W[in][D, F]):'
+  id: totrans-314
   prefs: []
   type: TYPE_NORMAL
+  zh: 使用这个，我们得到以下公式（让 Tmp[B, F] 代表 In[B, D] * W[in][D, F]）：
 - en: dW[out][F, D] = Tmp[B, F] *[B] dOut[B, D]
+  id: totrans-315
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: dW[out][F, D] = Tmp[B, F] *[B] dOut[B, D]
 - en: dTmp[B, F] = dOut[B, D] *[D] W[out][F, D]
+  id: totrans-316
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: dTmp[B, F] = dOut[B, D] *[D] W[out][F, D]
 - en: dW[in] = dTmp[B, F] *[B] Tmp[B, F]
+  id: totrans-317
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: dW[in] = dTmp[B, F] *[B] Tmp[B, F]
 - en: dIn[B, D] = dTmp[B, F] *[F] W[in][D, F]
+  id: totrans-318
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: dIn[B, D] = dTmp[B, F] *[F] W[in][D, F]
 - en: Note that these formulas are mathematical statements, with no mention of sharding.
     The job of the backwards pass is to compute these four quantities. So to figure
     out the comms necessary, we just take the shardings of all the quantities which
@@ -1552,24 +2302,40 @@
     are specified by our parallelization scheme, and use the rules of sharded matmuls
     to figure out what comms we have to do. Note that dOut is sharded in the same
     way as Out.</d-article>  <d-appendix><d-footnote-list><d-citation-list>### Miscellaneous
+  id: totrans-319
   prefs: []
   type: TYPE_NORMAL
+  zh: 注意，这些公式是数学陈述，没有提及分片。反向传播的任务是计算这四个量。因此，为了确定必要的通信，我们只需取上述四个方程（Tmp, dOut, W[out],
+    W[in]）中所有要矩阵乘的量的分片，这些分片由我们的并行化方案指定，并使用分片矩阵乘的规则来确定我们必须进行的通信。注意，dOut 的分片方式与 Out
+    相同。</d-article>  <d-appendix><d-footnote-list><d-citation-list>### 杂项
 - en: ^*Work done at Google DeepMind, now at MatX.
+  id: totrans-320
   prefs: []
   type: TYPE_NORMAL
+  zh: ^*在 Google DeepMind 完成的工作，现在在 MatX。
 - en: Citation
+  id: totrans-321
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 引用
 - en: 'For attribution in academic contexts, please cite this work as:'
+  id: totrans-322
   prefs: []
   type: TYPE_NORMAL
+  zh: 在学术环境中进行归属时，请引用本工作如下：
 - en: '[PRE1]'
+  id: totrans-323
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE1]'
 - en: 'or as a BibTeX entry:'
+  id: totrans-324
   prefs: []
   type: TYPE_NORMAL
+  zh: 或者作为一个 BibTeX 条目：
 - en: '[PRE2]</d-citation-list></d-footnote-list></d-appendix> <d-bibliography src="/scaling-book/assets/bibliography/main.bib"></d-bibliography></d-byline>'
+  id: totrans-325
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE2]</d-citation-list></d-footnote-list></d-appendix> <d-bibliography src="/scaling-book/assets/bibliography/main.bib"></d-bibliography></d-byline>'

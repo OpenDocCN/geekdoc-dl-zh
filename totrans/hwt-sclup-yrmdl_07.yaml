@@ -1,246 +1,380 @@
 - en: Training LLaMA 3 on TPUs
+  id: totrans-0
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
+  zh: 在TPU上训练LLaMA 3
 - en: 原文：[https://jax-ml.github.io/scaling-book/applied-training](https://jax-ml.github.io/scaling-book/applied-training)
+  id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 原文：[https://jax-ml.github.io/scaling-book/applied-training](https://jax-ml.github.io/scaling-book/applied-training)
 - en: '<d-title>Part 6 of [How To Scale Your Model](/scaling-book) ([Part 5: Training](../training)
     | [Part 7: Inference](../inference))'
+  id: totrans-2
   prefs: []
   type: TYPE_NORMAL
+  zh: <d-title>第6部分[如何扩展你的模型](/scaling-book) ([第5部分：训练](../training) | [第7部分：推理](../inference))
 - en: Let's take a close look at how we'd train LLaMA 3 models on TPU v5p using what
     we've learned in the previous section. How big are they? How expensive is training
     in different configurations? How are they sharded? Let's work through some back-of-the-envelope
     estimates for how the previous sections map onto real models.</d-title>  <d-byline><d-article><d-contents>###
     Contents
+  id: totrans-3
   prefs: []
   type: TYPE_NORMAL
+  zh: 让我们仔细看看如何使用上一节学到的知识在TPU v5p上训练LLaMA 3模型。它们有多大？不同配置的训练成本如何？它们是如何分片的？让我们通过一些粗略估计来看看前几节是如何映射到实际模型上的。
 - en: '[What does LLaMA 3 look like?](#what-does-llama-3-look-like)[Counting parameters
     and FLOPs](#counting-parameters-and-flops)[How to shard LLaMA 3-70B for training](#how-to-shard-llama-3-70b-for-training)[Worked
     Problems](#worked-problems)</d-contents>'
+  id: totrans-4
   prefs: []
   type: TYPE_NORMAL
+  zh: '[LLaMA 3长什么样？](#what-does-llama-3-look-like)[计算参数和FLOPs](#counting-parameters-and-flops)[如何分片训练LLaMA
+    3-70B](#how-to-shard-llama-3-70b-for-training)[练习问题](#worked-problems)'
 - en: '*Our goal in this section is to apply results from the previous section to
     a very practical problem: training the LLaMA 3 family (herd) of models. Unlike
     the previous sections we want you to do a lot of this work yourself. For this
     reason, we’ve hidden the answers to each section so you can try to answer it first.
     Try grabbing a pen and doing by hand!*'
+  id: totrans-5
   prefs: []
   type: TYPE_NORMAL
+  zh: '*本节的目标是将前节的结果应用于一个非常实际的问题：训练LLaMA 3系列（群）模型。与前面的章节不同，我们希望你自己做很多工作。因此，我们隐藏了每个部分的答案，这样你可以先尝试回答它。试着拿一支笔，手动尝试！*'
 - en: What does LLaMA 3 look like?
+  id: totrans-6
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: LLaMA 3长什么样？
 - en: 'The LLaMA-3 model family <d-cite key="llama3">includes 3 main models: LLaMA
     3 8B, 70B, and 405B. We’ll mostly focus on 70B, and leave 8B and 405B for you
     to explore in the problem section at the end. Here’s the architecture for LLaMA
     3-70B, taken from the LLaMA [HuggingFace page](https://huggingface.co/meta-llama/Meta-Llama-3-70B/blob/main/config.json).</d-cite>'
+  id: totrans-7
   prefs: []
   type: TYPE_NORMAL
+  zh: LLaMA-3模型家族包括3个主要模型：LLaMA 3 8B、70B和405B。我们将主要关注70B，并将8B和405B留给你在文章末尾的问题部分探索。以下是LLaMA
+    3-70B的架构，摘自LLaMA [HuggingFace页面](https://huggingface.co/meta-llama/Meta-Llama-3-70B/blob/main/config.json)。
 - en: '| **hyperparam** | **value** |'
+  id: totrans-8
   prefs: []
   type: TYPE_TB
+  zh: '| **超参数** | **值** |'
 - en: '| --- | --- |'
+  id: totrans-9
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- |'
 - en: '| \(n_\text{layers}\) (L) | 80 |'
+  id: totrans-10
   prefs: []
   type: TYPE_TB
+  zh: '| \(n_\text{layers}\) (L) | 80 |'
 - en: '| \(d_\text{model}\) (D) | 8,192 |'
+  id: totrans-11
   prefs: []
   type: TYPE_TB
+  zh: '| \(d_\text{model}\) (D) | 8,192 |'
 - en: '| \(d_{ff}\) (F) | 28,672 |'
+  id: totrans-12
   prefs: []
   type: TYPE_TB
+  zh: '| \(d_{ff}\) (F) | 28,672 |'
 - en: '| \(n_\text{heads}\) (N) | 64 |'
+  id: totrans-13
   prefs: []
   type: TYPE_TB
+  zh: '| \(n_\text{heads}\) (N) | 64 |'
 - en: '| \(n_\text{kv_heads}\) (K) | 8 |'
+  id: totrans-14
   prefs: []
   type: TYPE_TB
+  zh: '| \(n_\text{kv_heads}\) (K) | 8 |'
 - en: '| \(d_\text{qkv}\) (H) | 128 |'
+  id: totrans-15
   prefs: []
   type: TYPE_TB
+  zh: '| \(d_\text{qkv}\) (H) | 128 |'
 - en: '| \(n_\text{embeddings}\) (V) | 128,256 |'
+  id: totrans-16
   prefs: []
   type: TYPE_TB
+  zh: '| \(n_\text{embeddings}\) (V) | 128,256 |'
 - en: 'To highlight how easy this is to find, here’s the config itself, along with
     a mapping:'
+  id: totrans-17
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了突出这一点有多容易找到，这里提供了配置本身，以及一个映射：
 - en: <picture>![](../Images/08b4ca2bb72deccd30a73b1a0b07b724.png)</picture>
+  id: totrans-18
   prefs: []
   type: TYPE_NORMAL
+  zh: <picture>![](../Images/08b4ca2bb72deccd30a73b1a0b07b724.png)</picture>
 - en: '*It’s useful to make a big table with these numbers for many different open-source
     LLMs, so you can quickly compare the design decisions they’ve made.*'
+  id: totrans-19
   prefs: []
   type: TYPE_NORMAL
+  zh: '*制作一个包含这些数字的大表格，用于比较许多不同的开源LLM的设计决策，这样你可以快速比较它们。*'
 - en: Counting parameters and FLOPs
+  id: totrans-20
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 计算参数和FLOPs
 - en: '**Question:** From this table, can we calculate the LLaMA 3-70B parameter count?
     🤫 Let’s apply the content of [Section 4](../transformers) and see if we can get
     70B!'
+  id: totrans-21
   prefs: []
   type: TYPE_NORMAL
+  zh: '**问题：** 从这个表格中，我们能计算出LLaMA 3-70B的参数数量吗？🤫 让我们应用第4节的内容，看看我们是否能得到70B！'
 - en: '| param | formula | count |'
+  id: totrans-22
   prefs: []
   type: TYPE_TB
+  zh: '| 参数 | 公式 | 数量 |'
 - en: '| --- | --- | --- |'
+  id: totrans-23
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- | --- |'
 - en: '| FFW params | d_model * d_ff * 3 (for gelu + out-projection) * n_layers |
     8,192 * 8,192 * 3.5 * 3 * 80 = **56.3e9** |'
+  id: totrans-24
   prefs: []
   type: TYPE_TB
+  zh: '| FFW参数 | d_model * d_ff * 3 (for gelu + out-projection) * n_layers | 8,192
+    * 8,192 * 3.5 * 3 * 80 = **56.3e9** |'
 - en: '| Vocab params | 2 (input and output embeddings) * n_embeddings * d_model |
     2 * 128,256 * 8,192 = **2.1e9** |'
+  id: totrans-25
   prefs: []
   type: TYPE_TB
+  zh: '| Vocab参数 | 2 (input and output embeddings) * n_embeddings * d_model | 2 *
+    128,256 * 8,192 = **2.1e9** |'
 - en: '| Attention params | n_layers * [ 2 (for q embedding and concatenated output
     projection) * d_model * n_heads * d_qkv + 2 (for k and v) * d_model * n_kv_heads
     * d_qkv] | 80 * (2 * 8,192 * 64 * 128 + 2 * 8,192 * 8 * 128) = **12e9** |'
+  id: totrans-26
   prefs: []
   type: TYPE_TB
+  zh: '| Attention参数 | n_layers * [ 2 (for q embedding and concatenated output projection)
+    * d_model * n_heads * d_qkv + 2 (for k and v) * d_model * n_kv_heads * d_qkv]
+    | 80 * (2 * 8,192 * 64 * 128 + 2 * 8,192 * 8 * 128) = **12e9** |'
 - en: '|   |   | 56.3e9 + 2.1e9 + 12e9 = **70.4e9** |'
+  id: totrans-27
   prefs: []
   type: TYPE_TB
+  zh: '|   |   | 56.3e9 + 2.1e9 + 12e9 = **70.4e9** |'
 - en: That’s great! We get the number we expect. You’ll notice as expected that the
     FFW parameters totally dominate the overall parameter count, although attention
     is non-trivial.
+  id: totrans-28
   prefs: []
   type: TYPE_NORMAL
+  zh: 这太棒了！我们得到了预期的数字。正如预期的那样，你会注意到 FFW 参数在整体参数数量中完全占主导地位，尽管注意力机制并不简单。
 - en: '**Takeaway**: The 3 big weight matrices in the MLP block are so much larger
     than all the other arrays in the Transformer that we can typically almost ignore
     all other parameters when reasoning about model memory or FLOPs. For LLaMA 3-70B,
     they represent 56B of 70B parameters.'
+  id: totrans-29
   prefs: []
   type: TYPE_NORMAL
+  zh: '**总结：** MLP 块中的 3 个大权重矩阵比 Transformer 中的所有其他数组都要大得多，因此当我们考虑模型内存或 FLOPs 时，通常可以几乎忽略所有其他参数。对于
+    LLaMA 3-70B 来说，它们代表了 70B 个参数中的 56B。'
 - en: Let’s look at FLOPs now! *Remember the general rules for training from [Section
     4](../transformers).*
+  id: totrans-30
   prefs: []
   type: TYPE_NORMAL
+  zh: 让我们来看看 FLOPs！*记住 [第 4 节](../transformers) 中训练的一般规则。*
 - en: '**Question:** How many FLOPs does LLaMA-3 perform per token per training step?
     *This helps us determine how expensive the whole training process will be.*'
+  id: totrans-31
   prefs: []
   type: TYPE_NORMAL
+  zh: '**问题：** LLaMA-3 每个 token 每个训练步骤执行多少 FLOPs？*这有助于我们确定整个训练过程将有多昂贵。*'
 - en: <details><summary>Click here for the answer, once you’ve thought about it!</summary>
+  id: totrans-32
   prefs: []
   type: TYPE_NORMAL
+  zh: <details><summary>点击此处查看答案，在你思考过后！</summary>
 - en: '**Answer**: As shown in [Section 4](../transformers), we do roughly \(6 \cdot
     \text{param count}\) FLOPs per token, so here that’s roughly `6 * 70e9 = 4.2e11`
     FLOPs / token. That’s about half a TFLOP per token per step. Assuming we’re compute-bound,
     this should take roughly `4.2e11 / 4.59E+14 = 1ms` on a single TPU v5p chip, assuming
     perfect FLOPs utilization.</details>'
+  id: totrans-33
   prefs: []
   type: TYPE_NORMAL
+  zh: '**答案：** 如 [第 4 节](../transformers) 所示，我们每 token 大约需要 \(6 \cdot \text{参数数量}\)
+    个 FLOPs，所以这里大约是 `6 * 70e9 = 4.2e11` FLOPs / token。这意味着每步大约有 0.5 TFLOPs。假设我们受限于计算能力，这应该在单个
+    TPU v5p 芯片上大约需要 `4.2e11 / 4.59E+14 = 1ms`，假设 FLOPs 利用率完美。</details>'
 - en: '**Question:** LLaMA 3 was trained for about 15 trillion tokens. How many FLOPs
     is that total?'
+  id: totrans-34
   prefs: []
   type: TYPE_NORMAL
+  zh: '**问题：** LLaMA 3 大约训练了 1500 万亿个 token。这总共需要多少 FLOPs？'
 - en: <details><summary>Click here for the answer, once you’ve thought about it!</summary>
+  id: totrans-35
   prefs: []
   type: TYPE_NORMAL
+  zh: <details><summary>点击此处查看答案，在你思考过后！</summary>
 - en: '**Answer**: That’s easy, it’s just `4.2e11 * 15e12 = 6.3e24 FLOPs` total. 6.3
     yottaFLOPs. That’s a lot! On a single TPU this would take `6.3e24 / 4.59E+14 =
     435 years`. That’s also a lot!</details>'
+  id: totrans-36
   prefs: []
   type: TYPE_NORMAL
+  zh: '**答案：** 这很简单，总共只需要 `4.2e11 * 15e12 = 6.3e24 FLOPs`。6.3 yottaFLOPs。这太多了！在一个单独的
+    TPU 上这将需要 `6.3e24 / 4.59E+14 = 435 years`。这也太多了！</details>'
 - en: '**Question:** Let’s say we wanted to train on a full TPU v5p pod with 16x20x28
     = 8960 chips. How long would this take to train at 40% MFU in bfloat16, assuming
     we are compute-bound?'
+  id: totrans-37
   prefs: []
   type: TYPE_NORMAL
+  zh: '**问题：** 假设我们想在完整的 TPU v5p pod 上进行训练，该 pod 有 16x20x28 = 8960 个芯片。在 40% MFU 下以
+    bfloat16 格式训练需要多长时间，假设我们受限于计算能力？'
 - en: <details><summary>Click here for the answer, once you’ve thought about it!</summary>
+  id: totrans-38
   prefs: []
   type: TYPE_NORMAL
+  zh: <details><summary>点击此处查看答案，在你思考过后！</summary>
 - en: '**Answer**: We know that each TPU v5p can perform 4.59e14 FLOPs / second. At
     40% MFU, this will take about `T = 6.3e24 / (8960 * 4.59e14 * 0.4) = 3.8e6 seconds`.
     **This is about 44 days!** That’s fairly reasonable, assuming we can actually
     achieve 40% MFU.</details>'
+  id: totrans-39
   prefs: []
   type: TYPE_NORMAL
+  zh: '**答案：** 我们知道每个 TPU v5p 每秒可以执行 4.59e14 个 FLOPs。在 40% MFU 下，这将需要大约 `T = 6.3e24
+    / (8960 * 4.59e14 * 0.4) = 3.8e6 seconds`。**这大约是 44 天！**这相当合理，假设我们实际上能够达到 40%
+    MFU。</details>'
 - en: '**Question:** LLaMA 3-70B was pretrained with a batch size of about 4M tokens.
     How many TPUs do we need at minimum to train with this batch size? *You can assume
     bfloat16 parameters and float32 optimizer state, and that you checkpoint gradients
     4 times per layer.*'
+  id: totrans-40
   prefs: []
   type: TYPE_NORMAL
+  zh: '**问题：** LLaMA 3-70B 使用大约 4M 个 token 的批大小进行预训练。为了使用这个批大小进行训练，我们至少需要多少个 TPU？*你可以假设
+    bfloat16 参数和 float32 优化器状态，并且每层检查梯度 4 次。*'
 - en: <details><summary>Click here for the answer, once you’ve thought about it!</summary>
+  id: totrans-41
   prefs: []
   type: TYPE_NORMAL
+  zh: <details><summary>点击此处查看答案，在你思考过后！</summary>
 - en: '**Answer**: This question is primarily asking about memory usage, since that’s
     the only strict constraint on available compute. During training, we have three
     primary uses of HBM: model parameters, optimizer state, and gradient checkpoints.
     If we assume bfloat16 weights, float32 optimizer state, and a *very* conservative
     gradient checkpointing scheme (4 times per layer), we have:'
+  id: totrans-42
   prefs: []
   type: TYPE_NORMAL
+  zh: '**答案：** 这个问题主要询问的是内存使用情况，因为这是唯一严格的计算能力约束。在训练过程中，我们有三个主要的 HBM 使用场景：模型参数、优化器状态和梯度检查点。如果我们假设
+    bfloat16 权重、float32 优化器状态，以及一个非常保守的梯度检查点方案（每层 4 次），我们有：'
 - en: '| **Params** | 2 * 70GB | ~140GB |'
+  id: totrans-43
   prefs: []
   type: TYPE_TB
+  zh: '| **参数** | 2 * 70GB | ~140GB |'
 - en: '| **Optimizer State** | 8 * 70GB | ~560GB |'
+  id: totrans-44
   prefs: []
   type: TYPE_TB
+  zh: '| **优化器状态** | 8 * 70GB | ~560GB |'
 - en: '| **Gradient Checkpoints** | 2 * 8192 * 4e6 * 4 * 80 | ~20.9TB |'
+  id: totrans-45
   prefs: []
   type: TYPE_TB
+  zh: '| **梯度检查点** | 2 * 8192 * 4e6 * 4 * 80 | ~20.9TB |'
 - en: '| **Total** |   | ~21.6TB |'
+  id: totrans-46
   prefs: []
   type: TYPE_TB
+  zh: '| **总计** |   | ~21.6TB |'
 - en: The total here is about 21.6TB. You notice that gradient checkpointing strongly
     dominates the memory picture, even with a very conservative checkpointing scheme.
     We could technically go to 1 checkpoint per layer, or do microbatching, but this
     is a reasonable picture. With these assumptions, since each TPU v5p has 96GB of
     HBM, we need `21.6e12 / 96e9 = 225` TPUs. That’s not very much actually!
+  id: totrans-47
   prefs: []
   type: TYPE_NORMAL
+  zh: 总计大约是 21.6TB。你注意到，即使是非常保守的检查点方案，梯度检查点也强烈主导了内存图景。技术上我们可以做到每层一个检查点，或者进行微批处理，但这是一个合理的图景。在这些假设下，由于每个
+    TPU v5p 有 96GB 的 HBM，我们需要 `21.6e12 / 96e9 = 225` 个 TPU。实际上并不多！
 - en: '*Why wouldn’t we do this?* Well, because it would take us `44 days * 8960 /
     225 = 1752 days` to train. That’s nearly four years. **That’s a lot.** Still,
     this makes it clear that we’re using these large clusters not because we’re bound
     by memory but rather because we need the extra FLOPs.</details>'
+  id: totrans-48
   prefs: []
   type: TYPE_NORMAL
+  zh: '*为什么不这样做呢？* 好吧，因为这需要我们 `44 天 * 8960 / 225 = 1752 天` 来训练。这几乎四年的时间。**这太多了。**尽管如此，这清楚地表明我们使用这些大型集群并不是因为我们受限于内存，而是因为我们需要额外的
+    FLOPs。</details>'
 - en: '**Question:** Under the same assumptions as the question above, if we use 8960
     TPU v5p chips, how much memory will we use per-chip?'
+  id: totrans-49
   prefs: []
   type: TYPE_NORMAL
+  zh: '**问题**：在上述问题的相同假设下，如果我们使用 8960 个 TPU v5p 芯片，每片芯片我们将使用多少内存？'
 - en: <details><summary>Click here for the answer, once you’ve thought about it!</summary>
+  id: totrans-50
   prefs: []
   type: TYPE_NORMAL
+  zh: <details><summary>点击此处查看答案，在你思考过后！</summary>
 - en: '**Answer**: Our total memory is still about 21.6TB, so per-chip we’ll be using
     about 2.4GB per chip, which is basically nothing. If we did much more aggressive
     checkpointing, e.g. 12 checkpoints per layer, we’d still only be at 8GB per chip.
     We’re nowhere near being memory bound during training at these scales.</details>'
+  id: totrans-51
   prefs: []
   type: TYPE_NORMAL
+  zh: '**答案**：我们的总内存仍然是大约 21.6TB，所以每片芯片我们将使用大约 2.4GB，这基本上不算什么。如果我们进行更激进的检查点，例如每层 12
+    个检查点，我们每片芯片也只会达到 8GB。在这些规模下，我们在训练过程中根本不会接近内存限制。</details>'
 - en: '**Takeaways**: It is technically possible to train even very large models on
     very small topologies, with the caveat that they will likely take a long time.
     Being able to calculate the total FLOPs of a training run allows us to ballpark
     its training time by assuming a modest MFU and a known topology.'
+  id: totrans-52
   prefs: []
   type: TYPE_NORMAL
+  zh: '**要点**：在技术上，即使在非常小的拓扑结构上训练非常大的模型也是可能的，但前提是它们可能需要很长时间。能够计算训练运行的总体 FLOPs 允许我们通过假设一个适度的
+    MFU 和已知的拓扑来估算其训练时间。'
 - en: How to shard LLaMA 3-70B for training
+  id: totrans-53
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 如何为训练分片 LLaMA 3-70B
 - en: Let’s stick to our setting from above and say we want to train LLaMA 3-70B with
     4M token batch size (1024 sequences of length 4096 per batch) on a TPU v5p pod
     of 8960 chips. Let’s discuss what the best sharding strategy is for this model.
+  id: totrans-54
   prefs: []
   type: TYPE_NORMAL
+  zh: 让我们坚持上面的设置，并说我们想要使用 4M 令牌批大小（每个批次 1024 个长度为 4096 的序列）在 8960 个芯片的 TPU v5p pod
+    上训练 LLaMA 3-70B。让我们讨论这个模型的最佳分片策略。
 - en: '**Question:** Under the assumptions above, can we train our model with FSDP
     alone? To start, let’s say we can’t do any sequence/context parallelism. *This
     should be the first idea you have, since it’s simple and will introduce no extra
     communication if it works.*'
+  id: totrans-55
   prefs: []
   type: TYPE_NORMAL
+  zh: '**问题**：在上述假设下，我们能否仅使用 FSDP 训练我们的模型？首先，让我们假设我们无法进行任何序列/上下文并行。*这应该是你首先想到的想法，因为它简单，如果可行的话，将不会引入额外的通信。*'
 - en: <details><summary>Click here for the answer, once you’ve thought about it!</summary>
+  id: totrans-56
   prefs: []
   type: TYPE_NORMAL
+  zh: <details><summary>点击此处查看答案，在你思考过后！</summary>
 - en: '**Answer**: This answer will be a little pedantic. As noted above, LLaMA 3-70B
     is initially trained with sequences of length 4K, so the batch size of 4M tokens
     gives us a *sequence batch size* of 1024\. That means we can only really do pure
@@ -248,16 +382,24 @@
     to do data parallelism over*. So the answer in the simple sense of “fully data
     parallelism with no extra communication” is no. The next question will answer
     a slightly less pedantic version of this.</details>'
+  id: totrans-57
   prefs: []
   type: TYPE_NORMAL
+  zh: '**答案**：这个答案可能会有些繁琐。如上所述，LLaMA 3-70B 初始训练时使用长度为 4K 的序列，因此 4M 令牌的批大小给我们带来了 *序列批大小*
+    为 1024。这意味着我们实际上只能做到 1024 个芯片的纯数据并行/FSDP，因为这就是我们必须进行数据并行处理的序列数量。所以在简单意义上，“无额外通信的全数据并行”是不可能的。下一个问题将回答这个问题的稍微不那么繁琐的版本。</details>'
 - en: '**Question:** Let’s relax the requirement of not doing any sequence sharding.
     If we allow ourselves to do FSDP over both the batch *and* sequence axes, can
     we train LLaMA 3-70B with only FSDP on 8960 chips?'
+  id: totrans-58
   prefs: []
   type: TYPE_NORMAL
+  zh: '**问题**：如果我们放宽不进行任何序列分片的要求。如果我们允许自己在批和序列轴上进行 FSDP，我们能否在 8960 个芯片上仅使用 FSDP 训练
+    LLaMA 3-70B？'
 - en: <details><summary>Click here for the answer, once you’ve thought about it!</summary>
+  id: totrans-59
   prefs: []
   type: TYPE_NORMAL
+  zh: <details><summary>点击此处查看答案，在你思考过后！</summary>
 - en: '**Answer**: Now that we’re allowing ourselves to do sequence/context parallelism
     as well, we can scale up way more. First let’s calculate our per-device batch
     size. If we do 8960-way FSDP, we end with a per-TPU batch size of `4 * 1024 *
@@ -266,82 +408,126 @@
     3 axes here with a full 3D pod, this would give us a lower bound of 850, which
     we’re well below. **So the answer is no, even with 3 axes. We would be solidly
     communication-bound.**</details>'
+  id: totrans-60
   prefs: []
   type: TYPE_NORMAL
+  zh: '**答案**：现在我们允许自己进行序列/上下文并行，我们可以扩展得更多。首先让我们计算我们的每设备批处理大小。如果我们进行8960路FSDP，我们将得到每个TPU的批处理大小为`4
+    * 1024 * 1024 / 8960 = 468 tokens`。从上一节我们知道，当 \(\text{per device batch size} <
+    2550 / M_X\) 时，我们通过FSDP会变成ICI受限。由于我们可以在这里使用完整的3D pod来分配3个轴，这将给我们一个下限为850，我们远远低于这个值。**所以答案是，即使有3个轴，我们也会是通信受限的。**'
 - en: '**Question:** Now let’s look at mixed tensor parallelism and FSDP. Does there
     exist some combination that lets us remain compute-bound? What amount of FSDP
     and tensor parallelism should we do if so?'
+  id: totrans-61
   prefs: []
   type: TYPE_NORMAL
+  zh: '**问题**：现在让我们看看混合张量并行和FSDP。是否存在某种组合使我们保持计算受限？如果存在，我们应该进行多少FSDP和张量并行？'
 - en: <details><summary>Click here for the answer, once you’ve thought about it!</summary>
+  id: totrans-62
   prefs: []
   type: TYPE_NORMAL
+  zh: <details><summary>点击此处查看答案，在你思考过后！</summary>
 - en: '**Answer**: First let’s check to see if this will even fit. We know that we’ll
     be comms-bound if our per-chip batch size is less than $2550^2 / 2F = 113$. As
     we saw above, we’re slightly above this. So that’s great! Now to pick the optimal
     amount of FSDP, we can use the formula'
+  id: totrans-63
   prefs: []
   type: TYPE_NORMAL
+  zh: '**答案**：首先让我们看看这是否甚至能适应。我们知道如果我们的每片芯片批处理大小小于 $2550^2 / 2F = 113$，我们将会通信受限。如上所述，我们略高于这个值。所以这很好！现在为了选择最优的FSDP数量，我们可以使用以下公式'
 - en: \[X_{opt} = \sqrt{\frac{2BN}{F}} = \sqrt{\frac{2 \cdot 4.19e6 \cdot 8960}{28672}}
     = 1618\]
+  id: totrans-64
   prefs: []
   type: TYPE_NORMAL
+  zh: \[X_{opt} = \sqrt{\frac{2BN}{F}} = \sqrt{\frac{2 \cdot 4.19e6 \cdot 8960}{28672}}
+    = 1618\]
 - en: Rounding to a reasonable multiple of 2, that gives us roughly 2048-way FSDP
     and 4-way tensor parallelism parallelism. That should work well!</details>
+  id: totrans-65
   prefs: []
   type: TYPE_NORMAL
+  zh: 四舍五入到合理的2的倍数，这给我们大约2048路FSDP和4路张量并行。这应该会很好！
 - en: '**Takeaways**: We can train LLaMA-3 with a 4M token batch size on a full TPU
     v5p pod with a mixture of data parallelism (1024-way), sequence parallelism (2-way),
     and tensor parallelism (4-way) without being communication-bound. We will be comms-bound
     if we try to do pure FSDP or FSDP + sequence parallelism. The equations we’ve
     cooked up in the previous section are very practical.'
+  id: totrans-66
   prefs: []
   type: TYPE_NORMAL
+  zh: '**要点**：我们可以使用数据并行（1024路）、序列并行（2路）和张量并行（4路）的组合，在完整的TPU v5p pod上以4M token批处理大小训练LLaMA-3，而不会受到通信限制。如果我们尝试纯FSDP或FSDP
+    + 序列并行，我们会受到通信限制。我们在上一节中提出的方程非常实用。'
 - en: Worked Problems
+  id: totrans-67
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 工作问题
 - en: '**Question 1 [Scaling LLaMA 70B to more chips]:** say we want to train LLaMA
     3-70B on 4 pods with the same batch size. What parallelism scheme would we use?
     Would we be compute or communication bound? Roughly how long would it take to
     train? *Make sure to use the correct roofline bound.*'
+  id: totrans-68
   prefs: []
   type: TYPE_NORMAL
+  zh: '**问题1 [将LLaMA 70B扩展到更多芯片]：**如果我们想在4个pod上以相同的批处理大小训练LLaMA 3-70B，我们会使用哪种并行方案？我们会是计算受限还是通信受限？大致需要多长时间来训练？*确保使用正确的roofline界限*。'
 - en: '**Question 2 [LLaMA 405B]:**'
+  id: totrans-69
   prefs: []
   type: TYPE_NORMAL
+  zh: '**问题2 [LLaMA 405B]：**'
 - en: (a) Using the LLaMA 3-405B [config](https://huggingface.co/meta-llama/Llama-3.1-405B/blob/main/config.json),
     write a table with all the key hyperparameters as above. How many total parameters
     does this model have? How many FLOPs per training step? How many FLOPs do we perform
     if we train for 15T tokens?
+  id: totrans-70
   prefs: []
   type: TYPE_NORMAL
+  zh: (a) 使用 LLaMA 3-405B [配置](https://huggingface.co/meta-llama/Llama-3.1-405B/blob/main/config.json)，编写一个包含所有上述关键超参数的表格。这个模型总共有多少个参数？每一步训练有多少个FLOPs？如果我们训练15T个token，会有多少FLOPs？
 - en: (b) Assume we want to train on 8 TPU v5p pods. What parallelism scheme would
     we use? How long would training take? Would be compute or comms bound?
+  id: totrans-71
   prefs: []
   type: TYPE_NORMAL
+  zh: (b) 假设我们想在8个TPU v5p pod上进行训练。我们会使用哪种并行方案？训练需要多长时间？会是计算受限还是通信受限？
 - en: That’s all for Section 6\. For Section 7, about Transformer inference, click
     [here](../inference).</d-article>  <d-appendix><d-footnote-list><d-citation-list>###
     Miscellaneous
+  id: totrans-72
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 这就是第6节的所有内容。关于第7节，关于Transformer推理，请点击[这里](../inference)。</d-article>  <d-appendix><d-footnote-list><d-citation-list>###
+    杂项
 - en: ^*Work done at Google DeepMind, now at MatX.
+  id: totrans-73
   prefs: []
   type: TYPE_NORMAL
+  zh: ^*在Google DeepMind完成的工作，现在在MatX。
 - en: Citation
+  id: totrans-74
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 引用
 - en: 'For attribution in academic contexts, please cite this work as:'
+  id: totrans-75
   prefs: []
   type: TYPE_NORMAL
+  zh: 在学术环境中进行归属时，请引用此工作如下：
 - en: '[PRE0]'
+  id: totrans-76
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE0]'
 - en: 'or as a BibTeX entry:'
+  id: totrans-77
   prefs: []
   type: TYPE_NORMAL
+  zh: 或者作为一个BibTeX条目：
 - en: '[PRE1]</d-citation-list></d-footnote-list></d-appendix> <d-bibliography src="/scaling-book/assets/bibliography/main.bib"></d-bibliography></d-byline>'
+  id: totrans-78
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE1] <d-citation-list></d-citation-list> <d-footnote-list></d-footnote-list>
+    <d-appendix> <d-bibliography src="/scaling-book/assets/bibliography/main.bib"></d-bibliography></d-byline>'

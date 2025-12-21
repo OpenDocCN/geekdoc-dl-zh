@@ -1,126 +1,185 @@
 - en: Programming TPUs in JAX
+  id: totrans-0
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
+  zh: 在JAX中编程TPUs
 - en: 原文：[https://jax-ml.github.io/scaling-book/jax-stuff](https://jax-ml.github.io/scaling-book/jax-stuff)
+  id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 原文：[https://jax-ml.github.io/scaling-book/jax-stuff](https://jax-ml.github.io/scaling-book/jax-stuff)
 - en: '<d-title>Part 10 of [How To Scale Your Model](/scaling-book) ([Part 9: Profiling](../profiling)
     | [Part 11: Conclusions](../conclusion))'
+  id: totrans-2
   prefs: []
   type: TYPE_NORMAL
+  zh: <d-title>《如何扩展你的模型》第10部分[如何扩展你的模型](/scaling-book) ([第9部分：性能分析](../profiling)
+    | [第11部分：结论](../conclusion))
 - en: How to use JAX to program TPUs efficiently! Much of this section is taken from
     [here](https://jax.readthedocs.io/en/latest/jep/14273-shard-map.html). You can
     run the code examples in this section with free TPUs on [Google Colab](https://colab.sandbox.google.com/).</d-title>  <d-byline><d-article><d-contents>###
     Contents
+  id: totrans-3
   prefs: []
   type: TYPE_NORMAL
+  zh: 如何高效地使用JAX来编程TPUs！本节的大部分内容来自[这里](https://jax.readthedocs.io/en/latest/jep/14273-shard-map.html)。你可以使用免费TPUs在[Google
+    Colab](https://colab.sandbox.google.com/)上运行本节中的代码示例。</d-title>  <d-byline><d-article><d-contents>###
+    内容
 - en: '[How Does Parallelism Work in JAX?](#how-does-parallelism-work-in-jax)'
+  id: totrans-4
   prefs: []
   type: TYPE_NORMAL
+  zh: '[JAX中的并行是如何工作的？](#how-does-parallelism-work-in-jax)'
 - en: '[Auto sharding mode](#auto-sharding-mode)'
+  id: totrans-5
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '[自动分片模式](#auto-sharding-mode)'
 - en: '[“Explicit sharding mode”](#explicit-sharding-mode)'
+  id: totrans-6
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '[“显式分片模式”](#explicit-sharding-mode)'
 - en: '[Manual sharding mode via shard_map](#manual-sharding-mode-via-shard-map)'
+  id: totrans-7
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '[通过shard_map手动分片模式](#manual-sharding-mode-via-shard-map)'
 - en: '[Worked Problems](#worked-problems)</d-contents>'
+  id: totrans-8
   prefs: []
   type: TYPE_NORMAL
+  zh: '[练习题](#worked-problems)</d-contents>'
 - en: How Does Parallelism Work in JAX?
+  id: totrans-9
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: JAX中的并行是如何工作的？
 - en: 'JAX supports three schools of thought for multi-device programming:'
+  id: totrans-10
   prefs: []
   type: TYPE_NORMAL
+  zh: JAX支持多设备编程的三个流派：
 - en: '**Compiler, take the wheel!** Let the XLA compiler automatically partition
     arrays and decide what communication to add to facilitate a given program. This
     lets you take a program that runs on a single device and automatically run it
     on thousands without changing anything.'
+  id: totrans-11
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: '**编译器，接管方向盘！** 让XLA编译器自动分区数组并决定添加哪些通信以促进给定程序。这让你可以运行在单个设备上的程序，而无需更改任何内容即可自动在数千个设备上运行。'
 - en: '**JAX, take the wheel!** Automatic parallelism is great, but sometimes the
     compiler does something crazy. Explicit sharding lets you write single-device
     code like usual, but have JAX handle sharding propagation (not the compiler).
     This means JAX can ask you for clarification when it’s unclear what you want.'
+  id: totrans-12
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: '**JAX，接管方向盘！** 自动并行化很棒，但有时编译器会做一些疯狂的事情。显式分片让你可以像往常一样编写单设备代码，但让JAX处理分片传播（而不是编译器）。这意味着数组的分片实际上是JAX类型系统的一部分，当JAX检测到模糊的通信时，它会出错，并让用户解决它。'
 - en: '**Just let me write what I mean, damnit!** While compilers are nice, they sometimes
     do the wrong thing and add communication you don’t intend. Sometimes we want to
     be explicit about exactly what communication you intend to run.'
+  id: totrans-13
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: '**让我写我想写的，见鬼！** 虽然编译器很棒，但它们有时会做错事，添加你不想要的通信。有时我们希望明确指出你打算运行的确切通信。'
 - en: '| Mode | View? | Explicit sharding? | Explicit Collectives? |'
+  id: totrans-14
   prefs: []
   type: TYPE_TB
+  zh: '| 模式 | 查看？ | 显式分片？ | 显式集体？ |'
 - en: '| --- | --- | --- | --- |'
+  id: totrans-15
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- | --- | --- |'
 - en: '| Auto | Global | ❌ | ❌ |'
+  id: totrans-16
   prefs: []
   type: TYPE_TB
+  zh: '| 自动 | 全局 | ❌ | ❌ |'
 - en: '| Explicit | Global | ✅ | ❌ |'
+  id: totrans-17
   prefs: []
   type: TYPE_TB
+  zh: '| 显式 | 全局 | ✅ | ❌ |'
 - en: '| Manual | Per-device | ✅ | ✅ |'
+  id: totrans-18
   prefs: []
   type: TYPE_TB
+  zh: '| 手动 | 每设备 | ✅ | ✅ |'
 - en: 'Correspondingly, JAX provides APIs for each of these modes:'
+  id: totrans-19
   prefs: []
   type: TYPE_NORMAL
+  zh: 相应地，JAX为这些模式提供了API：
 - en: '`jax.jit` (with `Auto` mesh axes) lets you take any existing JAX function and
     call it with sharded inputs. JAX then uses XLA’s [Shardy](https://openxla.org/shardy)
     compiler which automatically parallelizes the program. XLA will add communication
     for you (AllGathers, ReduceScatters, AllReduces, etc.) when needed to facilitate
     existing operations. While it isn’t perfect, it usually does a decent job at automatically
     scaling your program to any number of chips without code changes.'
+  id: totrans-20
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: '`jax.jit`（带有`自动`网格轴）允许你使用分片输入调用任何现有的JAX函数。然后JAX使用XLA的[Shardy](https://openxla.org/shardy)编译器自动并行化程序。当需要时，XLA会为你添加通信（AllGathers、ReduceScatters、AllReduces等）以促进现有操作。虽然它并不完美，但它通常能自动将你的程序扩展到任何数量的芯片，而无需代码更改。'
 - en: '`jax.jit` with `Explicit` mesh axes looks similar to (1), but lets JAX handle
     the sharding propagation instead of XLA. That means the sharding of an array is
     actually part of the JAX type system, and JAX can error out when it detects ambiguous
     communication and lets the user resolve it.'
+  id: totrans-21
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: '`jax.jit`与`显式`网格轴看起来类似于（1），但让JAX处理分片传播而不是XLA。这意味着数组的分片实际上是JAX类型系统的一部分，当JAX检测到模糊的通信时，它会出错，并让用户解决它。'
 - en: '`jax.shard_map` is the more manual counterpart. You get a device-local view
     of the program and have to write any communication you want explicitly. Have a
     sharded array and want the whole thing on each device? Add a `jax.lax.all_gather`.
     Want to sum an array across your devices? Add a `jax.lax.psum` (an AllReduce).
     Programming is harder but far less likely to do something you don’t want.'
+  id: totrans-22
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: '`jax.shard_map` 是更手动的方法。你将获得程序在设备上的本地视图，并必须明确编写任何你想要的通信。有一个分片数组并想在每个设备上都有整个数组？添加一个
+    `jax.lax.all_gather`。想要在设备间求和一个数组？添加一个 `jax.lax.psum`（一个 AllReduce）。编程更困难，但几乎不可能做你不希望做的事情。'
 - en: Auto sharding mode
+  id: totrans-23
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 自动分片模式
 - en: 'jax.jit plays two roles inside JAX. As the name suggests, it “just-in-time”
     compiles a function from Python into bytecode (via XLA/HLO/LLO) so it runs faster.
     But if the input is sharded or the user specifies an `in_sharding` or `out_sharding`,
     it also lets XLA distribute the computation across multiple devices and add communication
     as needed. For example, here’s how you could write a sharded matmul using jax.jit:'
+  id: totrans-24
   prefs: []
   type: TYPE_NORMAL
+  zh: jax.jit 在 JAX 中扮演两个角色。正如其名所示，它“即时”地将一个 Python 函数编译成字节码（通过 XLA/HLO/LLO），从而使其运行更快。但如果输入被分片或用户指定了
+    `in_sharding` 或 `out_sharding`，它还允许 XLA 将计算分布到多个设备并在需要时添加通信。例如，以下是使用 jax.jit 编写分片矩阵乘法的方法：
 - en: '[PRE0]'
+  id: totrans-25
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE0]'
 - en: This will run automatically with any sharding and partition the computation
     across our devices. **But what’s actually happening at the hardware level?**
+  id: totrans-26
   prefs: []
   type: TYPE_NORMAL
+  zh: 这将在任何分片下自动运行，并将计算分配到我们的设备上。**但在硬件级别实际上发生了什么？**
 - en: First we create In and W sharded across our devices<d-footnote>Notice how we
     did this. This is one way to create an array with a particular sharding (i.e.
     by adding the device argument to the creation function). Another one is to create
@@ -130,39 +189,60 @@
     W is sharded 2 way along the contracting dimension, while In is sharded 4-ways
     (along both the contracting and output dimensions). This corresponds to a sharding
     W[D[Y], F] and In[B[X], D[Y]], aka a kind of model and data parallelism.
+  id: totrans-27
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 首先，我们在我们的设备上创建 In 和 W 分片。注意我们是如何做到这一点的。这是创建具有特定分片（即通过将设备参数添加到创建函数中）的数组的一种方法。另一种方法是使用
+    `jnp.array(....)` 正常创建一个数组，然后进行例如 `jax.device_put(..., P('x', 'y'))` 的操作。还有另一种方法是编写一个创建你想要的数组的函数，并使用
+    `out_shardings` 作为你想要的值进行 jit 编译。</d-footnote>。W 在收缩维度上以 2 方式分片，而 In 以 4 方式分片（沿收缩和输出维度）。这对应于分片
+    W[D[Y], F] 和 In[B[X], D[Y]]，即一种模型和数据并行。
 - en: If we were running this locally (i.e. on one device), `matmul_square` would
     simply square the input and perform a simple matmul. But because we specify the
     `out_shardings` as `P('X', None)`, the output will be sharded along the batch
     but replicated across the model dimension and will require an AllReduce to compute.
+  id: totrans-28
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 如果我们在本地运行这个程序（即在单个设备上），`matmul_square` 将简单地平方输入并执行简单的矩阵乘法。但由于我们指定了 `out_shardings`
+    为 `P('X', None)`，输出将沿着批次分片，但在模型维度上复制，并需要 AllReduce 来计算。
 - en: Using our notation from previous sections, this will likely do something like
+  id: totrans-29
   prefs: []
   type: TYPE_NORMAL
+  zh: 使用我们之前章节中的符号，这可能会做类似的事情
 - en: Out[B[X], F] { U[Y] } = In[B[X], D[Y]] *[D] W[D[Y], F]
+  id: totrans-30
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: Out[B[X], F] { U[Y] } = In[B[X], D[Y]] *[D] W[D[Y], F]
 - en: Out[B[X], F] = **AllReduce**(Out[B[X], F] { U[Y] })
+  id: totrans-31
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: Out[B[X], F] = **AllReduce**(Out[B[X], F] { U[Y] })
 - en: '`jax.jit` will add this for us automatically! We can actually print the HLO
     with `jit_matmul.as_text()` and see the following HLO (abbreviated dramatically):'
+  id: totrans-32
   prefs: []
   type: TYPE_NORMAL
+  zh: '`jax.jit` 会自动为我们添加这个功能！我们实际上可以使用 `jit_matmul.as_text()` 打印 HLO 并看到以下 HLO（大幅简化）：'
 - en: '[PRE1]'
+  id: totrans-33
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE1]'
 - en: We can see the matmul (the fusion) and the AllReduce above. Pay particular attention
     to the shapes. `bf16[2, 1024]` is a local view of the activations, since our `batch_size=8`
     is split across 4 devices and our `d_model=2048` is likewise split 2 ways.
+  id: totrans-34
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以看到上面的矩阵乘法（融合）和 AllReduce。特别注意形状。`bf16[2, 1024]` 是激活的本地视图，因为我们的 `batch_size=8`
+    被分成 4 个设备，我们的 `d_model=2048` 同样以 2 种方式分割。
 - en: '**This is pretty magical!** No matter how complicated our program is, [Shardy]((https://openxla.org/shardy))
     and jit will attempt to find shardings for all the intermediate activations and
     add communication as needed. With that said, Shardy has its flaws. It can make
@@ -172,31 +252,45 @@
     tensors with `jax.lax.with_sharding_constraint`. For instance, with two matmuls
     I can force the intermediate activations to be sharded along the `y` dimension
     (not that this is a good idea) with the following:'
+  id: totrans-35
   prefs: []
   type: TYPE_NORMAL
+  zh: '**这非常神奇！**无论我们的程序多么复杂，[Shardy](https://openxla.org/shardy) 和 jit 都会尝试为所有中间激活找到分片，并在需要时添加通信。话虽如此，Shardy有其缺陷。它可能会出错。有时你查看配置文件时，会发现有些地方出了问题。一个巨大的AllGather占用了配置文件的80%，而实际上并不需要。当这种情况发生时，我们可以尝试通过显式注释中间张量来纠正编译器，使用
+    `jax.lax.with_sharding_constraint`。例如，使用两个matmuls，我可以强制中间激活在 `y` 维度上进行分片（虽然这并不是一个好主意），如下所示：'
 - en: '[PRE2]'
+  id: totrans-36
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE2]'
 - en: This makes up like 60% of JAX parallel programming in the automatic partitioning
     world where you control the intermediate shardings via `jax.lax.with_sharding_constraint`.
     But “compiler tickling” is famously not a fun programming model. You could annotate
     every intermediate variable and still not know if you’ll get the right outcome.
     Instead, what if JAX itself could handle and control sharding propagation?
+  id: totrans-37
   prefs: []
   type: TYPE_NORMAL
+  zh: 这在JAX自动分区世界中占到了大约60%，其中你通过 `jax.lax.with_sharding_constraint` 控制中间分片。但“编译器挑逗”是一个著名的不好编程模型。你可能会注释每个中间变量，但仍不知道是否会得到正确的结果。相反，如果JAX本身能够处理和控制分片传播，会怎么样？
 - en: Explicit sharding mode
+  id: totrans-38
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 显式分片模式
 - en: 'Explicit sharding (or “sharding in types”) looks a lot like automatic sharding,
     but sharding propagation happens at the JAX level! Each JAX operation has a sharding
     rule that takes the shardings of the op’s arguments and produces a sharding for
     the op’s result. You can see the resulting sharding using `jax.typeof`:'
+  id: totrans-39
   prefs: []
   type: TYPE_NORMAL
+  zh: 显式分片（或“类型分片”）看起来很像自动分片，但分片传播发生在JAX级别！每个JAX操作都有一个分片规则，它接受操作参数的分片并生成操作结果的分片。你可以使用
+    `jax.typeof` 来查看结果分片：
 - en: '[PRE3]'
+  id: totrans-40
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE3]'
 - en: 'As you can see, JAX propagated the sharding from input (`x`) to output (`x`)
     which are inspectable at trace-time via `jax.typeof`. For most operations these
     rules are simple and obvious because there’s only one reasonable choice (e.g.
@@ -204,257 +298,381 @@
     how to shard the result in which case JAX throws a trace-time error and we ask
     the programmer to provide an `out_sharding` argument explicitly (e.g. jnp.einsum,
     jnp.reshape, etc). Let’s see another example where you have conflicts:'
+  id: totrans-41
   prefs: []
   type: TYPE_NORMAL
+  zh: 如你所见，JAX从输入（`x`）传播了分片到输出（`x`），这些可以在trace-time通过 `jax.typeof` 进行检查。对于大多数操作，这些规则简单明了，因为只有一个合理的选项（例如，逐元素操作保留相同的分片）。但对于某些操作，如何分片结果是不明确的，在这种情况下，JAX会在trace-time抛出一个错误，并要求程序员显式提供
+    `out_sharding` 参数（例如 jnp.einsum，jnp.reshape 等）。让我们看看另一个有冲突的例子：
 - en: '[PRE4]'
+  id: totrans-42
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE4]'
 - en: This code errors with `Contracting dimensions are sharded and it is ambiguous
     how the output should be sharded. Please specify the output sharding via the`
     out_sharding `parameter. Got lhs_contracting_spec=('Y',) and rhs_contracting_spec=('Y',)`
+  id: totrans-43
   prefs: []
   type: TYPE_NORMAL
+  zh: 这段代码会因 `Contracting dimensions are sharded and it is ambiguous how the output
+    should be sharded. Please specify the output sharding via the `out_sharding` parameter.
+    Got lhs_contracting_spec=('Y',) and rhs_contracting_spec=('Y',)` 而出错
 - en: 'This is awesome because how the output of einsum should be sharded is ambiguous.
     The output sharding can be:'
+  id: totrans-44
   prefs: []
   type: TYPE_NORMAL
+  zh: 这很棒，因为einsum的输出应该如何分片是不明确的。输出分片可以是：
 - en: P(‘X’, ‘Y’) which will induce a reduce-scatter or
+  id: totrans-45
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: P(‘X’，‘Y’)，这将引发一个reduce-scatter
 - en: P(‘X’, None) which will induce an all-reduce
+  id: totrans-46
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: P(‘X’，None)，这将引发一个all-reduce
 - en: 'Unlike Auto mode, explicit mode errors out when it detects ambiguous communication
     and requires the users to resolve it. So here you can do:'
+  id: totrans-47
   prefs: []
   type: TYPE_NORMAL
+  zh: 与自动模式不同，显式模式在检测到模糊通信时会出错，并要求用户解决它。所以这里你可以做：
 - en: '[PRE5]'
+  id: totrans-48
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE5]'
 - en: Auto mode and Explicit mode can be composed via `jax.sharding.auto_axes` and
     `jax.sharding.explicit_axes` APIs. This is a [great doc to read](https://docs.jax.dev/en/latest/notebooks/explicit-sharding.html)
     for more information.
+  id: totrans-49
   prefs: []
   type: TYPE_NORMAL
+  zh: 自动模式和显式模式可以通过 `jax.sharding.auto_axes` 和 `jax.sharding.explicit_axes` API 进行组合。这是一份[非常好的文档](https://docs.jax.dev/en/latest/notebooks/explicit-sharding.html)，可以了解更多信息。
 - en: 'shard_map: explicit parallelism control over a program'
+  id: totrans-50
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: shard_map：程序上的显式并行控制
 - en: While Shardy is the “compiler take the wheel” mode, jax [shard_map](https://jax.readthedocs.io/en/latest/jep/14273-shard-map.html)
     puts everything in your hands. You specify the sharding of the inputs, like in
     jax.jit, but then you write all communication explicitly. Whereas `jax.jit` leaves
     you with a global cross-device view of the program, `shard_map` gives you a local
     per-device view.
+  id: totrans-51
   prefs: []
   type: TYPE_NORMAL
+  zh: 当Shardy处于“编译器接管方向盘”模式时，jax [shard_map](https://jax.readthedocs.io/en/latest/jep/14273-shard-map.html)
+    将一切交给你。你指定输入的分片，就像在jax.jit中一样，但然后你必须明确写出所有通信。而`jax.jit`让你拥有程序的全球跨设备视图，而`shard_map`则给你每个设备的本地视图。
 - en: Here’s an example. Try to reason about what this function does:<d-footnote>If
     you want to play with this yourself in a colab by emulating a mesh, you can do
     so using the following cell `import jax; jax.config.update('jax_num_cpu_devices',
     8)`</d-footnote>
+  id: totrans-52
   prefs: []
   type: TYPE_NORMAL
+  zh: 这里有一个例子。试着推理这个函数的作用：<d-footnote>如果你想在colab中通过模拟网格自己尝试，可以使用以下单元格`import jax;
+    jax.config.update('jax_num_cpu_devices', 8)`</d-footnote>
 - en: '[PRE6]'
+  id: totrans-53
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE6]'
 - en: '**What does this do?** `slice_and_average` is run on each TPU with 1/8th of
     the array, from which we slice the first 4 elements and average them across the
     full mesh. This means we’re effectively doing `mean(x[:4], x[64:68], x[128:132],
     …)`. This is pretty cool, because that’s not an easy operation to express in JAX
     otherwise.'
+  id: totrans-54
   prefs: []
   type: TYPE_NORMAL
+  zh: '**这做了什么？** `slice_and_average`在每个TPU上运行，使用数组1/8，从中切出前4个元素，并在整个网格上平均。这意味着我们实际上在执行`mean(x[:4],
+    x[64:68], x[128:132], …)`。这很酷，因为在JAX中表达这个操作并不容易。'
 - en: '**Why do this instead of jax.jit?** If we’d used `jax.jit`, `slice_and_average`
     would have seen a global view of the array (the full `[512,]` array). We’d have
     had to slice out this non-uniform slice and then perform an average which XLA
     would have had to interpret correctly. XLA might have added the wrong communication
     or gotten confused. Here we see the local view and write only the communication
     we need.'
+  id: totrans-55
   prefs: []
   type: TYPE_NORMAL
+  zh: '**为什么这样做而不是使用jax.jit？** 如果我们使用了`jax.jit`，`slice_and_average`将看到数组的全局视图（完整的`[512,]`数组）。我们不得不切出这个非均匀的切片，然后执行平均，XLA必须正确解释。XLA可能会添加错误的通信或变得困惑。在这里我们看到的是局部视图，并且只写入所需的通信。'
 - en: '**Example [Collective Matmul]:** To take a more realistic example, say we to
     implement model parallelism where the activations are initially model sharded,
     i.e. A[B[X], D[Y]] * W[D, F[Y]] -> Out[B[X], F[Y]]. Naively, we would do this
     by AllGathering A first followed by a local matrix multiplication:'
+  id: totrans-56
   prefs: []
   type: TYPE_NORMAL
+  zh: '**示例 [集体矩阵乘法]**：为了举一个更现实的例子，假设我们要实现模型并行，其中激活最初是模型分片的，即A[B[X], D[Y]] * W[D,
+    F[Y]] -> Out[B[X], F[Y]]。天真地，我们会这样做：首先通过AllGathering A，然后进行局部矩阵乘法：'
 - en: A[B[X], D] = **AllGather**[Y](A[B[X], D[Y]])
+  id: totrans-57
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: A[B[X], D] = **AllGather**[Y](A[B[X], D[Y]])
 - en: Out[B[X], F[Y]] = A[B[X], D] *[D] W[D, F[Y]]
+  id: totrans-58
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: Out[B[X], F[Y]] = A[B[X], D] *[D] W[D, F[Y]]
 - en: 'Sadly, this is bad because it doesn’t allow us to overlap the communication
     with the computation. Overlapping them can be done with a “collective matmul”,
     as described in [Wang et al. 2023](https://dl.acm.org/doi/pdf/10.1145/3567955.3567959).
     The algorithm is basically as follows:'
+  id: totrans-59
   prefs: []
   type: TYPE_NORMAL
+  zh: 很遗憾，这不好，因为它不允许我们将通信与计算重叠。可以通过“集体矩阵乘法”来实现重叠，如[王等2023](https://dl.acm.org/doi/pdf/10.1145/3567955.3567959)中所述。算法基本上如下：
 - en: For each Y shard, perform a matmul of the local chunk of A with the local chunk
     of W, producing a result of shape `[B / X, F / Y]`. Simultaneously, permute A
     so you get the next chunk locally, perform the matmul, and sum the result.
+  id: totrans-60
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 对于每个Y分片，执行A的局部块与W的局部块的矩阵乘法，得到形状为`[B / X, F / Y]`的结果。同时，对A进行置换，以便你可以在本地获取下一个块，执行矩阵乘法，并求和结果。
 - en: 'We can implement that quite easily with `jax.shard_map`:'
+  id: totrans-61
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以用`jax.shard_map`轻松实现这一点：
 - en: '[PRE7]'
+  id: totrans-62
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE7]'
 - en: 'This is pretty neat! We can benchmark this and see that it’s also a lot faster!
     [Here’s](https://imgur.com/a/e9I6SrM) the profile with the default jit matmul
     which takes 311us with a big blocking AllGather at the beginning:'
+  id: totrans-63
   prefs: []
   type: TYPE_NORMAL
+  zh: 这很酷！我们可以对其进行基准测试并看到它也快得多！[这里](https://imgur.com/a/e9I6SrM)是默认jit矩阵乘法的配置文件，它需要311us，并在开始时有一个大的阻塞AllGather：
 - en: <picture>![](../Images/bbd45e2f32572168e58f62d70880aa90.png)</picture>
+  id: totrans-64
   prefs: []
   type: TYPE_NORMAL
+  zh: <picture>![](../Images/bbd45e2f32572168e58f62d70880aa90.png)</picture>
 - en: And [here’s](https://imgur.com/a/21iy0Sv) the version above that takes 244 us.
     You can see the profile doesn’t have the AllGather. It’s all useful work! Our
     FLOPs utilization is also a lot higher.
+  id: totrans-65
   prefs: []
   type: TYPE_NORMAL
+  zh: 而且这里还有[这个版本](https://imgur.com/a/21iy0Sv)，它只需要244us。你可以看到配置文件中没有AllGather。这都是有用的工作！我们的FLOPs利用率也高得多。
 - en: <picture>![](../Images/b9fe5be2fa2068a2865ebb9aa401b655.png)</picture>
+  id: totrans-66
   prefs: []
   type: TYPE_NORMAL
+  zh: <picture>![](../Images/b9fe5be2fa2068a2865ebb9aa401b655.png)</picture>
 - en: It’s also worth noting that the matmul time with no sharding on the contracting
     dimension is [224us](https://imgur.com/a/i3gNKfq), so we’re remarkably close to
     the unsharded baseline here. This is a good example of the kind of performance
     engineering you might end up doing to improve TPU utilization. For more `shard_map`
     examples, [this note is great](https://jax.readthedocs.io/en/latest/notebooks/shard_map.html#example-1-all-gather-on-one-side).
+  id: totrans-67
   prefs: []
   type: TYPE_NORMAL
+  zh: 值得注意的是，在收缩维度上没有分片时的矩阵乘法时间是 [224us](https://imgur.com/a/i3gNKfq)，所以我们在这里非常接近无分片基线。这是一个很好的例子，说明了你可能为了提高
+    TPU 利用率而进行的性能工程。更多 `shard_map` 示例，[这个笔记很棒](https://jax.readthedocs.io/en/latest/notebooks/shard_map.html#example-1-all-gather-on-one-side)。
 - en: Now here are a couple of useful worked problems to try and implement using `jax.jit`
     or `shard_map`!
+  id: totrans-68
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在有一些有用的工作问题，你可以尝试使用 `jax.jit` 或 `shard_map` 来实现！
 - en: Worked Problems
+  id: totrans-69
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 工作问题
 - en: Here are some random JAX-related problems. I’ll add some more later. For all
     of these, you’ll need some number of TPUs in a Colab. You can use a public Colab
     with TPUv2-8\. From now on, we’ll assume you have N devices available.
+  id: totrans-70
   prefs: []
   type: TYPE_NORMAL
+  zh: 这里有一些随机的 JAX 相关问题。我稍后会添加更多。对于所有这些问题，你需要在 Colab 中有一些 TPUs。你可以使用一个带有 TPUv2-8 的公共
+    Colab。从现在开始，我们假设你有 N 个设备可用。
 - en: '**Problem 1:** Let **A** be an array of activations of shape float32[S[X],
     D[Y]] with `X * Y = N`. Do the following:'
+  id: totrans-71
   prefs: []
   type: TYPE_NORMAL
+  zh: '**问题 1:** 设 **A** 为形状为 float32[S[X], D[Y]] 的激活数组，其中 `X * Y = N`。执行以下操作：'
 - en: 'Write a function in JAX that computes the average within each `(X, Y)` shard,
     i.e. it returns an array of size [X, Y] where `arr[i, j]` is the average over
     shard `(i, j)`. Do this with both `jax.jit` and `shard_map`. Profile each and
     see how long they took. Was there any communication added? *Hint: there shouldn’t
     be, but sometimes XLA adds it anyway.*'
+  id: totrans-72
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 在 JAX 中编写一个函数，计算每个 `(X, Y)` 片段的平均值，即返回一个大小为 [X, Y] 的数组，其中 `arr[i, j]` 是片段 `(i,
+    j)` 上的平均值。使用 `jax.jit` 和 `shard_map` 都来做这件事。分析每个并查看它们各自花费了多长时间。是否添加了任何通信？*提示：不应该添加，但有时
+    XLA 仍然会添加它。*
 - en: Write a function in JAX that returns roll(x, shift, axis=0) - x for some shift
     **within each shard X**. I’m not enough of a masochist to make you do this in
     jax.jit, so just do this with `shard_map`.
+  id: totrans-73
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 在 JAX 中编写一个函数，返回 roll(x, shift, axis=0) - x，其中 shift 是每个片段 X 内的某个位移。我不是足够痛苦的人来让你在
+    jax.jit 中做这件事，所以只需使用 `shard_map` 来做。
 - en: <details><summary>Click here for the answer.</summary>
+  id: totrans-74
   prefs: []
   type: TYPE_NORMAL
+  zh: <details><summary>点击此处查看答案。</summary>
 - en: 'Part 1: Here is a solution to part 1\. Note the fairly complex reshapes we
     have to do for the `jax.jit` solution.'
+  id: totrans-75
   prefs: []
   type: TYPE_NORMAL
+  zh: 第一部分：这里是对第一部分的解决方案。注意，对于 `jax.jit` 解决方案，我们必须进行相当复杂的重塑。
 - en: '[PRE8]'
+  id: totrans-76
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE8]'
 - en: 'Part 2: Here is a similar solution to Part 2.'
+  id: totrans-77
   prefs: []
   type: TYPE_NORMAL
+  zh: 第二部分：这里是对第二部分的一个类似解决方案。
 - en: '[PRE9]</details>'
+  id: totrans-78
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE9]</details>'
 - en: '**Problem 2:** Here we’ll make a basic “mixture of experts” model together.
     Let **W**: float32[E[X], D, F] be a set of E “expert” matrices. Let **A**: float32[S[X],
     D] (our activations) and let **B**: int32[S[X]] be a set of “routing assignments”
     where B[i] is an integer in the range `[0, E)` telling us which matrix we want
     to process that activation. We want to write a function in JAX that returns `Out[i]
     = W[B[i]] @ A[i]`.'
+  id: totrans-79
   prefs: []
   type: TYPE_NORMAL
+  zh: '**问题 2:** 在这里，我们将一起构建一个基本的“专家混合”模型。设 **W**: float32[E[X], D, F] 为一组 E 个“专家”矩阵。设
+    **A**: float32[S[X], D]（我们的激活）和设 **B**: int32[S[X]] 为一组“路由分配”，其中 B[i] 是一个在 `[0,
+    E)` 范围内的整数，告诉我们想要处理哪个矩阵的激活。我们想要在 JAX 中编写一个函数，该函数返回 `Out[i] = W[B[i]] @ A[i]`。'
 - en: 'Let’s start by ignoring sharding altogether. Make all of these tensors small
     enough so they fit in one device. Write a local implementation of this function.
     *Make sure you don’t materialize an array of shape `[S, D, F]`! Hint: try sorting
     the tokens into a new buffer of shape `[E, S, D]` with some attention to masking
     (why do we need the second dimension to have size S?).*'
+  id: totrans-80
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 让我们先忽略分片。将这些张量的大小调整得足够小，以便它们可以放入一个设备中。编写这个函数的本地实现。*确保你不会创建一个形状为 `[S, D, F]`
+    的数组！提示：尝试将标记排序到一个形状为 `[E, S, D]` 的新缓冲区中，并注意掩码（为什么第二个维度需要大小为 S？）。*
 - en: If you just `jax.jit` the above method, something will happen. Profile this
     and see what communication it decided to do. How long does it take?
+  id: totrans-81
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 如果你只是对上述方法使用 `jax.jit`，会发生一些事情。分析这个方法并查看它决定执行什么通信。这需要多长时间？
 - en: One problem you’ll notice with the above is that it likely gathers the full
     set of activations **A** locally, i.e. AllGather[X]([S[X], D]), Not only is this
     expensive communication-wise, it’s also incredibly expensive memory-wise if we
     can’t fit the full set of activations locally. Implement the above using `shard_map`
     and explicit communication.
+  id: totrans-82
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 你会注意到上述问题的一个问题是它可能会在本地收集完整的激活集 **A**，即 AllGather[X]([S[X], D])。这不仅是在通信方面代价高昂，而且如果我们不能在本地放入完整的激活集，那么在内存方面也会非常昂贵。使用
+    `shard_map` 和显式通信来实现上述功能。
 - en: For a first pass, it might be easiest to use a `jax.lax.all_gather` and reorder
     as in (a).
+  id: totrans-83
   prefs:
   - PREF_IND
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 在第一次遍历时，可能最容易使用 `jax.lax.all_gather` 并按照 (a) 中的方式进行重新排序。
 - en: For a second pass, try to avoid materializing any array of size `[E, S, D]`,
     i.e. try to perform the computation in a ragged fashion using a `jax.lax.all_to_all`
     inside a `jax.lax.while_loop`. This way, you can avoid materializing the full
     activations and wasting compute on padding. How much faster is this than your
     original implementation?
+  id: totrans-84
   prefs:
   - PREF_IND
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 在第二次遍历时，尽量避免创建大小为 `[E, S, D]` 的任何数组，即尝试使用 `jax.lax.all_to_all` 在 `jax.lax.while_loop`
+    内以交错方式执行计算。这样，你可以避免创建完整的激活并浪费在填充上的计算资源。这比你的原始实现快多少？
 - en: 'Most MoEs route to multiple (k) experts and then average the result. Refactor
     the above to implement this. Let **B**: int32[S, k] in this case for the k experts
     to route to.'
+  id: totrans-85
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: '大多数 MoEs 会将数据路由到多个（k）个专家，然后平均结果。重构上述代码以实现这一点。在这种情况下，让 **B**: int32[S, k] 作为
+    k 个专家的路由。'
 - en: <details><summary>Click here for the (partial) answer.</summary>
+  id: totrans-86
   prefs: []
   type: TYPE_NORMAL
+  zh: <details><summary>点击这里查看（部分）答案。</summary>
 - en: 1/2\. For part (1), you have a lot of choices. Here’s one option that just iterates
     over the experts with masking.
+  id: totrans-87
   prefs: []
   type: TYPE_NORMAL
+  zh: 1/2. 对于部分 (1)，你有许多选择。这里有一个选项，它只是通过掩码迭代专家。
 - en: '[PRE10]'
+  id: totrans-88
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE10]'
 - en: You can also use `jax.lax.ragged_dot` which will do something similar but more
     efficiently.
+  id: totrans-89
   prefs: []
   type: TYPE_NORMAL
+  zh: 你也可以使用 `jax.lax.ragged_dot`，它将执行类似操作但更有效。
 - en: 'I’m only going to sketch the pseudocode here (if you have a clean solution
     feel free to add it):'
+  id: totrans-90
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 我在这里只将伪代码草拟出来（如果你有一个干净的解决方案，请随时添加）：
 - en: '[PRE11]'
+  id: totrans-91
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE11]'
 - en: The basic idea is to iterate over chunks of the array, sort them and do an all_to_all,
     then do the local FLOPs.</details>
+  id: totrans-92
   prefs: []
   type: TYPE_NORMAL
+  zh: 基本思想是遍历数组的块，对它们进行排序，然后进行 all_to_all，然后进行本地 FLOPs。</details>
 - en: '**Problem 3:** The collective matmul example above is actually super relevant
     for real LLMs. Let’s tweak the example to do the full Transformer stack.'
+  id: totrans-93
   prefs: []
   type: TYPE_NORMAL
+  zh: '**问题 3**：上面提到的集体矩阵乘法示例实际上对于真实 LLM 非常相关。让我们调整示例以执行完整的 Transformer 堆栈。'
 - en: 'As an exercise, let’s start by implementing an AllReduce collective matmul,
     i.e. A[B[X], D[Y]] *[D] W[D[Y], F] -> Out[B[X], F]. Note that the output isn’t
     replicated. The naive algorithm is discussed above, basically just a local matmul
@@ -462,53 +680,82 @@
     of this operation. *Hint: tile over the output dimension and feel free to use
     `jax.lax.psum` (aka AllReduce).* *Note: due to the way XLA handles this, it may
     not actually be faster than the baseline.*'
+  id: totrans-94
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 作为练习，让我们首先实现一个 AllReduce 集体矩阵乘法，即 A[B[X], D[Y]] *[D] W[D[Y], F] -> Out[B[X],
+    F]。注意输出不会被复制。上述简单算法已在上面讨论，基本上就是一个局部矩阵乘法后跟一个 AllReduce。尝试制作一个通信重叠的“集体”版本的操作。*提示：在输出维度上平铺，并自由使用
+    `jax.lax.psum`（即 AllReduce）。* *注意：由于 XLA 处理方式的原因，这实际上可能并不比基线快。*
 - en: 'The complement to the AllReduce collective matmul above is a ReduceScatter
     collective matmul, as in Tmp[B[X], F[Y]] *[F] W2[F[Y], D] -> Out[B[X], D[Y]].
     This occurs in the down-projection matrix in a Transformer. Implement a collective,
     overlapped version of this in JAX. Be careful about passing only the minimal amount
     of data you need. *Hint: try permuting the result as you accumulate it.*'
+  id: totrans-95
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 上述 AllReduce 集体矩阵乘法的补充是 ReduceScatter 集体矩阵乘法，如 Tmp[B[X], F[Y]] *[F] W2[F[Y],
+    D] -> Out[B[X], D[Y]]。这在 Transformer 的下投影矩阵中发生。在 JAX 中实现一个集体、重叠版本的此操作。注意只传递所需的最小数据量。*提示：在累加时尝试对结果进行排列。*
 - en: Put these two together into an end-to-end Transformer block that performs In[B[X],
     D[Y]] *[D] W[in][D, F[Y]] *[F] W[out][F[Y], D] -> Out[B[X], D[Y]] with overlapped
     communication.<d-footnote>As before, we can't do $W_{in} \cdot W_{out}$ first
     because of a non-linearity we've omitted here.</d-footnote> How much faster is
     this than a `jax.jit` implementation?
+  id: totrans-96
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 将这两个结合成一个端到端 Transformer 块，该块执行 In[B[X], D[Y]] *[D] W[in][D, F[Y]] *[F] W[out][F[Y],
+    D] -> Out[B[X], D[Y]] 并具有重叠通信。<d-footnote>与之前一样，我们不能先执行 $W_{in} \cdot W_{out}$，因为我们省略了非线性。</d-footnote>这比
+    `jax.jit` 实现快多少？
 - en: '**Problem 4:** All of the collective matmuls implemented above are unidirectional:
     they only permute in one direction. Rewrite the collective AllReduce matmul and
     the collective ReduceScatter matmuls to use bidirectional communication. How much
     faster are these?'
+  id: totrans-97
   prefs: []
   type: TYPE_NORMAL
+  zh: '**问题 4**：上面实现的全部集体矩阵乘法都是单向的：它们只在一个方向上进行排列。重写集体 AllReduce 矩阵乘法和集体 ReduceScatter
+    矩阵乘法以使用双向通信。这些比原来的快多少？'
 - en: That’s all for Part 10\. That’s basically it! For final conclusions and further
     reading, click [here](../conclusion).</d-article>  <d-appendix><d-footnote-list><d-citation-list>###
     Miscellaneous
+  id: totrans-98
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: Part 10 的内容到此结束。基本上就是这样！对于最终结论和进一步阅读，请点击[这里](../conclusion)。</d-article>  <d-appendix><d-footnote-list><d-citation-list>###
+    杂项
 - en: ^*Work done at Google DeepMind, now at MatX.
+  id: totrans-99
   prefs: []
   type: TYPE_NORMAL
+  zh: ^*在 Google DeepMind 完成的工作，现在在 MatX。
 - en: Citation
+  id: totrans-100
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 引用
 - en: 'For attribution in academic contexts, please cite this work as:'
+  id: totrans-101
   prefs: []
   type: TYPE_NORMAL
+  zh: 在学术环境中进行归属时，请引用此作品如下：
 - en: '[PRE12]'
+  id: totrans-102
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE12]'
 - en: 'or as a BibTeX entry:'
+  id: totrans-103
   prefs: []
   type: TYPE_NORMAL
+  zh: 或者作为一个 BibTeX 条目：
 - en: '[PRE13]</d-citation-list></d-footnote-list></d-appendix> <d-bibliography src="/scaling-book/assets/bibliography/"></d-bibliography></d-byline>'
+  id: totrans-104
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE13]</d-citation-list></d-footnote-list></d-appendix> <d-bibliography src="/scaling-book/assets/bibliography/"></d-bibliography></d-byline>'

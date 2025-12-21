@@ -1,100 +1,144 @@
 - en: How to Think About TPUs
+  id: totrans-0
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
+  zh: 如何思考TPU
 - en: 原文：[https://jax-ml.github.io/scaling-book/tpus](https://jax-ml.github.io/scaling-book/tpus)
+  id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 原文：[https://jax-ml.github.io/scaling-book/tpus](https://jax-ml.github.io/scaling-book/tpus)
 - en: '<d-title>Part 2 of [How To Scale Your Model](/scaling-book) ([Part 1: Rooflines](../roofline)
     | [Part 3: Sharding](../sharding))'
+  id: totrans-2
   prefs: []
   type: TYPE_NORMAL
+  zh: <d-title>《如何扩展您的模型》第二部分[（第一部分：屋顶线](../roofline) | 第三部分：分片](../sharding))</d-title>
 - en: This section is all about how TPUs work, how they're networked together to enable
     multi-chip training and inference, and how this affects the performance of our
     favorite algorithms. There's even some good stuff for GPU users too!</d-title>  <d-byline><d-article><d-contents>###
     Contents
+  id: totrans-3
   prefs: []
   type: TYPE_NORMAL
+  zh: 这一部分全部关于TPU的工作原理，它们如何相互连接以实现多芯片训练和推理，以及这对我们最喜欢的算法性能的影响。甚至对GPU用户也有一些很好的内容！</d-title>  <d-byline><d-article><d-contents>###
+    内容
 - en: '[What Is a TPU?](#what-is-a-tpu)[TPU Networking](#tpu-networking)[Key Takeaways](#key-takeaways)'
+  id: totrans-4
   prefs: []
   type: TYPE_NORMAL
+  zh: '[什么是TPU？](#what-is-a-tpu)[TPU网络](#tpu-networking)[关键要点](#key-takeaways)'
 - en: '[TPU Specs](#tpu-specs)'
+  id: totrans-5
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '[TPU规格](#tpu-specs)'
 - en: '[Worked Problems](#worked-problems)[Appendix](#appendix)'
+  id: totrans-6
   prefs: []
   type: TYPE_NORMAL
+  zh: '[练习题](#worked-problems)[附录](#appendix)'
 - en: '[Appendix A: More on TPU internals](#appendix-a-more-on-tpu-internals)'
+  id: totrans-7
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '[附录A：更多关于TPU内部的信息](#appendix-a-more-on-tpu-internals)'
 - en: '[Appendix B: How does a systolic array work?](#appendix-b-how-does-a-systolic-array-work)</d-contents>'
+  id: totrans-8
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '[附录B：脉冲阵列是如何工作的？](#appendix-b-how-does-a-systolic-array-work)</d-contents>'
 - en: You might also enjoy reading the new [Section 12](../gpus) on NVIDIA GPUs!
+  id: totrans-9
   prefs: []
   type: TYPE_NORMAL
+  zh: 您也许还会喜欢阅读关于NVIDIA GPU的新[第12节](../gpus)！
 - en: What Is a TPU?
+  id: totrans-10
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 什么是TPU？
 - en: '**A TPU is basically a compute core that specializes in matrix multiplication
     (called a TensorCore) attached to a stack of fast memory (called high-bandwidth
     memory or HBM)<d-cite key="tpu_paper">.</d-cite>** Here’s a diagram:'
+  id: totrans-11
   prefs: []
   type: TYPE_NORMAL
+  zh: '**TPU基本上是一个专注于矩阵乘法（称为TensorCore）的计算核心，连接到一叠快速内存（称为高带宽内存或HBM）<d-cite key="tpu_paper">。</d-cite>**
+    下面是一个图示：'
 - en: <picture>![](../Images/e6c01ce9d6d2d37ab476d471c09cdb55.png)</picture>
+  id: totrans-12
   prefs: []
   type: TYPE_NORMAL
+  zh: <picture>![](../Images/e6c01ce9d6d2d37ab476d471c09cdb55.png)</picture>
 - en: '**Figure:** the basic components of a TPU chip. The TensorCore is the gray
     left-hand box, containing the matrix-multiply unit (MXU), vector unit (VPU), and
     vector memory (VMEM).'
+  id: totrans-13
   prefs: []
   type: TYPE_NORMAL
+  zh: '**图示：** TPU芯片的基本组件。TensorCore是左侧的灰色方块，包含矩阵乘法单元（MXU）、向量单元（VPU）和向量内存（VMEM）。'
 - en: 'You can think of the TensorCore as basically just being a really good matrix
     multiplication machine, but it has a few other functions worth noting. The TensorCore
     has three key units:'
+  id: totrans-14
   prefs: []
   type: TYPE_NORMAL
+  zh: 您可以将TensorCore视为一个非常好的矩阵乘法机器，但它还有一些值得注意的其他功能。TensorCore有三个关键单元：
 - en: The **MXU** (Matrix Multiply Unit) is the core of the TensorCore. For most TPU
     generations, it performs one `bfloat16[8,128] @ bf16[128,128] -> f32[8,128]` matrix
     multiply<d-footnote>TPU v6e (Trillium) has a 256x256 MXU, while all previous generations
     use 128x128</d-footnote> every 8 cycles using a systolic array (see [Appendix
     B](#appendix-b-how-does-a-systolic-array-work) for details).
+  id: totrans-15
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**MXU**（矩阵乘法单元）是TensorCore的核心。对于大多数TPU代系，它每8个周期使用脉冲阵列执行一次`bfloat16[8,128] @
+    bf16[128,128] -> f32[8,128]`矩阵乘法[d-footnote]TPU v6e（Trillium）有一个256x256的MXU，而所有之前的代系都使用128x128</d-footnote>。[附录B](#appendix-b-how-does-a-systolic-array-work)提供了详细信息。'
 - en: This is about `5e13` bf16 FLOPs/s per MXU at 1.5GHz on TPU v5e. Most TensorCores
     have 2 or 4 MXUs, so e.g. the total bf16 FLOPs/s for TPU v5e is `2e14`.
+  id: totrans-16
   prefs:
   - PREF_IND
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 这是在TPU v5e上，每个MXU在1.5GHz时大约有`5e13` bf16 FLOPs/s。大多数TensorCore有2个或4个MXU，所以例如，TPU
+    v5e的总bf16 FLOPs/s是`2e14`。
 - en: TPUs also support lower precision matmuls with higher throughput (e.g. each
     TPU v5e chip can do `4e14` int8 OPs/s).
+  id: totrans-17
   prefs:
   - PREF_IND
   - PREF_UL
   type: TYPE_NORMAL
+  zh: TPU还支持具有更高吞吐量的低精度矩阵乘法（例如，每个TPU v5e芯片可以执行`4e14` int8 OPs/s）。
 - en: The **VPU** (Vector Processing Unit) performs general mathematical operations
     like ReLU activations or pointwise addition or multiplication between vectors.
     Reductions (sums) are also performed here. [Appendix A](#appendix-a-more-on-tpu-internals)
     provides more details.
+  id: totrans-18
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**VPU**（向量处理单元）执行一般的数学运算，如ReLU激活或向量之间的逐点加法或乘法。这里也执行归约（求和）。[附录A](#appendix-a-more-on-tpu-internals)提供了更多细节。'
 - en: '**VMEM** (Vector Memory) is an on-chip scratchpad located in the TensorCore,
     close to the compute units. It is much smaller than HBM (for example, 128 MiB
     on TPU v5e) but has a much higher bandwidth to the MXU. VMEM operates somewhat
     like an L1/L2 cache on CPUs but is much larger and programmer-controlled. Data
     in HBM needs to be copied into VMEM before the TensorCore can do any computation
     with it.'
+  id: totrans-19
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**VMEM**（向量内存）是位于TensorCore内部的片上缓存，靠近计算单元。它比HBM（例如，TPU v5e上的128 MiB）小得多，但与MXU的带宽要高得多。VMEM在CPU上类似于L1/L2缓存，但更大，且由程序员控制。在TensorCore对HBM中的数据进行任何计算之前，需要将数据复制到VMEM中。'
 - en: '**TPUs are very, very fast at matrix multiplication**. It’s mainly what they
     do and they do it well. [TPU v5p](https://cloud.google.com/tpu/docs/v5p#system_architecture),
     one of the most powerful TPUs to date, can do `2.5e14` bf16 FLOPs / second / core
@@ -105,33 +149,44 @@
     is one of the few algorithms that uses $O(n^3)$ compute for $O(n^2)$ bytes. That
     makes it very easy for an ordinary ALU to be bottlenecked by compute and not by
     memory bandwidth.</d-footnote>'
+  id: totrans-20
   prefs: []
   type: TYPE_NORMAL
+  zh: '**TPU在矩阵乘法方面非常非常快**。这主要是它们所做的事情，而且做得很好。[TPU v5p](https://cloud.google.com/tpu/docs/v5p#system_architecture)，迄今为止最强大的TPU之一，可以做到`2.5e14`
+    bf16 FLOPs/秒/核心或`5e14` bf16 FLOPs/秒/芯片。一个包含8960个芯片的单个pod可以做到4 exaflops/秒。这**非常多**。这是世界上最强大的超级计算机之一。而且谷歌拥有很多这样的超级计算机。<d-footnote>TPU及其特定的收缩阵列之所以如此强大的硬件加速器，是因为矩阵乘法是少数几个使用$O(n^3)$计算用于$O(n^2)$字节的算法之一。这使得普通的ALU很容易因为计算而成为瓶颈，而不是因为内存带宽。</d-footnote>'
 - en: 'The diagram above also includes a few other components like SMEM and the scalar
     unit, which are used for control flow handling and are discussed briefly in [Appendix
     A](#appendix-a-more-on-tpu-internals), but aren’t crucial to understand. On the
     other hand, HBM is important and fairly simple:'
+  id: totrans-21
   prefs: []
   type: TYPE_NORMAL
+  zh: 上面的图还包含了一些其他组件，如SMEM和标量单元，它们用于控制流处理，并在[附录A](#appendix-a-more-on-tpu-internals)中简要讨论，但不是理解的关键。另一方面，HBM很重要且相对简单：
 - en: '**HBM** (High Bandwidth Memory) is a big chunk of fast memory that stores tensors
     for use by the TensorCore. HBM usually has capacity on the order of tens of gigabytes
     (for example, [TPU v5e has 16GiB of HBM](https://cloud.google.com/tpu/docs/v5e#system_architecture)).'
+  id: totrans-22
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**HBM**（高带宽内存）是一大块快速内存，用于存储TensorCore使用的张量。HBM通常具有数十GB的容量（例如，[TPU v5e具有16GiB的HBM](https://cloud.google.com/tpu/docs/v5e#system_architecture)）。'
 - en: When needed for a computation, tensors are streamed out of HBM through VMEM
     (see below) into the MXU and the result is written from VMEM back to HBM.
+  id: totrans-23
   prefs:
   - PREF_IND
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 当需要用于计算时，张量会通过VMEM（见下文）从HBM流出到MXU，并将结果从VMEM写回到HBM。
 - en: The bandwidth between HBM and the TensorCore (through VMEM) is known as “HBM
     bandwidth” (usually around 1-2TB/sec) and limits how fast computation can be done
     in memory-bound workloads.
+  id: totrans-24
   prefs:
   - PREF_IND
   - PREF_UL
   type: TYPE_NORMAL
+  zh: HBM和TensorCore（通过VMEM）之间的带宽称为“HBM带宽”（通常约为1-2TB/秒），限制了内存密集型工作负载中计算的执行速度。
 - en: '**Generally, all TPU operations are pipelined and overlapped.** To perform
     a matmul $X \cdot A \to Y$, a TPU would first need to copy chunks of matrices
     $A$ and $X$ from HBM into VMEM, then load them into the MXU which multiplies chunks
@@ -139,19 +194,27 @@
     back to HBM. To do this efficiently, the matmul is pipelined so the copies to/from
     VMEM are overlapped with the MXU work. This allows the MXU to continue working
     instead of waiting on memory transfers, keeping matmuls compute-bound, not memory-bound.'
+  id: totrans-25
   prefs: []
   type: TYPE_NORMAL
+  zh: '**一般来说，所有TPU操作都是流水线和重叠的**。为了执行矩阵乘法 $X \cdot A \to Y$，TPU首先需要将矩阵$A$和$X$的块从HBM复制到VMEM，然后将其加载到MXU中，MXU乘以8x128（对于$X$）和128x128（对于$A$）的块，然后将结果分块复制回HBM。为了高效地执行此操作，矩阵乘法是流水线的，因此VMEM的复制与MXU的工作重叠。这允许MXU继续工作，而不是等待内存传输，使矩阵乘法计算密集型，而不是内存密集型。'
 - en: 'Here’s an example of how you might perform an elementwise product from HBM:'
+  id: totrans-26
   prefs: []
   type: TYPE_NORMAL
+  zh: 这里有一个从HBM执行逐元素乘积的例子：
 - en: <picture>![](../Images/56da1b6e2650dfa1d2b7b7a30c72ad49.png)</picture>
+  id: totrans-27
   prefs: []
   type: TYPE_NORMAL
+  zh: <picture>![](../Images/56da1b6e2650dfa1d2b7b7a30c72ad49.png)</picture>
 - en: '**Figure:** an animation showing a pointwise product performed on TPU, with
     bytes loaded from HBM. Note how bytes are streamed out of memory in chunks and
     partial results are pipelined back without waiting for the full array to be materialized.'
+  id: totrans-28
   prefs: []
   type: TYPE_NORMAL
+  zh: '**图示**：一个在TPU上执行逐点乘积的动画，字节从HBM加载。注意字节是如何分块从内存中流出，以及部分结果是如何流水线返回，而不需要等待整个数组实现。'
 - en: A matmul would look nearly identical except it would load into the MXU instead
     of the VPU/Vector unit, and the loads and stores would occur in a different order,
     since the same weight chunk is used for multiple chunks of activations. You can
@@ -159,14 +222,19 @@
     then into the Vector Unit, then back into VMEM and HBM. As we’re about to see,
     if the load from HBM to VMEM is slower than the FLOPs in the Vector Unit (or MXU),
     we become “bandwidth bound” since we’re starving the VPU or MXU of work.
+  id: totrans-29
   prefs: []
   type: TYPE_NORMAL
+  zh: 矩阵乘法看起来几乎相同，但它会加载到MXU而不是VPU/向量单元，加载和存储的顺序也会不同，因为相同的权重块被用于多个激活块。你可以看到数据块流进VMEM，然后进入VREGs（向量寄存器），然后进入向量单元，然后返回VMEM和HBM。正如我们即将看到的，如果从HBM到VMEM的加载速度慢于向量单元（或MXU）中的FLOPs，我们就成为“带宽限制”的，因为我们正在使VPU或MXU的工作量不足。
 - en: '**Key takeaway:** TPUs are very simple. They load weights from HBM into VMEM,
     then from VMEM into a systolic array which can perform around 200 trillion multiply-adds
     per second. The HBM $\leftrightarrow$ VMEM and VMEM $\leftrightarrow$ systolic
     array bandwidths set fundamental limits on what computations TPUs can do efficiently.'
+  id: totrans-30
   prefs: []
   type: TYPE_NORMAL
+  zh: '**关键要点：** TPUs非常简单。它们将权重从HBM加载到VMEM，然后从VMEM加载到可以每秒执行约200万亿乘加操作的systolic array。HBM
+    $\leftrightarrow$ VMEM和VMEM $\leftrightarrow$ systolic array的带宽设定了TPU可以高效执行的计算的基本限制。'
 - en: '**VMEM and arithmetic intensity:** VMEM is much smaller than HBM but it has
     a much higher bandwidth to the MXU. As we saw in [Section 1](../roofline), this
     means if an algorithm can fit all its inputs/outputs in VMEM, it’s much less likely
@@ -184,22 +252,31 @@
     cost of the weight load if we''re memory bandwidth bound. This requires our weights
     to be small enough or sharded enough to fit a single layer into VMEM with space
     to spare.</d-footnote>'
+  id: totrans-31
   prefs: []
   type: TYPE_NORMAL
+  zh: '**VMEM和算术强度：** VMEM的容量远小于HBM，但它对MXU的带宽却要高得多。正如我们在[第1节](../roofline)中看到的，这意味着如果一个算法能够将其所有输入/输出都放入VMEM中，那么它遇到通信瓶颈的可能性就小得多。这对于算术强度较差的计算尤其有帮助：VMEM的带宽大约是HBM带宽的22倍，这意味着MXU从VMEM读取或写入操作所需的算术强度仅为10-20，才能达到峰值FLOPs利用率。这意味着如果我们能够将我们的权重放入VMEM而不是HBM，我们的矩阵乘法可以在更小的批量大小下达到FLOPs限制。这也意味着那些本质上算术强度较低的算法仍然可以高效运行。VMEM如此之小，这通常是一个挑战。<d-footnote>我们有时会提到VMEM预取，这指的是提前在VMEM中加载权重，这样我们就可以掩盖加载成本对我们矩阵乘法的影响。例如，在一个普通的Transformer中，我们可以在注意力过程中将大的前馈权重加载到VMEM中，这样如果我们在内存带宽受限的情况下，可以隐藏权重加载的成本。这要求我们的权重足够小或者足够碎片化，以便将单层放入VMEM中，并且还有空间剩余。</d-footnote>'
 - en: <picture>![](../Images/2e557f13c5aa328a68645417e2213ad7.png)</picture>
+  id: totrans-32
   prefs: []
   type: TYPE_NORMAL
+  zh: '![图片](../Images/2e557f13c5aa328a68645417e2213ad7.png)'
 - en: '**A TPU chip typically (but not always) consists of two TPU cores which share
     memory and can be thought of as one large accelerator** with twice the FLOPs (known
     as a “megacore” configuration). This has been true since TPU v4\. Older TPU chips
     have separate memory and are regarded as two separate accelerators (TPU v3 and
     older). Inference-optimized chips like the TPU v5e only have one TPU core per
     chip.'
+  id: totrans-33
   prefs: []
   type: TYPE_NORMAL
+  zh: '**TPU芯片通常（但不总是）由两个共享内存的TPU核心组成，可以将其视为一个大型加速器**，FLOPs是两倍（称为“巨核”配置）。自TPU v4以来一直如此。较老的TPU芯片有独立的内存，被视为两个独立的加速器（TPU
+    v3及更早版本）。推理优化的芯片，如TPU v5e，每个芯片只有一个TPU核心。'
 - en: <picture>![](../Images/ca9758db054b6fcec57c6e82de9db159.png)</picture>
+  id: totrans-34
   prefs: []
   type: TYPE_NORMAL
+  zh: '![图片](../Images/ca9758db054b6fcec57c6e82de9db159.png)'
 - en: '**Chips** are arranged in **sets of 4 on a ‘tray’** connected to a **CPU host
     via PCIe network.** This is the format most readers will be familiar with, 4 chips
     (8 cores, though usually treated as 4 logical megacores) exposed through Colab
@@ -207,39 +284,70 @@
     host, instead of 1, but also only 1 core per chip, giving us 8 chips = 8 cores.<d-footnote>On
     Cloud TPU VMs, each tray is exposed as part of a separate VM, so there are once
     again 4 cores visible.</d-footnote>'
+  id: totrans-35
   prefs: []
   type: TYPE_NORMAL
+  zh: '**Chips** are arranged in **sets of 4 on a ‘tray’** connected to a **CPU host
+    via PCIe network.** This is the format most readers will be familiar with, 4 chips
+    (8 cores, though usually treated as 4 logical megacores) exposed through Colab
+    or a single TPU-VM. For inference chips like the TPU v5e, we have 2 trays per
+    host, instead of 1, but also only 1 core per chip, giving us 8 chips = 8 cores.<d-footnote>在云
+    TPU 虚拟机上，每个托盘都作为单独的虚拟机的一部分暴露出来，因此再次有 4 个核心可见。</d-footnote>'
 - en: <picture>![](../Images/9cb943b33be7c9a3b8ff771310dafdc4.png)</picture>
+  id: totrans-36
   prefs: []
   type: TYPE_NORMAL
+  zh: <picture>![](../Images/9cb943b33be7c9a3b8ff771310dafdc4.png)</picture>
 - en: '**PCIe bandwidth is limited:** Like the HBM $\leftrightarrow$ VMEM link, the
     CPU $\leftrightarrow$ HBM PCIe connection has a specific bandwidth that limits
     how quickly you can load from host memory to HBM or vice-versa. PCIe bandwidth
     for TPU v4 is 16GB / second each way, for example, so close to 100x slower than
     HBM. We *can* load/offload data into the host (CPU) RAM, but not very quickly.'
+  id: totrans-37
   prefs: []
   type: TYPE_NORMAL
+  zh: '**PCIe bandwidth is limited:** Like the HBM $\leftrightarrow$ VMEM link, the
+    CPU $\leftrightarrow$ HBM PCIe connection has a specific bandwidth that limits
+    how quickly you can load from host memory to HBM or vice-versa. PCIe bandwidth
+    for TPU v4 is 16GB / second each way, for example, so close to 100x slower than
+    HBM. We *can* load/offload data into the host (CPU) RAM, but not very quickly.'
 - en: TPU Networking
+  id: totrans-38
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: TPU Networking
 - en: '**Chips are connected to each other through the ICI network in a Pod**. In
     older generations (TPU v2 and TPU v3), inference chips (e.g., TPU v5e), and Trilium
     (TPU v6e), ICI (“inter-chip interconnects”) connects the 4 nearest neighbors (with
     edge links to form a 2D torus). TPU v4 and TPU v5p are connected to the nearest
     6 neighbors (forming a 3D torus). Note these connections do **not** go through
     their hosts, they are direct links between chips.'
+  id: totrans-39
   prefs: []
   type: TYPE_NORMAL
+  zh: '**Chips are connected to each other through the ICI network in a Pod**. In
+    older generations (TPU v2 and TPU v3), inference chips (e.g., TPU v5e), and Trilium
+    (TPU v6e), ICI (“inter-chip interconnects”) connects the 4 nearest neighbors (with
+    edge links to form a 2D torus). TPU v4 and TPU v5p are connected to the nearest
+    6 neighbors (forming a 3D torus). Note these connections do **not** go through
+    their hosts, they are direct links between chips.'
 - en: <picture>![](../Images/21dc55aa413e6c367cb42ca95fc9e021.png)</picture>
+  id: totrans-40
   prefs: []
   type: TYPE_NORMAL
+  zh: <picture>![](../Images/21dc55aa413e6c367cb42ca95fc9e021.png)</picture>
 - en: The toroidal structure reduces the maximum distance between any two nodes from
     $N$ to $N / 2$, making communication much faster. TPUs also have a “twisted torus”
     configuration that wraps the torus in a Mobius-strip like topology to further
     reduce the average distance between nodes.
+  id: totrans-41
   prefs: []
   type: TYPE_NORMAL
+  zh: The toroidal structure reduces the maximum distance between any two nodes from
+    $N$ to $N / 2$, making communication much faster. TPUs also have a “twisted torus”
+    configuration that wraps the torus in a Mobius-strip like topology to further
+    reduce the average distance between nodes.
 - en: '**TPU pods (connected by ICI) can get really big:** the maximum pod size (called
     a **superpod**) is `16x16x16` for TPU v4 and `16x20x28` for TPU v5p. These large
     pods are composed of reconfigurable cubes of `4x4x4` chips connected by [optical
@@ -247,11 +355,20 @@
     is simply a reconfigurable connection with the same ICI bandwidth. It just lets
     us connect cubes while retaining a wraparound link.</d-footnote> that we can reconfigure
     to connect very large topologies.'
+  id: totrans-42
   prefs: []
   type: TYPE_NORMAL
+  zh: '**TPU pods (connected by ICI) can get really big:** the maximum pod size (called
+    a **superpod**) is `16x16x16` for TPU v4 and `16x20x28` for TPU v5p. These large
+    pods are composed of reconfigurable cubes of `4x4x4` chips connected by [optical
+    wraparound links](https://arxiv.org/pdf/2208.10041)<d-footnote>光交换机只是一个具有相同 ICI
+    带宽的可重构连接。它只是让我们在保持环绕链路的同时连接立方体。</d-footnote> that we can reconfigure to connect
+    very large topologies.'
 - en: <picture>![](../Images/8d1976749995c1c2bc3a18557adf5d79.png)</picture>
+  id: totrans-43
   prefs: []
   type: TYPE_NORMAL
+  zh: <picture>![](../Images/8d1976749995c1c2bc3a18557adf5d79.png)</picture>
 - en: Smaller topologies (e.g. `2x2x1`, `2x2x2`) can also be requested, albeit with
     no wraparounds. This is an important caveat, since it typically doubles the time
     of most communication. Any multiple of a full cube (e.g. `4x4x4` or `4x4x8`) will
@@ -259,22 +376,34 @@
     won't have any wraparounds since they are provided by the optical switches which
     are only available on a full cube. A TPU v5e 8x16 _will_ have a wraparound on
     the longer axis, however, since it doesn't use reconfigurable optical networking.</d-footnote>
+  id: totrans-44
   prefs: []
   type: TYPE_NORMAL
+  zh: Smaller topologies (e.g. `2x2x1`, `2x2x2`) can also be requested, albeit with
+    no wraparounds. This is an important caveat, since it typically doubles the time
+    of most communication. Any multiple of a full cube (e.g. `4x4x4` or `4x4x8`) will
+    have wraparounds provided by the optical switches.<d-footnote>请注意，`2x2x4` 不会有任何环绕，因为它们由仅在完整立方体上可用的光交换机提供。然而，TPU
+    v5e 8x16 由于不使用可重构光网络，因此在较长的轴上仍然会有环绕。</d-footnote>
 - en: <picture>![](../Images/ec19d5411f77eafe49bf98afa5089155.png)</picture>
+  id: totrans-45
   prefs: []
   type: TYPE_NORMAL
+  zh: <picture>![](../Images/ec19d5411f77eafe49bf98afa5089155.png)</picture>
 - en: TPU v5e and Trillium pods consist of a single `16x16` 2D torus with wraparounds
     along any axis of size 16 (meaning an `8x16` has a wraparound on the long axis).
     TPUs v5e and v6e (Trillium) cannot expand beyond a 16x16 torus but pods can still
     communicate with each other over standard data-center networking (DCN), which
     connects TPU hosts to each other. Again, smaller topologies can be requested without
     wraps on dims $<16$.
+  id: totrans-46
   prefs: []
   type: TYPE_NORMAL
+  zh: TPU v5e和Trillium pod由一个`16x16`的二维环面组成，沿任何16个尺寸的轴有环绕（这意味着`8x16`在长轴上有环绕）。TPU v5e和v6e（Trillium）不能扩展到16x16的环面，但pod仍然可以通过标准数据中心网络（DCN）相互通信，该网络连接TPU主机。再次强调，可以请求较小的拓扑结构，无需在维度$<16$上环绕。
 - en: <picture>![](../Images/63bc1d21441e76af6ec6d38f0e1eebe5.png)</picture>
+  id: totrans-47
   prefs: []
   type: TYPE_NORMAL
+  zh: <picture>![](../Images/63bc1d21441e76af6ec6d38f0e1eebe5.png)</picture>
 - en: '**This nearest-neighbor connectivity is a key difference between TPUs and GPUs**.
     GPUs are connected with a hierarchy of switches that approximate a point-to-point
     connection between every GPU, rather than using local connections like a TPU.
@@ -285,34 +414,48 @@
     switches are expensive), simpler to wire together, and can scale to much larger
     topologies because the number of links per device and the bandwidth per device
     is constant. Read more [here](../gpus#networking).'
+  id: totrans-48
   prefs: []
   type: TYPE_NORMAL
+  zh: '**这种近邻连接是TPU和GPU之间的一个关键区别**。GPU通过一系列交换机连接，这些交换机近似于每个GPU之间的点对点连接，而不是像TPU那样使用本地连接。通常，节点内的GPU（H100有8个GPU或B200
+    NVL72多达72个GPU）是直接连接的，而较大的拓扑结构需要每个GPU之间有O(log(N))跳。一方面，这意味着GPU可以在少量跳数内发送任意数据。另一方面，TPU的成本大大降低（因为NVLink交换机很贵），连接起来更简单，并且可以扩展到更大的拓扑结构，因为每个设备的链接数和带宽是恒定的。更多信息[这里](../gpus#networking)。'
 - en: '**ICI is very fast relative to DCN, but is still slower than HBM bandwidth.**
     For instance, a [TPU v5p](https://cloud.google.com/tpu/docs/v5p#system_architecture)
     has:'
+  id: totrans-49
   prefs: []
   type: TYPE_NORMAL
+  zh: '**相对于DCN，ICI非常快，但仍然比HBM带宽慢**。例如，一个[TPU v5p](https://cloud.google.com/tpu/docs/v5p#system_architecture)具有：'
 - en: '`2.5e12` bytes/s (2.5 TB/s) of HBM bandwidth per chip.'
+  id: totrans-50
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 每个芯片的HBM带宽为`2.5e12`字节/秒（2.5 TB/秒）。
 - en: '`9e10` bytes/s (90 GB/s) of ICI bandwidth per axis, with 3 axes per chip.<d-footnote>The
     page above lists 100 GB/s of bandwidth, which is slightly different from what''s
     listed here. TPU ICI links have slightly different bandwidths depending on the
     operation being performed. You can generally use the numbers in this doc without
     worry.</d-footnote>'
+  id: totrans-51
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 每个轴的ICI带宽为`9e10`字节/秒（90 GB/秒），每个芯片有3个轴。<d-footnote>上面的页面列出了100 GB/秒的带宽，这与这里列出的略有不同。TPU
+    ICI链接的带宽根据执行的操作而略有不同。您通常可以放心使用本文档中的数字。</d-footnote>
 - en: '`6.25e9` bytes/s (6.25 GB/s) of DCN (egress) bandwidth per TPU (via 1-2 NICs
     on each host).<d-footnote>TPU v6e has 12.5e9 bytes/s and v5e has 3.125e9 bytes/s.</d-footnote>'
+  id: totrans-52
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 每个TPU的DCN（出口）带宽为`6.25e9`字节/秒（6.25 GB/秒）（通过每个主机上的1-2个NIC）。<d-footnote>TPU v6e有`12.5e9`字节/秒，v5e有`3.125e9`字节/秒。</d-footnote>
 - en: This means that when we split models across multiple chips, we need to be careful
     to avoid bottlenecking the MXU with slower cross-device communication.
+  id: totrans-53
   prefs: []
   type: TYPE_NORMAL
+  zh: 这意味着当我们跨多个芯片分割模型时，我们需要小心避免使用较慢的跨设备通信来瓶颈MXU。
 - en: '**Multi-slice training:** A set of ICI-connected TPUs is called a **slice**.
     Different slices can be connected between each other using DCN, for instance to
     link slices on different pods. Since DCN is a much slower connection than ICI,
@@ -320,120 +463,179 @@
     DCN is host-to-host, so to transfer buffers from TPU to TPU over DCN, we first
     need to transfer over PCIe to the host, then egress over the network, then ingress
     over the target host network, then over PCIe into HBM.'
+  id: totrans-54
   prefs: []
   type: TYPE_NORMAL
+  zh: '**多切片训练**：一组ICI连接的TPU称为**切片**。不同的切片可以通过DCN相互连接，例如连接不同pod上的切片。由于DCN比ICI慢得多，因此应尽量减少我们的计算需要等待从DCN获取数据的时间。DCN是主机到主机的，因此要将缓冲区从TPU传输到TPU通过DCN，我们首先需要通过PCIe传输到主机，然后通过网络出口，然后通过目标主机网络进入，然后通过PCIe进入HBM。'
 - en: Key Takeaways
+  id: totrans-55
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 关键要点
 - en: TPUs are simple and can in most cases be thought of as a matrix multiply unit
     connected to memory (super fast), other chips over ICI (rather fast), and the
     rest of the datacenter over DCN (somewhat fast).
+  id: totrans-56
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: TPUs（张量处理单元）简单，在大多数情况下可以将其视为连接到内存（超级快速）的矩阵乘法单元，其他芯片通过ICI（相当快），数据中心的其他部分通过DCN（稍微快一些）。
 - en: 'Communication is limited by our various network bandwidths in order of speed:'
+  id: totrans-57
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 通信速度受我们各种网络带宽的限制：
 - en: 'HBM bandwidth: Between a TensorCore and its associated HBM.'
+  id: totrans-58
   prefs:
   - PREF_IND
   - PREF_UL
   type: TYPE_NORMAL
+  zh: HBM带宽：TensorCore与其相关HBM之间的带宽。
 - en: 'ICI bandwidth: Between a TPU chip and its nearest 4 or 6 neighbors.'
+  id: totrans-59
   prefs:
   - PREF_IND
   - PREF_UL
   type: TYPE_NORMAL
+  zh: ICI带宽：TPU芯片与其最近的4个或6个邻居之间的带宽。
 - en: 'PCIe bandwidth: Between a CPU host and its associated tray(s) of chips.'
+  id: totrans-60
   prefs:
   - PREF_IND
   - PREF_UL
   type: TYPE_NORMAL
+  zh: PCIe带宽：CPU主机与其相关托盘的芯片之间的带宽。
 - en: 'DCN bandwidth: Between multiple CPU hosts, typically hosts not connected by
     ICI.'
+  id: totrans-61
   prefs:
   - PREF_IND
   - PREF_UL
   type: TYPE_NORMAL
+  zh: DCN带宽：多个CPU主机之间的带宽，通常是未通过ICI连接的主机。
 - en: '**Within a slice, TPUs are only connected to their nearest neighbors via ICI.**
     This means communication over ICI between distant chips in a slice needs to hop
     over the intervening chips first.'
+  id: totrans-62
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**在一个切片内，TPU仅通过ICI与其最近的邻居连接。** 这意味着切片中远离芯片之间的ICI通信需要先跳过中间的芯片。'
 - en: '**Weight matrices need to be padded to at least size 128** (256 on TPU v6)
     in both dimensions to fill up the MXU (in fact, smaller axes are padded to 128).'
+  id: totrans-63
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**权重矩阵在两个维度上都需要填充到至少128**（在TPU v6上为256）以填充MXU（实际上，较小的轴填充到128）。'
 - en: '**Lower precision matrix multiplication tends to be faster.** TPUs can do int8
     or int4 FLOPs roughly 2x/4x faster than bfloat16 FLOPs for generations that support
     it. VPU operations are still performed in fp32.'
+  id: totrans-64
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**低精度矩阵乘法通常更快。** 对于支持它的几代TPU，TPU可以以大约2x/4x的速度比bfloat16 FLOPs执行int8或int4 FLOPs。VPU操作仍在fp32下执行。'
 - en: To avoid bottlenecking the TPU compute unit, we need to **make sure the amount
     of communication across each channel is proportional to its speed**.
+  id: totrans-65
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 为了避免TPU计算单元的瓶颈，我们需要**确保每个通道的通信量与其速度成比例**。
 - en: TPU Specs
+  id: totrans-66
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: TPU规格
 - en: 'Here are some specific numbers for our chips:'
+  id: totrans-67
   prefs: []
   type: TYPE_NORMAL
+  zh: 这里是我们芯片的一些具体数字：
 - en: '| Model | Pod size | Host size | HBM capacity/chip | HBM BW/chip (bytes/s)
     | FLOPs/s/chip (bf16) | FLOPs/s/chip (int8) |'
+  id: totrans-68
   prefs: []
   type: TYPE_TB
+  zh: '| 模型 | Pod大小 | 主机大小 | HBM容量/芯片 | HBM BW/芯片（字节/秒） | FLOPs/s/芯片（bf16） | FLOPs/s/芯片（int8）
+    |'
 - en: '| --- | --- | --- | --- | --- | --- | --- |'
+  id: totrans-69
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- | --- | --- | --- | --- | --- |'
 - en: '| TPU v3 | 32x32 | 4x2 | 32GB | 9.0e11 | 1.4e14 | 1.4e14 |'
+  id: totrans-70
   prefs: []
   type: TYPE_TB
+  zh: '| TPU v3 | 32x32 | 4x2 | 32GB | 9.0e11 | 1.4e14 | 1.4e14 |'
 - en: '| TPU v4p | 16x16x16 | 2x2x1 | 32GB | 1.2e12 | 2.75e14 | 2.75e14 |'
+  id: totrans-71
   prefs: []
   type: TYPE_TB
+  zh: '| TPU v4p | 16x16x16 | 2x2x1 | 32GB | 1.2e12 | 2.75e14 | 2.75e14 |'
 - en: '| TPU v5p | 16x20x28 | 2x2x1 | 96GB | 2.8e12 | 4.59e14 | 9.18e14 |'
+  id: totrans-72
   prefs: []
   type: TYPE_TB
+  zh: '| TPU v5p | 16x20x28 | 2x2x1 | 96GB | 2.8e12 | 4.59e14 | 9.18e14 |'
 - en: '| TPU v5e | 16x16 | 4x2 | 16GB | 8.1e11 | 1.97e14 | 3.94e14 |'
+  id: totrans-73
   prefs: []
   type: TYPE_TB
+  zh: '| TPU v5e | 16x16 | 4x2 | 16GB | 8.1e11 | 1.97e14 | 3.94e14 |'
 - en: '| TPU v6e | 16x16 | 4x2 | 32GB | 1.6e12 | 9.20e14 | 1.84e15 |'
+  id: totrans-74
   prefs: []
   type: TYPE_TB
+  zh: '| TPU v6e | 16x16 | 4x2 | 32GB | 1.6e12 | 9.20e14 | 1.84e15 |'
 - en: 'Host size refers to the topology of TPUs connected to a single host (e.g. TPU
     v5e has a single CPU host connected to 8 TPUs in a 4x2 topology). Here are interconnect
     figures:'
+  id: totrans-75
   prefs: []
   type: TYPE_NORMAL
+  zh: 主机大小指的是连接到单个主机的TPU拓扑结构（例如，TPU v5e有一个CPU主机连接到4x2拓扑中的8个TPU）。以下是互连数据：
 - en: '| Model | ICI BW/link (one-way, bytes/s) | ICI BW/link (bidi, bytes/s) |'
+  id: totrans-76
   prefs: []
   type: TYPE_TB
+  zh: '| 模型 | ICI BW/链路（单向，字节/秒） | ICI BW/链路（双向，字节/秒） |'
 - en: '| --- | --- | --- |'
+  id: totrans-77
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- | --- |'
 - en: '| **TPU v3** | 1e11 | 2e11 |'
+  id: totrans-78
   prefs: []
   type: TYPE_TB
+  zh: '| **TPU v3** | 1e11 | 2e11 |'
 - en: '| **TPU v4p** | 4.5e10 | 9e10 |'
+  id: totrans-79
   prefs: []
   type: TYPE_TB
+  zh: '| **TPU v4p** | 4.5e10 | 9e10 |'
 - en: '| **TPU v5p** | 9e10 | 1.8e11 |'
+  id: totrans-80
   prefs: []
   type: TYPE_TB
+  zh: '| **TPU v5p** | 9e10 | 1.8e11 |'
 - en: '| **TPU v5e** | 4.5e10 | 9e10 |'
+  id: totrans-81
   prefs: []
   type: TYPE_TB
+  zh: '| **TPU v5e** | 4.5e10 | 9e10 |'
 - en: '| **TPU v6e** | 9e10 | 1.8e11 |'
+  id: totrans-82
   prefs: []
   type: TYPE_TB
+  zh: '| **TPU v6e** | 9e10 | 1.8e11 |'
 - en: We include both one-way (unidirectional) bandwidth and bidi (bidirectional)
     bandwidth since unidirectional bandwidth is more true to the hardware but bidirectional
     bandwidth occurs more often in equations involving a full ring.<d-footnote>By
@@ -445,61 +647,91 @@
     axis, or on training chips (v*p) when we have an axis which is a multiple of 4\.
     We prefer to use the bidirectional bandwidth because it appears frequently in
     calculations involving bidirectional comms.</d-footnote>
+  id: totrans-83
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们包括单向（单向）带宽和双向（双向）带宽，因为单向带宽更接近硬件，但双向带宽在涉及完整环的方程中更常见。<d-footnote>双向带宽指的是沿单个链路在两个方向上可以发送的总字节数，或者同样，从单个TPU沿特定轴发出的总出站字节数，假设我们可以有效地使用这两个链路。这是在存在功能环时的情况，即在该特定轴上有回绕连接时。这在推理芯片上发生，当我们有完整的16轴时，或者在训练芯片（v*p）上，当我们有一个是4的倍数的轴时。我们更喜欢使用双向带宽，因为它在涉及双向通信的计算中经常出现。</d-footnote>
 - en: PCIe bandwidth is typically around `1.6e10` bytes / second per TPU (`3.2e10`
     for TPU v6e), while DCN bandwidth is typically around `6.25e9` bytes / second
     per TPU (`12.5e9` for TPU v6e and `3.125e9` for TPU v5e).
+  id: totrans-84
   prefs: []
   type: TYPE_NORMAL
+  zh: PCIe带宽通常是每个TPU大约`1.6e10`字节/秒（TPU v6e为`3.2e10`），而DCN带宽通常是每个TPU大约`6.25e9`字节/秒（TPU
+    v6e为`12.5e9`，TPU v5e为`3.125e9`）。
 - en: Worked Problems
+  id: totrans-85
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 工作问题
 - en: These numbers are a little dry, but they let you make basic roofline estimates
     for model performance. Let’s work a few problems to explain why this is useful.
     You’ll see more examples in Part 3.
+  id: totrans-86
   prefs: []
   type: TYPE_NORMAL
+  zh: 这些数字有点枯燥，但它们让你可以对模型性能做出基本的屋顶线估计。让我们解决几个问题来解释为什么这很有用。你将在第3部分看到更多示例。
 - en: '**Question 1 [bounding LLM latency]:** Say you want to sample from a 200B parameter
     model in bf16 that’s split across 32 TPU v4p. How long would it take to load all
     the parameters from HBM into the systolic array? *Hint: use the numbers above.*'
+  id: totrans-87
   prefs: []
   type: TYPE_NORMAL
+  zh: '**问题1 [LLM延迟限制]：** 假设你想要从一个分布在32个TPU v4p上的200B参数模型中采样，该模型以bf16格式分割。将所有参数从HBM加载到阵列中需要多长时间？**提示：使用上面的数字**。'
 - en: <details><summary>Click here for the answer.</summary>
+  id: totrans-88
   prefs: []
   type: TYPE_NORMAL
+  zh: <details><summary>点击此处查看答案。</summary>
 - en: '**Answer:** We’re loading `sizeof(bf16) * 200e9 = 400e9` bytes on 32 chips,
     meaning 12.5e9 bytes / chip, each with an HBM bandwidth of 1.23e12\. So the load
     takes around 10ms.'
+  id: totrans-89
   prefs: []
   type: TYPE_NORMAL
+  zh: '**答案：** 我们在32个芯片上加载`sizeof(bf16) * 200e9 = 400e9`字节，这意味着每个芯片12.5e9字节，每个芯片的HBM带宽为1.23e12。所以加载大约需要10毫秒。'
 - en: That’s pretty cool, because *that’s a reasonable lower bound on the latency
     of sampling* from the model. Each sampling step needs to load all parameters from
     HBM, so it cannot take less than 10 ms. In practice, at small batch sizes, this
     is close to being achievable.</details>
+  id: totrans-90
   prefs: []
   type: TYPE_NORMAL
+  zh: 这相当酷，因为这是从模型中采样**延迟的合理下限**。每个采样步骤都需要从HBM加载所有参数，所以它不能少于10毫秒。在实践中，在小批量大小的情况下，这几乎是可实现的。</details>
 - en: '**Question 2 [TPU details]:** Consider a full TPU v5e pod. How many total CPU
     hosts are there? How many TPU TensorCores? What is the total FLOPs/s for the whole
     pod? What is the total HBM? Do the same exercise for TPU v5p pod.'
+  id: totrans-91
   prefs: []
   type: TYPE_NORMAL
+  zh: '**问题2 [TPU细节]：** 考虑一个完整的TPU v5e pod。总共有多少个CPU主机？有多少个TPU TensorCores？整个pod的总FLOPs/s是多少？总HBM是多少？为TPU
+    v5p pod做同样的练习。'
 - en: <details><summary>Click here for the answer.</summary>
+  id: totrans-92
   prefs: []
   type: TYPE_NORMAL
+  zh: <details><summary>点击此处查看答案。</summary>
 - en: '**Answer:** For TPU v5e, each pod is `16x16` and each host is a 4x2 slice,
     so we have `16*16 / 8 = 32` hosts. For TPU v5e, each TPU has only one core, so
     we have 256 TensorCores. The total FLOPs/s is `16*16*2e14 = 5.1e16` in bfloat16\.
     Each chip has 16GB of HBM, so that’s `256 * 16 = 4TB` of memory.'
+  id: totrans-93
   prefs: []
   type: TYPE_NORMAL
+  zh: '**答案：** 对于TPU v5e，每个pod是`16x16`，每个主机是一个4x2的切片，因此我们有`16*16 / 8 = 32`个主机。对于TPU
+    v5e，每个TPU只有一个核心，所以我们有256个TensorCores。总的FLOPs/s是`16*16*2e14 = 5.1e16`在bfloat16下。每个芯片有16GB的HBM，所以那是`256
+    * 16 = 4TB`的内存。'
 - en: For a full TPU v5p pod, we have `16x20x28` chips and each host is 2x2x1, so
     we have `16*20*28 / 2*2 = 2,240` hosts. For TPU v5p, each TPU has two TensorCores,
     so we have `8960 * 2 = 17,920` cores. The total FLOPs/s is `8960 * 4.5e14 = 4e18`
     in bfloat16\. Each chip has 96GB of HBM, so that’s `8960 * 96 = 860TB` of memory.</details>
+  id: totrans-94
   prefs: []
   type: TYPE_NORMAL
+  zh: 对于一个完整的TPU v5p pod，我们有`16x20x28`个芯片，每个主机是2x2x1，所以我们有`16*20*28 / 2*2 = 2,240`个主机。对于TPU
+    v5p，每个TPU有两个TensorCores，所以我们有`8960 * 2 = 17,920`个核心。总的FLOPs/s是`8960 * 4.5e14 =
+    4e18`在bfloat16下。每个芯片有96GB的HBM，所以那是`8960 * 96 = 860TB`的内存。</details>
 - en: '**Question 3 [PCIe operational intensity]:** Imagine we’re forced to store
     a big weight matrix $A$ of type $\text{bfloat16}[D, F]$, and a batch of activations
     $x$ of type $\text{bfloat16}[B, D]$ in host DRAM and want to do a matrix multiplication
@@ -508,11 +740,17 @@
     why these are reasonable assumptions). What is the smallest batch size $B$ we
     need to remain FLOPs bound over PCIe? Assume PCIe bandwidth of 1.5e10 bytes /
     second.'
+  id: totrans-95
   prefs: []
   type: TYPE_NORMAL
+  zh: '**问题3 [PCIe操作强度]：** 假设我们被迫将一个大的权重矩阵$A$（类型$\text{bfloat16}[D, F]$）和一个激活批$ x$（类型$\text{bfloat16}[B,
+    D]$）存储在主机DRAM中，并想要对它们进行矩阵乘法。这是在单个主机上运行的，我们使用一个连接到它的单个TPU v6e芯片。你可以假设$B \ll D$，且$F
+    = 4D$（我们将在未来的章节中看到为什么这些假设是合理的）。为了保持PCIe上的FLOPs限制，我们需要最小的批大小$B$是多少？假设PCIe带宽为1.5e10字节/秒。'
 - en: <details><summary>Click here for the answer.</summary>
+  id: totrans-96
   prefs: []
   type: TYPE_NORMAL
+  zh: <details><summary>点击此处查看答案。</summary>
 - en: '**Answer:** We have to perform $2BDF$ floating point operations, and each chip
     can perform `9.2e14` floating point operations per second. This then requires
     $2BDF / 9.2e14$ seconds to perform. We have to load $2DF + 2BD$ bytes from DRAM,
@@ -522,36 +760,56 @@
     we can overlap all weight loading with computation, we want $2BDF / 9.2e14 > 2
     \cdot (BD + DF + BF) / 1.5e10$. We can simplify this using our assumptions that
     $B \ll D$, and $F = 4D$, to get'
+  id: totrans-97
   prefs: []
   type: TYPE_NORMAL
+  zh: '**答案：** 我们必须执行 $2BDF$ 个浮点运算，每个芯片每秒可以执行 `9.2e14` 个浮点运算。这需要 $2BDF / 9.2e14$ 秒来完成。我们必须从
+    DRAM 加载 $2DF + 2BD$ 字节，并将其写回。由于 PCIe 传输速度是瓶颈，我们需要 $2 \cdot (BD + DF + BF) / 1.5e10$
+    秒来传输数据到和从 TPU。由于我们希望计算时间比权重加载时间长，假设我们可以重叠所有权重加载与计算，我们希望 $2BDF / 9.2e14 > 2 \cdot
+    (BD + DF + BF) / 1.5e10$。我们可以通过假设 $B \ll D$ 和 $F = 4D$ 来简化这个不等式'
 - en: \[\frac{8BD^2}{9.2 \times 10^{14}} > \frac{8D^2}{1.5 \times 10^{10}}\]
+  id: totrans-98
   prefs: []
   type: TYPE_NORMAL
+  zh: \[\frac{8BD^2}{9.2 \times 10^{14}} > \frac{8D^2}{1.5 \times 10^{10}}\]
 - en: or
+  id: totrans-99
   prefs: []
   type: TYPE_NORMAL
+  zh: 或
 - en: \[B > \frac{9.2 \times 10^{14}}{1.5 \times 10^{10}} \simeq 61{,}000\]</details>
+  id: totrans-100
   prefs: []
   type: TYPE_NORMAL
+  zh: \[B > \frac{9.2 \times 10^{14}}{1.5 \times 10^{10}} \simeq 61{,}000\]</details>
 - en: '**Question 4 [general matmul latency]:** Let’s say we want to multiply a weight
     matrix int8[16384, 4096] by an activation matrix of size int8[B, 4096] where B
     is some unknown batch size. Let’s say we’re on 1 TPUv5e to start.'
+  id: totrans-101
   prefs: []
   type: TYPE_NORMAL
+  zh: '**问题 4 [通用矩阵乘法延迟]：** 假设我们想要将大小为 int8[16384, 4096] 的权重矩阵与大小为 int8[B, 4096] 的激活矩阵相乘，其中
+    B 是某个未知的批量大小。假设我们从 1 个 TPUv5e 开始。'
 - en: 'How long will this multiplication take as a function of B? *Hint: it may help
     to calculate how long it will take to load the arrays from HBM and how long the
     multiplication will actually take. Which is bottlenecking you?*'
+  id: totrans-102
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 这个乘法作为 B 的函数将花费多长时间？*提示：计算从 HBM 加载数组所需的时间和实际乘法所需的时间可能会有所帮助。哪个是瓶颈？*
 - en: What if we wanted to run this operation out of VMEM? How long would it take
     as a function of B?
+  id: totrans-103
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 如果我们想在 VMEM 中运行这个操作，它将作为 B 的函数花费多长时间？
 - en: <details><summary>Click here for the answer.</summary>
+  id: totrans-104
   prefs: []
   type: TYPE_NORMAL
+  zh: <details><summary>点击此处查看答案。</summary>
 - en: '**Answer:** (1) The number of floating point operations we need to perform
     is $2 \cdot 4096 \cdot 16384 \cdot B = 1.3 \times 10^{8} \cdot B$. So $T_{\text{math}}
     = (1.3 \times 10^{8} \cdot B) / 3.94 \times 10^{14}$ seconds. We need to load
@@ -560,42 +818,69 @@
     + 2 \times 10^{4} \cdot B) / 8.1 \times 10^{11}$ seconds. Assuming as much overlap
     of communication and computation as possible, the whole multiplication will take
     approximately'
+  id: totrans-105
   prefs: []
   type: TYPE_NORMAL
+  zh: '**答案：** (1) 我们需要执行的浮点运算次数是 $2 \cdot 4096 \cdot 16384 \cdot B = 1.3 \times 10^{8}
+    \cdot B$。因此，$T_{\text{math}} = (1.3 \times 10^{8} \cdot B) / 3.94 \times 10^{14}$
+    秒。我们需要从 HBM 加载 $16384 \cdot 4096 + 4096 \cdot B$ 字节到 VMEM，并将 $16384 \cdot B$ 字节从
+    VMEM 写回到 HBM。这意味着 $T_{\text{comms}} = (6.7 \times 10^{7} + 2 \times 10^{4} \cdot
+    B) / 8.1 \times 10^{11}$ 秒。假设尽可能多的重叠通信和计算，整个乘法将大约需要'
 - en: \[\max\{T_{\text{math}}, T_{\text{comms}}\} = \max\left\{ \frac{6.7 \times 10^{7}
     + 2 \times 10^{4} \cdot B}{8.1 \times 10^{11}}, \frac{1.3 \times 10^{8} \cdot
     B}{3.94 \times 10^{14}} \right\}\]
+  id: totrans-106
   prefs: []
   type: TYPE_NORMAL
+  zh: \[\max\{T_{\text{math}}, T_{\text{comms}}\} = \max\left\{ \frac{6.7 \times 10^{7}
+    + 2 \times 10^{4} \cdot B}{8.1 \times 10^{11}}, \frac{1.3 \times 10^{8} \cdot
+    B}{3.94 \times 10^{14}} \right\}\]
 - en: We’ll be FLOPs-bound when $\frac{6.7 \times 10^{7} + 2 \times 10^{4} \cdot B}{8.1
     \times 10^{11}} < \frac{1.3 \times 10^{8} \cdot B}{3.94 \times 10^{14}}$, or equivalently,
     $B > 271$. This is slightly larger than the 240 number we derive below because
     we factor in the full impact of \(D\) and \(F\).
+  id: totrans-107
   prefs: []
   type: TYPE_NORMAL
+  zh: 当 $\frac{6.7 \times 10^{7} + 2 \times 10^{4} \cdot B}{8.1 \times 10^{11}} <
+    \frac{1.3 \times 10^{8} \cdot B}{3.94 \times 10^{14}}$ 时，我们将受到 FLOPs 的限制，或者说，当
+    $B > 271$ 时。这比我们下面推导出的 240 个数字略大，因为我们考虑了 $D$ 和 $F$ 的全部影响。
 - en: (2) If instead we are loading from VMEM, let’s consider VMEM bandwidth to the
     MXU as 22 times the HBM $\leftrightarrow$ VMEM bandwidth. This turns our data
     loading denominator from 8.1e11 to 1.78e13, and we get $B > 11$. Note that in
     practice, we cannot dedicate all of our VMEM bandwidth to loading $W$, so in practice
     it will be closer to 20.</details>
+  id: totrans-108
   prefs: []
   type: TYPE_NORMAL
+  zh: (2) 如果我们从 VMEM 加载，让我们考虑 VMEM 到 MXU 的带宽是 HBM $\leftrightarrow$ VMEM 带宽的 22 倍。这把我们的数据加载分母从
+    8.1e11 变为 1.78e13，我们得到 $B > 11$。请注意，在实际操作中，我们不能将所有的 VMEM 带宽都用于加载 $W$，因此实际上它将更接近
+    20。</details>
 - en: '**Question 5 [ICI bandwidth]:** Let’s say we have a TPU v5e `4x4` slice. Let’s
     say we want to send an array of type `bfloat16[8, 128, 8192]` from `TPU{0,0}`
     to `TPU{3, 3}`. Let’s say the per-hop latency for TPU v5e is $1\mu s$.'
+  id: totrans-109
   prefs: []
   type: TYPE_NORMAL
+  zh: '**问题 5 [ICI 带宽]:** 假设我们有一个 TPU v5e `4x4` 切片。假设我们想将类型为 `bfloat16[8, 128, 8192]`
+    的数组从 `TPU{0,0}` 发送到 `TPU{3, 3}`。假设 TPU v5e 的每跳延迟为 $1\mu s$。'
 - en: How soon will the first byte arrive at its destination?
+  id: totrans-110
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 首个字节何时到达目的地？
 - en: How long will the total transfer take?
+  id: totrans-111
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 总传输需要多长时间？
 - en: <details><summary>Click here for the answer.</summary>
+  id: totrans-112
   prefs: []
   type: TYPE_NORMAL
+  zh: <details><summary>点击此处查看答案。</summary>
 - en: '**Answer:** In a TPUv5e we have 2D connectivity. Because we have only a `4x4`
     slice (with no axes of size 16), we have no wraparound connections. Thus there
     are two ports from which our target chip can receive data, and likewise two ports
@@ -608,57 +893,88 @@
     wraparound links for axes with fewer than 16 chips. Since the latency of each
     hop is about $1\mu s$, the first byte will arrive in about`6us` and the total
     transfer will take `188us`.</details>'
+  id: totrans-113
   prefs: []
   type: TYPE_NORMAL
+  zh: '**答案:** 在 TPUv5e 中，我们有 2D 连接性。因为我们只有一个 `4x4` 切片（没有大小为 16 的轴），所以我们没有环绕连接。因此，我们的目标芯片可以从两个端口接收数据，同样，我们的源芯片也可以从两个端口发送数据。我们需要传输的数据量是
+    `2 * 8 * 128 * 8192 = 1.7e7` 字节。我们可以同时从两个端口传输（即向右发送一半数组，向下发送一半），因此我们每秒可以传输 `2
+    * 4.5e10 = 9e10` 字节，这意味着传输整个数组大约需要 `1.7e7 / 9e10 = 188us`（假设我们受带宽限制）。在 `4x4` 切片中，芯片之间有六个跳（从
+    $(0, 0)$ 到 $(3, 3)$），因为没有环绕链接用于小于 16 个芯片的轴。由于每个跳的延迟大约为 $1\mu s$，第一个字节将在大约 `6us`
+    后到达，总传输时间将约为 `188us`。</details>'
 - en: '**Question 6 [pulling it all together, hard]:** Imagine you have a big matrix
     **A**: `int8[128 * 1024, 128 * 1024]` sharded evenly across a TPU v5e 4x4 slice
     but offloaded to host DRAM on each chip. Let’s say you want to copy the entire
     array to TPU{0, 0} and multiply it by a vector `bf16[8, 128 * 1024]`. How long
     will this take? *Hint: use the numbers above.*'
+  id: totrans-114
   prefs: []
   type: TYPE_NORMAL
+  zh: '**问题 6 [整合所有内容，难度大]:** 想象你有一个大的矩阵 **A**: `int8[128 * 1024, 128 * 1024]`，均匀地分布在
+    TPU v5e 4x4 切片中，但卸载到每个芯片的主机 DRAM 中。假设你想要将整个数组复制到 TPU{0, 0} 并与向量 `bf16[8, 128 *
+    1024]` 相乘。这将花费多长时间？*提示：使用上面的数字。*'
 - en: <details><summary>Click here for the answer.</summary>
+  id: totrans-115
   prefs: []
   type: TYPE_NORMAL
+  zh: <details><summary>点击此处查看答案。</summary>
 - en: '**Answer:** Let’s start by outlining the operations we have to perform. Our
     array is about 16GB. From the table above, a TPU v5e host has a 4x2 topology,
     so a 4x4 has 2 hosts, Thus, since our array is evenly sharded, each host effectively
     contains a chunk of 1/2 of the array, or 8GB. We need to copy these chunks all
     to TPU{0,0}, which gives us two options:'
+  id: totrans-116
   prefs: []
   type: TYPE_NORMAL
+  zh: '**答案:** 让我们先概述一下我们必须执行的操作。我们的数组大约是 16GB。从上面的表格中可以看出，一个 TPU v5e 主机具有 4x2 的拓扑结构，因此一个
+    4x4 有 2 个主机，因此，由于我们的数组是均匀分片的，每个主机实际上包含数组的一半，即 8GB。我们需要将这些块全部复制到 TPU{0,0}，这给我们提供了两个选择：'
 - en: We can copy over DCN and then load the entire unsharded array over PCIe into
     HBM.
+  id: totrans-117
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 我们可以复制 DCN，然后通过 PCIe 将整个未分片的数组加载到 HBM 中。
 - en: We can load our sharded arrays onto their corresponding TPUs, then perform a
     gather over ICI, then perform the matmul on TPU{0,0}.
+  id: totrans-118
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 我们可以将我们的分片数组加载到相应的 TPU 上，然后在 ICI 上执行 gather 操作，然后在 TPU{0,0} 上执行矩阵乘法。
 - en: It should be clear that option (2) is better. DCN is slow compared to ICI and
     we’d much prefer to load a big array over many PCIe links rather than just a few
     (the 8 on host 0). Here’s a diagram of part of the system. As described above,
     note that TPUs are connected to their neighbors by ICI (even across hosts), all
     TPUs are connected to their host CPU (via PCIe), and hosts are connected by DCN.
+  id: totrans-119
   prefs: []
   type: TYPE_NORMAL
+  zh: 应该很明显，选项 (2) 更好。DCN 相比 ICI 较慢，我们更愿意通过多个 PCIe 链路加载一个大数组，而不是仅仅通过几个（主机 0 上的 8 个）。以下是系统部分图示。如上所述，请注意，TPU
+    通过 ICI 连接到其邻居（甚至跨主机），所有 TPU 都通过 PCIe 连接到其主机 CPU，主机通过 DCN 连接。
 - en: <picture>![](../Images/30a6cd183f5853e95c174c3ee06c3142.png)</picture>
+  id: totrans-120
   prefs: []
   type: TYPE_NORMAL
+  zh: <picture>![](../Images/30a6cd183f5853e95c174c3ee06c3142.png)</picture>
 - en: Each chip actually has its own PCIe link to its host, though for clarity only
     one is shown here.
+  id: totrans-121
   prefs: []
   type: TYPE_NORMAL
+  zh: 每个芯片实际上都有其自己的 PCIe 连接到其主机，尽管为了清晰起见这里只显示了一个。
 - en: 'Now let’s work through how long each piece will take:'
+  id: totrans-122
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在我们来计算每个部分将花费多长时间：
 - en: '**PCIe load**: we’re loading chunks of 16GB over 16 PCIe links, each of which
     has `1.5e10` bytes/second bandwidth. Thus this will take about 66ms.'
+  id: totrans-123
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: '**PCIe load**: 我们通过 16 个 PCIe 链路加载 16GB 的数据块，每个链路具有 `1.5e10` 字节/秒的带宽。因此，这将花费大约
+    66ms。'
 - en: '**ICI copy:** each TPU now has 16GB / 16 = 1GB of our array. Our ICI bandwidth
     is 9e10 bytes/second per link *bidirectional*, and you’ll notice from the above
     diagram that only 2 of the 4 ICI links on the TPU v5e are in use in this topology
@@ -668,60 +984,91 @@
     it’s probably within a factor of 2\. As you’ll see in Section 2, performing a
     full AllGather would also take roughly `16e9 / (4.5e10 * 2)`, so this is close
     to optimal.'
+  id: totrans-124
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: '**ICI copy:** 每个 TPU 现在拥有我们数组的 1GB。我们的 ICI 带宽是每链路每秒 9e10 字节 * 双向，你将从上面的图中注意到，在
+    TPU v5e 的 4 个 ICI 链路中只有 2 个在此拓扑结构中用于 TPU{0,0}。由于 TPU{0,0} 需要在两个轴上以 `4.5e10` 字节/链路/秒的速度接收总共
+    15GB 的数据，我们可以将时间下限设定为 `15e9 / (4.5e10 * 2) = 167ms`。实际上，这可能无法实现，因为负载非常不均匀，但可能在大约
+    2 倍的范围内。正如你在第 2 节中看到的，执行完整的 AllGather 也大约需要 `16e9 / (4.5e10 * 2)`，因此这接近最优。'
 - en: '**HBM $\rightarrow$ MXU load:** to perform our final matmul, we need to load
     these 16e9 bytes plus the bf16[8, 128 * 1024] array (another 2MB, so negligible)
     over HBM bandwidth into the MXU, which will take `16e9 / 8.1e11 = 19ms`.'
+  id: totrans-125
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: '**HBM $\rightarrow$ MXU load:** 为了执行我们的最终矩阵乘法，我们需要将这些 16e9 字节加上 bf16[8, 128
+    * 1024] 数组（另外 2MB，因此可以忽略不计）通过 HBM 带宽加载到 MXU，这将花费 `16e9 / 8.1e11 = 19ms`。'
 - en: '**FLOPs:** we’re performing a total of \(2 \cdot 8 \cdot 128 \cdot 1024 \cdot
     128 \cdot 1024 = 2.7 \times 10^{11}\) FLOPs, and since we can perform `1.97e14`
     bf16 FLOPs/s, we get 1.3ms.'
+  id: totrans-126
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: '**FLOPs:** 我们总共执行了 \(2 \cdot 8 \cdot 128 \cdot 1024 \cdot 128 \cdot 1024 =
+    2.7 \times 10^{11}\) FLOPs，由于我们每秒可以执行 `1.97e14` bf16 FLOPs，因此我们得到 1.3ms。'
 - en: An upper bound for the total time is the sum of all of these times, but since
     the TPU can typically overlap these operations, we can think of this as a pipelining
     problem that’s bottlenecked by the slowest piece. Assuming that’s true, then the
     answer is about 150-200ms.</details>
+  id: totrans-127
   prefs: []
   type: TYPE_NORMAL
+  zh: 总时间的上界是所有这些时间的总和，但由于 TPU 通常可以重叠这些操作，我们可以将其视为一个瓶颈由最慢的部分决定的流水线问题。假设这是真的，那么答案大约是
+    150-200ms。</details>
 - en: That’s it for Part 2! For Part 3, covering partitioning and cross-TPU communication,
     [click here](../sharding).
+  id: totrans-128
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 这就是第二部分的所有内容！对于第三部分，涵盖分区和跨 TPU 通信，[点击这里](../sharding)。
 - en: Appendix
+  id: totrans-129
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 附录
 - en: 'Appendix A: More on TPU internals'
+  id: totrans-130
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 附录 A：更多关于 TPU 内部结构
 - en: Here we’ll dive more deeply into the internal operations of a TPU. Unless otherwise
     noted, we’ll provide specs for a TPU v5p.
+  id: totrans-131
   prefs: []
   type: TYPE_NORMAL
+  zh: 在这里，我们将更深入地探讨 TPU 的内部操作。除非另有说明，我们将提供 TPU v5p 的规格。
 - en: VPU
+  id: totrans-132
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: VPU
 - en: The VPU is the TPU’s vector arithmetic core. The VPU consists of a two dimensional
     SIMD vector machine (the **VPU**) that performs elementwise arithmetic operations
     like vadd (vector addition) or vmax (elementwise max) and a set of vector registers
     called **VREGs** that hold data for the VPU and MXU.
+  id: totrans-133
   prefs: []
   type: TYPE_NORMAL
+  zh: VPU 是 TPU 的向量算术核心。VPU 由一个二维 SIMD 向量机（**VPU**）组成，执行逐元素算术运算，如 vadd（向量加法）或 vmax（逐元素最大值），以及一组称为
+    **VREGs** 的向量寄存器，这些寄存器用于存储 VPU 和 MXU 的数据。
 - en: '**VREGs:** Each TPU v5p core has 64 32-bit VREGs (32 in TPU v4), giving us
     a total of about `64 * 8 * 128 * 4 = 256kB` of VREG memory per core (or 2x this
     for the whole chip since we have two cores). A TPU v5p can load 3 registers from
     VMEM each cycle, and write 1 register to VMEM each cycle.'
+  id: totrans-134
   prefs: []
   type: TYPE_NORMAL
+  zh: '**VREGs:** 每个 TPU v5p 核心有 64 个 32 位 VREGs（TPU v4 中有 32 个），总共约为 `64 * 8 * 128
+    * 4 = 256kB` 的 VREG 内存每个核心（或整个芯片的两倍，因为我们有两个核心）。TPU v5p 每个周期可以从 VMEM 加载 3 个寄存器，并每个周期写入
+    1 个寄存器到 VMEM。'
 - en: '**VPU:** The VPU is a 2D vector arithmetic unit of shape `(8, 128)` where the
     128 dimension is referred to as lane axis and the dimension of 8 is referred to
     as the sublane axis. Each (lane, sublane) pair on v5 contains 4 standard floating-point
@@ -730,161 +1077,243 @@
     cycles, so e.g. in v5 you can add 4 pairs of f32 values together from VREGs in
     each cycle. A typical VPU instruction might look like `{v2 = vadd.8x128.f32 v0,
     v1}` where v0 and v1 are input VREGs and v2 is an output VREG.'
+  id: totrans-135
   prefs: []
   type: TYPE_NORMAL
+  zh: '**VPU：** VPU 是一个形状为 `(8, 128)` 的二维向量算术单元，其中 128 维度被称为通道轴，8 维度被称为子通道轴。v5 上的每个
+    (通道，子通道) 对包含 4 个标准浮点 ALU，它们彼此独立。VPU 在其每个 ALU 中执行大多数算术指令（如 vadd 或向量加）每个周期一次，延迟为
+    2 个周期，因此例如在 v5 中，你可以在每个周期内将来自 VREG 的 4 对 f32 值相加。一个典型的 VPU 指令可能看起来像 `{v2 = vadd.8x128.f32
+    v0, v1}`，其中 v0 和 v1 是输入 VREG，v2 是输出 VREG。'
 - en: All lanes and sublanes execute the same program every cycle in a pure SIMD manner,
     but each ALU can perform a different operation. So we can e.g. process 1 vadd
     and 1 vsub in a single cycle, each of which operates on two full VREGs and writes
     the output to a third.
+  id: totrans-136
   prefs: []
   type: TYPE_NORMAL
+  zh: 所有通道和子通道在每个周期都以纯 SIMD 方式执行相同的程序，但每个 ALU 可以执行不同的操作。因此，例如，我们可以在单个周期内处理 1 个 vadd
+    和 1 个 vsub，每个操作都作用于两个完整的 VREG，并将输出写入第三个。
 - en: '**Pop Quiz [Calculating VPU throughput]:** Using the above information, calculate
     how many vector FLOPs/s a TPU v5p can perform. A TPU v5p has a clock speed of
     about 1.75GHz.'
+  id: totrans-137
   prefs: []
   type: TYPE_NORMAL
+  zh: '**快速问答 [计算 VPU 吞吐量]：** 使用上述信息，计算 TPU v5p 可以执行多少向量 FLOPs/s。TPU v5p 的时钟速度约为 1.75GHz。'
 - en: <details><summary>Click here for the answer.</summary>
+  id: totrans-138
   prefs: []
   type: TYPE_NORMAL
+  zh: <details><summary>点击此处查看答案。</summary>
 - en: '*Answer*: Each cycle, each core can execute 4 vector instructions on `8 * 128`
     ALUs. This gives us `8 * 128 * 4 * 2` FLOPs/cycle for the whole chip, or `8 *
     128 * 4 * 2 * 1.75e9 = 1.4e13 FLOPs/s`. Note how much smaller this is than the
     MXU FLOPs/s of about `2e14` (roughly 10x).</details>'
+  id: totrans-139
   prefs: []
   type: TYPE_NORMAL
+  zh: '*答案*：每个周期，每个核心可以在 `8 * 128` ALU 上执行 4 条向量指令。这为我们提供了整个芯片的 `8 * 128 * 4 * 2`
+    FLOPs/cycle，或者 `8 * 128 * 4 * 2 * 1.75e9 = 1.4e13 FLOPs/s`。注意这比大约 `2e14` 的 MXU
+    FLOPs/s 小得多（大约 10 倍）。</details>'
 - en: '**Reductions:** Generally, communication or reduction across the sublane dimension
     is easier than across the lane dimension. For instance, the VPU supports an intra-lane
     shuffle operation that can roll along the axis of size 8 in about a cycle. This
     can be used to perform efficient reductions along the sublane dimension (just
     shuffle by 4, 2, and 1 and do 3 pairs of elementwise sums).'
+  id: totrans-140
   prefs: []
   type: TYPE_NORMAL
+  zh: '**减少（Reductions）：** 通常情况下，跨子通道维度的通信或减少比跨通道维度的通信更容易。例如，VPU 支持一个沿大小为 8 的轴滚动的内部通道洗牌操作，大约在一个周期内完成。这可以用来在子通道维度上执行高效的减少（只需通过
+    4、2 和 1 洗牌，并进行 3 对逐元素求和）。'
 - en: Cross-lane reductions are much harder and involve a separate hardware unit called
     the XLU or “cross lane unit”, which is slow and fairly expensive.
+  id: totrans-141
   prefs: []
   type: TYPE_NORMAL
+  zh: 跨通道减少更困难，涉及一个称为 XLU 或“跨通道单元”的单独硬件单元，它速度较慢且相对昂贵。
 - en: '**Comparison to GPUs:** For those familiar with NVIDIA GPUs, each ALU in the
     VPU is analogous to a CUDA core, and a single VPU lane is analogous to a “Warp
     Scheduler”, i.e. the set of usually 32 CUDA Cores that perform SIMD arithmetic.
     Reductions within the lane are pretty easy, but if we need to cross lanes, we
     need to transit at least VMEM/XLU/SMEM which is much slower. See the [GPU section](../gpus)
     for more details.'
+  id: totrans-142
   prefs: []
   type: TYPE_NORMAL
+  zh: '**与 GPU 的比较：** 对于熟悉 NVIDIA GPU 的人来说，VPU 中的每个 ALU 都类似于一个 CUDA 核心，而单个 VPU 通道类似于“Warp
+    Scheduler”，即通常执行 SIMD 算术的 32 个 CUDA 核心集。通道内的减少相对容易，但如果我们需要跨通道，我们需要通过 VMEM/XLU/SMEM
+    进行转换，这要慢得多。有关更多详细信息，请参阅 [GPU 部分](../gpus)。'
 - en: Scalar Core
+  id: totrans-143
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 标量核心
 - en: The scalar core is the control unit of the TPU. It fetches and dispatches all
     instructions and executes transfers from HBM into VMEM, and can be programmed
     to do scalar metadata work. Because the scalar core is single-threaded, one side-effect
     of this is that each core of the TPU is only capable of creating one DMA request
     per cycle.
+  id: totrans-144
   prefs: []
   type: TYPE_NORMAL
+  zh: 标量核心是 TPU 的控制单元。它获取和调度所有指令，并执行从 HBM 到 VMEM 的传输，并且可以编程以执行标量元数据工作。由于标量核心是单线程的，这种做法的一个副作用是，TPU
+    的每个核心在每个周期只能创建一个 DMA 请求。
 - en: To put this in context, a single scalar core controls a VPU (consisting of 4096
     ALUs), 4 MXUs, 2 XLUs, and multiple DMA engines. The highly skewed nature of control
     per unit compute is a source of hardware efficiency, but also limits the ability
     to do data dependent vectorization in any interesting way.
+  id: totrans-145
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了将这个概念放在上下文中，单个标量核心控制一个VPU（包含4096个ALU），4个MXU，2个XLU和多个DMA引擎。每个计算单元的控制高度倾斜是硬件效率的来源，但也限制了以任何有趣的方式执行数据相关向量化。
 - en: 'Appendix B: How does a systolic array work?'
+  id: totrans-146
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 附录B：收缩阵列是如何工作的？
 - en: 'At the core of the TPU MXU is a `128x128` systolic array (`256x256` on TPU
     v6e). When fully saturated the systolic array can perform one `bfloat16[8,128]
     @ bf16[128x128] -> f32[8,128]`<d-footnote>If you are not familiar with this notation,
     it means: multiplying a `8x128` matrix with bfloat16 elements by a `128x128` matrix
     with bfloat16 elements and storing the results in a `8x128` matrix with float32
     elements.</d-footnote> multiplication per 8 clock cycles.'
+  id: totrans-147
   prefs: []
   type: TYPE_NORMAL
+  zh: TPU MXU的核心是一个 `128x128` 的收缩阵列（在TPU v6e上为 `256x256`）。当完全饱和时，收缩阵列可以在8个时钟周期内执行一次
+    `bfloat16[8,128] @ bf16[128x128] -> f32[8,128]`<d-footnote>如果你不熟悉这种表示法，它意味着：使用bfloat16元素乘以
+    `8x128` 矩阵和 `128x128` 矩阵，并将结果存储在 `8x128` 矩阵中，该矩阵具有float32元素。</d-footnote> 乘法。
 - en: At its core, the systolic array is a 2D `128x128` (`=16,384`) grid of ALUs each
     capable of performing a multiply and add operation.
+  id: totrans-148
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 在其核心，收缩阵列是一个2D `128x128` (`=16,384`) 的ALU网格，每个ALU都能执行乘加操作。
 - en: Weights (**W**, the `128x128` input) are passed down from above (called the
     RHS) while inputs (**X**, the `8x128` input) are passed in from the left (called
     the LHS).
+  id: totrans-149
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 权重（**W**，`128x128` 输入）从上方传递下来（称为RHS），而输入（**X**，`8x128` 输入）从左侧传入（称为LHS）。
 - en: Here is a simplified animation of multiplying a set of weights (blue) with a
     set of activations (green). You’ll notice that the weights (RHS) are partially
     loaded first, diagonally, and then the activations are fed in, also diagonally.
     In each frame below, we multiply all the overlapped green and blue units, sum
     the result with any residual passed in from above, and then pass the result in
     turn down one unit.
+  id: totrans-150
   prefs: []
   type: TYPE_NORMAL
+  zh: 这里是乘以一组权重（蓝色）和一组激活（绿色）的简化动画。你会注意到权重（RHS）首先部分加载，呈对角线，然后激活也以对角线方式输入。在每个下面的帧中，我们乘以所有重叠的绿色和蓝色单元，将任何从上方传递下来的残留结果相加，然后将结果依次传递给下一个单元。
 - en: <picture>![](../Images/c77e2addd638e602ddc94be69f3b9f84.png)</picture>
+  id: totrans-151
   prefs: []
   type: TYPE_NORMAL
+  zh: '![图片](../Images/c77e2addd638e602ddc94be69f3b9f84.png)'
 - en: 'Here’s a more general version of this animation showing the output being streamed
     out of computation:'
+  id: totrans-152
   prefs: []
   type: TYPE_NORMAL
+  zh: 这里有一个更通用的动画版本，展示了计算结果如何被流式传输出来：
 - en: <picture>![](../Images/533813a5aa7ea2e1429bf909a138cc4a.png)</picture>
+  id: totrans-153
   prefs: []
   type: TYPE_NORMAL
+  zh: '![图片](../Images/533813a5aa7ea2e1429bf909a138cc4a.png)'
 - en: 'Here’s a diagram showing how this can be pipelined across multiple RHS and
     LHS arrays:'
+  id: totrans-154
   prefs: []
   type: TYPE_NORMAL
+  zh: 这里有一个图表，展示了如何将这个流水线化到多个RHS和LHS数组中：
 - en: <picture>![](../Images/a84af56370820b54068eeef3b98cb1b0.png)</picture>
+  id: totrans-155
   prefs: []
   type: TYPE_NORMAL
+  zh: '![图片](../Images/a84af56370820b54068eeef3b98cb1b0.png)'
 - en: There is an initial pipeline bubble as the weights (RHS) and activations (LHS)
     are loaded. After that initial bubble, new inputs and weights can be loaded in
     without an additional bubble.
+  id: totrans-156
   prefs: []
   type: TYPE_NORMAL
+  zh: 在权重（RHS）和激活（LHS）加载时，存在一个初始的流水线气泡。在那之后，新的输入和权重可以加载而无需额外的气泡。
 - en: Here’s a bad animation of a bf16[2, 3] x bf16[3, 3] matrix multiplication, which
     you could imagine as a matmul of a 2x3 weight matrix with an input activation
     of batch 1 and size 3\. This is rotated compared to the previous slides and inputs
     flow out to the right instead of down, but you can roughly see the structure.
+  id: totrans-157
   prefs: []
   type: TYPE_NORMAL
+  zh: 这里是一个bf16[2, 3] x bf16[3, 3] 矩阵乘法的糟糕动画，你可以想象成是一个2x3权重矩阵与批次大小为3的输入激活的matmul。这与前面的幻灯片相比是旋转的，输入流向右侧而不是向下，但你可以大致看到结构。
 - en: <picture>![](../Images/12d0d3e9bcd5de21c0f45bdd109e840c.png)</picture>
+  id: totrans-158
   prefs: []
   type: TYPE_NORMAL
+  zh: '![图片](../Images/12d0d3e9bcd5de21c0f45bdd109e840c.png)'
 - en: We can efficiently pipeline this to multiply large matrices without too large
     a pipeline bubble. With that said, it’s important that our matrices have shapes
     larger than the side dimension of the MXU, which is generally 128x128\. Some TPUs
     (since TPU v3) have multiple MXUs, either 2 for TPU v3 and 4 for TPU v4/5, so
     we need to ensure tiling dimensions are larger than 128 * number of MXUs. [Here’s](https://www.youtube.com/watch?v=sJltBQ4MOHA)
     a good animation for this.
+  id: totrans-159
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以有效地流水线化这个过程，以在不产生太大的流水线气泡的情况下乘以大型矩阵。换句话说，我们的矩阵的形状必须大于MXU的边长维度，MXU通常是128x128。一些TPU（自TPU
+    v3以来）有多个MXU，TPU v3为2个，TPU v4/5为4个，因此我们需要确保分块维度大于128乘以MXU的数量。[这里有一个动画演示这个概念](https://www.youtube.com/watch?v=sJltBQ4MOHA)。
 - en: Trillium (TPU v6e) has a `256x256` systolic array, which means it can perform
     4x more FLOPs / cycle. This also means the dimensions of your tensors needs to
     be twice as large to utilize the MXU fully.
+  id: totrans-160
   prefs: []
   type: TYPE_NORMAL
+  zh: Trillium (TPU v6e) 拥有 `256x256` 的收缩阵列，这意味着它可以每周期执行 4 倍的 FLOPs。这也意味着您的张量维度需要是两倍大，才能充分利用
+    MXU。
 - en: '[This blog post](https://fleetwood.dev/posts/domain-specific-architectures#google-tpu)
     has another excellent animation of a systolic array multiplication for a fixed
     weight matrix.</d-article>  <d-appendix><d-footnote-list><d-citation-list>###
     Miscellaneous'
+  id: totrans-161
   prefs: []
   type: TYPE_NORMAL
+  zh: '[这篇博客文章](https://fleetwood.dev/posts/domain-specific-architectures#google-tpu)
+    有一个关于固定权重矩阵的收缩阵列乘法的另一个优秀动画。</d-article>  <d-appendix><d-footnote-list><d-citation-list>###
+    杂项'
 - en: ^*Work done at Google DeepMind, now at MatX.
+  id: totrans-162
   prefs: []
   type: TYPE_NORMAL
+  zh: ^*在 Google DeepMind 完成的工作，现在在 MatX。
 - en: Citation
+  id: totrans-163
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 引用
 - en: 'For attribution in academic contexts, please cite this work as:'
+  id: totrans-164
   prefs: []
   type: TYPE_NORMAL
+  zh: 在学术环境中进行归属引用时，请将此作品引用如下：
 - en: '[PRE0]'
+  id: totrans-165
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE0]'
 - en: 'or as a BibTeX entry:'
+  id: totrans-166
   prefs: []
   type: TYPE_NORMAL
+  zh: 或者作为 BibTeX 条目：
 - en: '[PRE1]</d-citation-list></d-footnote-list></d-appendix> <d-bibliography src="/scaling-book/assets/bibliography/main.bib"></d-bibliography></d-byline>'
+  id: totrans-167
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE1]</d-citation-list></d-footnote-list></d-appendix> <d-bibliography src="/scaling-book/assets/bibliography/main.bib"></d-bibliography></d-byline>'
