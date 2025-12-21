@@ -1,0 +1,675 @@
+- en: Definitions & Background
+  id: totrans-0
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+  zh: 定义与背景
+- en: This chapter includes all the definitions, symbols, and operations frequently
+    used in the RLHF process and with a quick overview of language models, which is
+    the guiding application of this book.
+  id: totrans-1
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 本章包括在RLHF过程中经常使用的所有定义、符号和操作，以及对语言模型的快速概述，这是本书的指导应用。
+- en: Language Modeling Overview
+  id: totrans-2
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+  zh: 语言模型概述
+- en: 'The majority of modern language models are trained to learn the joint probability
+    distribution of sequences of tokens (words, subwords, or characters) in an autoregressive
+    manner. Autoregression simply means that each next prediction depends on the previous
+    entities in the sequence. Given a sequence of tokens <semantics><mrow><mi>x</mi><mo>=</mo><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>x</mi><mn>1</mn></msub><mo>,</mo><msub><mi>x</mi><mn>2</mn></msub><mo>,</mo><mi>…</mi><mo>,</mo><msub><mi>x</mi><mi>T</mi></msub><mo
+    stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">x
+    = (x_1, x_2, \ldots, x_T)</annotation></semantics>, the model factorizes the probability
+    of the entire sequence into a product of conditional distributions:'
+  id: totrans-3
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 大多数现代语言模型都是训练以自回归方式学习标记序列（单词、子词或字符）的联合概率分布。自回归简单来说就是每个下一个预测都依赖于序列中的先前实体。给定一个标记序列
+    <semantics><mrow><mi>x</mi><mo>=</mo><mo stretchy="false" form="prefix">(</mo><msub><mi>x</mi><mn>1</mn></msub><mo>,</mo><msub><mi>x</mi><mn>2</mn></msub><mo>,</mo><mi>…</mi><mo>,</mo><msub><mi>x</mi><mi>T</mi></msub><mo
+    stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">x
+    = (x_1, x_2, \ldots, x_T)</annotation></semantics>，模型将整个序列的概率分解为条件分布的乘积：
+- en: <semantics><mrow><msub><mi>P</mi><mi>θ</mi></msub><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo><mo>=</mo><munderover><mo>∏</mo><mrow><mi>t</mi><mo>=</mo><mn>1</mn></mrow><mi>T</mi></munderover><msub><mi>P</mi><mi>θ</mi></msub><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>x</mi><mi>t</mi></msub><mo>∣</mo><msub><mi>x</mi><mn>1</mn></msub><mo>,</mo><mi>…</mi><mo>,</mo><msub><mi>x</mi><mrow><mi>t</mi><mo>−</mo><mn>1</mn></mrow></msub><mo
+    stretchy="false" form="postfix">)</mo><mi>.</mi><mrow><mo stretchy="false" form="prefix">(</mo><mn>1</mn><mo
+    stretchy="false" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">P_{\theta}(x)
+    = \prod_{t=1}^{T} P_{\theta}(x_{t} \mid x_{1}, \ldots, x_{t-1}).\qquad{(1)}</annotation></semantics>
+  id: totrans-4
+  prefs: []
+  type: TYPE_NORMAL
+  zh: <semantics><mrow><msub><mi>P</mi><mi>θ</mi></msub><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo><mo>=</mo><munderover><mo>∏</mo><mrow><mi>t</mi><mo>=</mo><mn>1</mn></mrow><mi>T</mi></munderover><msub><mi>P</mi><mi>θ</mi></msub><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>x</mi><mi>t</mi></msub><mo>∣</mo><msub><mi>x</mi><mn>1</mn></msub><mo>,</mo><mi>…</mi><mo>,</mo><msub><mi>x</mi><mrow><mi>t</mi><mo>−</mo><mn>1</mn></mrow></msub><mo
+    stretchy="false" form="postfix">)</mo><mi>.</mi><mrow><mo stretchy="false" form="prefix">(</mo><mn>1</mn><mo
+    stretchy="false" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">P_{\theta}(x)
+    = \prod_{t=1}^{T} P_{\theta}(x_{t} \mid x_{1}, \ldots, x_{t-1}).\qquad{(1)}</annotation></semantics>
+- en: 'In order to fit a model that accurately predicts this, the goal is often to
+    maximize the likelihood of the training data as predicted by the current model.
+    To do so, we can minimize a negative log-likelihood (NLL) loss:'
+  id: totrans-5
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 为了拟合一个能够准确预测此情况的模型，目标通常是最大化当前模型预测的训练数据的似然度。为此，我们可以最小化一个负对数似然（NLL）损失：
+- en: <semantics><mrow><msub><mi>ℒ</mi><mtext mathvariant="normal">LM</mtext></msub><mo
+    stretchy="false" form="prefix">(</mo><mi>θ</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mi>−</mi><msub><mi>𝔼</mi><mrow><mi>x</mi><mo>∼</mo><mi>𝒟</mi></mrow></msub><mrow><mo
+    stretchy="true" form="prefix">[</mo><munderover><mo>∑</mo><mrow><mi>t</mi><mo>=</mo><mn>1</mn></mrow><mi>T</mi></munderover><mi
+    mathvariant="normal">log</mi><msub><mi>P</mi><mi>θ</mi></msub><mrow><mo stretchy="true"
+    form="prefix">(</mo><msub><mi>x</mi><mi>t</mi></msub><mo>∣</mo><msub><mi>x</mi><mrow><mo><</mo><mi>t</mi></mrow></msub><mo
+    stretchy="true" form="postfix">)</mo></mrow><mo stretchy="true" form="postfix">]</mo></mrow><mi>.</mi><mrow><mo
+    stretchy="false" form="prefix">(</mo><mn>2</mn><mo stretchy="false" form="postfix">)</mo></mrow></mrow><annotation
+    encoding="application/x-tex">\mathcal{L}_{\text{LM}}(\theta)=-\,\mathbb{E}_{x
+    \sim \mathcal{D}}\left[\sum_{t=1}^{T}\log P_{\theta}\left(x_t \mid x_{<t}\right)\right].
+    \qquad{(2)}</annotation></semantics>
+  id: totrans-6
+  prefs: []
+  type: TYPE_NORMAL
+  zh: <semantics><mrow><msub><mi>ℒ</mi><mtext mathvariant="normal">LM</mtext></msub><mo
+    stretchy="false" form="prefix">(</mo><mi>θ</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mi>−</mi><msub><mi>𝔼</mi><mrow><mi>x</mi><mo>∼</mo><mi>𝒟</mi></mrow></msub><mrow><mo
+    stretchy="true" form="prefix">[</mo><munderover><mo>∑</mo><mrow><mi>t</mi><mo>=</mo><mn>1</mn></mrow><mi>T</mi></munderover><mi
+    mathvariant="normal">log</mi><msub><mi>P</mi><mi>θ</mi></msub><mrow><mo stretchy="true"
+    form="prefix">(</mo><msub><mi>x</mi><mi>t</mi></msub><mo>∣</mo><msub><mi>x</mi><mrow><mo><</mo><mi>t</mi></mrow></msub><mo
+    stretchy="true" form="postfix">)</mo></mrow><mo stretchy="true" form="postfix">]</mo></mrow><mi>.</mi><mrow><mo
+    stretchy="false" form="prefix">(</mo><mn>2</mn><mo stretchy="false" form="postfix">)</mo></mrow></mrow><annotation
+    encoding="application/x-tex">\mathcal{L}_{\text{LM}}(\theta)=-\,\mathbb{E}_{x
+    \sim \mathcal{D}}\left[\sum_{t=1}^{T}\log P_{\theta}\left(x_t \mid x_{<t}\right)\right].
+    \qquad{(2)}</annotation></semantics>
+- en: In practice, one uses a cross-entropy loss with respect to each next-token prediction,
+    computed by comparing the true token in a sequence to what was predicted by the
+    model.
+  id: totrans-7
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 在实践中，人们使用针对每个下一个标记预测的交叉熵损失，通过比较序列中的真实标记与模型预测的内容来计算。
+- en: Language models come in many architectures with different trade-offs in terms
+    of knowledge, speed, and other performance characteristics. Modern LMs, including
+    ChatGPT, Claude, Gemini, etc., most often use **decoder-only Transformers** [[49]](ch021.xhtml#ref-Vaswani2017AttentionIA).
+    The core innovation of the Transformer was heavily utilizing the **self-attention**
+    [[50]](ch021.xhtml#ref-Bahdanau2014NeuralMT) mechanism to allow the model to directly
+    attend to concepts in context and learn complex mappings. Throughout this book,
+    particularly when covering reward models in Chapter 7, we will discuss adding
+    new heads or modifying a language modeling (LM) head of the transformer. The LM
+    head is a final linear projection layer that maps from the model’s internal embedding
+    space to the tokenizer space (a.k.a. vocabulary). We’ll see in this book that
+    different “heads” of a language model can be applied to finetune the model to
+    different purposes – in RLHF this is most often done when training a reward model,
+    which is highlighted in Chapter 7.
+  id: totrans-8
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 语言模型有多种架构，在知识、速度和其他性能特征方面有不同的权衡。现代语言模型，包括ChatGPT、Claude、Gemini等，通常使用**仅解码器Transformer**
+    [[49]](ch021.xhtml#ref-Vaswani2017AttentionIA)。Transformer的核心创新是大量利用**自注意力** [[50]](ch021.xhtml#ref-Bahdanau2014NeuralMT)机制，允许模型直接关注上下文中的概念并学习复杂的映射。在本书中，尤其是在第7章介绍奖励模型时，我们将讨论添加新的头或修改Transformer的语言模型头。语言模型头是一个最终的线性投影层，它将模型内部嵌入空间映射到分词器空间（即词汇表）。在本书中，我们将看到语言模型的不同“头”可以应用于微调模型以适应不同的目的——在RLHF中，这通常在训练奖励模型时进行，这在第7章中得到了强调。
+- en: ML Definitions
+  id: totrans-9
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+  zh: 机器学习定义
+- en: '**Kullback-Leibler (KL) divergence (<semantics><mrow><msub><mi>𝒟</mi><mtext
+    mathvariant="normal">KL</mtext></msub><mo stretchy="false" form="prefix">(</mo><mi>P</mi><mo
+    stretchy="false" form="prefix">|</mo><mo stretchy="false" form="prefix">|</mo><mi>Q</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\mathcal{D}_{\text{KL}}(P
+    || Q)</annotation></semantics>)**, also known as KL divergence, is a measure of
+    the difference between two probability distributions. For discrete probability
+    distributions <semantics><mi>P</mi><annotation encoding="application/x-tex">P</annotation></semantics>
+    and <semantics><mi>Q</mi><annotation encoding="application/x-tex">Q</annotation></semantics>
+    defined on the same probability space <semantics><mi>𝒳</mi><annotation encoding="application/x-tex">\mathcal{X}</annotation></semantics>,
+    the KL distance from <semantics><mi>Q</mi><annotation encoding="application/x-tex">Q</annotation></semantics>
+    to <semantics><mi>P</mi><annotation encoding="application/x-tex">P</annotation></semantics>
+    is defined as:'
+  id: totrans-10
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: '**Kullback-Leibler (KL) 散度 (KL 散度 (<semantics><mrow><msub><mi>𝒟</mi><mtext
+    mathvariant="normal">KL</mtext></msub><mo stretchy="false" form="prefix">(</mo><mi>P</mi><mo
+    stretchy="false" form="prefix">|</mo><mo stretchy="false" form="prefix">|</mo><mi>Q</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\mathcal{D}_{\text{KL}}(P
+    || Q)</annotation></semantics>)**)，也称为 KL 散度，是衡量两个概率分布之间差异的度量。对于在相同概率空间 <semantics><mi>𝒳</mi><annotation
+    encoding="application/x-tex">\mathcal{X}</annotation></semantics> 上定义的离散概率分布 <semantics><mi>P</mi><annotation
+    encoding="application/x-tex">P</annotation></semantics> 和 <semantics><mi>Q</mi><annotation
+    encoding="application/x-tex">Q</annotation></semantics>，从 <semantics><mi>Q</mi><annotation
+    encoding="application/x-tex">Q</annotation></semantics> 到 <semantics><mi>P</mi><annotation
+    encoding="application/x-tex">P</annotation></semantics> 的 KL 距离定义为：'
+- en: <semantics><mrow><msub><mi>𝒟</mi><mtext mathvariant="normal">KL</mtext></msub><mo
+    stretchy="false" form="prefix">(</mo><mi>P</mi><mo stretchy="false" form="prefix">|</mo><mo
+    stretchy="false" form="prefix">|</mo><mi>Q</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><munder><mo>∑</mo><mrow><mi>x</mi><mo>∈</mo><mi>𝒳</mi></mrow></munder><mi>P</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mrow><mi
+    mathvariant="normal">log</mi><mo>⁡</mo></mrow><mrow><mo stretchy="true" form="prefix">(</mo><mfrac><mrow><mi>P</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo></mrow><mrow><mi>Q</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo></mrow></mfrac><mo
+    stretchy="true" form="postfix">)</mo></mrow><mrow><mo stretchy="false" form="prefix">(</mo><mn>3</mn><mo
+    stretchy="false" form="postfix">)</mo></mrow></mrow> <annotation encoding="application/x-tex">\mathcal{D}_{\text{KL}}(P
+    || Q) = \sum_{x \in \mathcal{X}} P(x) \log \left(\frac{P(x)}{Q(x)}\right) \qquad{(3)}</annotation></semantics>
+  id: totrans-11
+  prefs: []
+  type: TYPE_NORMAL
+  zh: <semantics><mrow><msub><mi>𝒟</mi><mtext mathvariant="normal">KL</mtext></msub><mo
+    stretchy="false" form="prefix">(</mo><mi>P</mi><mo stretchy="false" form="prefix">|</mo><mo
+    stretchy="false" form="prefix">|</mo><mi>Q</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><munder><mo>∑</mo><mrow><mi>x</mi><mo>∈</mo><mi>𝒳</mi></mrow></munder><mi>P</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mrow><mi
+    mathvariant="normal">log</mi><mo>⁡</mo></mrow><mrow><mo stretchy="true" form="prefix">(</mo><mfrac><mrow><mi>P</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo></mrow><mrow><mi>Q</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo></mrow></mfrac><mo
+    stretchy="true" form="postfix">)</mo></mrow><mrow><mo stretchy="false" form="prefix">(</mo><mn>3</mn><mo
+    stretchy="false" form="postfix">)</mo></mrow></mrow> <annotation encoding="application/x-tex">\mathcal{D}_{\text{KL}}(P
+    || Q) = \sum_{x \in \mathcal{X}} P(x) \log \left(\frac{P(x)}{Q(x)}\right) \qquad{(3)}</annotation></semantics>
+- en: NLP Definitions
+  id: totrans-12
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+  zh: NLP 定义
+- en: '**Prompt (<semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics>)**:
+    The input text given to a language model to generate a response or completion.'
+  id: totrans-13
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: '**提示 (<semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics>)**：给语言模型输入的文本，用于生成响应或补全。'
+- en: '**Completion (<semantics><mi>y</mi><annotation encoding="application/x-tex">y</annotation></semantics>)**:
+    The output text generated by a language model in response to a prompt. Often the
+    completion is denoted as <semantics><mrow><mi>y</mi><mo>∣</mo><mi>x</mi></mrow><annotation
+    encoding="application/x-tex">y\mid x</annotation></semantics>. Rewards and other
+    values are often computed as <semantics><mrow><mi>r</mi><mo stretchy="false" form="prefix">(</mo><mi>y</mi><mo>∣</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">r(y\mid
+    x)</annotation></semantics> or <semantics><mrow><mi>P</mi><mo stretchy="false"
+    form="prefix">(</mo><mi>y</mi><mo>∣</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation
+    encoding="application/x-tex">P(y\mid x)</annotation></semantics>.'
+  id: totrans-14
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: '**完成情况（<semantics><mi>y</mi><annotation encoding="application/x-tex">y</annotation></semantics>）**:
+    语言模型针对提示生成的输出文本。通常完成情况表示为 <semantics><mrow><mi>y</mi><mo>∣</mo><mi>x</mi></mrow><annotation
+    encoding="application/x-tex">y\mid x</annotation></semantics>。奖励和其他值通常计算为 <semantics><mrow><mi>r</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>y</mi><mo>∣</mo><mi>x</mi><mo stretchy="false"
+    form="postfix">)</mo></mrow><annotation encoding="application/x-tex">r(y\mid x)</annotation></semantics>
+    或 <semantics><mrow><mi>P</mi><mo stretchy="false" form="prefix">(</mo><mi>y</mi><mo>∣</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">P(y\mid
+    x)</annotation></semantics>.'
+- en: '**Chosen Completion (<semantics><msub><mi>y</mi><mi>c</mi></msub><annotation
+    encoding="application/x-tex">y_c</annotation></semantics>)**: The completion that
+    is selected or preferred over other alternatives, often denoted as <semantics><msub><mi>y</mi><mrow><mi>c</mi><mi>h</mi><mi>o</mi><mi>s</mi><mi>e</mi><mi>n</mi></mrow></msub><annotation
+    encoding="application/x-tex">y_{chosen}</annotation></semantics>.'
+  id: totrans-15
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: '**选择的完成情况（<semantics><msub><mi>y</mi><mi>c</mi></msub><annotation encoding="application/x-tex">y_c</annotation></semantics>）**:
+    被选中或优先于其他替代方案的完成情况，通常表示为 <semantics><msub><mi>y</mi><mrow><mi>c</mi><mi>h</mi><mi>o</mi><mi}s</mi><mi>e</mi><mi>n</mi></mrow></msub><annotation
+    encoding="application/x-tex">y_{chosen}</annotation></semantics>.'
+- en: '**Rejected Completion (<semantics><msub><mi>y</mi><mi>r</mi></msub><annotation
+    encoding="application/x-tex">y_r</annotation></semantics>)**: The disfavored completion
+    in a pairwise setting.'
+  id: totrans-16
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: '**拒绝的完成情况（<semantics><msub><mi>y</mi><mi>r</mi></msub><annotation encoding="application/x-tex">y_r</annotation></semantics>）**:
+    在成对设置中不受欢迎的完成情况。'
+- en: '**Preference Relation (<semantics><mo>≻</mo><annotation encoding="application/x-tex">\succ</annotation></semantics>)**:
+    A symbol indicating that one completion is preferred over another, e.g., <semantics><mrow><msub><mi>y</mi><mrow><mi>c</mi><mi>h</mi><mi>o</mi><mi>s</mi><mi>e</mi><mi>n</mi></mrow></msub><mo>≻</mo><msub><mi>y</mi><mrow><mi>r</mi><mi>e</mi><mi>j</mi><mi>e</mi><mi>c</mi><mi>t</mi><mi>e</mi><mi>d</mi></mrow></msub></mrow><annotation
+    encoding="application/x-tex">y_{chosen} \succ y_{rejected}</annotation></semantics>.
+    E.g. a reward model predicts the probability of a preference relation, <semantics><mrow><mi>P</mi><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mi>c</mi></msub><mo>≻</mo><msub><mi>y</mi><mi>r</mi></msub><mo>∣</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">P(y_c
+    \succ y_r \mid x)</annotation></semantics>.'
+  id: totrans-17
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: '**偏好关系（<semantics><mo>≻</mo><annotation encoding="application/x-tex">\succ</annotation></semantics>）**:
+    表示一个完成情况比另一个更受欢迎的符号，例如，<semantics><mrow><msub><mi>y</mi><mrow><mi>c</mi><mi>h</mi><mi>o</mi><mi}s</mi><mi>e</mi><mi>n</mi></mrow></msub><mo>≻</mo><msub><mi>y</mi><mrow><mi>r</mi><mi>e</mi><mi>j</mi><mi>e</mi><mi>c</mi><mi>t</mi><mi>e</mi><mi>d</mi></mrow></msub></mrow><annotation
+    encoding="application/x-tex">y_{chosen} \succ y_{rejected}</annotation></semantics>。例如，奖励模型预测偏好关系的概率，<semantics><mrow><mi>P</mi><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mi>c</mi></msub><mo>≻</mo><msub><mi>y</mi><mi>r</mi></msub><mo>∣</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">P(y_c
+    \succ y_r \mid x)</annotation></semantics>.'
+- en: '**Policy (<semantics><mi>π</mi><annotation encoding="application/x-tex">\pi</annotation></semantics>)**:
+    A probability distribution over possible completions, parameterized by <semantics><mi>θ</mi><annotation
+    encoding="application/x-tex">\theta</annotation></semantics>: <semantics><mrow><msub><mi>π</mi><mi>θ</mi></msub><mo
+    stretchy="false" form="prefix">(</mo><mi>y</mi><mo>∣</mo><mi>x</mi><mo stretchy="false"
+    form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\pi_\theta(y\mid
+    x)</annotation></semantics>.'
+  id: totrans-18
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: '**策略（<semantics><mi>π</mi><annotation encoding="application/x-tex">\pi</annotation></semantics>）**:
+    在可能的完成情况上的概率分布，由 <semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics>
+    参数化：<semantics><mrow><msub><mi>π</mi><mi>θ</mi></msub><mo stretchy="false" form="prefix">(</mo><mi>y</mi><mo>∣</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\pi_\theta(y\mid
+    x)</annotation></semantics>.'
+- en: RL Definitions
+  id: totrans-19
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+  zh: RL 定义
+- en: '**Reward (<semantics><mi>r</mi><annotation encoding="application/x-tex">r</annotation></semantics>)**:
+    A scalar value indicating the desirability of an action or state, typically denoted
+    as <semantics><mi>r</mi><annotation encoding="application/x-tex">r</annotation></semantics>.'
+  id: totrans-20
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: '**奖励 (<semantics><mi>r</mi><annotation encoding="application/x-tex">r</annotation></semantics>)**:
+    表示动作或状态的可取性的标量值，通常表示为 <semantics><mi>r</mi><annotation encoding="application/x-tex">r</annotation></semantics>。'
+- en: '**Action (<semantics><mi>a</mi><annotation encoding="application/x-tex">a</annotation></semantics>)**:
+    A decision or move made by an agent in an environment, often represented as <semantics><mrow><mi>a</mi><mo>∈</mo><mi>A</mi></mrow><annotation
+    encoding="application/x-tex">a \in A</annotation></semantics>, where <semantics><mi>A</mi><annotation
+    encoding="application/x-tex">A</annotation></semantics> is the set of possible
+    actions.'
+  id: totrans-21
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: '**动作 (<semantics><mi>a</mi><annotation encoding="application/x-tex">a</annotation></semantics>)**:
+    智能体在环境中做出的决策或移动，通常表示为 <semantics><mrow><mi>a</mi><mo>∈</mo><mi>A</mi></mrow><annotation
+    encoding="application/x-tex">a \in A</annotation></semantics>，其中 <semantics><mi>A</mi><annotation
+    encoding="application/x-tex">A</annotation></semantics> 是可能动作的集合。'
+- en: '**State (<semantics><mi>s</mi><annotation encoding="application/x-tex">s</annotation></semantics>)**:
+    The current configuration or situation of the environment, usually denoted as
+    <semantics><mrow><mi>s</mi><mo>∈</mo><mi>S</mi></mrow><annotation encoding="application/x-tex">s
+    \in S</annotation></semantics>, where <semantics><mi>S</mi><annotation encoding="application/x-tex">S</annotation></semantics>
+    is the state space.'
+  id: totrans-22
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: '**状态 (<semantics><mi>s</mi><annotation encoding="application/x-tex">s</annotation></semantics>)**:
+    环境的当前配置或情况，通常表示为 <semantics><mrow><mi>s</mi><mo>∈</mo><mi>S</mi></mrow><annotation
+    encoding="application/x-tex">s \in S</annotation></semantics>，其中 <semantics><mi>S</mi><annotation
+    encoding="application/x-tex">S</annotation></semantics> 是状态空间。'
+- en: '**Trajectory (<semantics><mi>τ</mi><annotation encoding="application/x-tex">\tau</annotation></semantics>)**:
+    A trajectory <semantics><mi>τ</mi><annotation encoding="application/x-tex">\tau</annotation></semantics>
+    is a sequence of states, actions, and rewards experienced by an agent: <semantics><mrow><mi>τ</mi><mo>=</mo><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>s</mi><mn>0</mn></msub><mo>,</mo><msub><mi>a</mi><mn>0</mn></msub><mo>,</mo><msub><mi>r</mi><mn>0</mn></msub><mo>,</mo><msub><mi>s</mi><mn>1</mn></msub><mo>,</mo><msub><mi>a</mi><mn>1</mn></msub><mo>,</mo><msub><mi>r</mi><mn>1</mn></msub><mo>,</mo><mi>.</mi><mi>.</mi><mi>.</mi><mo>,</mo><msub><mi>s</mi><mi>T</mi></msub><mo>,</mo><msub><mi>a</mi><mi>T</mi></msub><mo>,</mo><msub><mi>r</mi><mi>T</mi></msub><mo
+    stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\tau
+    = (s_0, a_0, r_0, s_1, a_1, r_1, ..., s_T, a_T, r_T)</annotation></semantics>.'
+  id: totrans-23
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: '**轨迹 (<semantics><mi>τ</mi><annotation encoding="application/x-tex">\tau</annotation></semantics>)**:
+    一个轨迹 <semantics><mi>τ</mi><annotation encoding="application/x-tex">\tau</annotation></semantics>
+    是一个由智能体经历的状态、动作和奖励的序列：<semantics><mrow><mi>τ</mi><mo>=</mo><mo stretchy="false"
+    form="prefix">(</mo><msub><mi>s</mi><mn>0</mn></msub><mo>,</mo><msub><mi>a</mi><mn>0</mn></msub><mo>,</mo><msub><mi>r</mi><mn>0</mn></msub><mo>,</mo><msub><mi>s</mi><mn>1</mn></msub><mo>,</mo><msub><mi>a</mi><mn>1</mn></msub><mo>,</mo><msub><mi>r</mi><mn>1</mn></msub><mo>,</mo><mi>.</mi><mi>.</mi><mi>.</mi><mo>,</mo><msub><mi>s</mi><mi>T</mi></msub><mo>,</mo><msub><mi>a</mi><mi>T</mi></msub><mo>,</mo><msub><mi>r</mi><mi>T</mi></msub><mo
+    stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\tau
+    = (s_0, a_0, r_0, s_1, a_1, r_1, ..., s_T, a_T, r_T)</annotation></semantics>.'
+- en: '**Trajectory Distribution (<semantics><mrow><mo stretchy="false" form="prefix">(</mo><mi>τ</mi><mo>∣</mo><mi>π</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">(\tau\mid\pi)</annotation></semantics>)**:
+    The probability of a trajectory under policy <semantics><mi>π</mi><annotation
+    encoding="application/x-tex">\pi</annotation></semantics> is <semantics><mrow><mi>P</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>τ</mi><mo>∣</mo><mi>π</mi><mo stretchy="false"
+    form="postfix">)</mo><mo>=</mo><mi>p</mi><mo stretchy="false" form="prefix">(</mo><msub><mi>s</mi><mn>0</mn></msub><mo
+    stretchy="false" form="postfix">)</mo><msubsup><mo>∏</mo><mrow><mi>t</mi><mo>=</mo><mn>0</mn></mrow><mi>T</mi></msubsup><mi>π</mi><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>a</mi><mi>t</mi></msub><mo>∣</mo><msub><mi>s</mi><mi>t</mi></msub><mo
+    stretchy="false" form="postfix">)</mo><mi>p</mi><mo stretchy="false" form="prefix">(</mo><msub><mi>s</mi><mrow><mi>t</mi><mo>+</mo><mn>1</mn></mrow></msub><mo>∣</mo><msub><mi>s</mi><mi>t</mi></msub><mo>,</mo><msub><mi>a</mi><mi>t</mi></msub><mo
+    stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">P(\tau\mid\pi)
+    = p(s_0)\prod_{t=0}^T \pi(a_t\mid s_t)p(s_{t+1}\mid s_t,a_t)</annotation></semantics>,
+    where <semantics><mrow><mi>p</mi><mo stretchy="false" form="prefix">(</mo><msub><mi>s</mi><mn>0</mn></msub><mo
+    stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">p(s_0)</annotation></semantics>
+    is the prior state distribution and <semantics><mrow><mi>p</mi><mo stretchy="false"
+    form="prefix">(</mo><msub><mi>s</mi><mrow><mi>t</mi><mo>+</mo><mn>1</mn></mrow></msub><mo>∣</mo><msub><mi>s</mi><mi>t</mi></msub><mo>,</mo><msub><mi>a</mi><mi>t</mi></msub><mo
+    stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">p(s_{t+1}\mid
+    s_t,a_t)</annotation></semantics> is the transition probability.'
+  id: totrans-24
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: '**轨迹分布（<semantics><mrow><mo stretchy="false" form="prefix">(</mo><mi>τ</mi><mo>∣</mo><mi>π</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">(\tau\mid\pi)</annotation></semantics>**)：在策略<semantics><mi>π</mi><annotation
+    encoding="application/x-tex">\pi</annotation></semantics>下，轨迹的概率是<semantics><mrow><mi>P</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>τ</mi><mo>∣</mo><mi>π</mi><mo stretchy="false"
+    form="postfix">)</mo><mo>=</mo><mi>p</mi><mo stretchy="false" form="prefix">(</mo><msub><mi>s</mi><mn>0</mn></msub><mo
+    stretchy="false" form="postfix">)</mo><msubsup><mo>∏</mo><mrow><mi>t</mi><mo>=</mo><mn>0</mn></mrow><mi>T</mi></msubsup><mi>π</mi><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>a</mi><mi>t</mi></msub><mo>∣</mo><msub><mi>s</mi><mi>t</mi></msub><mo
+    stretchy="false" form="postfix">)</mo><mi>p</mi><mo stretchy="false" form="prefix">(</mo><msub><mi>s</mi><mrow><mi>t</mi><mo>+</mo><mn>1</mn></mrow></msub><mo>∣</mo><msub><mi>s</mi><mi>t</mi></msub><mo>,</mo><msub><mi>a</mi><mi>t</mi></msub><mo
+    stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">P(\tau\mid\pi)
+    = p(s_0)\prod_{t=0}^T \pi(a_t\mid s_t)p(s_{t+1}\mid s_t,a_t)</annotation></semantics>，其中<semantics><mrow><mi>p</mi><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>s</mi><mn>0</mn></msub><mo stretchy="false"
+    form="postfix">)</mo></mrow><annotation encoding="application/x-tex">p(s_0)</annotation></semantics>是先验状态分布，而<semantics><mrow><mi>p</mi><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>s</mi><mrow><mi>t</mi><mo>+</mo><mn>1</mn></mrow></msub><mo>∣</mo><msub><mi>s</mi><mi>t</mi></msub><mo>,</mo><msub><mi>a</mi><mi>t</mi></msub><mo
+    stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">p(s_{t+1}\mid
+    s_t,a_t)</annotation></semantics>是转移概率。'
+- en: '**Policy (<semantics><mi>π</mi><annotation encoding="application/x-tex">\pi</annotation></semantics>)**,
+    also called the **policy model** in RLHF: In RL, a policy is a strategy or rule
+    that the agent follows to decide which action to take in a given state: <semantics><mrow><mi>π</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>a</mi><mo>∣</mo><mi>s</mi><mo stretchy="false"
+    form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\pi(a\mid
+    s)</annotation></semantics>.'
+  id: totrans-25
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: '**策略（<semantics><mi>π</mi><annotation encoding="application/x-tex">\pi</annotation></semantics>**)，也称为RLHF中的**策略模型**：在强化学习中，策略是智能体在给定状态下决定采取哪个动作的策略或规则：<semantics><mrow><mi>π</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>a</mi><mo>∣</mo><mi>s</mi><mo stretchy="false"
+    form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\pi(a\mid
+    s)</annotation></semantics>.'
+- en: '**Discount Factor (<semantics><mi>γ</mi><annotation encoding="application/x-tex">\gamma</annotation></semantics>)**:
+    A scalar <semantics><mrow><mn>0</mn><mo>≤</mo><mi>γ</mi><mo><</mo><mn>1</mn></mrow><annotation
+    encoding="application/x-tex">0 \le \gamma < 1</annotation></semantics> that exponentially
+    down-weights future rewards in the return, trading off immediacy versus long-term
+    gain and guaranteeing convergence for infinite-horizon sums. Sometimes discounting
+    is not used, which is equivalent to <semantics><mrow><mi>γ</mi><mo>=</mo><mn>1</mn></mrow><annotation
+    encoding="application/x-tex">\gamma=1</annotation></semantics>.'
+  id: totrans-26
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: '**折现因子 (<semantics><mi>γ</mi><annotation encoding="application/x-tex">\gamma</annotation></semantics>)**:
+    一个标量 <semantics><mrow><mn>0</mn><mo>≤</mo><mi>γ</mi><mo><</mo><mn>1</mn></mrow><annotation
+    encoding="application/x-tex">0 \le \gamma < 1</annotation></semantics>，它在回报中对未来奖励进行指数衰减，权衡即时与长期收益，并保证无限时域求和的收敛性。有时不使用折现，这相当于
+    <semantics><mrow><mi>γ</mi><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">\gamma=1</annotation></semantics>.'
+- en: '**Value Function (<semantics><mi>V</mi><annotation encoding="application/x-tex">V</annotation></semantics>)**:
+    A function that estimates the expected cumulative reward from a given state: <semantics><mrow><mi>V</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>s</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mi>𝔼</mi><mo
+    stretchy="false" form="prefix">[</mo><msubsup><mo>∑</mo><mrow><mi>t</mi><mo>=</mo><mn>0</mn></mrow><mi>∞</mi></msubsup><msup><mi>γ</mi><mi>t</mi></msup><msub><mi>r</mi><mi>t</mi></msub><mo>∣</mo><msub><mi>s</mi><mn>0</mn></msub><mo>=</mo><mi>s</mi><mo
+    stretchy="false" form="postfix">]</mo></mrow><annotation encoding="application/x-tex">V(s)
+    = \mathbb{E}[\sum_{t=0}^{\infty} \gamma^t r_t \mid s_0 = s]</annotation></semantics>.'
+  id: totrans-27
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: '**值函数 (<semantics><mi>V</mi><annotation encoding="application/x-tex">V</annotation></semantics>)**:
+    一个估计从给定状态期望累积奖励的函数：<semantics><mrow><mi>V</mi><mo stretchy="false" form="prefix">(</mo><mi>s</mi><mo
+    stretchy="false" form="postfix">)</mo><mo>=</mo><mi>𝔼</mi><mo stretchy="false"
+    form="prefix">[</mo><msubsup><mo>∑</mo><mrow><mi>t</mi><mo>=</mo><mn>0</mn></mrow><mi>∞</mi></msubsup><msup><mi>γ</mi><mi>t</mi></msup><msub><mi>r</mi><mi>t</mi></msub><mo>∣</mo><msub><mi>s</mi><mn>0</mn></msub><mo>=</mo><mi>s</mi><mo
+    stretchy="false" form="postfix">]</mo></mrow><annotation encoding="application/x-tex">V(s)
+    = \mathbb{E}[\sum_{t=0}^{\infty} \gamma^t r_t \mid s_0 = s]</annotation></semantics>.'
+- en: '**Q-Function (<semantics><mi>Q</mi><annotation encoding="application/x-tex">Q</annotation></semantics>)**:
+    A function that estimates the expected cumulative reward from taking a specific
+    action in a given state: <semantics><mrow><mi>Q</mi><mo stretchy="false" form="prefix">(</mo><mi>s</mi><mo>,</mo><mi>a</mi><mo
+    stretchy="false" form="postfix">)</mo><mo>=</mo><mi>𝔼</mi><mo stretchy="false"
+    form="prefix">[</mo><msubsup><mo>∑</mo><mrow><mi>t</mi><mo>=</mo><mn>0</mn></mrow><mi>∞</mi></msubsup><msup><mi>γ</mi><mi>t</mi></msup><msub><mi>r</mi><mi>t</mi></msub><mo>∣</mo><msub><mi>s</mi><mn>0</mn></msub><mo>=</mo><mi>s</mi><mo>,</mo><msub><mi>a</mi><mn>0</mn></msub><mo>=</mo><mi>a</mi><mo
+    stretchy="false" form="postfix">]</mo></mrow><annotation encoding="application/x-tex">Q(s,a)
+    = \mathbb{E}[\sum_{t=0}^{\infty} \gamma^t r_t \mid s_0 = s, a_0 = a]</annotation></semantics>.'
+  id: totrans-28
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: '**Q-函数 (<semantics><mi>Q</mi><annotation encoding="application/x-tex">Q</annotation></semantics>)**:
+    一个估计在给定状态下采取特定动作的期望累积奖励的函数：<semantics><mrow><mi>Q</mi><mo stretchy="false" form="prefix">(</mo><mi>s</mi><mo>,</mo><mi>a</mi><mo
+    stretchy="false" form="postfix">)</mo><mo>=</mo><mi>𝔼</mi><mo stretchy="false"
+    form="prefix">[</mo><msubsup><mo>∑</mo><mrow><mi>t</mi><mo>=</mo><mn>0</mn></mrow><mi>∞</mi></msubsup><msup><mi>γ</mi><mi>t</mi></msup><msub><mi>r</mi><mi>t</mi></msub><mo>∣</mo><msub><mi>s</mi><mn>0</mn></msub><mo>=</mo><mi>s</mi><mo>,</mo><msub><mi>a</mi><mn>0</mn></msub><mo>=</mo><mi>a</mi><mo
+    stretchy="false" form="postfix">]</mo></mrow><annotation encoding="application/x-tex">Q(s,a)
+    = \mathbb{E}[\sum_{t=0}^{\infty} \gamma^t r_t \mid s_0 = s, a_0 = a]</annotation></semantics>.'
+- en: '**Advantage Function (<semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics>)**:
+    The advantage function <semantics><mrow><mi>A</mi><mo stretchy="false" form="prefix">(</mo><mi>s</mi><mo>,</mo><mi>a</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">A(s,a)</annotation></semantics>
+    quantifies the relative benefit of taking action <semantics><mi>a</mi><annotation
+    encoding="application/x-tex">a</annotation></semantics> in state <semantics><mi>s</mi><annotation
+    encoding="application/x-tex">s</annotation></semantics> compared to the average
+    action. It’s defined as <semantics><mrow><mi>A</mi><mo stretchy="false" form="prefix">(</mo><mi>s</mi><mo>,</mo><mi>a</mi><mo
+    stretchy="false" form="postfix">)</mo><mo>=</mo><mi>Q</mi><mo stretchy="false"
+    form="prefix">(</mo><mi>s</mi><mo>,</mo><mi>a</mi><mo stretchy="false" form="postfix">)</mo><mo>−</mo><mi>V</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>s</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation
+    encoding="application/x-tex">A(s,a) = Q(s,a) - V(s)</annotation></semantics>.
+    Advantage functions (and value functions) can depend on a specific policy, <semantics><mrow><msup><mi>A</mi><mi>π</mi></msup><mo
+    stretchy="false" form="prefix">(</mo><mi>s</mi><mo>,</mo><mi>a</mi><mo stretchy="false"
+    form="postfix">)</mo></mrow><annotation encoding="application/x-tex">A^\pi(s,a)</annotation></semantics>.'
+  id: totrans-29
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: '**优势函数 (<semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics>)**:
+    优势函数 <semantics><mrow><mi>A</mi><mo stretchy="false" form="prefix">(</mo><mi>s</mi><mo>,</mo><mi>a</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">A(s,a)</annotation></semantics>
+    量化了在状态 <semantics><mi>s</mi><annotation encoding="application/x-tex">s</annotation></semantics>
+    下采取行动 <semantics><mi>a</mi><annotation encoding="application/x-tex">a</annotation></semantics>
+    相对于平均行动的相对收益。它被定义为 <semantics><mrow><mi>A</mi><mo stretchy="false" form="prefix">(</mo><mi>s</mi><mo>,</mo><mi>a</mi><mo
+    stretchy="false" form="postfix">)</mo><mo>=</mo><mi>Q</mi><mo stretchy="false"
+    form="prefix">(</mo><mi>s</mi><mo>,</mo><mi>a</mi><mo stretchy="false" form="postfix">)</mo><mo>−</mo><mi>V</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>s</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation
+    encoding="application/x-tex">A(s,a) = Q(s,a) - V(s)</annotation></semantics>.
+    优势函数（以及价值函数）可能依赖于特定的策略，<semantics><mrow><msup><mi>A</mi><mi>π</mi></msup><mo stretchy="false"
+    form="prefix">(</mo><mi>s</mi><mo>,</mo><mi>a</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation
+    encoding="application/x-tex">A^\pi(s,a)</annotation></semantics>.'
+- en: '**Policy-conditioned Values (<semantics><mrow><mo stretchy="false" form="prefix">[</mo><msup><mo
+    stretchy="false" form="postfix">]</mo><mrow><mi>π</mi><mo stretchy="false" form="prefix">(</mo><mi>⋅</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow></msup></mrow><annotation encoding="application/x-tex">[]^{\pi(\cdot)}</annotation></semantics>)**:
+    Across RL derivations and implementations, a crucial component of the theory and
+    practice is collecting data or values conditioned on a specific policy. Throughout
+    this book we will switch between the simpler notation of value functions (<semantics><mrow><mi>V</mi><mo>,</mo><mi>A</mi><mo>,</mo><mi>Q</mi><mo>,</mo><mi>G</mi></mrow><annotation
+    encoding="application/x-tex">V,A,Q,G</annotation></semantics>) and their specific
+    policy-conditioned values (<semantics><mrow><msup><mi>V</mi><mi>π</mi></msup><mo>,</mo><msup><mi>A</mi><mi>π</mi></msup><mo>,</mo><msup><mi>Q</mi><mi>π</mi></msup></mrow><annotation
+    encoding="application/x-tex">V^\pi,A^\pi,Q^\pi</annotation></semantics>). Also
+    crucial in the expected value computation is sampling from data <semantics><mi>d</mi><annotation
+    encoding="application/x-tex">d</annotation></semantics>, that is conditioned on
+    a specific policy, <semantics><msub><mi>d</mi><mi>π</mi></msub><annotation encoding="application/x-tex">d_\pi</annotation></semantics>
+    (e.g., <semantics><mrow><mi>s</mi><mo>∼</mo><msub><mi>d</mi><mi>π</mi></msub></mrow><annotation
+    encoding="application/x-tex">s \sim d_\pi</annotation></semantics> and <semantics><mrow><mi>a</mi><mo>∼</mo><mi>π</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>⋅</mi><mo>∣</mo><mi>s</mi><mo stretchy="false"
+    form="postfix">)</mo></mrow><annotation encoding="application/x-tex">a \sim \pi(\cdot\mid
+    s)</annotation></semantics> when estimating <semantics><mrow><msub><mi>𝔼</mi><mrow><mi>s</mi><mo>∼</mo><msub><mi>d</mi><mi>π</mi></msub><mo>,</mo><mi>a</mi><mo>∼</mo><mi>π</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>⋅</mi><mo>∣</mo><mi>s</mi><mo stretchy="false"
+    form="postfix">)</mo></mrow></msub><mo stretchy="false" form="prefix">[</mo><msup><mi>A</mi><mi>π</mi></msup><mo
+    stretchy="false" form="prefix">(</mo><mi>s</mi><mo>,</mo><mi>a</mi><mo stretchy="false"
+    form="postfix">)</mo><mo stretchy="false" form="postfix">]</mo></mrow><annotation
+    encoding="application/x-tex">\mathbb{E}_{s\sim d_\pi,\,a\sim\pi(\cdot\mid s)}[A^\pi(s,a)]</annotation></semantics>).'
+  id: totrans-30
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: '**策略条件值（<semantics><mrow><mo stretchy="false" form="prefix">[</mo><msup><mo
+    stretchy="false" form="postfix">]</mo><mrow><mi>π</mi><mo stretchy="false" form="prefix">(</mo><mi>⋅</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow></msup></mrow><annotation encoding="application/x-tex">[]^{\pi(\cdot)}</annotation></semantics>）**：在强化学习的推导和实现中，理论实践中的一个关键组成部分是收集基于特定策略的数据或值。在这本书中，我们将交替使用值函数的简单符号（<semantics><mrow><mi>V</mi><mo>,</mo><mi>A</mi><mo>,</mo><mi>Q</mi><mo>,</mo><mi>G</mi></mrow><annotation
+    encoding="application/x-tex">V,A,Q,G</annotation></semantics>）及其特定的策略条件值（<semantics><mrow><msup><mi>V</mi><mi>π</mi></msup><mo>,</mo><msup><mi>A</mi><mi>π</mi></msup><mo>,</mo><msup><mi>Q</mi><mi>π</mi></msup></mrow><annotation
+    encoding="application/x-tex">V^\pi,A^\pi,Q^\pi</annotation></semantics>）。在期望值计算中，从数据
+    <semantics><mi>d</mi><annotation encoding="application/x-tex">d</annotation></semantics>
+    中采样，即基于特定策略的条件数据，<semantics><msub><mi>d</mi><mi>π</mi></msub><annotation encoding="application/x-tex">d_\pi</annotation></semantics>（例如，<semantics><mrow><mi>s</mi><mo>∼</mo><msub><mi>d</mi><mi>π</mi></msub></mrow><annotation
+    encoding="application/x-tex">s \sim d_\pi</annotation></semantics> 和 <semantics><mrow><mi>a</mi><mo>∼</mo><mi>π</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>⋅</mi><mo>∣</mo><mi>s</mi><mo stretchy="false"
+    form="postfix">)</mo></mrow><annotation encoding="application/x-tex">a \sim \pi(\cdot\mid
+    s)</annotation></semantics> 当估计 <semantics><mrow><msub><mi>𝔼</mi><mrow><mi>s</mi><mo>∼</mo><msub><mi>d</mi><mi>π</mi></msub><mo>,</mo><mi>a</mi><mo>∼</mo><mi>π</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>⋅</mi><mo>∣</mo><mi>s</mi><mo stretchy="false"
+    form="postfix">)</mo></mrow></msub><mo stretchy="false" form="prefix">[</mo><msup><mi>A</mi><mi>π</mi></msup><mo
+    stretchy="false" form="prefix">(</mo><mi>s</mi><mo>,</mo><mi>a</mi><mo stretchy="false"
+    form="postfix">)</mo><mo stretchy="false" form="postfix">]</mo></mrow><annotation
+    encoding="application/x-tex">\mathbb{E}_{s\sim d_\pi,\,a\sim\pi(\cdot\mid s)}[A^\pi(s,a)]</annotation></semantics>）。'
+- en: '**Expectation of Reward Optimization**: The primary goal in RL, which involves
+    maximizing the expected cumulative reward:'
+  id: totrans-31
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: '**奖励期望优化**：在强化学习（RL）中，主要目标是最大化期望累积奖励：'
+- en: <semantics><mrow><munder><mi mathvariant="normal">max</mi><mi>θ</mi></munder><msub><mi>𝔼</mi><mrow><mi>s</mi><mo>∼</mo><msub><mi>ρ</mi><mi>π</mi></msub><mo>,</mo><mi>a</mi><mo>∼</mo><msub><mi>π</mi><mi>θ</mi></msub></mrow></msub><mo
+    stretchy="false" form="prefix">[</mo><munderover><mo>∑</mo><mrow><mi>t</mi><mo>=</mo><mn>0</mn></mrow><mo
+    accent="false">∞</mo></munderover><msup><mi>γ</mi><mi>t</mi></msup><msub><mi>r</mi><mi>t</mi></msub><mo
+    stretchy="false" form="postfix">]</mo><mrow><mo stretchy="false" form="prefix">(</mo><mn>4</mn><mo
+    stretchy="false" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\max_{\theta}
+    \mathbb{E}_{s \sim \rho_\pi, a \sim \pi_\theta}[\sum_{t=0}^{\infty} \gamma^t r_t]\qquad{(4)}</annotation></semantics>
+  id: totrans-32
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+  zh: <semantics><mrow><munder><mi mathvariant="normal">max</mi><mi>θ</mi></munder><msub><mi>𝔼</mi><mrow><mi>s</mi><mo>∼</mo><msub><mi>ρ</mi><mi>π</mi></msub><mo>,</mo><mi>a</mi><mo>∼</mo><msub><mi>π</mi><mi>θ</mi></msub></mrow></msub><mo
+    stretchy="false" form="prefix">[</mo><munderover><mo>∑</mo><mrow><mi>t</mi><mo>=</mo><mn>0</mn></mrow><mo
+    accent="false">∞</mo></munderover><msup><mi>γ</mi><mi>t</mi></msup><msub><mi>r</mi><mi>t</mi></msub><mo
+    stretchy="false" form="postfix">]</mo><mrow><mo stretchy="false" form="prefix">(</mo><mn>4</mn><mo
+    stretchy="false" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\max_{\theta}
+    \mathbb{E}_{s \sim \rho_\pi, a \sim \pi_\theta}[\sum_{t=0}^{\infty} \gamma^t r_t]\qquad{(4)}</annotation></semantics>
+- en: where <semantics><msub><mi>ρ</mi><mi>π</mi></msub><annotation encoding="application/x-tex">\rho_\pi</annotation></semantics>
+    is the state distribution under policy <semantics><mi>π</mi><annotation encoding="application/x-tex">\pi</annotation></semantics>,
+    and <semantics><mi>γ</mi><annotation encoding="application/x-tex">\gamma</annotation></semantics>
+    is the discount factor.
+  id: totrans-33
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+  zh: 其中，<semantics><msub><mi>ρ</mi><mi>π</mi></msub><annotation encoding="application/x-tex">\rho_\pi</annotation></semantics>
+    是策略 <semantics><mi>π</mi><annotation encoding="application/x-tex">\pi</annotation></semantics>
+    下的状态分布，而 <semantics><mi>γ</mi><annotation encoding="application/x-tex">\gamma</annotation></semantics>
+    是折扣因子。
+- en: '**Finite Horizon Reward (<semantics><mrow><mi>J</mi><mo stretchy="false" form="prefix">(</mo><msub><mi>π</mi><mi>θ</mi></msub><mo
+    stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">J(\pi_\theta)</annotation></semantics>)**:
+    The expected finite-horizon discounted return of the policy <semantics><msub><mi>π</mi><mi>θ</mi></msub><annotation
+    encoding="application/x-tex">\pi_\theta</annotation></semantics>, parameterized
+    by <semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics>
+    is defined as:'
+  id: totrans-34
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: '**有限时间范围奖励 (<semantics><mrow><mi>J</mi><mo stretchy="false" form="prefix">(</mo><msub><mi>π</mi><mi>θ</mi></msub><mo
+    stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">J(\pi_\theta)</annotation></semantics>)**:
+    由参数 <semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics>
+    确定的策略 <semantics><msub><mi>π</mi><mi>θ</mi></msub><annotation encoding="application/x-tex">\pi_\theta</annotation></semantics>
+    的期望有限时间范围折扣回报定义为：'
+- en: <semantics><mrow><mi>J</mi><mo stretchy="false" form="prefix">(</mo><msub><mi>π</mi><mi>θ</mi></msub><mo
+    stretchy="false" form="postfix">)</mo><mo>=</mo><msub><mi>𝔼</mi><mrow><mi>τ</mi><mo>∼</mo><msub><mi>π</mi><mi>θ</mi></msub></mrow></msub><mrow><mo
+    stretchy="true" form="prefix">[</mo><munderover><mo>∑</mo><mrow><mi>t</mi><mo>=</mo><mn>0</mn></mrow><mi>T</mi></munderover><msup><mi>γ</mi><mi>t</mi></msup><msub><mi>r</mi><mi>t</mi></msub><mo
+    stretchy="true" form="postfix">]</mo></mrow><mrow><mo stretchy="false" form="prefix">(</mo><mn>5</mn><mo
+    stretchy="false" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">J(\pi_\theta)
+    = \mathbb{E}_{\tau \sim \pi_\theta} \left[ \sum_{t=0}^T \gamma^t r_t \right]\qquad{(5)}</annotation></semantics>
+  id: totrans-35
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+  zh: <semantics><mrow><mi>J</mi><mo stretchy="false" form="prefix">(</mo><msub><mi>π</mi><mi>θ</mi></msub><mo
+    stretchy="false" form="postfix">)</mo><mo>=</mo><msub><mi>𝔼</mi><mrow><mi>τ</mi><mo>∼</mo><msub><mi>π</mi><mi>θ</mi></msub></mrow></msub><mrow><mo
+    stretchy="true" form="prefix">[</mo><munderover><mo>∑</mo><mrow><mi>t</mi><mo>=</mo><mn>0</mn></mrow><mi>T</mi></munderover><msup><mi>γ</mi><mi>t</mi></msup><msub><mi>r</mi><mi>t</mi></msub><mo
+    stretchy="true" form="postfix">]</mo></mrow><mrow><mo stretchy="false" form="prefix">(</mo><mn>5</mn><mo
+    stretchy="false" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">J(\pi_\theta)
+    = \mathbb{E}_{\tau \sim \pi_\theta} \left[ \sum_{t=0}^T \gamma^t r_t \right]\qquad{(5)}</annotation></semantics>
+- en: where <semantics><mrow><mi>τ</mi><mo>∼</mo><msub><mi>π</mi><mi>θ</mi></msub></mrow><annotation
+    encoding="application/x-tex">\tau \sim \pi_\theta</annotation></semantics> denotes
+    trajectories sampled by following policy <semantics><msub><mi>π</mi><mi>θ</mi></msub><annotation
+    encoding="application/x-tex">\pi_\theta</annotation></semantics> and <semantics><mi>T</mi><annotation
+    encoding="application/x-tex">T</annotation></semantics> is the finite horizon.
+  id: totrans-36
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+  zh: 其中，<semantics><mrow><mi>τ</mi><mo>∼</mo><msub><mi>π</mi><mi>θ</mi></msub></mrow><annotation
+    encoding="application/x-tex">\tau \sim \pi_\theta</annotation></semantics> 表示通过遵循策略
+    <semantics><msub><mi>π</mi><mi>θ</mi></msub><annotation encoding="application/x-tex">\pi_\theta</annotation></semantics>
+    采样的轨迹，而 <semantics><mi>T</mi><annotation encoding="application/x-tex">T</annotation></semantics>
+    是有限的时间范围。
+- en: '**On-policy**: In RLHF, particularly in the debate between RL and Direct Alignment
+    Algorithms, the discussion of **on-policy** data is common. In the RL literature,
+    on-policy means that the data is generated *exactly* by the current form of the
+    agent, but in the general preference-tuning literature, on-policy is expanded
+    to mean generations from that edition of model – e.g. a instruction-tuned checkpoint
+    before running any preference fine-tuning. In this context, off-policy could be
+    data generated by any other language model being used in post-training.'
+  id: totrans-37
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: '**按策略**：在 RLHF 中，尤其是在 RL 和直接对齐算法之间的辩论中，关于 **按策略** 数据的讨论很常见。在 RL 文献中，按策略意味着数据是由当前形式的代理“完全”生成的，但在一般偏好调整文献中，按策略被扩展为指从该版模型生成的数据——例如，在运行任何偏好微调之前的一个指令调整检查点。在这种情况下，离策略可能是任何其他在训练后使用的语言模型生成的数据。'
+- en: RLHF Only Definitions
+  id: totrans-38
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+  zh: RLHF 仅定义
+- en: '**Reference Model (<semantics><msub><mi>π</mi><mtext mathvariant="normal">ref</mtext></msub><annotation
+    encoding="application/x-tex">\pi_{\text{ref}}</annotation></semantics>)**: This
+    is a saved set of parameters used in RLHF where outputs of it are used to regularize
+    the optimization.'
+  id: totrans-39
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: '**参考模型 (<semantics><msub><mi>π</mi><mtext mathvariant="normal">ref</mtext></msub><annotation
+    encoding="application/x-tex">\pi_{\text{ref}}</annotation></semantics>)**：这是在
+    RLHF 中使用的保存参数集，其输出被用于正则化优化。'
+- en: Extended Glossary
+  id: totrans-40
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+  zh: 扩展词汇表
+- en: '**Synthetic Data**: This is any training data for an AI model that is the output
+    from another AI system. This could be anything from text generated from an open-ended
+    prompt of a model to a model rewriting existing content.'
+  id: totrans-41
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: '**合成数据**：这是为 AI 模型提供的任何训练数据，它是另一个 AI 系统的输出。这可能包括从模型的开放式提示生成的文本，到模型重写现有内容的一切。'
+- en: '**Distillation**: Distillation is a general set of practices in training AI
+    models where a model is trained on the outputs of a stronger model. This is a
+    type of synthetic data known to make strong, smaller models. Most models make
+    the rules around distillation clear through either the license, for open weight
+    models, or the terms of service, for models accessible only via API. The term
+    distillation is now overloaded with a specific technical definition from the ML
+    literature.'
+  id: totrans-42
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: '**蒸馏**：蒸馏是训练 AI 模型的一组通用实践，其中模型在更强模型的输出上进行训练。这是一种已知可以制作强大、更小模型的合成数据。大多数模型通过许可证（针对公开权重模型）或服务条款（针对仅可通过
+    API 访问的模型）明确其蒸馏规则。现在，蒸馏一词已经超载，具有来自机器学习文献的特定技术定义。'
+- en: '**(Teacher-student) Knowledge Distillation**: Knowledge distillation from a
+    specific teacher to a student model is a specific type of distillation above and
+    where the term originated. It is a specific deep learning method where a neural
+    network loss is modified to learn from the log-probabilities of the teacher model
+    over multiple potential tokens/logits, instead of learning directly from a chosen
+    output [[51]](ch021.xhtml#ref-hinton2015distilling). An example of a modern series
+    of models trained with Knowledge Distillation is Gemma 2 [[52]](ch021.xhtml#ref-team2024gemma)
+    or Gemma 3\. For a language modeling setup, the next-token loss function can be
+    modified as follows [[53]](ch021.xhtml#ref-agarwal2024policy), where the student
+    model <semantics><msub><mi>P</mi><mi>θ</mi></msub><annotation encoding="application/x-tex">P_\theta</annotation></semantics>
+    learns from the teacher distribution <semantics><msub><mi>P</mi><mi>ϕ</mi></msub><annotation
+    encoding="application/x-tex">P_\phi</annotation></semantics>:'
+  id: totrans-43
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: '**（教师-学生）知识蒸馏**：从特定教师到学生模型的知识的蒸馏是上述蒸馏的一种特定类型，也是该术语的起源。这是一种特定的深度学习方法，其中神经网络损失被修改为从教师模型在多个潜在标记/对数似然上的对数概率中学习，而不是直接从选定的输出中学习
+    [[51]](ch021.xhtml#ref-hinton2015distilling)。使用知识蒸馏训练的现代模型系列的一个例子是 Gemma 2 [[52]](ch021.xhtml#ref-team2024gemma)
+    或 Gemma 3。对于语言模型设置，下一个标记的损失函数可以修改如下 [[53]](ch021.xhtml#ref-agarwal2024policy)，其中学生模型
+    <semantics><msub><mi>P</mi><mi>θ</mi></msub><annotation encoding="application/x-tex">P_\theta</annotation></semantics>
+    从教师分布 <semantics><msub><mi>P</mi><mi>ϕ</mi></msub><annotation encoding="application/x-tex">P_\phi</annotation></semantics>
+    中学习：'
+- en: <semantics><mrow><msub><mi>ℒ</mi><mtext mathvariant="normal">KD</mtext></msub><mo
+    stretchy="false" form="prefix">(</mo><mi>θ</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mi>−</mi><msub><mi>𝔼</mi><mrow><mi>x</mi><mo>∼</mo><mi>𝒟</mi></mrow></msub><mrow><mo
+    stretchy="true" form="prefix">[</mo><munderover><mo>∑</mo><mrow><mi>t</mi><mo>=</mo><mn>1</mn></mrow><mi>T</mi></munderover><msub><mi>P</mi><mi>ϕ</mi></msub><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>x</mi><mi>t</mi></msub><mo>∣</mo><msub><mi>x</mi><mrow><mo><</mo><mi>t</mi></mrow></msub><mo
+    stretchy="false" form="postfix">)</mo><mi mathvariant="normal">log</mi><msub><mi>P</mi><mi>θ</mi></msub><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>x</mi><mi>t</mi></msub><mo>∣</mo><msub><mi>x</mi><mrow><mo><</mo><mi>t</mi></mrow></msub><mo
+    stretchy="false" form="postfix">)</mo><mo stretchy="true" form="postfix">]</mo></mrow><mi>.</mi><mrow><mo
+    stretchy="false" form="prefix">(</mo><mn>6</mn><mo stretchy="false" form="postfix">)</mo></mrow></mrow><annotation
+    encoding="application/x-tex">\mathcal{L}_{\text{KD}}(\theta) = -\,\mathbb{E}_{x
+    \sim \mathcal{D}}\left[\sum_{t=1}^{T} P_{\phi}(x_t \mid x_{<t}) \log P_{\theta}(x_t
+    \mid x_{<t})\right]. \qquad{(6)}</annotation></semantics>
+  id: totrans-44
+  prefs: []
+  type: TYPE_NORMAL
+  zh: <semantics><mrow><msub><mi>ℒ</mi><mtext mathvariant="normal">KD</mtext></msub><mo
+    stretchy="false" form="prefix">(</mo><mi>θ</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mi>−</mi><msub><mi>𝔼</mi><mrow><mi>x</mi><mo>∼</mo><mi>𝒟</mi></mrow></msub><mrow><mo
+    stretchy="true" form="prefix">[</mo><munderover><mo>∑</mo><mrow><mi>t</mi><mo>=</mo><mn>1</mn></mrow><mi>T</mi></munderover><msub><mi>P</mi><mi>ϕ</mi></msub><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>x</mi><mi>t</mi></msub><mo>∣</mo><msub><mi>x</mi><mrow><mo><</mo><mi>t</mi></mrow></msub><mo
+    stretchy="false" form="postfix">)</mo><mi mathvariant="normal">log</mi><msub><mi>P</mi><mi>θ</mi></msub><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>x</mi><mi>t</mi></msub><mo>∣</mo><msub><mi>x</mi><mrow><mo><</mo><mi>t</mi></mrow></msub><mo
+    stretchy="false" form="postfix">)</mo><mo stretchy="true" form="postfix">]</mo></mrow><mi>.</mi><mrow><mo
+    stretchy="false" form="prefix">(</mo><mn>6</mn><mo stretchy="false" form="postfix">)</mo></mrow></mrow><annotation
+    encoding="application/x-tex">\mathcal{L}_{\text{KD}}(\theta) = -\,\mathbb{E}_{x
+    \sim \mathcal{D}}\left[\sum_{t=1}^{T} P_{\phi}(x_t \mid x_{<t}) \log P_{\theta}(x_t
+    \mid x_{<t})\right]. \qquad{(6)}</annotation></semantics>
+- en: '**In-context Learning (ICL)**: In-context here refers to any information within
+    the context window of the language model. Usually, this is information added to
+    the prompt. The simplest form of in-context learning is adding examples of a similar
+    form before the prompt. Advanced versions can learn which information to include
+    for a specific use-case.'
+  id: totrans-45
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: '**上下文学习（ICL）**：这里的“上下文”指的是语言模型上下文窗口内的任何信息。通常，这是添加到提示中的信息。上下文学习的最简单形式是在提示之前添加类似形式的示例。高级版本可以学习为特定用例包含哪些信息。'
+- en: '**Chain of Thought (CoT)**: Chain of thought is a specific behavior of language
+    models where they are steered towards a behavior that breaks down a problem in
+    a step-by-step form. The original version of this was through the prompt “Let’s
+    think step-by-step” [[54]](ch021.xhtml#ref-wei2022chain).'
+  id: totrans-46
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: '**思维链（CoT）**：思维链是语言模型的一种特定行为，它们被引导以逐步分解问题的形式。这种行为的原始版本是通过提示“让我们一步步思考” [[54]](ch021.xhtml#ref-wei2022chain)。'

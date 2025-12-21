@@ -1,0 +1,804 @@
+- en: Preference Data
+  id: totrans-0
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+  zh: 偏好数据
+- en: 'Preference data is the engine of preference finetuning and reinforcement learning
+    from human feedback. The core problem we’ve been trying to solve with RLHF is
+    that we cannot precisely model human rewards and preferences for AI models’ outputs
+    – as in write clearly defined loss functions to optimize against – so preference
+    data is the proxy signal we use to tune our models. The data is what allows us
+    to match behaviors we desire and avoid some failure modes we hate. The data is
+    so rich a source that it is difficult to replace this style of optimization at
+    all. Within preference finetuning, many methods for collecting and using said
+    data have been proposed, and given that human preferences cannot be captured in
+    a clear reward function, many more will come to enable this process of collecting
+    labeled preference data at the center of RLHF and related techniques. Today, two
+    main challenges exist around preference data that are intertwined with this chapter:
+    1) operational complexity and cost of collection, and 2) the need for preference
+    data to be collected on the generations from the model being trained (called “on-policy”);'
+  id: totrans-1
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 偏好数据是偏好微调和从人类反馈中进行强化学习的基础。我们一直在尝试通过强化学习与人类反馈（RLHF）解决的核心问题是，我们无法精确地模拟人类对AI模型输出的奖励和偏好——就像编写明确的损失函数来优化一样——因此，偏好数据是我们用来调整模型的中介信号。这些数据使我们能够匹配我们希望的行为并避免我们讨厌的一些失败模式。数据资源如此丰富，以至于很难完全替代这种优化方式。在偏好微调中，已经提出了许多收集和使用此类数据的方法，鉴于人类偏好无法被清晰地纳入奖励函数，未来还将有更多方法来支持在RLHF和相关技术中收集标记的偏好数据这一核心过程。今天，围绕偏好数据存在两个主要挑战，这两个挑战与本章内容紧密相关：1）收集操作的复杂性和成本，以及2）需要从正在训练的模型生成的数据中收集偏好数据（称为“按策略”）；
+- en: In this chapter, we detail technical decisions on how the data is formatted
+    and organizational practices for collecting it.
+  id: totrans-2
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 在本章中，我们详细介绍了数据格式化的技术决策以及收集数据的组织实践。
+- en: Why We Need Preference Data
+  id: totrans-3
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+  zh: 我们为什么需要偏好数据
+- en: The preference data is needed for RLHF because directly capturing complex human
+    values in a single reward function is effectively impossible, as discussed in
+    the previous Chapter 5, where substantial context of psychology, economics, and
+    philosophy shows that accurately modeling human preferences is an impossible problem
+    to ever completely solve. Collecting this data to train reward models is one of
+    the original ideas behind RLHF [[33]](ch021.xhtml#ref-leike2018scalable) and has
+    continued to be used extensively throughout the emergence of modern language models.
+    One of the core intuitions for *why this data works so well* is that it is far
+    easier, both for humans and AI models supervising data collection, to differentiate
+    between a good and a bad answer for a prompt than it is to generate a good answer
+    on its own. This chapter focuses on the *mechanics* of getting preference data
+    and the best practices depend on the specific problem being solved.
+  id: totrans-4
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 偏好数据对于RLHF来说是必需的，因为像前一章第5章所讨论的那样，直接在单个奖励函数中捕捉复杂的人类价值观实际上是不可行的，因为心理学、经济学和哲学的大量背景表明，准确模拟人类偏好是一个永远无法完全解决的问题。收集这些数据以训练奖励模型是RLHF背后的原始想法之一，并且在现代语言模型出现的过程中一直被广泛使用。为什么这些数据如此有效的一个核心直觉是，对于人类和监督数据收集的AI模型来说，区分一个好答案和一个坏答案比单独生成一个好答案要容易得多。本章重点介绍获取偏好数据的机制和最佳实践，这些最佳实践取决于具体要解决的问题。
+- en: Collecting Preference Data
+  id: totrans-5
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+  zh: 收集偏好数据
+- en: Getting the most out of human data involves iterative training of models, spending
+    hundreds of thousands (or millions of dollars), highly detailed data instructions,
+    translating ideas through data foundry businesses that mediate collection (or
+    hiring a meaningful amount of annotators), and other challenges that add up. This
+    is not a process that should be taken lightly. Among all of the public knowledge
+    on RLHF, collecting this data well is also one of the most opaque pieces of the
+    pipeline. At the time of writing, there are no open models with fully open human
+    preference data released with the methods used to collect it (the largest and
+    most recent human preference dataset released for models is the HelpSteer line
+    of work from NVIDIA’s Nemotron team [[111]](ch021.xhtml#ref-wang2024helpsteer2p)).
+    For these reasons, many who take up RLHF for new teams or projects omit human
+    data and use AI feedback data, off-the-shelf reward models, or other methods to
+    circumvent the need for curating data from scratch.
+  id: totrans-6
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 充分利用人类数据涉及对模型进行迭代训练，花费数十万（或数百万）美元，高度详细的数据指令，通过中介收集（或雇佣大量标注员）的数据铸造业务来翻译想法，以及其他累积的挑战。这不是一个应该被轻视的过程。在所有关于RLHF的公共知识中，收集这些数据也是管道中最不透明的一部分。在撰写本文时，没有公开的模型发布了用于收集人类偏好数据的方法（为模型发布的最大和最新的人类偏好数据集是NVIDIA的Nemotron团队的帮助Steer工作线
+    [[111]](ch021.xhtml#ref-wang2024helpsteer2p))。因此，许多从事RLHF的新团队或项目的人省略了人类数据，并使用AI反馈数据、现成的奖励模型或其他方法来规避从头开始整理数据的需求。
+- en: An important assumption that is taken into the preference data collection process
+    is that the best data for your training process is “on-policy” with respect to
+    the previous checkpoint(s) of your training process. Recall that within post-training,
+    we start with a base model and then perform a set of training *stages* to create
+    a series of *checkpoints*. In this case, the preference data could be collected
+    on a checkpoint that has undergone supervised finetuning, where the preference
+    data will be used in the next stage of RLHF training.
+  id: totrans-7
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 在偏好数据收集过程中所采用的一个重要假设是，对于您的训练过程来说，最佳数据是相对于训练过程中的先前检查点“按策略”的。回想一下，在训练后，我们从一个基础模型开始，然后执行一系列训练**阶段**来创建一系列**检查点**。在这种情况下，偏好数据可以从经过监督微调的检查点收集，偏好数据将在RLHF训练的下一阶段使用。
+- en: The use of the term on-policy here is adapted from the reinforcement learning
+    literature, where on-policy is a technical term implying that the data for a certain
+    gradient update is collected from the most recent form of the policy. In preference
+    data, on-policy is used in a slightly softer manner, where it means that the data
+    is collected from the current family of models. Different models have different
+    patterns in their generations, which makes preference data that is from a closely
+    related model more robust in the crucial areas of optimization. Research has shown
+    that using this on-policy data, rather than other popular datasets that aggregate
+    completions from pools of popular models on platforms like HuggingFace, is particularly
+    important for effective RLHF training [[112]](ch021.xhtml#ref-malik2025rewardbench).
+  id: totrans-8
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 这里使用“按策略”一词是从强化学习文献中借鉴的，其中“按策略”是一个技术术语，意味着某个梯度更新的数据是从策略的最新形式收集的。在偏好数据中，“按策略”的使用方式稍微温和一些，意味着数据是从当前模型系列中收集的。不同的模型在生成模式上有所不同，这使得来自密切相关模型的偏好数据在优化的关键领域更加稳健。研究表明，使用这种按策略数据，而不是其他流行的数据集，这些数据集从HuggingFace等平台上的多个流行模型中汇总完成，对于有效的RLHF训练尤为重要
+    [[112]](ch021.xhtml#ref-malik2025rewardbench)。
+- en: This necessity for on-policy data is not well documented, but many popular technical
+    reports, such as early versions of Claude or Llama 2, showcase multiple training
+    stages with RLHF being useful for final performance, that mirrors this well. The
+    same uncertainty applies for the popular area AI feedback data – the exact balance
+    between human and AI preference data used for the latest AI models is unknown.
+    These data sources are known to be a valuable path to improve performance, but
+    careful tuning of processes is needed to extract that potential performance from
+    a data pipeline.
+  id: totrans-9
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '这种对按策略数据的需求并没有得到很好的记录，但许多流行的技术报告，如Claude或Llama 2的早期版本，展示了多个训练阶段，其中RLHF对于最终性能是有益的，这很好地反映了这一点。同样的不确定性也适用于流行的AI反馈数据领域——用于最新AI模型的人类和AI偏好数据的精确平衡是未知的。这些数据源被认为是提高性能的有价值途径，但需要仔细调整流程以从数据管道中提取这种潜在的性能。 '
+- en: A subtle but important point is that the *chosen* answer in preference data
+    is often not a globally *correct* answer. Instead, it is the answer that is better
+    relative to the alternatives shown (e.g., clearer, safer, more helpful, or less
+    incorrect). There can be cases where every completion being compared to a given
+    prompt is correct or incorrect, and the models can still learn from well-labeled
+    data.
+  id: totrans-10
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 一个微妙但重要的观点是，在偏好数据中，*选择的*答案通常不是全局*正确*的答案。相反，它是相对于所展示的替代方案更好的答案（例如，更清晰、更安全、更有帮助或更少错误）。可能存在所有被比较的完成内容与给定提示都是正确或错误的情况，而模型仍然可以从良好标注的数据中学习。
+- en: Interface
+  id: totrans-11
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+  zh: 接口
+- en: Crucial to collecting preference data is the interface by which one interacts
+    with the model, but it’s more of an art than a science, as it’s not well-studied
+    how subtle changes in the interface impact how a user interacts with a model.
+    An example of how a model’s vibe can be changed by the user experience is *speed*,
+    where with the rise of reasoning models, a user can think a model is less intelligent
+    if it replies too fast (even though users obviously want to get their answer faster
+    overall).
+  id: totrans-12
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 收集偏好数据的关键是用户与模型交互的接口，但这更像是一门艺术而不是科学，因为接口的微妙变化如何影响用户与模型的交互并没有得到很好的研究。一个用户体验如何改变模型感觉的例子是*速度*，随着推理模型的出现，如果模型回复得太快，用户可能会认为模型不太智能（尽管用户显然希望更快地得到答案）。
+- en: An example interface is shown below from Anthropic’s early and foundational
+    RLHF work for building Claude [[5]](ch021.xhtml#ref-bai2022training). In the figure
+    shown below, fig. [8](#fig:preference-interface), a data labeler has a conversation
+    with the model and must choose a preference between two possible answers, at the
+    bottom highlighted in purple. In addition, the labeler is given the potential
+    to include more notes on the conversation or a general rating of the conversation
+    quality (potentially spread across multiple tasks, as seen in the top left).
+  id: totrans-13
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 下面展示了Anthropic早期和基础RLHF工作构建Claude的一个示例接口 [[5]](ch021.xhtml#ref-bai2022training)。在下面的图中，图[8](#fig:preference-interface)，数据标注者与模型进行对话，并必须在两个可能的答案中选择一个偏好，底部用紫色突出显示。此外，标注者还被赋予了在对话中包含更多笔记或对对话质量进行总体评价（可能跨越多个任务，如上图左上角所示）的可能性。
+- en: '![Figure 8: An example of one of the earliest preference data collection interface,
+    from Anthropic’s research. Bai et al. 2022\. The actual conversation is a toy
+    conversation around what is a good example conversation for data collection. License
+    CC-BY.](../media/file6.png)'
+  id: totrans-14
+  prefs: []
+  type: TYPE_IMG
+  zh: '![图8：从Anthropic的研究中摘录的一个早期偏好数据收集接口示例。Bai等人，2022。实际的对话是一个关于什么是好的数据收集对话示例的玩具对话。许可CC-BY。](../media/file6.png)'
+- en: 'Figure 8: An example of one of the earliest preference data collection interface,
+    from Anthropic’s research. Bai et al. 2022\. The actual conversation is a toy
+    conversation around what is a good example conversation for data collection. License
+    CC-BY.'
+  id: totrans-15
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 图8：从Anthropic的研究中摘录的一个早期偏好数据收集接口示例。Bai等人，2022。实际的对话是一个关于什么是好的数据收集对话示例的玩具对话。许可CC-BY。
+- en: This first example is a *training-data only* interface, where the goal is to
+    collect rich metadata along with the conversation. Now that these models are popular,
+    applications often expose interfaces for collecting preference directly to the
+    users during everyday use, much like how other technology products will A/B test
+    new features in small subsets of the production usage. It depends on the application
+    whether this preference data is used directly to train the future models, or if
+    it is used just as an evaluation of models’ performance relative to each other.
+    An example interaction of this form is shown below in fig. [9](#fig:preference-chatgpt)
+    for an earlier version of ChatGPT.
+  id: totrans-16
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 这个第一个例子是一个*仅训练数据*的接口，其目标是收集与对话相关的丰富元数据。现在这些模型很受欢迎，应用程序通常在日常使用中向用户直接暴露用于收集偏好的接口，就像其他技术产品会在生产使用的子集中进行A/B测试新功能一样。这取决于应用程序，这些偏好数据是否直接用于训练未来的模型，或者只是作为模型之间性能评估的一种方式。下面图[9](#fig:preference-chatgpt)展示了这种形式的一个示例交互，是ChatGPT的一个早期版本。
+- en: '![Figure 9: Example preference data collection interface from when I was served
+    two completions from different ChatGPT beta models. The actual completions are
+    very close in content, showing how collecting preference data can be noisy and
+    difficult to get exactly right.](../media/file7.jpg)'
+  id: totrans-17
+  prefs: []
+  type: TYPE_IMG
+  zh: '![图9：当我从不同的ChatGPT beta模型中收到两个完成内容时的示例偏好数据收集接口。实际完成内容在内容上非常接近，展示了收集偏好数据可能会很嘈杂且难以完全正确。](../media/file7.jpg)'
+- en: 'Figure 9: Example preference data collection interface from when I was served
+    two completions from different ChatGPT beta models. The actual completions are
+    very close in content, showing how collecting preference data can be noisy and
+    difficult to get exactly right.'
+  id: totrans-18
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 图9：当我从不同的ChatGPT beta模型中收到两个完成项时的偏好数据收集界面示例。实际完成项在内容上非常接近，展示了收集偏好数据可能会很嘈杂且难以完全准确。
+- en: 'This style of interface is used extensively across the industry, such as for
+    *evaluation* of models given the same format. A popular public option to engage
+    with models in this way is ChatBotArena [[113]](ch021.xhtml#ref-chiang2024chatbot),
+    which includes the option of a “tie” between models:'
+  id: totrans-19
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 这种界面风格在行业内被广泛使用，例如用于相同格式的模型**评估**。一种流行的公共选项是与模型以这种方式互动是ChatBotArena [[113]](ch021.xhtml#ref-chiang2024chatbot)，其中包括模型之间“平局”的选项：
+- en: '![Figure 10: Example preference data collection interface from an early version
+    of the popular LMArena benchmark.](../media/file8.png)'
+  id: totrans-20
+  prefs: []
+  type: TYPE_IMG
+  zh: '![图10：来自流行的LMArena基准早期版本的偏好数据收集界面示例。](../media/file8.png)'
+- en: 'Figure 10: Example preference data collection interface from an early version
+    of the popular LMArena benchmark.'
+  id: totrans-21
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 图10：来自流行的LMArena基准早期版本的偏好数据收集界面示例。
+- en: 'For models in the wild, one of the most common techniques is to collect feedback
+    on if a specific response was positive or negative. An example from the Ai2 playground
+    is shown below with thumbs up and down indicators:'
+  id: totrans-22
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 对于野外的模型，最常见的技术之一是收集关于特定响应是正面还是负面的反馈。以下是一个来自Ai2游乐场的示例，包括向上和向下的点赞指标：
+- en: '![Figure 11: Example preference data collection interface with up or down arrow
+    from the Allen Institute of AI’s research demos.](../media/file9.png)'
+  id: totrans-23
+  prefs: []
+  type: TYPE_IMG
+  zh: '![图11：来自艾伦人工智能研究所研究演示的带有上下箭头的偏好数据收集界面示例。](../media/file9.png)'
+- en: 'Figure 11: Example preference data collection interface with up or down arrow
+    from the Allen Institute of AI’s research demos.'
+  id: totrans-24
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 图11：来自艾伦人工智能研究所研究演示的带有上下箭头的偏好数据收集界面示例。
+- en: 'In domains other than language, the same core principles apply, even though
+    these domains are not the focus of this book. For every Midjourney generation
+    (and most popular image generators) they expose multiple responses to users. These
+    companies then use the data of which response was selected to finetune their models
+    with RLHF. Midjourney’s interface is shown below:'
+  id: totrans-25
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 在语言以外的领域，同样的核心原则适用，尽管这些领域不是本书的重点。对于每次Midjourney生成（以及大多数流行的图像生成器）它们向用户展示多个响应。然后，这些公司使用用户选择的响应数据，通过RLHF微调他们的模型。以下展示了Midjourney的界面：
+- en: '![Figure 12: Example user interface of text-to-image models.](../media/file10.jpg)'
+  id: totrans-26
+  prefs: []
+  type: TYPE_IMG
+  zh: '![图12：文本到图像模型的用户界面示例。](../media/file10.jpg)'
+- en: 'Figure 12: Example user interface of text-to-image models.'
+  id: totrans-27
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 图12：文本到图像模型的用户界面示例。
+- en: Rankings vs. Ratings
+  id: totrans-28
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+  zh: 排名与评分
+- en: The largest decision on how to collect preference data is if the data should
+    be rankings – i.e. relative ordering of model completions – or ratings – i.e. scores
+    assigned to each piece of text. Common practice is to train on rankings, but ratings
+    are often used as metadata and / or have been explored in related literature.
+  id: totrans-29
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 收集偏好数据的最大决策是数据应该是排名——即模型完成的相对顺序——还是评分——即分配给每段文本的分数。常见的做法是在排名上训练，但评分通常用作元数据，或者已经在相关文献中进行了探索。
+- en: 'One simple way to collect ratings is to score a *single* completion on a 1–5
+    scale:'
+  id: totrans-30
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 收集评分的一个简单方法是在1到5的尺度上对单个完成项进行评分：
+- en: '**5** — excellent: correct, clear, and notably helpful'
+  id: totrans-31
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: '**5** — 优秀：正确、清晰且非常有帮助'
+- en: '**4** — good: correct, clear, and useful'
+  id: totrans-32
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: '**4** — 好：正确、清晰且有用'
+- en: '**3** — okay: acceptable, but nothing special'
+  id: totrans-33
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: '**3** — 一般：可接受，但没有什么特别之处'
+- en: '**2** — poor: partially correct but confusing or incomplete'
+  id: totrans-34
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: '**2** — 差：部分正确但令人困惑或不完整'
+- en: '**1** — very poor: incorrect or unhelpful'
+  id: totrans-35
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: '**1** — 非常差：不正确或无帮助'
+- en: With multiple completions to the same prompt, a simple way to make preference
+    data would be to choose the highest rated completion and pair it randomly with
+    a lower scored completion (as done for UltraFeedback and derivative works [[23]](ch021.xhtml#ref-cui2023ultrafeedback)).
+  id: totrans-36
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 对于相同提示的多个完成项，制作偏好数据的一个简单方法是从最高评分的完成项中选择，并将其随机与评分较低的完成项配对（如UltraFeedback及其衍生作品[[23]](ch021.xhtml#ref-cui2023ultrafeedback)所做的那样）。
+- en: 'Although, the most common technique for collecting preferences is to use a
+    Likert scale for relative rankings [[114]](ch021.xhtml#ref-likert1932technique),
+    which asks users to select which response they prefer in a group of completions.
+    For example, a 5 point Likert scale would look like the following (note that,
+    yes, a Likert scale uses a single integer to record the ranking, much like a rating,
+    so it’s how the data is structured that is the core difference in the two ways
+    of collecting preference data):'
+  id: totrans-37
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 尽管如此，收集偏好的最常见技术是使用李克特量表进行相对排名 [[114]](ch021.xhtml#ref-likert1932technique)，要求用户在一组完成中选择他们更偏好的响应。例如，5点李克特量表看起来如下（请注意，是的，李克特量表使用单个整数来记录排名，就像评分一样，因此数据结构的不同是两种收集偏好数据方式的核心区别）：
+- en: 'Table 2: An example 5-wise Likert scale between two responses, A and B.'
+  id: totrans-38
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 表2：两个响应A和B之间的5点李克特量表示例。
+- en: '| A<semantics><mrow><mo>></mo><mo>></mo></mrow><annotation encoding="application/x-tex">>></annotation></semantics>B
+    | A<semantics><mo>></mo><annotation encoding="application/x-tex">></annotation></semantics>B
+    | Tie | B<semantics><mo>></mo><annotation encoding="application/x-tex">></annotation></semantics>A
+    | B<semantics><mrow><mo>></mo><mo>></mo></mrow><annotation encoding="application/x-tex">>></annotation></semantics>A
+    |'
+  id: totrans-39
+  prefs: []
+  type: TYPE_TB
+  zh: '| A<semantics><mrow><mo>></mo><mo>></mo></mrow><annotation encoding="application/x-tex">>></annotation></semantics>B
+    | A<semantics><mo>></mo><annotation encoding="application/x-tex">></annotation></semantics>B
+    | 平局 | B<semantics><mo>></mo><annotation encoding="application/x-tex">></annotation></semantics>A
+    | B<semantics><mrow><mo>></mo><mo>></mo></mrow><annotation encoding="application/x-tex">>></annotation></semantics>A
+    |'
+- en: '| --- | --- | --- | --- | --- |'
+  id: totrans-40
+  prefs: []
+  type: TYPE_TB
+  zh: '| --- | --- | --- | --- | --- |'
+- en: '| 1 | 2 | 3 | 4 | 5 |'
+  id: totrans-41
+  prefs: []
+  type: TYPE_TB
+  zh: '| 1 | 2 | 3 | 4 | 5 |'
+- en: 'Some early RLHF for language modeling works uses an 8-step Likert scale with
+    levels of preference between the two responses [[5]](ch021.xhtml#ref-bai2022training).
+    An even scale removes the possibility of ties:'
+  id: totrans-42
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 一些早期的语言模型RLHF工作使用8步李克特量表，其中两个响应之间的偏好级别 [[5]](ch021.xhtml#ref-bai2022training)。一个偶数量表消除了平局的可能性：
+- en: 'Table 3: An example 8-wise Likert scale between two responses, A and B.'
+  id: totrans-43
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 表3：两个响应A和B之间的8点李克特量表示例。
+- en: '| A<semantics><mrow><mo>></mo><mo>></mo><mo>></mo></mrow><annotation encoding="application/x-tex">>>></annotation></semantics>B
+    |  |  | A<semantics><mo>></mo><annotation encoding="application/x-tex">></annotation></semantics>B
+    | B<semantics><mo>></mo><annotation encoding="application/x-tex">></annotation></semantics>A
+    |  |  | B<semantics><mrow><mo>></mo><mo>></mo><mo>></mo></mrow><annotation encoding="application/x-tex">>>></annotation></semantics>A
+    |'
+  id: totrans-44
+  prefs: []
+  type: TYPE_TB
+  zh: '| A<semantics><mrow><mo>></mo><mo>></mo><mo>></mo></mrow><annotation encoding="application/x-tex">>>></annotation></semantics>B
+    |  |  | A<semantics><mo>></mo><annotation encoding="application/x-tex">></annotation></semantics>B
+    | B<semantics><mo>></mo><annotation encoding="application/x-tex">></annotation></semantics>A
+    |  |  | B<semantics><mrow><mo>></mo><mo>></mo><mo>></mo></mrow><annotation encoding="application/x-tex">>>></annotation></semantics>A
+    |'
+- en: '| --- | --- | --- | --- | --- | --- | --- | --- |'
+  id: totrans-45
+  prefs: []
+  type: TYPE_TB
+  zh: '| --- | --- | --- | --- | --- | --- | --- | --- |'
+- en: '| 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 |'
+  id: totrans-46
+  prefs: []
+  type: TYPE_TB
+  zh: '| 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 |'
+- en: In this case [[5]](ch021.xhtml#ref-bai2022training), as in other works, this
+    information is still reduced to a binary signal for the training of a reward model.
+  id: totrans-47
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 在这种情况下 [[5]](ch021.xhtml#ref-bai2022training)，与其他工作一样，此信息仍被简化为二进制信号以用于奖励模型的训练。
+- en: Multi-turn Data
+  id: totrans-48
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+  zh: 多轮数据
+- en: In practice, core questions often arise over how to parse and collect multi-turn
+    data – simply conversations with multiple related prompts. In a real-world interaction,
+    normally a piece of preference data is only collected on the “final” prompt, but
+    there are scenarios where preferences can be given on every response. When preferences
+    are given on every response, the conversation traditionally continues with the
+    “chosen” answer. At training time, it is common to include the training data for
+    every turn of the conversation as a “single prompt,” where the model can learn
+    from completing it. This can effectively unroll longer conversations into many
+    training prompts, but needs to be done carefully to not bias the training data.
+    Many research questions are still emerging, such as if the person labeling the
+    preference on the generations should be the same as the person who creates the
+    prompt (to avoid sycophancy), and other variables that are difficult to control
+    for in data collection (question [inspired by John Schulman](https://x.com/johnschulman2/status/1917483351436582953)).
+    If the prompt creator cannot label the preference data, multi-turn is not really
+    practical due to the need for conversations to continue in real-time – sometimes
+    for preference data the curation of prompts is a different problem than comparing
+    responses (also due to the work of maintaining active endpoints for models). For
+    training, all of the previous turns in the conversation are masked from the loss,
+    as discussed with instruction finetuning.
+  id: totrans-49
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 在实践中，核心问题通常涉及如何解析和收集多轮数据——简单地说，就是与多个相关提示的对话。在现实世界的交互中，通常只在“最终”提示上收集偏好数据，但在某些情况下，可以在每个响应上给出偏好。当在每个响应上给出偏好时，对话传统上会继续以“所选”答案为结尾。在训练时间，通常将对话的每个轮次的训练数据作为一个“单个提示”包括在内，这样模型可以从完成它中学习。这可以有效地将更长的对话展开成许多训练提示，但需要谨慎操作，以免对训练数据产生偏差。许多研究问题仍在出现，例如，标记生成偏好的人是否应该与创建提示的人相同（以避免谄媚），以及难以在数据收集中控制的变量（问题[受约翰·舒尔曼启发](https://x.com/johnschulman2/status/1917483351436582953)))。如果提示创建者不能标记偏好数据，多轮对话实际上并不实用，因为需要实时继续对话——有时对于偏好数据，提示的编纂可能是一个不同于比较响应的问题（也由于维护模型活跃端点的工作）。对于训练，如前所述，与指令微调讨论的，将对话中的所有先前轮次在损失中屏蔽。
+- en: Structured Preference Data
+  id: totrans-50
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+  zh: 结构化偏好数据
+- en: 'In many applications of RLHF and post-training, preference data can be created
+    *automatically* due to innate structures of the data – i.e. the domains make automatic
+    checks of correctness or preference possible. For example, in mathematical reasoning
+    domains the chosen response can be a correct answer and the rejected an incorrect
+    answer. Another example is in precise instruction following, such as the evaluation
+    IFEval [[115]](ch021.xhtml#ref-zhou2023instructionfollowingevaluationlargelanguage),
+    where prompts take the form of:'
+  id: totrans-51
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 在许多RLHF和训练后应用中，由于数据的内在结构，偏好数据可以*自动*创建——即，领域使得自动检查正确性或偏好成为可能。例如，在数学推理领域，所选的响应可以是正确答案，而被拒绝的是错误答案。另一个例子是在精确指令遵循中，例如IFEval
+    [[115]](ch021.xhtml#ref-zhou2023instructionfollowingevaluationlargelanguage)的评估，其中提示的形式如下：
+- en: Write me a short poem about a goldfish. **Start each sentence with the letter
+    g.**
+  id: totrans-52
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+  zh: 为我写一首关于金鱼的短诗。**每个句子以字母g开头**。
+- en: The second part of this query is called the constraint, and the preference data
+    could be constructed with an example in the chosen column that follows the constraint.
+    Constructing this preference data, which would be included as *synthetic* preference
+    data, involves prompting the same model (or multiple models) twice. Once with
+    the constraint included and once without.
+  id: totrans-53
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 这个查询的第二部分被称为约束，偏好数据可以通过在满足约束的选定列中的示例来构建。构建这种偏好数据，它将被包括为*合成*偏好数据，涉及到对同一模型（或多个模型）进行两次提示。一次包含约束，一次不包含。
+- en: For example, prompting GPT-4.5-Preview with both of these gives the following.
+  id: totrans-54
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 例如，用这两个提示提示GPT-4.5-Preview，得到以下结果。
+- en: '**Prompt**: Write me a short poem about a goldfish. Start each sentence with
+    the letter g.'
+  id: totrans-55
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+  zh: '**提示**：为我写一首关于金鱼的短诗。每个句子以字母g开头。'
+- en: ''
+  id: totrans-56
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: '**Response**: Golden swimmer, circling slow, Gleaming scales in water’s glow.
+    Gentle fins dance softly by, Gazing out with quiet eye. Glass-bound world, a simple
+    sphere, Gliding calmly, free of fear. Graceful turns in endless roam, Goldfish
+    finds a crystal home.'
+  id: totrans-57
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+  zh: '**响应**：金鱼游泳，缓缓环绕，在水中闪耀的鳞片。温柔的鳍轻轻舞动，静静地凝视着。玻璃般的世界，一个简单的球体，平静地滑行，无惧恐惧。优雅的转身在无尽的漫游中，金鱼找到了一个水晶般的家。'
+- en: 'And without the constraint (which, it turns out, is also a lower quality output):'
+  id: totrans-58
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 而没有约束（实际上，这也导致了较低质量的结果）：
+- en: '**Prompt**: Write me a short poem about a goldfish.'
+  id: totrans-59
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+  zh: '**提示**：为我写一首关于金鱼的短诗。'
+- en: ''
+  id: totrans-60
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: '**Response**: In circles bright, the goldfish glides, A spark of sun that gently
+    rides Through waters clear, in endless spins— A golden whisper, scales like fins.'
+  id: totrans-61
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+  zh: '**回应**：在明亮的人群中，金鱼游动，一束阳光轻轻驶过清澈的水面，在无尽的旋转中——金色的低语，鳞片如鳍。'
+- en: ''
+  id: totrans-62
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: Its world confined, yet vast within, Each bubble breathed, a tale begins. In
+    silent waves, content to roam, The goldfish dreams its bowl as home.
+  id: totrans-63
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+  zh: 它的世界虽受限制，但内部广阔，每个气泡呼吸，一个故事开始。在无声的波浪中，满足于漫游，金鱼梦想着它的鱼缸就是家。
+- en: Crucially, the prompt for the preference data will need to include the constraint.
+    In domains outside of academic study, there are far more applications of preference
+    data based on inductive biases like above (relative to quality-based preferences,
+    which most of this chapter focuses on). These have been shown to enable preference
+    finetuning to have meaningful performance improvements across related evaluations,
+    such as instruction-following, math, etc. [[6]](ch021.xhtml#ref-lambert2024t).
+  id: totrans-64
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 关键的是，对偏好数据的提示需要包含约束条件。在学术研究之外的领域，基于上述归纳偏差（相对于本章主要关注的基于质量的偏好）的偏好数据应用更为广泛。这些数据已被证明能够使偏好微调在相关评估（如指令遵循、数学等）中实现有意义的性能提升。[6](ch021.xhtml#ref-lambert2024t)。
+- en: Alternatives
+  id: totrans-65
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+  zh: 替代方案
+- en: There are multiple other ways to collect useful feedback data for RLHF that
+    have not been pursued in as great of detail. Examples include using single data
+    points with directional labels, e.g. as shown from Ai2 playground above in fig. [11](#fig:up-down),
+    directly with algorithms designed for single direction signals like Kahneman-Tversky
+    Optimization (KTO) [[116]](ch021.xhtml#ref-ethayarajh2024kto). Other algorithms
+    have been proposed with different types of feedback signals such as fine-grained
+    feedback, e.g. at the token level [[117]](ch021.xhtml#ref-wu2024fine), or natural
+    language feedback, e.g. by writing responses [[118]](ch021.xhtml#ref-chen2024learning),
+    to provide a richer learning signal in exchange for a more complex data collection
+    setup.
+  id: totrans-66
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 有多种其他方式可以收集对RLHF有用的反馈数据，但尚未详细探讨。例如，使用带有方向标签的单个数据点，例如上图所示，直接使用为单方向信号设计的算法，如Kahneman-Tversky优化（KTO）[[116]](ch021.xhtml#ref-ethayarajh2024kto）。还提出了具有不同类型反馈信号的算法，例如细粒度反馈，例如在标记级别[[117]](ch021.xhtml#ref-wu2024fine)，或自然语言反馈，例如通过撰写回应[[118]](ch021.xhtml#ref-chen2024learning)，以提供更丰富的学习信号，以换取更复杂的数据收集设置。
+- en: Sourcing and Contracts
+  id: totrans-67
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+  zh: 数据来源和合同
+- en: Getting human preference data is an involved and costly process. The following
+    describes the experience of getting preference data when the field is moving quickly.
+    Over time, these processes will become far more automated and efficient (especially
+    with AI feedback being used for a larger portion of the process).
+  id: totrans-68
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 获取人类偏好数据是一个复杂且昂贵的流程。以下描述了在领域快速发展的过程中获取偏好数据的经验。随着时间的推移，这些流程将变得更加自动化和高效（尤其是在AI反馈被用于更大比例的流程时）。
+- en: The first step is sourcing the vendor to provide data (or one’s own annotators).
+    Much like acquiring access to cutting-edge Nvidia GPUs, getting access to data
+    providers in the peak of AI excitement is also a who-you-know game – those who
+    can provide data are supply-limited. If you have credibility in the AI ecosystem,
+    the best data companies will want you on their books for public image and long-term
+    growth options. Discounts are often also given on the first batches of data to
+    get training teams hooked.
+  id: totrans-69
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 第一步是寻找供应商提供数据（或自己的标注员）。就像获取访问最前沿的Nvidia GPU一样，在AI热情高涨的顶峰时期获取数据提供者的访问也是一个“认识谁”的游戏——能够提供数据的人是供应受限的。如果你在AI生态系统中拥有信誉，最好的数据公司会希望你在他们的名单上，以提升公众形象和长期增长机会。通常也会在第一批数据上提供折扣，以吸引训练团队。
+- en: If you’re a new entrant in the space, you may have a hard time getting the data
+    you need quickly. Data vendors are known to prioritize large budget line-items
+    and new customers that have an influential brand or potential for large future
+    revenue. This is, in many business ways, natural, as the data foundry companies
+    are often supply-limited in their ability to organize humans for effective data
+    labelling.
+  id: totrans-70
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 如果你刚进入这个领域，你可能很难快速获取所需的数据。数据供应商通常优先考虑预算较大的项目和新客户，这些客户拥有有影响力的品牌或未来可能带来大量收入的潜力。这在许多商业方式中是自然的，因为数据铸造公司通常在组织人力进行有效数据标注的能力上受到供应限制。
+- en: On multiple occasions, I’ve heard of data companies not delivering their data
+    as contracted without the customer threatening legal or financial action against
+    them for breach of contract. Others have listed companies I work with as customers
+    for PR even though we never worked with them, saying they “didn’t know how that
+    happened” when reaching out. There are plenty of potential bureaucratic or administrative
+    snags through the process. For example, the default terms on the contracts often
+    prohibit the open sourcing of artifacts after acquisition in some fine print.
+  id: totrans-71
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 在多次场合，我听说数据公司没有按照合同交付数据，除非客户威胁要对他们采取法律或财务行动以违约。还有一些公司将我合作的公司列为客户进行公关，尽管我们从未与他们合作，他们在联系时表示“不知道怎么会这样”。在整个过程中，存在许多潜在的官僚或行政障碍。例如，合同中的默认条款通常在收购后的一些细节中禁止开源工件。
+- en: Once a contract is settled, the data buyer and data provider agree upon instructions
+    for the task(s) purchased. There are intricate documents with extensive details,
+    corner cases, and priorities for the data. A popular example of data instructions
+    is the one that [OpenAI released for InstructGPT](https://docs.google.com/document/d/1MJCqDNjzD04UbcnVZ-LmeXJ04-TKEICDAepXyMCBUb8/edit#heading=h.21o5xkowgmpj)
+    [[3]](ch021.xhtml#ref-ouyang2022training).
+  id: totrans-72
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 一旦合同达成，数据购买方和数据提供方就购买的任务（们）达成指令。存在复杂的文件，其中包含详尽的细节、边缘情况和数据优先级。数据指令的一个流行例子是 [OpenAI
+    为 InstructGPT 发布的](https://docs.google.com/document/d/1MJCqDNjzD04UbcnVZ-LmeXJ04-TKEICDAepXyMCBUb8/edit#heading=h.21o5xkowgmpj)
+    [[3]](ch021.xhtml#ref-ouyang2022training)。
+- en: Depending on the domains of interest in the data, timelines for when the data
+    can be labeled or curated vary. High-demand areas like mathematical reasoning
+    or coding must be locked into a schedule weeks out. In the case when you are collecting
+    a dataset for your next model and you realize that collecting data later may be
+    optimal, simple delays of data collection don’t always work — Scale AI et al. are
+    managing their workforces like AI research labs manage the compute-intensive jobs
+    on their clusters (planning multiple weeks or months ahead as to when different
+    resources will be allocated where).
+  id: totrans-73
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 根据数据中感兴趣领域的不同，数据可以标注或整理的时间表也会有所变化。对于数学推理或编码等需求高的领域，必须提前几周锁定日程。在你收集用于下一个模型的数据集时，如果你意识到稍后收集数据可能更优，简单的数据收集延迟并不总是有效——Scale
+    AI 等公司正在像 AI 研究实验室管理其集群上的计算密集型工作一样管理他们的工作团队（提前几周或几个月规划不同资源将分配到何处）。
+- en: Once everything is agreed upon, the actual collection process is a high-stakes
+    time for post-training teams. All the training infrastructure, evaluation tools,
+    and plans for how to use the data and make downstream decisions must be in place.
+    If the data cannot be easily slotted into an existing RLHF data pipeline, it’ll
+    take a long time to have the information the data partner wants in order to try
+    and improve the collection process *during* the process. Collecting data that
+    cannot be seamlessly integrated into training pipelines often becomes stale and
+    a waste of resources.
+  id: totrans-74
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 一切达成一致后，实际的收集过程对后训练团队来说是一个高风险的时期。所有训练基础设施、评估工具以及如何使用数据和做出下游决策的计划都必须到位。如果数据不能轻松地整合到现有的
+    RLHF 数据管道中，那么获取数据合作伙伴想要的信息以尝试在过程中改进收集过程将需要很长时间。无法无缝整合到训练管道中的数据往往变得过时，浪费资源。
+- en: The data is delivered in weekly batches with more data coming later in the contract.
+    For example, when we bought preference data for on-policy models we were training
+    at HuggingFace, we had a 6 week delivery period. The first weeks were for further
+    calibration and the later weeks were when we hoped to most improve our model.
+  id: totrans-75
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 数据以每周批次的形式交付，合同中规定后续还将有更多数据。例如，当我们为在 HuggingFace 训练的按策略模型购买偏好数据时，我们有 6 周的交付期。前几周用于进一步校准，而后期则是我们希望最能改进模型的时候。
+- en: '![Figure 13: Overview of the multi-batch cycle for obtaining human preference
+    data from a vendor. The ramp up period allows a narrowing of goals and methodology
+    in order to create the best possible data. It is expected that a larger proportion
+    of the data from the earlier batches will have to be thrown out due to quality
+    issues. This is one timeline example for a smaller data contract (~$500K) and
+    much larger data contracts can vary substantially.](../media/file11.png)'
+  id: totrans-76
+  prefs: []
+  type: TYPE_IMG
+  zh: '![图13：从供应商处获取人类偏好数据的批量周期概述。爬坡期允许缩小目标和方法的范围，以创建最佳可能的数据。预计早期批次的数据中将有较大比例因质量问题而不得不被丢弃。这是针对较小数据合同（约500K美元）的一个时间线示例，而更大的数据合同可能会有很大差异。](../media/file11.png)'
+- en: 'Figure 13: Overview of the multi-batch cycle for obtaining human preference
+    data from a vendor. The ramp up period allows a narrowing of goals and methodology
+    in order to create the best possible data. It is expected that a larger proportion
+    of the data from the earlier batches will have to be thrown out due to quality
+    issues. This is one timeline example for a smaller data contract (~$500K) and
+    much larger data contracts can vary substantially.'
+  id: totrans-77
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 图13：从供应商处获取人类偏好数据的批量周期概述。爬坡期允许缩小目标和方法的范围，以创建最佳可能的数据。预计早期批次的数据中将有较大比例因质量问题而不得不被丢弃。这是针对较小数据合同（约500K美元）的一个时间线示例，而更大的数据合同可能会有很大差异。
+- en: The goal is that by week 4 or 5 we can see the data improving our model. This
+    is something some frontier models have mentioned, such as the 14 stages in the
+    Llama 2 data collection [[44]](ch021.xhtml#ref-touvron2023llama), but it doesn’t
+    always go well. At HuggingFace, trying to do this for the first time with human
+    preferences, we didn’t have the RLHF preparedness to get meaningful bumps on our
+    evaluations. The last weeks came and we were forced to continue to collect preference
+    data generating from endpoints we weren’t confident in.
+  id: totrans-78
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 目标是在第4周或第5周时看到数据改善我们的模型。这是某些前沿模型提到的事情，例如Llama 2数据收集的14个阶段[[44]](ch021.xhtml#ref-touvron2023llama)，但这并不总是顺利进行。在HuggingFace，我们第一次尝试使用人类偏好来做这件事，我们没有准备好RLHF来在我们评估中获得有意义的提升。最后几周过去了，我们被迫继续收集来自我们不太有信心的端点的偏好数据。
+- en: After the data is all in, there is plenty of time for learning and improving
+    the model. Data acquisition through these vendors works best when viewed as an
+    ongoing process of achieving a set goal. It requires iterative experimentation,
+    high effort, and focus. It’s likely that millions of dollars spent on these datasets
+    are “wasted” and not used in the final models, but that is just the cost of doing
+    business. Not many organizations have the bandwidth and expertise to make full
+    use of human data of this style.
+  id: totrans-79
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 数据全部到位后，有足够的时间来学习和改进模型。将这些供应商的数据获取视为实现既定目标的持续过程最为有效。它需要迭代实验、高投入和专注。很可能在这些数据集上花费的数百万美元是“浪费”的，并且没有用于最终模型，但这只是商业活动的成本。很少有组织有足够的带宽和专业知识来充分利用这种风格的人类数据。
+- en: This experience, especially relative to the simplicity of synthetic data, makes
+    me wonder how well these companies will be doing in the next decade.
+  id: totrans-80
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 与合成数据的简单性相比，这次经历让我想知道这些公司在下一个十年里会做得如何。
+- en: 'Note that this section *does not* mirror the experience for buying human-written
+    instruction data, where the process is less of a time crunch. Early post-training
+    processes were built around the first stage of training being heavily driven by
+    carefully crafted, human answers to a set of prompts. This stage of data is not
+    subject to the on-policy restrictions for multiple reasons: Instruction data is
+    used directly ontop of a base model, so on-policy doesn’t really apply; the loss-function
+    for instruction finetuning doesn’t need the contrastive data of preference finetuning;
+    and other structural advantages. Today, the primary other focus of human data
+    is in generating prompts for post-training – which dictate the training distribution
+    of topics for the model – or on challenging tasks at the frontier of model performance.
+    More of these data trade-offs are discussed in Chapter 16 on Synthetic Data.'
+  id: totrans-81
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 注意，本节**不**反映购买人工编写指令数据的经验，其中过程的时间压力较小。早期的训练后过程是围绕训练的第一阶段，这一阶段主要是由对一系列提示精心制作的、人工的回答驱动的。这一阶段的数据不受多项政策限制，原因有很多：指令数据直接用于基础模型之上，因此政策限制实际上不适用；指令微调的损失函数不需要偏好微调的对比数据；以及其他结构性优势。今天，人类数据的主要其他焦点在于生成训练后的提示——这决定了模型的训练主题分布——或者在模型性能前沿的挑战性任务。更多关于这些数据权衡的讨论见第16章关于合成数据。
+- en: 'Bias: Things to Watch Out For in Data Collection'
+  id: totrans-82
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+  zh: 偏见：数据收集中需要注意的事项
+- en: While preference data is essential, it’s also known to be prone to many subtle
+    biases that can make its collection error-prone. These biases are so common, e.g. prefix
+    bias (where the beginning of a completion disproportionately drives the preference)
+    [[119]](ch021.xhtml#ref-kumar2025detecting), that they can easily be passed to
+    the final model [[120]](ch021.xhtml#ref-bharadwaj2025flatteryflufffogdiagnosing)
+    (and especially as we know that models are only as good as their data). These
+    issues are often subtle and vary in how applicable interventions to mitigate them
+    are. For many, such as sycophancy (over-agreeing with the user’s stated beliefs
+    or flattering them, even when it reduces truthfulness) [[121]](ch021.xhtml#ref-sharma2023towards),
+    they reflect issues within humans that are often outside of the labeling criteria
+    that one will think of providing to the annotation partner or labelers. Others,
+    such as verbosity [[9]](ch021.xhtml#ref-singhal2023long) [[122]](ch021.xhtml#ref-bu2025beyond)
+    or formatting habits [[123]](ch021.xhtml#ref-zhang2024lists), emerge for a similar
+    reason, but they are easier to detect and mitigate in training. Mitigating these
+    subtle biases in data is the difference between good or great preference data,
+    and therefore good or great RLHF training.
+  id: totrans-83
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 尽管偏好数据至关重要，但它也众所周知容易受到许多微妙的偏见的影响，这些偏见可能导致收集错误。这些偏见如此普遍，例如前缀偏见（一个完成的开始部分不成比例地驱动偏好）[[119]](ch021.xhtml#ref-kumar2025detecting)，它们可以轻易地传递到最终模型[[120]](ch021.xhtml#ref-bharadwaj2025flatteryflufffogdiagnosing)（尤其是我们知道模型的好坏取决于其数据）。这些问题通常很微妙，并且干预措施的有效性各不相同。对于许多人来说，例如拍马屁（过度同意用户的陈述信念或奉承他们，即使这减少了真实性）[[121]](ch021.xhtml#ref-sharma2023towards)，它们反映了人类内部的问题，这些问题通常超出了人们会想到提供给注释合作伙伴或标注者的标签标准。其他，如冗长[[9]](ch021.xhtml#ref-singhal2023long)
+    [[122]](ch021.xhtml#ref-bu2025beyond) 或格式习惯[[123]](ch021.xhtml#ref-zhang2024lists)，由于类似的原因出现，但它们在训练中更容易检测和缓解。减轻这些微妙的偏见是良好或优秀偏好数据，以及因此良好或优秀RLHF训练之间的区别。
+- en: Open Questions in RLHF Preference Data
+  id: totrans-84
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+  zh: RLHF偏好数据中的开放性问题
+- en: The data used to enable RLHF is often curated by multiple stakeholders in a
+    combination of paid employment and consumer usage. This data, representing a preference
+    between two pieces of text in an individual instance, is capturing a broad and
+    diverse function via extremely limited interactions. Given that the data is sparse
+    in count relative to the complexity it begins to represent, more questions should
+    be openly shared about its curation and impacts.
+  id: totrans-85
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 用于启用RLHF的数据通常由多个利益相关者通过付费工作和消费者使用相结合的方式进行整理。这些数据代表了个别实例中两段文本之间的偏好，通过极其有限的交互捕捉了广泛而多样的功能。鉴于与它所代表的复杂性相比数据量稀疏，关于其整理和影响的问题应该更公开地分享。
+- en: Currently, datasets for the most popular LLMs are being generated by professional
+    workforces. This opens up many questions around who is creating the data and how
+    the context of their workplace informs it.
+  id: totrans-86
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 目前，最受欢迎的LLM的数据集正在由专业工作团队生成。这引发了许多关于谁在创建数据以及他们工作场所的背景如何影响数据的疑问。
+- en: 'Despite the maturity of RLHF as a core method across the field, there are still
+    many core open questions facing how best to align its practice with its motivations.
+    Some are enumerated below:'
+  id: totrans-87
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 尽管RLHF作为跨领域核心方法已经成熟，但仍然存在许多核心开放性问题，关乎如何将其实践与其动机最佳对齐。以下是一些列举的问题：
+- en: '**Data collection contexts**: Can data involving preferences collected in a
+    professional setting mirror the intent of researchers designing an experiment
+    or provide suitable transfer to downstream users? How does this compare to volunteer
+    workers? How does context inform preferences, how does this data impact a downstream
+    model, how can the impact of a user interface be measured in data? How does repetitive
+    labeling of preference data shift one’s preferences? Do professional crowd-workers,
+    instructed to follow a set of preferences, follow the instructions or their innate
+    values?'
+  id: totrans-88
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: '**数据收集环境**：在专业环境中收集的涉及偏好的数据能否反映研究人员设计实验的意图，或者为下游用户提供合适的迁移？这与志愿者工作者相比如何？环境如何影响偏好，这些数据如何影响下游模型，如何衡量用户界面在数据中的影响？重复标注偏好数据如何改变一个人的偏好？被指示遵循一系列偏好的专业众包工作者会遵循指示还是他们固有的价值观？ '
+- en: '**Type of feedback**: Does the default operating method of RLHF, pairwise preferences
+    capture preferences in its intended form? Can comparisons in RLHF across the same
+    data be made with the default comparisons versus advanced multi-axis feedback
+    mechanisms [**wu2023fine?**](#ref-wu2023fine)? What types of comparisons would
+    reflect how humans communicate preferences in text?'
+  id: totrans-89
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: '**反馈类型**：RLHF的默认操作方法是否能够以预期形式捕捉成对偏好的偏好？能否在相同数据上使用默认比较与高级多轴反馈机制[**wu2023fine**](#ref-wu2023fine)进行比较？哪些类型的比较能够反映人类在文本中表达偏好的方式？'
+- en: '**Population demographics**: Who is completing the data? Is a diverse population
+    maintained? How does a lack of diversity emerge as measurable impacts on the model?
+    What is a minimum number of people required to suitably represent a given population?
+    How are instances of preference annotator disagreement treated – as a source of
+    noise, or a signal?'
+  id: totrans-90
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: '**人口统计学**：谁在完成数据？是否保持了多元化的群体？缺乏多元化如何作为可衡量的影响出现在模型中？需要多少人才能合适地代表一个特定的群体？如何处理偏好标注员之间的不一致——作为噪声的来源，还是作为信号的来源？'
+- en: '**Are the Preferences Expressed in the Models?** In the maturation of RLHF
+    and related approaches, the motivation of them – to align models to abstract notions
+    of human preference – has drifted from the practical use – to make the models
+    more effective to users. A feedback loop that is not measurable due to the closed
+    nature of industrial RLHF work is the check to see if the behavior of the models
+    matches the specification given to the data annotators during the process of data
+    collection. We have limited tools to audit this, such as the Model Spec from OpenAI
+    [[124]](ch021.xhtml#ref-openai2024modelspec) that details *what they want their
+    models to do*, but we don’t know exactly how this translates to data collection.'
+  id: totrans-91
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: '**模型中是否表达了偏好？** 在RLHF和相关方法成熟的过程中，它们的动机——将模型与人类偏好的抽象概念对齐——已经从实用目的——使模型对用户更有效——偏离。由于工业RLHF工作的封闭性质，无法衡量的反馈循环是检查模型行为是否与数据收集过程中数据标注员收到的规格说明相匹配的检验。我们有限的审计工具，如OpenAI的模型规范[[124]](ch021.xhtml#ref-openai2024modelspec)，详细说明了*他们希望模型做什么*，但我们不知道这如何具体转化为数据收集。'

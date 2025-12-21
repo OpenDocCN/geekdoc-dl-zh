@@ -1,0 +1,270 @@
+- en: Constitutional AI & AI Feedback
+  id: totrans-0
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+  zh: 宪章AI与AI反馈
+- en: RL from AI Feedback (RLAIF) is a larger set of techniques for using AI to augment
+    or generate feedback data, including pairwise preferences [[227]](ch021.xhtml#ref-lee2023rlaif)
+    [[228]](ch021.xhtml#ref-sharma2024critical) [[229]](ch021.xhtml#ref-castricato2024suppressing).
+    There are many motivations to using RLAIF to either entirely replace human feedback
+    or augment it. AI models are far cheaper than humans, with a single piece of human
+    preference data costing on the order of $1 or higher (or even above $10 per prompt),
+    AI feedback with a frontier AI model, such as GPT-4o costs less than $0.01\. This
+    cost difference opens the market of experimentation with RLHF methods to an entire
+    population of people previously priced out. Other than price, AI feedback introduces
+    different *tradeoffs* on performance than human feedback, which are still being
+    investigated. The peak performance for AI feedback is at least in the same ballpark
+    of human data on skill-based evaluations, but it is not studied if human data
+    allows finer control of the models in real-world product settings or for newer
+    training methods such as character training.
+  id: totrans-1
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 来自AI反馈的强化学习（RLAIF）是一套更广泛的技术，用于使用AI来增强或生成反馈数据，包括成对偏好 [[227]](ch021.xhtml#ref-lee2023rlaif)
+    [[228]](ch021.xhtml#ref-sharma2024critical) [[229]](ch021.xhtml#ref-castricato2024suppressing)。使用RLAIF的动机有很多，既可以完全取代人类反馈，也可以增强它。AI模型比人类便宜得多，单条人类偏好数据成本约为1美元或更高（甚至每个提示词高达10美元以上），而使用前沿AI模型（如GPT-4o）的AI反馈成本不到0.01美元。这种成本差异使得RLHF方法的实验市场对之前因价格而被排除在外的人群开放。除了价格之外，AI反馈在性能上引入了与人类反馈不同的*权衡*，这些权衡仍在研究中。AI反馈的峰值性能至少与基于技能的评价中的人类数据在同一水平，但尚未研究人类数据是否允许在现实世界的产品设置或新的训练方法（如角色训练）中对模型进行更精细的控制。
+- en: 'The term RLAIF was introduced in Anthropic’s work *Constitutional AI: Harmlessness
+    from AI Feedback* [[19]](ch021.xhtml#ref-bai2022constitutional), which resulted
+    in initial confusion in the AI community over the relationship between the methods.
+    Since the release of the Constitutional AI (CAI) paper and the formalization of
+    RLAIF, RLAIF has become a default method within the post-training and RLHF literatures
+    – there are far more examples than one can easily enumerate. The relationship
+    should be understood as CAI was the example that kickstarted the broader field
+    of RLAIF.'
+  id: totrans-2
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 术语RLAIF是在Anthropic的工作*宪章AI：从AI反馈中获得无害性* [[19]](ch021.xhtml#ref-bai2022constitutional)中引入的，这导致AI社区对方法之间关系产生初步的困惑。自从宪章AI（CAI）论文发布和RLAIF的正式化以来，RLAIF已成为后训练和RLHF文献中的默认方法——例子多得无法轻易列举。应将这种关系理解为CAI是启动更广泛RLAIF领域的例子。
+- en: 'A rule of thumb for the difference between human data and AI feedback data
+    is as follows:'
+  id: totrans-3
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 人类数据与AI反馈数据之间差异的一个经验法则是：
+- en: Human data is high-noise and low-bias,
+  id: totrans-4
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+  zh: 人类数据是高噪声和低偏差的，
+- en: Synthetic preference data is low-noise and high-bias,
+  id: totrans-5
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+  zh: 合成偏好数据是低噪声和高偏差的，
+- en: Results in many academic results showing how one can substitute AI preference
+    data in RLHF workflows and achieve strong evaluation scores [[230]](ch021.xhtml#ref-miranda2024hybrid),
+    but shows how the literature of RLHF is separated from industrial best practices.
+  id: totrans-6
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 许多学术成果显示，如何在RLHF工作流程中用AI偏好数据替代，并实现强大的评估分数 [[230]](ch021.xhtml#ref-miranda2024hybrid)，但显示了RLHF文献与工业最佳实践之间的分离。
+- en: Constitutional AI
+  id: totrans-7
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+  zh: 宪章AI
+- en: 'The method of Constitutional AI (CAI), which Anthropic uses extensively in
+    their Claude models, is the earliest, large-scale use of synthetic data for RLHF
+    training. Constitutional AI has two uses of synthetic data:'
+  id: totrans-8
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 宪章AI（CAI）的方法，Anthropic在他们的Claude模型中广泛使用，是合成数据用于RLHF训练的最早、最大规模的应用。宪章AI有两个合成数据的使用：
+- en: Critiques of instruction-tuned data to follow a set of principles like “Is the
+    answer encouraging violence” or “Is the answer truthful.” When the model generates
+    answers to questions, it checks the answer against the list of principles in the
+    constitution, refining the answer over time. Then, they fine-tune the model on
+    this resulting dataset.
+  id: totrans-9
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+  zh: 对指令调整数据的批评，以遵循一系列原则，如“答案是否鼓励暴力”或“答案是否真实”。当模型生成问题的答案时，它会将答案与宪章中的原则列表进行核对，随着时间的推移改进答案。然后，他们在生成的数据集上微调模型。
+- en: Generates pairwise preference data by using a language model to answer which
+    completion was better, given the context of a random principle from the constitution
+    (similar to this paper for principle-guided reward models). Then, RLHF proceeds
+    as normal with synthetic data, hence the RLAIF name.
+  id: totrans-10
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+  zh: 通过使用语言模型来回答从宪法中随机抽取的原则（类似于这篇关于原则引导奖励模型的论文）的上下文中哪个补全更好，生成成对偏好数据。然后，RLHF使用合成数据按正常流程进行，因此得名RLAIF。
+- en: Largely, CAI is known for the second half above, the preference data, but the
+    methods introduced for instruction data are used in general data filtering and
+    synthetic data generation methods across post-training.
+  id: totrans-11
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 大部分情况下，CAI因上述第二部分，即偏好数据而闻名，但用于指令数据的方法在训练后的一般数据过滤和合成数据生成方法中得到应用。
+- en: CAI can be formalized as follows.
+  id: totrans-12
+  prefs: []
+  type: TYPE_NORMAL
+  zh: CAI可以形式化为以下内容。
+- en: By employing a human-written set of principles, which they term a *constitution*,
+    Bai et al. 2022 use a separate LLM to generate artificial preference and instruction
+    data used for fine-tuning [[19]](ch021.xhtml#ref-bai2022constitutional). A constitution
+    <semantics><mi>𝒞</mi><annotation encoding="application/x-tex">\mathcal{C}</annotation></semantics>
+    is a set of written principles indicating specific aspects to focus on during
+    a critique phase. The instruction data is curated by repeatedly sampling a principle
+    <semantics><mrow><msub><mi>c</mi><mi>i</mi></msub><mo>∈</mo><mi>𝒞</mi></mrow><annotation
+    encoding="application/x-tex">c_i \in \mathcal{C}</annotation></semantics> and
+    asking the model to revise its latest output <semantics><msup><mi>y</mi><mi>i</mi></msup><annotation
+    encoding="application/x-tex">y^i</annotation></semantics> to the prompt <semantics><mi>x</mi><annotation
+    encoding="application/x-tex">x</annotation></semantics> to align with <semantics><msub><mi>c</mi><mi>i</mi></msub><annotation
+    encoding="application/x-tex">c_i</annotation></semantics>. This yields a series
+    of instruction variants <semantics><mrow><mo stretchy="false" form="prefix">{</mo><msup><mi>y</mi><mn>0</mn></msup><mo>,</mo><msup><mi>y</mi><mn>1</mn></msup><mo>,</mo><mi>⋯</mi><mo>,</mo><msup><mi>y</mi><mi>n</mi></msup><mo
+    stretchy="false" form="postfix">}</mo></mrow><annotation encoding="application/x-tex">\{y^0,
+    y^1, \cdots, y^n\}</annotation></semantics> from the principles <semantics><mrow><mo
+    stretchy="false" form="prefix">{</mo><msub><mi>c</mi><mn>0</mn></msub><mo>,</mo><msub><mi>c</mi><mn>1</mn></msub><mo>,</mo><mi>⋯</mi><mo>,</mo><msub><mi>c</mi><mrow><mi>n</mi><mo>−</mo><mn>1</mn></mrow></msub><mo
+    stretchy="false" form="postfix">}</mo></mrow><annotation encoding="application/x-tex">\{c_{0},
+    c_{1}, \cdots, c_{n-1}\}</annotation></semantics> used for critique. The final
+    data point is the prompt <semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics>
+    together with the final completion <semantics><msup><mi>y</mi><mi>n</mi></msup><annotation
+    encoding="application/x-tex">y^n</annotation></semantics>, for some <semantics><mi>n</mi><annotation
+    encoding="application/x-tex">n</annotation></semantics>.
+  id: totrans-13
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 通过使用一组由人类编写的原则，他们称之为“宪法”，Bai等人（2022年）使用一个单独的LLM生成用于微调的人工偏好和指令数据[[19]](ch021.xhtml#ref-bai2022constitutional)。宪法<semantics><mi>𝒞</mi><annotation
+    encoding="application/x-tex">\mathcal{C}</annotation></semantics>是一组书面原则，指示在批判阶段需要关注的特定方面。指令数据是通过反复采样一个原则<semantics><mrow><msub><mi>c</mi><mi>i</mi></msub><mo>∈</mo><mi>𝒞</mi></mrow><annotation
+    encoding="application/x-tex">c_i \in \mathcal{C}</annotation></semantics>并要求模型修改其最新的输出<semantics><msup><mi>y</mi><mi>i</mi></msup><annotation
+    encoding="application/x-tex">y^i</annotation></semantics>以与提示<semantics><mi>x</mi><annotation
+    encoding="application/x-tex">x</annotation></semantics>对齐<semantics><msub><mi>c</mi><mi>i</mi></msub><annotation
+    encoding="application/x-tex">c_i</annotation></semantics>来精心制作的。这产生了一系列指令变体<semantics><mrow><mo
+    stretchy="false" form="prefix">{</mo><msup><mi>y</mi><mn>0</mn></msup><mo>,</mo><msup><mi>y</mi><mn>1</mn></msup><mo>,</mo><mi>⋯</mi><mo>,</mo><msup><mi>y</mi><mi>n</mi></msup><mo
+    stretchy="false" form="postfix">}</mo></mrow><annotation encoding="application/x-tex">\{y^0,
+    y^1, \cdots, y^n\}</annotation></semantics>，这些变体用于批判。最终数据点是提示<semantics><mi>x</mi><annotation
+    encoding="application/x-tex">x</annotation></semantics>与最终的补全<semantics><msup><mi>y</mi><mi>n</mi></msup><annotation
+    encoding="application/x-tex">y^n</annotation></semantics>，对于某个<semantics><mi>n</mi><annotation
+    encoding="application/x-tex">n</annotation></semantics>。
+- en: The preference data is constructed in a similar, yet simpler way by using a
+    subset of principles from <semantics><mi>𝒞</mi><annotation encoding="application/x-tex">\mathcal{C}</annotation></semantics>
+    as context for a feedback model. The feedback model is presented with a prompt
+    <semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics>,
+    a set of principles <semantics><mrow><mo stretchy="false" form="prefix">{</mo><msub><mi>c</mi><mn>0</mn></msub><mo>,</mo><mi>⋯</mi><mo>,</mo><msub><mi>c</mi><mi>n</mi></msub><mo
+    stretchy="false" form="postfix">}</mo></mrow><annotation encoding="application/x-tex">\{c_0,
+    \cdots, c_n\}</annotation></semantics>, and two completions <semantics><msub><mi>y</mi><mn>0</mn></msub><annotation
+    encoding="application/x-tex">y_0</annotation></semantics> and <semantics><msub><mi>y</mi><mn>1</mn></msub><annotation
+    encoding="application/x-tex">y_1</annotation></semantics> labeled as answers (A)
+    and (B) from a previous RLHF dataset. The feedback models’ probability of outputting
+    either (A) or (B) is recorded as a training sample for the reward model
+  id: totrans-14
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 通过使用来自 <semantics><mi>𝒞</mi><annotation encoding="application/x-tex">\mathcal{C}</annotation></semantics>
+    的原则子集作为反馈模型的上下文，以类似但更简单的方式构建偏好数据。反馈模型被呈现一个提示 <semantics><mi>x</mi><annotation
+    encoding="application/x-tex">x</annotation></semantics>，一组原则 <semantics><mrow><mo
+    stretchy="false" form="prefix">{</mo><msub><mi>c</mi><mn>0</mn></msub><mo>,</mo><mi>⋯</mi><mo>,</mo><msub><mi>c</mi><mi>n</mi></msub><mo
+    stretchy="false" form="postfix">}</mo></mrow><annotation encoding="application/x-tex">\{c_0,
+    \cdots, c_n\}</annotation></semantics>，以及两个标记为答案（A）和（B）的完成 <semantics><msub><mi>y</mi><mn>0</mn></msub><annotation
+    encoding="application/x-tex">y_0</annotation></semantics> 和 <semantics><msub><mi>y</mi><mn>1</mn></msub><annotation
+    encoding="application/x-tex">y_1</annotation></semantics>，这些答案来自之前的RLHF数据集。记录反馈模型输出（A）或（B）的概率作为奖励模型的训练样本
+- en: Specific LLMs for Judgement
+  id: totrans-15
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+  zh: 用于判断的特定LLM
+- en: As RLAIF methods have become more prevalent, many have wondered if we should
+    be using the same models for generating responses as those for generating critiques
+    or ratings. Specifically, the calibration of the LLM-as-a-judge used has come
+    into question. Several works have shown that LLMs are inconsistent evaluators
+    [[231]](ch021.xhtml#ref-wang2023large) and prefer their own responses over responses
+    from other models (coined self-preference bias) [[232]](ch021.xhtml#ref-panickssery2024llm).
+  id: totrans-16
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 随着RLAIF方法越来越普遍，许多人都在思考是否应该使用与生成评论或评分相同的模型来生成响应。特别是，所使用的LLM作为裁判的校准问题引起了质疑。一些研究表明，LLM是不一致的评估者
+    [[231]](ch021.xhtml#ref-wang2023large) 并且更倾向于自己的响应而不是其他模型的响应（称为自我偏好偏差） [[232]](ch021.xhtml#ref-panickssery2024llm)。
+- en: As a result, many have wondered if we should be using the same models for generating
+    responses as those for generating critiques or ratings. Would a solution be to
+    train a separate model just for this? Multiple models have been released with
+    the goal of substituting for frontier models as a data labeling tool, such as
+    critic models Shepherd [[233]](ch021.xhtml#ref-wang2023shepherd) and CriticLLM
+    [[234]](ch021.xhtml#ref-ke2023critiquellm) or models for evaluating response performance
+    akin to Auto-J [[235]](ch021.xhtml#ref-li2023generative), Prometheus [[138]](ch021.xhtml#ref-kim2023prometheus),
+    Prometheus 2 [[236]](ch021.xhtml#ref-kim2024prometheus), or Prometheus-Vision
+    [[237]](ch021.xhtml#ref-lee2024prometheus) but they are not widely adopted in
+    documented training recipes. Some find scaling inference via repeated sampling
+    [[238]](ch021.xhtml#ref-brown2024large) [[239]](ch021.xhtml#ref-zhao2025sample)
+    [[240]](ch021.xhtml#ref-kalra2025verdict), self-refinement [[241]](ch021.xhtml#ref-madaan2023self),
+    or tournament ranking [[242]](ch021.xhtml#ref-pace2024west) provides a better
+    estimate of the true judgement or higher-quality preference pairs. Other calibration
+    techniques co-evolve the generation and judgement capabilities of the model [[243]](ch021.xhtml#ref-wu2024meta).
+  id: totrans-17
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 因此，许多人都在思考是否应该使用与生成评论或评分相同的模型来生成响应。是否应该训练一个专门用于此目的的独立模型？已经发布了多个模型，旨在作为数据标注工具替代前沿模型，例如评论模型Shepherd
+    [[233]](ch021.xhtml#ref-wang2023shepherd) 和 CriticLLM [[234]](ch021.xhtml#ref-ke2023critiquellm)
+    或类似于Auto-J [[235]](ch021.xhtml#ref-li2023generative)、Prometheus [[138]](ch021.xhtml#ref-kim2023prometheus)、Prometheus
+    2 [[236]](ch021.xhtml#ref-kim2024prometheus) 或 Prometheus-Vision [[237]](ch021.xhtml#ref-lee2024prometheus)
+    的评估响应性能的模型，但它们在文档化的训练方案中并未得到广泛应用。有些人发现通过重复采样 [[238]](ch021.xhtml#ref-brown2024large)
+    [[239]](ch021.xhtml#ref-zhao2025sample) [[240]](ch021.xhtml#ref-kalra2025verdict)、自我完善
+    [[241]](ch021.xhtml#ref-madaan2023self) 或锦标赛排名 [[242]](ch021.xhtml#ref-pace2024west)
+    可以提供对真实判断或更高质量的偏好对的更好估计。其他校准技术共同进化了模型的生成和判断能力 [[243]](ch021.xhtml#ref-wu2024meta)。
+- en: Further Reading
+  id: totrans-18
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+  zh: 进一步阅读
+- en: There are many related research directions and extensions of Constitutional
+    AI, but few of them have been documented as clear improvements in RLHF and post-training
+    recipes. For now, they are included as further reading.
+  id: totrans-19
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 与宪法AI相关的研究方向和扩展有很多，但其中很少被记录为RLHF和后训练食谱中的明确改进。目前，它们被包括为进一步阅读的内容。
+- en: OpenAI has released a Model Spec [[124]](ch021.xhtml#ref-openai2024modelspec),
+    which is a document stating the intended behavior for their models, and stated
+    that they are exploring methods for alignment where the model references the document
+    directly (which could be seen as a close peer to CAI). OpenAI has continued and
+    trained their reasoning models such as o1 with a method called Deliberative Alignment
+    [[244]](ch021.xhtml#ref-guan2024deliberative) to align the model while referencing
+    these safety or behavior policies.
+  id: totrans-20
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: OpenAI发布了模型规范 [[124]](ch021.xhtml#ref-openai2024modelspec)，这是一份说明其模型预期行为的文档，并声明他们正在探索直接引用文档的方法来实现模型的对齐（这可以被视为与CAI的紧密伙伴）。OpenAI继续使用名为Deliberative
+    Alignment [[244]](ch021.xhtml#ref-guan2024deliberative) 的方法来训练他们的推理模型，如o1，以在引用这些安全或行为策略的同时对齐模型。
+- en: Anthropic has continued to use CAI in their model training, updating the constitution
+    Claude uses [[245]](ch021.xhtml#ref-Anthropic2023ClaudesConstitution) and experimenting
+    with how population collectives converge on principles for models and how that
+    changes model behavior [[246]](ch021.xhtml#ref-ganguli2023).
+  id: totrans-21
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: Anthropic继续在模型训练中使用CAI，更新了Claude使用的宪法 [[245]](ch021.xhtml#ref-Anthropic2023ClaudesConstitution)
+    并实验了种群集体如何就模型原则达成共识以及这如何改变模型行为 [[246]](ch021.xhtml#ref-ganguli2023)。
+- en: The open-source community has explored replications of CAI applied to open datasets
+    [[247]](ch021.xhtml#ref-Huang2024cai) and for explorations into creating dialogue
+    data between LMs [[248]](ch021.xhtml#ref-lambert2024self).
+  id: totrans-22
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: 开源社区已经探索了将CAI应用于开放数据集的复制 [[247]](ch021.xhtml#ref-Huang2024cai) 以及探索在LM之间创建对话数据的方法
+    [[248]](ch021.xhtml#ref-lambert2024self)。
+- en: Other work has used principle-driven preferences or feedback with different
+    optimization methods. [[249]](ch021.xhtml#ref-sun2023principledriven) uses principles
+    as context for the reward models, which was used to train the Dromedary models
+    [[250]](ch021.xhtml#ref-sun2024salmon). [[37]](ch021.xhtml#ref-glaese2022improving)
+    uses principles to improve the accuracy of human judgments in the RLHF process.
+    [[251]](ch021.xhtml#ref-liu2025inference) train a reward model to generate its
+    own principles at inference time, and use these to deliver a final score. [[252]](ch021.xhtml#ref-franken2024self)
+    formulate principle-following as a mutual information maximization problem that
+    the pretrained model can learn with no labels.
+  id: totrans-23
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: 其他工作使用了基于原则的偏好或反馈以及不同的优化方法。[[249]](ch021.xhtml#ref-sun2023principledriven) 使用原则作为奖励模型的上下文，该模型用于训练Dromedary模型
+    [[250]](ch021.xhtml#ref-sun2024salmon)。[[37]](ch021.xhtml#ref-glaese2022improving)
+    使用原则来提高RLHF过程中人类判断的准确性。[[251]](ch021.xhtml#ref-liu2025inference) 训练一个奖励模型在推理时生成自己的原则，并使用这些原则来提供最终评分。[[252]](ch021.xhtml#ref-franken2024self)
+    将遵循原则表述为一个预训练模型可以无标签学习的互信息最大化问题。

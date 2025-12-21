@@ -1,0 +1,199 @@
+- en: Product, UX, and Model Character
+  id: totrans-0
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+  zh: 产品、用户体验和模型性格
+- en: Frontiers in RLHF and post-training show how these techniques are used within
+    companies to make leading products. As RLHF becomes more established, the problems
+    it is used to address are becoming more nuanced. In this chapter, we discuss a
+    series of use-cases that leading AI laboratories consider RLHF and post-training
+    for that are largely unstudied in the academic literature.
+  id: totrans-1
+  prefs: []
+  type: TYPE_NORMAL
+  zh: RLHF 和后训练的前沿展示了这些技术在公司内部如何用于制造领先的产品。随着 RLHF 的日益成熟，它所解决的问题变得更加复杂。在本章中，我们讨论了一系列领先的AI实验室认为RLHF和后训练是重要的用例，这些用例在学术文献中基本上未被研究。
+- en: Character Training
+  id: totrans-2
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+  zh: 性格训练
+- en: Character training is the subset of post-training designed around crafting traits
+    within the model in the manner of its response, rather than the content [[357]](ch021.xhtml#ref-maiya2025open).
+    Character training, while being important to the user experience within language
+    model chatbots, is effectively unstudied in the public domain.
+  id: totrans-3
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 性格训练是后训练的一部分，旨在通过塑造模型响应的方式而不是内容来构建模型内的特质 [[357]](ch021.xhtml#ref-maiya2025open)。尽管性格训练对于语言模型聊天机器人的用户体验很重要，但在公共领域实际上并未得到研究。
+- en: We don’t know the trade-offs of what character training does, we don’t know
+    how exactly to study it, we don’t know how much it can improve user preferences
+    on ChatBotArena, and we should. What we *do know* is that character training uses
+    the same methods discussed in this book, but for much more precise goals on the
+    features in the language used by the model. Character training involves extensive
+    data filtering and synthetic data methods such as Constitutional AI that are focusing
+    on the manner of the model’s behavior. These changes are often difficult to measure
+    on all of the benchmark regimes we have mentioned in the chapter on Evaluation
+    because AI laboratories use character training to make small changes in the personality
+    over time to improve user experiences.
+  id: totrans-4
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 我们不知道性格训练的权衡，我们不知道如何确切地研究它，我们不知道它能在ChatBotArena上改善用户偏好吗，但我们应该知道。我们知道的是，性格训练使用了本书中讨论的相同方法，但针对模型使用的语言特征有更精确的目标。性格训练涉及广泛的数据过滤和合成数据方法，如宪法AI，这些方法专注于模型行为的方式。这些变化通常很难在我们在本章“评估”中提到的所有基准体系中衡量，因为AI实验室使用性格训练在一段时间内对性格进行微小调整，以改善用户体验。
+- en: 'For example, Character Training was added by Anthropic to its Claude 3 models
+    [[358]](ch021.xhtml#ref-anthropic2024claude):'
+  id: totrans-5
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 例如，Anthropic 将性格训练添加到了其 Claude 3 模型中 [[358]](ch021.xhtml#ref-anthropic2024claude)：
+- en: 'Claude 3 was the first model where we added “character training” to our alignment
+    finetuning process: the part of training that occurs after initial model training,
+    and the part that turns it from a predictive text model into an AI assistant.
+    The goal of character training is to make Claude begin to have more nuanced, richer
+    traits like curiosity, open-mindedness, and thoughtfulness.'
+  id: totrans-6
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+  zh: Claude 3 是第一个在我们对齐微调过程中添加“性格训练”的模型：这是在初始模型训练之后发生的训练部分，以及将模型从预测文本模型转变为人工智能助手的部分。性格训练的目标是使
+    Claude 开始拥有更加细腻、丰富的特质，如好奇心、开放性和周到。
+- en: 'In the following months, stronger character emerged across the industry of
+    models. The process is extremely synthetic data-heavy, but requires an artist’s
+    touch, as stated later in the blog post: It “relies on human researchers closely
+    checking how each trait changes the model’s behavior.”'
+  id: totrans-7
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 在接下来的几个月里，模型行业的性格变得更加鲜明。这个过程极其依赖于合成数据，但需要艺术家的触感，正如博客文章稍后所述：“它依赖于人类研究人员密切检查每个特质如何改变模型的行为。”
+- en: Character training being the focus of developments is the strongest endorsement
+    that RLHF and related approaches have shifted from their philosophical motivations
+    of alignment to being primarily an empirical tool. The models can capture so many
+    different behaviors, but getting them to reliably behave how we want is the hardest
+    part. Right now, it seems more likely that this is about capturing the upside
+    of RLHF as a performance tool, rather than a safety one.
+  id: totrans-8
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 性格训练成为发展的焦点，这表明RLHF和相关方法已经从其哲学动机的对齐转向了主要是一个经验工具。模型可以捕捉到许多不同的行为，但让它们可靠地按照我们的意愿行事是最困难的部分。目前来看，这似乎更像是捕捉RLHF作为性能工具的正面效果，而不是安全性。
+- en: 'One of the few public discussions of character training came from Amanda Askell
+    during her appearance on the Lex Fridman Podcast (taken from the transcript):'
+  id: totrans-9
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 关于性格训练的少数公开讨论之一来自阿曼达·阿斯凯尔在Lex Fridman播客中的亮相（摘自转录）：
+- en: Lex Fridman (03:41:56) When you say character training, what’s incorporated
+    into character training? Is that RLHF or what are we talking about?
+  id: totrans-10
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+  zh: Lex Fridman (03:41:56) 当你提到性格训练时，性格训练中包含了哪些内容？是RLHF还是我们在谈论什么？
+- en: ''
+  id: totrans-11
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: Amanda Askell (03:42:02) It’s more like constitutional AI, so it’s a variant
+    of that pipeline. I worked through constructing character traits that the model
+    should have. They can be shorter traits or they can be richer descriptions. And
+    then you get the model to generate queries that humans might give it that are
+    relevant to that trait. Then it generates the responses and then it ranks the
+    responses based on the character traits. In that way, after the generation of
+    the queries, it’s very much similar to constitutional AI, it has some differences.
+    I quite like it, because it’s like Claude’s training in its own character, because
+    it doesn’t have any… It’s like constitutional AI, but it’s without any human data.
+  id: totrans-12
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+  zh: Amanda Askell (03:42:02) 它更像是宪法AI，所以它是该管道的一个变体。我通过构建模型应该具备的性格特征进行了工作。它们可以是较短的特性，也可以是更丰富的描述。然后让模型生成与该特性相关的人类可能给出的查询。然后它生成响应，并根据性格特征对响应进行排序。以这种方式，在查询生成之后，它与宪法AI非常相似，有一些不同之处。我非常喜欢它，因为它就像Claude在自己的性格中进行训练，因为它没有任何……它就像宪法AI，但没有任何人类数据。
+- en: In summary, Anthropic uses the same techniques they use for Constitutional AI
+    and general post-training for capabilities to train these models’ characters.
+  id: totrans-13
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 总结来说，Anthropic使用他们用于宪法AI和一般后训练的相同技术来训练这些模型的性格。
+- en: Model Specifications
+  id: totrans-14
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+  zh: 模型规范
+- en: OpenAI recently shared what they call their “Model Spec” [[124]](ch021.xhtml#ref-openai2024modelspec),
+    a document that details their goal model behaviors prior to clicking go on a fine-tuning
+    run. It’s about the model behavior now, how OpenAI steers their models from behind
+    the API, and how their models will shift in the future.
+  id: totrans-15
+  prefs: []
+  type: TYPE_NORMAL
+  zh: OpenAI最近分享了他们所谓的“模型规范”[[124]](ch021.xhtml#ref-openai2024modelspec)，这是一份详细说明他们在点击微调运行前的目标模型行为的文档。它关于模型的行为现在，OpenAI如何通过API背后引导他们的模型，以及他们的模型在未来将如何转变。
+- en: Model Spec’s are one of the few tools in the industry and RLHF where one can
+    compare the actual behavior of the model to what the designers intended. As we
+    have covered in this book, training models is a complicated and multi-faceted
+    process, so it is expected that the final outcome differs from inputs such as
+    the data labeler instructions or the balance of tasks in the training data. For
+    example, a Model Spec is much more revealing than a list of principles used in
+    Constitutional AI because it speaks to the intent of the process rather than listing
+    what acts as intermediate training variables.
+  id: totrans-16
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 模型规范是行业中少数几个工具之一，在RLHF中，可以比较模型的实际行为与设计师的意图。正如我们在本书中所述，训练模型是一个复杂且多方面的过程，因此预期最终结果与输入（如数据标注员指示或训练数据中任务平衡）不同。例如，模型规范比宪法AI中使用的原则列表更有揭示性，因为它涉及到过程的意图，而不是列出充当中间训练变量的行为。
+- en: 'A Model Spec provides value to every stakeholder involved in a model release
+    process:'
+  id: totrans-17
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 模型规范为参与模型发布过程的每个利益相关者提供价值：
+- en: '**Model Designers**: The model designers get the benefit of needing to clarify
+    what behaviors they do and do not want. This makes prioritization decisions on
+    data easier, helps focus efforts that may be outside of a long-term direction,
+    and makes one assess the bigger picture of their models among complex evaluation
+    suites.'
+  id: totrans-18
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: '**模型设计师**：模型设计师能够从需要明确他们希望和希望不希望的行为中受益。这使得在数据上的优先级决策更容易，有助于集中精力在可能偏离长期方向的工作上，并使他们在复杂的评估套件中评估模型的整体图景。'
+- en: '**Developers**: Users of models have a better picture for which behaviors they
+    encounter may be intentional – i.e. some types of refusals – or side-effects of
+    training. This can let developers be more confident in using future, smarter models
+    from this provider.'
+  id: totrans-19
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: '**开发者**：模型的使用者对他们遇到的行为可能是故意的——即某些类型的拒绝——或者训练的副作用有一个更清晰的了解。这可以让开发者更有信心使用来自这个提供者的未来更智能的模型。'
+- en: '**Observing public**: The public benefits from Model Specs because it is one
+    of the few public sources of information on what is prioritized in training. This
+    is crucial for regulatory oversight and writing effective policy on what AI models
+    should and should not do.'
+  id: totrans-20
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: '**观察公众**：公众从模型规范中受益，因为它是在训练中优先考虑的信息的少数公共来源之一。这对于监管监督和制定关于AI模型应该做什么和不应该做什么的有效政策至关重要。'
+- en: Product Cycles, UX, and RLHF
+  id: totrans-21
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+  zh: 产品周期、用户体验和RLHF
+- en: As powerful AI models become closer to products than singular artifacts of an
+    experiment machine learning process, RLHF has become an interface point for the
+    relationship between models and product. Much more goes into making a model easy
+    to use than just having the final model weights be correct – fast inference, suitable
+    tools to use (e.g. search or code execution), a reliable and easy to understand
+    user interface (UX), and more. RLHF research has become the interface where a
+    lot of this is tested because of the framing where RLHF is a way to understand
+    the user’s preferences to products in real time and because it is the final training
+    stage before release. The quickest way to add a new feature to a model is to try
+    and incorporate it at post-training where training is faster and cheaper. This
+    cycle has been seen with image understanding, tool use, better behavior, and more.
+    What starts as a product question quickly becomes an RLHF modeling question, and
+    if it is successful there it backpropagates to other earlier training stages.
+  id: totrans-22
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 随着强大的AI模型越来越接近产品而非实验机器学习过程中的单一艺术品，RLHF（强化学习与人类反馈）已成为模型与产品之间关系的一个接口点。要使模型易于使用，不仅仅是确保最终模型权重正确，还需要考虑快速推理、合适的工具使用（例如搜索或代码执行）、可靠且易于理解的用户界面（UX）等多方面因素。由于RLHF被视为一种实时理解用户对产品偏好的方式，并且它是发布前的最终训练阶段，因此RLHF研究已成为测试这些因素的一个接口。将新功能添加到模型中最快的方式是在训练后尝试整合，因为此时训练更快且成本更低。这一循环已在图像理解、工具使用、更好的行为等方面得到体现。最初作为产品问题的问题很快就会变成RLHF建模问题，如果在那里取得成功，它就会反向传播到其他更早的训练阶段。

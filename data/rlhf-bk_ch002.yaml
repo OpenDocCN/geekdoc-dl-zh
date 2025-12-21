@@ -1,0 +1,182 @@
+- en: Key Related Works
+  id: totrans-0
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+  zh: 关键相关作品
+- en: RLHF and its related methods are very new. We highlight history to show how
+    recently the procedures were formalized, and how much of this documentation is
+    in the academic literature. With this, we want to emphasize that RLHF is very
+    rapidly evolving, so the chapter sets the stage for a book that will express uncertainty
+    over certain methods and an expectation that some details can change around a
+    few, core practices. Otherwise, the papers and methods listed here showcase why
+    many pieces of the RLHF pipeline are what they are, as some of the seminal papers
+    were for applications totally distinct from modern language models.
+  id: totrans-1
+  prefs: []
+  type: TYPE_NORMAL
+  zh: RLHF及其相关方法非常新颖。我们强调历史，以展示这些程序是如何最近才形式化的，以及学术文献中有多少这样的文档。因此，我们想强调RLHF发展非常迅速，所以本章为将表达对某些方法的不确定性以及预期某些细节会在几个核心实践中发生变化的书奠定了基础。否则，这里列出的论文和方法展示了为什么RLHF管道中的许多部分是这样的，因为一些开创性的论文是为与现代语言模型完全不同的应用而写的。
+- en: In this chapter we detail the key papers and projects that got the RLHF field
+    to where it is today. This is not intended to be a comprehensive review of RLHF
+    and the related fields, but rather a starting point and retelling of how we got
+    to today. It is intentionally focused on recent work that led to ChatGPT. There
+    is substantial further work in the RL literature on learning from preferences
+    [[26]](ch021.xhtml#ref-wirth2017survey). For a more exhaustive list, you should
+    use a proper survey paper [[27]](ch021.xhtml#ref-kaufmann2023survey),[[28]](ch021.xhtml#ref-casper2023open).
+  id: totrans-2
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 在本章中，我们详细介绍了将RLHF领域带到今天的关键论文和项目。这并不是对RLHF及其相关领域的全面回顾，而是一个起点和重述，说明了我们是如何到达今天的。它有意关注了导致ChatGPT的近期工作。在RL文献中，关于从偏好中学习有大量的进一步工作
+    [[26]](ch021.xhtml#ref-wirth2017survey)。要获得更详尽的列表，你应该使用一篇合适的调查论文 [[27]](ch021.xhtml#ref-kaufmann2023survey),
+    [[28]](ch021.xhtml#ref-casper2023open)。
+- en: 'Origins to 2018: RL on Preferences'
+  id: totrans-3
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+  zh: 2018年之前的起源：基于偏好的RL
+- en: The field has recently been popularized with the growth of Deep Reinforcement
+    Learning and has grown into a broader study of the applications of LLMs from many
+    large technology companies. Still, many of the techniques used today are deeply
+    related to core techniques from early literature on RL from preferences.
+  id: totrans-4
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 随着深度强化学习的兴起，该领域最近变得流行，并扩展为对许多大型科技公司中LLMs应用更广泛的研究。然而，今天使用的许多技术都与早期关于RL的文献中的核心技术密切相关。
+- en: 'One of the first papers with an approach similar to modern RLHF was *TAMER*.
+    *TAMER: Training an Agent Manually via Evaluative Reinforcement* proposed an approach
+    in which humans iteratively scored an agent’s actions to learn a reward model,
+    which was used to learn the action policy [[29]](ch021.xhtml#ref-knox2008tamer).
+    Other concurrent or soon after work proposed an actor-critic algorithm, COACH,
+    where human feedback (both positive and negative) is used to tune the advantage
+    function [[30]](ch021.xhtml#ref-macglashan2017interactive).'
+  id: totrans-5
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 第一篇采用类似现代RLHF方法的论文是 *TAMER*。*TAMER：通过评估强化手动训练一个智能体* 提出了一种方法，其中人类通过迭代评分智能体的动作来学习一个奖励模型，该模型用于学习动作策略
+    [[29]](ch021.xhtml#ref-knox2008tamer)。其他同时或随后提出的工作提出了一个演员-评论家算法COACH，其中人类反馈（正面和负面）用于调整优势函数
+    [[30]](ch021.xhtml#ref-macglashan2017interactive)。
+- en: The primary reference, Christiano et al. 2017, is an application of RLHF applied
+    to preferences between trajectories of agents within Atari games [[1]](ch021.xhtml#ref-christiano2017deep).
+    This work introducing RLHF followed soon after DeepMind’s seminal work in reinforcement
+    learning on Deep Q-Networks (DQN), which showed that RL agents can solve popular
+    video games learning from scratch. The work shows that humans choosing between
+    trajectories can be more effective in some domains than directly interacting with
+    the environment. This uses some clever conditions, but is impressive nonetheless.
+    This method was expanded upon with more direct reward modeling [[31]](ch021.xhtml#ref-ibarz2018reward)
+    and the adoption of deep learning within early RLHF work was capped by an extension
+    to TAMER with neural network models just one year later [[32]](ch021.xhtml#ref-warnell2018deep).
+  id: totrans-6
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 主要参考文献，Christiano等人2017年的论文，是RLHF应用于Atari游戏内代理轨迹之间的偏好[[1]](ch021.xhtml#ref-christiano2017deep)的应用。这项引入RLHF的工作紧随DeepMind在强化学习上的开创性工作——深度Q网络（DQN），该工作表明RL代理可以从头开始学习解决流行的视频游戏。这项工作表明，在某些领域，人类在轨迹之间进行选择可能比直接与环境交互更有效。这使用了一些巧妙条件，但仍然令人印象深刻。这种方法通过更直接的奖励建模[[31]](ch021.xhtml#ref-ibarz2018reward)和早期RLHF工作中深度学习的采用得到了扩展，仅一年后，通过将神经网络模型扩展到TAMER，就达到了顶峰[[32]](ch021.xhtml#ref-warnell2018deep)。
+- en: This era began to transition, as reward models as a general notion were proposed
+    as a method for studying alignment, rather than just a tool for solving RL problems
+    [[33]](ch021.xhtml#ref-leike2018scalable).
+  id: totrans-7
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 这个时代开始转变，因为作为一般概念的奖励模型被提出作为一种研究对齐的方法，而不仅仅是解决RL问题的工具[[33]](ch021.xhtml#ref-leike2018scalable)。
+- en: '2019 to 2022: RL from Human Preferences on Language Models'
+  id: totrans-8
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+  zh: 2019至2022年：语言模型上的从人类偏好进行强化学习
+- en: Reinforcement learning from human feedback, also referred to regularly as reinforcement
+    learning from human preferences in its early days, was quickly adopted by AI labs
+    increasingly turning to scaling large language models. A large portion of this
+    work began between GPT-2, in 2018, and GPT-3, in 2020\. The earliest work in 2019,
+    *Fine-Tuning Language Models from Human Preferences* has many striking similarities
+    to modern work on RLHF and the content that we will cover in this book [[34]](ch021.xhtml#ref-ziegler2019fine).
+    Many canonical terms, such as learning reward models, KL distances, feedback diagrams,
+    etc. were formalized in this paper – just the evaluation tasks for the final models,
+    and capabilities, were different to what people are doing today. From here, RLHF
+    was applied to a variety of tasks. Important examples include general summarization
+    [[2]](ch021.xhtml#ref-stiennon2020learning), recursive summarization of books
+    [[35]](ch021.xhtml#ref-wu2021recursively), instruction following (InstructGPT)
+    [[3]](ch021.xhtml#ref-ouyang2022training), browser-assisted question-answering
+    (WebGPT) [[4]](ch021.xhtml#ref-nakano2021webgpt), supporting answers with citations
+    (GopherCite) [[36]](ch021.xhtml#ref-menick2022teaching), and general dialogue
+    (Sparrow) [[37]](ch021.xhtml#ref-glaese2022improving).
+  id: totrans-9
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 从人类反馈中进行强化学习，也常在其早期被称为从人类偏好中进行强化学习，很快被转向扩展大型语言模型的AI实验室所采纳。这部分工作的大部分始于2018年的GPT-2和2020年的GPT-3之间。2019年的早期工作《从人类偏好微调语言模型》与RLHF的现代工作以及本书中将要涉及的内容有许多显著相似之处[[34]](ch021.xhtml#ref-ziegler2019fine)。许多经典术语，如学习奖励模型、KL距离、反馈图等，都在这篇论文中得到了形式化——只是最终模型的评估任务和能力与今天人们所做的工作有所不同。从这里，RLHF被应用于各种任务。重要例子包括通用摘要[[2]](ch021.xhtml#ref-stiennon2020learning)、书籍的递归摘要[[35]](ch021.xhtml#ref-wu2021recursively)、指令遵循（InstructGPT）[[3]](ch021.xhtml#ref-ouyang2022training)、浏览器辅助问答（WebGPT）[[4]](ch021.xhtml#ref-nakano2021webgpt)、支持带有引用的答案（GopherCite）[[36]](ch021.xhtml#ref-menick2022teaching)以及通用对话（Sparrow）[[37]](ch021.xhtml#ref-glaese2022improving)。
+- en: 'Aside from applications, a number of seminal papers defined key areas for the
+    future of RLHF, including those on:'
+  id: totrans-10
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 除了应用之外，许多开创性的论文定义了RLHF未来的关键领域，包括以下内容：
+- en: 'Reward model over-optimization [[38]](ch021.xhtml#ref-gao2023scaling): The
+    ability for RL optimizers to over-fit to models trained on preference data,'
+  id: totrans-11
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+  zh: 奖励模型过度优化[[38]](ch021.xhtml#ref-gao2023scaling)：RL优化器对偏好数据训练的模型过度拟合的能力，
+- en: Language models as a general area of study for alignment [[18]](ch021.xhtml#ref-askell2021general),
+    and
+  id: totrans-12
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+  zh: 语言模型作为对齐的一般研究领域[[18]](ch021.xhtml#ref-askell2021general)，以及
+- en: Red teaming [[39]](ch021.xhtml#ref-ganguli2022red) – the process of assessing
+    the safety of a language model.
+  id: totrans-13
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+  zh: 红队测试[[39]](ch021.xhtml#ref-ganguli2022red)——评估语言模型安全性的过程。
+- en: Work continued on refining RLHF for application to chat models. Anthropic continued
+    to use it extensively for early versions of Claude [[5]](ch021.xhtml#ref-bai2022training)
+    and early RLHF open-source tools emerged [[40]](ch021.xhtml#ref-ramamurthy2022reinforcement),[[41]](ch021.xhtml#ref-havrilla-etal-2023-trlx),[[42]](ch021.xhtml#ref-vonwerra2022trl).
+  id: totrans-14
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 工作继续在改进RLHF以应用于聊天模型方面进行。Anthropic继续在Claude的早期版本[[5]](ch021.xhtml#ref-bai2022training)和早期的RLHF开源工具[[40]](ch021.xhtml#ref-ramamurthy2022reinforcement),[[41]](ch021.xhtml#ref-havrilla-etal-2023-trlx),[[42]](ch021.xhtml#ref-vonwerra2022trl)中广泛使用。
+- en: '2023 to Present: ChatGPT Era'
+  id: totrans-15
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+  zh: 2023年至今：ChatGPT时代
+- en: 'The announcement of ChatGPT was very clear about the role of RLHF in its training
+    [[43]](ch021.xhtml#ref-openai2022chatgpt):'
+  id: totrans-16
+  prefs: []
+  type: TYPE_NORMAL
+  zh: ChatGPT的发布非常明确地阐述了RLHF在其训练中的角色[[43]](ch021.xhtml#ref-openai2022chatgpt)：
+- en: We trained this model using Reinforcement Learning from Human Feedback (RLHF),
+    using the same methods as InstructGPT, but with slight differences in the data
+    collection setup.
+  id: totrans-17
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+  zh: 我们使用人类反馈强化学习（RLHF）训练了这个模型，使用与InstructGPT相同的方法，但在数据收集设置上略有不同。
+- en: Since then, RLHF has been used extensively in leading language models. It is
+    well known to be used in Anthropic’s Constitutional AI for Claude [[19]](ch021.xhtml#ref-bai2022constitutional),
+    Meta’s Llama 2 [[44]](ch021.xhtml#ref-touvron2023llama) and Llama 3 [[24]](ch021.xhtml#ref-dubey2024llama),
+    Nvidia’s Nemotron [[25]](ch021.xhtml#ref-adler2024nemotron), Ai2’s Tülu 3 [[6]](ch021.xhtml#ref-lambert2024t),
+    and more.
+  id: totrans-18
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 从那时起，RLHF在领先的语言模型中被广泛使用。它被广泛认知为在Anthropic的Constitutional AI用于Claude [[19]](ch021.xhtml#ref-bai2022constitutional)，Meta的Llama
+    2 [[44]](ch021.xhtml#ref-touvron2023llama)和Llama 3 [[24]](ch021.xhtml#ref-dubey2024llama)，Nvidia的Nemotron
+    [[25]](ch021.xhtml#ref-adler2024nemotron)，Ai2的Tülu 3 [[6]](ch021.xhtml#ref-lambert2024t)，以及更多模型中使用。
+- en: Today, RLHF is growing into a broader field of preference fine-tuning (PreFT),
+    including new applications such as process reward for intermediate reasoning steps
+    [[45]](ch021.xhtml#ref-lightman2023let), covered in Chapter 7; direct alignment
+    algorithms inspired by Direct Preference Optimization (DPO) [[20]](ch021.xhtml#ref-rafailov2024direct),
+    covered in Chapter 12; learning from execution feedback from code or math [[46]](ch021.xhtml#ref-kumar2024training),[[47]](ch021.xhtml#ref-singh2023beyond)
+    and other online reasoning methods inspired by OpenAI’s o1 [[48]](ch021.xhtml#ref-openai2024o1),
+    covered in Chapter 14.
+  id: totrans-19
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 现在，RLHF正在发展成为更广泛的偏好微调（PreFT）领域，包括新的应用，如中间推理步骤的进程奖励[[45]](ch021.xhtml#ref-lightman2023let)，在第7章中介绍；受直接偏好优化（DPO）启发的直接对齐算法[[20]](ch021.xhtml#ref-rafailov2024direct)，在第12章中介绍；从代码或数学的执行反馈中学习[[46]](ch021.xhtml#ref-kumar2024training),[[47]](ch021.xhtml#ref-singh2023beyond)以及受OpenAI的o1
+    [[48]](ch021.xhtml#ref-openai2024o1)启发的其他在线推理方法，在第14章中介绍。

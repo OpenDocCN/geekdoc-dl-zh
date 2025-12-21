@@ -1,0 +1,933 @@
+- en: Reasoning Training & Inference-Time Scaling
+  id: totrans-0
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+  zh: 推理训练与推理时间缩放
+- en: Reasoning models and inference-time scaling – the underlying property of language
+    models that they exploit so well – enabled a massive step in language model performance
+    in the end of 2024, through 2025, and into the future. These models, trained with
+    a large amount of reinforcement learning with verifiable rewards (RLVR) [[6]](ch021.xhtml#ref-lambert2024t),
+    still utilize large amounts of RLHF. In this chapter we review the path that led
+    the AI community to a transformed appreciation for RL’s potential in language
+    models, review the fundamentals of RLVR, highlight key works, and point to the
+    future debates that will define the area in the next few years.
+  id: totrans-1
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 推理模型和推理时间缩放——这是语言模型充分利用的底层属性——在2024年末、2025年以及未来，使语言模型性能迈出了巨大的步伐。这些模型通过大量可验证奖励的强化学习（RLVR）[[6]](ch021.xhtml#ref-lambert2024t)进行训练，仍然使用了大量的RLHF。在本章中，我们回顾了引导AI社区对RL在语言模型中潜力的转变欣赏之路，回顾了RLVR的基本原理，突出了关键工作，并指出了未来几年将定义该领域的辩论。
+- en: 'To start, at the 2016 edition of the Neural Information Processing Systems
+    (NeurIPS) conference, Yann LeCun first introduced his now-famous cake metaphor
+    for where learning happens in modern machine learning systems:'
+  id: totrans-2
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 首先，在2016年神经信息处理系统（NeurIPS）会议的2016版上，Yann LeCun首次介绍了他现在著名的蛋糕隐喻，用于说明现代机器学习系统中学习发生的地方：
+- en: If intelligence is a cake, the bulk of the cake is unsupervised learning, the
+    icing on the cake is supervised learning, and the cherry on the cake is reinforcement
+    learning (RL).
+  id: totrans-3
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+  zh: 如果智能是一块蛋糕，那么蛋糕的主体是无监督学习，蛋糕上的糖霜是监督学习，而蛋糕上的樱桃则是强化学习（RL）。
+- en: 'This analogy is now largely complete with modern language models and recent
+    changes to the post-training stack. In this analogy:'
+  id: totrans-4
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 现代语言模型和后训练堆栈的最近变化使得这个类比现在基本完成。在这个类比中：
+- en: Self-supervised learning on vast swaths of internet data makes up the majority
+    of the cake (especially when viewed in compute spent in FLOPs),
+  id: totrans-5
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: 在大量互联网数据上进行的自监督学习构成了蛋糕的大部分（特别是在计算花费在FLOPs上时），
+- en: The beginning of post-training in supervised finetuning (SFT) for instructions
+    tunes the model to a narrower distribution (along with the help of chosen examples
+    for RLHF), and
+  id: totrans-6
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: 监督微调（SFT）后的训练初期将模型调整到一个更窄的分布（在所选示例的RLHF帮助下），并且
+- en: Finally “pure” reinforcement learning (RL) is the cherry on top.
+  id: totrans-7
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: 最后，“纯粹”的强化学习（RL）是蛋糕上的樱桃。
+- en: We learn just “a few bits” of information with RL in just a few training samples.
+    This little bit of reasoning training emerged with **reasoning models** that use
+    a combination of the post-training techniques discussed in this book to align
+    preferences along with RL training on verifiable domains to dramatically increase
+    capabilities such as reasoning, coding, and mathematics problem solving.
+  id: totrans-8
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 我们通过仅仅几个训练样本，用RL学习到“少量”的信息。这种推理训练随着**推理模型**的出现而出现，这些模型结合了本书中讨论的微调技术，并在可验证领域进行RL训练，以显著提高推理、编码和数学问题解决等能力。
+- en: The training method for these models, Reinforcement Learning with Verifiable
+    Rewards (RLVR) [[6]](ch021.xhtml#ref-lambert2024t), proceeds very similarly to
+    RLHF, but it makes the reward model optional in lieu of a scoring function that
+    returns a positive reward when the answer is correct and 0 otherwise. The ideas
+    behind RLVR are not new to the RL literature and there are many related ideas
+    in the language modeling literature where the model learns from feedback on if
+    the answer is correct.
+  id: totrans-9
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 这些模型的训练方法，可验证奖励的强化学习（RLVR）[[6]](ch021.xhtml#ref-lambert2024t)，与RLHF非常相似，但它将奖励模型作为可选的，而不是一个评分函数，当答案正确时返回正奖励，否则返回0。RLVR背后的思想在RL文献中并不新颖，在语言模型文献中也有许多相关思想，其中模型从答案是否正确的反馈中学习。
+- en: Originally, RL with Verifiable Rewards (RLVR) was to be named RL with Ground
+    Truth rewards (RLGT). However, RLVR is subtly different from learning solely from
+    ground truth answers. In domains like mathematics, a single ground truth answer
+    is available to verify solutions. In other domains, such as code generation or
+    precise instruction following, answers can be verified with a checking function
+    (e.g., a unit test), even when there are multiple correct solutions rather than
+    just a single ground truth answer. The core to progress on RLVR is having a variety
+    and depth of these verifiable problems, even if the exact solution isn’t known
+    a priori.
+  id: totrans-10
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 最初，具有可验证奖励的强化学习（RLVR）原本要被命名为具有真实值奖励的强化学习（RLGT）。然而，RLVR与仅从真实值答案中学习的强化学习有细微的差别。在数学等领域，只有一个真实值答案可用于验证解决方案。在其他领域，如代码生成或精确指令遵循，即使有多个正确答案而不是只有一个真实值答案，也可以使用检查函数（例如，单元测试）进行验证。RLVR进步的核心是拥有各种深度可验证问题，即使确切解决方案事先未知。
+- en: '![Figure 20: RLVR in the form of an RL feedback loop. Instead of a reward model,
+    we use a verification function.](../media/file18.png)'
+  id: totrans-11
+  prefs: []
+  type: TYPE_IMG
+  zh: '![图20：RLVR以RL反馈环的形式呈现。我们使用验证函数而不是奖励模型。](../media/file18.png)'
+- en: 'Figure 20: RLVR in the form of an RL feedback loop. Instead of a reward model,
+    we use a verification function.'
+  id: totrans-12
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 图20：RLVR以RL反馈环的形式呈现。我们使用验证函数而不是奖励模型。
+- en: The first models to successfully deploy this type of training were OpenAI’s
+    o1 [[48]](ch021.xhtml#ref-openai2024o1) and the open-weight model DeepSeek R1
+    [[61]](ch021.xhtml#ref-guo2025deepseek). Soon after, the entire AI industry prioritized
+    this training process and model style. The core change here is more of a reallocation
+    of the stages of training and the priority of different behaviors rather than
+    this type of RL setup being entirely new. Reasoning models brought an era where
+    scaling RL training is expected.
+  id: totrans-13
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 首次成功部署此类训练的模型是OpenAI的o1 [[48]](ch021.xhtml#ref-openai2024o1)和开放权重模型DeepSeek
+    R1 [[61]](ch021.xhtml#ref-guo2025deepseek)。不久之后，整个AI行业都将此训练过程和模型风格作为优先事项。这里的核心变化更多的是对训练阶段和不同行为优先级的重新分配，而不是这种RL设置完全新颖。推理模型带来了一个期望扩展RL训练的时代。
+- en: 'As for the type of behavior these models accrue, consider the following example
+    with DeepSeek V3 0325 versus their reasoning model, DeepSeek R1, on the query
+    `Write me a short poem about a goldfish`. DeepSeek V3 is very to the point:'
+  id: totrans-14
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 至于这些模型积累的行为类型，考虑以下示例，DeepSeek V3 0325与它们的推理模型DeepSeek R1在查询“为我写一首关于金鱼的短诗”上的比较。DeepSeek
+    V3非常直接：
+- en: Goldfish Dreams
+  id: totrans-15
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+  zh: 金鱼之梦
+- en: ''
+  id: totrans-16
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: In a bowl of glass so clear and round, A tiny goldfish swims without a sound.
+    With scales that gleam like sunlight’s kiss, He drifts along in watery bliss.
+  id: totrans-17
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+  zh: 在一个透明而圆润的玻璃鱼缸中，一只小小的金鱼无声地游动。它的鳞片像阳光的吻一样闪闪发光，它在水中悠闲地漂荡。
+- en: ''
+  id: totrans-18
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: A flick of fin, a flash so bright, Chasing bubbles in the light. Does he dream
+    of oceans wide? Or is his little world enough—his pride?
+  id: totrans-19
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+  zh: 尾鳍轻轻一摆，一道如此明亮的光芒，追逐着光中的气泡。它梦想着广阔的海洋吗？还是它的小小世界已经足够——它的骄傲？
+- en: 'Meanwhile, DeepSeek R1’s experience is different. It first generates numerous
+    thinking tokens to craft a response before responding to the user. The answer
+    appears as:'
+  id: totrans-20
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 同时，DeepSeek R1的经验不同。它在向用户做出回应之前，首先生成许多思考标记来构建一个回答。答案看起来像这样：
+- en: '`<thinking>` Okay, the user wants a short poem about a goldfish. Let me start
+    by brainstorming some goldfish-related imagery. Goldfish are often in bowls, right?
+    So maybe start with the setting. Words like “gilded bowl” or “crystal globe” could
+    work.'
+  id: totrans-21
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+  zh: '`<思考>` 好吧，用户想要一首关于金鱼的短诗。让我先从一些与金鱼相关的意象开始头脑风暴。金鱼通常在鱼缸里，对吧？所以也许可以从环境开始。像“金色的鱼缸”或“水晶球”这样的词可能适用。'
+- en: ''
+  id: totrans-22
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: Next, think about the movement of the goldfish. They swim smoothly, so words
+    like “dart”, “glide”, or “swirl” come to mind. Maybe describe their fins as “silken”
+    to emphasize delicacy.
+  id: totrans-23
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+  zh: 接下来，考虑金鱼的游动。它们游得很顺畅，所以像“冲刺”、“滑行”或“旋转”这样的词会浮现在脑海中。也许描述它们的鳍为“丝滑”以强调精致。
+- en: ''
+  id: totrans-24
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: Then, consider the environment around the goldfish. Sunlight through water creates
+    shimmering effects. Words like “sunbeams dance” or “ripples spin” might capture
+    that. Including elements like castles or pebbles adds a playful touch.
+  id: totrans-25
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+  zh: 然后，考虑金鱼周围的环境。阳光透过水面产生闪烁的效果。像“阳光舞动”或“波纹旋转”这样的词可能捕捉到这一点。包括城堡或鹅卵石等元素可以增加趣味性。
+- en: ''
+  id: totrans-26
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: Themes? Maybe the contrast between the goldfish’s small world and its perception
+    of freedom. The bowl as a universe, tiny but complete. Ending with a sense of
+    mystery or silent observation could give depth. Need to keep it concise, maybe
+    four stanzas with a rhyme scheme. Let me check the rhythm and flow. Avoid clichés
+    but keep it accessible. Alright, let’s piece it together. `</thinking>`
+  id: totrans-27
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+  zh: 主题？也许是小金鱼的小世界与它对自由的感知之间的对比。碗作为一个宇宙，微小但完整。以神秘或沉默的观察结束，可以增加深度。需要保持简洁，可能四节诗，有押韵模式。让我检查节奏和流畅度。避免陈词滥调，但要易于理解。好吧，让我们把它拼在一起。`</thinking>`
+- en: ''
+  id: totrans-28
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: Gilded Dreams in Liquid Glass
+  id: totrans-29
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+  zh: 液态玻璃中的金色梦想
+- en: ''
+  id: totrans-30
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: A gilded bowl, a crystal globe, Where tiny tides in silence flow— A flash of
+    orange, a whispered robe, You dart through sunlit indigo.
+  id: totrans-31
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+  zh: 一个镀金碗、一个水晶球，微小的潮汐在寂静中流淌——一抹橙色、低语般的袍子，你穿梭在阳光下的靛蓝色中。
+- en: ''
+  id: totrans-32
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: Your world is small, yet boundless too— Each pebble, castle, weed unfurled.
+    The surface bends the sky to blue, And ripples spin your liquid world.
+  id: totrans-33
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+  zh: 你的世界虽小，却又无边无际——每一颗鹅卵石、城堡、展开的杂草。水面弯曲天空至蓝色，涟漪旋转你的液态世界。
+- en: ''
+  id: totrans-34
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: You glide through myths we’ll never know, A silent monarch, veiled in mist.
+    Do dreams drift where the bubbles go? Or memories in amethyst?
+  id: totrans-35
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+  zh: 你在我们永远不知道的神话中滑行，一个沉默的君主，被雾气所遮蔽。梦想是否飘向气泡所在之处？或者记忆在紫水晶中？
+- en: ''
+  id: totrans-36
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: We watch you trace your endless sphere— A universe within a tear.
+  id: totrans-37
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+  zh: 我们看着你描绘你无尽的球体——一个在泪滴中的宇宙。
+- en: The tokens in the `<thinking>` tags is the model’s reasoning. For more complex
+    problems the reasoning stage can take thousands of tokens before producing an
+    answer. So, long-context language models were a prerequisite to advanced reasoning
+    behavior, but that is not the focus of this chapter.
+  id: totrans-38
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '`<thinking>`标签中的标记是模型的推理。对于更复杂的问题，推理阶段可能需要数千个标记才能生成答案。因此，长上下文语言模型是高级推理行为的先决条件，但这不是本章的重点。'
+- en: 'The core intuition for *how this training works* is that for a given model,
+    we repeat the following cycle:'
+  id: totrans-39
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 这种训练的核心直觉是，对于给定的模型，我们重复以下循环：
+- en: Sample multiple answers to multiple questions,
+  id: totrans-40
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+  zh: 对多个问题进行多次答案采样，
+- en: Take gradient steps towards the answers that are correct, and
+  id: totrans-41
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+  zh: 朝着正确的答案逐步前进，
+- en: Repeat, revisiting the same data.
+  id: totrans-42
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+  zh: 重复，重新访问相同的数据。
+- en: Remarkably, this extremely simple approach (when done with a careful distribution
+    of data and stable training infrastructure) helps the models learn by revisiting
+    the same questions again and again. Even more remarkable is that the improvements
+    on these training questions generalize to questions and (some) domains the models
+    have never seen!
+  id: totrans-43
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 令人惊讶的是，这种极其简单的方法（在仔细分布数据和稳定的训练基础设施下进行）通过反复回顾相同的问题来帮助模型学习。更令人惊讶的是，这些训练问题的改进可以推广到模型从未见过的问题和（某些）领域！
+- en: This simple approach allows the models to lightly search over behavior space
+    and the RL algorithm increases the likelihood of behaviors that are correlated
+    with correct answers.
+  id: totrans-44
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 这种简单的方法允许模型轻松搜索行为空间，并且强化学习算法增加了与正确答案相关的行为发生的可能性。
+- en: The Origins of New Reasoning Models
+  id: totrans-45
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+  zh: 新推理模型起源
+- en: Here we detail the high-level trends that led to the explosion of reasoning
+    models in 2025.
+  id: totrans-46
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 在这里，我们详细说明了导致2025年推理模型爆炸的高层次趋势。
+- en: Why Does RL Work Now?
+  id: totrans-47
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+  zh: 为什么强化学习现在有效？
+- en: 'Despite many, many takes that “RL doesn’t work yet” [[253]](ch021.xhtml#ref-irpan2018deep)
+    or paper’s detailing deep reproducibility issues with RL [[254]](ch021.xhtml#ref-henderson2018deep),
+    the field overcame it to find high-impact applications. The takeoff of RL-focused
+    training on language models indicates steps in many fundamental issues for the
+    research area, including:'
+  id: totrans-48
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 尽管有许多关于“强化学习还没有起作用”[[253]](ch021.xhtml#ref-irpan2018deep)或论文详细说明了强化学习的深度可重复性问题[[254]](ch021.xhtml#ref-henderson2018deep)，但该领域克服了这些问题，找到了高影响力的应用。专注于语言模型的强化学习训练起飞，标志着该研究领域的许多基本问题的进展，包括：
+- en: '**Stability of RL can be solved**: For its entire existence, the limiting factor
+    on RL’s adoption has been stability. This manifests in two ways. First, the learning
+    itself can be fickle and not always work. Second, the training itself is known
+    to be more brittle than standard language model training and more prone to loss
+    spikes, crashes, etc. Countless releases are using this style of RL training and
+    substantial academic uptake has occurred. The technical barriers to entry on RL
+    are at an all time low.'
+  id: totrans-49
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: '**强化学习的稳定性可以解决**：在其整个存在期间，限制强化学习采用的因素一直是稳定性。这表现在两个方面。首先，学习本身可能是不稳定的，并不总是有效。其次，训练本身已知比标准语言模型训练更脆弱，更容易出现损失峰值、崩溃等问题。无数发布都使用了这种强化学习训练风格，并且已经发生了大量的学术采用。在强化学习上的技术门槛已经达到历史最低点。'
+- en: '**Open-source versions already “exist”**: Many tools already exist for training
+    language models with RLVR and related techniques. Examples include TRL [[42]](ch021.xhtml#ref-vonwerra2022trl),
+    Open Instruct [[6]](ch021.xhtml#ref-lambert2024t), veRL [[255]](ch021.xhtml#ref-sheng2024hybridflow),
+    and OpenRLHF [[256]](ch021.xhtml#ref-hu2024openrlhf), where many of these are
+    building on optimizations from earlier in the arc of RLHF and post-training. The
+    accessibility of tooling is enabling a large uptake of research that’ll likely
+    soon render this chapter out of date.'
+  id: totrans-50
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: '**开源版本已经“存在”**：许多工具已经存在，用于使用RLVR和相关技术训练语言模型。例如，TRL [[42]](ch021.xhtml#ref-vonwerra2022trl)、Open
+    Instruct [[6]](ch021.xhtml#ref-lambert2024t)、veRL [[255]](ch021.xhtml#ref-sheng2024hybridflow)和OpenRLHF
+    [[256]](ch021.xhtml#ref-hu2024openrlhf)，其中许多都是基于RLHF和后训练阶段早期的优化。工具的可用性正在推动大量研究，这些研究可能会很快使本章过时。'
+- en: Multiple resources point to RL training for reasoning only being viable on leading
+    models coming out from about 2024 onwards, indicating that a certain level of
+    underlying capability was needed in the models before reasoning training was possible.
+  id: totrans-51
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 多种资源指出，仅用于推理的强化学习训练只有在大约2024年及以后的领先模型上才是可行的，这表明在推理训练成为可能之前，模型需要具备一定的基础能力。
+- en: RL Training vs. Inference Time Scaling
+  id: totrans-52
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+  zh: 强化学习训练与推理时间缩放
+- en: Training with Reinforcement Learning to elicit reasoning behaviors and performance
+    on verifiable domains is closely linked to the ideas of inference time scaling.
+    Inference-time scaling, also called test-time scaling, is the general class of
+    methods that use more computational power at inference in order to perform better
+    at downstream tasks. Methods for inference-time scaling were studied before the
+    release of DeepSeek R1 and OpenAI’s o1, which both massively popularized investment
+    in RL training specifically. Examples include value-guided sampling [[257]](ch021.xhtml#ref-liu2023don)
+    or repeated random sampling with answer extraction [[238]](ch021.xhtml#ref-brown2024large).
+    Beyond this, inference-time scaling can be used to improve more methods of AI
+    training beyond chain of thought reasoning to solve problems, such as with reward
+    models that consider the options deeply [[137]](ch021.xhtml#ref-ankner2024critique)
+    [[251]](ch021.xhtml#ref-liu2025inference).
+  id: totrans-53
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 使用强化学习来激发推理行为并在可验证领域上提高性能，与推理时间缩放的理念密切相关。推理时间缩放，也称为测试时间缩放，是一类在推理时使用更多计算能力以在下游任务中表现更好的方法。在DeepSeek
+    R1和OpenAI的o1发布之前，已经研究了推理时间缩放的方法，这两者都极大地推广了针对强化学习训练的投资。例如，价值引导采样[[257]](ch021.xhtml#ref-liu2023don)或带有答案提取的重复随机采样[[238]](ch021.xhtml#ref-brown2024large)。除此之外，推理时间缩放还可以用于改进除思维链推理之外的更多人工智能训练方法，以解决问题，例如使用考虑选项深度的奖励模型[[137]](ch021.xhtml#ref-ankner2024critique)
+    [[251]](ch021.xhtml#ref-liu2025inference)。
+- en: RL training is a short path to inference time scaling laws being used, but in
+    the long-term we will have more methods for eliciting the inference-time tradeoffs
+    we need for best performance. Training models heavily with RL changes them so
+    that they generate more tokens per response in a way that is strongly correlated
+    with downstream performance. This is a substantial shift from the length-bias
+    seen in early RLHF systems [[9]](ch021.xhtml#ref-singhal2023long), where the human
+    preference training had a side effect of increasing response rate for marginal
+    gains on preference rankings.
+  id: totrans-54
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 强化学习训练是推理时间缩放定律被使用的捷径，但从长远来看，我们将有更多方法来激发我们需要的推理时间权衡，以获得最佳性能。使用强化学习大量训练模型会改变它们，使它们在每次响应中生成更多标记，这与下游性能高度相关。这与早期RLHF系统中看到的长度偏差有显著不同[[9]](ch021.xhtml#ref-singhal2023long)，其中人类偏好训练的副作用是增加了响应率，以在偏好排名中获得微小的收益。
+- en: Downstream of the RL trained models there are many methods being explored to
+    continue to push the limits of reasoning and inference-time compute. These are
+    largely out of the scope of this book due to their rapidly evolving nature, but
+    they include distilling reasoning behavior from a larger RL trained model to a
+    smaller model via instruction tuning [[258]](ch021.xhtml#ref-muennighoff2025s1),
+    composing more inference calls [[259]](ch021.xhtml#ref-chen2024more), and more.
+    What is important here is the correlation between downstream performance and an
+    increase in the number of tokens generated – otherwise it is just wasted energy.
+  id: totrans-55
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 在RL训练模型下游，有许多方法正在探索，以继续推动推理和推理时间计算的极限。这些内容大多超出了本书的范围，因为它们的快速演变性质，但它们包括通过指令微调从更大的RL训练模型中提取推理行为到一个更小的模型
+    [[258]](ch021.xhtml#ref-muennighoff2025s1)，组合更多的推理调用 [[259]](ch021.xhtml#ref-chen2024more)，等等。这里重要的是下游性能与生成的token数量增加之间的相关性——否则这只是浪费的能量。
+- en: The Future (Beyond Reasoning) of RLVR
+  id: totrans-56
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+  zh: RLVR的未来（超越推理）
+- en: In many domains, these new flavors of RLVR are much more aligned with the goals
+    of developers by being focused on performance rather than behavior. Standard finetuning
+    APIs generally use a parameter-efficient finetuning method such as LoRA with supervised
+    finetuning on instructions. Developers pass in prompts and completions and the
+    model is tuned to match that by updating model parameters to match the completions,
+    which increases the prevalence of features from your data in the model’s generations.
+  id: totrans-57
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 在许多领域，这些新的RLVR变体更加符合开发者的目标，因为它们更关注性能而不是行为。标准的微调API通常使用参数高效的微调方法，如LoRA，通过指令的监督微调。开发者传入提示和完成内容，模型通过更新模型参数以匹配完成内容来进行调整，这增加了你的数据特征在模型生成中的普及率。
+- en: RLVR is focused on matching answers. Given queries and correct answers, RLVR
+    helps the model learn to get the correct answers. While standard instruction tuning
+    is done with 1 or 2 epochs of loss updates over the data, RLVR gets its name by
+    doing hundreds or thousands of epochs over the same few data points to give the
+    model time to learn new behaviors. This can be viewed as reinforcing positive
+    behaviors that would work sparingly in the base model version into robust behaviors
+    after RLVR.
+  id: totrans-58
+  prefs: []
+  type: TYPE_NORMAL
+  zh: RLVR专注于匹配答案。给定查询和正确答案，RLVR帮助模型学习获取正确答案。虽然标准的指令微调是在数据上通过1或2个epoch的损失更新来完成的，但RLVR通过在相同的一些数据点上执行数百或数千个epoch来获得名称，这给模型提供了学习新行为的时间。这可以被视为在RLVR之后将基础模型版本中偶尔起作用的积极行为强化为稳健的行为。
+- en: '**The scope of RL training for language models continues to grow**: The biggest
+    takeaway from o1 and R1 on a fundamental scientific level was that we have even
+    more ways to train language models to potentially valuable behaviors. The more
+    open doors that are available to researchers and engineers, the more optimism
+    we should have about AI’s general trajectory.'
+  id: totrans-59
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '**语言模型RL训练的范围持续扩大**：在基础科学层面上，o1和R1的最大收获是我们有更多方法来训练语言模型以实现可能有价值的行为。研究人员和工程师可用的门越多，我们对AI总体轨迹的乐观态度就越高。'
+- en: Understanding Reasoning Training Methods
+  id: totrans-60
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+  zh: 理解推理训练方法
+- en: The investment in reasoning has instigated a major evolution in the art of how
+    models are trained to follow human instructions. These recipes still use the common
+    pieces discussed in earlier chapters, including instruction finetuning, reinforcement
+    learning from human feedback, and reinforcement learning with verifiable rewards
+    (RLVR). The core change is using far more RLVR and applying the other training
+    techniques in different orders – traditionally for a reasoning model the core
+    training step is either a large-scale RL run or a large-scale instruction tuning
+    run on *outputs* of another model that had undergone a substantial portion of
+    RLVR training (referred to as distillation).
+  id: totrans-61
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 对推理的投资推动了模型训练艺术中如何遵循人类指令的重大演变。这些配方仍然使用了前面章节中讨论的常见元素，包括指令微调、从人类反馈中进行强化学习和具有可验证奖励的强化学习（RLVR）。核心变化是使用更多的RLVR，并以不同的顺序应用其他训练技术——传统上，对于推理模型，核心训练步骤要么是大规模的RL运行，要么是在另一个模型上进行的、经过大量RLVR训练的大规模指令微调运行（称为蒸馏）。
+- en: Reasoning Research Pre OpenAI’s o1 or DeepSeek R1
+  id: totrans-62
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+  zh: 预OpenAI的o1或DeepSeek R1的推理研究
+- en: Before the takeoff of reasoning models, a substantial effort was made understanding
+    how to train language models to be better at verifiable domains. The main difference
+    between these works below is that their methodologies did not scale up to the
+    same factor as those used in DeepSeek R1 and subsequent models, or they resulted
+    in models that made sacrifices in overall performance in exchange for higher mathematics
+    or coding abilities. The underlying ideas and motivations are included to paint
+    a broader picture for how reasoning models emerged within the landscape.
+  id: totrans-63
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 在推理模型起飞之前，人们投入了大量努力来理解如何训练语言模型以在验证领域表现得更好。这些工作的主要区别在于，它们的方法没有像DeepSeek R1和随后的模型那样扩展到相同的程度，或者它们导致了在整体性能上做出牺牲以换取更高数学或编码能力的模型。包括基本思想和动机在内，以描绘推理模型在整体景观中出现的更广阔图景。
+- en: Some of the earliest efforts training language models on verifiable domains
+    include self-taught reasoner (STaR) line of work[[260]](ch021.xhtml#ref-zelikman2022star)
+    [[261]](ch021.xhtml#ref-Zelikman2024QuietSTaRLM) and TRICE [[262]](ch021.xhtml#ref-hoffman2023training),
+    which both used ground-truth reward signals to encourage chain of thought reasoning
+    in models throughout 2022 and 2023\. STaR effectively approximates the policy
+    gradient algorithm, but in practice filters samples differently and uses a cross-entropy
+    measure instead of a log-probability, and Quiet-STaR expands on this with very
+    related ideas of recent reasoning models by having the model generate tokens before
+    trying to answer the verifiable question (which helps with training performance).
+    TRICE [[262]](ch021.xhtml#ref-hoffman2023training) also improves upon reasoning
+    by generating traces and then optimizing with a custom Markov chain Monte Carlo
+    inspired expectation maximization algorithm. VinePPO [[263]](ch021.xhtml#ref-VinePPO)
+    followed these and used a setup that shifted closer to modern reasoning models.
+    VinePPO uses binary rewards math questions (GSM8K and MATH training sets in the
+    paper) correctness with a PPO-based algorithm. Other work before OpenAI’s o1 and
+    DeepSeek R1 used code execution as a feedback signal for training [[264]](ch021.xhtml#ref-gehring2024rlefgroundingcodellms),
+    [[265]](ch021.xhtml#ref-xudpoppo) or verification for theorem proving (called
+    Reinforcement Learning from Verifier Feedback, RLVF, here) [[266]](ch021.xhtml#ref-amit2024models).
+    Tülu 3 expanded upon these methods by using a simple PPO trainer to reward completions
+    with correct answers – most importantly while maintaining the model’s overall
+    performance on a broad suite of evaluations. The binary rewards of Tülu 3 and
+    modern reasoning training techniques can be contrasted to the iterative approach
+    of STaR or the log-likelihood rewards of Quiet-STaR.
+  id: totrans-64
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 在验证领域训练语言模型的早期努力包括自学习推理器（STaR）系列工作[[260]](ch021.xhtml#ref-zelikman2022star)
+    [[261]](ch021.xhtml#ref-Zelikman2024QuietSTaRLM) 和 TRICE [[262]](ch021.xhtml#ref-hoffman2023training)，它们都使用了真实奖励信号来鼓励模型在2022年和2023年进行思维链推理。STaR有效地近似策略梯度算法，但在实践中以不同的方式过滤样本，并使用交叉熵度量而不是对数概率，而Quiet-STaR通过在尝试回答可验证问题之前生成标记来扩展这一思路（这有助于训练性能）。TRICE
+    [[262]](ch021.xhtml#ref-hoffman2023training) 通过生成轨迹并使用受启发于马尔可夫链蒙特卡洛的期望最大化算法进行优化来改进推理。VinePPO
+    [[263]](ch021.xhtml#ref-VinePPO) 遵循这些方法，并使用一种更接近现代推理模型的设置。VinePPO使用基于PPO算法的二进制奖励数学问题（论文中的GSM8K和MATH训练集）的正确性。在OpenAI的o1和DeepSeek
+    R1之前的工作使用了代码执行作为训练的反馈信号[[264]](ch021.xhtml#ref-gehring2024rlefgroundingcodellms)，[[265]](ch021.xhtml#ref-xudpoppo)
+    或用于定理证明的验证（在此称为从验证器反馈的强化学习，RLVF，见[[266]](ch021.xhtml#ref-amit2024models)）。Tülu
+    3通过使用简单的PPO训练器来奖励正确答案的完成来扩展这些方法——最重要的是在保持模型在广泛评估套件上的整体性能的同时。Tülu 3的二进制奖励和现代推理训练技术可以与STaR的迭代方法或Quiet-STaR的对数似然奖励进行对比。
+- en: Early Reasoning Models
+  id: totrans-65
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+  zh: 早期推理模型
+- en: A summary of the foundational reasoning research reports, some of which are
+    accompanied by open data and model weights, following DeepSeek R1 is below.
+  id: totrans-66
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 以下是对DeepSeek R1之后的基础推理研究报告的总结，其中一些报告附带开放数据和模型权重。
+- en: 'Table 6: A summary of the notable reasoning model technical reports in 2025,
+    the first year of substantial inference-time scaling with RLHF.'
+  id: totrans-67
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 表6：2025年（RLHF大量推理时间缩放的第一年）显著的推理模型技术报告概览。
+- en: '| Date | Name | TLDR | Open weights | Open data |'
+  id: totrans-68
+  prefs: []
+  type: TYPE_TB
+  zh: '| 日期 | 名称 | TLDR | 开放权重 | 开放数据 |'
+- en: '| --- | --- | --- | --- | --- |'
+  id: totrans-69
+  prefs: []
+  type: TYPE_TB
+  zh: '| --- | --- | --- | --- | --- |'
+- en: '| 2025-01-22 | DeepSeek R1 [[61]](ch021.xhtml#ref-guo2025deepseek) | RL-based
+    upgrade to DeepSeek, big gains on math & code reasoning | Yes | No |'
+  id: totrans-70
+  prefs: []
+  type: TYPE_TB
+  zh: '| 2025-01-22 | DeepSeek R1 [[61]](ch021.xhtml#ref-guo2025deepseek) | 基于 RL
+    的 DeepSeek 升级，在数学和代码推理上取得重大进展 | 是 | 否 |'
+- en: '| 2025-01-22 | Kimi 1.5 [[205]](ch021.xhtml#ref-team2025kimi) | Scales PPO/GRPO
+    on Chinese/English data; strong AIME maths | No | No |'
+  id: totrans-71
+  prefs: []
+  type: TYPE_TB
+  zh: '| 2025-01-22 | Kimi 1.5 [[205]](ch021.xhtml#ref-team2025kimi) | 在中文/英文数据上扩展
+    PPO/GRPO；强大的 AIME 数学能力 | 否 | 否 |'
+- en: '| 2025-03-31 | Open-Reasoner-Zero [[267]](ch021.xhtml#ref-hu2025openreasonerzero)
+    | Fully open replication of base model RL | Yes | Yes |'
+  id: totrans-72
+  prefs: []
+  type: TYPE_TB
+  zh: '| 2025-03-31 | Open-Reasoner-Zero [[267]](ch021.xhtml#ref-hu2025openreasonerzero)
+    | 基础模型 RL 的完全开源复制 | 是 | 是 |'
+- en: '| 2025-04-10 | Seed-Thinking 1.5 [[64]](ch021.xhtml#ref-seed2025seed) | ByteDance
+    RL pipeline with dynamic CoT gating | Yes (7B) | No |'
+  id: totrans-73
+  prefs: []
+  type: TYPE_TB
+  zh: '| 2025-04-10 | Seed-Thinking 1.5 [[64]](ch021.xhtml#ref-seed2025seed) | 字节跳动
+    RL 管道，具有动态 CoT 阀门 | 是（7B） | 否 |'
+- en: '| 2025-04-30 | Phi-4 Reasoning [[268]](ch021.xhtml#ref-abdin2025phi4) | 14B
+    model; careful SFT→RL; excels at STEM reasoning | Yes | No |'
+  id: totrans-74
+  prefs: []
+  type: TYPE_TB
+  zh: '| 2025-04-30 | Phi-4 Reasoning [[268]](ch021.xhtml#ref-abdin2025phi4) | 14B
+    模型；谨慎的 SFT→RL；擅长 STEM 推理 | 是 | 否 |'
+- en: '| 2025-05-02 | Llama-Nemotron [[269]](ch021.xhtml#ref-bercovich2025llamanemotron)
+    | Multi-size “reasoning-toggle” models | Yes | Yes |'
+  id: totrans-75
+  prefs: []
+  type: TYPE_TB
+  zh: '| 2025-05-02 | Llama-Nemotron [[269]](ch021.xhtml#ref-bercovich2025llamanemotron)
+    | 多尺寸“推理切换”模型 | 是 | 是 |'
+- en: '| 2025-05-12 | INTELLECT-2 [[198]](ch021.xhtml#ref-primeintellectteam2025intellect2reasoningmodeltrained)
+    | First globally-decentralized RL training run (32B) | Yes | Yes |'
+  id: totrans-76
+  prefs: []
+  type: TYPE_TB
+  zh: '| 2025-05-12 | INTELLECT-2 [[198]](ch021.xhtml#ref-primeintellectteam2025intellect2reasoningmodeltrained)
+    | 首次全球去中心化 RL 训练运行（32B） | 是 | 是 |'
+- en: '| 2025-05-12 | Xiaomi MiMo [[63]](ch021.xhtml#ref-xia2025mimo) | End-to-end
+    reasoning pipeline from pre- to post-training | Yes | No |'
+  id: totrans-77
+  prefs: []
+  type: TYPE_TB
+  zh: '| 2025-05-12 | Xiaomi MiMo [[63]](ch021.xhtml#ref-xia2025mimo) | 从预训练到后训练的端到端推理管道
+    | 是 | 否 |'
+- en: '| 2025-05-14 | Qwen 3 [[62]](ch021.xhtml#ref-yang2025qwen3) | Similar to R1
+    recipe applied to new models | Yes | No |'
+  id: totrans-78
+  prefs: []
+  type: TYPE_TB
+  zh: '| 2025-05-14 | Qwen 3 [[62]](ch021.xhtml#ref-yang2025qwen3) | 将 R1 食谱应用于新模型的类似方法
+    | 是 | 否 |'
+- en: '| 2025-05-21 | Hunyuan-TurboS [[270]](ch021.xhtml#ref-liu2025hunyuan) | Mamba-Transformer
+    MoE, adaptive long/short CoT | No | No |'
+  id: totrans-79
+  prefs: []
+  type: TYPE_TB
+  zh: '| 2025-05-21 | Hunyuan-TurboS [[270]](ch021.xhtml#ref-liu2025hunyuan) | Mamba-Transformer
+    MoE，自适应长/短 CoT | 否 | 否 |'
+- en: '| 2025-05-28 | Skywork OR-1 [[271]](ch021.xhtml#ref-he2025skyworkor1) | RL
+    recipe avoiding entropy collapse; beats DeepSeek on AIME | Yes | Yes |'
+  id: totrans-80
+  prefs: []
+  type: TYPE_TB
+  zh: '| 2025-05-28 | Skywork OR-1 [[271]](ch021.xhtml#ref-he2025skyworkor1) | 避免熵崩溃的
+    RL 食谱；在 AIME 上击败 DeepSeek | 是 | 是 |'
+- en: '| 2025-06-04 | Xiaomi MiMo VL [[272]](ch021.xhtml#ref-coreteam2025mimovltechnicalreport)
+    | Adapting reasoning pipeline end-to-end to include multi-modal tasks | Yes |
+    No |'
+  id: totrans-81
+  prefs: []
+  type: TYPE_TB
+  zh: '| 2025-06-04 | Xiaomi MiMo VL [[272]](ch021.xhtml#ref-coreteam2025mimovltechnicalreport)
+    | 将推理管道端到端适应以包含多模态任务 | 是 | 否 |'
+- en: '| 2025-06-04 | OpenThoughts [[273]](ch021.xhtml#ref-guha2025openthoughts) |
+    Public 1.2M-example instruction dataset distilled from QwQ-32B | Yes | Yes |'
+  id: totrans-82
+  prefs: []
+  type: TYPE_TB
+  zh: '| 2025-06-04 | OpenThoughts [[273]](ch021.xhtml#ref-guha2025openthoughts) |
+    从 QwQ-32B 中提取的 1.2M 个示例指令数据集的公开 | 是 | 是 |'
+- en: '| 2025-06-10 | Magistral [[274]](ch021.xhtml#ref-mistral2025magistral) | Pure
+    RL on Mistral 3; multilingual CoT; small model open-sourced | Yes (24B) | No |'
+  id: totrans-83
+  prefs: []
+  type: TYPE_TB
+  zh: '| 2025-06-10 | Magistral [[274]](ch021.xhtml#ref-mistral2025magistral) | 在
+    Mistral 3 上纯 RL；多语言 CoT；小型模型开源 | 是（24B） | 否 |'
+- en: '| 2025-06-16 | MiniMax-M1 [[275]](ch021.xhtml#ref-minimax2025minimaxm1scalingtesttimecompute)
+    | Open-weight 456B MoE hybrid/Lightning Attention reasoning model; 1M context;
+    RL w/CISPO; releases 40K/80K thinking-budget checkpoints | Yes | No |'
+  id: totrans-84
+  prefs: []
+  type: TYPE_TB
+  zh: '| 2025-06-16 | MiniMax-M1 [[275]](ch021.xhtml#ref-minimax2025minimaxm1scalingtesttimecompute)
+    | 开放权重 456B MoE 混合/Lightning Attention 推理模型；1M 上下文；RL w/CISPO；发布 40K/80K 思考预算检查点
+    | 是 | 否 |'
+- en: '| 2025-07-10 | Kimi K2 [[276]](ch021.xhtml#ref-kimiteam2025kimik2) | 1T MoE
+    (32B active) with MuonClip (QK-clip) for stability; 15.5T token pretrain without
+    loss spikes; multi-stage post-train with agentic data synthesis + joint RL; releases
+    base + post-trained checkpoints. | Yes | No |'
+  id: totrans-85
+  prefs: []
+  type: TYPE_TB
+  zh: '| 2025-07-10 | Kimi K2 [[276]](ch021.xhtml#ref-kimiteam2025kimik2) | 1T MoE
+    (32B active) with MuonClip (QK-clip) for stability; 15.5T token pretrain without
+    loss spikes; multi-stage post-train with agentic data synthesis + joint RL; releases
+    base + post-trained checkpoints. | 是 | 否 |'
+- en: '| 2025-07-28 | GLM-4.5 [[277]](ch021.xhtml#ref-zeng2025glm45) | Open-weight
+    355B-A32B MoE “ARC” model with thinking/non-thinking modes; 23T-token multi-stage
+    training + post-train w/ expert iteration and RL; releases GLM-4.5 + GLM-4.5-Air
+    (MIT). | Yes | No |'
+  id: totrans-86
+  prefs: []
+  type: TYPE_TB
+  zh: '| 2025-07-28 | GLM-4.5 [[277]](ch021.xhtml#ref-zeng2025glm45) | 开放权重 355B-A32B
+    MoE “ARC” 模型，具有思考/非思考模式；23T-token 多阶段训练 + 后训练与专家迭代和 RL；发布 GLM-4.5 + GLM-4.5-Air
+    (MIT)。 | 是 | 否 |'
+- en: '| 2025-08-20 | Nemotron Nano 2 [[278]](ch021.xhtml#ref-nvidia2025nemotronnano2)
+    | Hybrid Mamba-Transformer for long “thinking traces”; FP8 pretraining at 20T
+    tokens then compression/distillation; explicitly releases multiple checkpoints
+    plus “majority” of pre/post-training datasets. | Yes | Yes (most) |'
+  id: totrans-87
+  prefs: []
+  type: TYPE_TB
+  zh: '| 2025-08-20 | Nemotron Nano 2 [[278]](ch021.xhtml#ref-nvidia2025nemotronnano2)
+    | 用于长“思考轨迹”的混合Mamba-Transformer；在20T tokens上进行FP8预训练然后压缩/蒸馏；明确发布多个检查点以及“大多数”预/后训练数据集。
+    | 是 | 是（大多数）|'
+- en: '| 2025-09-09 | K2-Think [[279]](ch021.xhtml#ref-llm3602025k2think) | Parameter-efficient
+    math reasoning system: a 32B open-weights model with test-time scaling recipe;
+    positioned as fully open incl. training data/code (per release materials). | Yes
+    | Yes |'
+  id: totrans-88
+  prefs: []
+  type: TYPE_TB
+  zh: '| 2025-09-09 | K2-Think [[279]](ch021.xhtml#ref-llm3602025k2think) | 参数高效的数学推理系统：一个32B的开源权重模型，带有测试时缩放配方；定位为完全开源，包括训练数据/代码（根据发布材料）。
+    | 是 | 是 |'
+- en: '| 2025-09-23 | LongCat-Flash-Thinking [[280]](ch021.xhtml#ref-mlcteam2025longcat)
+    | 560B MoE reasoning model; report is explicit about a staged recipe from long-CoT
+    cold start to large-scale RL; open-source release. | Yes | No |'
+  id: totrans-89
+  prefs: []
+  type: TYPE_TB
+  zh: '| 2025-09-23 | LongCat-Flash-Thinking [[280]](ch021.xhtml#ref-mlcteam2025longcat)
+    | 560B MoE推理模型；报告明确关于从长-CoT冷启动到大规模RL的阶段配方；开源发布。 | 是 | 否 |'
+- en: '| 2025-10-21 | Ring-1T [[281]](ch021.xhtml#ref-ringteam2025everystepevolves)
+    | Trillion-scale “thinking model” with RL scaling focus; report frames bottlenecks/solutions
+    for scaling RL at 1T and releases an open model. | Yes | No |'
+  id: totrans-90
+  prefs: []
+  type: TYPE_TB
+  zh: '| 2025-10-21 | Ring-1T [[281]](ch021.xhtml#ref-ringteam2025everystepevolves)
+    | 以RL缩放为重点的万亿规模“思考模型”；报告了在1T规模上缩放RL的瓶颈/解决方案，并发布了一个开源模型。 | 是 | 否 |'
+- en: '| 2025-11-20 | OLMo 3 Think [[282]](ch021.xhtml#ref-teamolmo2025olmo3) | Fully
+    open “model flow” release: reports the entire lifecycle (stages, checkpoints,
+    and data points) and positions OLMo 3 Think 32B as a flagship open thinking model.
+    | Yes | Yes |'
+  id: totrans-91
+  prefs: []
+  type: TYPE_TB
+  zh: '| 2025-11-20 | OLMo 3 Think [[282]](ch021.xhtml#ref-teamolmo2025olmo3) | 完全开放的“模型流”发布：报告了整个生命周期（阶段、检查点和数据点），并将OLMo
+    3 Think 32B定位为旗舰开放思维模型。 | 是 | 是 |'
+- en: '| 2025-12-02 | DeepSeek V3.2 [[283]](ch021.xhtml#ref-deepseekai2025v32) | Open-weight
+    MoE frontier push with a report that foregrounds attention efficiency changes,
+    RL framework upgrades, and data synthesis for agentic/reasoning performance. |
+    Yes | No |'
+  id: totrans-92
+  prefs: []
+  type: TYPE_TB
+  zh: '| 2025-12-02 | DeepSeek V3.2 [[283]](ch021.xhtml#ref-deepseekai2025v32) | 开源权重MoE前沿推进，报告突出了注意力效率变化、RL框架升级和数据合成以提升代理/推理性能。
+    | 是 | 否 |'
+- en: '| 2025-12-15 | Nemotron 3 Nano [[284]](ch021.xhtml#ref-nvidia2025nemotron3nano)
+    | 30B-A3B MoE hybrid Mamba-Transformer; pretrain on 25T tokens and includes SFT
+    + large-scale RL; explicitly states it ships weights + recipe/code + most training
+    data. | Yes | Yes (most) |'
+  id: totrans-93
+  prefs: []
+  type: TYPE_TB
+  zh: '| 2025-12-15 | Nemotron 3 Nano [[284]](ch021.xhtml#ref-nvidia2025nemotron3nano)
+    | 30B-A3B MoE hybrid Mamba-Transformer; pretrain on 25T tokens and includes SFT
+    + large-scale RL; explicitly states it ships weights + recipe/code + most training
+    data. | 是 | 是（大多数）|'
+- en: '| 2025-12-16 | MiMo-V2-Flash [[285]](ch021.xhtml#ref-mimo2025flash) | 309B
+    MoE (15B active) optimized for speed: hybrid SWA/GA attention (5:1, 128-token
+    window) + lightweight MTP; FP8 pretrain on 27T tokens; post-train with MOPD +
+    large-scale agentic RL for reasoning/coding. | Yes | No |'
+  id: totrans-94
+  prefs: []
+  type: TYPE_TB
+  zh: '| 2025-12-16 | MiMo-V2-Flash [[285]](ch021.xhtml#ref-mimo2025flash) | 309B
+    MoE (15B active) optimized for speed: hybrid SWA/GA attention (5:1, 128-token
+    window) + lightweight MTP; FP8 pretrain on 27T tokens; post-train with MOPD +
+    large-scale agentic RL for reasoning/coding. | 是 | 否 |'
+- en: Common Practices in Training Reasoning Models
+  id: totrans-95
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+  zh: 推理模型训练的常见实践
+- en: In this section we detail common methods used to sequence training stages and
+    modify data to maximize performance when training a reasoning model.
+  id: totrans-96
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 在本节中，我们详细介绍了用于序列化训练阶段和修改数据以最大化推理模型训练性能的常用方法。
+- en: Note that these papers could have used a listed technique and not mentioned
+    it while their peers do, so these examples are a subset of known implementations
+    and should be used as reference, but not a final proclamation on what is an optimal
+    recipe.
+  id: totrans-97
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 注意，这些论文可能使用了列出的技术但没有提及，而他们的同行则提到了，因此这些例子是已知实现的子集，应作为参考，但不应作为最终宣言，即什么是最优配方。
+- en: '**Offline difficulty filtering**: A core intuition of RLVR is that models can
+    only learn from examples where there is a gradient. If the starting model for
+    RLVR can solve a problem either 100% of the time or 0% of the time, there will
+    be no gradient between different completions to the prompt (i.e., all strategies
+    appear the same to the policy gradient algorithm). Many models have used difficulty
+    filtering before starting a large-scale RL to restrict the training problems to
+    those that the starting point model solves only 20-80% of the time. This data
+    is collected by sampling N, e.g. 16, completions to each prompt in the training
+    set and verifying which percentage are correct. Forms of this were used by Seed-Thinking 1.5,
+    Open Reasoner Zero, Phi 4, INTELLECT-2, MiMo RL, Skywork OR-1, and others.'
+  id: totrans-98
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: '**离线难度过滤**：RLVR的核心直觉是模型只能从存在梯度的例子中学习。如果RLVR的起始模型可以100%或0%的时间解决一个问题，那么不同完成之间的梯度将不存在（即，所有策略对策略梯度算法来说都看起来相同）。许多模型在开始大规模RL之前使用了难度过滤，将训练问题限制在起始点模型只能解决20-80%的那些问题上。这种数据是通过在训练集中对每个提示进行N次，例如16次，完成并验证正确百分比来收集的。Seed-Thinking
+    1.5、Open Reasoner Zero、Phi 4、INTELLECT-2、MiMo RL、Skywork OR-1和其他一些模型使用了这种形式。'
+- en: '**Per-batch online filtering** (or difficulty curriculums throughout training):
+    To compliment the offline filtering to find the right problems to train on, another
+    major question is “what order should we present the problems to the model during
+    learning.” In order to address this, many models use online filtering of questions
+    in the batch, prebuilt curriculums/data schedulers, saving harder problems for
+    later in training, or other ideas to improve long-term stability. Related ideas
+    are used by Kimi 1.5, Magistral, Llama-Nemotron, INTELLECT-2, MiMo-RL, Hunyuan-TurboS,
+    and others.'
+  id: totrans-99
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: '**批在线过滤**（或训练过程中的难度课程）：为了补充离线过滤以找到合适的训练问题，另一个主要问题是“我们应该以什么顺序在训练过程中向模型展示问题。”为了解决这个问题，许多模型使用批次的在线过滤问题，预建的课程/数据调度器，将更难的问题留到训练后期，或者采用其他方法来提高长期稳定性。Kimi
+    1.5、Magistral、Llama-Nemotron、INTELLECT-2、MiMo-RL、Hunyuan-TurboS和其他一些模型采用了相关想法。'
+- en: '**Remove KL penalty**: As the length of RL runs increased for reasoning models
+    relative to RLHF training, and the reward function became less prone to over-optimization,
+    many models removed the KL penalty constraining the RL-learned policy to be similar
+    to the base model of training. This allows the model to further explore during
+    its training. This was used by RAGEN[[286]](ch021.xhtml#ref-wang2025ragenunderstandingselfevolutionllm),
+    Magistral, OpenReasonerZero, Skywork OR-1, and others.'
+  id: totrans-100
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: '**移除KL惩罚**：随着推理模型相对于RLHF训练的RL运行长度增加，奖励函数变得不太容易过度优化，许多模型移除了约束RL学习策略与训练基模型相似的KL惩罚。这允许模型在训练过程中进一步探索。RAGEN[[286]](ch021.xhtml#ref-wang2025ragenunderstandingselfevolutionllm)、Magistral、OpenReasonerZero、Skywork
+    OR-1和其他一些模型使用了这种方法。'
+- en: '**Relaxed policy-gradient clipping**: New variations of the algorithm GRPO,
+    such as DAPO [[193]](ch021.xhtml#ref-yu2025dapo), proposed modifications to the
+    two sided clipping objective used in GRPO (or PPO) in order to enable better exploration.
+    Clipping has also been shown to cause potentially spurious learning signals when
+    rewards are imperfect [[287]](ch021.xhtml#ref-shao2025spurious). This two-sided
+    clipping with different ranges per gradient direction is used by RAGEN, Magistral,
+    INTELLECT-2, and others.'
+  id: totrans-101
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: '**放宽策略梯度裁剪**：算法GRPO的新变体，如DAPO [[193]](ch021.xhtml#ref-yu2025dapo)，对GRPO（或PPO）中使用的双向裁剪目标进行了修改，以实现更好的探索。裁剪也已被证明在奖励不完美时可能导致潜在的虚假学习信号[[287]](ch021.xhtml#ref-shao2025spurious)。这种具有不同梯度方向范围的两侧裁剪被RAGEN、Magistral、INTELLECT-2和其他一些模型使用。'
+- en: '**Off-policy data (or fully asynchronous updates)**: As the length of completions
+    needed to solve tasks with RL increases dramatically with harder problems (particularly
+    in the *variance* of the response length), compute in RL runs can sit idle. To
+    solve this, training is moving to asynchronous updates or changing how problems
+    are arranged into batches to improve overall throughput. Partial-to-full asynchronous
+    (off-policy) data is used by Seed-Thinking 1.5, INTELLECT-2, and others.'
+  id: totrans-102
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: '**离线数据（或完全异步更新）**：随着使用RL解决任务所需的完成长度随着问题的难度增加而显著增加（尤其是在响应长度的*方差*方面），RL运行中的计算可能会闲置。为了解决这个问题，训练正在转向异步更新或改变问题如何安排到批次中，以提高整体吞吐量。Seed-Thinking
+    1.5、INTELLECT-2和其他一些模型使用了部分到完全异步（离线）数据。'
+- en: '**Additional format rewards**: In order to make the reasoning process predictable,
+    many models add minor rewards to make sure the model follows the correct format
+    of e.g. `<think>...</think>` before an answer. This is used by DeepSeek R1, OpenReasonerZero,
+    Magistral, Skywork OR-1, and others.'
+  id: totrans-103
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: '**额外的格式奖励**：为了使推理过程可预测，许多模型添加了微小的奖励，以确保模型在回答之前遵循正确的格式，例如`<think>...</think>`。这被DeepSeek
+    R1、OpenReasonerZero、Magistral、Skywork OR-1和其他模型所采用。'
+- en: '**Language consistency rewards**: Similar to format rewards, some multilingual
+    reasoning models use language consistency rewards to prioritize models that do
+    not change languages while reasoning (for a better and more predictable user experience).
+    These include DeepSeek R1, Magistral, and others.'
+  id: totrans-104
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: '**语言一致性奖励**：与格式奖励类似，一些多语言推理模型使用语言一致性奖励来优先考虑在推理过程中不改变语言的模型（以获得更好的和更可预测的用户体验）。这些包括DeepSeek
+    R1、Magistral和其他模型。'
+- en: '**Length penalties**: Many models use different forms of length penalties during
+    RL training to either stabilize the learning process over time or to mitigate
+    overthinking on hard problems. Some examples include Kimi 1.5 progressively extend
+    target length to combat overthinking (while training accuracy is high across difficulty
+    curriculum) or INTELLECT-2 running a small length penalty throughout. Others use
+    overlong filtering and other related implementations to improve throughput.'
+  id: totrans-105
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: '**长度惩罚**：许多模型在RL训练期间使用不同形式的长度惩罚，要么是为了在时间上稳定学习过程，要么是为了减轻对难题的过度思考。一些例子包括Kimi
+    1.5逐渐扩展目标长度以对抗过度思考（同时训练精度在难度课程中保持较高）或INTELLECT-2在整个过程中运行小的长度惩罚。其他人使用过长的过滤和其他相关实现来提高吞吐量。'
+- en: '**Loss normalization**: There has been some discussion (see the chapter on
+    Policy Gradients or [[185]](ch021.xhtml#ref-liu2025understanding)) around potential
+    length or difficulty biases introduced by the per-group normalization terms of
+    the original GRPO algorithm. As such, some models, such as Magistral or MiMo,
+    chose to normalize either losses or advantages at the batch level instead of the
+    group level.'
+  id: totrans-106
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: '**损失归一化**：关于原始GRPO算法的按组归一化项可能引入的潜在长度或难度偏差有一些讨论（参见关于策略梯度的章节或 [[185]](ch021.xhtml#ref-liu2025understanding))。因此，一些模型，如Magistral或MiMo，选择在批量级别而不是组级别对损失或优势进行归一化。'
+- en: '**Parallel test-time compute scaling**: Combining answers from multiple parallel,
+    independently-sampled rollouts can lead to substantial improvements over using
+    the answer from a single rollout. The most naive form of parallel test-time compute
+    scaling, as done in DeepSeek-R1, Phi-4, and others, involves using the answer
+    returned by a majority of rollouts as the final answer. A more advanced technique
+    is to use a scoring model trained to select the best answer out of the answers
+    from the parallel rollouts. This technique has yet to be adopted by open reasoning
+    model recipes (as of June 2025) but was mentioned in the Claude 4 announcement
+    [[288]](ch021.xhtml#ref-anthropic2025claude4) and used in DeepSeek-GRM [[251]](ch021.xhtml#ref-liu2025inference).'
+  id: totrans-107
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: '**并行测试时计算扩展**：结合来自多个并行、独立采样的rollout的答案可以显著提高使用单个rollout答案的效果。最简单形式的并行测试时计算扩展，如DeepSeek-R1、Phi-4和其他模型所做的那样，涉及使用大多数rollout返回的答案作为最终答案。一种更高级的技术是使用一个评分模型，该模型经过训练，可以从并行rollout的答案中选择最佳答案。这种技术尚未被开放推理模型配方（截至2025年6月）采用，但在Claude
+    4公告[[288]](ch021.xhtml#ref-anthropic2025claude4)中提到，并在DeepSeek-GRM [[251]](ch021.xhtml#ref-liu2025inference)中使用。'
+- en: 'In complement to the common techniques, there are also many common findings
+    on how reasoning training can create useful models without sacrificing ancillary
+    capabilities:'
+  id: totrans-108
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 除了常见的技巧之外，还有许多关于如何在不牺牲辅助能力的情况下通过推理训练创建有用模型的常见发现：
+- en: '**Text-only reasoning boosts multimodal performance**: Magistral, MiMo-VL,
+    and others find that training a multimodal model and then performing text-only
+    reasoning training after it can *improve* multimodal performance in the final
+    model.'
+  id: totrans-109
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: '**仅文本推理提升多模态性能**：Magistral、MiMo-VL和其他模型发现，在训练多模态模型后进行仅文本推理训练可以提高最终模型的多模态性能。'
+- en: '**Toggleable reasoning with system prompt** (or length control): Llama-Nemotron,
+    Qwen 3, and others use specific system prompts (possibly in combination with length-controlled
+    RL training [[289]](ch021.xhtml#ref-aggarwal2025l1)) to enable a toggle-able thinking
+    length for the user.'
+  id: totrans-110
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: '**使用系统提示切换推理**（或长度控制）：Llama-Nemotron、Qwen 3和其他模型使用特定的系统提示（可能结合长度控制的RL训练 [[289]](ch021.xhtml#ref-aggarwal2025l1))来启用用户可切换的思考长度。'

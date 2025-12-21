@@ -1,0 +1,1753 @@
+- en: Direct Alignment Algorithms
+  id: totrans-0
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+  zh: 直接对齐算法
+- en: Direct Alignment Algorithms (DAAs) allow one to update models to solve the same
+    RLHF objective, shown again in eq. [68](ch012.xhtml#eq:review_rlhf), without ever
+    training an intermediate reward model or using reinforcement learning optimizers.
+    It solves the same preference learning problem we’ve been studying (with literally
+    the same data!), in order to make language models more aligned, smarter, and easier
+    to use. The lack of a reward model and online optimization makes DAAs far simpler
+    to implement, reducing compute spent during training and making experimentation
+    easier. This chapter details the complex mathematics that were done to derive
+    these algorithms, and then shows that the sometimes tedious derivations result
+    in simple implementations.
+  id: totrans-1
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 直接对齐算法（DAAs）允许更新模型以解决相同的RLHF目标，如等式[68](ch012.xhtml#eq:review_rlhf)所示，而无需训练任何中间奖励模型或使用强化学习优化器。它解决了我们一直在研究（实际上使用的是相同的数据！）的相同偏好学习问题，目的是使语言模型更加对齐、更智能、更易于使用。没有奖励模型和在线优化使得DAAs的实现更加简单，减少了训练过程中的计算量，并使实验更容易进行。本章详细介绍了为了推导这些算法所进行的复杂数学，然后展示了有时繁琐的推导最终导致了简单的实现。
+- en: 'The most prominent DAA and one that catalyzed an entire academic movement of
+    aligning language models is Direct Preference Optimization (DPO) [[20]](ch021.xhtml#ref-rafailov2024direct).
+    At its core, DPO is using gradient ascent to solve the same constrained RLHF objective
+    (see Chapter 4):'
+  id: totrans-2
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 最突出的DAA之一，也是催化了整个将语言模型对齐的学术运动的是直接偏好优化（DPO）[[20]](ch021.xhtml#ref-rafailov2024direct)。在其核心，DPO是使用梯度上升来解决相同的约束RLHF目标（见第4章）：
+- en: <semantics><mrow><munder><mi mathvariant="normal">max</mi><mi>π</mi></munder><msub><mi>𝔼</mi><mrow><mi>x</mi><mo>∼</mo><mi>𝒟</mi></mrow></msub><msub><mi>𝔼</mi><mrow><mi>y</mi><mo>∼</mo><mi>π</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>y</mi><mo stretchy="false" form="prefix">|</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow></msub><mrow><mo stretchy="true"
+    form="prefix">[</mo><msub><mi>r</mi><mi>θ</mi></msub><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo>,</mo><mi>y</mi><mo
+    stretchy="false" form="postfix">)</mo><mo stretchy="true" form="postfix">]</mo></mrow><mo>−</mo><mi>β</mi><msub><mi>𝒟</mi><mtext
+    mathvariant="normal">KL</mtext></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>π</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>y</mi><mo stretchy="false" form="prefix">|</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo><mo stretchy="false" form="postfix">∥</mo><msub><mi>π</mi><mtext
+    mathvariant="normal">ref</mtext></msub><mo stretchy="false" form="prefix">(</mo><mi>y</mi><mo
+    stretchy="false" form="prefix">|</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mo
+    stretchy="true" form="postfix">)</mo></mrow><mrow><mo stretchy="false" form="prefix">(</mo><mn>68</mn><mo
+    stretchy="false" form="postfix">)</mo></mrow></mrow> <annotation encoding="application/x-tex">\max_{\pi}
+    \mathbb{E}_{x \sim \mathcal{D}}\mathbb{E}_{y \sim \pi(y|x)} \left[r_\theta(x,
+    y)\right] - \beta \mathcal{D}_{\text{KL}}\left(\pi(y|x) \| \pi_{\text{ref}}(y|x)\right)\qquad{(68)}</annotation></semantics>
+  id: totrans-3
+  prefs: []
+  type: TYPE_NORMAL
+  zh: <semantics><mrow><munder><mi mathvariant="normal">max</mi><mi>π</mi></munder><msub><mi>𝔼</mi><mrow><mi>x</mi><mo>∼</mo><mi>𝒟</mi></mrow></msub><msub><mi>𝔼</mi><mrow><mi>y</mi><mo>∼</mo><mi>π</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>y</mi><mo stretchy="false" form="prefix">|</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow></msub><mrow><mo stretchy="true"
+    form="prefix">[</mo><msub><mi>r</mi><mi>θ</mi></msub><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo>,</mo><mi>y</mi><mo
+    stretchy="false" form="postfix">)</mo><mo stretchy="true" form="postfix">]</mo></mrow><mo>−</mo><mi>β</mi><msub><mi>𝒟</mi><mtext
+    mathvariant="normal">KL</mtext></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>π</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>y</mi><mo stretchy="false" form="prefix">|</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo><mo stretchy="false" form="postfix">∥</mo><msub><mi>π</mi><mtext
+    mathvariant="normal">ref</mtext></msub><mo stretchy="false" form="prefix">(</mo><mi>y</mi><mo
+    stretchy="false" form="prefix">|</mi><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mo
+    stretchy="true" form="postfix">)</mo></mrow><mrow><mo stretchy="false" form="prefix">(</mo><mn>68</mn><mo
+    stretchy="false" form="postfix">)</mo></mrow></mrow> <annotation encoding="application/x-tex">\max_{\pi}
+    \mathbb{E}_{x \sim \mathcal{D}}\mathbb{E}_{y \sim \pi(y|x)} \left[r_\theta(x,
+    y)\right] - \beta \mathcal{D}_{\text{KL}}\left(\pi(y|x) \| \pi_{\text{ref}}(y|x)\right)\qquad{(68)}</annotation></semantics>
+- en: Since its release in May of 2023, after a brief delay where the community figured
+    out the right data and hyperparameters to use DPO with (specifically, surprisingly
+    low learning rates), many popular models have used DPO or its variants, from Zephyr-<semantics><mi>β</mi><annotation
+    encoding="application/x-tex">\beta</annotation></semantics> kickstarting it in
+    October of 2023 [[21]](ch021.xhtml#ref-tunstall2023zephyr), Llama 3 Instruct [[24]](ch021.xhtml#ref-dubey2024llama),
+    Tülu 2 [[22]](ch021.xhtml#ref-ivison2023camels) and 3 [[6]](ch021.xhtml#ref-lambert2024t),
+    Nemotron 4 340B [[25]](ch021.xhtml#ref-adler2024nemotron), and others. Technically,
+    Sequence Likelihood Calibration (SLiC-HF) was the first, modern direct alignment
+    algorithm released [[210]](ch021.xhtml#ref-zhao2023slic), but it did not catch
+    on due to a combination of factors (unwinding the adoption of research methods
+    is always a tricky task).
+  id: totrans-4
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 自2023年5月发布以来，经过短暂的延迟（社区找到了使用DPO的正确数据和超参数，特别是出人意料地低的学习率），许多流行的模型已经使用了DPO或其变体，从2023年10月启动的Zephyr-<semantics><mi>β</mi><annotation
+    encoding="application/x-tex">\beta</annotation></semantics> [[21]](ch021.xhtml#ref-tunstall2023zephyr)，Llama
+    3 Instruct [[24]](ch021.xhtml#ref-dubey2024llama)，Tülu 2 [[22]](ch021.xhtml#ref-ivison2023camels)
+    和 3 [[6]](ch021.xhtml#ref-lambert2024t)，Nemotron 4 340B [[25]](ch021.xhtml#ref-adler2024nemotron)，以及其他模型。技术上讲，序列似然校准（SLiC-HF）是第一个发布的现代直接对齐算法
+    [[210]](ch021.xhtml#ref-zhao2023slic)，但由于多种因素（逆转研究方法的采用总是一个棘手的问题）并未流行起来。
+- en: The most impactful part of DPO and DAAs is lowering the barrier of entry to
+    experimenting with language model post-training – it uses less compute, is easier
+    to implement from scratch, and is easier to get working on both toy and production
+    examples.
+  id: totrans-5
+  prefs: []
+  type: TYPE_NORMAL
+  zh: DPO和DAAs最具影响力的部分是降低了在训练后尝试语言模型的门槛——它使用的计算资源更少，从头开始实现更容易，并且更容易在玩具和实际生产案例中运行。
+- en: '*Throughout this chapter, we use <semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics>
+    to denote prompts and <semantics><mi>y</mi><annotation encoding="application/x-tex">y</annotation></semantics>
+    to denote completions. This notation is common in the language model literature,
+    where methods operate on full prompt-completion pairs rather than individual tokens.*'
+  id: totrans-6
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '*在本章中，我们使用<semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics>表示提示，<semantics><mi>y</mi><annotation
+    encoding="application/x-tex">y</annotation></semantics>表示完成。这种符号在语言模型文献中很常见，其中方法操作的是完整的提示-完成对，而不是单个标记。*'
+- en: Direct Preference Optimization (DPO)
+  id: totrans-7
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+  zh: 直接偏好优化（DPO）
+- en: Here we explain intuitions for how DPO works and re-derive the core equations
+    fully.
+  id: totrans-8
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 在这里，我们解释DPO的工作直觉并重新推导核心方程。
+- en: How DPO Works
+  id: totrans-9
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+  zh: DPO是如何工作的
+- en: 'DPO at a surface level is directly optimizing a policy to solve the RLHF objective.
+    The loss function for this, which we will revisit below in the derivations, is
+    a pairwise relationship of log-probabilities. The loss function derived from a
+    Bradley-Terry reward model follows:'
+  id: totrans-10
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 在表面层面上，DPO是直接优化策略以解决RLHF目标。这个损失函数，我们将在下面的推导中重新审视，是成对的对数概率关系。从Bradley-Terry奖励模型推导出的损失函数如下：
+- en: <semantics><mrow><msub><mi>ℒ</mi><mtext mathvariant="normal">DPO</mtext></msub><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>π</mi><mi>θ</mi></msub><mo>;</mo><msub><mi>π</mi><mtext
+    mathvariant="normal">ref</mtext></msub><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mi>−</mi><msub><mi>𝔼</mi><mrow><mo
+    stretchy="false" form="prefix">(</mo><mi>x</mi><mo>,</mo><msub><mi>y</mi><mi>c</mi></msub><mo>,</mo><msub><mi>y</mi><mi>r</mi></msub><mo
+    stretchy="false" form="postfix">)</mo><mo>∼</mo><mi>𝒟</mi></mrow></msub><mrow><mo
+    stretchy="true" form="prefix">[</mo><mi mathvariant="normal">log</mi><mi>σ</mi><mrow><mo
+    stretchy="true" form="prefix">(</mo><mi>β</mi><mi mathvariant="normal">log</mi><mfrac><mrow><msub><mi>π</mi><mi>θ</mi></msub><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mi>c</mi></msub><mo>∣</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow><mrow><msub><mi>π</mi><mtext mathvariant="normal">ref</mtext></msub><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mi>c</mi></msub><mo>∣</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow></mfrac><mo>−</mo><mi>β</mi><mi mathvariant="normal">log</mi><mfrac><mrow><msub><mi>π</mi><mi>θ</mi></msub><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mi>r</mi></msub><mo>∣</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow><mrow><msub><mi>π</mi><mtext mathvariant="normal">ref</mtext></msub><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mi>r</mi></msub><mo>∣</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow></mfrac><mo stretchy="true" form="postfix">)</mo></mrow><mo
+    stretchy="true" form="postfix">]</mo></mrow><mrow><mo stretchy="false" form="prefix">(</mo><mn>69</mn><mo
+    stretchy="false" form="postfix">)</mo></mrow></mrow> <annotation encoding="application/x-tex">\mathcal{L}_{\text{DPO}}(\pi_\theta;
+    \pi_{\text{ref}}) = -\mathbb{E}_{(x, y_c, y_r) \sim \mathcal{D}}\left[ \log \sigma\left(
+    \beta \log \frac{\pi_{\theta}(y_c \mid x)}{\pi_{\text{ref}}(y_c \mid x)} - \beta
+    \log \frac{\pi_{\theta}(y_r \mid x)}{\pi_{\text{ref}}(y_r \mid x)} \right) \right]
+    \qquad{(69)}</annotation></semantics>
+  id: totrans-11
+  prefs: []
+  type: TYPE_NORMAL
+  zh: <semantics><mrow><msub><mi>ℒ</mi><mtext mathvariant="normal">DPO</mtext></msub><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>π</mi><mi>θ</mi></msub><mo>;</mo><msub><mi>π</mi><mtext
+    mathvariant="normal">ref</mtext></msub><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mi>−</mi><msub><mi>𝔼</mi><mrow><mo
+    stretchy="false" form="prefix">(</mo><mi>x</mi><mo>,</mo><msub><mi>y</mi><mi>c</mi></msub><mo>,</mo><msub><mi>y</mi><mi>r</mi></msub><mo
+    stretchy="false" form="postfix">)</mo><mo>∼</mo><mi>𝒟</mi></mrow></msub><mrow><mo
+    stretchy="true" form="prefix">[</mo><mi mathvariant="normal">log</mi><mi>σ</mi><mrow><mo
+    stretchy="true" form="prefix">(</mo><mi>β</mi><mi mathvariant="normal">log</mi><mfrac><mrow><msub><mi>π</mi><mi>θ</mi></msub><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mi>c</mi></msub><mo>∣</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow><mrow><msub><mi>π</mi><mtext mathvariant="normal">ref</mtext></msub><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mi>c</mi></msub><mo>∣</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow></mfrac><mo>−</mo><mi>β</mi><mi mathvariant="normal">log</mi><mfrac><mrow><msub><mi>π</mi><mi>θ</mi></msub><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mi>r</mi></msub><mo>∣</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow><mrow><msub><mi>π</mi><mtext mathvariant="normal">ref</mtext></msub><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mi>r</mi></msub><mo>∣</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow></mfrac><mo stretchy="true" form="postfix">)</mo></mrow><mo
+    stretchy="true" form="postfix">]</mo></mrow><mrow><mo stretchy="false" form="prefix">(</mo><mn>69</mn><mo
+    stretchy="false" form="postfix">)</mo></mrow></mrow> <annotation encoding="application/x-tex">\mathcal{L}_{\text{DPO}}(\pi_\theta;
+    \pi_{\text{ref}}) = -\mathbb{E}_{(x, y_c, y_r) \sim \mathcal{D}}\left[ \log \sigma\left(
+    \beta \log \frac{\pi_{\theta}(y_c \mid x)}{\pi_{\text{ref}}(y_c \mid x)} - \beta
+    \log \frac{\pi_{\theta}(y_r \mid x)}{\pi_{\text{ref}}(y_r \mid x)} \right) \right]
+    \qquad{(69)}</annotation></semantics>
+- en: 'Throughout, <semantics><mi>β</mi><annotation encoding="application/x-tex">\beta</annotation></semantics>
+    is a hyperparameter balancing the reward optimization to the KL distance between
+    the final model and the initial reference (i.e. balancing over-optimization, as
+    a crucial hyperparameter to using DPO correction). This relies on the implicit
+    reward for DPO training that replaces using an external reward model, which is
+    a log-ratio of probabilities:'
+  id: totrans-12
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 在整个过程中，<semantics><mi>β</mi><annotation encoding="application/x-tex">\beta</annotation></semantics>
+    是一个超参数，用于平衡奖励优化与最终模型与初始参考模型之间的KL距离（即平衡过度优化，作为使用DPO校正的关键超参数）。这依赖于DPO训练的隐含奖励，它取代了使用外部奖励模型，后者是概率的对数比率：
+- en: <semantics><mrow><mi>r</mi><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo>,</mo><mi>y</mi><mo
+    stretchy="false" form="postfix">)</mo><mo>=</mo><mi>β</mi><mrow><mi mathvariant="normal">log</mi><mo>⁡</mo></mrow><mfrac><mrow><msub><mi>π</mi><mi>r</mi></msub><mo
+    stretchy="false" form="prefix">(</mo><mi>y</mi><mo>∣</mo><mi>x</mi><mo stretchy="false"
+    form="postfix">)</mo></mrow><mrow><msub><mi>π</mi><mtext mathvariant="normal">ref</mtext></msub><mo
+    stretchy="false" form="prefix">(</mo><mi>y</mi><mo>∣</mo><mi>x</mi><mo stretchy="false"
+    form="postfix">)</mo></mrow></mfrac><mrow><mo stretchy="false" form="prefix">(</mo><mn>70</mn><mo
+    stretchy="false" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">r(x,
+    y) = \beta \log \frac{\pi_r(y \mid x)}{\pi_{\text{ref}}(y \mid x)}\qquad{(70)}</annotation></semantics>
+  id: totrans-13
+  prefs: []
+  type: TYPE_NORMAL
+  zh: <semantics><mrow><mi>r</mi><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo>,</mo><mi>y</mi><mo
+    stretchy="false" form="postfix">)</mo><mo>=</mo><mi>β</mi><mrow><mi mathvariant="normal">log</mi><mo>⁡</mo></mrow><mfrac><mrow><msub><mi>π</mi><mi>r</mi></msub><mo
+    stretchy="false" form="prefix">(</mo><mi>y</mi><mo>∣</mo><mi>x</mi><mo stretchy="false"
+    form="postfix">)</mo></mrow><mrow><msub><mi>π</mi><mtext mathvariant="normal">ref</mtext></msub><mo
+    stretchy="false" form="prefix">(</mo><mi>y</mi><mo>∣</mo><mi>x</mi><mo stretchy="false"
+    form="postfix">)</mo></mrow></mfrac><mrow><mo stretchy="false" form="prefix">(</mo><mn>70</mn><mo
+    stretchy="false" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">r(x,
+    y) = \beta \log \frac{\pi_r(y \mid x)}{\pi_{\text{ref}}(y \mid x)}\qquad{(70)}</annotation></semantics>
+- en: where <semantics><mrow><msub><mi>π</mi><mi>r</mi></msub><mo stretchy="false"
+    form="prefix">(</mo><mi>y</mi><mo>∣</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation
+    encoding="application/x-tex">\pi_r(y \mid x)</annotation></semantics> is the exact,
+    optimal reward policy that we are solving for. This comes from deriving the Bradley-Terry
+    reward with respect to an optimal policy (shown in eq. [84](ch012.xhtml#eq:dpo_opt_policy)),
+    as shown in the Bradley-Terry model section of Chapter 7\. Essentially, the implicit
+    reward model shows “the probability of human preference data in terms of the optimal
+    policy rather than the reward model.”
+  id: totrans-14
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 其中 <semantics><mrow><msub><mi>π</mi><mi>r</mi></msub><mo stretchy="false" form="prefix">(</mo><mi>y</mi><mo>∣</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\pi_r(y
+    \mid x)</annotation></semantics> 是我们正在解决的精确、最优奖励策略。这来自于根据最优策略（如第7章的布拉德利-特里奖励模型部分中所示，见等式[84](ch012.xhtml#eq:dpo_opt_policy)）推导出的布拉德利-特里奖励，正如第7章的布拉德利-特里模型部分所示。本质上，隐式奖励模型显示了“以最优策略而不是奖励模型来表示人类偏好数据的概率。”
+- en: Let us consider the loss shown in eq. [69](ch012.xhtml#eq:dpo_core) that the
+    optimizer must decrease. Here, the loss will be lower when the log-ratio of the
+    chosen response is bigger than the log-ratio of the rejected response (normalized
+    by the reference model). In practice, this is a sum of log-probabilities of the
+    model across the sequence of tokens in the data presented. Hence, DPO is increasing
+    the delta in probabilities between the chosen and rejected responses.
+  id: totrans-15
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 让我们考虑等式[69](ch012.xhtml#eq:dpo_core)中显示的损失，优化器必须减少这个损失。在这里，当所选响应的对数比率大于被拒绝响应的对数比率（按参考模型归一化）时，损失会更低。在实践中，这是模型在数据呈现的标记序列中的对数概率的总和。因此，DPO正在增加所选和被拒绝响应之间的概率差异。
+- en: 'With the reward in eq. [70](ch012.xhtml#eq:dpo_reward), we can write the gradient
+    of the loss to further interpret what is going on:'
+  id: totrans-16
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 在等式[70](ch012.xhtml#eq:dpo_reward)中的奖励下，我们可以写出损失的梯度以进一步解释正在发生的事情：
+- en: <semantics><mrow><msub><mi>∇</mi><mi>θ</mi></msub><msub><mi>ℒ</mi><mtext mathvariant="normal">DPO</mtext></msub><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>π</mi><mi>θ</mi></msub><mo>;</mo><msub><mi>π</mi><mtext
+    mathvariant="normal">ref</mtext></msub><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mi>−</mi><mi>β</mi><msub><mi>𝔼</mi><mrow><mo
+    stretchy="false" form="prefix">(</mo><mi>x</mi><mo>,</mo><msub><mi>y</mi><mi>c</mi></msub><mo>,</mo><msub><mi>y</mi><mi>r</mi></msub><mo
+    stretchy="false" form="postfix">)</mo><mo>∼</mo><mi>𝒟</mi></mrow></msub><mrow><mo
+    stretchy="true" form="prefix">[</mo><mi>σ</mi><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>r</mi><mi>θ</mi></msub><mo
+    stretchy="false" form="prefix">(</mo><mi>x</mi><mo>,</mo><msub><mi>y</mi><mi>r</mi></msub><mo
+    stretchy="false" form="postfix">)</mo><mo>−</mo><msub><mi>r</mi><mi>θ</mi></msub><mo
+    stretchy="false" form="prefix">(</mo><mi>x</mi><mo>,</mo><msub><mi>y</mi><mi>c</mi></msub><mo
+    stretchy="false" form="postfix">)</mo><mo stretchy="true" form="postfix">)</mo></mrow><mrow><mo
+    stretchy="true" form="prefix">(</mo><msub><mi>∇</mi><mi>θ</mi></msub><mi mathvariant="normal">log</mi><mi>π</mi><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mi>c</mi></msub><mo>∣</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo><mo>−</mo><msub><mi>∇</mi><mi>θ</mi></msub><mi
+    mathvariant="normal">log</mi><mi>π</mi><mo stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mi>r</mi></msub><mo>∣</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo><mo stretchy="true" form="postfix">)</mo></mrow><mo
+    stretchy="true" form="postfix">]</mo></mrow><mrow><mo stretchy="false" form="prefix">(</mo><mn>71</mn><mo
+    stretchy="false" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\nabla_{\theta}\mathcal{L}_{\text{DPO}}(\pi_{\theta};
+    \pi_{\text{ref}}) = -\beta \mathbb{E}_{(x, y_c, y_r)\sim \mathcal{D}}\left[ \sigma\left(r_{\theta}(x,
+    y_r) - r_{\theta}(x, y_c)\right) \left(\nabla_{\theta}\log \pi(y_c \mid x) - \nabla_{\theta}\log
+    \pi(y_r \mid x)\right) \right] \qquad{(71)}</annotation></semantics>
+  id: totrans-17
+  prefs: []
+  type: TYPE_NORMAL
+  zh: <semantics><mrow><msub><mi>∇</mi><mi>θ</mi></msub><msub><mi>ℒ</mi><mtext mathvariant="normal">DPO</mtext></msub><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>π</mi><mi>θ</mi></msub><mo>;</mo><msub><mi>π</mi><mtext
+    mathvariant="normal">ref</mtext></msub><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mi>−</mi><mi>β</mi><msub><mi>𝔼</mi><mrow><mo
+    stretchy="false" form="prefix">(</mo><mi>x</mi><mo>,</mo><msub><mi>y</mi><mi>c</mi></msub><mo>,</mo><msub><mi>y</mi><mi>r</mi></msub><mo
+    stretchy="false" form="postfix">)</mo><mo>∼</mo><mi>𝒟</mi></mrow></msub><mrow><mo
+    stretchy="true" form="prefix">[</mo><mi>σ</mi><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>r</mi><mi>θ</mi></msub><mo
+    stretchy="false" form="prefix">(</mo><mi>x</mi><mo>,</mo><msub><mi>y</mi><mi>r</mi></msub><mo
+    stretchy="false" form="postfix">)</mo><mo>−</mo><msub><mi>r</mi><mi>θ</mi></msub><mo
+    stretchy="false" form="prefix">(</mo><mi>x</mi><mo>,</mo><msub><mi>y</mi><mi>c</mi></msub><mo
+    stretchy="false" form="postfix">)</mo><mo stretchy="true" form="postfix">)</mo></mrow><mrow><mo
+    stretchy="true" form="prefix">(</mo><msub><mi>∇</mi><mi>θ</mi></msub><mi mathvariant="normal">log</mi><mi>π</mi><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mi>c</mi></msub><mo>∣</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo><mo>−</mo><msub><mi>∇</mi><mi>θ</mi></msub><mi
+    mathvariant="normal">log</mi><mi>π</mi><mo stretchy="false" form="postfix">(</mo><msub><mi>y</mi><mi>r</mi></msub><mo>∣</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo><mo stretchy="true" form="postfix">)</mo></mrow><mo
+    stretchy="true" form="postfix">]</mo></mrow><mrow><mo stretchy="false" form="prefix">(</mo><mn>71</mn><mo
+    stretchy="false" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\nabla_{\theta}\mathcal{L}_{\text{DPO}}(\pi_{\theta};
+    \pi_{\text{ref}}) = -\beta \mathbb{E}_{(x, y_c, y_r)\sim \mathcal{D}}\left[ \sigma\left(r_{\theta}(x,
+    y_r) - r_{\theta}(x, y_c)\right) \left(\nabla_{\theta}\log \pi(y_c \mid x) - \nabla_{\theta}\log
+    \pi(y_r \mid x)\right) \right] \qquad{(71)}</annotation></semantics>
+- en: 'Here, the gradient solves the above objective by doing the following:'
+  id: totrans-18
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 这里，梯度通过以下方式解决上述目标：
+- en: The first term within the sigmoid function, <semantics><mrow><mi>σ</mi><mo stretchy="false"
+    form="prefix">(</mo><mi>⋅</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation
+    encoding="application/x-tex">\sigma(\cdot)</annotation></semantics>, creates a
+    weight of the parameter update from 0 to 1 that is higher when the reward estimate
+    is incorrect. When the rejected sample is preferred over the chosen, the weight
+    update should be larger!
+  id: totrans-19
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: Sigmoid函数中的第一个项，<semantics><mrow><mi>σ</mi><mo stretchy="false" form="prefix">(</mo><mi>⋅</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\sigma(\cdot)</annotation></semantics>，创建了一个从0到1的参数更新权重，当奖励估计不正确时权重更高。当拒绝的样本被优先选择时，权重更新应该更大！
+- en: Second, the terms in the inner brackets <semantics><mrow><mo stretchy="false"
+    form="prefix">[</mo><mi>⋅</mi><mo stretchy="false" form="postfix">]</mo></mrow><annotation
+    encoding="application/x-tex">[\cdot]</annotation></semantics> increase the likelihood
+    of the chosen response <semantics><msub><mi>y</mi><mi>c</mi></msub><annotation
+    encoding="application/x-tex">y_c</annotation></semantics> and decrease the likelihood
+    of the rejected <semantics><msub><mi>y</mi><mi>r</mi></msub><annotation encoding="application/x-tex">y_r</annotation></semantics>.
+  id: totrans-20
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: 其次，内括号中的术语<semantics><mrow><mo stretchy="false" form="prefix">[</mo><mi>⋅</mi><mo
+    stretchy="false" form="postfix">]</mo></mrow><annotation encoding="application/x-tex">[\cdot]</annotation></semantics>增加了所选响应<semantics><msub><mi>y</mi><mi>c</mi></msub><annotation
+    encoding="application/x-tex">y_c</annotation></semantics>的可能性，并减少了被拒绝的<semantics><msub><mi>y</mi><mi>r</mi></msub><annotation
+    encoding="application/x-tex">y_r</annotation></semantics>的可能性。
+- en: These terms are weighted by <semantics><mi>β</mi><annotation encoding="application/x-tex">\beta</annotation></semantics>,
+    which controls how the update balances ordering the completions correctly relative
+    to the KL distance.
+  id: totrans-21
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: 这些术语通过<semantics><mi>β</mi><annotation encoding="application/x-tex">\beta</annotation></semantics>进行加权，它控制了更新如何平衡正确排序完成项与KL距离之间的关系。
+- en: The core intuition is that DPO is fitting an implicit reward model whose corresponding
+    optimal policy can be extracted in a closed form (thanks to gradient descent and
+    our ML tools). The closed form of the equation means that it is straightforward
+    to implement the exact gradient, rather than needing to reach it by proxy of training
+    a reward model and sampling completions to score. What is often misunderstood
+    is that DPO is learning a reward model at its core, hence the subtitle of the
+    paper *Your Language Model is Secretly a Reward Model.* It is easy to confuse
+    this with the DPO objective training a policy directly, hence studying the derivations
+    below is good for a complete understanding.
+  id: totrans-22
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 核心直觉是DPO正在拟合一个隐式奖励模型，其相应的最佳策略可以以闭式形式提取（多亏了梯度下降和我们的ML工具）。方程的闭式形式意味着实现精确梯度是直接的，而不是需要通过训练奖励模型和采样完成项来评分来间接达到。常被误解的是，DPO在本质上是在学习一个奖励模型，因此论文的副标题是*Your
+    Language Model is Secretly a Reward Model.* 容易将其与直接训练策略的DPO目标混淆，因此研究下面的推导对完整理解很有帮助。
+- en: With the implicit reward model learning, DPO is generating an optimal solution
+    to the RLHF objective given the data in the dataset and the specific KL constraint
+    in the objective <semantics><mi>β</mi><annotation encoding="application/x-tex">\beta</annotation></semantics>.
+    Here, DPO solves for the exact policy given a specific KL distance because the
+    generations are not online as in policy gradient algorithms – a core difference
+    from the RL methods for preference tuning. In many ways, this makes the <semantics><mi>β</mi><annotation
+    encoding="application/x-tex">\beta</annotation></semantics> value easier to tune
+    with DPO relative to online RL methods, but crucially and intuitively the optimal
+    value depends on the model being trained and the data training it.
+  id: totrans-23
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 在隐式奖励模型学习的情况下，DPO根据数据集中的数据和目标中的特定KL约束生成RLHF目标的最佳解决方案。<semantics><mi>β</mi><annotation
+    encoding="application/x-tex">\beta</annotation></semantics>。在这里，DPO针对特定的KL距离求解精确策略，因为生成不是在线的，就像策略梯度算法那样——这是与偏好调整的RL方法的核心区别。在许多方面，这使得与在线RL方法相比，使用DPO调整<semantics><mi>β</mi><annotation
+    encoding="application/x-tex">\beta</annotation></semantics>值更容易，但关键且直观的是，最佳值取决于正在训练的模型和训练它的数据。
+- en: At each batch of preference data, composed of many pairs of completions <semantics><mrow><msub><mi>y</mi><mrow><mi>c</mi><mi>h</mi><mi>o</mi><mi>s</mi><mi>e</mi><mi>n</mi></mrow></msub><mo>≻</mo><msub><mi>y</mi><mrow><mi>r</mi><mi>e</mi><mi>j</mi><mi>e</mi><mi>c</mi><mi>t</mi><mi>e</mi><mi>d</mi></mrow></msub></mrow><annotation
+    encoding="application/x-tex">y_{chosen} \succ y_{rejected}</annotation></semantics>,
+    DPO takes gradient steps directly towards the optimal solution. It is far simpler
+    than policy gradient methods.
+  id: totrans-24
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 在每个偏好数据批次中，由许多对完成项<semantics><mrow><msub><mi>y</mi><mrow><mi>c</mi><mi>h</mi><mi>o</mi><mi}s</mi><mi>e</mi><mi>n</mi></mrow></msub><mo>≻</mo><msub><mi>y</mi><mrow><mi>r</mi><mi>e</mi><mi>j</mi><mi>e</mi><mi>c</mi><mi>t</mi><mi>e</mi><mi>d</mi></mrow></msub></mrow><annotation
+    encoding="application/x-tex">y_{chosen} \succ y_{rejected}</annotation></semantics>组成，DPO直接向最佳解决方案采取梯度步骤。这比策略梯度方法简单得多。
+- en: '![Figure 18: When DPO first released it sparked a fierce debate in the research
+    community about how to best do RLHF and preference learning. This meme is a great
+    job capturing the sentiment, where the debate often felt forced and over the top,
+    but many people both getting started and in top labs were getting immense benefit
+    out of DPO. DPO simplicity meme, credit Tom Goldstein.](../media/file16.jpg)'
+  id: totrans-25
+  prefs: []
+  type: TYPE_IMG
+  zh: '![图 18：当 DPO 首次发布时，它在研究社区中引发了关于如何最好地进行 RLHF 和偏好学习的激烈辩论。这个梗很好地捕捉了这种情绪，辩论往往感觉是被强加的，过于夸张，但许多刚开始和处于顶级实验室的人们都从
+    DPO 中获得了巨大的益处。DPO 简化梗，归功于汤姆·戈尔茨坦。](../media/file16.jpg)'
+- en: 'Figure 18: When DPO first released it sparked a fierce debate in the research
+    community about how to best do RLHF and preference learning. This meme is a great
+    job capturing the sentiment, where the debate often felt forced and over the top,
+    but many people both getting started and in top labs were getting immense benefit
+    out of DPO. DPO simplicity meme, credit Tom Goldstein.'
+  id: totrans-26
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 图 18：当 DPO 首次发布时，它在研究社区中引发了关于如何最好地进行 RLHF 和偏好学习的激烈辩论。这个梗很好地捕捉了这种情绪，辩论往往感觉是被强加的，过于夸张，但许多刚开始和处于顶级实验室的人们都从
+    DPO 中获得了巨大的益处。DPO 简化梗，归功于汤姆·戈尔茨坦。
+- en: DPO Derivation
+  id: totrans-27
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+  zh: DPO 推导
+- en: The DPO derivation takes two primary parts. First, the authors show the form
+    of the policy that optimally solved the RLHF objective used throughout this book.
+    Next, they show how to arrive at that solution from pairwise preference data (i.e. a
+    Bradley Terry model).
+  id: totrans-28
+  prefs: []
+  type: TYPE_NORMAL
+  zh: DPO 推导分为两个主要部分。首先，作者展示了在整个书中使用的 RLHF 目标最优策略的形式。接下来，他们展示了如何从成对偏好数据（即布拉德利-特里模型）到达那个解决方案。
+- en: 1\. Deriving the Optimal RLHF Solution
+  id: totrans-29
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+  zh: 1. 推导最优 RLHF 解决方案
+- en: 'To start, we should consider the RLHF optimization objective once again, here
+    indicating we wish to maximize this quantity:'
+  id: totrans-30
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 首先，我们应该再次考虑 RLHF 优化目标，这里表示我们希望最大化这个量：
+- en: <semantics><mrow><munder><mi mathvariant="normal">max</mi><mi>π</mi></munder><msub><mi>𝔼</mi><mrow><mi>x</mi><mo>∼</mo><mi>𝒟</mi></mrow></msub><msub><mi>𝔼</mi><mrow><mi>y</mi><mo>∼</mo><mi>π</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>y</mi><mo stretchy="false" form="prefix">|</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow></msub><mrow><mo stretchy="true"
+    form="prefix">[</mo><msub><mi>r</mi><mi>θ</mi></msub><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo>,</mo><mi>y</mi><mo
+    stretchy="false" form="postfix">)</mo><mo stretchy="true" form="postfix">]</mo></mrow><mo>−</mo><mi>β</mi><msub><mi>𝒟</mi><mtext
+    mathvariant="normal">KL</mtext></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>π</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>y</mi><mo stretchy="false" form="prefix">|</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo><mo stretchy="false" form="postfix">∥</mo><msub><mi>π</mi><mtext
+    mathvariant="normal">ref</mtext></msub><mo stretchy="false" form="prefix">(</mo><mi>y</mi><mo
+    stretchy="false" form="prefix">|</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mo
+    stretchy="true" form="postfix">)</mo></mrow><mrow><mo stretchy="false" form="prefix">(</mo><mn>72</mn><mo
+    stretchy="false" form="postfix">)</mo></mrow></mrow> <annotation encoding="application/x-tex">\max_{\pi}
+    \mathbb{E}_{x \sim \mathcal{D}}\mathbb{E}_{y \sim \pi(y|x)} \left[r_\theta(x,
+    y)\right] - \beta \mathcal{D}_{\text{KL}}\left(\pi(y|x) \| \pi_{\text{ref}}(y|x)\right)\qquad{(72)}</annotation></semantics>
+  id: totrans-31
+  prefs: []
+  type: TYPE_NORMAL
+  zh: <semantics><mrow><munder><mi mathvariant="normal">max</mi><mi>π</mi></munder><msub><mi>𝔼</mi><mrow><mi>x</mi><mo>∼</mo><mi>𝒟</mi></mrow></msub><msub><mi>𝔼</mi><mrow><mi>y</mi><mo>∼</mo><mi>π</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>y</mi><mo stretchy="false" form="prefix">|</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow></msub><mrow><mo stretchy="true"
+    form="prefix">[</mo><msub><mi>r</mi><mi>θ</mi></msub><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo>,</mo><mi>y</mi><mo
+    stretchy="false" form="postfix">)</mo><mo stretchy="true" form="postfix">]</mo></mrow><mo>−</mo><mi>β</mi><msub><mi>𝒟</mi><mtext
+    mathvariant="normal">KL</mtext></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>π</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>y</mi><mo stretchy="false" form="prefix">|</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo><mo stretchy="false" form="postfix">∥</mo><msub><mi>π</mi><mtext
+    mathvariant="normal">ref</mtext></msub><mo stretchy="false" form="prefix">(</mo><mi>y</mi><mo
+    stretchy="false" form="prefix">|</mi><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mo
+    stretchy="true" form="postfix">)</mo></mrow><mrow><mo stretchy="false" form="prefix">(</mo><mn>72</mn><mo
+    stretchy="false" form="postfix">)</mo></mrow></mrow> <annotation encoding="application/x-tex">\max_{\pi}
+    \mathbb{E}_{x \sim \mathcal{D}}\mathbb{E}_{y \sim \pi(y|x)} \left[r_\theta(x,
+    y)\right] - \beta \mathcal{D}_{\text{KL}}\left(\pi(y|x) \| \pi_{\text{ref}}(y|x)\right)\qquad{(72)}</annotation></semantics>
+- en: 'Here, the dual expectation only applies to the sampling to compute the expected
+    reward, as the KL term is still an analytical expression. First, let us expand
+    the definition of KL-divergence. Recall that <semantics><mrow><msub><mi>𝒟</mi><mtext
+    mathvariant="normal">KL</mtext></msub><mo stretchy="false" form="prefix">(</mo><mi>π</mi><mo
+    stretchy="false" form="postfix">∥</mo><msub><mi>π</mi><mtext mathvariant="normal">ref</mtext></msub><mo
+    stretchy="false" form="postfix">)</mo><mo>=</mo><msub><mi>𝔼</mi><mrow><mi>y</mi><mo>∼</mo><mi>π</mi></mrow></msub><mrow><mo
+    stretchy="true" form="prefix">[</mo><mi mathvariant="normal">log</mi><mfrac><mrow><mi>π</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>y</mi><mo stretchy="false" form="prefix">|</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow><mrow><msub><mi>π</mi><mtext mathvariant="normal">ref</mtext></msub><mo
+    stretchy="false" form="prefix">(</mo><mi>y</mi><mo stretchy="false" form="prefix">|</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow></mfrac><mo stretchy="true" form="postfix">]</mo></mrow></mrow><annotation
+    encoding="application/x-tex">\mathcal{D}_{\text{KL}}(\pi \| \pi_{\text{ref}})
+    = \mathbb{E}_{y \sim \pi}\left[\log \frac{\pi(y|x)}{\pi_{\text{ref}}(y|x)}\right]</annotation></semantics>,
+    where the <semantics><mrow><mi>π</mi><mo stretchy="false" form="prefix">(</mo><mi>y</mi><mo
+    stretchy="false" form="prefix">|</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation
+    encoding="application/x-tex">\pi(y|x)</annotation></semantics> weighting in the
+    sum becomes the sampling distribution. Since both terms now share the same expectation
+    over <semantics><mrow><mi>y</mi><mo>∼</mo><mi>π</mi><mo stretchy="false" form="prefix">(</mo><mi>y</mi><mo
+    stretchy="false" form="prefix">|</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation
+    encoding="application/x-tex">y \sim \pi(y|x)</annotation></semantics>, we can
+    combine them:'
+  id: totrans-32
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 在这里，双重期望仅适用于用于计算期望奖励的采样，因为KL项仍然是一个解析表达式。首先，让我们扩展KL散度的定义。回忆一下 <semantics><mrow><msub><mi>𝒟</mi><mtext
+    mathvariant="normal">KL</mtext></msub><mo stretchy="false" form="prefix">(</mo><mi>π</mi><mo
+    stretchy="false" form="postfix">∥</mo><msub><mi>π</mi><mtext mathvariant="normal">ref</mtext></msub><mo
+    stretchy="false" form="postfix">)</mo><mo>=</mo><msub><mi>𝔼</mi><mrow><mi>y</mi><mo>∼</mo><mi>π</mi></mrow></msub><mrow><mo
+    stretchy="true" form="prefix">[</mo><mi mathvariant="normal">log</mi><mfrac><mrow><mi>π</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>y</mi><mo stretchy="false" form="prefix">|</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow><mrow><msub><mi>π</mi><mtext mathvariant="normal">ref</mtext></msub><mo
+    stretchy="false" form="prefix">(</mo><mi>y</mi><mo stretchy="false" form="prefix">|</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow></mfrac><mo stretchy="true" form="postfix">]</mo></mrow></mrow><annotation
+    encoding="application/x-tex">\mathcal{D}_{\text{KL}}(\pi \| \pi_{\text{ref}})
+    = \mathbb{E}_{y \sim \pi}\left[\log \frac{\pi(y|x)}{\pi_{\text{ref}}(y|x)}\right]</annotation></semantics>，其中求和中的
+    <semantics><mrow><mi>π</mi><mo stretchy="false" form="prefix">(</mo><mi>y</mi><mo
+    stretchy="false" form="prefix">|</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation
+    encoding="application/x-tex">\pi(y|x)</annotation></semantics> 权重变成了采样分布。由于现在两个项都对
+    <semantics><mrow><mi>y</mi><mo>∼</mo><mi>π</mi><mo stretchy="false" form="prefix">(</mo><mi>y</mi><mo
+    stretchy="false" form="prefix">|</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation
+    encoding="application/x-tex">y \sim \pi(y|x)</annotation></semantics> 有相同的期望，我们可以将它们合并：
+- en: <semantics><mrow><munder><mi mathvariant="normal">max</mi><mi>π</mi></munder><msub><mi>𝔼</mi><mrow><mi>x</mi><mo>∼</mo><mi>𝒟</mi></mrow></msub><msub><mi>𝔼</mi><mrow><mi>y</mi><mo>∼</mo><mi>π</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>y</mi><mo stretchy="false" form="prefix">|</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow></msub><mrow><mo stretchy="true"
+    form="prefix">[</mo><mi>r</mi><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo>,</mo><mi>y</mi><mo
+    stretchy="false" form="postfix">)</mo><mo>−</mo><mi>β</mi><mi mathvariant="normal">log</mi><mfrac><mrow><mi>π</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>y</mi><mo stretchy="false" form="prefix">|</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow><mrow><msub><mi>π</mi><mtext mathvariant="normal">ref</mtext></msub><mo
+    stretchy="false" form="prefix">(</mo><mi>y</mi><mo stretchy="false" form="prefix">|</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow></mfrac><mo stretchy="true" form="postfix">]</mo></mrow><mrow><mo
+    stretchy="false" form="prefix">(</mo><mn>73</mn><mo stretchy="false" form="postfix">)</mo></mrow></mrow><annotation
+    encoding="application/x-tex">\max_{\pi} \mathbb{E}_{x \sim \mathcal{D}}\mathbb{E}_{y
+    \sim \pi(y|x)}\left[r(x,y)-\beta\log\frac{\pi(y|x)}{\pi_{\text{ref}}(y|x)}\right]
+    \qquad{(73)}</annotation></semantics>
+  id: totrans-33
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Next, pull the negative sign out of the difference in brackets. To do this,
+    split it into two terms:'
+  id: totrans-34
+  prefs: []
+  type: TYPE_NORMAL
+- en: <semantics><mrow><mo>=</mo><munder><mi mathvariant="normal">max</mi><mi>π</mi></munder><mrow><mo
+    stretchy="true" form="prefix">(</mo><msub><mi>𝔼</mi><mrow><mi>x</mi><mo>∼</mo><mi>𝒟</mi></mrow></msub><msub><mi>𝔼</mi><mrow><mi>y</mi><mo>∼</mo><mi>π</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>y</mi><mo stretchy="false" form="prefix">|</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow></msub><mo stretchy="false" form="prefix">[</mo><mi>r</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>x</mi><mo>,</mo><mi>y</mi><mo stretchy="false"
+    form="postfix">)</mo><mo stretchy="false" form="postfix">]</mo><mo>−</mo><mi>β</mi><msub><mi>𝔼</mi><mrow><mi>x</mi><mo>∼</mo><mi>𝒟</mi></mrow></msub><msub><mi>𝔼</mi><mrow><mi>y</mi><mo>∼</mo><mi>π</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>y</mi><mo stretchy="false" form="prefix">|</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow></msub><mrow><mo stretchy="true"
+    form="prefix">[</mo><mi mathvariant="normal">log</mi><mfrac><mrow><mi>π</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>y</mi><mo stretchy="false" form="prefix">|</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow><mrow><msub><mi>π</mi><mtext mathvariant="normal">ref</mtext></msub><mo
+    stretchy="false" form="prefix">(</mo><mi>y</mi><mo stretchy="false" form="prefix">|</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow></mfrac><mo stretchy="true" form="postfix">]</mo></mrow><mo
+    stretchy="true" form="postfix">)</mo></mrow><mrow><mo stretchy="false" form="prefix">(</mo><mn>74</mn><mo
+    stretchy="false" form="postfix">)</mo></mrow></mrow> <annotation encoding="application/x-tex">=
+    \max_{\pi}\left(\mathbb{E}_{x \sim \mathcal{D}}\mathbb{E}_{y \sim \pi(y|x)}[r(x,y)]
+    - \beta\,\mathbb{E}_{x \sim \mathcal{D}}\mathbb{E}_{y \sim \pi(y|x)}\left[\log\frac{\pi(y|x)}{\pi_{\text{ref}}(y|x)}\right]\right)
+    \qquad{(74)}</annotation></semantics>
+  id: totrans-35
+  prefs: []
+  type: TYPE_NORMAL
+  zh: <semantics><mrow><mo>=</mo><munder><mi mathvariant="normal">max</mi><mi>π</mi></munder><mrow><mo
+    stretchy="true" form="prefix">(</mo><msub><mi>𝔼</mi><mrow><mi>x</mi><mo>∼</mo><mi>𝒟</mi></mrow></msub><msub><mi>𝔼</mi><mrow><mi>y</mi><mo>∼</mo><mi>π</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>y</mi><mo stretchy="false" form="prefix">|</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow></msub><mo stretchy="false" form="prefix">[</mo><mi>r</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>x</mi><mo>,</mo><mi>y</mi><mo stretchy="false"
+    form="postfix">)</mo><mo stretchy="false" form="postfix">]</mo><mo>−</mo><mi>β</mi><msub><mi>𝔼</mi><mrow><mi>x</mi><mo>∼</mo><mi>𝒟</mi></mrow></msub><msub><mi>𝔼</mi><mrow><mi>y</mi><mo>∼</mo><mi>π</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>y</mi><mo stretchy="false" form="prefix">|</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow></msub><mrow><mo stretchy="true"
+    form="prefix">[</mo><mi mathvariant="normal">log</mi><mfrac><mrow><mi>π</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>y</mi><mo stretchy="false" form="prefix">|</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow><mrow><msub><mi>π</mi><mtext mathvariant="normal">ref</mtext></msub><mo
+    stretchy="false" form="prefix">(</mo><mi>y</mi><mo stretchy="false" form="prefix">|</mi><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow></mfrac><mo stretchy="true" form="postfix">]</mo></mrow><mo
+    stretchy="true" form="postfix">)</mo></mrow><mrow><mo stretchy="false" form="prefix">(</mo><mn>74</mn><mo
+    stretchy="false" form="postfix">)</mo></mrow></mrow> <annotation encoding="application/x-tex">=
+    \max_{\pi}\left(\mathbb{E}_{x \sim \mathcal{D}}\mathbb{E}_{y \sim \pi(y|x)}[r(x,y)]
+    - \beta\,\mathbb{E}_{x \sim \mathcal{D}}\mathbb{E}_{y \sim \pi(y|x)}\left[\log\frac{\pi(y|x)}{\pi_{\text{ref}}(y|x)}\right]\right)
+    \qquad{(74)}</annotation></semantics>
+- en: Then, remove the factor of <semantics><mrow><mi>−</mi><mn>1</mn></mrow><annotation
+    encoding="application/x-tex">-1</annotation></semantics> and <semantics><mi>β</mi><annotation
+    encoding="application/x-tex">\beta</annotation></semantics>,
+  id: totrans-36
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 然后移除因子<semantics><mrow><mi>−</mi><mn>1</mn></mrow><annotation encoding="application/x-tex">-1</annotation></semantics>和<semantics><mi>β</mi><annotation
+    encoding="application/x-tex">\beta</annotation></semantics>，
+- en: <semantics><mrow><mo>=</mo><munder><mi mathvariant="normal">min</mi><mi>π</mi></munder><mrow><mo
+    stretchy="true" form="prefix">(</mo><mi>−</mi><msub><mi>𝔼</mi><mrow><mi>x</mi><mo>∼</mo><mi>𝒟</mi></mrow></msub><msub><mi>𝔼</mi><mrow><mi>y</mi><mo>∼</mo><mi>π</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>y</mi><mo stretchy="false" form="prefix">|</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow></msub><mo stretchy="false" form="prefix">[</mo><mi>r</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>x</mi><mo>,</mo><mi>y</mi><mo stretchy="false"
+    form="postfix">)</mo><mo stretchy="false" form="postfix">]</mo><mo>+</mo><mi>β</mi><msub><mi>𝔼</mi><mrow><mi>x</mi><mo>∼</mo><mi>𝒟</mi></mrow></msub><msub><mi>𝔼</mi><mrow><mi>y</mi><mo>∼</mo><mi>π</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>y</mi><mo stretchy="false" form="prefix">|</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow></msub><mrow><mo stretchy="true"
+    form="prefix">[</mo><mi mathvariant="normal">log</mi><mfrac><mrow><mi>π</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>y</mi><mo stretchy="false" form="prefix">|</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow><mrow><msub><mi>π</mi><mrow><mi mathvariant="normal">r</mi><mi
+    mathvariant="normal">e</mi><mi mathvariant="normal">f</mi></mrow></msub><mo stretchy="false"
+    form="prefix">(</mo><mi>y</mi><mo stretchy="false" form="prefix">|</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow></mfrac><mo stretchy="true" form="postfix">]</mo></mrow><mo
+    stretchy="true" form="postfix">)</mo></mrow><mrow><mo stretchy="false" form="prefix">(</mo><mn>75</mn><mo
+    stretchy="false" form="postfix">)</mo></mrow></mrow> <annotation encoding="application/x-tex">=
+    \min_{\pi}\left(-\mathbb{E}_{x \sim \mathcal{D}}\mathbb{E}_{y \sim \pi(y|x)}[r(x,y)]
+    + \beta\,\mathbb{E}_{x \sim \mathcal{D}}\mathbb{E}_{y \sim \pi(y|x)}\left[\log\frac{\pi(y|x)}{\pi_{\mathrm{ref}}(y|x)}\right]\right)
+    \qquad{(75)}</annotation></semantics>
+  id: totrans-37
+  prefs: []
+  type: TYPE_NORMAL
+  zh: <semantics><mrow><mo>=</mo><munder><mi mathvariant="normal">min</mi><mi>π</mi></munder><mrow><mo
+    stretchy="true" form="prefix">(</mo><mi>−</mi><msub><mi>𝔼</mi><mrow><mi>x</mi><mo>∼</mo><mi>𝒟</mi></mrow></msub><msub><mi>𝔼</mi><mrow><mi>y</mi><mo>∼</mo><mi>π</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>y</mi><mo stretchy="false" form="prefix">|</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow></msub><mo stretchy="false" form="prefix">[</mo><mi>r</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>x</mi><mo>,</mo><mi>y</mi><mo stretchy="false"
+    form="postfix">)</mo><mo stretchy="false" form="postfix">]</mo><mo>+</mo><mi>β</mi><msub><mi>𝔼</mi><mrow><mi>x</mi><mo>∼</mo><mi>𝒟</mi></mrow></msub><msub><mi>𝔼</mi><mrow><mi>y</mi><mo>∼</mo><mi>π</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>y</mi><mo stretchy="false" form="prefix">|</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow></msub><mrow><mo stretchy="true"
+    form="prefix">[</mo><mi mathvariant="normal">log</mi><mfrac><mrow><mi>π</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>y</mi><mo stretchy="false" form="prefix">|</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow><mrow><msub><mi>π</mi><mrow><mi mathvariant="normal">r</mi><mi
+    mathvariant="normal">e</mi><mi mathvariant="normal">f</mi></mrow></msub><mo stretchy="false"
+    form="prefix">(</mo><mi>y</mi><mo stretchy="false" form="prefix">|</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow></mfrac><mo stretchy="true" form="postfix">]</mo></mrow><mo
+    stretchy="true" form="postfix">)</mo></mrow><mrow><mo stretchy="false" form="prefix">(</mo><mn>75</mn><mo
+    stretchy="false" form="postfix">)</mo></mrow></mrow> <annotation encoding="application/x-tex">=
+    \min_{\pi}\left(-\mathbb{E}_{x \sim \mathcal{D}}\mathbb{E}_{y \sim \pi(y|x)}[r(x,y)]
+    + \beta\,\mathbb{E}_{x \sim \mathcal{D}}\mathbb{E}_{y \sim \pi(y|x)}\left[\log\frac{\pi(y|x)}{\pi_{\mathrm{ref}}(y|x)}\right]\right)
+    \qquad{(75)}</annotation></semantics>
+- en: 'Divide by <semantics><mi>β</mi><annotation encoding="application/x-tex">\beta</annotation></semantics>
+    and recombine:'
+  id: totrans-38
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 将其除以 <semantics><mi>β</mi><annotation encoding="application/x-tex">\beta</annotation></semantics>
+    并重新组合：
+- en: <semantics><mrow><mo>=</mo><munder><mi mathvariant="normal">min</mi><mi>π</mi></munder><mrow><mo
+    stretchy="true" form="prefix">(</mo><msub><mi>𝔼</mi><mrow><mi>x</mi><mo>∼</mo><mi>𝒟</mi></mrow></msub><msub><mi>𝔼</mi><mrow><mi>y</mi><mo>∼</mo><mi>π</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>y</mi><mo stretchy="false" form="prefix">|</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow></msub><mrow><mo stretchy="true"
+    form="prefix">[</mo><mi mathvariant="normal">log</mi><mfrac><mrow><mi>π</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>y</mi><mo stretchy="false" form="prefix">|</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow><mrow><msub><mi>π</mi><mtext mathvariant="normal">ref</mtext></msub><mo
+    stretchy="false" form="prefix">(</mo><mi>y</mi><mo stretchy="false" form="prefix">|</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow></mfrac><mo>−</mo><mfrac><mn>1</mn><mi>β</mi></mfrac><mi>r</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>x</mi><mo>,</mo><mi>y</mi><mo stretchy="false"
+    form="postfix">)</mo><mo stretchy="true" form="postfix">]</mo></mrow><mo stretchy="true"
+    form="postfix">)</mo></mrow><mrow><mo stretchy="false" form="prefix">(</mo><mn>76</mn><mo
+    stretchy="false" form="postfix">)</mo></mrow></mrow> <annotation encoding="application/x-tex">=
+    \min_{\pi}\left(\mathbb{E}_{x \sim \mathcal{D}}\mathbb{E}_{y \sim \pi(y|x)}\left[
+    \log\frac{\pi(y|x)}{\pi_{\text{ref}}(y|x)} - \frac{1}{\beta}r(x,y) \right]\right)
+    \qquad{(76)}</annotation></semantics>
+  id: totrans-39
+  prefs: []
+  type: TYPE_NORMAL
+  zh: <semantics><mrow><mo>=</mo><munder><mi mathvariant="normal">min</mi><mi>π</mi></munder><mrow><mo
+    stretchy="true" form="prefix">(</mo><msub><mi>𝔼</mi><mrow><mi>x</mi><mo>∼</mo><mi>𝒟</mi></mrow></msub><msub><mi>𝔼</mi><mrow><mi>y</mi><mo>∼</mo><mi>π</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>y</mi><mo stretchy="false" form="prefix">|</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow></msub><mrow><mo stretchy="true"
+    form="prefix">[</mo><mi mathvariant="normal">log</mi><mfrac><mrow><mi>π</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>y</mi><mo stretchy="false" form="prefix">|</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow><mrow><msub><mi>π</mi><mtext mathvariant="normal">ref</mtext></msub><mo
+    stretchy="false" form="prefix">(</mo><mi>y</mi><mo stretchy="false" form="prefix">|</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow></mfrac><mo>−</mo><mfrac><mn>1</mn><mi>β</mi></mfrac><mi>r</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>x</mi><mo>,</mo><mi>y</mi><mo stretchy="false"
+    form="postfix">)</mo><mo stretchy="true" form="postfix">]</mo></mrow><mo stretchy="true"
+    form="postfix">)</mo></mrow><mrow><mo stretchy="false" form="prefix">(</mo><mn>76</mn><mo
+    stretchy="false" form="postfix">)</mo></mrow></mrow> <annotation encoding="application/x-tex">=
+    \min_{\pi}\left(\mathbb{E}_{x \sim \mathcal{D}}\mathbb{E}_{y \sim \pi(y|x)}\left[
+    \log\frac{\pi(y|x)}{\pi_{\text{ref}}(y|x)} - \frac{1}{\beta}r(x,y) \right]\right)
+    \qquad{(76)}</annotation></semantics>
+- en: 'Next, we must introduce a partition function, <semantics><mrow><mi>Z</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation
+    encoding="application/x-tex">Z(x)</annotation></semantics>:'
+  id: totrans-40
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 接下来，我们必须引入一个配分函数，<semantics><mrow><mi>Z</mi><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">Z(x)</annotation></semantics>：
+- en: <semantics><mrow><mi>Z</mi><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo><mo>=</mo><munder><mo>∑</mo><mi>y</mi></munder><msub><mi>π</mi><mtext
+    mathvariant="normal">ref</mtext></msub><mo stretchy="false" form="prefix">(</mo><mi>y</mi><mo
+    stretchy="false" form="prefix">|</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mrow><mi
+    mathvariant="normal">exp</mi><mo>⁡</mo></mrow><mrow><mo stretchy="true" form="prefix">(</mo><mfrac><mn>1</mn><mi>β</mi></mfrac><mi>r</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>x</mi><mo>,</mo><mi>y</mi><mo stretchy="false"
+    form="postfix">)</mo><mo stretchy="true" form="postfix">)</mo></mrow><mrow><mo
+    stretchy="false" form="prefix">(</mo><mn>77</mn><mo stretchy="false" form="postfix">)</mo></mrow></mrow>
+    <annotation encoding="application/x-tex">Z(x) = \sum_y \pi_{\text{ref}}(y|x)\exp\left(\frac{1}{\beta}r(x,y)\right)
+    \qquad{(77)}</annotation></semantics>
+  id: totrans-41
+  prefs: []
+  type: TYPE_NORMAL
+  zh: <semantics><mrow><mi>Z</mi><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo><mo>=</mo><munder><mo>∑</mo><mi>y</mi></munder><msub><mi>π</mi><mtext
+    mathvariant="normal">ref</mtext></msub><mo stretchy="false" form="prefix">(</mo><mi>y</mi><mo
+    stretchy="false" form="prefix">|</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mrow><mi
+    mathvariant="normal">exp</mi><mo>⁡</mo></mrow><mrow><mo stretchy="true" form="prefix">(</mo><mfrac><mn>1</mn><mi>β</mi></mfrac><mi>r</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>x</mi><mo>,</mo><mi>y</mi><mo stretchy="false"
+    form="postfix">)</mo><mo stretchy="true" form="postfix">)</mo></mrow><mrow><mo
+    stretchy="false" form="prefix">(</mo><mn>77</mn><mo stretchy="false" form="postfix">)</mo></mrow></mrow>
+    <annotation encoding="application/x-tex">Z(x) = \sum_y \pi_{\text{ref}}(y|x)\exp\left(\frac{1}{\beta}r(x,y)\right)
+    \qquad{(77)}</annotation></semantics>
+- en: 'The partition function acts as a normalization factor over the reference policy,
+    summing over all possible responses <semantics><mi>y</mi><annotation encoding="application/x-tex">y</annotation></semantics>
+    to a prompt <semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics>.
+    With this substituted in, we obtain our intermediate transformation:'
+  id: totrans-42
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 配分函数作为参考策略的归一化因子，对所有可能的响应 <semantics><mi>y</mi><annotation encoding="application/x-tex">y</annotation></semantics>
+    到提示 <semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics>
+    的总和。将此代入后，我们得到我们的中间转换：
+- en: <semantics><mrow><munder><mi mathvariant="normal">min</mi><mi>π</mi></munder><msub><mi>𝔼</mi><mrow><mi>x</mi><mo>∼</mo><mi>𝒟</mi></mrow></msub><msub><mi>𝔼</mi><mrow><mi>y</mi><mo>∼</mo><mi>π</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>y</mi><mo stretchy="false" form="prefix">|</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow></msub><mrow><mo stretchy="true"
+    form="prefix">[</mo><mi mathvariant="normal">log</mi><mfrac><mrow><mi>π</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>y</mi><mo stretchy="false" form="prefix">|</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow><mrow><mfrac><mn>1</mn><mrow><mi>Z</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo></mrow></mfrac><msub><mi>π</mi><mtext
+    mathvariant="normal">ref</mtext></msub><mo stretchy="false" form="prefix">(</mo><mi>y</mi><mo
+    stretchy="false" form="prefix">|</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mrow><mi
+    mathvariant="normal">exp</mi><mo>⁡</mo></mrow><mrow><mo stretchy="true" form="prefix">(</mo><mfrac><mn>1</mn><mi>β</mi></mfrac><mi>r</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>x</mi><mo>,</mo><mi>y</mi><mo stretchy="false"
+    form="postfix">)</mo><mo stretchy="true" form="postfix">)</mo></mrow></mrow></mfrac><mo>−</mo><mi
+    mathvariant="normal">log</mi><mi>Z</mi><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo><mo stretchy="true" form="postfix">]</mo></mrow><mrow><mo
+    stretchy="false" form="prefix">(</mo><mn>78</mn><mo stretchy="false" form="postfix">)</mo></mrow></mrow>
+    <annotation encoding="application/x-tex">\min_{\pi}\mathbb{E}_{x\sim\mathcal{D}}\mathbb{E}_{y\sim\pi(y|x)}\left[\log\frac{\pi(y|x)}{\frac{1}{Z(x)}\pi_{\text{ref}}(y|x)\exp\left(\frac{1}{\beta}r(x,y)\right)}
+    - \log Z(x)\right] \qquad{(78)}</annotation></semantics>
+  id: totrans-43
+  prefs: []
+  type: TYPE_NORMAL
+  zh: <semantics><mrow><munder><mi mathvariant="normal">min</mi><mi>π</mi></munder><msub><mi>𝔼</mi><mrow><mi>x</mi><mo>∼</mo><mi>𝒟</mi></mrow></msub><msub><mi>𝔼</mi><mrow><mi>y</mi><mo>∼</mo><mi>π</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>y</mi><mo stretchy="false" form="prefix">|</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow></msub><mrow><mo stretchy="true"
+    form="prefix">[</mo><mi mathvariant="normal">log</mi><mfrac><mrow><mi>π</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>y</mi><mo stretchy="false" form="prefix">|</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow><mrow><mfrac><mn>1</mn><mrow><mi>Z</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo></mrow></mfrac><msub><mi>π</mi><mtext
+    mathvariant="normal">ref</mtext></msub><mo stretchy="false" form="prefix">(</mo><mi>y</mi><mo
+    stretchy="false" form="prefix">|</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mrow><mi
+    mathvariant="normal">exp</mi><mo>⁡</mo></mrow><mrow><mo stretchy="true" form="prefix">(</mo><mfrac><mn>1</mn><mi>β</mi></mfrac><mi>r</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>x</mi><mo>,</mo><mi>y</mi><mo stretchy="false"
+    form="postfix">)</mo><mo stretchy="true" form="postfix">)</mo></mrow></mrow></mfrac><mo>−</mo><mi
+    mathvariant="normal">log</mi><mi>Z</mi><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo><mo stretchy="true" form="postfix">]</mo></mrow><mrow><mo
+    stretchy="false" form="prefix">(</mo><mn>78</mn><mo stretchy="false" form="postfix">)</mo></mrow></mrow>
+    <annotation encoding="application/x-tex">\min_{\pi}\mathbb{E}_{x\sim\mathcal{D}}\mathbb{E}_{y\sim\pi(y|x)}\left[\log\frac{\pi(y|x)}{\frac{1}{Z(x)}\pi_{\text{ref}}(y|x)\exp\left(\frac{1}{\beta}r(x,y)\right)}
+    - \log Z(x)\right] \qquad{(78)}</annotation></semantics>
+- en: 'To see how this is obtained, consider the internal part of the optimization
+    in brackets of eq. [76](ch012.xhtml#eq:dpo_deriv_4):'
+  id: totrans-44
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 要了解这是如何得到的，考虑方程[76](ch012.xhtml#eq:dpo_deriv_4)中括号内的优化内部部分：
+- en: <semantics><mrow><mrow><mi mathvariant="normal">log</mi><mo>⁡</mo></mrow><mfrac><mrow><mi>π</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>y</mi><mo stretchy="false" form="prefix">|</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow><mrow><msub><mi>π</mi><mtext mathvariant="normal">ref</mtext></msub><mo
+    stretchy="false" form="prefix">(</mo><mi>y</mi><mo stretchy="false" form="prefix">|</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow></mfrac><mo>−</mo><mfrac><mn>1</mn><mi>β</mi></mfrac><mi>r</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>x</mi><mo>,</mo><mi>y</mi><mo stretchy="false"
+    form="postfix">)</mo><mrow><mo stretchy="false" form="prefix">(</mo><mn>79</mn><mo
+    stretchy="false" form="postfix">)</mo></mrow></mrow> <annotation encoding="application/x-tex">\log\frac{\pi(y|x)}{\pi_{\text{ref}}(y|x)}
+    - \frac{1}{\beta}r(x,y) \qquad{(79)}</annotation></semantics>
+  id: totrans-45
+  prefs: []
+  type: TYPE_NORMAL
+  zh: <semantics><mrow><mrow><mi mathvariant="normal">log</mi><mo>⁡</mo></mrow><mfrac><mrow><mi>π</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>y</mi><mo stretchy="false" form="prefix">|</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow><mrow><msub><mi>π</mi><mtext mathvariant="normal">ref</mtext></msub><mo
+    stretchy="false" form="prefix">(</mo><mi>y</mi><mo stretchy="false" form="prefix">|</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow></mfrac><mo>−</mo><mfrac><mn>1</mn><mi>β</mi></mfrac><mi>r</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>x</mi><mo>,</mo><mi>y</mi><mo stretchy="false"
+    form="postfix">)</mo><mrow><mo stretchy="false" form="prefix">(</mo><mn>79</mn><mo
+    stretchy="false" form="postfix">)</mo></mrow></mrow> <annotation encoding="application/x-tex">\log\frac{\pi(y|x)}{\pi_{\text{ref}}(y|x)}
+    - \frac{1}{\beta}r(x,y) \qquad{(79)}</annotation></semantics>
+- en: 'Then, add <semantics><mrow><mrow><mi mathvariant="normal">log</mi><mo>⁡</mo></mrow><mi>Z</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mo>−</mo><mrow><mi
+    mathvariant="normal">log</mi><mo>⁡</mo></mrow><mi>Z</mi><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\log
+    Z(x) - \log Z(x)</annotation></semantics> to both sides:'
+  id: totrans-46
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 然后，将 <semantics><mrow><mrow><mi mathvariant="normal">log</mi><mo>⁡</mo></mrow><mi>Z</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mo>−</mo><mrow><mi
+    mathvariant="normal">log</mi><mo>⁡</mo></mrow><mi>Z</mi><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\log
+    Z(x) - \log Z(x)</annotation></semantics> 添加到等式的两边：
+- en: <semantics><mrow><mo>=</mo><mrow><mi mathvariant="normal">log</mi><mo>⁡</mo></mrow><mfrac><mrow><mi>π</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>y</mi><mo stretchy="false" form="prefix">|</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow><mrow><msub><mi>π</mi><mtext mathvariant="normal">ref</mtext></msub><mo
+    stretchy="false" form="prefix">(</mo><mi>y</mi><mo stretchy="false" form="prefix">|</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow></mfrac><mo>−</mo><mfrac><mn>1</mn><mi>β</mi></mfrac><mi>r</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>x</mi><mo>,</mo><mi>y</mi><mo stretchy="false"
+    form="postfix">)</mo><mo>+</mo><mrow><mi mathvariant="normal">log</mi><mo>⁡</mo></mrow><mi>Z</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mo>−</mo><mrow><mi
+    mathvariant="normal">log</mi><mo>⁡</mo></mrow><mi>Z</mi><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo><mrow><mo stretchy="false" form="prefix">(</mo><mn>80</mn><mo
+    stretchy="false" form="postfix">)</mo></mrow></mrow> <annotation encoding="application/x-tex">=
+    \log\frac{\pi(y|x)}{\pi_{\text{ref}}(y|x)} - \frac{1}{\beta}r(x,y) + \log Z(x)
+    - \log Z(x) \qquad{(80)}</annotation></semantics>
+  id: totrans-47
+  prefs: []
+  type: TYPE_NORMAL
+  zh: <semantics><mrow><mo>=</mo><mrow><mi mathvariant="normal">log</mi><mo>⁡</mo></mrow><mfrac><mrow><mi>π</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>y</mi><mo stretchy="false" form="prefix">|</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow><mrow><msub><mi>π</mi><mtext mathvariant="normal">ref</mtext></msub><mo
+    stretchy="false" form="prefix">(</mo><mi>y</mi><mo stretchy="false" form="prefix">|</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow></mfrac><mo>−</mo><mfrac><mn>1</mn><mi>β</mi></mfrac><mi>r</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>x</mi><mo>,</mo><mi>y</mi><mo stretchy="false"
+    form="postfix">)</mo><mo>+</mo><mrow><mi mathvariant="normal">log</mi><mo>⁡</mo></mrow><mi>Z</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mo>−</mo><mrow><mi
+    mathvariant="normal">log</mi><mo>⁡</mo></mrow><mi>Z</mi><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo><mrow><mo stretchy="false" form="prefix">(</mo><mn>80</mn><mo
+    stretchy="false" form="postfix">)</mo></mrow></mrow> <annotation encoding="application/x-tex">=
+    \log\frac{\pi(y|x)}{\pi_{\text{ref}}(y|x)} - \frac{1}{\beta}r(x,y) + \log Z(x)
+    - \log Z(x) \qquad{(80)}</annotation></semantics>
+- en: 'Then, we group the terms:'
+  id: totrans-48
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 然后，我们将这些项分组：
+- en: <semantics><mrow><mo>=</mo><mrow><mo stretchy="true" form="prefix">(</mo><mi
+    mathvariant="normal">log</mi><mfrac><mrow><mi>π</mi><mo stretchy="false" form="prefix">(</mo><mi>y</mi><mo
+    stretchy="false" form="prefix">|</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo></mrow><mrow><msub><mi>π</mi><mtext
+    mathvariant="normal">ref</mtext></msub><mo stretchy="false" form="prefix">(</mo><mi>y</mi><mo
+    stretchy="false" form="prefix">|</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo></mrow></mfrac><mo>+</mo><mi
+    mathvariant="normal">log</mi><mi>Z</mi><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo><mo stretchy="true" form="postfix">)</mo></mrow><mo>−</mo><mrow><mi
+    mathvariant="normal">log</mi><mo>⁡</mo></mrow><mi>Z</mi><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo><mo>−</mo><mfrac><mn>1</mn><mi>β</mi></mfrac><mi>r</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>x</mi><mo>,</mo><mi>y</mi><mo stretchy="false"
+    form="postfix">)</mo><mrow><mo stretchy="false" form="prefix">(</mo><mn>81</mn><mo
+    stretchy="false" form="postfix">)</mo></mrow></mrow> <annotation encoding="application/x-tex">=
+    \left( \log \frac{\pi(y|x)}{\pi_{\text{ref}}(y|x)} + \log Z(x) \right) - \log
+    Z(x) - \frac{1}{\beta}r(x,y) \qquad{(81)}</annotation></semantics>
+  id: totrans-49
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '`<semantics><mrow><mo>=</mo><mrow><mo stretchy="true" form="prefix">(</mo><mi
+    mathvariant="normal">log</mi><mfrac><mrow><mi>π</mi><mo stretchy="false" form="prefix">(</mo><mi>y</mi><mo
+    stretchy="false" form="prefix">|</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo></mrow><mrow><msub><mi>π</mi><mtext
+    mathvariant="normal">ref</mtext></msub><mo stretchy="false" form="prefix">(</mo><mi>y</mi><mo
+    stretchy="false" form="prefix">|</mi><mi>x</mi><mo stretchy="false" form="postfix">)</mo></mrow></mfrac><mo>+</mo><mi
+    mathvariant="normal">log</mi><mi>Z</mi><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo><mo stretchy="true" form="postfix">)</mo></mrow><mo>−</mo><mrow><mi
+    mathvariant="normal">log</mi><mo>⁡</mo></mrow><mi>Z</mi><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo><mo>−</mo><mfrac><mn>1</mn><mi>β</mi></mfrac><mi>r</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>x</mi><mo>,</mo><mi>y</mi><mo stretchy="false"
+    form="postfix">)</mo><mrow><mo stretchy="false" form="prefix">(</mo><mn>81</mn><mo
+    stretchy="false" form="postfix">)</mo></mrow></mrow> <annotation encoding="application/x-tex">=
+    \left( \log \frac{\pi(y|x)}{\pi_{\text{ref}}(y|x)} + \log Z(x) \right) - \log
+    Z(x) - \frac{1}{\beta}r(x,y) \qquad{(81)}</annotation></semantics>`'
+- en: 'With <semantics><mrow><mrow><mi mathvariant="normal">log</mi><mo>⁡</mo></mrow><mo
+    stretchy="false" form="prefix">(</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mo>+</mo><mrow><mi
+    mathvariant="normal">log</mi><mo>⁡</mo></mrow><mo stretchy="false" form="prefix">(</mo><mi>y</mi><mo
+    stretchy="false" form="postfix">)</mo><mo>=</mo><mrow><mi mathvariant="normal">log</mi><mo>⁡</mo></mrow><mo
+    stretchy="false" form="prefix">(</mo><mi>x</mi><mo>⋅</mo><mi>y</mi><mo stretchy="false"
+    form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\log(x) +
+    \log(y) = \log(x\cdot y)</annotation></semantics> (and moving <semantics><mi>Z</mi><annotation
+    encoding="application/x-tex">Z</annotation></semantics> to the denominator), we
+    get:'
+  id: totrans-50
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 通过 `<semantics><mrow><mrow><mi mathvariant="normal">log</mi><mo>⁡</mo></mrow><mo
+    stretchy="false" form="prefix">(</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mo>+</mo><mrow><mi
+    mathvariant="normal">log</mi><mo>⁡</mo></mrow><mo stretchy="false" form="prefix">(</mo><mi>y</mi><mo
+    stretchy="false" form="postfix">)</mo><mo>=</mo><mrow><mi mathvariant="normal">log</mi><mo>⁡</mo></mrow><mo
+    stretchy="false" form="prefix">(</mo><mi>x</mi><mo>⋅</mo><mi>y</mi><mo stretchy="false"
+    form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\log(x) +
+    \log(y) = \log(x\cdot y)</annotation></semantics>` (并将 `<semantics><mi>Z</mi><annotation
+    encoding="application/x-tex">Z</annotation></semantics>` 移至分母)，我们得到：
+- en: <semantics><mrow><mo>=</mo><mrow><mi mathvariant="normal">log</mi><mo>⁡</mo></mrow><mfrac><mrow><mi>π</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>y</mi><mo stretchy="false" form="prefix">|</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow><mrow><mfrac><mn>1</mn><mrow><mi>Z</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo></mrow></mfrac><msub><mi>π</mi><mtext
+    mathvariant="normal">ref</mtext></msub><mo stretchy="false" form="prefix">(</mo><mi>y</mi><mo
+    stretchy="false" form="prefix">|</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo></mrow></mfrac><mo>−</mo><mrow><mi
+    mathvariant="normal">log</mi><mo>⁡</mo></mrow><mi>Z</mi><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo><mo>−</mo><mfrac><mn>1</mn><mi>β</mi></mfrac><mi>r</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>x</mi><mo>,</mo><mi>y</mi><mo stretchy="false"
+    form="postfix">)</mo><mrow><mo stretchy="false" form="prefix">(</mo><mn>82</mn><mo
+    stretchy="false" form="postfix">)</mo></mrow></mrow> <annotation encoding="application/x-tex">=
+    \log \frac{\pi(y|x)}{\frac{1}{Z(x)}\pi_{\text{ref}}(y|x)}- \log Z(x) - \frac{1}{\beta}r(x,y)
+    \qquad{(82)}</annotation></semantics>
+  id: totrans-51
+  prefs: []
+  type: TYPE_NORMAL
+  zh: <semantics><mrow><mo>=</mo><mrow><mi mathvariant="normal">log</mi><mo>⁡</mo></mrow><mfrac><mrow><mi>π</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>y</mi><mo stretchy="false" form="prefix">|</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow><mrow><mfrac><mn>1</mn><mrow><mi>Z</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo></mrow></mfrac><msub><mi>π</mi><mtext
+    mathvariant="normal">ref</mtext></msub><mo stretchy="false" form="prefix">(</mo><mi>y</mi><mo
+    stretchy="false" form="prefix">|</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo></mrow></mfrac><mo>−</mo><mrow><mi
+    mathvariant="normal">log</mi><mo>⁡</mo></mrow><mi>Z</mi><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo><mo>−</mo><mfrac><mn>1</mn><mi>β</mi></mfrac><mi>r</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>x</mi><mo>,</mo><mi>y</mi><mo stretchy="false"
+    form="postfix">)</mo><mrow><mo stretchy="false" form="prefix">(</mo><mn>82</mn><mo
+    stretchy="false" form="postfix">)</mo></mrow></mrow> <annotation encoding="application/x-tex">=
+    \log \frac{\pi(y|x)}{\frac{1}{Z(x)}\pi_{\text{ref}}(y|x)}- \log Z(x) - \frac{1}{\beta}r(x,y)
+    \qquad{(82)}</annotation></semantics>
+- en: 'Next, we expand <semantics><mrow><mfrac><mn>1</mn><mi>β</mi></mfrac><mi>r</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>x</mi><mo>,</mo><mi>y</mi><mo stretchy="false"
+    form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\frac{1}{\beta}r(x,y)</annotation></semantics>
+    to <semantics><mrow><mrow><mi mathvariant="normal">log</mi><mo>⁡</mo></mrow><mrow><mi
+    mathvariant="normal">exp</mi><mo>⁡</mo></mrow><mfrac><mn>1</mn><mi>β</mi></mfrac><mi>r</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>x</mi><mo>,</mo><mi>y</mi><mo stretchy="false"
+    form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\log \exp
+    \frac{1}{\beta}r(x,y)</annotation></semantics> and do the same operation to get
+    eq. [78](ch012.xhtml#eq:dpo_deriv_5). With this optimization form, we need to
+    actually solve for the optimal policy <semantics><msup><mi>π</mi><mo>*</mo></msup><annotation
+    encoding="application/x-tex">\pi^*</annotation></semantics>. To do so, let us
+    consider the above optimization as a KL distance:'
+  id: totrans-52
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 接下来，我们将 <semantics><mrow><mfrac><mn>1</mn><mi>β</mi></mfrac><mi>r</mi><mo stretchy="false"
+    form="prefix">(</mo><mi>x</mi><mo>,</mo><mi>y</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation
+    encoding="application/x-tex">\frac{1}{\beta}r(x,y)</annotation></semantics> 展开为
+    <semantics><mrow><mrow><mi mathvariant="normal">log</mi><mo>⁡</mo></mrow><mrow><mi
+    mathvariant="normal">exp</mi><mo>⁡</mo></mrow><mfrac><mn>1</mn><mi>β</mi></mfrac><mi>r</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>x</mi><mo>,</mo><mi>y</mi><mo stretchy="false"
+    form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\log \exp
+    \frac{1}{\beta}r(x,y)</annotation></semantics> 并对等式[78](ch012.xhtml#eq:dpo_deriv_5)进行相同的操作。采用这种优化形式，我们需要实际求解最优策略
+    <semantics><msup><mi>π</mi><mo>*</mo></msup><annotation encoding="application/x-tex">\pi^*</annotation></semantics>。为此，让我们将上述优化视为KL距离：
+- en: <semantics><mrow><munder><mi mathvariant="normal">min</mi><mi>π</mi></munder><msub><mi>𝔼</mi><mrow><mi>x</mi><mo>∼</mo><mi>𝒟</mi></mrow></msub><mrow><mo
+    stretchy="true" form="prefix">[</mo><msub><mi>𝒟</mi><mtext mathvariant="normal">KL</mtext></msub><mrow><mo
+    stretchy="true" form="prefix">(</mo><mi>π</mi><mo stretchy="false" form="prefix">(</mo><mi>y</mi><mo
+    stretchy="false" form="prefix">|</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mo
+    stretchy="false" form="prefix">|</mo><mo stretchy="false" form="prefix">|</mo><mfrac><mn>1</mn><mrow><mi>Z</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo></mrow></mfrac><msub><mi>π</mi><mtext
+    mathvariant="normal">ref</mtext></msub><mo stretchy="false" form="prefix">(</mo><mi>y</mi><mo
+    stretchy="false" form="prefix">|</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mi
+    mathvariant="normal">exp</mi><mrow><mo stretchy="true" form="prefix">(</mo><mfrac><mn>1</mn><mi>β</mi></mfrac><mi>r</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>x</mi><mo>,</mo><mi>y</mi><mo stretchy="false"
+    form="postfix">)</mo><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="true"
+    form="postfix">)</mo></mrow><mo>−</mo><mi mathvariant="normal">log</mi><mi>Z</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mo
+    stretchy="true" form="postfix">]</mo></mrow><mrow><mo stretchy="false" form="prefix">(</mo><mn>83</mn><mo
+    stretchy="false" form="postfix">)</mo></mrow></mrow> <annotation encoding="application/x-tex">\min_{\pi}\mathbb{E}_{x\sim\mathcal{D}}\left[\mathcal{D}_{\text{KL}}
+    \left(\pi(y|x)||\frac{1}{Z(x)}\pi_{\text{ref}}(y|x)\exp\left(\frac{1}{\beta}r(x,y)\right)
+    \right) - \log Z(x)\right] \qquad{(83)}</annotation></semantics>
+  id: totrans-53
+  prefs: []
+  type: TYPE_NORMAL
+  zh: <semantics><mrow><munder><mi mathvariant="normal">min</mi><mi>π</mi></munder><msub><mi>𝔼</mi><mrow><mi>x</mi><mo>∼</mo><mi>𝒟</mi></mrow></msub><mrow><mo
+    stretchy="true" form="prefix">[</mo><msub><mi>𝒟</mi><mtext mathvariant="normal">KL</mtext></msub><mrow><mo
+    stretchy="true" form="prefix">(</mo><mi>π</mi><mo stretchy="false" form="prefix">(</mo><mi>y</mi><mo
+    stretchy="false" form="prefix">|</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mo
+    stretchy="false" form="prefix">|</mo><mo stretchy="false" form="prefix">|</mo><mfrac><mn>1</mn><mrow><mi>Z</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo></mrow></mfrac><msub><mi>π</mi><mtext
+    mathvariant="normal">ref</mtext></msub><mo stretchy="false" form="prefix">(</mo><mi>y</mi><mo
+    stretchy="false" form="prefix">|</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mi
+    mathvariant="normal">exp</mi><mrow><mo stretchy="true" form="prefix">(</mo><mfrac><mn>1</mn><mi>β</mi></mfrac><mi>r</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>x</mi><mo>,</mo><mi>y</mi><mo stretchy="false"
+    form="postfix">)</mo><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="true"
+    form="postfix">)</mo></mrow><mo>−</mo><mi mathvariant="normal">log</mi><mi>Z</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mo
+    stretchy="true" form="postfix">]</mo></mrow><mrow><mo stretchy="false" form="prefix">(</mo><mn>83</mn><mo
+    stretchy="false" form="postfix">)</mo></mrow></mrow> <annotation encoding="application/x-tex">\min_{\pi}\mathbb{E}_{x\sim\mathcal{D}}\left[\mathcal{D}_{\text{KL}}
+    \left(\pi(y|x)||\frac{1}{Z(x)}\pi_{\text{ref}}(y|x)\exp\left(\frac{1}{\beta}r(x,y)\right)
+    \right) - \log Z(x)\right] \qquad{(83)}</annotation></semantics>
+- en: 'Since the partition function <semantics><mrow><mi>Z</mi><mo stretchy="false"
+    form="prefix">(</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation
+    encoding="application/x-tex">Z(x)</annotation></semantics> does not depend on
+    the final answer, we can ignore it. This leaves us with just the KL distance between
+    our policy we are learning and a form relating the partition, <semantics><mi>β</mi><annotation
+    encoding="application/x-tex">\beta</annotation></semantics>, reward, and reference
+    policy. The Gibb’s inequality tells this is minimized at a distance of 0, only
+    when the two quantities are equal! Hence, we get an optimal policy:'
+  id: totrans-54
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 由于配分函数 <semantics><mrow><mi>Z</mi><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">Z(x)</annotation></semantics>
+    不依赖于最终答案，我们可以忽略它。这使我们只剩下我们正在学习的策略与与配分相关的形式之间的KL距离，<semantics><mi>β</mi><annotation
+    encoding="application/x-tex">\beta</annotation></semantics>，奖励和参考策略。吉布斯不等式告诉我们，当这两个量相等时，距离为0，此时达到最小化！因此，我们得到一个最优策略：
+- en: <semantics><mrow><msup><mi>π</mi><mo>*</mo></msup><mo stretchy="false" form="prefix">(</mo><mi>y</mi><mo
+    stretchy="false" form="prefix">|</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mi>π</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>y</mi><mo stretchy="false" form="prefix">|</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo><mo>=</mo><mfrac><mn>1</mn><mrow><mi>Z</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo></mrow></mfrac><msub><mi>π</mi><mtext
+    mathvariant="normal">ref</mtext></msub><mo stretchy="false" form="prefix">(</mo><mi>y</mi><mo
+    stretchy="false" form="prefix">|</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mrow><mi
+    mathvariant="normal">exp</mi><mo>⁡</mo></mrow><mrow><mo stretchy="true" form="prefix">(</mo><mfrac><mn>1</mn><mi>β</mi></mfrac><mi>r</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>x</mi><mo>,</mo><mi>y</mi><mo stretchy="false"
+    form="postfix">)</mo><mo stretchy="true" form="postfix">)</mo></mrow><mrow><mo
+    stretchy="false" form="prefix">(</mo><mn>84</mn><mo stretchy="false" form="postfix">)</mo></mrow></mrow>
+    <annotation encoding="application/x-tex">\pi^*(y|x) = \pi(y|x) = \frac{1}{Z(x)}\pi_{\text{ref}}(y|x)\exp\left(\frac{1}{\beta}r(x,y)\right)
+    \qquad{(84)}</annotation></semantics>
+  id: totrans-55
+  prefs: []
+  type: TYPE_NORMAL
+  zh: <semantics><mrow><msup><mi>π</mi><mo>*</mo></msup><mo stretchy="false" form="prefix">(</mo><mi>y</mi><mo
+    stretchy="false" form="prefix">|</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mi>π</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>y</mi><mo stretchy="false" form="prefix">|</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo><mo>=</mo><mfrac><mn>1</mn><mrow><mi>Z</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo></mrow></mfrac><msub><mi>π</mi><mtext
+    mathvariant="normal">ref</mtext></msub><mo stretchy="false" form="prefix">(</mo><mi>y</mi><mo
+    stretchy="false" form="prefix">|</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mrow><mi
+    mathvariant="normal">exp</mi><mo>⁡</mo></mrow><mrow><mo stretchy="true" form="prefix">(</mo><mfrac><mn>1</mn><mi>β</mi></mfrac><mi>r</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>x</mi><mo>,</mo><mi>y</mi><mo stretchy="false"
+    form="postfix">)</mo><mo stretchy="true" form="postfix">)</mo></mrow><mrow><mo
+    stretchy="false" form="prefix">(</mo><mn>84</mn><mo stretchy="false" form="postfix">)</mo></mrow></mrow>
+    <annotation encoding="application/x-tex">\pi^*(y|x) = \pi(y|x) = \frac{1}{Z(x)}\pi_{\text{ref}}(y|x)\exp\left(\frac{1}{\beta}r(x,y)\right)
+    \qquad{(84)}</annotation></semantics>
+- en: 2\. Deriving DPO Objective for Bradley Terry Models
+  id: totrans-56
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+  zh: 2. 推导布拉德利-特里模型的目标函数
+- en: 'To start, recall from Chapter 7 on Reward Modeling and Chapter 6 on Preference
+    Data that a Bradley-Terry model of human preferences is formed as:'
+  id: totrans-57
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 首先，回顾第7章关于奖励建模和第6章关于偏好数据的内容，了解人类偏好的布拉德利-特里模型是如何形成的：
+- en: <semantics><mrow><msup><mi>p</mi><mo>*</mo></msup><mo stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mn>1</mn></msub><mo>≻</mo><msub><mi>y</mi><mn>2</mn></msub><mo>∣</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo><mo>=</mo><mfrac><mrow><mrow><mi mathvariant="normal">exp</mi><mo>⁡</mo></mrow><mrow><mo
+    stretchy="true" form="prefix">(</mo><msup><mi>r</mi><mo>*</mo></msup><mo stretchy="false"
+    form="prefix">(</mo><mi>x</mi><mo>,</mo><msub><mi>y</mi><mn>1</mn></msub><mo stretchy="false"
+    form="postfix">)</mo><mo stretchy="true" form="postfix">)</mo></mrow></mrow><mrow><mrow><mi
+    mathvariant="normal">exp</mi><mo>⁡</mo></mrow><mrow><mo stretchy="true" form="prefix">(</mo><msup><mi>r</mi><mo>*</mo></msup><mo
+    stretchy="false" form="prefix">(</mo><mi>x</mi><mo>,</mo><msub><mi>y</mi><mn>1</mn></msub><mo
+    stretchy="false" form="postfix">)</mo><mo stretchy="true" form="postfix">)</mo></mrow><mo>+</mo><mrow><mi
+    mathvariant="normal">exp</mi><mo>⁡</mo></mrow><mrow><mo stretchy="true" form="prefix">(</mo><msup><mi>r</mi><mo>*</mo></msup><mo
+    stretchy="false" form="prefix">(</mo><mi>x</mi><mo>,</mo><msub><mi>y</mi><mn>2</mn></msub><mo
+    stretchy="false" form="postfix">)</mo><mo stretchy="true" form="postfix">)</mo></mrow></mrow></mfrac><mrow><mo
+    stretchy="false" form="prefix">(</mo><mn>85</mn><mo stretchy="false" form="postfix">)</mo></mrow></mrow><annotation
+    encoding="application/x-tex">p^*(y_1 \succ y_2 \mid x) = \frac{\exp\left(r^*(x,y_1)\right)}{\exp\left(r^*(x,y_1)\right)
+    + \exp\left(r^*(x, y_2)\right)} \qquad{(85)}</annotation></semantics>
+  id: totrans-58
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'By manipulating eq. [84](ch012.xhtml#eq:dpo_opt_policy), we can solve for the
+    optimal reward. First, take the logarithm of both sides:'
+  id: totrans-59
+  prefs: []
+  type: TYPE_NORMAL
+- en: <semantics><mrow><mrow><mi mathvariant="normal">log</mi><mo>⁡</mo></mrow><msup><mi>π</mi><mo>*</mo></msup><mo
+    stretchy="false" form="prefix">(</mo><mi>y</mi><mo stretchy="false" form="prefix">|</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo><mo>=</mo><mrow><mi mathvariant="normal">log</mi><mo>⁡</mo></mrow><mrow><mo
+    stretchy="true" form="prefix">(</mo><mfrac><mn>1</mn><mrow><mi>Z</mi><mo stretchy="false"
+    form="prefix">(</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo></mrow></mfrac><msub><mi>π</mi><mtext
+    mathvariant="normal">ref</mtext></msub><mo stretchy="false" form="prefix">(</mo><mi>y</mi><mo
+    stretchy="false" form="prefix">|</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mi
+    mathvariant="normal">exp</mi><mrow><mo stretchy="true" form="prefix">(</mo><mfrac><mn>1</mn><mi>β</mi></mfrac><msup><mi>r</mi><mo>*</mo></msup><mo
+    stretchy="false" form="prefix">(</mo><mi>x</mi><mo>,</mo><mi>y</mi><mo stretchy="false"
+    form="postfix">)</mo><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="true"
+    form="postfix">)</mo></mrow><mrow><mo stretchy="false" form="prefix">(</mo><mn>86</mn><mo
+    stretchy="false" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\log
+    \pi^*(y|x) = \log \left( \frac{1}{Z(x)}\pi_{\text{ref}}(y|x)\exp\left(\frac{1}{\beta}r^*(x,y)\right)
+    \right)\qquad{(86)}</annotation></semantics>
+  id: totrans-60
+  prefs: []
+  type: TYPE_NORMAL
+  zh: <semantics><mrow><mrow><mi mathvariant="normal">log</mi><mo>⁡</mo></mrow><msup><mi>π</mi><mo>*</mo></msup><mo
+    stretchy="false" form="prefix">(</mo><mi>y</mi><mo stretchy="false" form="prefix">|</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo><mo>=</mo><mrow><mi mathvariant="normal">log</mi><mo>⁡</mo></mrow><mrow><mo
+    stretchy="true" form="prefix">(</mo><mfrac><mn>1</mn><mrow><mi>Z</mi><mo stretchy="false"
+    form="prefix">(</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo></mrow></mfrac><msub><mi>π</mi><mtext
+    mathvariant="normal">ref</mtext></msub><mo stretchy="false" form="prefix">(</mo><mi>y</mi><mo
+    stretchy="false" form="prefix">|</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mi
+    mathvariant="normal">exp</mi><mrow><mo stretchy="true" form="prefix">(</mo><mfrac><mn>1</mn><mi>β</mi></mfrac><msup><mi>r</mi><mo>*</mo></msup><mo
+    stretchy="false" form="prefix">(</mo><mi>x</mi><mo>,</mo><mi>y</mi><mo stretchy="false"
+    form="postfix">)</mo><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="true"
+    form="postfix">)</mo></mrow><mrow><mo stretchy="false" form="prefix">(</mo><mn>86</mn><mo
+    stretchy="false" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\log
+    \pi^*(y|x) = \log \left( \frac{1}{Z(x)}\pi_{\text{ref}}(y|x)\exp\left(\frac{1}{\beta}r^*(x,y)\right)
+    \right)\qquad{(86)}</annotation></semantics>
+- en: 'Expanding the right-hand side using <semantics><mrow><mrow><mi mathvariant="normal">log</mi><mo>⁡</mo></mrow><mo
+    stretchy="false" form="prefix">(</mo><mi>a</mi><mi>b</mi><mi>c</mi><mo stretchy="false"
+    form="postfix">)</mo><mo>=</mo><mrow><mi mathvariant="normal">log</mi><mo>⁡</mo></mrow><mi>a</mi><mo>+</mo><mrow><mi
+    mathvariant="normal">log</mi><mo>⁡</mo></mrow><mi>b</mi><mo>+</mo><mrow><mi mathvariant="normal">log</mi><mo>⁡</mo></mrow><mi>c</mi></mrow><annotation
+    encoding="application/x-tex">\log(abc) = \log a + \log b + \log c</annotation></semantics>:'
+  id: totrans-61
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 使用 <semantics><mrow><mrow><mi mathvariant="normal">log</mi><mo>⁡</mo></mrow><mo
+    stretchy="false" form="prefix">(</mo><mi>a</mi><mi>b</mi><mi>c</mi><mo stretchy="false"
+    form="postfix">)</mo><mo>=</mo><mrow><mi mathvariant="normal">log</mi><mo>⁡</mo></mrow><mi>a</mi><mo>+</mo><mrow><mi
+    mathvariant="normal">log</mi><mo>⁡</mo></mrow><mi>b</mi><mo>+</mo><mrow><mi mathvariant="normal">log</mi><mo>⁡</mo></mrow><mi>c</mi></mrow><annotation
+    encoding="application/x-tex">\log(abc) = \log a + \log b + \log c</annotation></semantics>
+    展开右侧：
+- en: <semantics><mrow><mrow><mi mathvariant="normal">log</mi><mo>⁡</mo></mrow><msup><mi>π</mi><mo>*</mo></msup><mo
+    stretchy="false" form="prefix">(</mo><mi>y</mi><mo stretchy="false" form="prefix">|</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo><mo>=</mo><mi>−</mi><mrow><mi mathvariant="normal">log</mi><mo>⁡</mo></mrow><mi>Z</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mo>+</mo><mrow><mi
+    mathvariant="normal">log</mi><mo>⁡</mo></mrow><msub><mi>π</mi><mtext mathvariant="normal">ref</mtext></msub><mo
+    stretchy="false" form="prefix">(</mo><mi>y</mi><mo stretchy="false" form="prefix">|</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo><mo>+</mo><mfrac><mn>1</mn><mi>β</mi></mfrac><msup><mi>r</mi><mo>*</mo></msup><mo
+    stretchy="false" form="prefix">(</mo><mi>x</mi><mo>,</mo><mi>y</mi><mo stretchy="false"
+    form="postfix">)</mo><mrow><mo stretchy="false" form="prefix">(</mo><mn>87</mn><mo
+    stretchy="false" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\log
+    \pi^*(y|x) = -\log Z(x) + \log \pi_{\text{ref}}(y|x) + \frac{1}{\beta}r^*(x,y)\qquad{(87)}</annotation></semantics>
+  id: totrans-62
+  prefs: []
+  type: TYPE_NORMAL
+  zh: <semantics><mrow><mrow><mi mathvariant="normal">log</mi><mo>⁡</mo></mrow><msup><mi>π</mi><mo>*</mo></msup><mo
+    stretchy="false" form="prefix">(</mo><mi>y</mi><mo stretchy="false" form="prefix">|</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo><mo>=</mo><mi>−</mi><mrow><mi mathvariant="normal">log</mi><mo>⁡</mo></mrow><mi>Z</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mo>+</mo><mrow><mi
+    mathvariant="normal">log</mi><mo>⁡</mo></mrow><msub><mi>π</mi><mtext mathvariant="normal">ref</mtext></msub><mo
+    stretchy="false" form="prefix">(</mo><mi>y</mi><mo stretchy="false" form="prefix">|</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo><mo>+</mo><mfrac><mn>1</mn><mi>β</mi></mfrac><msup><mi>r</mi><mo>*</mo></msup><mo
+    stretchy="false" form="prefix">(</mo><mi>x</mi><mo>,</mo><mi>y</mi><mo stretchy="false"
+    form="postfix">)</mo><mrow><mo stretchy="false" form="prefix">(</mo><mn>87</mn><mo
+    stretchy="false" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\log
+    \pi^*(y|x) = -\log Z(x) + \log \pi_{\text{ref}}(y|x) + \frac{1}{\beta}r^*(x,y)\qquad{(87)}</annotation></semantics>
+- en: 'Rearranging to solve for <semantics><mrow><msup><mi>r</mi><mo>*</mo></msup><mo
+    stretchy="false" form="prefix">(</mo><mi>x</mi><mo>,</mo><mi>y</mi><mo stretchy="false"
+    form="postfix">)</mo></mrow><annotation encoding="application/x-tex">r^*(x,y)</annotation></semantics>:'
+  id: totrans-63
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '对 <semantics><mrow><msup><mi>r</mi><mo>*</mo></msup><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo>,</mo><mi>y</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">r^*(x,y)</annotation></semantics>
+    进行重新排列以求解:'
+- en: <semantics><mrow><mfrac><mn>1</mn><mi>β</mi></mfrac><msup><mi>r</mi><mo>*</mo></msup><mo
+    stretchy="false" form="prefix">(</mo><mi>x</mi><mo>,</mo><mi>y</mi><mo stretchy="false"
+    form="postfix">)</mo><mo>=</mo><mrow><mi mathvariant="normal">log</mi><mo>⁡</mo></mrow><msup><mi>π</mi><mo>*</mo></msup><mo
+    stretchy="false" form="prefix">(</mo><mi>y</mi><mo stretchy="false" form="prefix">|</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo><mo>−</mo><mrow><mi mathvariant="normal">log</mi><mo>⁡</mo></mrow><msub><mi>π</mi><mtext
+    mathvariant="normal">ref</mtext></msub><mo stretchy="false" form="prefix">(</mo><mi>y</mi><mo
+    stretchy="false" form="prefix">|</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mo>+</mo><mrow><mi
+    mathvariant="normal">log</mi><mo>⁡</mo></mrow><mi>Z</mi><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo><mrow><mo stretchy="false" form="prefix">(</mo><mn>88</mn><mo
+    stretchy="false" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\frac{1}{\beta}r^*(x,y)
+    = \log \pi^*(y|x) - \log \pi_{\text{ref}}(y|x) + \log Z(x)\qquad{(88)}</annotation></semantics>
+  id: totrans-64
+  prefs: []
+  type: TYPE_NORMAL
+  zh: <semantics><mrow><mfrac><mn>1</mn><mi>β</mi></mfrac><msup><mi>r</mi><mo>*</mo></msup><mo
+    stretchy="false" form="prefix">(</mo><mi>x</mi><mo>,</mo><mi>y</mi><mo stretchy="false"
+    form="postfix">)</mo><mo>=</mo><mrow><mi mathvariant="normal">log</mi><mo>⁡</mo></mrow><msup><mi>π</mi><mo>*</mo></msup><mo
+    stretchy="false" form="prefix">(</mo><mi>y</mi><mo stretchy="false" form="prefix">|</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo><mo>−</mo><mrow><mi mathvariant="normal">log</mi><mo>⁡</mo></mrow><msub><mi>π</mi><mtext
+    mathvariant="normal">ref</mtext></msub><mo stretchy="false" form="prefix">(</mo><mi>y</mi><mo
+    stretchy="false" form="prefix">|</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mo>+</mo><mrow><mi
+    mathvariant="normal">log</mi><mo>⁡</mo></mrow><mi>Z</mi><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo><mrow><mo stretchy="false" form="prefix">(</mo><mn>88</mn><mo
+    stretchy="false" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\frac{1}{\beta}r^*(x,y)
+    = \log \pi^*(y|x) - \log \pi_{\text{ref}}(y|x) + \log Z(x)\qquad{(88)}</annotation></semantics>
+- en: 'Multiplying both sides by <semantics><mi>β</mi><annotation encoding="application/x-tex">\beta</annotation></semantics>:'
+  id: totrans-65
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '两边同时乘以 <semantics><mi>β</mi><annotation encoding="application/x-tex">\beta</annotation></semantics>:'
+- en: <semantics><mrow><msup><mi>r</mi><mo>*</mo></msup><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo>,</mo><mi>y</mi><mo
+    stretchy="false" form="postfix">)</mo><mo>=</mo><mi>β</mi><mrow><mi mathvariant="normal">log</mi><mo>⁡</mo></mrow><mfrac><mrow><msup><mi>π</mi><mo>*</mo></msup><mo
+    stretchy="false" form="prefix">(</mo><mi>y</mi><mo>∣</mo><mi>x</mi><mo stretchy="false"
+    form="postfix">)</mo></mrow><mrow><msub><mi>π</mi><mtext mathvariant="normal">ref</mtext></msub><mo
+    stretchy="false" form="prefix">(</mo><mi>y</mi><mo>∣</mo><mi>x</mi><mo stretchy="false"
+    form="postfix">)</mo></mrow></mfrac><mo>+</mo><mi>β</mi><mrow><mi mathvariant="normal">log</mi><mo>⁡</mo></mrow><mi>Z</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mrow><mo
+    stretchy="false" form="prefix">(</mo><mn>89</mn><mo stretchy="false" form="postfix">)</mo></mrow></mrow><annotation
+    encoding="application/x-tex">r^*(x, y) = \beta \log \frac{\pi^*(y \mid x)}{\pi_{\text{ref}}(y
+    \mid x)} + \beta \log Z(x)\qquad{(89)}</annotation></semantics>
+  id: totrans-66
+  prefs: []
+  type: TYPE_NORMAL
+  zh: <semantics><mrow><msup><mi>r</mi><mo>*</mo></msup><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo>,</mo><mi>y</mi><mo
+    stretchy="false" form="postfix">)</mo><mo>=</mo><mi>β</mi><mrow><mi mathvariant="normal">log</mi><mo>⁡</mo></mrow><mfrac><mrow><msup><mi>π</mi><mo>*</mo></msup><mo
+    stretchy="false" form="prefix">(</mo><mi>y</mi><mo>∣</mo><mi>x</mi><mo stretchy="false"
+    form="postfix">)</mo></mrow><mrow><msub><mi>π</mi><mtext mathvariant="normal">ref</mtext></msub><mo
+    stretchy="false" form="prefix">(</mo><mi>y</mi><mo>∣</mo><mi>x</mi><mo stretchy="false"
+    form="postfix">)</mo></mrow></mfrac><mo>+</mo><mi>β</mi><mrow><mi mathvariant="normal">log</mi><mo>⁡</mo></mrow><mi>Z</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mrow><mo
+    stretchy="false" form="prefix">(</mo><mn>89</mn><mo stretchy="false" form="postfix">)</mo></mrow></mrow><annotation
+    encoding="application/x-tex">r^*(x, y) = \beta \log \frac{\pi^*(y \mid x)}{\pi_{\text{ref}}(y
+    \mid x)} + \beta \log Z(x)\qquad{(89)}</annotation></semantics>
+- en: 'We then can substitute the reward into the Bradley-Terry equation shown in
+    eq. [85](ch012.xhtml#eq:bradley_terry_dpo) to obtain:'
+  id: totrans-67
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 我们可以将奖励代入到方程式[85](ch012.xhtml#eq:bradley_terry_dpo)中所示的Bradley-Terry方程，以获得：
+- en: <semantics><mrow><msup><mi>p</mi><mo>*</mo></msup><mo stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mn>1</mn></msub><mo>≻</mo><msub><mi>y</mi><mn>2</mn></msub><mo>∣</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo><mo>=</mo><mfrac><mrow><mrow><mi mathvariant="normal">exp</mi><mo>⁡</mo></mrow><mrow><mo
+    stretchy="true" form="prefix">(</mo><mi>β</mi><mi mathvariant="normal">log</mi><mfrac><mrow><msup><mi>π</mi><mo>*</mo></msup><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mn>1</mn></msub><mo>∣</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow><mrow><msub><mi>π</mi><mtext mathvariant="normal">ref</mtext></msub><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mn>1</mn></msub><mo>∣</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow></mfrac><mo>+</mo><mi>β</mi><mi mathvariant="normal">log</mi><mi>Z</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mo
+    stretchy="true" form="postfix">)</mo></mrow></mrow><mrow><mrow><mi mathvariant="normal">exp</mi><mo>⁡</mo></mrow><mrow><mo
+    stretchy="true" form="prefix">(</mo><mi>β</mi><mi mathvariant="normal">log</mi><mfrac><mrow><msup><mi>π</mi><mo>*</mo></msup><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mn>1</mn></msub><mo>∣</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow><mrow><msub><mi>π</mi><mtext mathvariant="normal">ref</mtext></msub><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mn>1</mn></msub><mo>∣</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow></mfrac><mo>+</mo><mi>β</mi><mi mathvariant="normal">log</mi><mi>Z</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mo
+    stretchy="true" form="postfix">)</mo></mrow><mo>+</mo><mrow><mi mathvariant="normal">exp</mi><mo>⁡</mo></mrow><mrow><mo
+    stretchy="true" form="prefix">(</mo><mi>β</mi><mi mathvariant="normal">log</mi><mfrac><mrow><msup><mi>π</mi><mo>*</mo></msup><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mn>2</mn></msub><mo>∣</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow><mrow><msub><mi>π</mi><mtext mathvariant="normal">ref</mtext></msub><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mn>2</mn></msub><mo>∣</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow></mfrac><mo>+</mo><mi>β</mi><mi mathvariant="normal">log</mi><mi>Z</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mo
+    stretchy="true" form="postfix">)</mo></mrow></mrow></mfrac><mrow><mo stretchy="false"
+    form="prefix">(</mo><mn>90</mn><mo stretchy="false" form="postfix">)</mo></mrow></mrow><annotation
+    encoding="application/x-tex">p^*(y_1 \succ y_2 \mid x) = \frac{\exp\left(\beta
+    \log \frac{\pi^*(y_1 \mid x)}{\pi_{\text{ref}}(y_1 \mid x)} + \beta \log Z(x)\right)}
+    {\exp\left(\beta \log \frac{\pi^*(y_1 \mid x)}{\pi_{\text{ref}}(y_1 \mid x)} +
+    \beta \log Z(x)\right) + \exp\left(\beta \log \frac{\pi^*(y_2 \mid x)}{\pi_{\text{ref}}(y_2
+    \mid x)} + \beta \log Z(x)\right)} \qquad{(90)}</annotation></semantics>
+  id: totrans-68
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'By decomposing the exponential expressions from <semantics><msup><mi>e</mi><mrow><mi>a</mi><mo>+</mo><mi>b</mi></mrow></msup><annotation
+    encoding="application/x-tex">e^{a+b}</annotation></semantics> to <semantics><mrow><msup><mi>e</mi><mi>a</mi></msup><msup><mi>e</mi><mi>b</mi></msup></mrow><annotation
+    encoding="application/x-tex">e^a e^b</annotation></semantics> and then cancelling
+    out the terms <semantics><msup><mi>e</mi><mrow><mrow><mi mathvariant="normal">log</mi><mo>⁡</mo></mrow><mo
+    stretchy="false" form="prefix">(</mo><mi>Z</mi><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo><mo stretchy="false" form="postfix">)</mo></mrow></msup><annotation
+    encoding="application/x-tex">e^{\log(Z(x))}</annotation></semantics>, this simplifies
+    to:'
+  id: totrans-69
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 通过将指数表达式从 <semantics><msup><mi>e</mi><mrow><mi>a</mi><mo>+</mo><mi>b</mi></mrow></msup><annotation
+    encoding="application/x-tex">e^{a+b}</annotation></semantics> 分解为 <semantics><mrow><msup><mi>e</mi><mi>a</mi></msup><msup><mi>e</mi><mi>b</mi></msup></mrow><annotation
+    encoding="application/x-tex">e^a e^b</annotation></semantics>，然后消去项 <semantics><msup><mi>e</mi><mrow><mrow><mi
+    mathvariant="normal">log</mi><mo>⁡</mo></mrow><mo stretchy="false" form="prefix">(</mo><mi>Z</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mo
+    stretchy="false" form="postfix">)</mo></mrow></msup><annotation encoding="application/x-tex">e^{\log(Z(x))}</annotation></semantics>，这简化为：
+- en: <semantics><mrow><msup><mi>p</mi><mo>*</mo></msup><mo stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mn>1</mn></msub><mo>≻</mo><msub><mi>y</mi><mn>2</mn></msub><mo>∣</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo><mo>=</mo><mfrac><mrow><mrow><mi mathvariant="normal">exp</mi><mo>⁡</mo></mrow><mrow><mo
+    stretchy="true" form="prefix">(</mo><mi>β</mi><mi mathvariant="normal">log</mi><mfrac><mrow><msup><mi>π</mi><mo>*</mo></msup><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mn>1</mn></msub><mo>∣</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow><mrow><msub><mi>π</mi><mtext mathvariant="normal">ref</mtext></msub><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mn>1</mn></msub><mo>∣</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow></mfrac><mo stretchy="true" form="postfix">)</mo></mrow></mrow><mrow><mrow><mi
+    mathvariant="normal">exp</mi><mo>⁡</mo></mrow><mrow><mo stretchy="true" form="prefix">(</mo><mi>β</mi><mi
+    mathvariant="normal">log</mi><mfrac><mrow><msup><mi>π</mi><mo>*</mo></msup><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mn>1</mn></msub><mo>∣</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow><mrow><msub><mi>π</mi><mtext mathvariant="normal">ref</mtext></msub><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mn>1</mn></msub><mo>∣</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow></mfrac><mo stretchy="true" form="postfix">)</mo></mrow><mo>+</mo><mrow><mi
+    mathvariant="normal">exp</mi><mo>⁡</mo></mrow><mrow><mo stretchy="true" form="prefix">(</mo><mi>β</mi><mi
+    mathvariant="normal">log</mi><mfrac><mrow><msup><mi>π</mi><mo>*</mo></msup><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mn>2</mn></msub><mo>∣</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow><mrow><msub><mi>π</mi><mtext mathvariant="normal">ref</mtext></msub><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mn>2</mn></msub><mo>∣</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow></mfrac><mo stretchy="true" form="postfix">)</mo></mrow></mrow></mfrac><mrow><mo
+    stretchy="false" form="prefix">(</mo><mn>91</mn><mo stretchy="false" form="postfix">)</mo></mrow></mrow><annotation
+    encoding="application/x-tex">p^*(y_1 \succ y_2 \mid x) = \frac{\exp\left(\beta
+    \log \frac{\pi^*(y_1 \mid x)}{\pi_{\text{ref}}(y_1 \mid x)}\right)} {\exp\left(\beta
+    \log \frac{\pi^*(y_1 \mid x)}{\pi_{\text{ref}}(y_1 \mid x)}\right) + \exp\left(\beta
+    \log \frac{\pi^*(y_2 \mid x)}{\pi_{\text{ref}}(y_2 \mid x)}\right)} \qquad{(91)}</annotation></semantics>
+  id: totrans-70
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Then, multiply the numerator and denominator by <semantics><mrow><mrow><mi
+    mathvariant="normal">exp</mi><mo>⁡</mo></mrow><mrow><mo stretchy="true" form="prefix">(</mo><mi>−</mi><mi>β</mi><mi
+    mathvariant="normal">log</mi><mfrac><mrow><msup><mi>π</mi><mo>*</mo></msup><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mn>1</mn></msub><mo>∣</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow><mrow><msub><mi>π</mi><mtext mathvariant="normal">ref</mtext></msub><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mn>1</mn></msub><mo>∣</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow></mfrac><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation
+    encoding="application/x-tex">\exp\left(-\beta \log \frac{\pi^*(y_1 \mid x)}{\pi_{\text{ref}}(y_1
+    \mid x)}\right)</annotation></semantics> to obtain:'
+  id: totrans-71
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 然后，将分子和分母乘以 `<semantics><mrow><mrow><mi mathvariant="normal">exp</mi><mo>⁡</mo></mrow><mrow><mo
+    stretchy="true" form="prefix">(</mo><mi>−</mi><mi>β</mi><mi mathvariant="normal">log</mi><mfrac><mrow><msup><mi>π</mi><mo>*</mo></msup><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mn>1</mn></msub><mo>∣</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow><mrow><msub><mi>π</mi><mtext mathvariant="normal">ref</mtext></msub><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mn>1</mn></msub><mo>∣</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow></mfrac><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation
+    encoding="application/x-tex">\exp\left(-\beta \log \frac{\pi^*(y_1 \mid x)}{\pi_{\text{ref}}(y_1
+    \mid x)}\right)</annotation></semantics>` 以获得：
+- en: <semantics><mrow><msup><mi>p</mi><mo>*</mo></msup><mo stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mn>1</mn></msub><mo>≻</mo><msub><mi>y</mi><mn>2</mn></msub><mo>∣</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo><mo>=</mo><mfrac><mn>1</mn><mrow><mn>1</mn><mo>+</mo><mrow><mi
+    mathvariant="normal">exp</mi><mo>⁡</mo></mrow><mrow><mo stretchy="true" form="prefix">(</mo><mi>β</mi><mi
+    mathvariant="normal">log</mi><mfrac><mrow><msup><mi>π</mi><mo>*</mo></msup><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mn>2</mn></msub><mo>∣</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow><mrow><msub><mi>π</mi><mtext mathvariant="normal">ref</mtext></msub><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mn>2</mn></msub><mo>∣</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow></mfrac><mo>−</mo><mi>β</mi><mi mathvariant="normal">log</mi><mfrac><mrow><msup><mi>π</mi><mo>*</mo></msup><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mn>1</mn></msub><mo>∣</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow><mrow><msub><mi>π</mi><mtext mathvariant="normal">ref</mtext></msub><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mn>1</mn></msub><mo>∣</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow></mfrac><mo stretchy="true" form="postfix">)</mo></mrow></mrow></mfrac><mrow><mo
+    stretchy="false" form="prefix">(</mo><mn>92</mn><mo stretchy="false" form="postfix">)</mo></mrow></mrow><annotation
+    encoding="application/x-tex">p^*(y_1 \succ y_2 \mid x) = \frac{1}{1 + \exp\left(\beta
+    \log \frac{\pi^*(y_2 \mid x)}{\pi_{\text{ref}}(y_2 \mid x)} - \beta \log \frac{\pi^*(y_1
+    \mid x)}{\pi_{\text{ref}}(y_1 \mid x)}\right)} \qquad{(92)}</annotation></semantics>
+  id: totrans-72
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '`<semantics><mrow><msup><mi>p</mi><mo>*</mo></msup><mo stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mn>1</mn></msub><mo>≻</mo><msub><mi>y</mi><mn>2</mn></msub><mo>∣</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo><mo>=</mo><mfrac><mn>1</mn><mrow><mn>1</mn><mo>+</mo><mrow><mi
+    mathvariant="normal">exp</mi><mo>⁡</mo></mrow><mrow><mo stretchy="true" form="prefix">(</mo><mi>β</mi><mi
+    mathvariant="normal">log</mi><mfrac><mrow><msup><mi>π</mi><mo>*</mo></msup><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mn>2</mn></msub><mo>∣</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow><mrow><msub><mi>π</mi><mtext mathvariant="normal">ref</mtext></msub><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mn>2</mn></msub><mo>∣</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow></mfrac><mo>−</mo><mi>β</mi><mi mathvariant="normal">log</mi><mfrac><mrow><msup><mi>π</mi><mo>*</mo></msup><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mn>1</mn></msub><mo>∣</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow><mrow><msub><mi>π</mi><mtext mathvariant="normal">ref</mtext></msub><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mn>1</mn></msub><mo>∣</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow></mfrac><mo>−</mo><mi>β</mi><mi mathvariant="normal">log</mi><mfrac><mrow><msup><mi>π</mi><mo>*</mo></msup><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mn>1</mn></msub><mo>∣</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow><mrow><msub><mi>π</mi><mtext mathvariant="normal">ref</mtext></msub><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mn>1</mn></msub><mo>∣</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow></mfrac><mo>−</mo><mi>β</mi><mi mathvariant="normal">log</mi><mfrac><mrow><msup><mi>π</mi><mo>*</mo></msup><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mn>1</mn></msub><mo>∣</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow><mrow><msub><mi>π</mi><mtext mathvariant="normal">ref</mtext></msub><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mn>1</mn></msub><mo>∣</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow></mfrac><mo>−</mo><mi>β</mi><mi mathvariant="normal">log</mi><mfrac><mrow><msup><mi>π</mi><mo>*</mo></msup><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mn>1</mn></msub><mo>∣</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow><mrow><msub><mi>π</mi><mtext mathvariant="normal">ref</mtext></msub><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mn>1</mn></msub><mo>∣</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow></mfrac><mo>−</mo><mi>β</mi><mi mathvariant="normal">log</mi><mfrac><mrow><msup><mi>π</mi><mo>*</mo></msup><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mn>1</mn></msub><mo>∣</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow><mrow><msub><mi>π</mi><mtext mathvariant="normal">ref</mtext></msub><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mn>1</mn></msub><mo>∣</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow></mfrac><mo>−</mo><mi>β</mi><mi mathvariant="normal">log</mi><mfrac><mrow><msup><mi>π</mi><mo>*</mo></msup><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mn>1</mn></msub><mo>∣</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow><mrow><msub><mi>π</mi><mtext mathvariant="normal">ref</mtext></msub><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mn>1</mn></msub><mo>∣</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow></mfrac><mo>−</mo><mi>β</mi><mi mathvariant="normal">log</mi><mfrac><mrow><msup><mi>π</mi><mo>*</mo></msup><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mn>1</mn></msub><mo>∣</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow><mrow><msub><mi>π</mi><mtext mathvariant="normal">ref</mtext></msub><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mn>1</mn></msub><mo>∣</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow></mfrac><mo>−</mo><mi>β</mi><mi mathvariant="normal">log</mi><mfrac><mrow><msup><mi>π</mi><mo>*</mo></msup><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mn>1</mn></msub><mo>∣</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow><mrow><msub><mi>π</mi><mtext mathvariant="normal">ref</mtext></msub><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mn>1</mn></msub><mo>∣</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow></mfrac><mo>−</mo><mi>β</mi><mi mathvariant="normal">log</mi><mfrac><mrow><msup><mi>π</mi><mo>*</mo></msup><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mn>1</mn></msub><mo>∣</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow><mrow><msub><mi>π</mi><mtext mathvariant="normal">ref</mtext></msub><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mn>1</mn></msub><mo>∣</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow></mfrac><mo>−</mo><mi>β</mi><mi mathvariant="normal">log</mi><mfrac><mrow><msup><mi>π</mi><mo>*</mo></msup><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mn>1</mn></msub><mo>∣</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow><mrow><msub><mi>π</mi><mtext mathvariant="normal">ref</mtext></msub><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mn>1</mn></msub><mo>∣</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow></mfrac><mo>−</mo><mi>β</mi><mi mathvariant="normal">log</mi><mfrac><mrow><msup><mi>π</mi><mo>*</mo></msup><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mn>1</mn></msub><mo>∣</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow><mrow><msub><mi>π</mi><mtext mathvariant="normal">ref</mtext></msub><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mn>1</mn></msub><mo>∣</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow></mfrac><mo>−</mo><mi>β</mi><mi mathvariant="normal">log</mi><mfrac><mrow><msup><mi>π</mi><mo>*</mo></msup><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mn>1</mn></msub><mo>∣</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow><mrow><msub><mi>π</mi><mtext mathvariant="normal">ref</mtext></msub><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mn>1</mn></msub><mo>∣</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow></mfrac><mo>−</mo><mi>β</mi><mi mathvariant="normal">log</mi><mfrac><mrow><msup><mi>π</mi><mo>*</mo></msup><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mn>1</mn></msub><mo>∣</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow><mrow><msub><mi>π</mi><mtext mathvariant="normal">ref</mtext></msub><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mn>1</mn></msub><mo>∣</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow></mfrac><mo>−</mo><mi>β</mi><mi mathvariant="normal">log</mi><mfrac><mrow><msup><mi>π</mi><mo>*</mo></msup><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>y'
+- en: 'Finally, with the definition of a sigmoid function as <semantics><mrow><mi>σ</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mfrac><mn>1</mn><mrow><mn>1</mn><mo>+</mo><msup><mi>e</mi><mrow><mi>−</mi><mi>x</mi></mrow></msup></mrow></mfrac></mrow><annotation
+    encoding="application/x-tex">\sigma(x) = \frac{1}{1+e^{-x}}</annotation></semantics>,
+    we obtain:'
+  id: totrans-73
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 最后，根据sigmoid函数的定义 <semantics><mrow><mi>σ</mi><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo><mo>=</mo><mfrac><mn>1</mn><mrow><mn>1</mn><mo>+</mo><msup><mi>e</mi><mrow><mi>−</mi><mi>x</mi></mrow></msup></mrow></mfrac></mrow><annotation
+    encoding="application/x-tex">\sigma(x) = \frac{1}{1+e^{-x}}</annotation></semantics>，我们得到：
+- en: <semantics><mrow><msup><mi>p</mi><mo>*</mo></msup><mo stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mn>1</mn></msub><mo>≻</mo><msub><mi>y</mi><mn>2</mn></msub><mo>∣</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo><mo>=</mo><mi>σ</mi><mrow><mo stretchy="true"
+    form="prefix">(</mo><mi>β</mi><mi mathvariant="normal">log</mi><mfrac><mrow><msup><mi>π</mi><mo>*</mo></msup><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mn>1</mn></msub><mo>∣</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow><mrow><msub><mi>π</mi><mtext mathvariant="normal">ref</mtext></msub><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mn>1</mn></msub><mo>∣</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow></mfrac><mo>−</mo><mi>β</mi><mi mathvariant="normal">log</mi><mfrac><mrow><msup><mi>π</mi><mo>*</mo></msup><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mn>2</mn></msub><mo>∣</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow><mrow><msub><mi>π</mi><mtext mathvariant="normal">ref</mtext></msub><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mn>2</mn></msub><mo>∣</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow></mfrac><mo stretchy="true" form="postfix">)</mo></mrow><mrow><mo
+    stretchy="false" form="prefix">(</mo><mn>93</mn><mo stretchy="false" form="postfix">)</mo></mrow></mrow><annotation
+    encoding="application/x-tex">p^*(y_1 \succ y_2 \mid x) = \sigma\left(\beta \log
+    \frac{\pi^*(y_1 \mid x)}{\pi_{\text{ref}}(y_1 \mid x)} - \beta \log \frac{\pi^*(y_2
+    \mid x)}{\pi_{\text{ref}}(y_2 \mid x)}\right) \qquad{(93)}</annotation></semantics>
+  id: totrans-74
+  prefs: []
+  type: TYPE_NORMAL
+  zh: <semantics><mrow><msup><mi>p</mi><mo>*</mo></msup><mo stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mn>1</mn></msub><mo>≻</mo><msub><mi>y</mi><mn>2</mn></msub><mo>∣</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo><mo>=</mo><mi>σ</mi><mrow><mo stretchy="true"
+    form="prefix">(</mo><mi>β</mi><mi mathvariant="normal">log</mi><mfrac><mrow><msup><mi>π</mi><mo>*</mo></msup><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mn>1</mn></msub><mo>∣</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow><mrow><msub><mi>π</mi><mtext mathvariant="normal">ref</mtext></msub><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mn>1</mn></msub><mo>∣</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow></mfrac><mo>−</mo><mi>β</mi><mi mathvariant="normal">log</mi><mfrac><mrow><msup><mi>π</mi><mo>*</mo></msup><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mn>2</mn></msub><mo>∣</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow><mrow><msub><mi>π</mi><mtext mathvariant="normal">ref</mtext></msub><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mn>2</mn></msub><mo>∣</mo><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow></mfrac><mo stretchy="true" form="postfix">)</mo></mrow><mrow><mo
+    stretchy="false" form="prefix">(</mo><mn>93</mn><mo stretchy="false" form="postfix">)</mo></mrow></mrow><annotation
+    encoding="application/x-tex">p^*(y_1 \succ y_2 \mid x) = \sigma\left(\beta \log
+    \frac{\pi^*(y_1 \mid x)}{\pi_{\text{ref}}(y_1 \mid x)} - \beta \log \frac{\pi^*(y_2
+    \mid x)}{\pi_{\text{ref}}(y_2 \mid x)}\right) \qquad{(93)}</annotation></semantics>
+- en: This is the loss function for DPO, as shown in eq. [69](ch012.xhtml#eq:dpo_core).
+    The DPO paper has an additional derivation for the objective under a Plackett-Luce
+    Model, which is far less used in practice [[20]](ch021.xhtml#ref-rafailov2024direct).
+  id: totrans-75
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 这就是DPO的损失函数，如方程[69](ch012.xhtml#eq:dpo_core)所示。DPO论文在Plackett-Luce模型下对目标函数的推导有额外的说明，这在实践中远不如其他方法常用
+    [[20]](ch021.xhtml#ref-rafailov2024direct)。
+- en: 3\. Deriving the Bradley Terry DPO Gradient
+  id: totrans-76
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+  zh: 3. 推导Bradley-Terry DPO梯度
+- en: We used the DPO gradient shown in eq. [71](ch012.xhtml#eq:dpo_gradient) to explain
+    intuitions for how the model learns. To derive this, we must take the gradient
+    of eq. [93](ch012.xhtml#eq:dpo_loss_deriv3) with respect to the model parameters.
+  id: totrans-77
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 我们使用了方程[71](ch012.xhtml#eq:dpo_gradient)中显示的DPO梯度来解释模型学习时的直觉。为了推导这个梯度，我们必须对方程[93](ch012.xhtml#eq:dpo_loss_deriv3)关于模型参数求导。
+- en: <semantics><mrow><msub><mi>∇</mi><mi>θ</mi></msub><msub><mi>ℒ</mi><mtext mathvariant="normal">DPO</mtext></msub><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>π</mi><mi>θ</mi></msub><mo>;</mo><msub><mi>π</mi><mtext
+    mathvariant="normal">ref</mtext></msub><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mi>−</mi><msub><mi>∇</mi><mi>θ</mi></msub><msub><mi>𝔼</mi><mrow><mo
+    stretchy="false" form="prefix">(</mo><mi>x</mi><mo>,</mo><msub><mi>y</mi><mi>c</mi></msub><mo>,</mo><msub><mi>y</mi><mi>r</mi></msub><mo
+    stretchy="false" form="postfix">)</mo><mo>∼</mo><mi>𝒟</mi></mrow></msub><mrow><mo
+    stretchy="true" form="prefix">[</mo><mi mathvariant="normal">log</mi><mi>σ</mi><mrow><mo
+    stretchy="true" form="prefix">(</mo><mi>β</mi><mi mathvariant="normal">log</mi><mfrac><mrow><msub><mi>π</mi><mi>θ</mi></msub><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mi>c</mi></msub><mo stretchy="false"
+    form="prefix">|</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo></mrow><mrow><msub><mi>π</mi><mtext
+    mathvariant="normal">ref</mtext></msub><mo stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mi>c</mi></msub><mo
+    stretchy="false" form="prefix">|</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo></mrow></mfrac><mo>−</mo><mi>β</mi><mi
+    mathvariant="normal">log</mi><mfrac><mrow><msub><mi>π</mi><mi>θ</mi></msub><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mi>r</mi></msub><mo stretchy="false"
+    form="prefix">|</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo></mrow><mrow><msub><mi>π</mi><mtext
+    mathvariant="normal">ref</mtext></msub><mo stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mi>r</mi></msub><mo
+    stretchy="false" form="prefix">|</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo></mrow></mfrac><mo
+    stretchy="true" form="postfix">)</mo></mrow><mo stretchy="true" form="postfix">]</mo></mrow><mrow><mo
+    stretchy="false" form="prefix">(</mo><mn>94</mn><mo stretchy="false" form="postfix">)</mo></mrow></mrow><annotation
+    encoding="application/x-tex">\nabla_{\theta}\mathcal{L}_{\text{DPO}}(\pi_{\theta};
+    \pi_{\text{ref}}) = -\nabla_{\theta}\mathbb{E}_{(x,y_c,y_r)\sim\mathcal{D}}\left[
+    \log \sigma\left(\beta \log \frac{\pi_{\theta}(y_c|x)}{\pi_{\text{ref}}(y_c|x)}
+    - \beta \log \frac{\pi_{\theta}(y_r|x)}{\pi_{\text{ref}}(y_r|x)}\right)\right]
+    \qquad{(94)}</annotation></semantics>
+  id: totrans-78
+  prefs: []
+  type: TYPE_NORMAL
+- en: To start, this can be rewritten. We know that the derivative of a sigmoid function
+    <semantics><mrow><mfrac><mi>d</mi><mrow><mi>d</mi><mi>x</mi></mrow></mfrac><mi>σ</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mi>σ</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mo
+    stretchy="false" form="prefix">(</mo><mn>1</mn><mo>−</mo><mi>σ</mi><mo stretchy="false"
+    form="prefix">(</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mo stretchy="false"
+    form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\frac{d}{dx}
+    \sigma(x) = \sigma(x)(1-\sigma(x))</annotation></semantics>, the derivative of
+    logarithm <semantics><mrow><mfrac><mi>d</mi><mrow><mi>d</mi><mi>x</mi></mrow></mfrac><mrow><mi
+    mathvariant="normal">log</mi><mo>⁡</mo></mrow><mi>x</mi><mo>=</mo><mfrac><mn>1</mn><mi>x</mi></mfrac></mrow><annotation
+    encoding="application/x-tex">\frac{d}{dx} \log x = \frac{1}{x}</annotation></semantics>,
+    and properties of sigmoid <semantics><mrow><mi>σ</mi><mo stretchy="false" form="prefix">(</mo><mi>−</mi><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo><mo>=</mo><mn>1</mn><mo>−</mo><mi>σ</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation
+    encoding="application/x-tex">\sigma(-x)=1-\sigma(x)</annotation></semantics>,
+    so we can reformat the above equation.
+  id: totrans-79
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 首先，我们可以重新编写。我们知道sigmoid函数的导数 <semantics><mrow><mfrac><mi>d</mi><mrow><mi>d</mi><mi>x</mi></mrow></mfrac><mi>σ</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mi>σ</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mo
+    stretchy="false" form="prefix">(</mo><mn>1</mn><mo>−</mo><mi>σ</mi><mo stretchy="false"
+    form="prefix">(</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mo stretchy="false"
+    form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\frac{d}{dx}
+    \sigma(x) = \sigma(x)(1-\sigma(x))</annotation></semantics>，对数函数的导数 <semantics><mrow><mfrac><mi>d</mi><mrow><mi>d</mi><mi>x</mi></mrow></mfrac><mrow><mi
+    mathvariant="normal">log</mi><mo>⁡</mo></mrow><mi>x</mi><mo>=</mo><mfrac><mn>1</mn><mi>x</mi></mfrac></mrow><annotation
+    encoding="application/x-tex">\frac{d}{dx} \log x = \frac{1}{x}</annotation></semantics>，以及sigmoid函数的性质
+    <semantics><mrow><mi>σ</mi><mo stretchy="false" form="prefix">(</mo><mi>−</mi><mi>x</mi><mo
+    stretchy="false" form="postfix">)</mo><mo>=</mo><mn>1</mn><mo>−</mo><mi>σ</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation
+    encoding="application/x-tex">\sigma(-x)=1-\sigma(x)</annotation></semantics>，因此我们可以重新格式化上述方程。
+- en: First, let <semantics><mrow><mi>u</mi><mo>=</mo><mi>β</mi><mrow><mi mathvariant="normal">log</mi><mo>⁡</mo></mrow><mfrac><mrow><msub><mi>π</mi><mi>θ</mi></msub><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mi>c</mi></msub><mo stretchy="false"
+    form="prefix">|</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo></mrow><mrow><msub><mi>π</mi><mtext
+    mathvariant="normal">ref</mtext></msub><mo stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mi>c</mi></msub><mo
+    stretchy="false" form="prefix">|</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo></mrow></mfrac><mo>−</mo><mi>β</mi><mrow><mi
+    mathvariant="normal">log</mi><mo>⁡</mo></mrow><mfrac><mrow><msub><mi>π</mi><mi>θ</mi></msub><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mi>r</mi></msub><mo stretchy="false"
+    form="prefix">|</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo></mrow><mrow><msub><mi>π</mi><mtext
+    mathvariant="normal">ref</mtext></msub><mo stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mi>r</mi></msub><mo
+    stretchy="false" form="prefix">|</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo></mrow></mfrac></mrow><annotation
+    encoding="application/x-tex">u=\beta \log \frac{\pi_{\theta}(y_c|x)}{\pi_{\text{ref}}(y_c|x)}
+    - \beta \log \frac{\pi_{\theta}(y_r|x)}{\pi_{\text{ref}}(y_r|x)}</annotation></semantics>
+    (the expression inside the sigmoid). Then, we have
+  id: totrans-80
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 首先，设 <semantics><mrow><mi>u</mi><mo>=</mo><mi>β</mi><mrow><mi mathvariant="normal">log</mi><mo>⁡</mo></mrow><mfrac><mrow><msub><mi>π</mi><mi>θ</mi></msub><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mi>c</mi></msub><mo stretchy="false"
+    form="prefix">|</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo></mrow><mrow><msub><mi>π</mi><mtext
+    mathvariant="normal">ref</mtext></msub><mo stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mi>c</mi></msub><mo
+    stretchy="false" form="prefix">|</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo></mrow></mfrac><mo>−</mo><mi>β</mi><mrow><mi
+    mathvariant="normal">log</mi><mo>⁡</mo></mrow><mfrac><mrow><msub><mi>π</mi><mi>θ</mi></msub><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mi>r</mi></msub><mo stretchy="false"
+    form="prefix">|</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo></mrow><mrow><msub><mi>π</mi><mtext
+    mathvariant="normal">ref</mtext></msub><mo stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mi>r</mi></msub><mo
+    stretchy="false" form="prefix">|</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo></mrow></mfrac></mrow><annotation
+    encoding="application/x-tex">u=\beta \log \frac{\pi_{\theta}(y_c|x)}{\pi_{\text{ref}}(y_c|x)}
+    - \beta \log \frac{\pi_{\theta}(y_r|x)}{\pi_{\text{ref}}(y_r|x)}</annotation></semantics>（sigmoid函数内的表达式）。然后，我们有
+- en: <semantics><mrow><msub><mi>∇</mi><mi>θ</mi></msub><msub><mi>ℒ</mi><mtext mathvariant="normal">DPO</mtext></msub><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>π</mi><mi>θ</mi></msub><mo>;</mo><msub><mi>π</mi><mtext
+    mathvariant="normal">ref</mtext></msub><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mi>−</mi><msub><mi>𝔼</mi><mrow><mo
+    stretchy="false" form="prefix">(</mo><mi>x</mi><mo>,</mo><msub><mi>y</mi><mi>c</mi></msub><mo>,</mo><msub><mi>y</mi><mi>r</mi></msub><mo
+    stretchy="false" form="postfix">)</mo><mo>∼</mo><mi>𝒟</mi></mrow></msub><mrow><mo
+    stretchy="true" form="prefix">[</mo><mfrac><mrow><msup><mi>σ</mi><mo>′</mo></msup><mo
+    stretchy="false" form="prefix">(</mo><mi>u</mi><mo stretchy="false" form="postfix">)</mo></mrow><mrow><mi>σ</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>u</mi><mo stretchy="false" form="postfix">)</mo></mrow></mfrac><msub><mi>∇</mi><mi>θ</mi></msub><mi>u</mi><mo
+    stretchy="true" form="postfix">]</mo></mrow><mrow><mo stretchy="false" form="prefix">(</mo><mn>95</mn><mo
+    stretchy="false" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\nabla_{\theta}\mathcal{L}_{\text{DPO}}(\pi_{\theta};\pi_{\text{ref}})
+    = -\mathbb{E}_{(x, y_c, y_r)\sim \mathcal{D}}\left[\frac{\sigma'(u)}{\sigma(u)}\nabla_{\theta}u\right]
+    \qquad{(95)}</annotation></semantics>
+  id: totrans-81
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Expanding this and using the above expressions for sigmoid and logarithms results
+    in the gradient introduced earlier:'
+  id: totrans-82
+  prefs: []
+  type: TYPE_NORMAL
+- en: <semantics><mrow><mi>−</mi><msub><mi>𝔼</mi><mrow><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo>,</mo><msub><mi>y</mi><mi>c</mi></msub><mo>,</mo><msub><mi>y</mi><mi>r</mi></msub><mo
+    stretchy="false" form="postfix">)</mo><mo>∼</mo><mi>𝒟</mi></mrow></msub><mrow><mo
+    stretchy="true" form="prefix">[</mo><mi>β</mi><mi>σ</mi><mrow><mo stretchy="true"
+    form="prefix">(</mo><mi>β</mi><mi mathvariant="normal">log</mi><mfrac><mrow><msub><mi>π</mi><mi>θ</mi></msub><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mi>r</mi></msub><mo stretchy="false"
+    form="prefix">|</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo></mrow><mrow><msub><mi>π</mi><mtext
+    mathvariant="normal">ref</mtext></msub><mo stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mi>r</mi></msub><mo
+    stretchy="false" form="prefix">|</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo></mrow></mfrac><mo>−</mo><mi>β</mi><mi
+    mathvariant="normal">log</mi><mfrac><mrow><msub><mi>π</mi><mi>θ</mi></msub><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mi>c</mi></msub><mo stretchy="false"
+    form="prefix">|</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo></mrow><mrow><msub><mi>π</mi><mtext
+    mathvariant="normal">ref</mtext></msub><mo stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mi>c</mi></msub><mo
+    stretchy="false" form="prefix">|</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo></mrow></mfrac><mo
+    stretchy="true" form="postfix">)</mo></mrow><mrow><mo stretchy="true" form="prefix">[</mo><msub><mi>∇</mi><mi>θ</mi></msub><mi
+    mathvariant="normal">log</mi><mi>π</mi><mo stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mi>c</mi></msub><mo
+    stretchy="false" form="prefix">|</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mo>−</mo><msub><mi>∇</mi><mi>θ</mi></msub><mi
+    mathvariant="normal">log</mi><mi>π</mi><mo stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mi>r</mi></msub><mo
+    stretchy="false" form="prefix">|</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mo
+    stretchy="true" form="postfix">]</mo></mrow><mo stretchy="true" form="postfix">]</mo></mrow><mrow><mo
+    stretchy="false" form="prefix">(</mo><mn>96</mn><mo stretchy="false" form="postfix">)</mo></mrow></mrow>
+    <annotation encoding="application/x-tex">-\mathbb{E}_{(x,y_c,y_r)\sim\mathcal{D}}\left[\beta\sigma\left(\beta\log\frac{\pi_{\theta}(y_r|x)}{\pi_{\text{ref}}(y_r|x)}
+    - \beta\log\frac{\pi_{\theta}(y_c|x)}{\pi_{\text{ref}}(y_c|x)}\right)\left[\nabla_{\theta}\log\pi(y_c|x)-\nabla_{\theta}\log\pi(y_r|x)\right]\right]
+    \qquad{(96)}</annotation></semantics>
+  id: totrans-83
+  prefs: []
+  type: TYPE_NORMAL
+  zh: <semantics><mrow><mi>−</mi><msub><mi>𝔼</mi><mrow><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo>,</mo><msub><mi>y</mi><mi>c</mi></msub><mo>,</mo><msub><mi>y</mi><mi>r</mi></msub><mo
+    stretchy="false" form="postfix">)</mo><mo>∼</mo><mi>𝒟</mi></mrow></msub><mrow><mo
+    stretchy="true" form="prefix">[</mo><mi>β</mi><mi>σ</mi><mrow><mo stretchy="true"
+    form="prefix">(</mo><mi>β</mi><mi mathvariant="normal">log</mi><mfrac><mrow><msub><mi>π</mi><mi>θ</mi></msub><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mi>r</mi></msub><mo stretchy="false"
+    form="prefix">|</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo></mrow><mrow><msub><mi>π</mi><mtext
+    mathvariant="normal">ref</mtext></msub><mo stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mi>r</mi></msub><mo
+    stretchy="false" form="prefix">|</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo></mrow></mfrac><mo>−</mo><mi>β</mi><mi
+    mathvariant="normal">log</mi><mfrac><mrow><msub><mi>π</mi><mi>θ</mi></msub><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mi>c</mi></msub><mo stretchy="false"
+    form="prefix">|</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo></mrow><mrow><msub><mi>π</mi><mtext
+    mathvariant="normal">ref</mtext></msub><mo stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mi>c</mi></msub><mo
+    stretchy="false" form="prefix">|</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo></mrow></mfrac><mo
+    stretchy="true" form="postfix">)</mo></mrow><mrow><mo stretchy="true" form="prefix">[</mo><msub><mi>∇</mi><mi>θ</mi></msub><mi
+    mathvariant="normal">log</mi><mi>π</mi><mo stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mi>c</mi></msub><mo
+    stretchy="false" form="prefix">|</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mo>−</mo><msub><mi>∇</mi><mi>θ</mi></msub><mi
+    mathvariant="normal">log</mi><mi>π</mi><mo stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mi>r</mi></msub><mo
+    stretchy="false" form="prefix">|</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mo
+    stretchy="true" form="postfix">]</mo></mrow><mo stretchy="true" form="postfix">]</mo></mrow><mrow><mo
+    stretchy="false" form="prefix">(</mo><mn>96</mn><mo stretchy="false" form="postfix">)</mo></mrow></mrow>
+    <annotation encoding="application/x-tex">-\mathbb{E}_{(x,y_c,y_r)\sim\mathcal{D}}\left[\beta\sigma\left(\beta\log\frac{\pi_{\theta}(y_r|x)}{\pi_{\text{ref}}(y_r|x)}
+    - \beta\log\frac{\pi_{\theta}(y_c|x)}{\pi_{\text{ref}}(y_c|x)}\right)\left[\nabla_{\theta}\log\pi(y_c|x)-\nabla_{\theta}\log\pi(y_r|x)\right]\right]
+    \qquad{(96)}</annotation></semantics>
+- en: Numerical Concerns, Weaknesses, and Alternatives
+  id: totrans-84
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+  zh: 数值问题、弱点及替代方案
+- en: Many variants of the DPO algorithm have been proposed to address weaknesses
+    of DPO. For example, without rollouts where a reward model can rate generations,
+    DPO treats every pair of preference data with equal weight. In reality, as seen
+    in Chapter 6 on Preference Data, there are many ways of capturing preference data
+    with a richer label than binary. Multiple algorithms have been proposed to re-balance
+    the optimization away from treating each pair equally.
+  id: totrans-85
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 已经提出了许多DPO算法的变体来解决DPO的弱点。例如，在没有奖励模型可以评估生成的rollouts的情况下，DPO以平等权重处理每对偏好数据。在现实中，正如第6章中关于偏好数据的讨论所示，有许多方法可以捕获比二元标签更丰富的偏好数据。已经提出了多个算法来重新平衡优化，使其不再平等对待每一对。
+- en: '**REgression to RElative REward Based RL (REBEL)** adds signal from a reward
+    model, as a margin between chosen and rejected responses, rather than solely the
+    pairwise preference data to more accurately solve the RLHF problem [[166]](ch021.xhtml#ref-gao2024rebel).'
+  id: totrans-86
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: '**回归到相对奖励的强化学习（REBEL）** 通过将奖励模型的信号作为所选和被拒绝响应之间的边缘添加，而不是仅使用成对偏好数据，以更精确地解决RLHF问题
+    [[166]](ch021.xhtml#ref-gao2024rebel)。'
+- en: '**Conservative DPO (cDPO) and Identity Preference Optimization (IPO)** address
+    the overfitting by assuming noise in the preference data. cDPO assumes N percent
+    of the data is incorrectly labelled [[20]](ch021.xhtml#ref-rafailov2024direct)
+    and IPO changes the optimization to soften probability of preference rather than
+    optimize directly from a label [[211]](ch021.xhtml#ref-azar2024general). Practically,
+    IPO changes the preference probability to a nonlinear function, moving away from
+    the Bradley-Terry assumption, with <semantics><mrow><mi mathvariant="normal">Ψ</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>q</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mrow><mi
+    mathvariant="normal">log</mi><mo>⁡</mo></mrow><mrow><mo stretchy="true" form="prefix">(</mo><mfrac><mi>q</mi><mrow><mn>1</mn><mo>−</mo><mi>q</mi></mrow></mfrac><mo
+    stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\Psi(q)
+    = \log\left(\frac{q}{1-q}\right)</annotation></semantics>.'
+  id: totrans-87
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: '**保守DPO（cDPO）和身份偏好优化（IPO）** 通过假设偏好数据中的噪声来解决过拟合问题。cDPO假设N%的数据被错误标记 [[20]](ch021.xhtml#ref-rafailov2024direct)，而IPO通过将偏好概率的优化改为软化概率而不是直接从标签优化，来改变优化方式
+    [[211]](ch021.xhtml#ref-azar2024general)。实际上，IPO将偏好概率转换为非线性函数，远离Bradley-Terry假设，其中
+    <semantics><mrow><mi mathvariant="normal">Ψ</mi><mo stretchy="false" form="prefix">(</mo><mi>q</mi><mo
+    stretchy="false" form="postfix">)</mo><mo>=</mo><mrow><mi mathvariant="normal">log</mi><mo>⁡</mo></mrow><mrow><mo
+    stretchy="true" form="prefix">(</mo><mfrac><mi>q</mi><mrow><mn>1</mn><mo>−</mo><mi>q</mi></mrow></mfrac><mo
+    stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\Psi(q)
+    = \log\left(\frac{q}{1-q}\right)</annotation></semantics>。'
+- en: '**DPO with an offset (ODPO)** “requires the difference between the likelihood
+    of the preferred and dispreferred response to be greater than an offset value”
+    [[212]](ch021.xhtml#ref-amini2024direct) – do not treat every data pair equally,
+    but this can come at the cost of a more difficult labeling environment.'
+  id: totrans-88
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: '**带偏移的DPO（ODPO）** “要求首选和次选响应之间的似然差异大于偏移值” [[212]](ch021.xhtml#ref-amini2024direct)
+    – 不要平等对待每个数据对，但这可能会以更困难的标记环境为代价。'
+- en: Some variants to DPO attempt to either improve the learning signal by making
+    small changes to the loss or make the application more efficient by reducing memory
+    usage.
+  id: totrans-89
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 一些DPO的变体试图通过微小地改变损失或通过减少内存使用来提高应用效率，以改善学习信号。
+- en: '**Odds Ratio Policy Optimization (ORPO)** directly updates the policy model
+    with a pull towards the chosen response, similar to the instruction finetuning
+    loss, with a small penalty on the chosen response [[213]](ch021.xhtml#ref-hong2024reference).
+    This change of loss function removes the need for a reference model, simplifying
+    the setup. The best way to view ORPO is DPO inspired, rather than a DPO derivative.'
+  id: totrans-90
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: '**奇偶比策略优化（ORPO）** 直接通过向所选响应的拉力来更新策略模型，类似于指令微调损失，对所选响应施加小惩罚 [[213]](ch021.xhtml#ref-hong2024reference)。这种损失函数的改变消除了对参考模型的需求，简化了设置。ORPO的最佳看法是受DPO启发，而不是DPO的衍生物。'
+- en: '**Simple Preference Optimization SimPO** makes a minor change to the DPO optimization,
+    by averaging the log-probabilities rather than summing them (SimPO) or adding
+    length normalization, to improve performance [[214]](ch021.xhtml#ref-meng2025simpo).'
+  id: totrans-91
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: '**简单偏好优化SimPO** 对DPO优化进行了微小调整，通过平均对数概率而不是求和（SimPO）或添加长度归一化，以提高性能 [[214]](ch021.xhtml#ref-meng2025simpo)。'
+- en: '![Figure 19: Sketch of preference displacement in DPO.](../media/file17.png)'
+  id: totrans-92
+  prefs: []
+  type: TYPE_IMG
+  zh: '![图19：DPO中偏好位移的草图。](../media/file17.png)'
+- en: 'Figure 19: Sketch of preference displacement in DPO.'
+  id: totrans-93
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 图19：DPO中偏好位移的草图。
+- en: One of the core issues *apparent* in DPO is that the optimization drives only
+    to increase the margin between the probability of the chosen and rejected responses.
+    Numerically, the model reduces the probability of both the chosen and rejected
+    responses, but the *rejected response is reduced by a greater extent* as shown
+    in fig. [19](#fig:dpo_issue). Intuitively, it is not clear how this generalizes,
+    but work has posited that it increases the probability of unaddressed for behaviors
+    – i.e. tokens that language model could generate, but are not in the distribution
+    of the post-training datasets [[215]](ch021.xhtml#ref-razin2024unintentional)
+    [[216]](ch021.xhtml#ref-ren2024learning). Simple methods—such as Cal-DPO [[217]](ch021.xhtml#ref-xiao2024cal),
+    which adjusts the optimization process, and AlphaPO [[218]](ch021.xhtml#ref-gupta2025alphapo),
+    which modifies the reward shape—mitigate this **preference displacement**. In
+    practice, the exact impact of this is not well known, but points to a potential
+    reason why online methods can outperform vanilla DPO.
+  id: totrans-94
+  prefs: []
+  type: TYPE_NORMAL
+  zh: DPO的一个核心问题*明显*在于，优化过程仅驱动增加所选和拒绝响应之间的概率差距。从数值上看，模型降低了所选和拒绝响应的概率，但如图[19](#fig:dpo_issue)所示，*拒绝响应的降低程度更大*。直观上，不清楚这如何泛化，但已有研究提出，这增加了未解决行为（即语言模型可以生成但不在训练后数据集分布中的标记）的概率
+    [[215]](ch021.xhtml#ref-razin2024unintentional) [[216]](ch021.xhtml#ref-ren2024learning)。简单的方法——如Cal-DPO
+    [[217]](ch021.xhtml#ref-xiao2024cal)，它调整优化过程，以及AlphaPO [[218]](ch021.xhtml#ref-gupta2025alphapo)，它修改奖励形状——可以减轻这种**偏好位移**。在实践中，这种影响的精确程度尚不清楚，但指向了在线方法可能优于传统DPO的一个潜在原因。
+- en: The largest other reason that is posited for DPO-like methods to have a lower
+    ceiling on performance than online (RL based) RLHF methods is that the training
+    signal comes from completions from previous or other models. Online variants of
+    DPO alleviate these limitations by generating new completions and incorporating
+    a preference signal at training time. **Online DPO** [[219]](ch021.xhtml#ref-guo2024direct)
+    samples generations from the current model, while **Discriminator-Guided DPO**
+    (D2PO) [[220]](ch021.xhtml#ref-singhal2024d2po) uses reward model relabelling
+    to create new preference data on the fly, and many more variants exist.
+  id: totrans-95
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 最大的其他原因是，与基于在线（基于强化学习）的RLHF方法相比，DPO-like方法在性能上存在较低的上限，这是因为训练信号来自先前或其他模型的完成。DPO的在线变体通过生成新的完成并在训练时引入偏好信号来缓解这些限制。**在线DPO**
+    [[219]](ch021.xhtml#ref-guo2024direct) 从当前模型中采样生成，而**判别器引导的DPO** (D2PO) [[220]](ch021.xhtml#ref-singhal2024d2po)
+    通过奖励模型重标记实时创建新的偏好数据，并且存在许多其他变体。
+- en: There is a long list of other DAA variants, such as Direct Nash Optimization
+    (DNO) [[221]](ch021.xhtml#ref-rosset2024direct) or Binary Classifier Optimization
+    (BCO) [[222]](ch021.xhtml#ref-jung2024binary), but the choice of algorithm is
+    far less important than the initial model and the data used [[6]](ch021.xhtml#ref-lambert2024t)
+    [[223]](ch021.xhtml#ref-zhao2024rainbowpo) [[224]](ch021.xhtml#ref-gorbatovski2025differences).
+  id: totrans-96
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 还有其他许多DAA变体，如直接纳什优化（DNO） [[221]](ch021.xhtml#ref-rosset2024direct) 或二分类器优化（BCO）
+    [[222]](ch021.xhtml#ref-jung2024binary)，但算法的选择远不如初始模型和所使用的数据重要 [[6]](ch021.xhtml#ref-lambert2024t)
+    [[223]](ch021.xhtml#ref-zhao2024rainbowpo) [[224]](ch021.xhtml#ref-gorbatovski2025differences)。
+- en: Implementation Considerations
+  id: totrans-97
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+  zh: 实现考虑
+- en: 'DAAs such as DPO are implemented very differently than policy gradient optimizers.
+    The DPO loss, taken from the original implementation, largely can be summarized
+    as follows [[20]](ch021.xhtml#ref-rafailov2024direct):'
+  id: totrans-98
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 与策略梯度优化器相比，DAA（如DPO）的实现方式大相径庭。DPO损失，从原始实现中提取，大致可以总结如下 [[20]](ch021.xhtml#ref-rafailov2024direct)：
+- en: '[PRE0]'
+  id: totrans-99
+  prefs: []
+  type: TYPE_PRE
+  zh: '[PRE0]'
+- en: This can be used in standard language model training stacks as this information
+    is already collated during the forward pass of a model (with the addition of a
+    reference model).
+  id: totrans-100
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 这可以在标准的语言模型训练堆栈中使用，因为这种信息已经在模型的正向传递过程中收集（添加一个参考模型）。
+- en: In most ways, this is simpler and a quality of life improvement, but also they
+    offer a different set of considerations.
+  id: totrans-101
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 在大多数方面，这更简单，也是生活质量的提升，但同时也带来了一组不同的考虑因素。
+- en: '**KL distance is static**: In DPO and other algorithms, the KL distance is
+    set explicitly by the <semantics><mi>β</mi><annotation encoding="application/x-tex">\beta</annotation></semantics>
+    parameter that balances the distance penalty to the optimization. This is due
+    to the fact that DPO takes gradient steps towards the *optimal* solution to the
+    RLHF objective given the data – it steps exactly to the solution set by the <semantics><mi>β</mi><annotation
+    encoding="application/x-tex">\beta</annotation></semantics> term. On the other
+    hand, RL based optimizers take steps based on the batch and recent data.'
+  id: totrans-102
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+  zh: '**KL距离是静态的**：在DPO和其他算法中，KL距离是通过<semantics><mi>β</mi><annotation encoding="application/x-tex">\beta</annotation></semantics>参数显式设置的，该参数平衡了距离惩罚对优化的影响。这是因为DPO根据数据向RLHF目标的最优解进行梯度步骤——它精确地走向由<semantics><mi>β</mi><annotation
+    encoding="application/x-tex">\beta</annotation></semantics>项设定的解集。另一方面，基于RL的优化器根据批量和最近的数据进行步骤。'
+- en: '**Caching log-probabilities**: Simple implementations of DPO do the forward
+    passes for the policy model and reference models at the same time for conveniences
+    with respect to the loss function. Though, this doubles the memory used and results
+    in increased GPU usage. To avoid this, one can compute the log-probabilities of
+    the reference model over the training dataset first, then reference it when computing
+    the loss and updating the parameters per batch, reducing the peak memory usage
+    by 50%.'
+  id: totrans-103
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+  zh: '**缓存对数概率**：DPO的简单实现同时进行策略模型和参考模型的正向传递，以方便损失函数。尽管如此，这加倍了内存的使用，并导致GPU使用增加。为了避免这种情况，可以先计算参考模型在训练数据集上的对数概率，然后在计算损失和按批更新参数时引用它，从而将峰值内存使用量减少50%。'
+- en: 'DAAs vs. RL: Online vs. Offline Data'
+  id: totrans-104
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+  zh: DAAs与RL：在线数据与离线数据
+- en: 'Broadly, the argument boils down to one question: Do we need the inner workings
+    of reinforcement learning, with value functions, policy gradients, and all, to
+    align language models with RLHF? This, like most questions phrased this way, is
+    overly simplistic. Of course, both methods are well-established, but it is important
+    to illustrate where the fundamental differences and performance manifolds lie.'
+  id: totrans-105
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 广义上，这个论点归结为一个问题：我们需要强化学习的内部工作原理，包括价值函数、策略梯度等，来使语言模型与RLHF对齐吗？这个问题，就像大多数以这种方式表述的问题一样，过于简单化。当然，这两种方法都是成熟的，但重要的是要说明它们之间的基本差异和性能差异在哪里。
+- en: Multiple reports have concluded that policy-gradient based and RL methods outperform
+    DPO and its variants. The arguments take different forms, from training models
+    with different algorithms but controlled data[[190]](ch021.xhtml#ref-ivison2024unpacking)
+    [[225]](ch021.xhtml#ref-xu2024dpo) or studying the role of on-policy data within
+    the RL optimization loop [[226]](ch021.xhtml#ref-tajwar2024preference). In all
+    of these cases, DPO algorithms are a hair behind.
+  id: totrans-106
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 多份报告得出结论，基于策略梯度和RL的方法优于DPO及其变体。这些论点采取了不同的形式，从使用不同算法但受控的数据训练模型[[190]](ch021.xhtml#ref-ivison2024unpacking)
+    [[225]](ch021.xhtml#ref-xu2024dpo) 或研究RL优化循环中在线策略数据的作用[[226]](ch021.xhtml#ref-tajwar2024preference)。在这些所有情况下，DPO算法都略逊一筹。
+- en: Even with this performance delta, DAA are still used extensively in leading
+    models due to its simplicity. DAAs provide a controlled environment where iterations
+    on training data and other configurations can be made rapidly, and given that
+    data is often far more important than algorithms, using DPO can be fine.
+  id: totrans-107
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 即使有这种性能差异，DAA仍然在领先模型中广泛使用，因为其简单性。DAAs提供了一个受控的环境，其中可以快速对训练数据和其他配置进行迭代，鉴于数据通常比算法更重要，使用DPO是可以接受的。
+- en: With the emergence of reasoning models that are primarily trained with RL, further
+    investment will return to using RL for preference-tuning, which in the long-term
+    will improve the robustness of RL infrastructure and cement this margin between
+    DAAs and RL for optimizing from human feedback.
+  id: totrans-108
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 随着以RL为主要训练目标的推理模型的兴起，进一步的投入将回归到使用RL进行偏好调整，从长远来看，这将提高RL基础设施的鲁棒性并巩固DAAs和RL在从人类反馈中进行优化之间的差距。

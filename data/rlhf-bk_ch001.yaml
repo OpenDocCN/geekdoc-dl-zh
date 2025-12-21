@@ -1,0 +1,965 @@
+- en: Introduction
+  id: totrans-0
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+  zh: 引言
+- en: Reinforcement learning from Human Feedback (RLHF) is a technique used to incorporate
+    human information into AI systems. RLHF emerged primarily as a method to solve
+    hard to specify problems. With systems that are designed to be used by humans
+    directly, such problems emerge all the time due to the often unexpressible nature
+    of an individual’s preferences. This encompasses every domain of content and interaction
+    with a digital system. RLHF’s early applications were often in control problems
+    and other traditional domains for reinforcement learning (RL), where the goal
+    is to optimize a specific behavior to solve a task. The core idea to start the
+    field of RLHF was “can we solve hard problems only with basic preference signals
+    guiding the optimization process.” RLHF became most known through the release
+    of ChatGPT and the subsequent rapid development of large language models (LLMs)
+    and other foundation models.
+  id: totrans-1
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 从人类反馈中进行强化学习（RLHF）是一种将人类信息纳入AI系统的技术。RLHF最初主要作为一种解决难以指定问题的方法出现。由于个体偏好的往往难以表达，因此，当系统设计为直接由人类使用时，这类问题会不断出现。这涵盖了与数字系统内容交互的每个领域。RLHF的早期应用通常在控制问题和强化学习（RL）的其他传统领域，其目标是优化特定行为以解决问题。RLHF领域的核心思想是“我们能否仅通过基本偏好信号引导优化过程来解决难题。”RLHF通过ChatGPT的发布而广为人知，随后是大型语言模型（LLMs）和其他基础模型的快速发展和应用。
+- en: The basic pipeline for RLHF involves three steps. First, a language model that
+    can follow user questions must be trained (see Chapter 9). Second, human preference
+    data must be collected for the training of a reward model of human preferences
+    (see Chapter 7). Finally, the language model can be optimized with an RL optimizer
+    of choice, by sampling generations and rating them with respect to the reward
+    model (see Chapter 3 and 11). This book details key decisions and basic implementation
+    examples for each step in this process.
+  id: totrans-2
+  prefs: []
+  type: TYPE_NORMAL
+  zh: RLHF的基本流程包括三个步骤。首先，必须训练一个能够遵循用户问题的语言模型（参见第9章）。其次，必须收集人类偏好数据以训练人类偏好的奖励模型（参见第7章）。最后，可以使用选择的RL优化器对语言模型进行优化，通过采样生成并使用奖励模型对其进行评分（参见第3章和第11章）。本书详细介绍了该过程中每一步的关键决策和基本实现示例。
+- en: RLHF has been applied to many domains successfully, with complexity increasing
+    as the techniques have matured. Early breakthrough experiments with RLHF were
+    applied to deep reinforcement learning [[1]](ch021.xhtml#ref-christiano2017deep),
+    summarization [[2]](ch021.xhtml#ref-stiennon2020learning), following instructions
+    [[3]](ch021.xhtml#ref-ouyang2022training), parsing web information for question
+    answering [[4]](ch021.xhtml#ref-nakano2021webgpt), and “alignment” [[5]](ch021.xhtml#ref-bai2022training).
+    A summary of the early RLHF recipes is shown below in fig. [1](#fig:rlhf-basic).
+  id: totrans-3
+  prefs: []
+  type: TYPE_NORMAL
+  zh: RLHF已成功应用于许多领域，随着技术的成熟，复杂性也在增加。早期使用RLHF的突破性实验应用于深度强化学习 [[1]](ch021.xhtml#ref-christiano2017deep)、摘要
+    [[2]](ch021.xhtml#ref-stiennon2020learning)、遵循指令 [[3]](ch021.xhtml#ref-ouyang2022training)、解析网络信息以进行问答
+    [[4]](ch021.xhtml#ref-nakano2021webgpt) 和“对齐” [[5]](ch021.xhtml#ref-bai2022training)。早期RLHF的配方总结如下，见图[1](#fig:rlhf-basic)。
+- en: '![Figure 1: A rendition of the early, three stage RLHF process with SFT, a
+    reward model, and then optimization.](../media/file0.png)'
+  id: totrans-4
+  prefs: []
+  type: TYPE_IMG
+  zh: '![图1：早期三个阶段的RLHF过程，包括SFT（强化学习与人类反馈）、奖励模型以及随后优化。](../media/file0.png)'
+- en: 'Figure 1: A rendition of the early, three stage RLHF process with SFT, a reward
+    model, and then optimization.'
+  id: totrans-5
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 图1：早期三个阶段的RLHF过程，包括SFT（强化学习与人类反馈）、奖励模型以及随后优化。
+- en: 'In modern language model training, RLHF is one component of post-training.
+    Post-training is a more complete set of techniques and best-practices to make
+    language models more useful for downstream tasks [[6]](ch021.xhtml#ref-lambert2024t).
+    Post-training can be summarized as a many-stage training process using three optimization
+    methods:'
+  id: totrans-6
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 在现代语言模型训练中，RLHF（强化学习与人类反馈）是后训练的一个组成部分。后训练是一套更完整的技巧和最佳实践，旨在使语言模型在下游任务中更加有用 [[6]](ch021.xhtml#ref-lambert2024t)。后训练可以概括为一个多阶段训练过程，使用三种优化方法：
+- en: Instruction / Supervised Finetuning (IFT/SFT), where we teach formatting and
+    form the base of instruction following abilities. This is largely about learning
+    *features* in language.
+  id: totrans-7
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+  zh: 指令/监督微调（IFT/SFT），其中我们教授格式化并形成遵循指令能力的基础。这主要关于在语言中学习*特征*。
+- en: Preference Finetuning (PreFT), where we align to human preferences (and get
+    smaller bump in capabilities at the same time). This is largely about *style*
+    of language and subtle human preferences that are hard to quantify.
+  id: totrans-8
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+  zh: 偏好微调（PreFT），其中我们与人类偏好对齐（同时也在能力上获得较小的提升）。这主要关于语言的*风格*和难以量化的微妙的人类偏好。
+- en: Reinforcement Learning with Verifiable Rewards (RLVR). The newest type of post-training
+    that boosts performance on verifiable domains with more RL training.
+  id: totrans-9
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+  zh: 可验证奖励的强化学习（RLVR）。一种新型的后训练方法，通过更多的RL训练来提高可验证领域的性能。
+- en: RLHF lives within and dominates the second area, **preference finetuning**,
+    which has more complexity than instruction tuning due to it often involving proxy
+    reward models of the true object and noisier data. At the same time, RLHF is far
+    more established than the other popular RL method for language models, reinforcement
+    learning with verifiable rewards. For that reason, this book focuses on preference
+    learning, but in order to completely grasp the role of RLHF, one needs to use
+    these other training stages, so they are also explained in detail.
+  id: totrans-10
+  prefs: []
+  type: TYPE_NORMAL
+  zh: RLHF存在于并主导着第二个领域，**偏好微调**，由于它通常涉及真实目标的代理奖励模型和更嘈杂的数据，因此比指令微调更复杂。同时，RLHF比其他流行的语言模型强化学习方法——可验证奖励的强化学习——更为成熟。因此，这本书专注于偏好学习，但为了完全理解RLHF的作用，需要使用这些其他训练阶段，因此它们也被详细解释。
+- en: As we consider the space of options and attention on these methods for crafting
+    models we collectively use extensively, RLHF colloquially *is* what led to modern
+    post-training. RLHF was the technique that enabled the massive success of the
+    release of ChatGPT, so early in 2023 RLHF encompassed much of the interest in
+    the general field of post-training. RLHF is now just one piece of post-training,
+    so in this book we map through why there was so much attention on RLHF early on,
+    and how other methods emerged to complement it.
+  id: totrans-11
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 当我们考虑我们共同广泛使用的这些方法构建模型的选择和关注时，RLHF在口语中*就是*导致现代后训练的原因。RLHF是使ChatGPT发布取得巨大成功的技巧，因此在2023年初，RLHF涵盖了后训练领域的大部分兴趣。现在，RLHF只是后训练的一部分，因此在这本书中，我们解释了为什么早期对RLHF如此关注，以及其他方法是如何出现来补充它的。
+- en: Training language models is a very complex process, often involving large technical
+    teams of 10s to 100s of people and millions of dollars in data and compute cost.
+    This book serves three purposes to enable readers to grasp how RLHF and related
+    models are used to craft leading models. First, the book distills cutting edge
+    research often hidden within large technology companies into clear topics and
+    trade-offs, so readers can understand how models are made. Second, the book will
+    allow users to setup basic code examples to get their hands dirty on finetuning
+    these models themselves. Finally, beyond teaching the techniques for doing RLHF,
+    this book is designed to distill intuition as to *why* RLHF is crucial to modern
+    AI models.
+  id: totrans-12
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 训练语言模型是一个非常复杂的过程，通常涉及10到100人的大型技术团队，以及数百万美元的数据和计算成本。这本书旨在实现三个目的，使读者能够掌握如何使用RLHF和相关模型来构建领先模型。首先，这本书将大型科技公司中通常隐藏的尖端研究提炼成清晰的主题和权衡，以便读者了解模型是如何制作的。其次，这本书将允许用户设置基本的代码示例，以便他们自己动手微调这些模型。最后，除了教授进行RLHF的技术外，这本书旨在提炼关于*为什么*RLHF对现代人工智能模型至关重要的直觉。
+- en: Due to the complexity of RLHF and how the state-of-the-art is often too complex
+    to be done alone, this book focuses on enabling readers so they have the tools
+    needed to get jobs and start research projects in the area. Others will just enjoy
+    precisely understanding the inner workings of the technology that is the focus
+    of countless discussions across the globe. A book that lays out an exact recipe
+    of how to do RLHF for a specific need is impossible, which is why there is a large
+    industry of companies providing RLHF training and related methods as a service
+    worth millions of dollars. Still, rapid progress in AI systems means the readers
+    who are fitted with this knowledge can approach more and more of their own training
+    over time.
+  id: totrans-13
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 由于RLHF的复杂性和最先进的技术通常过于复杂而无法单独完成，这本书专注于使读者具备所需工具，以便他们能够在该领域找到工作和开始研究项目。其他人将只是享受精确理解全球无数讨论的技术核心。一本详细说明如何针对特定需求进行RLHF的精确食谱的书是不可能的，这就是为什么有大量公司提供价值数百万美元的RLHF培训和相关方法作为服务。尽管如此，人工智能系统的快速进步意味着具备这种知识的读者可以随着时间的推移处理越来越多的自己的训练。
+- en: What Does RLHF Do?
+  id: totrans-14
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+  zh: RLHF做什么？
+- en: The biggest question around RLHF, yet one that is still hard to answer, is “What
+    does RLHF training offer models?” In recent years, language models have shifted
+    from academic experiments studied in the purview of benchmarks to general purpose
+    technology. RLHF is at the core of this transition.
+  id: totrans-15
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 关于RLHF（强化学习和人类反馈）最大的问题，尽管仍然难以回答，那就是“RLHF训练为模型提供了什么？”近年来，语言模型已经从在基准测试范围内的学术实验转变为通用技术。RLHF是这个转变的核心。
+- en: 'To start, let us consider how a language model at the end of autoregressive
+    pretraining answers a query. A strong model, Llama 3.1 405B Base, will continue
+    from “The president of the united states in 2006 was”:'
+  id: totrans-16
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 首先，让我们考虑一个语言模型在自回归预训练结束时如何回答查询。一个强大的模型，Llama 3.1 405B Base，将继续从“The president
+    of the united states in 2006 was”：
+- en: 'George W. Bush, the governor of Florida in 2006 was Jeb Bush, and John McCain
+    was an Arizona senator in 2006 - who later lost to obama. September 1 – U.S. President
+    Bush signs an executive order to provide more options for faith-based organizations
+    when delivering social services that are paid for with federal funds. January
+    1 – The current deadline set by United States Congress in the Unlawful Internet
+    Gambling Enforcement Act, aka UIGEA. search: Amendments to the 1961 International
+    Convention for the Protection of New Varieties of Plants require plant breeders’
+    rights include farmer’s privilege. 2009 was a common year starting on Thursday
+    of the Gregorian calendar, the 2009th year of the Common Era (ce) and Anno Domini
+    (ad) designations, the 9th year of the 3rd millennium, the 9th year of the 21st
+    century, and the 10th and last year of the 2000s decade.'
+  id: totrans-17
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+  zh: 乔治·W·布什在2006年是佛罗里达州的州长，约翰·麦凯恩在2006年是亚利桑那州的参议员，后来输给了奥巴马。9月1日——美国总统布什签署一项行政命令，为使用联邦资金支付的社会服务提供更多基于信仰的组织选择。1月1日——美国国会根据《不合法互联网赌博执行法》，即UIGEA设定的当前截止日期。搜索：1961年《保护植物新品种国际公约》的修正案要求植物育种者的权利包括农民的特权。2009年是公历星期四开始的一年，公元2009年，公元纪年（CE）和公元纪年（AD）的年份，第三千年的第9年，21世纪的第9年，2000年代的最后一年。
+- en: What is clear is that this model is completing the sentence and adding other
+    common internet metadata.
+  id: totrans-18
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 明确的是，这个模型正在完成句子并添加其他常见的互联网元数据。
+- en: 'The most compelling view of how RLHF works is to think of how *style* applies
+    to interactions you have with language models. The style, closely related to tone
+    or format, of information presented is crucial to how it is learned. Style is
+    often used to describe the manner of the model. To see the difference, consider
+    two example responses to the following question:'
+  id: totrans-19
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 关于RLHF如何工作的最有说服力的观点是，将风格应用于你与语言模型互动的方式。信息呈现的风格，与语气或格式密切相关，对于学习方式至关重要。风格通常用来描述模型的方式。为了看到差异，考虑以下问题的两个示例回答：
+- en: Help, I have to give a presentation tomorrow and I’m panicking.
+  id: totrans-20
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+  zh: 帮助，我明天要做一个演讲，我很紧张。
+- en: 'A blunt, low-empathy style: > You’ll be fine. Practice your slides a few times,
+    get some sleep, and stop overthinking it. Just present what you know and move
+    on.'
+  id: totrans-21
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 一种直接、低同理心的风格：>你会没事的。练习你的幻灯片几次，睡一觉，停止过度思考。只展示你所知道的内容，然后继续。
+- en: 'A warmer, more supportive style: > That sounds really stressful, and it’s a
+    normal reaction. If you can, do one quick practice run now, pick the one or two
+    points you most want people to remember, and then give yourself permission to
+    rest—being clear and calm tomorrow will matter more than cramming tonight.'
+  id: totrans-22
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 更温暖、更支持性的风格：>这听起来真的很紧张，这是一种正常的反应。如果你可以的话，现在就快速练习一下，挑选出你最希望人们记住的一两个要点，然后给自己休息的许可——明天保持清晰和冷静比今晚临时抱佛脚更重要。
+- en: 'On the other hand, format is how the answer is structured. Modern models are
+    known to use extensive markdown formatting with lists, linebreaks, and emojis.
+    Consider two answers to the following question that are very different:'
+  id: totrans-23
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 另一方面，格式是答案的结构方式。现代模型已知使用广泛的Markdown格式，包括列表、换行符和表情符号。考虑以下问题的两个非常不同的回答：
+- en: How can I improve my sleep quality?
+  id: totrans-24
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+  zh: 我如何提高我的睡眠质量？
+- en: 'The simple answer, from an early language model:'
+  id: totrans-25
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 从早期的语言模型得到的简单回答：
+- en: Try to go to bed at the same time each night, avoid caffeine late in the day,
+    and keep your bedroom quiet and dark.
+  id: totrans-26
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+  zh: 尽量每天晚上同一时间上床睡觉，避免白天晚些时候摄入咖啡因，并保持你的卧室安静和黑暗。
+- en: 'Or a complex, richer answer:'
+  id: totrans-27
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 或者一个复杂、更丰富的回答：
+- en: Better sleep, in practice
+  id: totrans-28
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+  zh: 实际上更好的睡眠
+- en: ''
+  id: totrans-29
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: '**Goal**: make your schedule predictable and your environment boring enough
+    that your brain gives up.'
+  id: totrans-30
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+  zh: '**目标**：使你的日程可预测，环境无聊到足以让你的大脑放弃。'
+- en: ''
+  id: totrans-31
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: '**Tonight (quick wins)**: 1\. Dim lights for the last hour before bed. 2\.
+    No caffeine after lunch; keep alcohol minimal. 3\. If you’re stuck awake, get
+    up and do something quiet until sleepy again.'
+  id: totrans-32
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+  zh: '**今晚（快速胜利）**：1. 睡前最后一小时调暗灯光。2. 午饭后不喝咖啡；酒精量最小。3. 如果你醒来无法入睡，起床做一些安静的事情，直到再次困倦。'
+- en: ''
+  id: totrans-33
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: '**Daily basics (most impact)**: • Same wake time (even weekends) → anchors
+    your body clock. • Morning light for 5–10 minutes → helps set circadian rhythm.
+    • Cool, dark room (fan/eye mask) → easier to stay asleep.'
+  id: totrans-34
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+  zh: '**日常基础（影响最大）**：• 同样的醒着时间（即使是周末）→ 锚定你的生物钟。• 早晨光线5-10分钟 → 帮助设定昼夜节律。• 冷暗的房间（风扇/眼罩）→
+    更容易保持睡眠。'
+- en: ''
+  id: totrans-35
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: '**If you want a simple rule**: `wake time fixed + caffeine cutoff + wind-down
+    routine`'
+  id: totrans-36
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+  zh: '**如果你想要一个简单的规则**：`醒着时间固定 + 咖啡因截止 + 放松程序`'
+- en: ''
+  id: totrans-37
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: If sleep problems are persistent or severe, it can be worth talking with a clinician—many
+    issues are very treatable.
+  id: totrans-38
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+  zh: 如果睡眠问题持续或严重，与临床医生交谈可能是有益的——许多问题都是可以治疗的。
+- en: 'Continuing the above example, a model trained with RLHF (and other post-training
+    tools), would answer the question very differently. Asking Tülu 3 405B the same
+    question “The president of the united states in 2006 was,” it says concisely:'
+  id: totrans-39
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 继续上述例子，使用RLHF（以及其他后训练工具）训练的模型会以非常不同的方式回答问题。当询问Tülu 3 405B相同的问题“2006年美国总统是谁”时，它简洁地回答：
+- en: George W. Bush was the president of the United States in 2006\. He served two
+    terms in office, from January 20, 2001, to January 20, 2009.
+  id: totrans-40
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+  zh: 乔治·W·布什在2006年担任美国总统。他连任两届，从2001年1月20日至2009年1月20日。
+- en: This change in style is downstream of the post-training methods described in
+    this book. Instruction finetuning would provide the basic ability for models to
+    respond reliably in the question-answer format, and RLHF is what takes these answers
+    and crafts them into the reliable, warm, and engaging answers we now expect from
+    language models.
+  id: totrans-41
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 这种风格上的变化是本书中描述的后训练方法的结果。指令微调为模型提供在问答格式中可靠响应的基本能力，而RLHF则是将这些答案加工成我们现在期望的语言模型提供的可靠、温暖和吸引人的答案。
+- en: Modern research has established RLHF as a general method to integrate subtle
+    stylistic and related behavioral features into the models. Compared to other techniques
+    for post-training, such as instruction finetuning, RLHF generalizes far better
+    across domains [[7]](ch021.xhtml#ref-kirk2023understanding) [[8]](ch021.xhtml#ref-chu2025sft)
+    – helping create effective general purpose models.
+  id: totrans-42
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 现代研究已经将RLHF确立为一种将微妙风格和相关行为特征整合到模型中的通用方法。与后训练的其他技术，如指令微调相比，RLHF在各个领域中的泛化能力更强
+    [[7]](ch021.xhtml#ref-kirk2023understanding) [[8]](ch021.xhtml#ref-chu2025sft)
+    – 有助于创建有效的通用模型。
+- en: Intuitively, this can be seen in how the optimization techniques are applied.
+    Instruction finetuning is training the model to predict the next certain token
+    when the text preceding is close to examples it has seen. It is optimizing the
+    model to more regularly output specific features in text. This is a per-token
+    update.
+  id: totrans-43
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 直观地，这可以从优化技术的应用中看出。指令微调是训练模型在文本前部分接近它所看到的示例时预测下一个特定标记。这是对每个标记的更新。
+- en: RLHF on the other hand tunes the responses on the response level rather than
+    looking at the next token specifically. Additionally, it is telling the model
+    what a *better* response looks like, rather than a specific response it should
+    learn. RLHF also shows a model which type of response it should avoid, i.e. negative
+    feedback. The training to achieve this is often called a *contrastive* loss function
+    and is referenced throughout this book.
+  id: totrans-44
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 另一方面，RLHF在响应级别上调整响应，而不是具体查看下一个标记。此外，它还告诉模型一个*更好的*响应是什么样的，而不仅仅是它应该学习的特定响应。RLHF还向模型展示它应该避免哪种类型的响应，即负面反馈。实现这一目标的训练通常被称为*对比性*损失函数，并在本书中多次提及。
+- en: While this flexibility is a major advantage of RLHF, it comes with implementation
+    challenges. Largely, these center on *how to control the optimization.* As we
+    will cover in this book, implementing RLHF often requires training a reward model,
+    of which best practices are not strongly established and depend on the area of
+    application. With this, the optimization itself is prone to *over-optimization*
+    because our reward signal is at best a proxy objective, requiring regularization.
+    With these limitations, effective RLHF requires a strong starting point, so RLHF
+    cannot be a solution to every problem alone and needs to be approached in a broader
+    lens of post-training.
+  id: totrans-45
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 虽然这种灵活性是RLHF的一个主要优势，但它也带来了实施挑战。在很大程度上，这些挑战集中在*如何控制优化*上。正如我们将在本书中讨论的，实现RLHF通常需要训练一个奖励模型，其中最佳实践尚未得到充分确立，并且取决于应用领域。因此，优化本身容易发生*过度优化*，因为我们的奖励信号至多是一个代理目标，需要正则化。在这些限制下，有效的RLHF需要一个强大的起点，因此RLHF不能单独解决所有问题，需要从更广泛的训练后视角来考虑。
+- en: Due to this complexity, implementing RLHF is far more costly than simple instruction
+    finetuning and can come with unexpected challenges such as length bias [[9]](ch021.xhtml#ref-singhal2023long)
+    [[10]](ch021.xhtml#ref-park2024disentangling). For model training efforts where
+    absolute performance matters, RLHF is established as being crucial to achieving
+    a strong finetuned model, but it is more expensive in compute, data costs, and
+    time. Through the early history of RLHF after ChatGPT, there were many research
+    papers that showed approximate solutions to RLHF via limited instruction finetuning,
+    but as the literature matured it has been repeated time and again that RLHF and
+    related methods are core stages to model performance that cannot be dispensed
+    with quickly.
+  id: totrans-46
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 由于这种复杂性，实现RLHF的成本远高于简单的指令微调，并且可能带来意外的挑战，例如长度偏差 [[9]](ch021.xhtml#ref-singhal2023long)
+    [[10]](ch021.xhtml#ref-park2024disentangling)。对于绝对性能至关重要的模型训练工作，RLHF已被确立为实现强大微调模型的关键，但它在计算、数据成本和时间上的成本更高。在ChatGPT之后的RLHF早期历史中，有许多研究论文展示了通过有限的指令微调对RLHF的近似解决方案，但随着文献的成熟，它一次又一次地被重复强调，RLHF和相关方法是模型性能的核心阶段，不能迅速放弃。
+- en: An Intuition for Post-Training
+  id: totrans-47
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+  zh: 对训练后的直觉
+- en: We’ve established that RLHF specifically and post-training generally is crucial
+    to performance of the latest models and how it changes the models’ outputs, but
+    not why it works. Here’s a simple analogy for how so many gains can be made on
+    benchmarks on top of any base model.
+  id: totrans-48
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 我们已经确定，RLHF特别是训练后一般对于最新模型的性能至关重要，以及它如何改变模型的输出，但并没有解释为什么它有效。这里有一个简单的类比，说明了如何在任何基础模型之上通过基准测试获得如此多的收益。
+- en: The way I’ve been describing the potential of post-training is called the elicitation
+    interpretation of post-training, where all we are doing is extracting potential
+    by amplifying valuable behaviors in the base model.
+  id: totrans-49
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 我描述的训练后潜力的方式被称为训练后的诱发解释，其中我们所做的一切就是通过放大基础模型中的有价值行为来提取潜力。
+- en: To make this example click, we make the analogy between the base model – the
+    language model that comes out of the large-scale, next-token prediction pretraining
+    – and other foundational components in building complex systems. We use the example
+    of the chassis of a car, which defines the space where a car can be built around
+    it. Consider Formula 1 (F1), most of the teams show up to the beginning of the
+    year with a new chassis and engine. Then, they spend all year on aerodynamics
+    and systems changes (of course, it is a minor oversimplification), and can dramatically
+    improve the performance of the car. The best F1 teams improve way more during
+    a season than chassis-to-chassis.
+  id: totrans-50
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 为了使这个例子更具说服力，我们将基础模型——即从大规模、下一token预测预训练中产生的语言模型——与其他构建复杂系统的基础组件进行类比。我们以汽车底盘为例，它定义了汽车可以围绕其建造的空间。考虑一级方程式（F1），大多数车队在年初都会带来一款新的底盘和引擎。然后，他们全年都在进行空气动力学和系统变化（当然，这是一个轻微的简化），可以显著提高汽车的性能。最好的F1车队在一季度的改进比底盘到底盘的改进还要多。
+- en: The same is true for post-training, where one can extract a ton of performance
+    out of a static base model as they learn more about its quirks and tendencies.
+    The best post-training teams extract a ton of performance in a very short time
+    frame. The set of techniques is everything after the end of most of pretraining.
+    It includes “mid-training” like annealing / high-quality end of pre-training web
+    data, instruction tuning, RLVR, preference-tuning, etc. A good example is the
+    change from the first version of the Allen Institute for AI’s fully-open, small
+    Mixture-of-Experts (MoE) model OLMoE Instruct to the second. The first model was
+    released in the fall of 2024 [[11]](ch021.xhtml#ref-muennighoff2024olmoe), and
+    with the second version only updating the the post-training, the evaluation average
+    on popular benchmarks went from from 35 to 48 without changing the majority of
+    pretraining [[12]](ch021.xhtml#ref-ai2_olmoe_ios_2025).
+  id: totrans-51
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 对于后训练来说也是如此，随着他们对其怪癖和倾向了解得更多，可以从静态基础模型中提取大量的性能。最好的后训练团队在非常短的时间内提取了大量的性能。这些技术是在大多数预训练结束之后的一切。它包括“中期训练”如退火/高质量的预训练结束时的网络数据、指令调整、RLVR、偏好调整等。一个很好的例子是从艾伦人工智能研究所的第一个版本的全开放、小型混合专家（MoE）模型
+    OLMoE Instruct 到第二个版本的变化。第一个模型于 2024 年秋季发布 [[11]](ch021.xhtml#ref-muennighoff2024olmoe)，而第二个版本只更新了后训练，在流行的基准测试中的评估平均分从
+    35 提高到 48，而没有改变大多数预训练 [[12]](ch021.xhtml#ref-ai2_olmoe_ios_2025)。
+- en: The idea is that there is a lot of intelligence and ability within base models,
+    but because they can only answer in next-token prediction and not question-answering
+    format, it takes a lot of work building around them, through post-training, in
+    order to make excellent final models.
+  id: totrans-52
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 这个想法是，基础模型中有很多智能和能力，但由于它们只能通过下一个标记的预测来回答，而不能以问答格式回答，因此需要大量的工作来围绕它们构建，通过后训练，才能制作出优秀的最终模型。
+- en: Then, when you look at models such as OpenAI’s GPT-4.5 released in February
+    2025, which was largely a failure of a consumer product due to being too large
+    of a base model to serve to millions of users, you can see this as a way more
+    dynamic and exciting base for OpenAI to build onto. With this intuition, base
+    models determine the vast majority of the potential of a final model, and post-training’s
+    job is to cultivate all of it.
+  id: totrans-53
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 然后，当你看到像 OpenAI 在 2025 年 2 月发布的 GPT-4.5 这样的模型时，它由于基础模型太大，无法服务于数百万用户，而主要是一个消费产品的失败，你可以将其视为
+    OpenAI 建立的基础更加动态和令人兴奋。有了这个直觉，基础模型决定了最终模型的大部分潜力，后训练的工作就是培养所有这些潜力。
+- en: I’ve described this intuition as the Elicitation Theory of Post-training. This
+    theory folds in with the reality that the majority of gains users are seeing are
+    from post-training because it implies that there is more latent potential in a
+    model pretraining on the internet than we can teach the model simply — such as
+    by passing certain narrow samples in repeatedly during early types of post-training
+    (i.e. only instruction tuning). The challenge of post-training is to reshape models
+    from next-token prediction to conversation question-answering, while extracting
+    all of this knowledge and intelligence from pretraining.
+  id: totrans-54
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 我将这个直觉描述为后训练的揭示理论。这个理论与现实相符，即用户看到的大多数收益来自后训练，因为它暗示了在互联网上预训练的模型中存在比我们能够通过简单方式（例如，在早期后训练类型中（即仅指令调整）重复传递某些狭窄样本）教给模型的更多潜在潜力。后训练的挑战是将模型从下一个标记的预测重塑为对话问答，同时从预训练中提取所有这些知识和智能。
+- en: 'A related idea to this theory is the Superficial Alignment Hypothesis, coined
+    in the paper LIMA: Less is More for Alignment [[13]](ch021.xhtml#ref-zhou2023lima).
+    This paper is getting some important intuitions right but for the wrong reasons
+    in the big picture. The authors state:'
+  id: totrans-55
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 与这个理论相关的一个想法是浅层对齐假设，在论文 LIMA：对齐的“少即是多”[[13]](ch021.xhtml#ref-zhou2023lima)中被提出。这篇论文在大局上对一些重要的直觉理解正确，但原因不正确。作者表示：
+- en: A model’s knowledge and capabilities are learnt almost entirely during pretraining,
+    while alignment teaches it which subdistribution of formats should be used when
+    interacting with users. If this hypothesis is correct, and alignment is largely
+    about learning style, then a corollary of the Superficial Alignment Hypothesis
+    is that one could sufficiently tune a pretrained language model with a rather
+    small set of examples [Kirstain et al., 2021].
+  id: totrans-56
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+  zh: 模型的知识和能力几乎完全是在预训练期间学习的，而对齐则教会它在与用户交互时应该使用哪种格式的子分布。如果这个假设是正确的，并且对齐主要关于学习风格，那么浅层对齐假设的一个推论是，人们可以用一个非常小的示例集足够地调整预训练的语言模型
+    [Kirstain 等人，2021]。
+- en: All of the successes of deep learning should have taught you a deeply held belief
+    that scaling data is important to performance. Here, the major difference is that
+    the authors are discussing alignment and style, the focus of academic post-training
+    at the time. With a few thousand samples for instruction finetuning, you can change
+    a model substantially and improve a narrow set of evaluations, such as AlpacaEval,
+    MT Bench, ChatBotArena, and the likes. These do not always translate to more challenging
+    capabilities, which is why Meta wouldn’t train its Llama Chat models on just this
+    dataset. Academic results have lessons, but need to be interpreted carefully if
+    you are trying to understand the big picture of the technological arc.
+  id: totrans-57
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 深度学习的所有成功都应该教会你一个深刻的信念，即扩展数据对性能很重要。在这里，主要的不同之处在于，作者们正在讨论一致性和风格，这是当时学术训练的重点。用几千个样本进行指令微调，你可以显著改变模型，并提高一系列评估，如AlpacaEval、MT
+    Bench、ChatBotArena等。这些并不总是转化为更具挑战性的能力，这就是为什么Meta不会只在这个数据集上训练其Llama Chat模型。学术结果有教训，但如果你试图理解技术弧的大图景，需要仔细解读。
+- en: What this paper is showing is that you can change models substantially with
+    a few samples. We knew this, and it is important to the short-term adaptation
+    of new models, but their argument for performance leaves the casual readers with
+    the wrong lessons.
+  id: totrans-58
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 这篇论文展示的是，你可以用少量样本显著改变模型。我们知道这一点，这对新模型的短期适应很重要，但他们对性能的论点让普通读者得到了错误的教训。
+- en: If we change the data, the impact could be far higher on the model’s performance
+    and behavior, but it is far from “superficial.” Base language models today (with
+    no post-training) can be trained on some mathematics problems with reinforcement
+    learning, learn to output a full chain of thought reasoning, and then score higher
+    on a full suite of reasoning evaluations like BigBenchHard, Zebra Logic, AIME,
+    etc.
+  id: totrans-59
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 如果我们改变数据，对模型性能和行为的影响可能会更高，但这远非“表面”。今天的基础语言模型（没有训练后）可以用强化学习训练一些数学问题，学会输出完整的思维推理链，然后在BigBenchHard、Zebra
+    Logic、AIME等完整的推理评估套件中得分更高。
+- en: The superficial alignment hypothesis is wrong for the same reason that people
+    who think RLHF and post-training are just for vibes are still wrong. This was
+    a field-wide lesson we had to overcome in 2023 (one many AI observers are still
+    rooted in). Post-training has far outgrown that, and we are coming to see that
+    the style of models operates on top of behavior — such as the now popular long
+    chain of thought.
+  id: totrans-60
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 表面一致性假设是错误的，这与认为RLHF和训练后只是感觉的人仍然错误的原因相同。这是我们在2023年必须克服的整个领域的教训（许多AI观察者仍然根深蒂固）。训练后已经远远超出了这一点，我们开始看到模型风格是在行为之上运作的——例如现在流行的长链思维。
+- en: How We Got Here
+  id: totrans-61
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+  zh: 我们是如何到达这里的
+- en: Why does this book make sense now? How much still will change?
+  id: totrans-62
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 为什么这本书现在有意义？还会发生多少变化？
+- en: Post-training, the craft of eliciting powerful behaviors from a raw pretrained
+    language model, has gone through many seasons and moods since the release of ChatGPT
+    that sparked the renewed interest in RLHF. In the era of Alpaca [[14]](ch021.xhtml#ref-alpaca),
+    Vicuna [[15]](ch021.xhtml#ref-vicuna2023), Koala [[16]](ch021.xhtml#ref-koala_blogpost_2023),
+    and Dolly [[17]](ch021.xhtml#ref-DatabricksBlog2023DollyV1), a limited number
+    of human datapoints with extended synthetic data in the style of Self-Instruct
+    were used to normally fine-tune the original LLaMA to get similar behavior to
+    ChatGPT. The benchmark for these early models was fully vibes (and human evaluation)
+    as we were all so captivated by the fact that these small models can have such
+    impressive behaviors across domains. It was justified excitement.
+  id: totrans-63
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 训练完成后，从原始预训练语言模型中激发强大行为的技术，自从ChatGPT发布并重新点燃了对RLHF（强化学习和人类反馈）兴趣以来，已经经历了许多季节和情绪。在Alpaca
+    [[14]](ch021.xhtml#ref-alpaca)、Vicuna [[15]](ch021.xhtml#ref-vicuna2023)、Koala
+    [[16]](ch021.xhtml#ref-koala_blogpost_2023)和Dolly [[17]](ch021.xhtml#ref-DatabricksBlog2023DollyV1)的时代，使用少量人类数据点和以Self-Instruct风格扩展的合成数据，通常用于微调原始LLaMA，以获得与ChatGPT相似的行为。这些早期模型的基准是全面的感觉（以及人类评估），因为我们所有人都被这些小型模型在各个领域展现出的令人印象深刻的行为所吸引。这是合理的兴奋。
+- en: Open post-training was moving faster, releasing more models, and making more
+    noise than its closed counterparts. Companies were scrambling, e.g. DeepMind merging
+    with Google or being started, and taking time to follow it up. There are phases
+    of open recipes surging and then lagging behind.
+  id: totrans-64
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 开放式训练后的发展速度更快，发布更多模型，比其封闭式对手产生更多噪音。公司正在争先恐后，例如DeepMind与Google合并或被启动，并花时间跟进。开放食谱有高潮和低谷的阶段。
+- en: The era following Alpaca et al., the first lag in open recipes, was one defined
+    by skepticism and doubt on reinforcement learning from human feedback (RLHF),
+    the technique OpenAI highlighted as crucial to the success of the first ChatGPT.
+    Many companies doubted that they needed to do RLHF. A common phrase – “instruction
+    tuning is enough for alignment” – was so popular then that it still holds heavy
+    weight today despite heavy obvious pressures against it.
+  id: totrans-65
+  prefs: []
+  type: TYPE_NORMAL
+  zh: Alpaca等人之后的时代，开放食谱的第一个滞后期，是一个由对人类反馈强化学习（RLHF）的怀疑和怀疑所定义的时代，这是OpenAI强调对第一个ChatGPT成功至关重要的技术。许多公司怀疑他们是否需要进行RLHF。一个常见的说法——“指令调整就足以实现对齐”——当时非常流行，尽管有明显的压力反对它，但至今仍具有很大的影响力。
+- en: This doubt of RLHF lasted, especially in the open where groups cannot afford
+    data budgets on the order of $100K to $1M. The companies that embraced it early
+    ended up winning out. Anthropic published extensive research on RLHF through 2022
+    and is now argued to have the best post-training [[18]](ch021.xhtml#ref-askell2021general)
+    [[5]](ch021.xhtml#ref-bai2022training) [[19]](ch021.xhtml#ref-bai2022constitutional).
+    The delta between open groups, struggling to reproduce, or even knowing basic
+    closed techniques, is a common theme.
+  id: totrans-66
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 这种对RLHF的怀疑持续存在，尤其是在开放领域，因为团体无法承担10万美元至100万美元的数据预算。早期接受它的公司最终取得了胜利。Anthropic通过2022年发布了关于RLHF的大量研究，现在有人认为它拥有最好的后训练[18](ch021.xhtml#ref-askell2021general)[5](ch021.xhtml#ref-bai2022training)[19](ch021.xhtml#ref-bai2022constitutional)。开放团体在努力复制，甚至了解基本封闭技术之间的差距是一个常见的主题。
+- en: The first shift in open alignment methods and post-training was the story of
+    Direct Preference Optimization (DPO) [[20]](ch021.xhtml#ref-rafailov2024direct),
+    which showed that you can solve the same optimization problem as RLHF with fewer
+    moving parts by taking gradient steps directly on pairwise preference data. The
+    DPO paper, posted in May of 2023, didn’t have any clearly impactful models trained
+    with it going through the fall of 2023\. This changed with the releases of a few
+    breakthrough DPO models – all contingent on finding a better, lower, learning
+    rate. Zephyr-Beta [[21]](ch021.xhtml#ref-tunstall2023zephyr), Tülu 2 [[22]](ch021.xhtml#ref-ivison2023camels),
+    and many other models showed that the DPO era of post-training had begun. Chris
+    Manning literally thanked me for “saving DPO.”
+  id: totrans-67
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 开放对齐方法和后训练的第一个转变是直接偏好优化（DPO）[20](ch021.xhtml#ref-rafailov2024direct)的故事，它表明你可以通过直接在成对偏好数据上采取梯度步骤来解决与RLHF相同的优化问题。2023年5月发布的DPO论文，在2023年秋季之前并没有任何使用它训练的明显有影响力的模型。但随着几个突破性DPO模型的发布——所有这些都依赖于找到更好、更低的学习率——这一情况发生了变化。Zephyr-Beta
+    [21](ch021.xhtml#ref-tunstall2023zephyr)、Tülu 2 [22](ch021.xhtml#ref-ivison2023camels)以及许多其他模型表明，后训练的DPO时代已经开始了。Chris
+    Manning甚至感谢我“拯救了DPO”。
+- en: Preference-tuning was something you needed to do to meet the table stakes of
+    releasing a good model since late 2023\. The DPO era continued through 2024, in
+    the form of never-ending variants on the algorithm, but we were very far into
+    another slump in open recipes. Open post-training recipes had saturated the extent
+    of knowledge and resources available.
+  id: totrans-68
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 自2023年底以来，为了满足发布良好模型的最低要求，你需要进行偏好调整。DPO时代一直持续到2024年，以算法的不断变体形式出现，但我们已经非常深入地陷入了另一个开放食谱的低迷期。开放的训练后食谱已经饱和了可用的知识和资源。
+- en: A year after Zephyr and Tulu 2, the same breakout dataset, UltraFeedback is
+    arguably still state-of-the-art for preference tuning in open recipes [[23]](ch021.xhtml#ref-cui2023ultrafeedback).
+  id: totrans-69
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 在Zephyr和Tulu 2一年后，同样的突破性数据集UltraFeedback在开放食谱中的偏好调整方面可以说是仍然处于最前沿[23](ch021.xhtml#ref-cui2023ultrafeedback)。
+- en: At the same time, the Llama 3.1 [[24]](ch021.xhtml#ref-dubey2024llama) and Nemotron
+    4 340B [[25]](ch021.xhtml#ref-adler2024nemotron) reports gave us substantive hints
+    that large-scale post-training is much more complex and impactful. The closed
+    labs are doing full post-training – a large multi-stage process of instruction
+    tuning, RLHF, prompt design, etc. – where academic papers are just scratching
+    the surface. Tülu 3 represented a comprehensive, open effort to build the foundation
+    of future academic post-training research [[6]](ch021.xhtml#ref-lambert2024t).
+  id: totrans-70
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 同时，Llama 3.1 [24](ch021.xhtml#ref-dubey2024llama)和Nemotron 4 340B [25](ch021.xhtml#ref-adler2024nemotron)的报告给我们提供了实质性的线索，表明大规模的后训练要复杂得多，影响也更大。封闭实验室正在进行全面的后训练——一个包括指令调整、RLHF、提示设计等的大型多阶段过程——而学术论文只是触及了表面。Tülu
+    3代表了构建未来学术后训练研究基础的全面、开放的努力[6](ch021.xhtml#ref-lambert2024t)。
+- en: Today, post-training is a complex process involving the aforementioned training
+    objectives applied in various orders in order to target specific capabilities.
+    This book is designed to give a platform to understand all of these techniques,
+    and in coming years the best practices for how to interleave them will emerge.
+  id: totrans-71
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 现在，训练后期是一个复杂的过程，涉及上述训练目标，以不同的顺序应用，以针对特定的能力。本书旨在提供一个平台来理解所有这些技术，在未来几年，如何交错使用这些技术的最佳实践将逐渐显现。
+- en: The primary areas of innovation in post-training are now in reinforcement finetuning,
+    reasoning training, and related ideas. These newer methods build extensively on
+    the infrastructure and ideas of RLHF, but are evolving far faster. This book is
+    written to capture the first stable literature for RLHF after its initial period
+    of rapid change.
+  id: totrans-72
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 在训练后期的创新主要领域现在包括强化微调、推理训练和相关理念。这些新方法在RLHF的基础设施和理念上进行了大量构建，但发展速度却远快得多。本书旨在捕捉RLHF初期快速变化之后的第一个稳定文献。
+- en: Scope of This Book
+  id: totrans-73
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+  zh: 本书范围
+- en: This book hopes to touch on each of the core steps of doing canonical RLHF implementations.
+    It will not cover all the history of the components nor recent research methods,
+    just techniques, problems, and trade-offs that have been proven to occur again
+    and again.
+  id: totrans-74
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 本书希望涉及RLHF标准实现的核心步骤的每一个。它不会涵盖所有组件的历史或最近的研究方法，只涉及已被证明反复出现的技术、问题和权衡。
+- en: Chapter Summaries
+  id: totrans-75
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+  zh: 章节摘要
+- en: 'This book has the following chapters:'
+  id: totrans-76
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 本书包含以下章节：
+- en: Introductions
+  id: totrans-77
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+  zh: 介绍
+- en: Reference material useful throughout the book.
+  id: totrans-78
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 全书有用的参考资料。
+- en: 'Introduction: Overview of RLHF and what this book provides.'
+  id: totrans-79
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+  zh: 引言：RLHF概述及本书提供的内容。
+- en: 'Seminal (Recent) Works: Key models and papers in the history of RLHF techniques.'
+  id: totrans-80
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+  zh: 基础（近期）作品：RLHF技术历史上的关键模型和论文。
+- en: 'Definitions: Mathematical definitions for RL, language modeling, and other
+    ML techniques leveraged in this book.'
+  id: totrans-81
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+  zh: 定义：本书中使用的RL、语言建模和其他ML技术的数学定义。
+- en: Problem Setup & Context
+  id: totrans-82
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+  zh: 问题设置与背景
+- en: Context for the big picture problem RLHF is trying to solve.
+  id: totrans-83
+  prefs: []
+  type: TYPE_NORMAL
+  zh: RLHF试图解决的宏观问题的背景。
+- en: 'RLHF Training Overview: How the training objective for RLHF is designed and
+    basics of understanding it.'
+  id: totrans-84
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+  zh: RLHF训练概述：RLHF的训练目标是如何设计的，以及理解它的基础知识。
+- en: 'What are preferences?: Why human preference data is needed to fuel and understand
+    RLHF.'
+  id: totrans-85
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+  zh: 偏好是什么？：为什么需要人类偏好数据来推动和了解RLHF。
+- en: 'Preference Data: How preference data is collected for RLHF.'
+  id: totrans-86
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+  zh: 偏好数据：如何收集RLHF的偏好数据。
+- en: Optimization Tools
+  id: totrans-87
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+  zh: 优化工具
+- en: The suite of techniques used to optimize language models to align them to human
+    preferences. This is a serial presentation of the techniques one can use to solve
+    the problems proposed in the previous chapters.
+  id: totrans-88
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 用于优化语言模型以对齐人类偏好的技术套件。这是对解决前几章提出的问题可以使用的技术的一种连续展示。
+- en: 'Reward Modeling: Training reward models from preference data that act as an
+    optimization target for RL training (or for use in data filtering).'
+  id: totrans-89
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+  zh: 奖励建模：从偏好数据中训练奖励模型，作为RL训练的优化目标（或用于数据过滤）。
+- en: 'Regularization: Tools to constrain these optimization tools to effective regions
+    of the parameter space.'
+  id: totrans-90
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+  zh: 正则化：工具，用于约束这些优化工具到参数空间的有效区域。
+- en: 'Instruction Tuning: Adapting language models to the question-answer format.'
+  id: totrans-91
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+  zh: 指令调整：调整语言模型以适应问答格式。
+- en: 'Rejection Sampling: A basic technique for using a reward model with instruction
+    tuning to align models.'
+  id: totrans-92
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+  zh: 拒绝采样：使用奖励模型和指令调整来对齐模型的基本技术。
+- en: 'Reinforcement Learning (i.e. Policy Gradients): The core RL techniques used
+    to optimize reward models (and other signals) throughout RLHF.'
+  id: totrans-93
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+  zh: 强化学习（即策略梯度）：在RLHF中用于优化奖励模型（和其他信号）的核心RL技术。
+- en: 'Direct Alignment Algorithms: Algorithms that optimize the RLHF objective direction
+    from pairwise preference data rather than learning a reward model first.'
+  id: totrans-94
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+  zh: 直接对齐算法：从成对偏好数据优化RLHF目标方向而不是首先学习奖励模型的算法。
+- en: Advanced
+  id: totrans-95
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+  zh: 高级
+- en: Newer RLHF techniques and discussions that are not clearly established, but
+    are important to current generations of models.
+  id: totrans-96
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 新的RLHF技术和讨论，虽然尚未明确建立，但对当前一代模型很重要。
+- en: 'Constitutional AI and AI Feedback: How AI feedback data and specific models
+    designed to simulate human preference ratings work.'
+  id: totrans-97
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+  zh: 宪法AI和AI反馈：AI反馈数据和旨在模拟人类偏好评分的特定模型的工作方式。
+- en: 'Reasoning and Reinforcement Finetuning: The role of new RL training methods
+    for inference-time scaling with respect to post-training and RLHF.'
+  id: totrans-98
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+  zh: 推理和强化微调：新RL训练方法在推理时间相对于后训练和RLHF的缩放作用。
+- en: 'Tool Use and Function Calling: The basics of training models to call functions
+    or tools in their outputs.'
+  id: totrans-99
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+  zh: 工具使用和函数调用：训练模型在输出中调用函数或工具的基本原理。
+- en: 'Synthetic Data: The shift away from human to synthetic data and how distilling
+    from other models is used.'
+  id: totrans-100
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+  zh: 合成数据：从人类数据转向合成数据，以及如何从其他模型中提取。
+- en: 'Evaluation: The ever evolving role of evaluation (and prompting) in language
+    models.'
+  id: totrans-101
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+  zh: 评估：评估（和提示）在语言模型中不断演变的作用。
+- en: Open Questions
+  id: totrans-102
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+  zh: 开放性问题
+- en: Fundamental problems and discussions for the long-term evolution of how RLHF
+    is used.
+  id: totrans-103
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 长期使用RLHF的演变中的基本问题和讨论。
+- en: 'Over-optimization: Qualitative observations of why RLHF goes wrong and why
+    over-optimization is inevitable with a soft optimization target in reward models.'
+  id: totrans-104
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+  zh: 过度优化：关于RLHF为何出错以及为什么在奖励模型中具有软优化目标的过度优化是不可避免的定性观察。
+- en: 'Style and Information: How RLHF is often underestimated in its role in improving
+    the user experience of models due to the crucial role that style plays in information
+    sharing.'
+  id: totrans-105
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+  zh: 风格和信息：由于风格在信息共享中的关键作用，RLHF在改善模型用户体验方面的作用常常被低估。
+- en: 'Product, UX, Character: How RLHF is shifting in its applicability as major
+    AI laboratories use it to subtly match their models to their products.'
+  id: totrans-106
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+  zh: 产品、UX、角色：随着主要人工智能实验室使用RLHF微妙地匹配其模型与产品，RLHF的应用范围正在发生变化。
+- en: Target Audience
+  id: totrans-107
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+  zh: 目标受众
+- en: This book is intended for audiences with entry level experience with language
+    modeling, reinforcement learning, and general machine learning. It will not have
+    exhaustive documentation for all the techniques, but just those crucial to understanding
+    RLHF.
+  id: totrans-108
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 本书旨在面向具有语言建模、强化学习和通用机器学习入门级经验的受众。它不会对所有技术进行详尽的文档记录，而只是那些对理解RLHF至关重要的技术。
+- en: How to Use This Book
+  id: totrans-109
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+  zh: 如何使用本书
+- en: This book was largely created because there were no canonical references for
+    important topics in the RLHF workflow. The contributions of this book are supposed
+    to give you the minimum knowledge needed to try a toy implementation or dive into
+    the literature. This is *not* a comprehensive textbook, but rather a quick book
+    for reminders and getting started. Additionally, given the web-first nature of
+    this book, it is expected that there are minor typos and somewhat random progressions
+    – please contribute by fixing bugs or suggesting important content on [GitHub](https://github.com/natolambert/rlhf-book).
+  id: totrans-110
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 这本书的大部分内容是因缺乏RLHF工作流程中重要主题的权威参考而创作的。本书的贡献旨在为您提供尝试玩具实现或深入研究文献所需的最基本知识。这不是一本全面的教学课本，而是一本用于提醒和入门的快速指南。此外，鉴于本书以网络优先的特性，预期会有一些小错误和随机的进展——请通过修复错误或建议重要内容在[GitHub](https://github.com/natolambert/rlhf-book)上做出贡献。
+- en: About the Author
+  id: totrans-111
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+  zh: 关于作者
+- en: Dr. Nathan Lambert is a RLHF researcher contributing to the open science of
+    language model fine-tuning. He has released many models trained with RLHF, their
+    subsequent datasets, and training codebases in his time at the Allen Institute
+    for AI (Ai2) and HuggingFace. Examples include [Zephyr-Beta](https://huggingface.co/HuggingFaceH4/zephyr-7b-beta),
+    [Tulu 2](https://huggingface.co/allenai/tulu-2-dpo-70b), [OLMo](https://huggingface.co/allenai/OLMo-7B-Instruct),
+    [TRL](https://github.com/huggingface/trl), [Open Instruct](https://github.com/allenai/open-instruct),
+    and many more. He has written extensively on RLHF, including [many blog posts](https://www.interconnects.ai/t/rlhf)
+    and [academic papers](https://scholar.google.com/citations?hl=en&user=O4jW7BsAAAAJ&view_op=list_works&sortby=pubdate).
+  id: totrans-112
+  prefs: []
+  type: TYPE_NORMAL
+  zh: Nathan Lambert博士是一位RLHF研究人员，为语言模型微调的开放科学做出了贡献。他在艾伦人工智能研究所（Ai2）和HuggingFace的任职期间发布了许多使用RLHF训练的模型、其后续数据集和训练代码库。例如包括[Zephyr-Beta](https://huggingface.co/HuggingFaceH4/zephyr-7b-beta)、[Tulu
+    2](https://huggingface.co/allenai/tulu-2-dpo-70b)、[OLMo](https://huggingface.co/allenai/OLMo-7B-Instruct)、[TRL](https://github.com/huggingface/trl)、[Open
+    Instruct](https://github.com/allenai/open-instruct)以及许多其他模型。他在RLHF方面发表了大量作品，包括[许多博客文章](https://www.interconnects.ai/t/rlhf)和[学术论文](https://scholar.google.com/citations?hl=en&user=O4jW7BsAAAAJ&view_op=list_works&sortby=pubdate)。
+- en: Future of RLHF
+  id: totrans-113
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+  zh: RLHF的未来
+- en: With the investment in language modeling, many variations on the traditional
+    RLHF methods emerged. RLHF colloquially has become synonymous with multiple overlapping
+    approaches. RLHF is a subset of preference fine-tuning (PreFT) techniques, including
+    Direct Alignment Algorithms (See Chapter 12), which are the class of methods downstream
+    of DPO that solve the preference learning problem by taking gradient steps directly
+    on preference data, rather than learning an intermediate reward model. RLHF is
+    the tool most associated with rapid progress in “post-training” of language models,
+    which encompasses all training after the large-scale autoregressive training on
+    primarily web data. This textbook is a broad overview of RLHF and its directly
+    neighboring methods, such as instruction tuning and other implementation details
+    needed to set up a model for RLHF training.
+  id: totrans-114
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 随着对语言模型的投入，许多基于传统 RLHF 方法的变化出现了。RLHF 通俗地说已经成为多种重叠方法的同义词。RLHF 是偏好微调（PreFT）技术的一个子集，包括直接对齐算法（见第
+    12 章），这是一类下游方法，通过直接在偏好数据上采取梯度步骤来解决偏好学习问题，而不是学习一个中间奖励模型。RLHF 是与语言模型“后训练”快速进展最相关的工具，这包括在主要基于网络数据的大规模自回归训练之后的所有训练。这本教科书是
+    RLHF 及其直接邻近方法（如指令调整和其他设置 RLHF 训练模型所需的具体实现细节）的广泛概述。
+- en: As more successes of fine-tuning language models with RL emerge, such as OpenAI’s
+    o1 reasoning models, RLHF will be seen as the bridge that enabled further investment
+    of RL methods for fine-tuning large base models. At the same time, while the spotlight
+    of focus may be more intense on the RL portion of RLHF in the near future – as
+    a way to maximize performance on valuable tasks – the core of RLHF is that it
+    is a lens for studying the grand problems facing modern forms of AI. How do we
+    map the complexities of human values and objectives into systems we use on a regular
+    basis? This book hopes to be the foundation of decades of research and lessons
+    on these problems.
+  id: totrans-115
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 随着使用强化学习（RL）微调语言模型的更多成功案例出现，例如 OpenAI 的 o1 推理模型，强化学习与人类反馈（RLHF）将被视为连接进一步投资强化学习方法以微调大型基础模型的桥梁。同时，尽管在不久的将来，关注的焦点可能更加集中在
+    RLHF 中的 RL 部分——作为一种在有价值任务上最大化性能的方法——RLHF 的核心在于它是一个研究现代人工智能形式面临的重大问题的视角。我们如何将人类价值观和目标复杂性映射到我们日常使用的系统中？这本书希望成为数十年来关于这些问题的研究和经验教训的基础。

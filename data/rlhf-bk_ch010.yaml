@@ -1,0 +1,889 @@
+- en: Rejection Sampling
+  id: totrans-0
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+  zh: 拒绝采样
+- en: Rejection Sampling (RS) is a popular and simple baseline for performing preference
+    fine-tuning. This makes it one of a handful of methods that are used after a first
+    round of instruction tuning in order to further refine the model to human preferences.
+    Rejection sampling operates by curating new candidate completions, filtering them
+    based on a trained reward model, and then instruction finetuning the original
+    model only on the top completions (same loss function as when doing a dedicated
+    training stage for learning to follow instructions).
+  id: totrans-1
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 拒绝采样 (RS) 是进行偏好微调的一个流行且简单的基础线。这使得它成为在第一轮指令微调之后用于进一步细化模型以符合人类偏好的少数几种方法之一。拒绝采样通过精心挑选新的候选完成，根据训练好的奖励模型进行过滤，然后仅在顶部完成上进行指令微调（与为学习遵循指令而进行的专用训练阶段相同的损失函数）。
+- en: The name originates from computational statistics [[175]](ch021.xhtml#ref-gilks1992adaptive),
+    where one wishes to sample from a complex distribution, but does not have a direct
+    method to do so. To alleviate this, one samples from a simpler distribution to
+    model and uses a heuristic to check if the sample is permissible. With language
+    models, the target distribution is high-quality completions to prompts, the filter
+    is a reward model, and the sampling distribution is the current model.
+  id: totrans-2
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 这个名字起源于计算统计学 [[175]](ch021.xhtml#ref-gilks1992adaptive)，在那里，人们希望从一个复杂的分布中进行采样，但没有直接的方法来做这件事。为了缓解这个问题，人们从更简单的分布中进行采样来建模，并使用启发式方法来检查样本是否可接受。在语言模型中，目标分布是对提示的高质量完成，过滤器是一个奖励模型，采样分布是当前模型。
+- en: Many prominent RLHF and preference fine-tuning papers have used rejection sampling
+    as a baseline, but a canonical implementation and documentation does not exist.
+  id: totrans-3
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 许多著名的RLHF和偏好微调论文都使用了拒绝采样作为基线，但并没有一个标准的实现和文档。
+- en: WebGPT [[4]](ch021.xhtml#ref-nakano2021webgpt), Anthropic’s Helpful and Harmless
+    agent [[5]](ch021.xhtml#ref-bai2022training), OpenAI’s popular paper on process
+    reward models [[45]](ch021.xhtml#ref-lightman2023let), Llama 2 Chat models [[44]](ch021.xhtml#ref-touvron2023llama),
+    and other seminal works all use this baseline; more recent work has formalized
+    it directly (e.g., RAFT [[176]](ch021.xhtml#ref-dong2023raft) for applying it
+    to alignment in multiple modalities and Statistical Rejection Sampling Optimization
+    (RSO) [[177]](ch021.xhtml#ref-liu2023statistical) that gives a principled overview
+    on how rejection sampling relates to other preference learning objectives).
+  id: totrans-4
+  prefs: []
+  type: TYPE_NORMAL
+  zh: WebGPT [[4]](ch021.xhtml#ref-nakano2021webgpt)，Anthropic的有益无害代理 [[5]](ch021.xhtml#ref-bai2022training)，OpenAI关于过程奖励模型的流行论文
+    [[45]](ch021.xhtml#ref-lightman2023let)，Llama 2 Chat模型 [[44]](ch021.xhtml#ref-touvron2023llama)，以及其他开创性工作都使用了这个基线；更近期的作品直接对其进行了形式化（例如，RAFT
+    [[176]](ch021.xhtml#ref-dong2023raft) 用于将其应用于多模态的对齐，以及统计拒绝采样优化 (RSO) [[177]](ch021.xhtml#ref-liu2023statistical)，它提供了一个关于拒绝采样如何与其他偏好学习目标相关联的原理性概述）。
+- en: '*Throughout this chapter, we use <semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics>
+    to denote prompts and <semantics><mi>y</mi><annotation encoding="application/x-tex">y</annotation></semantics>
+    to denote completions. This notation is common in the language model literature,
+    where methods operate on full prompt-completion pairs rather than individual tokens.*'
+  id: totrans-5
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '*在本章中，我们使用 <semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics>
+    来表示提示，使用 <semantics><mi>y</mi><annotation encoding="application/x-tex">y</annotation></semantics>
+    来表示完成。这种符号在语言模型文献中很常见，其中方法操作的是完整的提示-完成对，而不是单个标记。*'
+- en: Training Process
+  id: totrans-6
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+  zh: 训练过程
+- en: Rejection sampling overall follows a few stages.
+  id: totrans-7
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 拒绝采样总体上遵循几个阶段。
+- en: '**Prompt and reward model selection:** First, you must select the prompts you
+    want to train on, relative to other stages of training. The simplest method is
+    to re-use every prompt from the first SFT/IFT stage, but this can cause some overfitting.
+    Before doing rejection sampling, you must also have trained a reward model (see
+    Chapter 7 for more information).'
+  id: totrans-8
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+  zh: '**提示和奖励模型选择：** 首先，你必须选择你想要在训练中使用的提示，相对于训练的其他阶段。最简单的方法是重用第一轮SFT/IFT阶段的每个提示，但这可能会导致一些过拟合。在进行拒绝采样之前，你还必须已经训练了一个奖励模型（更多信息请参阅第7章）。'
+- en: '**Generate completions from the starting checkpoint:** Next, one must generate
+    completions to the selected prompts with the model they want to optimize. This
+    can involve tweaking many settings, such as sampling temperature, top-p, max sequence
+    length, number of completions per prompt, etc.'
+  id: totrans-9
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+  zh: '**从起始检查点生成完成内容**：接下来，必须使用他们想要优化的模型生成所选提示的完成内容。这可能涉及调整许多设置，例如采样温度、top-p、最大序列长度、每个提示的完成数量等。'
+- en: '**Select top completions with a reward model**: All completions are ranked
+    by a reward model. This can include deduplication to only have one prompt per
+    completion after this stage, or not, as a lot of the decisions become based on
+    empirical ablation studies.'
+  id: totrans-10
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+  zh: '**使用奖励模型选择顶级完成**：所有完成内容都通过奖励模型进行排名。这可以包括去重，以便在这一点之后每个完成内容只有一个提示，或者不进行去重，因为许多决策都基于经验消除研究。'
+- en: '**SFT on top completions:** To finish rejection sampling, one instruction finetunes
+    the starting checkpoint on the selected completions.'
+  id: totrans-11
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+  zh: '**在顶级完成上进行SFT**：为了完成拒绝采样，一条指令对所选的完成内容上的起始检查点进行微调。'
+- en: A visual overview of the rejection sampling process is included below in fig. [14](#fig:rs-overview).
+  id: totrans-12
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 拒绝采样过程的视觉概述如下，见图[14](#fig:rs-overview)。
+- en: '![Figure 14: Rejection sampling overview.](../media/file12.png)'
+  id: totrans-13
+  prefs: []
+  type: TYPE_IMG
+  zh: '![图14：拒绝采样概述。](../media/file12.png)'
+- en: 'Figure 14: Rejection sampling overview.'
+  id: totrans-14
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 图14：拒绝采样概述。
+- en: The actual details on which prompts to use, how to select a reward model, how
+    to sequence rejection sampling, etc. are not well documented in the literature.
+    This chapter provides an overview of the methods and leaves further experimentation
+    to the reader.
+  id: totrans-15
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 关于使用哪些提示、如何选择奖励模型、如何进行拒绝采样排序等实际细节，在文献中并没有很好地记录。本章提供了方法概述，并将进一步的实验留给读者。
+- en: 1\. Generating Completions
+  id: totrans-16
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+  zh: 1. 生成完成内容
+- en: 'To generate a set of multiple candidate completions per prompt, let’s define
+    a set of <semantics><mi>M</mi><annotation encoding="application/x-tex">M</annotation></semantics>
+    prompts as a vector:'
+  id: totrans-17
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 为了为每个提示生成一组多个候选完成，让我们定义一组<semantics><mi>M</mi><annotation encoding="application/x-tex">M</annotation></semantics>提示作为一个向量：
+- en: <semantics><mrow><mi>X</mi><mo>=</mo><mo stretchy="false" form="prefix">[</mo><msub><mi>x</mi><mn>1</mn></msub><mo>,</mo><msub><mi>x</mi><mn>2</mn></msub><mo>,</mo><mi>.</mi><mi>.</mi><mi>.</mi><mo>,</mo><msub><mi>x</mi><mi>M</mi></msub><mo
+    stretchy="false" form="postfix">]</mo></mrow><annotation encoding="application/x-tex">X
+    = [x_1, x_2, ..., x_M]</annotation></semantics>
+  id: totrans-18
+  prefs: []
+  type: TYPE_NORMAL
+  zh: <semantics><mrow><mi>X</mi><mo>=</mo><mo stretchy="false" form="prefix">[</mo><msub><mi>x</mi><mn>1</mn></msub><mo>,</mo><msub><mi>x</mi><mn>2</mn></msub><mo>,</mo><mi>.</mi><mi>.</mi><mi>.</mi><mo>,</mo><msub><mi>x</mi><mi>M</mi></msub><mo
+    stretchy="false" form="postfix">]</mo></mrow><annotation encoding="application/x-tex">X
+    = [x_1, x_2, ..., x_M]</annotation></semantics>
+- en: These prompts can come from many sources, but most commonly they come from the
+    instruction training set.
+  id: totrans-19
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 这些提示可以来自许多来源，但最常见的是来自指令训练集。
+- en: 'For each prompt <semantics><msub><mi>x</mi><mi>i</mi></msub><annotation encoding="application/x-tex">x_i</annotation></semantics>,
+    we generate <semantics><mi>N</mi><annotation encoding="application/x-tex">N</annotation></semantics>
+    completions. We can represent this as a matrix:'
+  id: totrans-20
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 对于每个提示<semantics><msub><mi>x</mi><mi>i</mi></msub><annotation encoding="application/x-tex">x_i</annotation></semantics>，我们生成<semantics><mi>N</mi><annotation
+    encoding="application/x-tex">N</annotation></semantics>个完成。我们可以将这表示为一个矩阵：
+- en: '<semantics><mrow><mi>Y</mi><mo>=</mo><mrow><mo stretchy="true" form="prefix">[</mo><mtable><mtr><mtd
+    columnalign="center" style="text-align: center"><msub><mi>y</mi><mrow><mn>1</mn><mo>,</mo><mn>1</mn></mrow></msub></mtd><mtd
+    columnalign="center" style="text-align: center"><msub><mi>y</mi><mrow><mn>1</mn><mo>,</mo><mn>2</mn></mrow></msub></mtd><mtd
+    columnalign="center" style="text-align: center"><mi>⋯</mi></mtd><mtd columnalign="center"
+    style="text-align: center"><msub><mi>y</mi><mrow><mn>1</mn><mo>,</mo><mi>N</mi></mrow></msub></mtd></mtr><mtr><mtd
+    columnalign="center" style="text-align: center"><msub><mi>y</mi><mrow><mn>2</mn><mo>,</mo><mn>1</mn></mrow></msub></mtd><mtd
+    columnalign="center" style="text-align: center"><msub><mi>y</mi><mrow><mn>2</mn><mo>,</mo><mn>2</mn></mrow></msub></mtd><mtd
+    columnalign="center" style="text-align: center"><mi>⋯</mi></mtd><mtd columnalign="center"
+    style="text-align: center"><msub><mi>y</mi><mrow><mn>2</mn><mo>,</mo><mi>N</mi></mrow></msub></mtd></mtr><mtr><mtd
+    columnalign="center" style="text-align: center"><mi>⋮</mi></mtd><mtd columnalign="center"
+    style="text-align: center"><mi>⋮</mi></mtd><mtd columnalign="center" style="text-align:
+    center"><mo>⋱</mo></mtd><mtd columnalign="center" style="text-align: center"><mi>⋮</mi></mtd></mtr><mtr><mtd
+    columnalign="center" style="text-align: center"><msub><mi>y</mi><mrow><mi>M</mi><mo>,</mo><mn>1</mn></mrow></msub></mtd><mtd
+    columnalign="center" style="text-align: center"><msub><mi>y</mi><mrow><mi>M</mi><mo>,</mo><mn>2</mn></mrow></msub></mtd><mtd
+    columnalign="center" style="text-align: center"><mi>⋯</mi></mtd><mtd columnalign="center"
+    style="text-align: center"><msub><mi>y</mi><mrow><mi>M</mi><mo>,</mo><mi>N</mi></mrow></msub></mtd></mtr></mtable><mo
+    stretchy="true" form="postfix">]</mo></mrow></mrow><annotation encoding="application/x-tex">Y
+    = \begin{bmatrix} y_{1,1} & y_{1,2} & \cdots & y_{1,N} \\ y_{2,1} & y_{2,2} &
+    \cdots & y_{2,N} \\ \vdots & \vdots & \ddots & \vdots \\ y_{M,1} & y_{M,2} & \cdots
+    & y_{M,N} \end{bmatrix}</annotation></semantics>'
+  id: totrans-21
+  prefs: []
+  type: TYPE_NORMAL
+- en: where <semantics><msub><mi>y</mi><mrow><mi>i</mi><mo>,</mo><mi>j</mi></mrow></msub><annotation
+    encoding="application/x-tex">y_{i,j}</annotation></semantics> represents the <semantics><mi>j</mi><annotation
+    encoding="application/x-tex">j</annotation></semantics>-th completion for the
+    <semantics><mi>i</mi><annotation encoding="application/x-tex">i</annotation></semantics>-th
+    prompt. Each row <semantics><mi>i</mi><annotation encoding="application/x-tex">i</annotation></semantics>
+    corresponds to a single prompt <semantics><msub><mi>x</mi><mi>i</mi></msub><annotation
+    encoding="application/x-tex">x_i</annotation></semantics> and contains its <semantics><mi>N</mi><annotation
+    encoding="application/x-tex">N</annotation></semantics> candidate completions;
+    each column <semantics><mi>j</mi><annotation encoding="application/x-tex">j</annotation></semantics>
+    corresponds to the <semantics><mi>j</mi><annotation encoding="application/x-tex">j</annotation></semantics>-th
+    sampled completion across all prompts.
+  id: totrans-22
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 其中 <semantics><msub><mi>y</mi><mrow><mi>i</mi><mo>,</mo><mi>j</mi></mrow></msub><annotation
+    encoding="application/x-tex">y_{i,j}</annotation></semantics> 代表第 <semantics><mi>j</mi><annotation
+    encoding="application/x-tex">j</annotation></semantics> 个对第 <semantics><mi>i</mi><annotation
+    encoding="application/x-tex">i</annotation></semantics> 个提示的完成。每一行 <semantics><mi>i</mi><annotation
+    encoding="application/x-tex">i</annotation></semantics> 对应一个单独的提示 <semantics><msub><mi>x</mi><mi>i</mi></msub><annotation
+    encoding="application/x-tex">x_i</annotation></semantics>，并包含其 <semantics><mi>N</mi><annotation
+    encoding="application/x-tex">N</annotation></semantics> 个候选完成；每一列 <semantics><mi>j</mi><annotation
+    encoding="application/x-tex">j</annotation></semantics> 对应所有提示中的第 <semantics><mi>j</mi><annotation
+    encoding="application/x-tex">j</annotation></semantics> 个采样完成。
+- en: 2\. Scoring Completions
+  id: totrans-23
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+  zh: 2. 评分完成
+- en: 'Now, we pass all of these prompt-completion pairs through a reward model, to
+    get a matrix of rewards. We’ll represent the rewards as a matrix <semantics><mi>R</mi><annotation
+    encoding="application/x-tex">R</annotation></semantics>:'
+  id: totrans-24
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 现在，我们将所有这些提示-完成对通过一个奖励模型，以获得一个奖励矩阵。我们将奖励表示为一个矩阵 <semantics><mi>R</mi><annotation
+    encoding="application/x-tex">R</annotation></semantics>：
+- en: '<semantics><mrow><mi>R</mi><mo>=</mo><mrow><mo stretchy="true" form="prefix">[</mo><mtable><mtr><mtd
+    columnalign="center" style="text-align: center"><msub><mi>r</mi><mrow><mn>1</mn><mo>,</mo><mn>1</mn></mrow></msub></mtd><mtd
+    columnalign="center" style="text-align: center"><msub><mi>r</mi><mrow><mn>1</mn><mo>,</mo><mn>2</mn></mrow></msub></mtd><mtd
+    columnalign="center" style="text-align: center"><mi>⋯</mi></mtd><mtd columnalign="center"
+    style="text-align: center"><msub><mi>r</mi><mrow><mn>1</mn><mo>,</mo><mi>N</mi></mrow></msub></mtd></mtr><mtr><mtd
+    columnalign="center" style="text-align: center"><msub><mi>r</mi><mrow><mn>2</mn><mo>,</mo><mn>1</mn></mrow></msub></mtd><mtd
+    columnalign="center" style="text-align: center"><msub><mi>r</mi><mrow><mn>2</mn><mo>,</mo><mn>2</mn></mrow></msub></mtd><mtd
+    columnalign="center" style="text-align: center"><mi>⋯</mi></mtd><mtd columnalign="center"
+    style="text-align: center"><msub><mi>r</mi><mrow><mn>2</mn><mo>,</mo><mi>N</mi></mrow></msub></mtd></mtr><mtr><mtd
+    columnalign="center" style="text-align: center"><mi>⋮</mi></mtd><mtd columnalign="center"
+    style="text-align: center"><mi>⋮</mi></mtd><mtd columnalign="center" style="text-align:
+    center"><mo>⋱</mo></mtd><mtd columnalign="center" style="text-align: center"><mi>⋮</mi></mtd></mtr><mtr><mtd
+    columnalign="center" style="text-align: center"><msub><mi>r</mi><mrow><mi>M</mi><mo>,</mo><mn>1</mn></mrow></msub></mtd><mtd
+    columnalign="center" style="text-align: center"><msub><mi>r</mi><mrow><mi>M</mi><mo>,</mo><mn>2</mn></mrow></msub></mtd><mtd
+    columnalign="center" style="text-align: center"><mi>⋯</mi></mtd><mtd columnalign="center"
+    style="text-align: center"><msub><mi>r</mi><mrow><mi>M</mi><mo>,</mo><mi>N</mi></mrow></msub></mtd></mtr></mtable><mo
+    stretchy="true" form="postfix">]</mo></mrow></mrow><annotation encoding="application/x-tex">R
+    = \begin{bmatrix} r_{1,1} & r_{1,2} & \cdots & r_{1,N} \\ r_{2,1} & r_{2,2} &
+    \cdots & r_{2,N} \\ \vdots & \vdots & \ddots & \vdots \\ r_{M,1} & r_{M,2} & \cdots
+    & r_{M,N} \end{bmatrix}</annotation></semantics>'
+  id: totrans-25
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '<semantics><mrow><mi>R</mi><mo>=</mo><mrow><mo stretchy="true" form="prefix">[</mo><mtable><mtr><mtd
+    columnalign="center" style="text-align: center"><msub><mi>r</mi><mrow><mn>1</mn><mo>,</mo><mn>1</mn></mrow></msub></mtd><mtd
+    columnalign="center" style="text-align: center"><msub><mi>r</mi><mrow><mn>1</mn><mo>,</mo><mn>2</mn></mrow></msub></mtd><mtd
+    columnalign="center" style="text-align: center"><mi>⋯</mi></mtd><mtd columnalign="center"
+    style="text-align: center"><msub><mi>r</mi><mrow><mn>1</mn><mo>,</mo><mi>N</mi></mrow></msub></mtd></mtr><mtr><mtd
+    columnalign="center" style="text-align: center"><msub><mi>r</mi><mrow><mn>2</mn><mo>,</mo><mn>1</mn></mrow></msub></mtd><mtd
+    columnalign="center" style="text-align: center"><msub><mi>r</mi><mrow><mn>2</mn><mo>,</mo><mn>2</mn></mrow></msub></mtd><mtd
+    columnalign="center" style="text-align: center"><mi>⋯</mi></mtd><mtd columnalign="center"
+    style="text-align: center"><msub><mi>r</mi><mrow><mn>2</mn><mo>,</mo><mi>N</mi></mrow></msub></mtd></mtr><mtr><mtd
+    columnalign="center" style="text-align: center"><mi>⋮</mi></mtd><mtd columnalign="center"
+    style="text-align: center"><mi>⋮</mi></mtd><mtd columnalign="center" style="text-align:
+    center"><mo>⋱</mo></mtd><mtd columnalign="center" style="text-align: center"><mi>⋮</mi></mtd></mtr><mtr><mtd
+    columnalign="center" style="text-align: center"><msub><mi>r</mi><mrow><mi>M</mi><mo>,</mo><mn>1</mn></mrow></msub></mtd><mtd
+    columnalign="center" style="text-align: center"><msub><mi>r</mi><mrow><mi>M</mi><mo>,</mo><mn>2</mn></mrow></msub></mtd><mtd
+    columnalign="center" style="text-align: center"><mi>⋯</mi></mtd><mtd columnalign="center"
+    style="text-align: center"><msub><mi>r</mi><mrow><mi>M</mi><mo>,</mo><mi>N</mi></mrow></msub></mtd></mtr></mtable><mo
+    stretchy="true" form="postfix">]</mo></mrow></mrow><annotation encoding="application/x-tex">R
+    = \begin{bmatrix} r_{1,1} & r_{1,2} & \cdots & r_{1,N} \\ r_{2,1} & r_{2,2} &
+    \cdots & r_{2,N} \\ \vdots & \vdots & \ddots & \vdots \\ r_{M,1} & r_{M,2} & \cdots
+    & r_{M,N} \end{bmatrix}</annotation></semantics>'
+- en: 'Each reward <semantics><msub><mi>r</mi><mrow><mi>i</mi><mo>,</mo><mi>j</mi></mrow></msub><annotation
+    encoding="application/x-tex">r_{i,j}</annotation></semantics> is computed by passing
+    the completion <semantics><msub><mi>y</mi><mrow><mi>i</mi><mo>,</mo><mi>j</mi></mrow></msub><annotation
+    encoding="application/x-tex">y_{i,j}</annotation></semantics> and its corresponding
+    prompt <semantics><msub><mi>x</mi><mi>i</mi></msub><annotation encoding="application/x-tex">x_i</annotation></semantics>
+    through a reward model <semantics><mi>ℛ</mi><annotation encoding="application/x-tex">\mathcal{R}</annotation></semantics>:'
+  id: totrans-26
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 每个奖励 <semantics><msub><mi>r</mi><mrow><mi>i</mi><mo>,</mo><mi>j</mi></mrow></msub><annotation
+    encoding="application/x-tex">r_{i,j}</annotation></semantics> 都是通过将完成 <semantics><msub><mi>y</mi><mrow><mi>i</mi><mo>,</mo><mi>j</mi></mrow></msub><annotation
+    encoding="application/x-tex">y_{i,j}</annotation></semantics> 和其对应的提示 <semantics><msub><mi>x</mi><mi>i</mi></msub><annotation
+    encoding="application/x-tex">x_i</annotation></semantics> 通过一个奖励模型 <semantics><mi>ℛ</mi><annotation
+    encoding="application/x-tex">\mathcal{R}</annotation></semantics> 来计算的：
+- en: <semantics><mrow><msub><mi>r</mi><mrow><mi>i</mi><mo>,</mo><mi>j</mi></mrow></msub><mo>=</mo><mi>ℛ</mi><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mrow><mi>i</mi><mo>,</mo><mi>j</mi></mrow></msub><mo>∣</mo><msub><mi>x</mi><mi>i</mi></msub><mo
+    stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">r_{i,j}
+    = \mathcal{R}(y_{i,j} \mid x_i)</annotation></semantics>
+  id: totrans-27
+  prefs: []
+  type: TYPE_NORMAL
+  zh: <semantics><mrow><msub><mi>r</mi><mrow><mi>i</mi><mo>,</mo><mi>j</mi></mrow></msub><mo>=</mo><mi>ℛ</mi><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>y</mi><mrow><mi>i</mi><mo>,</mo><mi>j</mi></mrow></msub><mo>∣</mo><msub><mi>x</mi><mi>i</mi></msub><mo
+    stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">r_{i,j}
+    = \mathcal{R}(y_{i,j} \mid x_i)</annotation></semantics>
+- en: There are multiple methods to select the top completions to train on.
+  id: totrans-28
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 有多种方法可以选择用于训练的最高完成项。
+- en: To formalize the process of selecting the best completions based on our reward
+    matrix, we can define a selection function <semantics><mi>S</mi><annotation encoding="application/x-tex">S</annotation></semantics>
+    that operates on the reward matrix <semantics><mi>R</mi><annotation encoding="application/x-tex">R</annotation></semantics>.
+  id: totrans-29
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 为了形式化基于我们的奖励矩阵选择最佳完成项的过程，我们可以定义一个选择函数<semantics><mi>S</mi><annotation encoding="application/x-tex">S</annotation></semantics>，它作用于奖励矩阵<semantics><mi>R</mi><annotation
+    encoding="application/x-tex">R</annotation></semantics>。
+- en: Top Per Prompt
+  id: totrans-30
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+  zh: 最高提示
+- en: The first potential selection function takes the max reward per prompt.
+  id: totrans-31
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 第一个潜在的选择函数取每个提示的最大奖励。
+- en: <semantics><mrow><mi>S</mi><mo stretchy="false" form="prefix">(</mo><mi>R</mi><mo
+    stretchy="false" form="postfix">)</mo><mo>=</mo><mo stretchy="false" form="prefix">[</mo><mrow><mi
+    mathvariant="normal">arg</mi><mo>⁡</mo></mrow><munder><mi mathvariant="normal">max</mi><mi>j</mi></munder><msub><mi>r</mi><mrow><mn>1</mn><mo>,</mo><mi>j</mi></mrow></msub><mo>,</mo><mrow><mi
+    mathvariant="normal">arg</mi><mo>⁡</mo></mrow><munder><mi mathvariant="normal">max</mi><mi>j</mi></munder><msub><mi>r</mi><mrow><mn>2</mn><mo>,</mo><mi>j</mi></mrow></msub><mo>,</mo><mi>.</mi><mi>.</mi><mi>.</mi><mo>,</mo><mrow><mi
+    mathvariant="normal">arg</mi><mo>⁡</mo></mrow><munder><mi mathvariant="normal">max</mi><mi>j</mi></munder><msub><mi>r</mi><mrow><mi>M</mi><mo>,</mo><mi>j</mi></mrow></msub><mo
+    stretchy="false" form="postfix">]</mo></mrow><annotation encoding="application/x-tex">S(R)
+    = [\arg\max_{j} r_{1,j}, \arg\max_{j} r_{2,j}, ..., \arg\max_{j} r_{M,j}]</annotation></semantics>
+  id: totrans-32
+  prefs: []
+  type: TYPE_NORMAL
+  zh: <semantics><mrow><mi>S</mi><mo stretchy="false" form="prefix">(</mo><mi>R</mi><mo
+    stretchy="false" form="postfix">)</mo><mo>=</mo><mo stretchy="false" form="prefix">[</mo><mrow><mi
+    mathvariant="normal">arg</mi><mo>⁡</mo></mrow><munder><mi mathvariant="normal">max</mi><mi>j</mi></munder><msub><mi>r</mi><mrow><mn>1</mn><mo>,</mo><mi>j</mi></mrow></msub><mo>,</mo><mrow><mi
+    mathvariant="normal">arg</mi><mo>⁡</mo></mrow><munder><mi mathvariant="normal">max</mi><mi>j</mi></munder><msub><mi>r</mi><mrow><mn>2</mn><mo>,</mo><mi>j</mi></mrow></msub><mo>,</mo><mi>.</mi><mi>.</mi><mi>.</mi><mo>,</mo><mrow><mi
+    mathvariant="normal">arg</mi><mo>⁡</mo></mrow><munder><mi mathvariant="normal">max</mi><mi>j</mi></munder><msub><mi>r</mi><mrow><mi>M</mi><mo>,</mo><mi>j</mi></mrow></msub><mo
+    stretchy="false" form="postfix">]</mo></mrow><annotation encoding="application/x-tex">S(R)
+    = [\arg\max_{j} r_{1,j}, \arg\max_{j} r_{2,j}, ..., \arg\max_{j} r_{M,j}]</annotation></semantics>
+- en: 'This function <semantics><mi>S</mi><annotation encoding="application/x-tex">S</annotation></semantics>
+    returns a vector of indices, where each index corresponds to the column with the
+    maximum reward for each row in <semantics><mi>R</mi><annotation encoding="application/x-tex">R</annotation></semantics>.
+    We can then use these indices to select our chosen completions:'
+  id: totrans-33
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 这个函数<semantics><mi>S</mi><annotation encoding="application/x-tex">S</annotation></semantics>返回一个索引向量，其中每个索引对应于<semantics><mi>R</mi><annotation
+    encoding="application/x-tex">R</annotation></semantics>中每行的最大奖励列。然后我们可以使用这些索引来选择我们的选择完成项：
+- en: <semantics><mrow><msub><mi>Y</mi><mrow><mi>c</mi><mi>h</mi><mi>o</mi><mi>s</mi><mi>e</mi><mi>n</mi></mrow></msub><mo>=</mo><mo
+    stretchy="false" form="prefix">[</mo><msub><mi>y</mi><mrow><mn>1</mn><mo>,</mo><mi>S</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>R</mi><msub><mo stretchy="false" form="postfix">)</mo><mn>1</mn></msub></mrow></msub><mo>,</mo><msub><mi>y</mi><mrow><mn>2</mn><mo>,</mo><mi>S</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>R</mi><msub><mo stretchy="false" form="postfix">)</mo><mn>2</mn></msub></mrow></msub><mo>,</mo><mi>.</mi><mi>.</mi><mi>.</mi><mo>,</mo><msub><mi>y</mi><mrow><mi>M</mi><mo>,</mo><mi>S</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>R</mi><msub><mo stretchy="false" form="postfix">)</mo><mi>M</mi></msub></mrow></msub><mo
+    stretchy="false" form="postfix">]</mo></mrow><annotation encoding="application/x-tex">Y_{chosen}
+    = [y_{1,S(R)_1}, y_{2,S(R)_2}, ..., y_{M,S(R)_M}]</annotation></semantics>
+  id: totrans-34
+  prefs: []
+  type: TYPE_NORMAL
+  zh: <semantics><mrow><msub><mi>Y</mi><mrow><mi>c</mi><mi>h</mi><mi>o</mi><mi}s</mi><mi>e</mi><mi>n</mi></mrow></msub><mo>=</mo><mo
+    stretchy="false" form="prefix">[</mo><msub><mi>y</mi><mrow><mn>1</mn><mo>,</mo><mi>S</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>R</mi><msub><mo stretchy="false" form="postfix">)</mo><mn>1</mn></msub></mrow></msub><mo>,</mo><msub><mi>y</mi><mrow><mn>2</mn><mo>,</mo><mi>S</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>R</mi><msub><mo stretchy="false" form="postfix">)</mo><mn>2</mn></msub></mrow></msub><mo>,</mo><mi>.</mi><mi>.</mi><mi>.</mi><mo>,</mo><msub><mi>y</mi><mrow><mi>M</mi><mo>,</mo><mi>S</mi><mo
+    stretchy="false" form="prefix">(</mo><mi>R</mi><msub><mo stretchy="false" form="postfix">)</mo><mi>M</mi></msub></mrow></msub><mo
+    stretchy="false" form="postfix">]</mo></mrow><annotation encoding="application/x-tex">Y_{chosen}
+    = [y_{1,S(R)_1}, y_{2,S(R)_2}, ..., y_{M,S(R)_M}]</annotation></semantics>
+- en: Top Overall Pairs
+  id: totrans-35
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+  zh: 总体前K对
+- en: 'Alternatively, we can select the top K prompt-completion pairs from the entire
+    set. First, let’s flatten our reward matrix R into a single vector:'
+  id: totrans-36
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 或者，我们可以从整个集合中选择前K个提示-完成对。首先，让我们将奖励矩阵R展平成一个单一向量：
+- en: <semantics><mrow><msub><mi>R</mi><mrow><mi>f</mi><mi>l</mi><mi>a</mi><mi>t</mi></mrow></msub><mo>=</mo><mo
+    stretchy="false" form="prefix">[</mo><msub><mi>r</mi><mrow><mn>1</mn><mo>,</mo><mn>1</mn></mrow></msub><mo>,</mo><msub><mi>r</mi><mrow><mn>1</mn><mo>,</mo><mn>2</mn></mrow></msub><mo>,</mo><mi>.</mi><mi>.</mi><mi>.</mi><mo>,</mo><msub><mi>r</mi><mrow><mn>1</mn><mo>,</mo><mi>N</mi></mrow></msub><mo>,</mo><msub><mi>r</mi><mrow><mn>2</mn><mo>,</mo><mn>1</mn></mrow></msub><mo>,</mo><msub><mi>r</mi><mrow><mn>2</mn><mo>,</mo><mn>2</mn></mrow></msub><mo>,</mo><mi>.</mi><mi>.</mi><mi>.</mi><mo>,</mo><msub><mi>r</mi><mrow><mn>2</mn><mo>,</mo><mi>N</mi></mrow></msub><mo>,</mo><mi>.</mi><mi>.</mi><mi>.</mi><mo>,</mo><msub><mi>r</mi><mrow><mi>M</mi><mo>,</mo><mn>1</mn></mrow></msub><mo>,</mo><msub><mi>r</mi><mrow><mi>M</mi><mo>,</mo><mn>2</mn></mrow></msub><mo>,</mo><mi>.</mi><mi>.</mi><mi>.</mi><mo>,</mo><msub><mi>r</mi><mrow><mi>M</mi><mo>,</mo><mi>N</mi></mrow></msub><mo
+    stretchy="false" form="postfix">]</mo></mrow><annotation encoding="application/x-tex">R_{flat}
+    = [r_{1,1}, r_{1,2}, ..., r_{1,N}, r_{2,1}, r_{2,2}, ..., r_{2,N}, ..., r_{M,1},
+    r_{M,2}, ..., r_{M,N}]</annotation></semantics>
+  id: totrans-37
+  prefs: []
+  type: TYPE_NORMAL
+  zh: <semantics><mrow><msub><mi>R</mi><mrow><mi>f</mi><mi>l</mi><mi>a</mi><mi>t</mi></mrow></msub><mo>=</mo><mo
+    stretchy="false" form="prefix">[</mo><msub><mi>r</mi><mrow><mn>1</mn><mo>,</mo><mn>1</mn></mrow></msub><mo>,</mo><msub><mi>r</mi><mrow><mn>1</mn><mo>,</mo><mn>2</mn></mrow></msub><mo>,</mo><mi>.</mi><mi>.</mi><mi>.</mi><mo>,</mo><msub><mi>r</mi><mrow><mn>1</mn><mo>,</mo><mi>N</mi></mrow></msub><mo>,</mo><msub><mi>r</mi><mrow><mn>2</mn><mo>,</mo><mn>1</mn></mrow></msub><mo>,</mo><msub><mi>r</mi><mrow><mn>2</mn><mo>,</mo><mn>2</mn></mrow></msub><mo>,</mo><mi>.</mi><mi>.</mi><mi>.</mi><mo>,</mo><msub><mi>r</mi><mrow><mn>2</mn><mo>,</mo><mi>N</mi></mrow></msub><mo>,</mo><mi>.</mi><mi>.</mi><mi>.</mi><mo>,</mo><msub><mi>r</mi><mrow><mi>M</mi><mo>,</mo><mn>1</mn></mrow></msub><mo>,</mo><msub><mi>r</mi><mrow><mi>M</mi><mo>,</mo><mn>2</mn></mrow></msub><mo>,</mo><mi>.</mi><mi>.</mi><mi>.</mi><mo>,</mo><msub><mi>r</mi><mrow><mi>M</mi><mo>,</mo><mi>N</mi></mrow></msub><mo
+    stretchy="false" form="postfix">]</mo></mrow><annotation encoding="application/x-tex">R_{flat}
+    = [r_{1,1}, r_{1,2}, ..., r_{1,N}, r_{2,1}, r_{2,2}, ..., r_{2,N}, ..., r_{M,1},
+    r_{M,2}, ..., r_{M,N}]</annotation></semantics>
+- en: This <semantics><msub><mi>R</mi><mrow><mi>f</mi><mi>l</mi><mi>a</mi><mi>t</mi></mrow></msub><annotation
+    encoding="application/x-tex">R_{flat}</annotation></semantics> vector has length
+    <semantics><mrow><mi>M</mi><mo>×</mo><mi>N</mi></mrow><annotation encoding="application/x-tex">M
+    \times N</annotation></semantics>, where <semantics><mi>M</mi><annotation encoding="application/x-tex">M</annotation></semantics>
+    is the number of prompts and <semantics><mi>N</mi><annotation encoding="application/x-tex">N</annotation></semantics>
+    is the number of completions per prompt.
+  id: totrans-38
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 这个<semantics><msub><mi>R</mi><mrow><mi>f</mi><mi>l</mi><mi>a</mi><mi>t</mi></mrow></msub><annotation
+    encoding="application/x-tex">R_{flat}</annotation></semantics>向量的长度是<semantics><mrow><mi>M</mi><mo>×</mo><mi>N</mi></mrow><annotation
+    encoding="application/x-tex">M \times N</annotation></semantics>，其中<semantics><mi>M</mi><annotation
+    encoding="application/x-tex">M</annotation></semantics>是提示的数量，<semantics><mi>N</mi><annotation
+    encoding="application/x-tex">N</annotation></semantics>是每个提示的完成数量。
+- en: 'Now, we can define a selection function <semantics><msub><mi>S</mi><mi>K</mi></msub><annotation
+    encoding="application/x-tex">S_K</annotation></semantics> that selects the indices
+    of the K highest values in <semantics><msub><mi>R</mi><mrow><mi>f</mi><mi>l</mi><mi>a</mi><mi>t</mi></mrow></msub><annotation
+    encoding="application/x-tex">R_{flat}</annotation></semantics>:'
+  id: totrans-39
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 现在，我们可以定义一个选择函数 <semantics><msub><mi>S</mi><mi>K</mi></msub><annotation encoding="application/x-tex">S_K</annotation></semantics>，该函数用于选择
+    <semantics><msub><mi>R</mi><mrow><mi>f</mi><mi>l</mi><mi>a</mi><mi>t</mi></mrow></msub><annotation
+    encoding="application/x-tex">R_{flat}</annotation></semantics> 中 K 个最高值的索引：
+- en: <semantics><mrow><msub><mi>S</mi><mi>K</mi></msub><mo stretchy="false" form="prefix">(</mo><msub><mi>R</mi><mrow><mi>f</mi><mi>l</mi><mi>a</mi><mi>t</mi></mrow></msub><mo
+    stretchy="false" form="postfix">)</mo><mo>=</mo><mtext mathvariant="normal">argsort</mtext><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>R</mi><mrow><mi>f</mi><mi>l</mi><mi>a</mi><mi>t</mi></mrow></msub><mo
+    stretchy="false" form="postfix">)</mo><mo stretchy="false" form="prefix">[</mo><mi>−</mi><mi>K</mi><mo>:</mo><mo
+    stretchy="false" form="postfix">]</mo></mrow><annotation encoding="application/x-tex">S_K(R_{flat})
+    = \text{argsort}(R_{flat})[-K:]</annotation></semantics>
+  id: totrans-40
+  prefs: []
+  type: TYPE_NORMAL
+  zh: <semantics><mrow><msub><mi>S</mi><mi>K</mi></msub><mo stretchy="false" form="prefix">(</mo><msub><mi>R</mi><mrow><mi>f</mi><mi>l</mi><mi>a</mi><mi>t</mi></mrow></msub><mo
+    stretchy="false" form="postfix">)</mo><mo>=</mo><mtext mathvariant="normal">argsort</mtext><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>R</mi><mrow><mi>f</mi><mi>l</mi><mi>a</mi><mi>t</mi></mrow></msub><mo
+    stretchy="false" form="postfix">)</mo><mo stretchy="false" form="prefix">[</mo><mi>−</mi><mi>K</mi><mo>:</mo><mo
+    stretchy="false" form="postfix">]</mo></mrow><annotation encoding="application/x-tex">S_K(R_{flat})
+    = \text{argsort}(R_{flat})[-K:]</annotation></semantics>
+- en: where <semantics><mtext mathvariant="normal">argsort</mtext><annotation encoding="application/x-tex">\text{argsort}</annotation></semantics>
+    returns the indices that would sort the array in ascending order, and we take
+    the last K indices to get the K highest values.
+  id: totrans-41
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 其中 <semantics><mtext mathvariant="normal">argsort</mtext><annotation encoding="application/x-tex">\text{argsort}</annotation></semantics>
+    返回将数组按升序排序的索引，我们取最后 K 个索引以获取 K 个最高值。
+- en: To get our selected completions, we need to map these flattened indices back
+    to our original completion matrix <semantics><mi>Y</mi><annotation encoding="application/x-tex">Y</annotation></semantics>.
+    To recover the corresponding (prompt, completion) pair, you can map a zero-indexed
+    flattened index <semantics><mi>k</mi><annotation encoding="application/x-tex">k</annotation></semantics>
+    to <semantics><mrow><mo stretchy="false" form="prefix">(</mo><mi>i</mi><mo>,</mo><mi>j</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">(i,j)</annotation></semantics>
+    via <semantics><mrow><mi>i</mi><mo>=</mo><mo stretchy="false" form="prefix">⌊</mo><mi>k</mi><mi>/</mi><mi>N</mi><mo
+    stretchy="false" form="postfix">⌋</mo><mo>+</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">i
+    = \lfloor k / N \rfloor + 1</annotation></semantics> and <semantics><mrow><mi>j</mi><mo>=</mo><mo
+    stretchy="false" form="prefix">(</mo><mi>k</mi><mrow><mrow><mi mathvariant="normal">mod</mi><mo>⁡</mo></mrow><mi>N</mi></mrow><mo
+    stretchy="false" form="postfix">)</mo><mo>+</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">j
+    = (k \bmod N) + 1</annotation></semantics>.
+  id: totrans-42
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 要获取我们的选择完成项，我们需要将这些展平的索引映射回我们的原始完成矩阵 <semantics><mi>Y</mi><annotation encoding="application/x-tex">Y</annotation></semantics>。要恢复相应的（提示，完成）对，你可以将零索引的展平索引
+    <semantics><mi>k</mi><annotation encoding="application/x-tex">k</annotation></semantics>
+    映射到 <semantics><mrow><mo stretchy="false" form="prefix">(</mo><mi>i</mi><mo>,</mo><mi>j</mi><mo
+    stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">(i,j)</annotation></semantics>，通过
+    <semantics><mrow><mi>i</mi><mo>=</mo><mo stretchy="false" form="prefix">⌊</mo><mi>k</mi><mi>/</mi><mi>N</mi><mo
+    stretchy="false" form="postfix">⌋</mo><mo>+</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">i
+    = \lfloor k / N \rfloor + 1</annotation></semantics> 和 <semantics><mrow><mi>j</mi><mo>=</mo><mo
+    stretchy="false" form="prefix">(</mo><mi>k</mi><mrow><mrow><mi mathvariant="normal">mod</mi><mo>⁡</mo></mrow><mi>N</mi></mrow><mo
+    stretchy="false" form="postfix">)</mo><mo>+</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">j
+    = (k \bmod N) + 1</annotation></semantics>。
+- en: Selection Example
+  id: totrans-43
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+  zh: 选择示例
+- en: Consider the case where we have the following situation, with 5 prompts and
+    4 completions. We will show two ways of selecting the completions based on reward.
+  id: totrans-44
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 考虑以下情况，我们有 5 个提示和 4 个完成项。我们将展示两种基于奖励选择完成项的方法。
+- en: '<semantics><mrow><mi>R</mi><mo>=</mo><mrow><mo stretchy="true" form="prefix">[</mo><mtable><mtr><mtd
+    columnalign="center" style="text-align: center"><mn>0.7</mn></mtd><mtd columnalign="center"
+    style="text-align: center"><mn>0.3</mn></mtd><mtd columnalign="center" style="text-align:
+    center"><mn>0.5</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>0.2</mn></mtd></mtr><mtr><mtd
+    columnalign="center" style="text-align: center"><mn>0.4</mn></mtd><mtd columnalign="center"
+    style="text-align: center"><mn>0.8</mn></mtd><mtd columnalign="center" style="text-align:
+    center"><mn>0.6</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>0.5</mn></mtd></mtr><mtr><mtd
+    columnalign="center" style="text-align: center"><mn>0.9</mn></mtd><mtd columnalign="center"
+    style="text-align: center"><mn>0.3</mn></mtd><mtd columnalign="center" style="text-align:
+    center"><mn>0.4</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>0.7</mn></mtd></mtr><mtr><mtd
+    columnalign="center" style="text-align: center"><mn>0.2</mn></mtd><mtd columnalign="center"
+    style="text-align: center"><mn>0.5</mn></mtd><mtd columnalign="center" style="text-align:
+    center"><mn>0.8</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>0.6</mn></mtd></mtr><mtr><mtd
+    columnalign="center" style="text-align: center"><mn>0.5</mn></mtd><mtd columnalign="center"
+    style="text-align: center"><mn>0.4</mn></mtd><mtd columnalign="center" style="text-align:
+    center"><mn>0.3</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>0.6</mn></mtd></mtr></mtable><mo
+    stretchy="true" form="postfix">]</mo></mrow></mrow><annotation encoding="application/x-tex">R
+    = \begin{bmatrix} 0.7 & 0.3 & 0.5 & 0.2 \\ 0.4 & 0.8 & 0.6 & 0.5 \\ 0.9 & 0.3
+    & 0.4 & 0.7 \\ 0.2 & 0.5 & 0.8 & 0.6 \\ 0.5 & 0.4 & 0.3 & 0.6 \end{bmatrix}</annotation></semantics>'
+  id: totrans-45
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '<semantics><mrow><mi>R</mi><mo>=</mo><mrow><mo stretchy="true" form="prefix">[</mo><mtable><mtr><mtd
+    columnalign="center" style="text-align: center"><mn>0.7</mn></mtd><mtd columnalign="center"
+    style="text-align: center"><mn>0.3</mn></mtd><mtd columnalign="center" style="text-align:
+    center"><mn>0.5</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>0.2</mn></mtd></mtr><mtr><mtd
+    columnalign="center" style="text-align: center"><mn>0.4</mn></mtd><mtd columnalign="center"
+    style="text-align: center"><mn>0.8</mn></mtd><mtd columnalign="center" style="text-align:
+    center"><mn>0.6</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>0.5</mn></mtd></mtr><mtr><mtd
+    columnalign="center" style="text-align: center"><mn>0.9</mn></mtd><mtd columnalign="center"
+    style="text-align: center"><mn>0.3</mn></mtd><mtd columnalign="center" style="text-align:
+    center"><mn>0.4</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>0.7</mn></mtd></mtr><mtr><mtd
+    columnalign="center" style="text-align: center"><mn>0.2</mn></mtd><mtd columnalign="center"
+    style="text-align: center"><mn>0.5</mn></mtd><mtd columnalign="center" style="text-align:
+    center"><mn>0.8</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>0.6</mn></mtd></mtr><mtr><mtd
+    columnalign="center" style="text-align: center"><mn>0.5</mn></mtd><mtd columnalign="center"
+    style="text-align: center"><mn>0.4</mn></mtd><mtd columnalign="center" style="text-align:
+    center"><mn>0.3</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>0.6</mn></mtd></mtr></mtable><mo
+    stretchy="true" form="postfix">]</mo></mrow></mrow><annotation encoding="application/x-tex">R
+    = \begin{bmatrix} 0.7 & 0.3 & 0.5 & 0.2 \\ 0.4 & 0.8 & 0.6 & 0.5 \\ 0.9 & 0.3
+    & 0.4 & 0.7 \\ 0.2 & 0.5 & 0.8 & 0.6 \\ 0.5 & 0.4 & 0.3 & 0.6 \end{bmatrix}</annotation></semantics>'
+- en: 'First, **per prompt**. Intuitively, we can highlight the reward matrix as follows:'
+  id: totrans-46
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 首先，**根据提示**。直观上，我们可以将奖励矩阵突出显示如下：
+- en: '<semantics><mrow><mi>R</mi><mo>=</mo><mrow><mo stretchy="true" form="prefix">[</mo><mtable><mtr><mtd
+    columnalign="center" style="text-align: center"><mtext mathvariant="bold">𝟎.𝟕</mtext></mtd><mtd
+    columnalign="center" style="text-align: center"><mn>0.3</mn></mtd><mtd columnalign="center"
+    style="text-align: center"><mn>0.5</mn></mtd><mtd columnalign="center" style="text-align:
+    center"><mn>0.2</mn></mtd></mtr><mtr><mtd columnalign="center" style="text-align:
+    center"><mn>0.4</mn></mtd><mtd columnalign="center" style="text-align: center"><mtext
+    mathvariant="bold">𝟎.𝟖</mtext></mtd><mtd columnalign="center" style="text-align:
+    center"><mn>0.6</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>0.5</mn></mtd></mtr><mtr><mtd
+    columnalign="center" style="text-align: center"><mtext mathvariant="bold">𝟎.𝟗</mtext></mtd><mtd
+    columnalign="center" style="text-align: center"><mn>0.3</mn></mtd><mtd columnalign="center"
+    style="text-align: center"><mn>0.4</mn></mtd><mtd columnalign="center" style="text-align:
+    center"><mn>0.7</mn></mtd></mtr><mtr><mtd columnalign="center" style="text-align:
+    center"><mn>0.2</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>0.5</mn></mtd><mtd
+    columnalign="center" style="text-align: center"><mtext mathvariant="bold">𝟎.𝟖</mtext></mtd><mtd
+    columnalign="center" style="text-align: center"><mn>0.6</mn></mtd></mtr><mtr><mtd
+    columnalign="center" style="text-align: center"><mn>0.5</mn></mtd><mtd columnalign="center"
+    style="text-align: center"><mn>0.4</mn></mtd><mtd columnalign="center" style="text-align:
+    center"><mn>0.3</mn></mtd><mtd columnalign="center" style="text-align: center"><mtext
+    mathvariant="bold">𝟎.𝟔</mtext></mtd></mtr></mtable><mo stretchy="true" form="postfix">]</mo></mrow></mrow><annotation
+    encoding="application/x-tex">R = \begin{bmatrix} \textbf{0.7} & 0.3 & 0.5 & 0.2
+    \\ 0.4 & \textbf{0.8} & 0.6 & 0.5 \\ \textbf{0.9} & 0.3 & 0.4 & 0.7 \\ 0.2 & 0.5
+    & \textbf{0.8} & 0.6 \\ 0.5 & 0.4 & 0.3 & \textbf{0.6} \end{bmatrix}</annotation></semantics>'
+  id: totrans-47
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Using the argmax method, we select the best completion for each prompt:'
+  id: totrans-48
+  prefs: []
+  type: TYPE_NORMAL
+- en: <semantics><mrow><mi>S</mi><mo stretchy="false" form="prefix">(</mo><mi>R</mi><mo
+    stretchy="false" form="postfix">)</mo><mo>=</mo><mo stretchy="false" form="prefix">[</mo><mrow><mi
+    mathvariant="normal">arg</mi><mo>⁡</mo></mrow><munder><mi mathvariant="normal">max</mi><mi>j</mi></munder><msub><mi>r</mi><mrow><mi>i</mi><mo>,</mo><mi>j</mi></mrow></msub>
+    <mrow><mtext mathvariant="normal">for</mtext></mrow> <mi>i</mi><mo>∈</mo><mo stretchy="false"
+    form="prefix">[</mo><mn>1</mn><mo>,</mo><mn>5</mn><mo stretchy="false" form="postfix">]</mo><mo
+    stretchy="false" form="postfix">]</mo></mrow><annotation encoding="application/x-tex">S(R)
+    = [\arg\max_{j} r_{i,j} \text{ for } i \in [1,5]]</annotation></semantics>
+  id: totrans-49
+  prefs: []
+  type: TYPE_NORMAL
+- en: <semantics><mrow><mi>S</mi><mo stretchy="false" form="prefix">(</mo><mi>R</mi><mo
+    stretchy="false" form="postfix">)</mo><mo>=</mo><mo stretchy="false" form="prefix">[</mo><mn>1</mn><mo>,</mo><mn>2</mn><mo>,</mo><mn>1</mn><mo>,</mo><mn>3</mn><mo>,</mo><mn>4</mn><mo
+    stretchy="false" form="postfix">]</mo></mrow><annotation encoding="application/x-tex">S(R)
+    = [1, 2, 1, 3, 4]</annotation></semantics>
+  id: totrans-50
+  prefs: []
+  type: TYPE_NORMAL
+  zh: <semantics><mrow><mi>S</mi><mo stretchy="false" form="prefix">(</mo><mi>R</mi><mo
+    stretchy="false" form="postfix">)</mo><mo>=</mo><mo stretchy="false" form="prefix">[</mo><mn>1</mn><mo>,</mo><mn>2</mn><mo>,</mo><mn>1</mn><mo>,</mo><mn>3</mn><mo>,</mo><mn>4</mn><mo
+    stretchy="false" form="postfix">]</mo></mrow><annotation encoding="application/x-tex">S(R)
+    = [1, 2, 1, 3, 4]</annotation></semantics>
+- en: 'This means we would select:'
+  id: totrans-51
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 这意味着我们会选择：
+- en: 'For prompt 1: completion 1 (reward 0.7)'
+  id: totrans-52
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: 对于提示1：完成1（奖励0.7）
+- en: 'For prompt 2: completion 2 (reward 0.8)'
+  id: totrans-53
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: 对于提示2：完成2（奖励0.8）
+- en: 'For prompt 3: completion 1 (reward 0.9)'
+  id: totrans-54
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: 对于提示3：完成1（奖励0.9）
+- en: 'For prompt 4: completion 3 (reward 0.8)'
+  id: totrans-55
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: 对于提示4：完成3（奖励0.8）
+- en: 'For prompt 5: completion 4 (reward 0.6)'
+  id: totrans-56
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: 对于提示5：完成4（奖励0.6）
+- en: Now, **best overall**. Let’s highlight the top 5 overall completion pairs.
+  id: totrans-57
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 现在，**最佳整体**。让我们突出显示前5个最佳整体完成对。
+- en: '<semantics><mrow><mi>R</mi><mo>=</mo><mrow><mo stretchy="true" form="prefix">[</mo><mtable><mtr><mtd
+    columnalign="center" style="text-align: center"><mtext mathvariant="bold">𝟎.𝟕</mtext></mtd><mtd
+    columnalign="center" style="text-align: center"><mn>0.3</mn></mtd><mtd columnalign="center"
+    style="text-align: center"><mn>0.5</mn></mtd><mtd columnalign="center" style="text-align:
+    center"><mn>0.2</mn></mtd></mtr><mtr><mtd columnalign="center" style="text-align:
+    center"><mn>0.4</mn></mtd><mtd columnalign="center" style="text-align: center"><mtext
+    mathvariant="bold">𝟎.𝟖</mtext></mtd><mtd columnalign="center" style="text-align:
+    center"><mn>0.6</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>0.5</mn></mtd></mtr><mtr><mtd
+    columnalign="center" style="text-align: center"><mtext mathvariant="bold">𝟎.𝟗</mtext></mtd><mtd
+    columnalign="center" style="text-align: center"><mn>0.3</mn></mtd><mtd columnalign="center"
+    style="text-align: center"><mn>0.4</mn></mtd><mtd columnalign="center" style="text-align:
+    center"><mtext mathvariant="bold">𝟎.𝟕</mtext></mtd></mtr><mtr><mtd columnalign="center"
+    style="text-align: center"><mn>0.2</mn></mtd><mtd columnalign="center" style="text-align:
+    center"><mn>0.5</mn></mtd><mtd columnalign="center" style="text-align: center"><mtext
+    mathvariant="bold">𝟎.𝟖</mtext></mtd><mtd columnalign="center" style="text-align:
+    center"><mn>0.6</mn></mtd></mtr><mtr><mtd columnalign="center" style="text-align:
+    center"><mn>0.5</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>0.4</mn></mtd><mtd
+    columnalign="center" style="text-align: center"><mn>0.3</mn></mtd><mtd columnalign="center"
+    style="text-align: center"><mn>0.6</mn></mtd></mtr></mtable><mo stretchy="true"
+    form="postfix">]</mo></mrow></mrow><annotation encoding="application/x-tex">R
+    = \begin{bmatrix} \textbf{0.7} & 0.3 & 0.5 & 0.2 \\ 0.4 & \textbf{0.8} & 0.6 &
+    0.5 \\ \textbf{0.9} & 0.3 & 0.4 & \textbf{0.7} \\ 0.2 & 0.5 & \textbf{0.8} & 0.6
+    \\ 0.5 & 0.4 & 0.3 & 0.6 \end{bmatrix}</annotation></semantics>'
+  id: totrans-58
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '<semantics><mrow><mi>R</mi><mo>=</mo><mrow><mo stretchy="true" form="prefix">[</mo><mtable><mtr><mtd
+    columnalign="center" style="text-align: center"><mtext mathvariant="bold">𝟎.𝟕</mtext></mtd><mtd
+    columnalign="center" style="text-align: center"><mn>0.3</mn></mtd><mtd columnalign="center"
+    style="text-align: center"><mn>0.5</mn></mtd><mtd columnalign="center" style="text-align:
+    center"><mn>0.2</mn></mtd></mtr><mtr><mtd columnalign="center" style="text-align:
+    center"><mn>0.4</mn></mtd><mtd columnalign="center" style="text-align: center"><mtext
+    mathvariant="bold">𝟎.𝟖</mtext></mtd><mtd columnalign="center" style="text-align:
+    center"><mn>0.6</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>0.5</mn></mtd></mtr><mtr><mtd
+    columnalign="center" style="text-align: center"><mtext mathvariant="bold">𝟎.𝟗</mtext></mtd><mtd
+    columnalign="center" style="text-align: center"><mn>0.3</mn></mtd><mtd columnalign="center"
+    style="text-align: center"><mn>0.4</mn></mtd><mtd columnalign="center" style="text-align:
+    center"><mtext mathvariant="bold">𝟎.𝟕</mtext></mtd></mtr><mtr><mtd columnalign="center"
+    style="text-align: center"><mn>0.2</mn></mtd><mtd columnalign="center" style="text-align:
+    center"><mn>0.5</mn></mtd><mtd columnalign="center" style="text-align: center"><mtext
+    mathvariant="bold">𝟎.𝟖</mtext></mtd><mtd columnalign="center" style="text-align:
+    center"><mn>0.6</mn></mtd></mtr><mtr><mtd columnalign="center" style="text-align:
+    center"><mn>0.5</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>0.4</mn></mtd><mtd
+    columnalign="center" style="text-align: center"><mn>0.3</mn></mtd><mtd columnalign="center"
+    style="text-align: center"><mn>0.6</mn></mtd></mtr></mtable><mo stretchy="true"
+    form="postfix">]</mo></mrow></mrow><annotation encoding="application/x-tex">R
+    = \begin{bmatrix} \textbf{0.7} & 0.3 & 0.5 & 0.2 \\ 0.4 & \textbf{0.8} & 0.6 &
+    0.5 \\ \textbf{0.9} & 0.3 & 0.4 & \textbf{0.7} \\ 0.2 & 0.5 & \textbf{0.8} & 0.6
+    \\ 0.5 & 0.4 & 0.3 & 0.6 \end{bmatrix}</annotation></semantics>'
+- en: 'First, we flatten the reward matrix:'
+  id: totrans-59
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 首先，我们将奖励矩阵展平：
+- en: <semantics><mrow><msub><mi>R</mi><mrow><mi>f</mi><mi>l</mi><mi>a</mi><mi>t</mi></mrow></msub><mo>=</mo><mo
+    stretchy="false" form="prefix">[</mo><mn>0.7</mn><mo>,</mo><mn>0.3</mn><mo>,</mo><mn>0.5</mn><mo>,</mo><mn>0.2</mn><mo>,</mo><mn>0.4</mn><mo>,</mo><mn>0.8</mn><mo>,</mo><mn>0.6</mn><mo>,</mo><mn>0.5</mn><mo>,</mo><mn>0.9</mn><mo>,</mo><mn>0.3</mn><mo>,</mo><mn>0.4</mn><mo>,</mo><mn>0.7</mn><mo>,</mo><mn>0.2</mn><mo>,</mo><mn>0.5</mn><mo>,</mo><mn>0.8</mn><mo>,</mo><mn>0.6</mn><mo>,</mo><mn>0.5</mn><mo>,</mo><mn>0.4</mn><mo>,</mo><mn>0.3</mn><mo>,</mo><mn>0.6</mn><mo
+    stretchy="false" form="postfix">]</mo></mrow><annotation encoding="application/x-tex">R_{flat}
+    = [0.7, 0.3, 0.5, 0.2, 0.4, 0.8, 0.6, 0.5, 0.9, 0.3, 0.4, 0.7, 0.2, 0.5, 0.8,
+    0.6, 0.5, 0.4, 0.3, 0.6]</annotation></semantics>
+  id: totrans-60
+  prefs: []
+  type: TYPE_NORMAL
+  zh: <semantics><mrow><msub><mi>R</mi><mrow><mi>f</mi><mi>l</mi><mi>a</mi><mi>t</mi></mrow></msub><mo>=</mo><mo
+    stretchy="false" form="prefix">[</mo><mn>0.7</mn><mo>,</mo><mn>0.3</mn><mo>,</mo><mn>0.5</mn><mo>,</mo><mn>0.2</mn><mo>,</mo><mn>0.4</mn><mo>,</mo><mn>0.8</mn><mo>,</mo><mn>0.6</mn><mo>,</mo><mn>0.5</mn><mo>,</mo><mn>0.9</mn><mo>,</mo><mn>0.3</mn><mo>,</mo><mn>0.4</mn><mo>,</mo><mn>0.7</mn><mo>,</mo><mn>0.2</mn><mo>,</mo><mn>0.5</mn><mo>,</mo><mn>0.8</mn><mo>,</mo><mn>0.6</mn><mo>,</mo><mn>0.5</mn><mo>,</mo><mn>0.4</mn><mo>,</mo><mn>0.3</mn><mo>,</mo><mn>0.6</mn><mo
+    stretchy="false" form="postfix">]</mo></mrow><annotation encoding="application/x-tex">R_{flat}
+    = [0.7, 0.3, 0.5, 0.2, 0.4, 0.8, 0.6, 0.5, 0.9, 0.3, 0.4, 0.7, 0.2, 0.5, 0.8,
+    0.6, 0.5, 0.4, 0.3, 0.6]</annotation></semantics>
+- en: 'Now, we select the indices of the 5 highest values: <semantics><mrow><msub><mi>S</mi><mn>5</mn></msub><mo
+    stretchy="false" form="prefix">(</mo><msub><mi>R</mi><mrow><mi>f</mi><mi>l</mi><mi>a</mi><mi>t</mi></mrow></msub><mo
+    stretchy="false" form="postfix">)</mo><mo>=</mo><mo stretchy="false" form="prefix">[</mo><mn>8</mn><mo>,</mo><mn>5</mn><mo>,</mo><mn>14</mn><mo>,</mo><mn>0</mn><mo>,</mo><mn>11</mn><mo
+    stretchy="false" form="postfix">]</mo></mrow><annotation encoding="application/x-tex">S_5(R_{flat})
+    = [8, 5, 14, 0, 11]</annotation></semantics>'
+  id: totrans-61
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 现在，我们选择5个最高值的索引：<semantics><mrow><msub><mi>S</mi><mn>5</mn></msub><mo stretchy="false"
+    form="prefix">(</mo><msub><mi>R</mi><mrow><mi>f</mi><mi>l</mi><mi>a</mi><mi>t</mi></mrow></msub><mo
+    stretchy="false" form="postfix">)</mo><mo>=</mo><mo stretchy="false" form="prefix">[</mo><mn>8</mn><mo>,</mo><mn>5</mn><mo>,</mo><mn>14</mn><mo>,</mo><mn>0</mn><mo>,</mo><mn>11</mn><mo
+    stretchy="false" form="postfix">]</mo></mrow><annotation encoding="application/x-tex">S_5(R_{flat})
+    = [8, 5, 14, 0, 11]</annotation></semantics>
+- en: 'Mapping these back to our original matrix:'
+  id: totrans-62
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 将这些映射回我们的原始矩阵：
+- en: Index 8 → prompt 3, completion 1 (reward 0.9)
+  id: totrans-63
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: 索引 8 → 提示 3，补全 1（奖励 0.9）
+- en: Index 5 → prompt 2, completion 2 (reward 0.8)
+  id: totrans-64
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: 索引 5 → 提示 2，补全 2（奖励 0.8）
+- en: Index 14 → prompt 4, completion 3 (reward 0.8)
+  id: totrans-65
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: 索引 14 → 提示 4，补全 3（奖励 0.8）
+- en: Index 0 → prompt 1, completion 1 (reward 0.7)
+  id: totrans-66
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: 索引 0 → 提示 1，补全 1（奖励 0.7）
+- en: Index 11 → prompt 3, completion 4 (reward 0.7)
+  id: totrans-67
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: 索引 11 → 提示 3，补全 4（奖励 0.7）
+- en: Implementation Example
+  id: totrans-68
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+  zh: 实现示例
+- en: Here is a code snippet showing how the selection methods could be implemented.
+  id: totrans-69
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 这里是一个代码片段，展示了选择方法可以如何实现。
+- en: '[PRE0]'
+  id: totrans-70
+  prefs: []
+  type: TYPE_PRE
+  zh: '[PRE0]'
+- en: 3\. Fine-tuning
+  id: totrans-71
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+  zh: 3. 微调
+- en: With the selected completions, you then perform standard instruction fine-tuning
+    on the current rendition of the model. More details can be found in the [chapter
+    on instruction tuning](https://rlhfbook.com/c/instructions).
+  id: totrans-72
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 使用选定的补全后，您接着对当前版本的模型执行标准的指令微调。更多细节可以在[指令调整章节](https://rlhfbook.com/c/instructions)中找到。
+- en: Implementation Details
+  id: totrans-73
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+  zh: 实现细节
+- en: 'The core hyperparameters for performing this training are very intuitive:'
+  id: totrans-74
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 执行此训练的核心超参数非常直观：
+- en: '**Sampling parameters**: Rejection sampling is directly dependent on the completions
+    received from the model. Common settings for rejection sampling include temperatures
+    above zero, e.g. between 0.7 and 1.0, with other modifications to parameters such
+    as top-p or top-k sampling.'
+  id: totrans-75
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: '**采样参数**：拒绝采样直接依赖于从模型收到的补全。拒绝采样的常见设置包括高于零的温度，例如在0.7到1.0之间，以及其他对参数如top-p或top-k采样的修改。'
+- en: '**Completions per prompt**: Successful implementations of rejection sampling
+    have included 10 to 30 or more completions for each prompt. Using too few completions
+    will make training biased and/or noisy.'
+  id: totrans-76
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: '**每个提示的补全数量**：拒绝采样的成功实现包括每个提示10到30个或更多的补全。使用过少的补全将使训练结果偏向且/或噪声较大。'
+- en: '**Instruction tuning details**: No clear training details for the instruction
+    tuning during rejection sampling have been released. It is likely that they use
+    slightly different settings than the initial instruction tuning phase of the model.'
+  id: totrans-77
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: '**指令调整细节**：在拒绝采样期间的指令调整没有发布明确的训练细节。很可能是他们使用了与模型初始指令调整阶段略有不同的设置。'
+- en: '**Heterogeneous model generations**: Some implementations of rejection sampling
+    include generations from multiple models rather than just the current model that
+    is going to be trained. Best practices on how to do this are not established.'
+  id: totrans-78
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: '**异构模型生成**：一些拒绝采样的实现包括从多个模型生成，而不仅仅是即将训练的当前模型。如何做到这一点还没有建立最佳实践。'
+- en: '**Reward model training**: The reward model used will heavily impact the final
+    result. For more resources on reward model training, see the [relevant chapter](https://rlhfbook.com/c/07-reward-models).'
+  id: totrans-79
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: '**奖励模型训练**：所使用的奖励模型将严重影响最终结果。有关奖励模型训练的更多资源，请参阅[相关章节](https://rlhfbook.com/c/07-reward-models)。'
+- en: When doing batch reward model inference, you can sort the tokenized completions
+    by length so that the batches are of similar lengths. This eliminates the need
+    to run inference on as many padding tokens and will improve throughput in exchange
+    for minor implementation complexity.
+  id: totrans-80
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 在进行批量奖励模型推理时，你可以按长度对分词补全进行排序，以便批次具有相似长度。这消除了对许多填充标记进行推理的需要，并将通过轻微的实现复杂性换取吞吐量的提高。
+- en: 'Related: Best-of-N Sampling'
+  id: totrans-81
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+  zh: 相关：Best-of-N 采样
+- en: Best-of-N (BoN) is a close relative of rejection sampling, where the same generate-and-score
+    procedure is followed, but you do **not** fine-tune the model on the selected
+    completions. Instead, BoN is a way of computing a best possible completion to
+    a static prompt (or set of prompts) at inference time, and related techniques
+    are often used in “Pro” tiers of chat models that spend extra compute to get an
+    answer to your query.
+  id: totrans-82
+  prefs: []
+  type: TYPE_NORMAL
+  zh: Best-of-N (BoN) 是拒绝采样的一个近亲，遵循相同的生成和评分过程，但你**不**对选定的补全进行微调。相反，BoN 是一种在推理时计算对静态提示（或提示集）的最佳可能补全的方法，相关技术常用于“Pro”级别的聊天模型，这些模型会投入额外的计算资源来回答你的查询。
+- en: Best-of-N sampling is often included as a baseline relative to RLHF training
+    methods. It is important to remember that BoN *does not* modify the underlying
+    model, but is a sampling technique. For this reason, comparisons for BoN sampling
+    to online training methods, such as PPO, are still valid in some contexts. For
+    example, you can still measure the KL distance when running BoN sampling relative
+    to any other policy.
+  id: totrans-83
+  prefs: []
+  type: TYPE_NORMAL
+  zh: Best-of-N 采样通常被包括为与 RLHF 训练方法相对的基线。重要的是要记住，BoN **不**修改底层模型，而是一种采样技术。因此，将 BoN
+    采样与在线训练方法（如 PPO）进行比较在某些情况下仍然是有效的。例如，当运行 BoN 采样相对于任何其他策略时，你仍然可以测量 KL 距离。
+- en: Here, we will show that when using simple BoN sampling over one prompt, both
+    selection criteria shown above are equivalent.
+  id: totrans-84
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 在这里，我们将展示，当使用简单的 BoN 采样对一个提示进行采样时，上述两个选择标准是等价的。
+- en: 'Let R be a reward vector for our single prompt with N completions:'
+  id: totrans-85
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 设 R 为我们单个提示的奖励向量，其中包含 N 个补全：
+- en: <semantics><mrow><mi>R</mi><mo>=</mo><mo stretchy="false" form="prefix">[</mo><msub><mi>r</mi><mn>1</mn></msub><mo>,</mo><msub><mi>r</mi><mn>2</mn></msub><mo>,</mo><mi>.</mi><mi>.</mi><mi>.</mi><mo>,</mo><msub><mi>r</mi><mi>N</mi></msub><mo
+    stretchy="false" form="postfix">]</mo><mrow><mo stretchy="false" form="prefix">(</mo><mn>31</mn><mo
+    stretchy="false" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">R
+    = [r_1, r_2, ..., r_N]\qquad{(31)}</annotation></semantics>
+  id: totrans-86
+  prefs: []
+  type: TYPE_NORMAL
+  zh: <semantics><mrow><mi>R</mi><mo>=</mo><mo stretchy="false" form="prefix">[</mo><msub><mi>r</mi><mn>1</mn></msub><mo>,</mo><msub><mi>r</mi><mn>2</mn></msub><mo>,</mo><mi>.</mi><mi>.</mi><mi>.</mi><mo>,</mo><msub><mi>r</mi><mi>N</mi></msub><mo
+    stretchy="false" form="postfix">]</mo><mrow><mo stretchy="false" form="prefix">(</mo><mn>31</mn><mo
+    stretchy="false" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">R
+    = [r_1, r_2, ..., r_N]\qquad{(31)}</annotation></semantics>
+- en: Where <semantics><msub><mi>r</mi><mi>j</mi></msub><annotation encoding="application/x-tex">r_j</annotation></semantics>
+    represents the reward for the j-th completion.
+  id: totrans-87
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 其中，<semantics><msub><mi>r</mi><mi>j</mi></msub><annotation encoding="application/x-tex">r_j</annotation></semantics>
+    代表第 j 个补全的奖励。
+- en: 'Using the argmax method, we select the best completion for the prompt:'
+  id: totrans-88
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 使用 argmax 方法，我们选择提示的最佳补全：
+- en: <semantics><mrow><mi>S</mi><mo stretchy="false" form="prefix">(</mo><mi>R</mi><mo
+    stretchy="false" form="postfix">)</mo><mo>=</mo><mrow><mi mathvariant="normal">arg</mi><mo>⁡</mo></mrow><munder><mi
+    mathvariant="normal">max</mi><mrow><mi>j</mi><mo>∈</mo><mo stretchy="false" form="prefix">[</mo><mn>1</mn><mo>,</mo><mi>N</mi><mo
+    stretchy="false" form="postfix">]</mo></mrow></munder><msub><mi>r</mi><mi>j</mi></msub><mrow><mo
+    stretchy="false" form="prefix">(</mo><mn>32</mn><mo stretchy="false" form="postfix">)</mo></mrow></mrow><annotation
+    encoding="application/x-tex">S(R) = \arg\max_{j \in [1,N]} r_j\qquad{(32)}</annotation></semantics>
+  id: totrans-89
+  prefs: []
+  type: TYPE_NORMAL
+  zh: <semantics><mrow><mi>S</mi><mo stretchy="false" form="prefix">(</mo><mi>R</mi><mo
+    stretchy="false" form="postfix">)</mo><mo>=</mo><mrow><mi mathvariant="normal">arg</mi><mo>⁡</mo></mrow><munder><mi
+    mathvariant="normal">max</mi><mrow><mi>j</mi><mo>∈</mo><mo stretchy="false" form="prefix">[</mo><mn>1</mn><mo>,</mo><mi>N</mi><mo
+    stretchy="false" form="postfix">]</mo></mrow></munder><msub><mi>r</mi><mi>j</mi></msub><mrow><mo
+    stretchy="false" form="prefix">(</mo><mn>32</mn><mo stretchy="false" form="postfix">)</mo></mrow></mrow><annotation
+    encoding="application/x-tex">S(R) = \arg\max_{j \in [1,N]} r_j\qquad{(32)}</annotation></semantics>
+- en: Using the Top-K method with <semantics><mrow><mi>K</mi><mo>=</mo><mn>1</mn></mrow><annotation
+    encoding="application/x-tex">K=1</annotation></semantics> reduces to the same
+    method, which is common practice.
+  id: totrans-90
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 使用 Top-K 方法，其中 <semantics><mrow><mi>K</mi><mo>=</mo><mn>1</mn></mrow><annotation
+    encoding="application/x-tex">K=1</annotation></semantics>，简化为相同的方法，这是常见的做法。

@@ -1,0 +1,342 @@
+- en: Instruction Finetuning
+  id: totrans-0
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+  zh: 指令微调
+- en: Early large pretrained language models were trained with a next-token prediction
+    objective and, by default, did not come with an explicit interface for following
+    instructions. Around the release of GPT-3 [[167]](ch021.xhtml#ref-brown2020language),
+    prompting and in-context learning became a widely used way to adapt a single model
+    to many tasks (though task-specific fine-tuning remained common), by showing examples
+    in-context and asking the model to complete a similar task. A practical next step
+    was instruction finetuning, which teaches the model to respond in an instruction–response
+    format rather than just continuing text.
+  id: totrans-1
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 早期的大规模预训练语言模型是用下一个标记预测目标进行训练的，并且默认情况下没有提供遵循指令的显式接口。在GPT-3[[167]](ch021.xhtml#ref-brown2020language)发布时，提示和情境学习成为了一种广泛使用的方法，通过展示情境中的示例并要求模型完成类似任务，来适应单个模型到许多任务（尽管特定任务的微调仍然很常见）。一个实际的下一步是指令微调，它教会模型以指令-响应格式进行响应，而不仅仅是继续文本。
+- en: Instruction finetuning took off when two lines of work converged. First, NLP
+    shifted from bespoke-finetuning task setups to a unified “text-to-text” or instruction
+    framing, which made it straightforward to standardize diverse datasets and train
+    a single model across many tasks. Prominent examples of unifying the framework
+    for tasks include *Exploring the Limits of Transfer Learning with a Unified Text-to-Text
+    Transformer* (T5 models) [[168]](ch021.xhtml#ref-raffel2020exploring), *Finetuned
+    Language Models Are Zero-Shot Learners* (FLAN dataset) [[169]](ch021.xhtml#ref-wei2021finetuned),
+    *Multitask Prompted Training Enables Zero-Shot Task Generalization* (T0 models)
+    [[170]](ch021.xhtml#ref-sanh2021multitask), and *Cross-Task Generalization via
+    Natural Language Crowdsourcing Instructions* (Natural Instructions dataset) [[171]](ch021.xhtml#ref-mishra2021cross).
+    Second, scaling pretrained LMs and the rise of prompting/in-context learning showed
+    that a single model could generalize across tasks, but that generalization becomes
+    far more reliable when the model is explicitly trained on instruction–response
+    examples. Together, these trends led to an era of fine-tuning pretrained language
+    models on large collections of instructions—what is now commonly called instruction
+    finetuning (IFT), or supervised finetuning (SFT), in which training general models
+    became accessible to wider audiences.
+  id: totrans-2
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 指令微调的兴起得益于两条工作线的交汇。首先，自然语言处理（NLP）从定制的微调任务设置转向统一的“文本到文本”或指令框架，这使得标准化多样化的数据集并在许多任务上训练单个模型变得简单。统一任务框架的突出例子包括*使用统一的文本到文本转换器探索迁移学习的极限*（T5模型）[[168]](ch021.xhtml#ref-raffel2020exploring)，*微调语言模型是零样本学习者*（FLAN数据集）[[169]](ch021.xhtml#ref-wei2021finetuned)，*多任务提示训练实现零样本任务泛化*（T0模型）[[170]](ch021.xhtml#ref-sanh2021multitask)，以及*通过自然语言众包指令实现跨任务泛化*（Natural
+    Instructions数据集）[[171]](ch021.xhtml#ref-mishra2021cross)。其次，预训练语言模型的扩展和提示/情境学习的兴起表明，单个模型可以跨任务泛化，但当模型明确地训练在指令-响应示例上时，泛化变得更加可靠。这些趋势共同导致了在大量指令集合上微调预训练语言模型的时代——现在通常称为指令微调（IFT）或监督微调（SFT），其中训练通用模型变得对更广泛的受众可访问。
+- en: Since its discovery, instruction finetuning, also called colloquially just *instruction
+    tuning*, has matured and is standard practice across many language modeling pipelines.
+    At its core, IFT is the simplest method for adapting language models to a desired
+    task distribution. It serves as the foundation for RLHF by preparing the model
+    for a format of instructions that is known as question-answering, and it is the
+    first tool used by those attempting to apply modern techniques to new domains.
+    Without a basic level of instruction-following abilities, most of the pipelines
+    we discuss in this book—from preference data collection to online RLHF optimization—cannot
+    be performed.
+  id: totrans-3
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 自从被发现以来，指令微调（也俗称*指令调整*）已经成熟，并且成为许多语言建模管道的标准实践。在其核心，指令微调（IFT）是适应语言模型到期望的任务分布的最简单方法。它作为RLHF的基础，为模型准备了一种称为问答的指令格式，并且是那些试图将现代技术应用于新领域的人使用的第一个工具。如果没有基本的指令遵循能力，本书中讨论的大多数管道——从偏好数据收集到在线RLHF优化——都无法执行。
+- en: Chat templates and the structure of instructions
+  id: totrans-4
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+  zh: 聊天模板和指令结构
+- en: 'The beginning of the post-training process is defining a pattern to format
+    user queries so that they are easily readable by a language model that processes
+    information through a tokenizer. When using a pretrained language model, the prompting
+    is quite simple, the model only knows a few tokens: a beginning-of-sequence token
+    (e.g., `<bos_token>`), an end-of-sequence token (e.g., `<eos_token>`), and a padding
+    token (to manage training on batches with empty components). This means, to prompt
+    a base model, the user inputs a sequence of tokens for the model to continue from,
+    such as:'
+  id: totrans-5
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 训练后过程的开始是定义一个格式化用户查询的模式，以便它们可以被通过标记器处理信息的语言模型轻松读取。当使用预训练的语言模型时，提示非常简单，模型只知道几个标记：一个序列开始标记（例如，`<bos_token>`），一个序列结束标记（例如，`<eos_token>`），以及一个填充标记（用于管理空组件的训练批次）。这意味着，为了提示基础模型，用户输入一个标记序列，模型可以从中继续，例如：
+- en: '[PRE0]'
+  id: totrans-6
+  prefs: []
+  type: TYPE_PRE
+  zh: '[PRE0]'
+- en: Then, the model would generate tokens until it runs out of its context window,
+    or it generates the end-of-sequence token.
+  id: totrans-7
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 然后，模型将生成标记，直到其上下文窗口耗尽，或者生成序列结束标记。
+- en: All post-training stages, from instruction tuning to RLHF and other methods,
+    rely on this formatting to train the model. The tool that handles the structure
+    of the interaction with the user is called the **chat template**.
+  id: totrans-8
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 所有训练后的阶段，从指令调整到RLHF和其他方法，都依赖于这种格式来训练模型。处理与用户交互结构的工具被称为**聊天模板**。
+- en: 'An example which we will break down is below:'
+  id: totrans-9
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 下面是一个我们将要分解的例子：
+- en: '[PRE1]'
+  id: totrans-10
+  prefs: []
+  type: TYPE_PRE
+  zh: '[PRE1]'
+- en: This is the raw code for transforming a list of dictionaries in Python containing
+    messages and roles into tokens that a language model can predict from.
+  id: totrans-11
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 这是将包含消息和角色的字典列表转换为语言模型可以预测的标记的原始代码。
+- en: All information passed into models is assigned a role. The traditional three
+    roles are `system`, `user`, and `assistant`.
+  id: totrans-12
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 所有传递给模型的都是分配了一个角色。传统的三个角色是`system`、`user`和`assistant`。
+- en: The `system` tag is only used for the first message of the conversation; it
+    holds instructions for the agent in text that will not be received from or exposed
+    to the user. These **system prompts** are used to provide additional context to
+    the models, such as the date and time, or to patch behaviors. As a fun example,
+    models can be told things such as “You are a friendly chatbot who always responds
+    in the style of a pirate.”
+  id: totrans-13
+  prefs: []
+  type: TYPE_NORMAL
+  zh: '`system`标签仅用于对话的第一个消息；它包含不会从用户那里接收或暴露给用户的文本指令。这些**系统提示**用于向模型提供额外的上下文，例如日期和时间，或修正行为。作为一个有趣的例子，模型可以被告知诸如“你是一个友好的聊天机器人，总是以海盗的风格回应。”之类的事情。'
+- en: 'Next, the two other roles are straightforward: **user** holds the messages
+    from the person using the AI, and **assistant** holds the responses from the model
+    (that is engaging as an AI assistant).'
+  id: totrans-14
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 接下来，其他两个角色很简单：**user**包含使用AI的人的消息，而**assistant**包含模型的响应（即作为AI助手参与）。
+- en: 'In order to translate all this information into tokens, we use the code listing
+    above that we started with. The model has a series of *special tokens* that separate
+    the various messages from each other. If we run the above code with the example
+    query “How many helicopters can a human eat in one sitting?”, the token sequence
+    passed into the model would look as follows:'
+  id: totrans-15
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 为了将所有这些信息转换为标记，我们使用上面列出的代码。该模型有一系列*特殊标记*，用于将各种消息彼此分开。如果我们用示例查询“一个人一次能吃多少直升机？”运行上述代码，传递给模型的标记序列将如下所示：
+- en: '[PRE2]'
+  id: totrans-16
+  prefs: []
+  type: TYPE_PRE
+  zh: '[PRE2]'
+- en: Notice how the final tokens in the sequence are `<|im_start|>assistant`. This
+    is how the model knows to continue generating tokens until it finally generates
+    its end-of-sequence token, which in this case is `<|im_end|>`.
+  id: totrans-17
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 注意序列中的最后一个标记是`<|im_start|>assistant`。这就是模型知道继续生成标记，直到最终生成其序列结束标记的方式，在这种情况下是`<|im_end|>`。
+- en: By packing all question-answer pair data (and downstream preference tuning data)
+    into this format, modern language models follow it with perfect consistency. This
+    is the language that instruction tuned models use to exchange information with
+    users and the models stored on GPUs or other computing devices.
+  id: totrans-18
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 通过将所有问答对数据（以及下游偏好调整数据）打包成这种格式，现代语言模型会以完美的一致性遵循它。这是指令调整模型用于与用户和存储在GPU或其他计算设备上的模型交换信息的语言。
+- en: 'The behavior can be extended naively to multiple turns, such as shown below:'
+  id: totrans-19
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 这种行为可以天真地扩展到多个回合，如下所示：
+- en: '[PRE3]'
+  id: totrans-20
+  prefs: []
+  type: TYPE_PRE
+  zh: '[PRE3]'
+- en: In the open ecosystem, the standard method for applying the chat template to
+    a list of messages is a piece of Jinja code saved in the tokenizer, as `apply_chat_template`.
+  id: totrans-21
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 在开源生态系统中，将聊天模板应用于消息列表的标准方法是保存为 `apply_chat_template` 的 Jinja 代码片段，保存在分词器中。
+- en: The above chat template is a derivative of OpenAI’s Chat Markup Language (ChatML),
+    which was an early attempt to standardize message formatting. Now, OpenAI and
+    other model providers use a hierarchical system where the user can configure a
+    system message, yet there are higher-level instructions that may or may not be
+    revealed to the user [[172]](ch021.xhtml#ref-wallace2024instruction).
+  id: totrans-22
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 上述聊天模板是 OpenAI 的聊天标记语言（ChatML）的衍生品，ChatML 是早期尝试标准化消息格式的尝试。现在，OpenAI 和其他模型提供商使用一种分层系统，用户可以配置系统消息，但可能或可能不会向用户揭示更高级别的指令
+    [[172]](ch021.xhtml#ref-wallace2024instruction)。
+- en: 'Many other chat templates exist. Some other examples include Zephyr’s [[21]](ch021.xhtml#ref-tunstall2023zephyr):'
+  id: totrans-23
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 存在许多其他聊天模板。一些其他例子包括 Zephyr 的 [[21]](ch021.xhtml#ref-tunstall2023zephyr)：
+- en: '[PRE4]'
+  id: totrans-24
+  prefs: []
+  type: TYPE_PRE
+  zh: '[PRE4]'
+- en: 'Or Tülu’s:'
+  id: totrans-25
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 或者 Tülu 的：
+- en: '[PRE5]'
+  id: totrans-26
+  prefs: []
+  type: TYPE_PRE
+  zh: '[PRE5]'
+- en: Beyond this, many chat templates include formatting and other tokens for tasks
+    such as tool-use.
+  id: totrans-27
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 此外，许多聊天模板包括用于工具使用等任务的格式化和其他标记。
+- en: Best practices of instruction tuning
+  id: totrans-28
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+  zh: 指令调整的最佳实践
+- en: Instruction tuning as the foundation of post-training and creating helpful language
+    models is well-established. There are many ways to achieve successful instruction
+    tuning. For example, efficient finetuning with quantization of some model parameters
+    makes training very accessible [[173]](ch021.xhtml#ref-dettmers2023qlora). Also,
+    in narrow domains such as chat alignment, i.e., without harder skills such as
+    math or code, small, focused datasets can achieve strong performance [[13]](ch021.xhtml#ref-zhou2023lima).
+  id: totrans-29
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 指令调整作为后训练和创建有帮助的语言模型的基础已被确立。有许多方法可以实现成功的指令调整。例如，通过量化一些模型参数进行高效的微调，使得训练变得非常容易
+    [[173]](ch021.xhtml#ref-dettmers2023qlora)。此外，在狭窄领域，例如聊天对齐，即没有像数学或代码这样的更难技能的情况下，小型、专注的数据集可以实现强大的性能
+    [[13]](ch021.xhtml#ref-zhou2023lima)。
+- en: Soon after the release of ChatGPT, human datasets with as few as 10K samples
+    such as No Robots were state-of-the-art [[174]](ch021.xhtml#ref-no_robots). Years
+    later, large-scale synthetic datasets work best [[6]](ch021.xhtml#ref-lambert2024t)
+    on most tasks.
+  id: totrans-30
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 在 ChatGPT 发布后不久，像 No Robots 这样的只有 10K 个样本的人类数据集是最先进的 [[174]](ch021.xhtml#ref-no_robots)。几年后，大规模合成数据集在大多数任务上表现最佳
+    [[6]](ch021.xhtml#ref-lambert2024t)。
+- en: 'A few principles remain:'
+  id: totrans-31
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 一些原则仍然存在：
+- en: High-quality data is key to performance. The completions are what the model
+    actually learns from (in many cases the prompts are not predicted over so the
+    model does not learn to predict prompts).
+  id: totrans-32
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: 高质量数据是性能的关键。完成项是模型实际学习的内容（在许多情况下，提示没有被预测，因此模型没有学习预测提示）。
+- en: ~1M prompts can be used to create a model capable of excellent RLHF and post-training.
+    Further scaling can still help, but returns diminish quickly.
+  id: totrans-33
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: ~1M 个提示可以用来创建一个能够进行优秀 RLHF 和后训练的模型。进一步的扩展仍然有帮助，但回报迅速减少。
+- en: The best prompts are those in a similar distribution to downstream tasks of
+    interest.
+  id: totrans-34
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: 最好的提示是与感兴趣的下游任务相似分布的提示。
+- en: If multiple stages of training are done after instruction tuning, the models
+    can recover from some noise in the process. Optimizing the overall optimization
+    is more important than each individual stage.
+  id: totrans-35
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: 如果在指令调整之后进行多个训练阶段，模型可以从过程中的某些噪声中恢复。优化整体优化比每个单独的阶段更重要。
+- en: Implementation
+  id: totrans-36
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+  zh: 实现
+- en: 'While the loss function is the same as pretraining, there are a few key implementation
+    details that differ from the setting used for pre-training. Many practices, such
+    as deciding on the types of parallelism used to shard models across many GPUs
+    are the same as pretraining, just the total number of machines used is often lower
+    (for the first technical change listed below):'
+  id: totrans-37
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 虽然损失函数与预训练相同，但有一些关键的实施细节与用于预训练的设置不同。许多实践，例如决定用于将模型分片到多个 GPU 的并行类型，与预训练相同，只是使用的机器总数通常较低（对于下面列出的第一个技术变化）：
+- en: '**Smaller batch sizes**: Compared to pre-training, instruction tuning (and
+    other post-training techniques such as preference finetuning) use substantially
+    smaller batch sizes. For example, OLMo 2 uses a batch size of 1024 sequences for
+    the 7B and 2048 for the 13B pretraining, while both only use a batch size of 256
+    sequences at post-training [[59]](ch021.xhtml#ref-olmo20242). The smaller batch
+    sizes mean that these training jobs cannot be sharded across as many devices as
+    pretraining – in practice, distributed training setups have minimum per-device
+    batch sizes, so if you’re trying to retain a smaller global batch size for SFT
+    you can use cumulatively fewer GPUs. In practice the batch size forcing a smaller
+    concurrent GPU allotment per training job is not a limiting factor because the
+    training token counts for SFT are much smaller than pretraining, and training
+    for multiple seeds is needed in post-training to obtain the best final performance.'
+  id: totrans-38
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: '**更小的批次大小**：与预训练相比，指令微调（以及其他后训练技术，如偏好微调）使用显著更小的批次大小。例如，OLMo 2 在 7B 预训练中使用 1024
+    个序列的批次大小，在 13B 预训练中使用 2048 个序列，而在后训练阶段两者都只使用 256 个序列的批次大小 [[59]](ch021.xhtml#ref-olmo20242)。较小的批次大小意味着这些训练作业不能像预训练那样跨那么多设备进行分片
+    - 实际上，分布式训练设置中每个设备的批次大小有最小限制，因此如果您尝试保留较小的全局批次大小进行 SFT，可以使用累积更少的 GPU。实际上，由于 SFT
+    的训练令牌计数远小于预训练，并且后训练需要为多个种子进行训练以获得最佳最终性能，因此强制批次大小以减少每个训练作业的并发 GPU 分配并不是一个限制因素。'
+- en: '**Prompt masking**: When pretraining, every token in the batch is predicted
+    autoregressively and the loss is then applied to them. For instruction tuning,
+    the prompt tokens are masked out so the model isn’t learning to accurately predict
+    user queries – just responses. The same applies for other post-training algorithms.'
+  id: totrans-39
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: '**提示掩码**：在预训练时，批次中的每个令牌都会进行自回归预测，然后对它们应用损失。对于指令微调，提示令牌被掩码，因此模型不会学习准确预测用户查询
+    - 只预测响应。这同样适用于其他后训练算法。'
+- en: '**Multi-turn masking**: For multi-turn conversations, there are two common
+    masking choices. (1) *Final-turn only*: only the tokens in the final assistant
+    turn are included in the loss, while all earlier context (including earlier assistant
+    turns) is masked. Long conversations can still be “unrolled” into multiple training
+    samples: for a conversation of <semantics><mi>N</mi><annotation encoding="application/x-tex">N</annotation></semantics>
+    turns, each example predicts one assistant response while masking all prior context
+    (and excluding any future turns). (2) *Mask user turns only*: all user turns are
+    masked, but *every* assistant turn is included in the loss. You can still unroll
+    in this setting if you want more (shorter) training examples, but the key difference
+    is that intermediate assistant replies are trained on directly.'
+  id: totrans-40
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: '**多轮掩码**：对于多轮对话，有两种常见的掩码选择。（1）*仅最后轮次*：只有最后助手轮次的令牌包含在损失中，而所有早期上下文（包括早期助手轮次）都被掩码。长对话仍然可以“展开”成多个训练样本：对于
+    <semantics><mi>N</mi><annotation encoding="application/x-tex">N</annotation></semantics>
+    轮次的对话，每个示例预测一个助手响应，同时掩码所有先前上下文（并排除任何后续轮次）。（2）*仅掩码用户轮次*：所有用户轮次都被掩码，但*每个*助手轮次都包含在损失中。如果您想要更多（更短）的训练示例，您仍然可以在此设置中展开，但关键区别在于直接训练中间助手回复。'
+- en: '**Same loss function as pretraining:** Instruction tuning uses the same autoregressive
+    loss function used in pretraining language models, but with substantially different
+    data and masking (training only on full sequences, whereas pretraining documents
+    can be split across batches), etc.'
+  id: totrans-41
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+  zh: '**与预训练相同的损失函数**：指令微调使用与预训练语言模型中使用的相同自回归损失函数，但数据集和掩码（仅在完整序列上训练，而预训练文档可以跨批次分割）等方面有显著不同。'

@@ -1,0 +1,197 @@
+- en: Style and Information
+  id: totrans-0
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+  zh: 风格与信息
+- en: Early developments in RLHF gave it a reputation for being “just style transfer”
+    or other harsh critiques on how RLHF manipulates the way information is presented
+    in outputs. This chapter explains why style is very core to understanding the
+    value that RLHF is providing. Reading this chapter should help you understand
+    the changes RLHF is making to the models and why it positively impacts user behavior.
+  id: totrans-1
+  prefs: []
+  type: TYPE_NORMAL
+  zh: RLHF（强化学习与人类反馈）的早期发展给它带来了“仅仅是风格迁移”或其他对RLHF如何操纵输出中信息呈现方式的严厉批评。本章解释了为什么风格对于理解RLHF所提供价值的核心地位至关重要。阅读本章应有助于你理解RLHF对模型所做的改变以及它为何对用户行为产生积极影响。
+- en: The idea of being solely about style transfer has held back the RLHF narrative
+    for two reasons. First, when people discuss style transfer, they don’t describe
+    this as being important or exciting. Style is a never-ending source of human value,
+    it’s why retelling stories can result in new bestselling books (such as [Sapiens](https://en.wikipedia.org/wiki/Sapiens:_A_Brief_History_of_Humankind)),
+    and it is a fundamental part of continuing to progress our intellectual ecosystem.
+    Style is intertwined with what the information is.
+  id: totrans-2
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 单纯关于风格迁移的想法有两个原因阻碍了RLHF叙事的发展。首先，当人们讨论风格迁移时，他们并不将其描述为重要或令人兴奋的。风格是人类价值的永恒源泉，这就是为什么重述故事可以导致新的畅销书（如[Sapiens](https://en.wikipedia.org/wiki/Sapiens:_A_Brief_History_of_Humankind)），并且它是继续推进我们知识生态系统的基础部分。风格与信息内容是交织在一起的。
+- en: Second, we’ve seen how different styles actually can improve evaluation improvements
+    with Llama 3 [[24]](ch021.xhtml#ref-dubey2024llama). The Llama 3 Instruct models
+    scored extremely high on ChatBotArena, and it’s accepted as being because they
+    had a more fun personality. If RLHF is going to make language models simply more
+    fun, that is delivered value.
+  id: totrans-3
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 其次，我们已经看到不同的风格实际上如何通过Llama 3 [[24]](ch021.xhtml#ref-dubey2024llama)来提高评估改进。Llama
+    3 Instruct模型在ChatBotArena上得分极高，并被认为是因为它们拥有更有趣的个性。如果RLHF能让语言模型变得更有趣，那么这就是其带来的价值。
+- en: Throughout this chapter, the term “chattiness” is used to encompass the growing
+    length of responses from models training with RLHF, but it also encompasses techniques
+    like heavy markdown use, emojis, and formatting the answer in bulleted lists.
+  id: totrans-4
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 在本章中，“chattiness”（健谈度）一词被用来概括使用RLHF训练的模型响应长度的增长，但它也包括了像大量使用Markdown、表情符号以及以项目符号列表格式化答案等技术。
+- en: The Chattiness Paradox
+  id: totrans-5
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+  zh: 健谈度悖论
+- en: RLHF or preference fine-tuning methods are being used mostly to boost scores
+    like AlpacaEval and other automatic leaderboards without shifting proportionally
+    on harder-to-game evaluations like ChatBotArena. The paradox is that while alignment
+    methods give a measurable improvement on these models that does transfer into
+    performance that people care about, a large swath of the models doing more or
+    less the same thing take it way too far and publish evaluation scores that are
+    obviously meaningless.
+  id: totrans-6
+  prefs: []
+  type: TYPE_NORMAL
+  zh: RLHF或偏好微调方法主要被用来提升像AlpacaEval和其他自动排行榜的分数，而没有在像ChatBotArena这样更难以操纵的评估上成比例地提升。悖论在于，虽然对齐方法在这些模型上提供了可衡量的改进，并且这种改进确实转化为人们关心的性能，但大量进行类似操作且效果相同的模型却将这种改进过度放大，并发布了明显无意义的评估分数。
+- en: These methods, when done right, make the models easier to work with and more
+    enjoyable. This often comes with a few percentage point improvements on evaluation
+    tools like MT Bench or AlpacaEval. The problem is that you can also use techniques
+    like DPO and PPO in feedback loops or in an abundance of data to actually severely
+    harm the model on other tasks like mathematics or coding at the cost of LLM-as-a-judge
+    performance.
+  id: totrans-7
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 这些方法如果做得恰当，会使模型更容易操作和更有趣。这通常伴随着在MT Bench或AlpacaEval等评估工具上几个百分点的改进。问题是，你也可以使用DPO和PPO等技术，在反馈循环或大量数据中实际上严重损害模型在其他任务上的表现，如数学或编码，以牺牲LLM作为评判者的性能为代价。
+- en: During the proliferation of the DPO versus PPO debate there were many papers
+    that came out with incredible benchmarks but no model weights that gathered sustained
+    usage. When applying RLHF, there is no way to make an aligned version of a 7 billion
+    parameter model actually beat GPT-4 across comprehensive benchmarks. It seems
+    obvious, but there are papers claiming these results. fig. [23](#fig:DNO) is from
+    a paper called Direct Nash Optimization (DNO) that makes the case that their model
+    is state-of-the-art or so on AlpacaEval. These challenges emerge when academic
+    incentives interface with technologies becoming of extreme interest to the broader
+    society.
+  id: totrans-8
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 在DPO与PPO争论泛滥期间，出现了许多论文，提出了令人难以置信的基准，但没有模型权重被广泛使用。在应用RLHF时，没有方法可以使一个70亿参数模型的版本在全面基准上真正击败GPT-4。这似乎很明显，但有些论文声称这些结果。图[23](#fig:DNO)来自一篇名为《直接纳什优化》（DNO）的论文，该论文认为他们的模型在AlpacaEval上处于最先进水平或类似水平。这些挑战出现在学术激励与对更广泛社会极端感兴趣的技术接口时。
+- en: '![Figure 23: Results from the paper on Direct Nash Optimization (DNO) highlighting
+    their small model outperforming the likes of GPT-4\. Rosset et al. 2024\. License
+    CC-BY.](../media/file22.png)'
+  id: totrans-9
+  prefs: []
+  type: TYPE_IMG
+  zh: '![图23：直接纳什优化（DNO）论文的结果，突出显示他们的小型模型优于GPT-4等模型。Rosset等人，2024。许可CC-BY。](../media/file22.png)'
+- en: 'Figure 23: Results from the paper on Direct Nash Optimization (DNO) highlighting
+    their small model outperforming the likes of GPT-4\. Rosset et al. 2024\. License
+    CC-BY.'
+  id: totrans-10
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 图23：直接纳什优化（DNO）论文的结果，突出显示他们的小型模型优于GPT-4等模型。Rosset等人，2024。许可CC-BY。
+- en: Even the pioneering paper Self Rewarding Language Models [[354]](ch021.xhtml#ref-yuan2025selfrewardinglanguagemodels)
+    disclosed unrealistic scores on Llama 2 70B. A 70B model can get closer to GPT-4
+    than a 7B model can, as we have seen with Llama 3, but it’s important to separate
+    the reality of models from the claims in modern RLHF papers. Many more methods
+    have come and gone similar to this, sharing valuable insights and oversold results,
+    which make RLHF harder to understand.
+  id: totrans-11
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 即使是开创性的论文《自我奖励语言模型》[[354]](ch021.xhtml#ref-yuan2025selfrewardinglanguagemodels)也披露了Llama
+    2 70B上的不切实际的成绩。一个70B模型可以比7B模型更接近GPT-4，正如我们通过Llama 3所看到的，但重要的是要将模型的现实与现代RLHF论文中的声明区分开来。许多类似的方法都来了又去，分享了有价值的见解，但过度夸大了结果，这使得RLHF难以理解。
+- en: A symptom of models that have “funky RLHF” applied to them has often been a
+    length bias. This got so common that multiple evaluation systems like AlpacaEval
+    and WildBench both have linear length correction mechanisms in them. This patches
+    the incentives for doping on chattiness to “beat GPT-4,” and adds a less gamified
+    bug that shorter and useful models may actually win out.
+  id: totrans-12
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 应用“古怪RLHF”的模型的症状通常是长度偏差。这种情况变得如此普遍，以至于像AlpacaEval和WildBench这样的多个评估系统都包含了线性长度校正机制。这修补了在聊天上“击败GPT-4”的激励措施，并增加了一个不那么游戏化的缺陷，即短小而实用的模型实际上可能获胜。
+- en: Regardless, aligning chat models simply for chattiness still has a bit of a
+    tax in the literature. This note from the Qwen models is something that has been
+    seen multiple times in early alignment experiments, exaggerating a trade-off between
+    chattiness and performance [[355]](ch021.xhtml#ref-qwen).
+  id: totrans-13
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 然而，仅仅为了聊天而使聊天模型对齐在文献中仍然有一定的代价。Qwen模型中的这个注释在早期的对齐实验中已经多次出现，夸大了聊天和性能之间的权衡[[355]](ch021.xhtml#ref-qwen)。
+- en: We pretrained the models with a large amount of data, and we post-trained the
+    models with both supervised finetuning and direct preference optimization. However,
+    DPO leads to improvements in human preference evaluation but degradation in benchmark
+    evaluation.
+  id: totrans-14
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+  zh: 我们用大量数据预训练了模型，并用监督微调和直接偏好优化对模型进行了后训练。然而，DPO在人类偏好评估中带来了改进，但在基准评估中却有所下降。
+- en: A good example of this tradeoff done right is a model like Starling Beta [[126]](ch021.xhtml#ref-zhu2024starling).
+    It’s a model that was fine-tuned from another chat model, OpenChat [[356]](ch021.xhtml#ref-wang2023openchat),
+    which was in fact trained by an entire other organization. It’s training entirely
+    focuses on a k-wise reward model training and PPO optimization, and moves it up
+    10 places in ChatBotArena. The average response length of the model increases,
+    but in a way that’s good enough to actually help the human raters.
+  id: totrans-15
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 这种权衡做得好的一个好例子是Starling Beta [[126]](ch021.xhtml#ref-zhu2024starling)模型。这是一个从另一个聊天模型OpenChat
+    [[356]](ch021.xhtml#ref-wang2023openchat)微调的模型，而OpenChat实际上是由另一个组织训练的。它的训练完全集中在k-wise奖励模型训练和PPO优化上，并在ChatBotArena中提升了10个位置。模型的平均响应长度增加了，但以一种足够好的方式，实际上有助于人类评分者。
+- en: How Chattiness Emerges
+  id: totrans-16
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+  zh: 聊天如何出现
+- en: 'A natural question is: Why does RLHF make model responses longer? At a fundamental
+    answer, evaluations like ChatBotArena have shown us that average users of models
+    often like longer, complete answers when compared with terse responses. This does
+    not represent the preference of *every* user, but these models are trained to
+    match the preferences of many data labelers.'
+  id: totrans-17
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 一个自然的问题就是：为什么RLHF会让模型响应更长？从根本上讲，像ChatBotArena这样的评估已经向我们展示了，与简洁的回应相比，平均用户通常更喜欢更长、更完整的答案。这并不代表每个用户的偏好，但这些模型被训练去匹配许多数据标注者的偏好。
+- en: Most of the popular datasets for alignment these days are synthetic preferences
+    where a model like GPT-4 rates outputs from other models as the winner or the
+    loser. Given that GPT-4 is known to have length and style biases for outputs that
+    match itself, most of the pieces of text in the “preferred” section of the dataset
+    are either from an OpenAI model or are stylistically similar to it. The important
+    difference is that not all of the pieces of text in the dataset will have that.
+    They’re often generated from other open models like Alpaca, Vicuna, or more recent
+    examples. These models have very different characteristics.
+  id: totrans-18
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 目前大多数用于对齐的流行数据集都是合成偏好，其中像GPT-4这样的模型会评估其他模型的输出，并判定为胜者或败者。鉴于GPT-4已知对与其匹配的输出具有长度和风格偏差，数据集中“首选”部分的许多文本要么来自OpenAI的模型，要么在风格上与之相似。重要的区别是，数据集中并非所有文本都具有这种特征。它们通常来自其他公开模型，如Alpaca、Vicuna或更近期的例子。这些模型具有非常不同的特性。
+- en: Next, now that we’ve established that we have a preference dataset where most
+    of the chosen models are similar to ChatGPT (or some other model that is accepted
+    to be “strong”), these alignment methods simply increase the probability of these
+    sequences. The math is somewhat complicated, where the batches of data operate
+    on many chosen-rejected pairs at once, but in practice, the model is doing credit
+    assignment over sequences of tokens (subword pieces). Preference alignment for
+    chattiness is making the sequences found in outputs of models like GPT-4 more
+    likely and the sequences from other, weaker models less likely. Repeatedly, this
+    results in models with longer generations and characteristics that people like
+    more.
+  id: totrans-19
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 接下来，既然我们已经确定我们有一个偏好数据集，其中大多数选定的模型与ChatGPT（或一些其他被接受为“强大”的模型）相似，这些对齐方法只是增加了这些序列的概率。数学上有些复杂，因为数据批次同时处理许多选定的-拒绝对，但在实践中，模型正在对标记序列（子词片段）进行信用分配。偏好对聊天的对齐使得在GPT-4等模型输出中找到的序列更有可能，而来自其他较弱模型的序列则不太可能。反复这样做会导致生成更长的模型，并且具有人们更喜欢的特性。
+- en: Those among you who are familiar with RLHF methods may ask if the KL constraint
+    in the optimization should stop this from happening. The KL constraint is a distance
+    term between the distribution of the original model and the resulting model. It
+    helps make the optimization more robust to overoptimization, but that makes the
+    border between good and bad models a bit more nuanced. Hence, the prevalence of
+    vibes-based evaluations. Though, models tend to have enough parameters where they
+    can change substantially and still satisfy the KL constraint on the data being
+    measured — it can’t be the entire pretraining dataset, for example.
+  id: totrans-20
+  prefs: []
+  type: TYPE_NORMAL
+  zh: 在你们中熟悉RLHF方法的人可能会问，优化中的KL约束是否应该阻止这种情况发生。KL约束是原始模型分布与结果模型分布之间的距离项。它有助于使优化对过度优化更加稳健，但这使得好模型和坏模型之间的边界变得更加微妙。因此，基于感觉的评估变得普遍。尽管如此，模型通常具有足够的参数，它们可以发生显著变化，同时仍然满足被测量数据的KL约束——例如，不能是整个预训练数据集。
