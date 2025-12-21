@@ -7,6 +7,7 @@
 +   [DLology 博客中文翻译](docs/dlology/README.md)
 +   [EZYang 博客翻译](docs/ezyang/README.md)
 +   [与 TensorFlow 的初次接触](docs/first_contact_with_tensorFlow/README.md)
++   [如何扩展你的模型](docs/hwt-sclup-yrmdl/README.md)
 +   [TensorFlow 学习指南](docs/learning-tf-zh/README.md)
 +   [LiLianWeng 博客中文翻译](docs/lilianweng/README.md)
 +   [精通 JAX 编程](docs/ms-jax-prog/README.md)
