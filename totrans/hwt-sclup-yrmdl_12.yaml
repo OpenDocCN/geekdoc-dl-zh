@@ -1,0 +1,197 @@
+- en: Conclusions and Further Reading
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 原文：[https://jax-ml.github.io/scaling-book/conclusion](https://jax-ml.github.io/scaling-book/conclusion)
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: '<d-title>Part 11 of [How To Scale Your Model](/scaling-book) ([Part 10: JAX](../jax-stuff)
+    | [Part 12: GPUs](../gpus))'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Thank you for reading! Here we'll include a few more references for further
+    study.</d-title>  <d-byline><d-article><d-contents>### Contents
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[Acknowledgments](#acknowledgments)[Further Reading](#further-reading)[Feedback](#feedback)</d-contents>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Thank you for reading this set of essays and congratulations on making it
+    all the way to the end.** Before we conclude, a few acknowledgments:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Acknowledgments
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: This document represents a significant collective investment from many people
+    at Google DeepMind, who we’d like to briefly acknowledge!
+  prefs: []
+  type: TYPE_NORMAL
+- en: James Bradbury, Reiner Pope, and Blake Hechtman originally derived many of the
+    ideas in this manuscript, and were early to understanding the systems view of
+    the Transformer.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Sholto Douglas wrote the first version of this doc and is responsible for kicking
+    off the project. He is more than anyone responsible for the overall narrative
+    of this doc.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Jacob Austin led the work of transforming this first version from rough notes
+    into a more polished and comprehensive artifact. He did much of the work of editing,
+    formatting, and releasing this document, and coordinated contributions from other
+    authors.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Most of the figures and animations were made by Anselm Levskaya and Charlie
+    Chen.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Charlie Chen wrote the inference section and drew many of the inference figures.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Roy Frostig helped with publication, editing, and many other steps of the journey.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: We’d also like to thank many others gave critical feedback throughout the process,
+    in particular Zak Stone, Nikhil Sethi, Caitlin Stanton, Alex Dimitriev, Sridhar
+    Lakshmanamurthy, Albert Magyar, Diwakar Gupta, Jeff Dean, Corry Wang, Matt Johnson,
+    Peter Hawkins, and many others. Thanks to Ruiqi Gao for help with the HTML formatting.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Thank you all!**'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Before you go, you might also enjoy reading the new [Section 12](../gpus) on
+    NVIDIA GPUs!
+  prefs: []
+  type: TYPE_NORMAL
+- en: Further Reading
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'There is a bunch of related writing, including the following:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[**TPU Deep Dive**](https://henryhmko.github.io/posts/tpu/tpu.html): a wonderful
+    in-depth look at the TPU architecture in the spirit of this book.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[**Domain specific architectures for AI inference**](https://fleetwood.dev/posts/domain-specific-architectures):
+    a hardware and model deep dive in the spirit of this book.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[**A Domain-Specific Supercomputer for Training Deep Neural Networks**](https://dl.acm.org/doi/pdf/10.1145/3360307):
+    one of the OG TPU paper, this has a lot of great details about the Google TPU
+    program not covered here.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[**Making Deep Learning Go Brrrr From First Principles**](https://horace.io/brrr_intro.html):
+    a more GPU and PyTorch-focused tutorial on LLM rooflines and performance engineering.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[**Writing TPU Kernels with Pallas**](https://jax.readthedocs.io/en/latest/pallas/tpu/details.html):
+    increasingly, TPU programming involves writing custom kernels in Pallas. This
+    series discusses how to write kernels and many lower level TPU details that aren’t
+    mentioned here.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[**How to Optimize a CUDA Matmul Kernel for cuBLAS-like Performance: a Worklog**](https://siboehm.com/articles/22/CUDA-MMM):
+    while GPU and CUDA specific, this is an excellent blog post showing how to optimize
+    a matmul kernel in CUDA. This might be a good deep dive into how TPUs and GPUs
+    are different.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[**Distributed arrays and automatic parallelization**](https://jax.readthedocs.io/en/latest/notebooks/Distributed_arrays_and_automatic_parallelization.html):
+    this is a really nice guide to parallelism APIs in JAX and is a good way to learn
+    how to actually implement some of the ideas we’ve discussed here.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[**Rafi Witten’s High Performance LLMs 2024 Class**](https://github.com/rwitten/HighPerfLLMs2024):
+    our former colleague Rafi gave a great course on TPU performance engineering and
+    the slides are all on GitHub. This covers a bunch of things in more depth than
+    we do here.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[**[2211.05102] Efficiently Scaling Transformer Inference**](https://arxiv.org/abs/2211.05102):
+    a detailed paper on the mathematics of Transformer inference. This is the inspiration
+    for a lot of this document.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[**Huggingface Ultra-Scale Playbook**](https://huggingface.co/spaces/nanotron/ultrascale-playbook):
+    something of a GPU analog to this book, this talks more at depth about how PyTorch
+    implements parallelism techniques and memory-saving techniques during training.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[**Transformer Inference Arithmetic**](https://kipp.ly/transformer-inference-arithmetic/):
+    a blog with many of the same ideas as this book and some excellent illustrations.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[**Stanford CS336 Slides and Videos**](https://stanford-cs336.github.io/spring2025/index.html#coursework):
+    a fantastic Stanford course covering many details of LLM training and serving,
+    with some useful exercises. Assignments 1 and 2 are particularly relevant.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[**Stas Bekman’s ML Engineering Handbook**](https://github.com/stas00/ml-engineering):
+    a highly practical guide to ML infrastructure, covering topics not addressed in
+    this book like how to negotiate with cloud providers, cluster management, and
+    empirical measurements of GPU throughput.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: There remains a lot of room for comprehensive writing in this area, so we hope
+    this manuscript encourages more of it! We also believe that this is a fruitful
+    area to study and research. In many cases, it can be done even without having
+    many hardware accelerators on hand.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Feedback
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Please leave comments or questions so that we can improve this further. You
+    can reach our corresponding author, Jacob Austin, at jacobaustin123 [at] gmail
+    [dot] com, or suggest edits by posting issues, pull requests, or discussions [on
+    GitHub](https://github.com/jax-ml/scaling-book).</d-article>  <d-appendix><d-footnote-list><d-citation-list>###
+    Miscellaneous
+  prefs: []
+  type: TYPE_NORMAL
+- en: ^*Work done at Google DeepMind, now at MatX.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Citation
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: 'For attribution in academic contexts, please cite this work as:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'or as a BibTeX entry:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE1]</d-citation-list></d-footnote-list></d-appendix> <d-bibliography src="/scaling-book/assets/bibliography/"></d-bibliography></d-byline>'
+  prefs: []
+  type: TYPE_NORMAL

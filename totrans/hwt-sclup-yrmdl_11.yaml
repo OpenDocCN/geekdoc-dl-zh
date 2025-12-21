@@ -1,0 +1,514 @@
+- en: Programming TPUs in JAX
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 原文：[https://jax-ml.github.io/scaling-book/jax-stuff](https://jax-ml.github.io/scaling-book/jax-stuff)
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: '<d-title>Part 10 of [How To Scale Your Model](/scaling-book) ([Part 9: Profiling](../profiling)
+    | [Part 11: Conclusions](../conclusion))'
+  prefs: []
+  type: TYPE_NORMAL
+- en: How to use JAX to program TPUs efficiently! Much of this section is taken from
+    [here](https://jax.readthedocs.io/en/latest/jep/14273-shard-map.html). You can
+    run the code examples in this section with free TPUs on [Google Colab](https://colab.sandbox.google.com/).</d-title>  <d-byline><d-article><d-contents>###
+    Contents
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[How Does Parallelism Work in JAX?](#how-does-parallelism-work-in-jax)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[Auto sharding mode](#auto-sharding-mode)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[“Explicit sharding mode”](#explicit-sharding-mode)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Manual sharding mode via shard_map](#manual-sharding-mode-via-shard-map)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Worked Problems](#worked-problems)</d-contents>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: How Does Parallelism Work in JAX?
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'JAX supports three schools of thought for multi-device programming:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Compiler, take the wheel!** Let the XLA compiler automatically partition
+    arrays and decide what communication to add to facilitate a given program. This
+    lets you take a program that runs on a single device and automatically run it
+    on thousands without changing anything.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**JAX, take the wheel!** Automatic parallelism is great, but sometimes the
+    compiler does something crazy. Explicit sharding lets you write single-device
+    code like usual, but have JAX handle sharding propagation (not the compiler).
+    This means JAX can ask you for clarification when it’s unclear what you want.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**Just let me write what I mean, damnit!** While compilers are nice, they sometimes
+    do the wrong thing and add communication you don’t intend. Sometimes we want to
+    be explicit about exactly what communication you intend to run.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '| Mode | View? | Explicit sharding? | Explicit Collectives? |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- | --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| Auto | Global | ❌ | ❌ |'
+  prefs: []
+  type: TYPE_TB
+- en: '| Explicit | Global | ✅ | ❌ |'
+  prefs: []
+  type: TYPE_TB
+- en: '| Manual | Per-device | ✅ | ✅ |'
+  prefs: []
+  type: TYPE_TB
+- en: 'Correspondingly, JAX provides APIs for each of these modes:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '`jax.jit` (with `Auto` mesh axes) lets you take any existing JAX function and
+    call it with sharded inputs. JAX then uses XLA’s [Shardy](https://openxla.org/shardy)
+    compiler which automatically parallelizes the program. XLA will add communication
+    for you (AllGathers, ReduceScatters, AllReduces, etc.) when needed to facilitate
+    existing operations. While it isn’t perfect, it usually does a decent job at automatically
+    scaling your program to any number of chips without code changes.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '`jax.jit` with `Explicit` mesh axes looks similar to (1), but lets JAX handle
+    the sharding propagation instead of XLA. That means the sharding of an array is
+    actually part of the JAX type system, and JAX can error out when it detects ambiguous
+    communication and lets the user resolve it.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '`jax.shard_map` is the more manual counterpart. You get a device-local view
+    of the program and have to write any communication you want explicitly. Have a
+    sharded array and want the whole thing on each device? Add a `jax.lax.all_gather`.
+    Want to sum an array across your devices? Add a `jax.lax.psum` (an AllReduce).
+    Programming is harder but far less likely to do something you don’t want.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Auto sharding mode
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: 'jax.jit plays two roles inside JAX. As the name suggests, it “just-in-time”
+    compiles a function from Python into bytecode (via XLA/HLO/LLO) so it runs faster.
+    But if the input is sharded or the user specifies an `in_sharding` or `out_sharding`,
+    it also lets XLA distribute the computation across multiple devices and add communication
+    as needed. For example, here’s how you could write a sharded matmul using jax.jit:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs: []
+  type: TYPE_PRE
+- en: This will run automatically with any sharding and partition the computation
+    across our devices. **But what’s actually happening at the hardware level?**
+  prefs: []
+  type: TYPE_NORMAL
+- en: First we create In and W sharded across our devices<d-footnote>Notice how we
+    did this. This is one way to create an array with a particular sharding (i.e.
+    by adding the device argument to the creation function). Another one is to create
+    an array normally with `jnp.array(....)` and then do e.g. `jax.device_put(...,
+    P('x', 'y'))`. Yet another is to write a function which creates the array you
+    want, and jit-compile it with `out_shardings` being what you want.</d-footnote>.
+    W is sharded 2 way along the contracting dimension, while In is sharded 4-ways
+    (along both the contracting and output dimensions). This corresponds to a sharding
+    W[D[Y], F] and In[B[X], D[Y]], aka a kind of model and data parallelism.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: If we were running this locally (i.e. on one device), `matmul_square` would
+    simply square the input and perform a simple matmul. But because we specify the
+    `out_shardings` as `P('X', None)`, the output will be sharded along the batch
+    but replicated across the model dimension and will require an AllReduce to compute.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Using our notation from previous sections, this will likely do something like
+  prefs: []
+  type: TYPE_NORMAL
+- en: Out[B[X], F] { U[Y] } = In[B[X], D[Y]] *[D] W[D[Y], F]
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Out[B[X], F] = **AllReduce**(Out[B[X], F] { U[Y] })
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '`jax.jit` will add this for us automatically! We can actually print the HLO
+    with `jit_matmul.as_text()` and see the following HLO (abbreviated dramatically):'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE1]'
+  prefs: []
+  type: TYPE_PRE
+- en: We can see the matmul (the fusion) and the AllReduce above. Pay particular attention
+    to the shapes. `bf16[2, 1024]` is a local view of the activations, since our `batch_size=8`
+    is split across 4 devices and our `d_model=2048` is likewise split 2 ways.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**This is pretty magical!** No matter how complicated our program is, [Shardy]((https://openxla.org/shardy))
+    and jit will attempt to find shardings for all the intermediate activations and
+    add communication as needed. With that said, Shardy has its flaws. It can make
+    mistakes. Sometimes you’ll look at a profile and notice something has gone wrong.
+    A giant AllGather takes up 80% of the profile, where it doesn’t need to. When
+    this happens, we can try to correct the compiler by explicitly annotating intermediate
+    tensors with `jax.lax.with_sharding_constraint`. For instance, with two matmuls
+    I can force the intermediate activations to be sharded along the `y` dimension
+    (not that this is a good idea) with the following:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE2]'
+  prefs: []
+  type: TYPE_PRE
+- en: This makes up like 60% of JAX parallel programming in the automatic partitioning
+    world where you control the intermediate shardings via `jax.lax.with_sharding_constraint`.
+    But “compiler tickling” is famously not a fun programming model. You could annotate
+    every intermediate variable and still not know if you’ll get the right outcome.
+    Instead, what if JAX itself could handle and control sharding propagation?
+  prefs: []
+  type: TYPE_NORMAL
+- en: Explicit sharding mode
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: 'Explicit sharding (or “sharding in types”) looks a lot like automatic sharding,
+    but sharding propagation happens at the JAX level! Each JAX operation has a sharding
+    rule that takes the shardings of the op’s arguments and produces a sharding for
+    the op’s result. You can see the resulting sharding using `jax.typeof`:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE3]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'As you can see, JAX propagated the sharding from input (`x`) to output (`x`)
+    which are inspectable at trace-time via `jax.typeof`. For most operations these
+    rules are simple and obvious because there’s only one reasonable choice (e.g.
+    elementwise ops retain the same sharding). But for some operations it’s ambiguous
+    how to shard the result in which case JAX throws a trace-time error and we ask
+    the programmer to provide an `out_sharding` argument explicitly (e.g. jnp.einsum,
+    jnp.reshape, etc). Let’s see another example where you have conflicts:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE4]'
+  prefs: []
+  type: TYPE_PRE
+- en: This code errors with `Contracting dimensions are sharded and it is ambiguous
+    how the output should be sharded. Please specify the output sharding via the`
+    out_sharding `parameter. Got lhs_contracting_spec=('Y',) and rhs_contracting_spec=('Y',)`
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'This is awesome because how the output of einsum should be sharded is ambiguous.
+    The output sharding can be:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: P(‘X’, ‘Y’) which will induce a reduce-scatter or
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: P(‘X’, None) which will induce an all-reduce
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Unlike Auto mode, explicit mode errors out when it detects ambiguous communication
+    and requires the users to resolve it. So here you can do:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE5]'
+  prefs: []
+  type: TYPE_PRE
+- en: Auto mode and Explicit mode can be composed via `jax.sharding.auto_axes` and
+    `jax.sharding.explicit_axes` APIs. This is a [great doc to read](https://docs.jax.dev/en/latest/notebooks/explicit-sharding.html)
+    for more information.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'shard_map: explicit parallelism control over a program'
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: While Shardy is the “compiler take the wheel” mode, jax [shard_map](https://jax.readthedocs.io/en/latest/jep/14273-shard-map.html)
+    puts everything in your hands. You specify the sharding of the inputs, like in
+    jax.jit, but then you write all communication explicitly. Whereas `jax.jit` leaves
+    you with a global cross-device view of the program, `shard_map` gives you a local
+    per-device view.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Here’s an example. Try to reason about what this function does:<d-footnote>If
+    you want to play with this yourself in a colab by emulating a mesh, you can do
+    so using the following cell `import jax; jax.config.update('jax_num_cpu_devices',
+    8)`</d-footnote>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE6]'
+  prefs: []
+  type: TYPE_PRE
+- en: '**What does this do?** `slice_and_average` is run on each TPU with 1/8th of
+    the array, from which we slice the first 4 elements and average them across the
+    full mesh. This means we’re effectively doing `mean(x[:4], x[64:68], x[128:132],
+    …)`. This is pretty cool, because that’s not an easy operation to express in JAX
+    otherwise.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Why do this instead of jax.jit?** If we’d used `jax.jit`, `slice_and_average`
+    would have seen a global view of the array (the full `[512,]` array). We’d have
+    had to slice out this non-uniform slice and then perform an average which XLA
+    would have had to interpret correctly. XLA might have added the wrong communication
+    or gotten confused. Here we see the local view and write only the communication
+    we need.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Example [Collective Matmul]:** To take a more realistic example, say we to
+    implement model parallelism where the activations are initially model sharded,
+    i.e. A[B[X], D[Y]] * W[D, F[Y]] -> Out[B[X], F[Y]]. Naively, we would do this
+    by AllGathering A first followed by a local matrix multiplication:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: A[B[X], D] = **AllGather**[Y](A[B[X], D[Y]])
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Out[B[X], F[Y]] = A[B[X], D] *[D] W[D, F[Y]]
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Sadly, this is bad because it doesn’t allow us to overlap the communication
+    with the computation. Overlapping them can be done with a “collective matmul”,
+    as described in [Wang et al. 2023](https://dl.acm.org/doi/pdf/10.1145/3567955.3567959).
+    The algorithm is basically as follows:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: For each Y shard, perform a matmul of the local chunk of A with the local chunk
+    of W, producing a result of shape `[B / X, F / Y]`. Simultaneously, permute A
+    so you get the next chunk locally, perform the matmul, and sum the result.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'We can implement that quite easily with `jax.shard_map`:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE7]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'This is pretty neat! We can benchmark this and see that it’s also a lot faster!
+    [Here’s](https://imgur.com/a/e9I6SrM) the profile with the default jit matmul
+    which takes 311us with a big blocking AllGather at the beginning:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: <picture>![](../Images/bbd45e2f32572168e58f62d70880aa90.png)</picture>
+  prefs: []
+  type: TYPE_NORMAL
+- en: And [here’s](https://imgur.com/a/21iy0Sv) the version above that takes 244 us.
+    You can see the profile doesn’t have the AllGather. It’s all useful work! Our
+    FLOPs utilization is also a lot higher.
+  prefs: []
+  type: TYPE_NORMAL
+- en: <picture>![](../Images/b9fe5be2fa2068a2865ebb9aa401b655.png)</picture>
+  prefs: []
+  type: TYPE_NORMAL
+- en: It’s also worth noting that the matmul time with no sharding on the contracting
+    dimension is [224us](https://imgur.com/a/i3gNKfq), so we’re remarkably close to
+    the unsharded baseline here. This is a good example of the kind of performance
+    engineering you might end up doing to improve TPU utilization. For more `shard_map`
+    examples, [this note is great](https://jax.readthedocs.io/en/latest/notebooks/shard_map.html#example-1-all-gather-on-one-side).
+  prefs: []
+  type: TYPE_NORMAL
+- en: Now here are a couple of useful worked problems to try and implement using `jax.jit`
+    or `shard_map`!
+  prefs: []
+  type: TYPE_NORMAL
+- en: Worked Problems
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Here are some random JAX-related problems. I’ll add some more later. For all
+    of these, you’ll need some number of TPUs in a Colab. You can use a public Colab
+    with TPUv2-8\. From now on, we’ll assume you have N devices available.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Problem 1:** Let **A** be an array of activations of shape float32[S[X],
+    D[Y]] with `X * Y = N`. Do the following:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Write a function in JAX that computes the average within each `(X, Y)` shard,
+    i.e. it returns an array of size [X, Y] where `arr[i, j]` is the average over
+    shard `(i, j)`. Do this with both `jax.jit` and `shard_map`. Profile each and
+    see how long they took. Was there any communication added? *Hint: there shouldn’t
+    be, but sometimes XLA adds it anyway.*'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Write a function in JAX that returns roll(x, shift, axis=0) - x for some shift
+    **within each shard X**. I’m not enough of a masochist to make you do this in
+    jax.jit, so just do this with `shard_map`.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: <details><summary>Click here for the answer.</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Part 1: Here is a solution to part 1\. Note the fairly complex reshapes we
+    have to do for the `jax.jit` solution.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE8]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Part 2: Here is a similar solution to Part 2.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE9]</details>'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Problem 2:** Here we’ll make a basic “mixture of experts” model together.
+    Let **W**: float32[E[X], D, F] be a set of E “expert” matrices. Let **A**: float32[S[X],
+    D] (our activations) and let **B**: int32[S[X]] be a set of “routing assignments”
+    where B[i] is an integer in the range `[0, E)` telling us which matrix we want
+    to process that activation. We want to write a function in JAX that returns `Out[i]
+    = W[B[i]] @ A[i]`.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Let’s start by ignoring sharding altogether. Make all of these tensors small
+    enough so they fit in one device. Write a local implementation of this function.
+    *Make sure you don’t materialize an array of shape `[S, D, F]`! Hint: try sorting
+    the tokens into a new buffer of shape `[E, S, D]` with some attention to masking
+    (why do we need the second dimension to have size S?).*'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: If you just `jax.jit` the above method, something will happen. Profile this
+    and see what communication it decided to do. How long does it take?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: One problem you’ll notice with the above is that it likely gathers the full
+    set of activations **A** locally, i.e. AllGather[X]([S[X], D]), Not only is this
+    expensive communication-wise, it’s also incredibly expensive memory-wise if we
+    can’t fit the full set of activations locally. Implement the above using `shard_map`
+    and explicit communication.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: For a first pass, it might be easiest to use a `jax.lax.all_gather` and reorder
+    as in (a).
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: For a second pass, try to avoid materializing any array of size `[E, S, D]`,
+    i.e. try to perform the computation in a ragged fashion using a `jax.lax.all_to_all`
+    inside a `jax.lax.while_loop`. This way, you can avoid materializing the full
+    activations and wasting compute on padding. How much faster is this than your
+    original implementation?
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Most MoEs route to multiple (k) experts and then average the result. Refactor
+    the above to implement this. Let **B**: int32[S, k] in this case for the k experts
+    to route to.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: <details><summary>Click here for the (partial) answer.</summary>
+  prefs: []
+  type: TYPE_NORMAL
+- en: 1/2\. For part (1), you have a lot of choices. Here’s one option that just iterates
+    over the experts with masking.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE10]'
+  prefs: []
+  type: TYPE_PRE
+- en: You can also use `jax.lax.ragged_dot` which will do something similar but more
+    efficiently.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'I’m only going to sketch the pseudocode here (if you have a clean solution
+    feel free to add it):'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE11]'
+  prefs: []
+  type: TYPE_PRE
+- en: The basic idea is to iterate over chunks of the array, sort them and do an all_to_all,
+    then do the local FLOPs.</details>
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Problem 3:** The collective matmul example above is actually super relevant
+    for real LLMs. Let’s tweak the example to do the full Transformer stack.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'As an exercise, let’s start by implementing an AllReduce collective matmul,
+    i.e. A[B[X], D[Y]] *[D] W[D[Y], F] -> Out[B[X], F]. Note that the output isn’t
+    replicated. The naive algorithm is discussed above, basically just a local matmul
+    followed by an AllReduce. Try to make a comms overlapped “collective” version
+    of this operation. *Hint: tile over the output dimension and feel free to use
+    `jax.lax.psum` (aka AllReduce).* *Note: due to the way XLA handles this, it may
+    not actually be faster than the baseline.*'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'The complement to the AllReduce collective matmul above is a ReduceScatter
+    collective matmul, as in Tmp[B[X], F[Y]] *[F] W2[F[Y], D] -> Out[B[X], D[Y]].
+    This occurs in the down-projection matrix in a Transformer. Implement a collective,
+    overlapped version of this in JAX. Be careful about passing only the minimal amount
+    of data you need. *Hint: try permuting the result as you accumulate it.*'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Put these two together into an end-to-end Transformer block that performs In[B[X],
+    D[Y]] *[D] W[in][D, F[Y]] *[F] W[out][F[Y], D] -> Out[B[X], D[Y]] with overlapped
+    communication.<d-footnote>As before, we can't do $W_{in} \cdot W_{out}$ first
+    because of a non-linearity we've omitted here.</d-footnote> How much faster is
+    this than a `jax.jit` implementation?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**Problem 4:** All of the collective matmuls implemented above are unidirectional:
+    they only permute in one direction. Rewrite the collective AllReduce matmul and
+    the collective ReduceScatter matmuls to use bidirectional communication. How much
+    faster are these?'
+  prefs: []
+  type: TYPE_NORMAL
+- en: That’s all for Part 10\. That’s basically it! For final conclusions and further
+    reading, click [here](../conclusion).</d-article>  <d-appendix><d-footnote-list><d-citation-list>###
+    Miscellaneous
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: ^*Work done at Google DeepMind, now at MatX.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Citation
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: 'For attribution in academic contexts, please cite this work as:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE12]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'or as a BibTeX entry:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE13]</d-citation-list></d-footnote-list></d-appendix> <d-bibliography src="/scaling-book/assets/bibliography/"></d-bibliography></d-byline>'
+  prefs: []
+  type: TYPE_NORMAL
