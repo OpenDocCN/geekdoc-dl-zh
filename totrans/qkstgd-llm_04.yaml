@@ -1,70 +1,96 @@
 - en: '3'
+  id: totrans-0
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: '3'
 - en: First Steps with Prompt Engineering
+  id: totrans-1
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 第一步：使用提示工程
 - en: Introduction
+  id: totrans-2
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 简介
 - en: In our previous chapter, we built a semantic search system that leveraged the
     power of Large Language Models (LLMs) to find relevant documents based on natural
     language queries. The system was able to understand the meaning behind the queries
     and retrieve accurate results, thanks to the pre-training of the LLMs on vast
     amounts of text.
+  id: totrans-3
   prefs: []
   type: TYPE_NORMAL
+  zh: 在我们上一章中，我们构建了一个语义搜索系统，该系统利用大型语言模型（LLM）的力量，根据自然语言查询找到相关文档。该系统能够理解查询背后的含义，并检索准确的结果，这得益于LLM在大量文本上的预训练。
 - en: However, building an effective LLM-based application can require more than just
     plugging in a pre-trained model and feeding it data and we might want to lean
     on the learnings of massively large language models to help complete the loop.
     This is where prompt engineering begins to come into the picture.
+  id: totrans-4
   prefs: []
   type: TYPE_NORMAL
+  zh: 然而，构建一个有效的基于LLM的应用程序可能需要更多，而不仅仅是插入一个预训练的模型并给它数据，我们可能希望借鉴大规模语言模型的学习成果来帮助完成循环。这就是提示工程开始发挥作用的地方。
 - en: Prompt Engineering
+  id: totrans-5
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 提示工程
 - en: '**Prompt engineering** involves crafting prompts that effectively communicate
     the task at hand to the LLM, leading to accurate and useful outputs ([Figure 3.1](ch03.html#ch03fig01)).
     It is a skill that requires an understanding of the nuances of language, the specific
     domain being worked on, and the capabilities and limitations of the LLM being
     used.'
+  id: totrans-6
   prefs: []
   type: TYPE_NORMAL
+  zh: '**提示工程**涉及构建能够有效地将手头任务传达给LLM的提示，从而产生准确和有用的输出（[图3.1](ch03.html#ch03fig01)）。这是一种需要理解语言细微差别、正在工作的特定领域以及所使用的LLM的能力和限制的技能。'
 - en: '![Images](graphics/03fig01.jpg)'
+  id: totrans-7
   prefs: []
   type: TYPE_IMG
+  zh: '![图片](graphics/03fig01.jpg)'
 - en: '**Figure 3.1** *Prompt engineering is how we construct inputs to LLMs to get
     a desired output.*'
+  id: totrans-8
   prefs: []
   type: TYPE_NORMAL
+  zh: '**图3.1** *提示工程是我们构建LLM输入以获得期望输出的方式。*'
 - en: In this chapter, we will delve deeper into the art of prompt engineering, exploring
     techniques and best practices for crafting effective prompts that lead to accurate
     and relevant outputs. We will cover topics such as structuring prompts for different
     types of tasks, fine-tuning models for specific domains, and evaluating the quality
     of LLM outputs.
+  id: totrans-9
   prefs: []
   type: TYPE_NORMAL
+  zh: 在本章中，我们将深入探讨提示工程的技艺，探讨构建有效提示以产生准确和相关性输出的技术和最佳实践。我们将涵盖诸如为不同类型的任务结构化提示、针对特定领域微调模型以及评估LLM输出质量等主题。
 - en: By the end of this chapter, you will have the skills and knowledge needed to
     create powerful LLM-based applications that leverage the full potential of these
     cutting-edge models.
+  id: totrans-10
   prefs: []
   type: TYPE_NORMAL
+  zh: 到本章结束时，你将具备创建利用这些尖端模型全部潜力的强大基于LLM的应用程序所需的技术和知识。
 - en: Alignment in Language Models
+  id: totrans-11
   prefs:
   - PREF_H4
   type: TYPE_NORMAL
+  zh: 语言模型中的对齐
 - en: '**Alignment** in language models refers to how well the model can understand
     and respond to input prompts that are in line with what the user expected. In
     standard language modeling, a model is trained to predict the next word or sequence
     of words based on the context of the preceding words. However, this approach does
     not allow for specific instructions or prompts to be given to the model, which
     can limit its usefulness for certain applications.'
+  id: totrans-12
   prefs: []
   type: TYPE_NORMAL
+  zh: 语言模型中的**对齐**指的是模型理解并响应与用户期望一致的输入提示的能力。在标准语言建模中，模型被训练根据前一个单词或单词序列的上下文预测下一个单词或单词序列。然而，这种方法不允许向模型提供特定的指令或提示，这可能会限制其在某些应用中的有用性。
 - en: Prompt engineering can be challenging if the language model has not been aligned
     with the prompts, as it may generate irrelevant or incorrect responses. However,
     some language models have been developed with extra alignment features, such as
@@ -74,18 +100,24 @@
     training. These alignment techniques can improve the model’s ability to understand
     and respond to specific prompts, making them more useful for applications such
     as question-answering or language translation ([Figure 3.2](ch03.html#ch03fig02)).
+  id: totrans-13
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果语言模型没有与提示对齐，提示工程可能会很具挑战性，因为它可能会生成不相关或不正确的响应。然而，一些语言模型已经开发出了额外的对齐功能，例如来自Anthropic的宪法AI驱动的基于AI反馈的强化学习（RLAIF）或OpenAI的GPT系列中的基于人类反馈的强化学习（RLHF），这些功能可以将明确的指令和反馈纳入模型的训练中。这些对齐技术可以提高模型理解和响应特定提示的能力，使它们在问答或语言翻译等应用中更有用（[图3.2](ch03.html#ch03fig02)）。
 - en: '![Images](graphics/03fig02.jpg)'
+  id: totrans-14
   prefs: []
   type: TYPE_IMG
+  zh: '![图片](graphics/03fig02.jpg)'
 - en: '**Figure 3.2** *Even modern LLMs like GPT-3 need alignment to behave how we
     want them to. The original GPT-3 model released in 2020 is a pure auto-regressive
     language model and tries to “complete the thought” and gives me some misinformation
     pretty freely. In January 2022, GPT-3’s first aligned version was released (InstructGPT)
     and was able to answer questions in a more succinct and accurate manner.*'
+  id: totrans-15
   prefs: []
   type: TYPE_NORMAL
+  zh: '**图3.2** *即使是像GPT-3这样的现代LLM也需要进行对齐才能按照我们的期望行事。2020年发布的原始GPT-3模型是一个纯自回归语言模型，试图“完成思想”并且很自由地给我提供一些错误信息。2022年1月，GPT-3的第一个对齐版本（InstructGPT）发布，能够以更简洁、更准确的方式回答问题。*'
 - en: This chapter will focus on language models that have been specifically designed
     and trained to be aligned with instructional prompts. These models have been developed
     with the goal of improving their ability to understand and respond to specific
@@ -97,191 +129,266 @@
     will see the beginnings of fully working NLP products and features that utilize
     these models, and gain a deeper understanding of how to leverage aligned language
     models’ full capabilities.
+  id: totrans-16
   prefs: []
   type: TYPE_NORMAL
+  zh: 本章将重点介绍那些专门设计和训练以与教学提示对齐的语言模型。这些模型的开发目标是提高它们理解和响应特定指令或任务的能力。这些包括GPT-3、ChatGPT（来自OpenAI的闭源模型）、FLAN-T5（来自Google的开源模型）和Cohere的命令系列（闭源），这些模型通过大量数据和迁移学习、微调等技术进行训练，以更有效地生成对教学提示的响应。通过这次探索，我们将看到完全工作的NLP产品和功能的开始，并更深入地了解如何利用对齐语言模型的全部能力。
 - en: Just Ask
+  id: totrans-17
   prefs:
   - PREF_H4
   type: TYPE_NORMAL
+  zh: 直接询问
 - en: The first and most important rule of prompt engineering for instruction aligned
     language models is to be clear and direct in what you are asking for. When we
     give an LLM a task to complete, we want to make sure that we are communicating
     that task as clearly as possible. This is especially true for simple tasks that
     are straightforward for the LLM to accomplish.
+  id: totrans-18
   prefs: []
   type: TYPE_NORMAL
+  zh: 对于对齐语言模型的提示工程来说，第一条也是最重要的规则是明确、直接地表达你的要求。当我们给一个LLM一个任务来完成时，我们希望确保我们尽可能清晰地传达这个任务。这对于LLM能够直接完成的简单任务尤其如此。
 - en: In the case of asking GPT-3 to correct the grammar of a sentence, a direct instruction
     of “Correct the grammar of this sentence” is all you need to get a clear and accurate
     response. The prompt should also clearly indicate the phrase to be corrected ([Figure
     3.3](ch03.html#ch03fig03)).
+  id: totrans-19
   prefs: []
   type: TYPE_NORMAL
+  zh: 在要求GPT-3纠正句子语法的情况下，一个直接的指令“纠正这个句子的语法”就足以得到清晰、准确的响应。提示也应该清楚地指出需要纠正的短语（[图3.3](ch03.html#ch03fig03)）。
 - en: '![Images](graphics/03fig03.jpg)'
+  id: totrans-20
   prefs: []
   type: TYPE_IMG
+  zh: '![图片](graphics/03fig03.jpg)'
 - en: '**Figure 3.3** *The best way to get started with an LLM aligned to answer queries
     from humans is to simply ask.*'
+  id: totrans-21
   prefs: []
   type: TYPE_NORMAL
+  zh: '**图3.3** *开始使用与人类查询对齐的LLM的最佳方式就是简单地提问。*'
 - en: '**Note**'
+  id: totrans-22
   prefs: []
   type: TYPE_NORMAL
+  zh: '**注意**'
 - en: Many figures are screenshots of an LLM’s playground. Experimenting with prompt
     formats in the playground or via an online interface can help identify effective
     approaches, which can then be tested more rigorously using larger data batches
     and the code/API for optimal output.
+  id: totrans-23
   prefs: []
   type: TYPE_NORMAL
+  zh: 许多图是LLM游乐场的截图。在游乐场或通过在线界面实验提示格式可以帮助确定有效的方法，然后可以使用更大的数据批次和代码/API进行更严格的测试，以获得最佳输出。
 - en: To be even more confident in the LLM’s response, we can provide a clear indication
     of the input and output for the task by adding prefixes. Let’s take another simple
     example asking GPT-3 to translate a sentence from English to Turkish.
+  id: totrans-24
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了对LLM的响应更有信心，我们可以通过添加前缀来清楚地表明任务的输入和输出。让我们再举一个简单的例子，要求GPT-3将句子从英语翻译成土耳其语。
 - en: 'A simple “just ask” prompt will consist of three elements:'
+  id: totrans-25
   prefs: []
   type: TYPE_NORMAL
+  zh: 一个简单的“直接询问”提示将包含三个要素：
 - en: '![Images](graphics/square.jpg) A direct instruction: “Translate from English
     to Turkish.” which belongs at the top of the prompt so the LLM can pay attention
     to it (pun intended) while reading the input, which is next'
+  id: totrans-26
   prefs: []
   type: TYPE_NORMAL
+  zh: '![图片](graphics/square.jpg) 一个直接的指令：“从英语翻译成土耳其语。”这个指令应该放在提示的顶部，这样LLM在阅读输入时可以注意它（有意为之），输入紧接着是'
 - en: '![Images](graphics/square.jpg) The English phrase we want translated preceded
     by “English:” which is our clearly designated input'
+  id: totrans-27
   prefs: []
   type: TYPE_NORMAL
+  zh: '![图片](graphics/square.jpg) 我们想要翻译的英文短语，前面加上“英文：”，这是我们明确指定的输入'
 - en: '![Images](graphics/square.jpg) A space designated for the LLM to answer to
     give it’s answer which we will add the intentionally similar prefix “Turkish:”'
+  id: totrans-28
   prefs: []
   type: TYPE_NORMAL
+  zh: '![图片](graphics/square.jpg) 一个指定LLM回答的空间，我们将添加一个故意相似的“土耳其语：”前缀。'
 - en: These three elements are all part of a direct set of instructions with an organized
     answer area. By giving GPT-3 this clearly constructed prompt, it will be able
     to recognize the task being asked of it and fill in the answer correctly ([Figure
     3.4](ch03.html#ch03fig04)).
+  id: totrans-29
   prefs: []
   type: TYPE_NORMAL
+  zh: 这三个元素都是一套直接指令的一部分，有一个有组织的答案区域。通过给GPT-3这个清晰构建的提示，它将能够识别被要求完成的任务，并正确填写答案（[图3.4](ch03.html#ch03fig04)）。
 - en: '![Images](graphics/03fig04.jpg)'
+  id: totrans-30
   prefs: []
   type: TYPE_IMG
+  zh: '![图片](graphics/03fig04.jpg)'
 - en: '**Figure 3.4** *This more fleshed out version of our just ask prompt has three
     components: a clear and concise set of instructions, our input prefixed by an
     explanatory label and a prefix for our output followed by a colon and no further
     whitespace.*'
+  id: totrans-31
   prefs: []
   type: TYPE_NORMAL
+  zh: '**图3.4** *我们改进后的“仅询问”提示有三个组成部分：一组清晰简洁的指令，我们的输入前带有解释性标签，以及我们的输出前带有冒号和没有额外空格的前缀。*'
 - en: We can expand on this even further by asking the GPT-3 to output multiple options
     for our corrected grammar by asking GPT-3 to give results back as a numbered list
     ([Figure 3.5](ch03.html#ch03fig05)).
+  id: totrans-32
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以通过要求GPT-3以编号列表的形式输出多个语法修正选项来进一步扩展这一点，即要求GPT-3以编号列表的形式返回结果（[图3.5](ch03.html#ch03fig05)）。
 - en: '![Images](graphics/03fig05.jpg)'
+  id: totrans-33
   prefs: []
   type: TYPE_IMG
+  zh: '![图片](graphics/03fig05.jpg)'
 - en: '**Figure 3.5** *Part of giving clear and direct instructions is telling the
     LLM how to structure the output. In this example, we ask GPT-3 to give grammatically
     correct versions as a numbered list.*'
+  id: totrans-34
   prefs: []
   type: TYPE_NORMAL
+  zh: '**图3.5** *清晰直接地给出指令的一部分是告诉LLM如何结构化输出。在这个例子中，我们要求GPT-3以编号列表的形式给出语法正确的版本。*'
 - en: 'Therefore, when it comes to prompt engineering, the rule of thumb is simple:
     when in doubt, just ask. Providing clear and direct instructions is crucial to
     getting the most accurate and useful outputs from an LLM.'
+  id: totrans-35
   prefs: []
   type: TYPE_NORMAL
+  zh: 因此，当涉及到提示工程时，一个简单的规则是：如果有疑问，就问。提供清晰直接的指令对于从LLM中获得最准确和有用的输出至关重要。
 - en: Few-shot Learning
+  id: totrans-36
   prefs:
   - PREF_H4
   type: TYPE_NORMAL
+  zh: 少样本学习
 - en: When it comes to more complex tasks that require a deeper understanding of language,
     giving an LLM a few examples can go a long way in helping an LLM produce accurate
     and consistent outputs. Few-shot learning is a powerful technique that involves
     providing an LLM with a few examples of a task to help it understand the context
     and nuances of the problem.
+  id: totrans-37
   prefs: []
   type: TYPE_NORMAL
+  zh: 当涉及到需要更深入理解语言的更复杂任务时，给LLM一些例子可以大大帮助LLM产生准确和一致的结果。少样本学习是一种强大的技术，它涉及向LLM提供一些任务的例子，以帮助它理解问题的上下文和细微差别。
 - en: Few-shot learning has been a pretty major focus of research in the field of
     LLMs. The creators of GPT-3 even recognized the potential of this technique, which
     is evident from the fact that the original GPT-3 research paper was titled “Language
     Models are Few-Shot Learners”.
+  id: totrans-38
   prefs: []
   type: TYPE_NORMAL
+  zh: 少样本学习在LLM领域的研究中已经是一个相当重要的焦点。GPT-3的创造者甚至认识到了这种技术的潜力，这一点从原始的GPT-3研究论文的标题“Language
+    Models are Few-Shot Learners”中可以看出。
 - en: Few-shot learning is particularly useful for tasks that require a certain tone,
     syntax, or style, and for fields where the language used is specific to a particular
     domain. [Figure 3.6](ch03.html#ch03fig06) shows an example of asking GPT-3 to
     classify a review as being subjective or not. Basically this is a binary classification
     task.
+  id: totrans-39
   prefs: []
   type: TYPE_NORMAL
+  zh: 少样本学习对于需要特定语气、句法或风格的任务特别有用，以及那些使用的语言特定于某个领域的领域。[图3.6](ch03.html#ch03fig06)展示了要求GPT-3将评论分类为主观或非主观的例子。基本上这是一个二元分类任务。
 - en: '![Images](graphics/03fig06.jpg)'
+  id: totrans-40
   prefs: []
   type: TYPE_IMG
+  zh: '![图片](graphics/03fig06.jpg)'
 - en: '**Figure 3.6** *A simple binary classification for whether a given review is
     subjective or not. The top two examples show how LLMs can intuit a task’s answer
     from only a few examples where the bottom two examples show the same prompt structure
     without any examples (referred to as “zero-shot”) and cannot seem to answer how
     we want it to.*'
+  id: totrans-41
   prefs: []
   type: TYPE_NORMAL
+  zh: '**图3.6** *一个简单的二元分类，用于判断给定的评论是否主观。前两个例子显示了LLM如何仅从几个例子中推断出任务的答案，而底部两个例子显示了相同的提示结构，没有任何例子（称为“零样本”），似乎无法按照我们的期望回答。'
 - en: In the following figure, we can see that the few-shot examples are more likely
     to produce expected results because the LLM can look back at some examples to
     intuit from.
+  id: totrans-42
   prefs: []
   type: TYPE_NORMAL
+  zh: 在下面的图中，我们可以看到，由于LLM可以回顾一些例子来直观地推断，少样本例子更有可能产生预期的结果。
 - en: Few-shot learning opens up new possibilities for how we can interact with LLMs.
     With this technique, we can provide an LLM with an understanding of a task without
     explicitly providing instructions, making it more intuitive and user-friendly.
     This breakthrough capability has paved the way for the development of a wide range
     of LLM-based applications, from chatbots to language translation tools.
+  id: totrans-43
   prefs: []
   type: TYPE_NORMAL
+  zh: 少样本学习为如何与LLM交互开辟了新的可能性。使用这种技术，我们可以向LLM提供对任务的理解，而无需明确提供指令，这使得它更加直观和用户友好。这一突破性能力为基于LLM的广泛应用的开发铺平了道路，从聊天机器人到语言翻译工具。
 - en: Output Structuring
+  id: totrans-44
   prefs:
   - PREF_H4
   type: TYPE_NORMAL
+  zh: 输出结构化
 - en: LLMs can generate text in a variety of formats, sometimes with too much variety.
     It can be helpful to structure the output in a specific way to make it easier
     to work with and integrate into other systems. We’ve actually seen this previously
     in this chapter when we asked GPT-3 to give us an answer in a numbered list. We
     can also make an LLM give back structured data formats like JSON (JavaScript Object
     Notation) as the output [Figure 3.7](ch03.html#ch03fig07)).
+  id: totrans-45
   prefs: []
   type: TYPE_NORMAL
+  zh: LLM可以以各种格式生成文本，有时变化过多。以特定方式结构化输出可以帮助更容易地处理和集成到其他系统中。我们实际上在本章中已经看到过这一点，当时我们要求GPT-3以编号列表的形式给出答案。我们还可以让LLM返回结构化数据格式，如JSON（JavaScript对象表示法）作为输出[图3.7](ch03.html#ch03fig07)）。
 - en: '![Images](graphics/03fig07.jpg)'
+  id: totrans-46
   prefs: []
   type: TYPE_IMG
+  zh: '![图片](graphics/03fig07.jpg)'
 - en: '**Figure 3.7** *Simply asking GPT-3 to give a response back as a JSON (top)
     does give back a valid JSON but the keys are also in Turkish which may not be
     what we want. We can be more specific in our instruction by giving a one-shot
     example (bottom) which makes the LLM output the translation in the exact JSON
     format we requested.*'
+  id: totrans-47
   prefs: []
   type: TYPE_NORMAL
+  zh: '**图3.7** *简单地要求GPT-3以JSON格式（顶部）回应确实返回了有效的JSON，但键也以土耳其语表示，这可能不是我们想要的。我们可以通过提供一个单次示例（底部）来使指令更加具体，这样LLM就会以我们请求的精确JSON格式输出翻译。*'
 - en: By structuring LLM output in structured formats, developers can more easily
     extract specific information and pass it on to other services. Additionally, using
     a structured format can help ensure consistency in the output and reduce the risk
     of errors or inconsistencies when working with the model.
+  id: totrans-48
   prefs: []
   type: TYPE_NORMAL
+  zh: 通过以结构化格式组织LLM的输出，开发者可以更轻松地提取特定信息并将其传递给其他服务。此外，使用结构化格式可以帮助确保输出的连贯性，并降低在处理模型时出现错误或不一致的风险。
 - en: Prompting Personas
+  id: totrans-49
   prefs:
   - PREF_H4
   type: TYPE_NORMAL
+  zh: 提示角色
 - en: Specific word choices in our prompts can greatly influence the output of the
     model. Even small changes to the prompt can lead to vastly different results.
     For example, adding or removing a single word can cause the LLM to shift its focus
     or change its interpretation of the task. In some cases, this may result in incorrect
     or irrelevant responses, while in other cases, it may produce the exact output
     desired.
+  id: totrans-50
   prefs: []
   type: TYPE_NORMAL
+  zh: 在我们的提示中，特定的词汇选择可以极大地影响模型的输出。即使是提示中的微小变化也可能导致截然不同的结果。例如，添加或删除一个单词可能会使大型语言模型（LLM）改变其关注点或改变对任务的解释。在某些情况下，这可能会导致不正确或不相关的响应，而在其他情况下，它可能会产生所需的精确输出。
 - en: To account for these variations, researchers and practitioners often create
     different “personas” for the LLM, representing different styles or voices that
     the model can adopt depending on the prompt. These personas can be based on specific
     topics, genres, or even fictional characters, and are designed to elicit specific
     types of responses from the LLM ([Figure 3.8](ch03.html#ch03fig08)).
+  id: totrans-51
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了应对这些变化，研究人员和从业者通常会为LLM创建不同的“角色”，代表模型可以根据提示采用的不同风格或声音。这些角色可以基于特定主题、流派，甚至虚构角色，旨在从LLM中引发特定类型的响应（[图3.8](ch03.html#ch03fig08)）。
 - en: '![Images](graphics/03fig08.jpg)'
+  id: totrans-52
   prefs: []
   type: TYPE_IMG
+  zh: '![图片](graphics/03fig08.jpg)'
 - en: '**Figure 3.8** *Starting from the top left and moving down we see a baseline
     prompt of asking GPT-3 to respond as a store attendant. We can inject some more
     personality by asking it to respond in an “excitable” way or even as a pirate!
@@ -290,12 +397,16 @@
     be aware that these kinds of outputs are possible, whether intentional or not.
     We will talk about advanced output validation techniques in a future chapter that
     can help mitigate this behavior.*'
+  id: totrans-53
   prefs: []
   type: TYPE_NORMAL
+  zh: '**图3.8** *从左上角开始向下看，我们看到一个基线提示是要求GPT-3以店员身份回应。我们可以通过要求它以“兴奋”的方式或甚至以海盗的身份回应来注入更多个性。我们还可以通过要求LLM以粗鲁的方式或甚至以反犹太主义者的方式回应来滥用这个系统。任何想要使用LLM的开发者都应该意识到，这些类型的输出是可能的，无论是有意还是无意。我们将在未来的章节中讨论高级输出验证技术，这些技术可以帮助减轻这种行为。*'
 - en: By taking advantage of personas, LLM developers can better control the output
     of the model and end-users of the system can get a more unique and tailored experience.
+  id: totrans-54
   prefs: []
   type: TYPE_NORMAL
+  zh: 通过利用个性，LLM 开发者可以更好地控制模型的输出，系统的最终用户可以获得更独特和定制的体验。
 - en: Personas may not always be used for positive purposes. Just like any tool or
     technology, some people may use LLMs to evoke harmful messages like if we asked
     an LLM to imitate an anti-Semite like in the last figure. By feeding the LLMs
@@ -306,12 +417,18 @@
     of the model. Individuals who want to use LLMs must also be responsible and ethical
     when using LLMs and consider the potential impact of their actions (or the actions
     the LLM take on their behalf) on others.
+  id: totrans-55
   prefs: []
   type: TYPE_NORMAL
+  zh: 个性（Personas）可能并不总是用于积极的目的。就像任何工具或技术一样，有些人可能会使用 LLMs 来唤起有害的信息，比如如果我们要求一个 LLM
+    模仿上一次图中的反犹太主义者。通过向 LLMs 提供促进仇恨言论或其他有害内容的提示，个人可以生成持续有害思想和加强负面刻板印象的文本。LLM 的创造者通常会采取措施来减轻这种潜在的滥用，例如实施内容过滤器并与人类调解员合作审查模型的输出。希望使用
+    LLMs 的个人在使用 LLMs 时也必须负责任和道德，并考虑他们行为（或 LLM 代表他们的行为）对他人可能产生的影响。
 - en: Working with Prompts Across Models
+  id: totrans-56
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 在不同模型间使用提示
 - en: Prompts are highly dependent on the architecture and training of the language
     model, meaning that what works for one model may not work for another. For example,
     ChatGPT, GPT-3 (which is different from ChatGPT), T5, and models in the Cohere
@@ -319,17 +436,24 @@
     sources, and training approaches, which all impact the effectiveness of prompts
     when working with them. While some prompts may transfer between models, others
     may need to be adapted or re-engineered to work with a specific model.
+  id: totrans-57
   prefs: []
   type: TYPE_NORMAL
+  zh: 提示高度依赖于语言模型的架构和训练，这意味着对某个模型有效的东西可能对另一个模型无效。例如，ChatGPT、GPT-3（与 ChatGPT 不同）、T5
+    和 Cohere 命令系列中的模型都具有不同的底层架构、预训练数据源和训练方法，这些都影响在使用它们时提示的有效性。虽然一些提示可能在模型间转移，但其他提示可能需要调整或重新设计才能与特定模型一起工作。
 - en: In this section, we will explore how to work with prompts across models, taking
     into account the unique features and limitations of each model to develop effective
     prompts that can guide language models to generate the desired output.
+  id: totrans-58
   prefs: []
   type: TYPE_NORMAL
+  zh: 在本节中，我们将探讨如何在不同模型间使用提示，考虑到每个模型的独特特性和限制，以开发出能够引导语言模型生成所需输出的有效提示。
 - en: ChatGPT
+  id: totrans-59
   prefs:
   - PREF_H4
   type: TYPE_NORMAL
+  zh: ChatGPT
 - en: Some LLMs can take in more than just a single “prompt”. Models that are aligned
     to conversational dialogue like ChatGPT can take in a **system prompt** and multiple
     “user” and “assistant” prompts ([Figure 3.8](ch03.html#ch03fig08a)). The system
@@ -338,46 +462,68 @@
     are messages between the user and the LLM respectively. For any LLM you choose
     to look at, be sure to check out their documentation for specifics on how to structure
     input prompts.
+  id: totrans-60
   prefs: []
   type: TYPE_NORMAL
+  zh: 一些 LLMs 可以接受不仅仅是单个“提示”。与 ChatGPT 这样的对话式对话模型对齐的模型可以接受一个**系统提示**和多个“用户”和“助手”提示（[图
+    3.8](ch03.html#ch03fig08a)）。系统提示旨在作为对话的一般指令，通常包括总体规则和要遵循的个性。用户和助手提示是用户和 LLM 之间的消息。对于您选择的任何
+    LLM，请务必查看其文档，了解如何具体构建输入提示。
 - en: '![Images](graphics/03fig08a.jpg)'
+  id: totrans-61
   prefs: []
   type: TYPE_IMG
+  zh: '![图片](graphics/03fig08a.jpg)'
 - en: '**Figure 3.8** *ChatGPT takes in an overall system prompt as well as any number
     of user and assistant prompts that simulate an ongoing conversation.*'
+  id: totrans-62
   prefs: []
   type: TYPE_NORMAL
+  zh: '**图 3.8** *ChatGPT 接受一个整体系统提示以及任何数量的用户和助手提示，这些提示模拟了持续的对话。*'
 - en: Cohere
+  id: totrans-63
   prefs:
   - PREF_H4
   type: TYPE_NORMAL
+  zh: Cohere
 - en: We’ve already seen Cohere’s command series of models in action previously in
     this chapter but as an alternative to OpenAI, it’s a good time to show that prompts
     cannot always be simply ported over from one model to another. Usually we need
     to alter the prompt slightly to allow another LLM to do its work.
+  id: totrans-64
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们在本章之前已经看到了 Cohere 的模型系列在行动中的表现，但作为 OpenAI 的替代方案，现在是展示提示（prompts）不能总是简单地从一个模型转移到另一个模型的好时机。通常我们需要稍微调整提示，以便让另一个大型语言模型（LLM）完成其工作。
 - en: Let’s return to our simple translation example. Let’s ask OpenAI and Cohere
     to translate something from English to Turkish ([Figure 3.10](ch03.html#ch03fig10)).
+  id: totrans-65
   prefs: []
   type: TYPE_NORMAL
+  zh: 让我们回到我们的简单翻译示例。让我们请OpenAI和Cohere将内容从英语翻译成土耳其语([图3.10](ch03.html#ch03fig10))。
 - en: '![Images](graphics/03fig10.jpg)'
+  id: totrans-66
   prefs: []
   type: TYPE_IMG
+  zh: '![图片](graphics/03fig10.jpg)'
 - en: '**Figure 3.10** *OpenAI’s GPT-3 can take a translation instruction without
     much hand-holding whereas the cohere model seems to require a bit more structure.*'
+  id: totrans-67
   prefs: []
   type: TYPE_NORMAL
+  zh: '**图3.10** OpenAI的GPT-3可以在没有太多指导的情况下接受翻译指令，而Cohere模型似乎需要更多的结构。'
 - en: It seems that the Cohere model I chose required a bit more structuring than
     the OpenAI version. That doesn’t mean that the Cohere is worse than GPT-3, it
     just means that we need to think about how our prompt is structured for a given
     LLM.
+  id: totrans-68
   prefs: []
   type: TYPE_NORMAL
+  zh: 看起来我选择的Cohere模型比OpenAI版本需要更多的结构化。这并不意味着Cohere比GPT-3差，只是意味着我们需要考虑如何为给定的LLM结构化我们的提示。
 - en: Open-Source Prompt Engineering
+  id: totrans-69
   prefs:
   - PREF_H4
   type: TYPE_NORMAL
+  zh: 开源提示工程
 - en: It wouldn’t be fair to talk about prompt engineering and not talk about open-source
     models like GPT-J and FLAN-T5\. When working with them, prompt engineering is
     a critical step to get the most out of their pre-training and fine-tuning which
@@ -386,16 +532,20 @@
     models like GPT and Cohere, open-source models offer greater flexibility and control
     over prompt engineering, enabling developers to customize prompts and tailor output
     to specific use cases during fine-tuning.
+  id: totrans-70
   prefs: []
   type: TYPE_NORMAL
+  zh: 在谈论提示工程而不谈论像GPT-J和FLAN-T5这样的开源模型是不公平的。当与它们一起工作时，提示工程是获取其预训练和微调最大效益的关键步骤，我们将在下一章开始介绍。这些模型可以生成与闭源模型类似的高质量文本输出，但与GPT和Cohere这样的闭源模型不同，开源模型在提示工程方面提供了更大的灵活性和控制，使开发者能够在微调期间自定义提示并针对特定用例调整输出。
 - en: For example, a developer working on a medical chatbot may want to create prompts
     that focus on medical terminology and concepts, while a developer working on a
     language translation model may want to create prompts that emphasize grammar and
     syntax. With open-source models, developers have the flexibility to fine-tune
     prompts to their specific use cases, resulting in more accurate and relevant text
     output.
+  id: totrans-71
   prefs: []
   type: TYPE_NORMAL
+  zh: 例如，一个在医疗聊天机器人上工作的开发者可能希望创建专注于医疗术语和概念的提示，而一个在语言翻译模型上工作的开发者可能希望创建强调语法和语法的提示。使用开源模型，开发者可以根据他们的特定用例微调提示，从而产生更准确和相关的文本输出。
 - en: Another advantage of prompt engineering in open-source models is collaboration
     with other developers and researchers. Open-source models have a large and active
     community of users and contributors, which allows developers to share their prompt
@@ -403,19 +553,25 @@
     performance of the model. This collaborative approach to prompt engineering can
     lead to faster progress and more significant breakthroughs in natural language
     processing research.
+  id: totrans-72
   prefs: []
   type: TYPE_NORMAL
+  zh: 开源模型中提示工程的优势之一是与其他开发者和研究人员合作。开源模型拥有庞大且活跃的用户和贡献者社区，这使得开发者可以分享他们的提示工程策略，获得反馈，并共同提高模型的总体性能。这种提示工程的协作方法可以导致自然语言处理研究中的更快进步和更重大的突破。
 - en: It pays to remember how open-source models were pre-trained and fine-tuned (if
     they were at all). For example, GPT-J is simply an auto-regressive language model,
     so we’d expect things like few shot prompting to work better than simply asking
     a direct instructional promp,t whereas FLAN-T5 was specifically fine-tuned with
     instructional prompting in mind so while few-shots will still be on the table,
     we can also rely on the simplicity of just asking ([Figure 3.11](ch03.html#ch03fig011)).
+  id: totrans-73
   prefs: []
   type: TYPE_NORMAL
+  zh: 记住开源模型是如何预训练和微调的（如果有的话）是值得的。例如，GPT-J只是一个自回归语言模型，所以我们预计像少样本提示这样的东西会比简单地提出直接指导性提示工作得更好，而FLAN-T5则是专门针对指导性提示进行微调的，所以虽然少样本提示仍然在桌面上，我们也可以依赖简单提问的简单性([图3.11](ch03.html#ch03fig011))。
 - en: '![Images](graphics/03fig11.jpg)'
+  id: totrans-74
   prefs: []
   type: TYPE_IMG
+  zh: '![图片](graphics/03fig11.jpg)'
 - en: '**Figure 3.11** *Open source models can vary drastically in how they were trained
     and how they expect prompts. Models like GPT-J which is not instruction aligned
     has a hard time answering a direct instruction (bottom left) whereas FLAN-T5 which
@@ -423,120 +579,177 @@
     Both models are able to intuit from few-shot learning but FLAN-T5 seems to be
     having trouble with our subjective task. Perhaps a great candidate for some fine-tuning!
     Coming soon to a chapter near you.*'
+  id: totrans-75
   prefs: []
   type: TYPE_NORMAL
+  zh: '**图3.11** *开源模型在训练方式和期望提示方面可能会有很大差异。例如，GPT-J这类没有遵循指令的模型在回答直接指令（左下角）时会有困难，而FLAN-T5这类遵循指令的模型则知道如何接受指令（右下角）。这两个模型都能够通过少量样本学习进行直观推理，但FLAN-T5似乎在我们的主观任务上遇到了麻烦。或许是一个很好的微调候选者！即将在下一章中揭晓。*'
 - en: Building a Q/A bot with ChatGPT
+  id: totrans-76
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 使用ChatGPT构建问答机器人
 - en: Let’s build a very simple Q/A bot using ChatGPT and the semantic retrieval system
     we built in the last chapter. Recall that one of our API endpoints is used to
     retrieve documents from our BoolQ dataset given a natural query.
+  id: totrans-77
   prefs: []
   type: TYPE_NORMAL
+  zh: 让我们使用ChatGPT和我们在上一章中构建的语义检索系统来构建一个非常简单的问答机器人。回想一下，我们其中一个API端点是用来根据自然查询从我们的BoolQ数据集中检索文档的。
 - en: '**Note**'
+  id: totrans-78
   prefs: []
   type: TYPE_NORMAL
+  zh: '**注意**'
 - en: Both ChatGPT (GPT 3.5) and GPT-4 are conversational LLMs and take in the same
     kind of system prompt as well as user prompts assistant prompts. When I say we
     are using ChatGPT, we could be using either GPT 3.5 or GPT-4\. Our repository
     uses the most up to date model (which at the time of writing is GPT-4).
+  id: totrans-79
   prefs: []
   type: TYPE_NORMAL
+  zh: ChatGPT（GPT 3.5）和GPT-4都是对话型大型语言模型，它们接受相同类型的系统提示和用户提示助手提示。当我提到我们正在使用ChatGPT时，我们可能在使用GPT
+    3.5或GPT-4。我们的仓库使用最新的模型（在撰写本文时是GPT-4）。
 - en: 'All we need to do to get off the ground is:'
+  id: totrans-80
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们要做的只是：
 - en: 1\. Design a system prompt for ChatGPT
+  id: totrans-81
   prefs: []
   type: TYPE_NORMAL
+  zh: 1. 为ChatGPT设计一个系统提示
 - en: 2\. Search for context in our knowledge with every new user message
+  id: totrans-82
   prefs: []
   type: TYPE_NORMAL
+  zh: 2. 在每个新用户消息中搜索我们的知识库中的上下文
 - en: 3\. Inject any context we find from our DB directly into ChatGPT’s system prompt
+  id: totrans-83
   prefs: []
   type: TYPE_NORMAL
+  zh: 3. 将我们从数据库中找到的任何上下文直接注入到ChatGPT的系统提示中
 - en: 4\. Let ChatGPT do its job and answer the question
+  id: totrans-84
   prefs: []
   type: TYPE_NORMAL
+  zh: 4. 让ChatGPT完成其工作并回答问题
 - en: '[Figure 3.12](ch03.html#ch03fig011) outlines these high level steps:'
+  id: totrans-85
   prefs: []
   type: TYPE_NORMAL
+  zh: '[图3.12](ch03.html#ch03fig011)概述了这些高级步骤：'
 - en: '![Images](graphics/03fig12.jpg)'
+  id: totrans-86
   prefs: []
   type: TYPE_IMG
+  zh: '![图片](graphics/03fig12.jpg)'
 - en: '**Figure 3.12** *A 10,000 foot view of our chatbot that uses ChatGPT to provide
     a conversational interface in front of our semantic search API.*'
+  id: totrans-87
   prefs: []
   type: TYPE_NORMAL
+  zh: '**图3.12** *从10,000英尺的高度看，我们的聊天机器人使用ChatGPT在我们的语义搜索API前面提供了一个对话式界面。*'
 - en: 'To dig into it one step deeper, [Figure 3.13](ch03.html#ch03fig013) shows how
     this will work at the prompt level, step by step:'
+  id: totrans-88
   prefs: []
   type: TYPE_NORMAL
+  zh: 要进一步深入了解，[图3.13](ch03.html#ch03fig013)展示了这一过程在提示层面的工作方式，一步一步：
 - en: '![Images](graphics/03fig13.jpg)'
+  id: totrans-89
   prefs: []
   type: TYPE_IMG
+  zh: '![图片](graphics/03fig13.jpg)'
 - en: '**Figure 3.13** *Starting from the top left and reading left to right, these
     four states represent how our bot is architected. Every time a user says something
     that surfaces a confident document from our knowledge base, that document is inserted
     directly into the system prompt where we tell ChatGPT to only use documents from
     our knowledge base.*'
+  id: totrans-90
   prefs: []
   type: TYPE_NORMAL
+  zh: '**图3.13** *从左上角开始，从左到右阅读，这四个状态代表了我们的机器人是如何构建的。每次用户说些什么，从我们的知识库中检索出自信的文档时，该文档就会被直接插入到系统提示中，我们告诉ChatGPT只使用我们的知识库中的文档。*'
 - en: Let’s wrap all of this logic into a Python class that will have a skeleton like
     in [Listing 3.1](ch03.html#list3_1).
+  id: totrans-91
   prefs: []
   type: TYPE_NORMAL
+  zh: 让我们将所有这些逻辑封装到一个Python类中，其结构类似于[列表3.1](ch03.html#list3_1)。
 - en: '**Listing 3.1 *A ChatGPT Q/A bot***'
+  id: totrans-92
   prefs: []
   type: TYPE_NORMAL
+  zh: '**列表3.1 *一个ChatGPT问答机器人*** '
 - en: '[PRE0]'
+  id: totrans-93
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE0]'
 - en: A full implementation of this code using GPT-4 is in the book’s repository and
     [Figure 3.14](ch03.html#ch03fig014) presents a sample conversation we can have
     with it.
+  id: totrans-94
   prefs: []
   type: TYPE_NORMAL
+  zh: 使用GPT-4的完整代码实现可以在本书的仓库中找到，[图3.14](ch03.html#ch03fig014)展示了我们可以与之进行的示例对话。
 - en: '![Images](graphics/03fig14.jpg)'
+  id: totrans-95
   prefs: []
   type: TYPE_IMG
+  zh: '![图片](graphics/03fig14.jpg)'
 - en: '**Figure 3.14** *Asking our bot about information from the BoolQ dataset yields
     cohesive and conversational answers whereas when I ask about Barack Obama’s age
     (which is information not present in the knowledge base) the AI politely declines
     to answer even though that is general knowledge it would try to use otherwise.*'
+  id: totrans-96
   prefs: []
   type: TYPE_NORMAL
+  zh: '**图3.14** *询问我们的机器人关于BoolQ数据集中的信息，它会给出连贯且对话式的回答，而当我询问巴拉克·奥巴马的年龄（这是知识库中不存在的信息）时，尽管这是AI可能尝试使用的常识，但它礼貌地拒绝回答。*'
 - en: As a part of testing, I decided to try something out of the box and built a
     new namespace in the same vector database (Thank you, Pinecone) and I chunked
     documents out of a PDF of a Star Wars-themed card game I like. I wanted to use
     the chatbot to ask basic questions about the game and let ChatGPT retrieve portions
     of the manual to answer my questions. [Figure 3.15](ch03.html#ch03fig015) was
     the result!
+  id: totrans-97
   prefs: []
   type: TYPE_NORMAL
+  zh: 作为测试的一部分，我决定尝试一些不同寻常的事情，并在同一向量数据库（感谢Pinecone）中创建了一个新的命名空间，并从我喜欢的一款星球大战主题卡牌游戏的PDF中提取了文档。我想使用聊天机器人来询问关于游戏的基本问题，并让ChatGPT检索手册的部分内容来回答我的问题。[图3.15](ch03.html#ch03fig015)就是结果！
 - en: '![Images](graphics/03fig15.jpg)'
+  id: totrans-98
   prefs: []
   type: TYPE_IMG
+  zh: '![图片](graphics/03fig15.jpg)'
 - en: '**Figure 3.15** *The same architecture and system prompt against a new knowledge
     base of a card game manual. Now I can ask questions in the manual but my questions
     from BoolQ are no longer in scope.*'
+  id: totrans-99
   prefs: []
   type: TYPE_NORMAL
+  zh: '**图3.15** *针对新知识库（卡牌游戏手册）的相同架构和系统提示。现在我可以询问手册中的问题，但我的BoolQ问题已不再在范围内。*'
 - en: Not bad at all if I may say so.
+  id: totrans-100
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果我可以这么说，那真是太不错了。
 - en: Summary
+  id: totrans-101
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 摘要
 - en: Prompt engineering, the process of designing and optimizing prompts to improve
     the performance of language models can be fun, iterative, and sometimes tricky!
     We saw many tips and tricks on how to get started such as understanding alignment,
     just asking, few-shot learning, output structuring, prompting personas, and working
     with prompts across models. We also built our own chatbot using ChatGPT’s prompt
     interface that was able to tie into the API we built in the last chapter.
+  id: totrans-102
   prefs: []
   type: TYPE_NORMAL
+  zh: 提示工程，即设计和优化提示以提升语言模型性能的过程，可以是一件有趣、迭代且有时颇具挑战性的工作！我们看到了许多如何开始的技巧和窍门，例如理解对齐、直接提问、少样本学习、输出结构化、提示角色以及跨模型使用提示。我们还利用ChatGPT的提示界面构建了自己的聊天机器人，该机器人能够连接到我们在上一章中构建的API。
 - en: There is a strong correlation between proficient prompt engineering and effective
     writing. A well-crafted prompt provides the model with clear instructions, resulting
     in an output that closely aligns with the desired response. When a human can comprehend
@@ -546,13 +759,17 @@
     between prompt engineering and writing highlights that the art of writing effective
     prompts is more like crafting data annotation guidelines or engaging in skillful
     writing than it is similar to traditional engineering practices.
+  id: totrans-103
   prefs: []
   type: TYPE_NORMAL
+  zh: 精通提示工程与有效写作之间存在强烈的关联。一个精心设计的提示为模型提供清晰的指令，从而产生与期望响应高度一致的输出。当人类能够从给定的提示中理解并创建预期的输出时，这表明该提示结构良好且对LLM有用。然而，如果一个提示允许多个响应或总体上模糊不清，那么它可能对LLM来说过于含糊。提示工程与写作之间的这种平行关系突显了编写有效提示的艺术更像是在制定数据标注指南或进行技巧性写作，而不是类似于传统工程实践。
 - en: Prompt engineering is an important process for improving the performance of
     language models. By designing and optimizing prompts, language models can better
     understand and respond to user inputs. In a later chapter, we will revisit prompt
     engineering with some more advanced topics like LLM output validation, chain of
     thought prompting to force an LLM to think out loud, and chaining multiple prompts
     together into larger workflows.
+  id: totrans-104
   prefs: []
   type: TYPE_NORMAL
+  zh: 提示工程是提高语言模型性能的重要过程。通过设计和优化提示，语言模型可以更好地理解和响应用户输入。在后续章节中，我们将重新探讨提示工程，并涉及一些更高级的主题，如LLM输出验证、思维链提示以迫使LLM大声思考，以及将多个提示链接到更大的工作流程中。

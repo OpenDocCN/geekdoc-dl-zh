@@ -1,11 +1,15 @@
 - en: '1'
+  id: totrans-0
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: '1'
 - en: Overview of Large Language Models
+  id: totrans-1
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 大型语言模型的概述
 - en: Ever since an advanced artificial intelligence (AI) deep learning model called
     the Transformer was introduced by a team at Google Brain in 2017, it has become
     the standard for tackling various natural language processing (NLP) tasks in academia
@@ -14,46 +18,64 @@
     better understanding users’ search queries. The GPT family of models from OpenAI
     have also received attention for their ability to generate human-like text and
     images.
+  id: totrans-2
   prefs: []
   type: TYPE_NORMAL
+  zh: 自从2017年谷歌大脑团队推出了一种名为Transformer的高级人工智能（AI）深度学习模型以来，它已成为学术界和工业界处理各种自然语言处理（NLP）任务的行业标准。很可能你今天已经与Transformer模型互动过，甚至没有意识到这一点，因为谷歌使用BERT通过更好地理解用户的搜索查询来增强其搜索引擎。OpenAI的GPT系列模型也因其生成类似人类文本和图像的能力而受到关注。
 - en: These Transformers now power applications such as GitHub’s Copilot (developed
     by OpenAI in collaboration with Microsoft), which can convert comments and snippets
     of code into fully functioning source code that can even call upon other LLMs
     (like in [Listing 1.1](ch01.html#list1_1)) to perform NLP tasks.
+  id: totrans-3
   prefs: []
   type: TYPE_NORMAL
+  zh: 这些Transformer现在为GitHub的Copilot（由OpenAI与微软合作开发）等应用提供动力，它可以将注释和代码片段转换为功能齐全的源代码，甚至可以调用其他LLMs（如[列表1.1](ch01.html#list1_1)）来执行NLP任务。
 - en: '**Listing 1.1** Using the Copilot LLM to get an output from Facebook’s BART
     LLM'
+  id: totrans-4
   prefs: []
   type: TYPE_NORMAL
+  zh: '**列表1.1** 使用Copilot LLM从Facebook的BART LLM获取输出'
 - en: '[PRE0]'
+  id: totrans-5
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE0]'
 - en: 'In this listing, I use Copilot to take in only a Python function definition
     and some comments I wrote and wrote all of the code to make the function do what
     I wrote. No cherry-picking here, just a fully working python function that I can
     call like this:'
+  id: totrans-6
   prefs: []
   type: TYPE_NORMAL
+  zh: 在这个列表中，我使用Copilot仅接受一个Python函数定义和一些我写的注释，并编写了所有代码以使该函数执行我写的内容。这里没有挑选，只是一个完全工作的Python函数，我可以像这样调用它：
 - en: '[PRE1]'
+  id: totrans-7
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE1]'
 - en: It appears we are surrounded by LLMs, but just what are they doing under the
     hood? Let’s find out!
+  id: totrans-8
   prefs: []
   type: TYPE_NORMAL
+  zh: 看起来我们周围都是LLMs，但它们在底层到底在做什么呢？让我们来看看吧！
 - en: What Are Large Language Models (LLMs)?
+  id: totrans-9
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 什么是大型语言模型（LLMs）？
 - en: '**Large language models** (LLMs) are AI models that are usually (but not necessarily)
     derived from the Transformer architecture and are designed to *understand* and
     *generate* human language, code, and much more. These models are trained on vast
     amounts of text data, allowing them to capture the complexities and nuances of
     human language. LLMs can perform a wide range of language tasks, from simple text
     classification to text generation, with high accuracy, fluency, and style.'
+  id: totrans-10
   prefs: []
   type: TYPE_NORMAL
+  zh: '**大型语言模型**（LLMs）是通常（但不一定）源自Transformer架构的AI模型，旨在*理解*和*生成*人类语言、代码以及更多内容。这些模型在大量文本数据上进行了训练，使它们能够捕捉人类语言的复杂性和细微差别。LLMs可以执行各种语言任务，从简单的文本分类到文本生成，具有高精度、流畅性和风格。'
 - en: In the healthcare industry, LLMs are being used for electronic medical record
     (EMR) processing, clinical trial matching, and drug discovery. In finance, LLMs
     are being utilized for fraud detection, sentiment analysis of financial news,
@@ -61,11 +83,15 @@
     via chatbots and virtual assistants. With their versatility and highly performant
     natures, Transformer-based LLMs are becoming an increasingly valuable asset in
     a variety of industries and applications.
+  id: totrans-11
   prefs: []
   type: TYPE_NORMAL
+  zh: 在医疗保健行业，LLMs被用于电子病历（EMR）处理、临床试验匹配和药物发现。在金融领域，LLMs被用于欺诈检测、金融新闻的情感分析，甚至交易策略。LLMs还通过聊天机器人和虚拟助手用于客户服务自动化。凭借其多功能性和高性能特性，基于Transformer的LLMs正在成为各种行业和应用的越来越有价值的资产。
 - en: '**Note**'
+  id: totrans-12
   prefs: []
   type: TYPE_NORMAL
+  zh: '**注意**'
 - en: I will use the term **understand** a fair amount in this text. I am usually
     referring to “Natural Language Understanding” (NLU) which is a research branch
     of NLP that focuses on developing algorithms and models that can accurately interpret
@@ -73,8 +99,10 @@
     sentiment analysis, and named entity recognition. However, it is important to
     note that while these models can perform complex language tasks, they do not possess
     true understanding in the way humans do.
+  id: totrans-13
   prefs: []
   type: TYPE_NORMAL
+  zh: 我将在本文中使用“理解”这个词很多。我通常指的是“自然语言理解”（NLU），它是NLP的一个研究分支，专注于开发能够准确解释人类语言的算法和模型。正如我们将看到的，NLU模型在分类、情感分析和命名实体识别等任务上表现出色。然而，需要注意的是，尽管这些模型可以执行复杂的语言任务，但它们并不具备人类那样的真正理解能力。
 - en: The success of LLMs and Transformers is due to the combination of several ideas.
     Most of these ideas had been around for years but were also being actively researched
     around the same time. Mechanisms such as attention, transfer learning, and scaling
@@ -82,17 +110,23 @@
     breakthroughs right around the same time. [Figure 1.1](ch01.html#ch01fig01) outlines
     some of the biggest advancements in NLP in the last few decades, all leading up
     to the invention of the Transformer.
+  id: totrans-14
   prefs: []
   type: TYPE_NORMAL
+  zh: LLMs和Transformers的成功归功于几个想法的结合。其中大多数想法已经存在多年，但也是在同一时间被积极研究的。诸如注意力、迁移学习和扩展神经网络等机制，为Transformers提供了支撑，它们在几乎同一时间取得了突破。[图1.1](ch01.html#ch01fig01)概述了过去几十年NLP的一些最大进步，所有这些都为Transformer的发明奠定了基础。
 - en: '![Images](graphics/01fig01.jpg)'
+  id: totrans-15
   prefs: []
   type: TYPE_IMG
+  zh: '![图片](graphics/01fig01.jpg)'
 - en: '**Figure 1.1** *A brief history of Modern NLP highlights using deep learning
     to tackle language modeling, advancements in large scale semantic token embeddings
     (Word2vec), sequence to sequence models with attention (something we will see
     in more depth later in this chapter), and finally the Transformer in 2017.*'
+  id: totrans-16
   prefs: []
   type: TYPE_NORMAL
+  zh: '**图1.1** *现代NLP简史强调了使用深度学习来解决语言建模、大规模语义词嵌入（Word2vec）的进步、具有注意力的序列到序列模型（我们将在本章后面更深入地探讨），以及2017年的Transformer。*'
 - en: The Transformer architecture itself is quite impressive. It can be highly parallelized
     and scaled in ways that previous state of the art NLP models could not be, allowing
     it to scale to much larger data sets and training times than previous NLP models.
@@ -102,8 +136,10 @@
     relationships between words. Of course, no architecture is perfect. Transformers
     are still limited to an input context window which represents the maximum length
     of text it can process at any given moment.
+  id: totrans-17
   prefs: []
   type: TYPE_NORMAL
+  zh: Transformer架构本身相当令人印象深刻。它可以以先前最先进的NLP模型无法实现的方式高度并行化和扩展，使其能够扩展到比以前NLP模型更大的数据集和训练时间。Transformer使用一种特殊类型的注意力计算，称为**自注意力**，允许序列中的每个单词“关注”（寻找上下文）序列中的所有其他单词，使其能够捕捉单词之间的长距离依赖关系和上下文关系。当然，没有架构是完美的。Transformers仍然局限于一个输入上下文窗口，它代表了在任何给定时刻它可以处理的文本的最大长度。
 - en: Since the advent of the Transformer in 2017, the ecosystem around using and
     deploying Transformers has only exploded. The aptly named “Transformers” library
     and its supporting packages have made it accessible for practitioners to use,
@@ -111,26 +147,37 @@
     of organizations and counting. Popular LLM repositories like Hugging Face have
     popped up, providing access to powerful open-source models to the masses. In short,
     using and productionizing a Transformer has never been easier.
+  id: totrans-18
   prefs: []
   type: TYPE_NORMAL
+  zh: 自从2017年Transformer问世以来，围绕使用和部署Transformer的生态系统已经爆炸式增长。恰如其名，“Transformer”库及其支持包使得从业者能够使用、训练和共享模型，极大地加速了其采用，并被成千上万家组织和机构所使用。像Hugging
+    Face这样的流行LLM存储库也应运而生，为大众提供了访问强大开源模型的机会。简而言之，使用和生产化Transformer从未如此简单。
 - en: That’s where this book comes in.
+  id: totrans-19
   prefs: []
   type: TYPE_NORMAL
+  zh: 这本书正是为了填补这一空白。
 - en: My goal is to guide you on how to use, train, and optimize all kinds of LLMs
     for practical applications while giving you just enough insight into the inner
     workings of the model to know how to make optimal decisions about model choice,
     data format, fine-tuning parameters, and so much more.
+  id: totrans-20
   prefs: []
   type: TYPE_NORMAL
+  zh: 我的目的是指导你如何使用、训练和优化各种LLM以应用于实际，同时给你足够的洞察力了解模型的内部工作原理，以便你能够做出关于模型选择、数据格式、微调参数等方面的最佳决策。
 - en: My aim is to make using Transformers accessible for software developers, data
     scientists, analysts, and hobbyists alike. To do that, we should start on a level
     playing field and learn a bit more about LLMs.
+  id: totrans-21
   prefs: []
   type: TYPE_NORMAL
+  zh: 我的目的是让软件开发者、数据科学家、分析师和爱好者都能轻松使用Transformers。要做到这一点，我们应该从同一起跑线开始，并更多地了解LLMs。
 - en: Definition of LLMs
+  id: totrans-22
   prefs:
   - PREF_H4
   type: TYPE_NORMAL
+  zh: LLMs的定义
 - en: 'To back up only slightly, we should talk first about the specific NLP task
     that LLMs and Transformers are being used to solve and provides the foundation
     layer for their ability to solve a multitude of tasks. **Language modeling** is
@@ -139,34 +186,46 @@
     (a limited and known set of tokens). There are generally two kinds of language
     modeling tasks out there: autoencoding tasks and autoregressive tasks [Figure
     1.2](ch01.html#ch01fig02))'
+  id: totrans-23
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了稍微支持这一点，我们首先应该谈谈LLMs和Transformers被用来解决的具体NLP任务，这为它们解决多种任务的能力提供了基础层。**语言建模**是NLP的一个子领域，涉及创建统计/深度学习模型来预测指定**词汇**（一个有限且已知的标记集合）中标记序列的可能性。通常有两种语言建模任务：自编码任务和自回归任务[图1.2](ch01.html#ch01fig02)。
 - en: '**Note**'
+  id: totrans-24
   prefs: []
   type: TYPE_NORMAL
+  zh: '**注意**'
 - en: The term **token** refers to the smallest unit of semantic meaning created by
     breaking down a sentence or piece of text into smaller units and are the basic
     inputs for an LLM. Tokens can be words but also can be “sub-words” as we will
     see in more depth throughout this book. Some readers may be familiar with the
     term “n-gram” which refers to a sequence of n consecutive tokens.
+  id: totrans-25
   prefs: []
   type: TYPE_NORMAL
+  zh: 术语**标记**指的是通过将句子或文本分解成更小的单元而创建的最小语义单位，是LLM的基本输入。标记可以是单词，也可以是“子词”，正如我们将在本书的后续部分更深入地了解的那样。一些读者可能熟悉“n-gram”这个术语，它指的是n个连续标记的序列。
 - en: '![Images](graphics/01fig02.jpg)'
+  id: totrans-26
   prefs: []
   type: TYPE_IMG
+  zh: '![图片](graphics/01fig02.jpg)'
 - en: '**Figure 1.2** *Both the autoencoding and autoregressive language modeling
     task involves filling in a missing token but only the autoencoding task allows
     for context to be seen on both sides of the missing token.*'
+  id: totrans-27
   prefs: []
   type: TYPE_NORMAL
+  zh: '**图1.2** *自编码和自回归语言建模任务都涉及填充缺失的标记，但只有自编码任务允许在缺失标记的两侧看到上下文。*'
 - en: '**Autoregressive** language models are trained to predict the next token in
     a sentence, based only on the previous tokens in the phrase. These models correspond
     to the decoder part of the transformer model, and a mask is applied to the full
     sentence so that the attention heads can only see the tokens that came before.
     Autoregressive models are ideal for text generation and a good example of this
     type of model is GPT.'
+  id: totrans-28
   prefs: []
   type: TYPE_NORMAL
+  zh: '**自回归**语言模型被训练根据短语中的前一个标记预测句子中的下一个标记。这些模型对应于Transformer模型的解码器部分，并且对整个句子应用掩码，以便注意力头只能看到之前的标记。自回归模型非常适合文本生成，GPT是这个类型模型的典型例子。'
 - en: '**Autoencoding** language models are trained to reconstruct the original sentence
     from a corrupted version of the input. These models correspond to the encoder
     part of the transformer model and have access to the full input without any mask.
@@ -174,8 +233,10 @@
     They can be fine-tuned for a variety of tasks such as text generation, but their
     main application is sentence classification or token classification. A typical
     example of this type of model is BERT.'
+  id: totrans-29
   prefs: []
   type: TYPE_NORMAL
+  zh: '**自编码**语言模型被训练从输入的损坏版本中重建原始句子。这些模型对应于Transformer模型的编码器部分，并且可以访问完整的输入而不需要任何掩码。自编码模型创建整个句子的双向表示。它们可以针对各种任务进行微调，如文本生成，但它们的主要应用是句子分类或标记分类。这类模型的典型例子是BERT。'
 - en: To summarize, Large Language Models (LLMs) are language models that are either
     autoregressive, autoencoding, or a combination of the two. Modern LLMs are usually
     based on the Transformer architecture which is what we will use but they can be
@@ -183,96 +244,136 @@
     and large training datasets which enables them to perform complex language tasks,
     such as text generation and classification, with high accuracy and with little
     to no fine-tuning.
+  id: totrans-30
   prefs: []
   type: TYPE_NORMAL
+  zh: 总结来说，大型语言模型（LLMs）要么是自回归的，要么是自编码的，或者两者兼而有之。现代的LLMs通常基于Transformer架构，这是我们将会使用的架构，但它们也可以基于其他架构。LLMs的标志性特征是它们庞大的规模和庞大的训练数据集，这使得它们能够以高精度执行复杂的语言任务，如文本生成和分类，并且几乎不需要微调。
 - en: '[Table 1.1](ch01.html#ch01tab01) shows the disk size, memory usage, number
     of parameters, and approximate size of the pre-training data for several popular
     large language models (LLMs). Note that these sizes are approximate and may vary
     depending on the specific implementation and hardware used.'
+  id: totrans-31
   prefs: []
   type: TYPE_NORMAL
+  zh: '[表1.1](ch01.html#ch01tab01)显示了几个流行的LLMs的磁盘大小、内存使用量、参数数量以及预训练数据的近似大小。请注意，这些大小是近似的，可能会根据具体的实现和硬件使用而有所不同。'
 - en: '**Table 1.1 Comparison of Popular Large Language Models (LLMs)**'
+  id: totrans-32
   prefs: []
   type: TYPE_NORMAL
+  zh: '**表1.1 大型语言模型（LLMs）比较**'
 - en: '![Images](graphics/01tab01.jpg)'
+  id: totrans-33
   prefs: []
   type: TYPE_IMG
+  zh: '![图片](graphics/01tab01.jpg)'
 - en: But size is everything. Let’s look at some of the key characteristics of LLMs
     and then dive into how LLMs learn to read and write.
+  id: totrans-34
   prefs: []
   type: TYPE_NORMAL
+  zh: 但大小是关键。让我们看看LLMs的一些关键特性，然后深入了解LLMs是如何学习和读写。
 - en: Key Characteristics of LLMs
+  id: totrans-35
   prefs:
   - PREF_H4
   type: TYPE_NORMAL
+  zh: LLMs的关键特性
 - en: 'The original Transformer architecture, as devised in 2017, was a **sequence-to-sequence
     model**, which means it had two main components:'
+  id: totrans-36
   prefs: []
   type: TYPE_NORMAL
+  zh: 2017年设计的原始Transformer架构是一个**序列到序列模型**，这意味着它有两个主要组件：
 - en: '![Images](graphics/square.jpg) An **encoder** which is tasked with taking in
     raw text, splitting them up into its core components (more on this later), converting
     them into vectors (similar to the Word2vec process), and using attention to *understand*
     the context of the text'
+  id: totrans-37
   prefs: []
   type: TYPE_NORMAL
+  zh: '![图片](graphics/square.jpg) 一个**编码器**，负责接收原始文本，将其拆分成其核心组件（关于这一点稍后讨论），将其转换为向量（类似于Word2vec过程），并使用注意力机制来**理解**文本的上下文'
 - en: '![Images](graphics/square.jpg) A **decoder** which excels at *generating* text
     by using a modified type of attention to predict the next best token'
+  id: totrans-38
   prefs: []
   type: TYPE_NORMAL
+  zh: '![图片](graphics/square.jpg) 一个**解码器**，擅长通过使用修改后的注意力机制来预测下一个最佳标记来**生成**文本'
 - en: As shown in [Figure 1.3](ch01.html#ch01fig03), The Transformer has many other
     sub-components that we won’t get into that promotes faster training, generalizability,
     and better performance. Today’s LLMs are for the most part variants of the original
     Transformer. Models like BERT and GPT dissect the Transformer into only an encoder
     and decoder (respectively) in order to build models that excel in understanding
     and generating (also respectively).
+  id: totrans-39
   prefs: []
   type: TYPE_NORMAL
+  zh: 如[图1.3](ch01.html#ch01fig03)所示，Transformer有许多其他子组件，这些组件促进了更快的训练、泛化能力和更好的性能。今天的LLMs大部分是原始Transformer的变体。BERT和GPT等模型将Transformer分解为仅一个编码器和一个解码器（分别），以构建在理解和生成（也分别）方面表现卓越的模型。
 - en: '![Images](graphics/01fig03.jpg)'
+  id: totrans-40
   prefs: []
   type: TYPE_IMG
+  zh: '![图片](graphics/01fig03.jpg)'
 - en: '**Figure 1.3** *The original Transformer has two main components: an encoder
     which is great at understanding text, and a decoder which is great at generating
     text. Putting them together makes the entire model a “sequence to sequence” model.*'
+  id: totrans-41
   prefs: []
   type: TYPE_NORMAL
+  zh: '**图1.3** *原始Transformer有两个主要组件：一个擅长理解文本的编码器和一个擅长生成文本的解码器。将它们结合起来，使整个模型成为一个“序列到序列”模型。*'
 - en: 'In general, LLMs can be categorized into three main buckets:'
+  id: totrans-42
   prefs: []
   type: TYPE_NORMAL
+  zh: 通常，大型语言模型（LLMs）可以分为三个主要类别：
 - en: '![Images](graphics/square.jpg) **Autoregressive models**, such as GPT, which
     predict the next token in a sentence based on the previous tokens. They are effective
     at generating coherent free-text following a given context'
+  id: totrans-43
   prefs: []
   type: TYPE_NORMAL
+  zh: '![图片](graphics/square.jpg) **自回归模型**，例如 GPT，它根据前一个标记预测句子中的下一个标记。它们在根据给定上下文生成连贯的自由文本方面非常有效'
 - en: '![Images](graphics/square.jpg) **Autoencoding models**, such as BERT, which
     build a bidirectional representation of a sentence by masking some of the input
     tokens and trying to predict them from the remaining ones. They are adept at capturing
     contextual relationships between tokens quickly and at scale which make them great
     candidates for text classification tasks for example.'
+  id: totrans-44
   prefs: []
   type: TYPE_NORMAL
+  zh: '![图片](graphics/square.jpg) **自编码模型**，例如BERT，通过掩盖一些输入标记并尝试从剩余的标记中预测它们来构建句子的双向表示。它们擅长快速且大规模地捕捉标记之间的上下文关系，这使得它们成为文本分类任务等领域的优秀候选者。'
 - en: '![Images](graphics/square.jpg) **Combinations** of autoregressive and autoencoding,
     like T5, which can use the encoder and decoder to be more versatile and flexible
     in generating text. It has been shown that these combination models can generate
     more diverse and creative text in different contexts compared to pure decoder-based
     autoregressive models due to their ability to capture additional context using
     the encoder.'
+  id: totrans-45
   prefs: []
   type: TYPE_NORMAL
+  zh: '![图片](graphics/square.jpg) **自回归和自编码的组合**，如T5，可以使用编码器和解码器来在生成文本时更加灵活和多变。研究表明，这些组合模型能够在不同上下文中生成比纯解码器自回归模型更丰富和更具创造性的文本，因为它们能够通过编码器捕获额外的上下文。'
 - en: '![Images](graphics/01fig04.jpg)'
+  id: totrans-46
   prefs: []
   type: TYPE_IMG
+  zh: '![图片](graphics/01fig04.jpg)'
 - en: '**Figure 1.4** *A breakdown of the key characteristics of LLMs based on how
     they are derived from the original Transformer architecture.*'
+  id: totrans-47
   prefs: []
   type: TYPE_NORMAL
+  zh: '**图1.4** *基于它们从原始Transformer架构中派生出来的方式，对大型语言模型关键特性的分解。*'
 - en: '[Figure 1.4](ch01.html#ch01fig04) shows the breakdown of the key characteristics
     of LLMs based on these three buckets.'
+  id: totrans-48
   prefs: []
   type: TYPE_NORMAL
+  zh: '[图1.4](ch01.html#ch01fig04)展示了基于这三个类别的大型语言模型关键特性的分解。'
 - en: More Context Please
+  id: totrans-49
   prefs:
   - PREF_H5
   type: TYPE_NORMAL
+  zh: 需要更多上下文
 - en: No matter how the LLM is constructed and what parts of the Transformer it is
     using, they all care about context ([Figure 1.5](ch01.html#ch01fig05)). The goal
     is to understand each token as it relates to the other tokens in the input text.
@@ -281,135 +382,190 @@
     word definitions) and context (with the surrounding tokens) to create the most
     meaningful token embeddings possible. The Transformer relies on the attention
     calculation to make this combination a reality.
+  id: totrans-50
   prefs: []
   type: TYPE_NORMAL
+  zh: 无论LLM是如何构建的，以及它使用了Transformer的哪些部分，它们都关注上下文（[图1.5](ch01.html#ch01fig05)）。目标是理解每个标记与输入文本中其他标记的关系。从2013年Word2vec的流行开始，NLP实践者和研究人员一直好奇于如何将语义意义（基本上是单词定义）和上下文（与周围标记）结合起来，以创建尽可能有意义的标记嵌入。Transformer依赖于注意力计算来实现这一结合。
 - en: '![Images](graphics/01fig05.jpg)'
+  id: totrans-51
   prefs: []
   type: TYPE_IMG
+  zh: '![图片](graphics/01fig05.jpg)'
 - en: '**Figure 1.5** *LLMs are great at understanding context. The word “Python”
     can have different meanings depending on the context. We could be talking about
     a snake, or a pretty cool coding language.*'
+  id: totrans-52
   prefs: []
   type: TYPE_NORMAL
+  zh: '**图1.5** *大型语言模型（LLMs）擅长理解上下文。单词“Python”根据上下文可以有不同的含义。我们可能是在谈论一条蛇，或者是一种非常酷的编程语言。*'
 - en: Choosing what kind of Transformer derivation you want isn’t enough. Just choosing
     the encoder doesn’t mean your Transformer is magically good at understanding text.
     Let’s take a look at how these LLMs actually learn to read and write.
+  id: totrans-53
   prefs: []
   type: TYPE_NORMAL
+  zh: 选择你想要的Transformer衍生版本还不够。仅仅选择编码器并不意味着你的Transformer在理解文本方面有魔法般的能力。让我们看看这些LLMs实际上是如何学习阅读和写作的。
 - en: How LLMs Work
+  id: totrans-54
   prefs:
   - PREF_H4
   type: TYPE_NORMAL
+  zh: LLMs的工作原理
 - en: How an LLM is pre-trained and fine-tuned makes all the difference between an
     alright performing model and something state of the art and highly accurate. We’ll
     need to take a quick look into how LLMs are pre-trained to understand what they
     are good at, what they are bad at, and whether or not we would need to update
     them with our own custom data.
+  id: totrans-55
   prefs: []
   type: TYPE_NORMAL
+  zh: 一个LLM是如何进行预训练和微调的，这决定了模型的表现从一般到最先进和高度准确之间的差异。我们需要快速了解一下LLMs是如何进行预训练的，以便了解它们擅长什么，不擅长什么，以及我们是否需要用我们自己的定制数据来更新它们。
 - en: Pre-training
+  id: totrans-56
   prefs:
   - PREF_H5
   type: TYPE_NORMAL
+  zh: 预训练
 - en: Every LLM on the market has been **pre-trained** on a large corpus of text data
     and on specific language modeling related tasks. During pre-training, the LLM
     tries to learn and understand general language and relationships between words.
     Every LLM is trained on different corpora and on different tasks.
+  id: totrans-57
   prefs: []
   type: TYPE_NORMAL
+  zh: 市场上每个LLM都已经在大量的文本数据语料库和特定的语言建模相关任务上进行了**预训练**。在预训练期间，LLM试图学习和理解通用语言和词语之间的关系。每个LLM都在不同的语料库和不同的任务上进行了训练。
 - en: 'BERT, for example, was originally pre-trained on two publicly available text
     corpora ([Figure 1.6](ch01.html#ch01fig06)):'
+  id: totrans-58
   prefs: []
   type: TYPE_NORMAL
+  zh: 例如，BERT最初是在两个公开可用的文本语料库上预训练的（[图1.6](ch01.html#ch01fig06)）：
 - en: '![Images](graphics/square.jpg) **English Wikipedia** - a collection of articles
     from the English version of Wikipedia, a free online encyclopedia. It contains
     a range of topics and writing styles, making it a diverse and representative sample
     of English language text'
+  id: totrans-59
   prefs: []
   type: TYPE_NORMAL
+  zh: '![图片](graphics/square.jpg) **English Wikipedia** - 来自维基百科英文版的文章集合，一个免费在线百科全书。它包含各种主题和写作风格，使其成为英语语言文本的多样化和代表性样本'
 - en: • At the time 2.5 billion words.
+  id: totrans-60
   prefs: []
   type: TYPE_NORMAL
+  zh: • 当时2.5亿个单词。
 - en: '![Images](graphics/square.jpg) **The BookCorpus** - a large collection of fiction
     and non-fiction books. It was created by scraping book text from the web and includes
     a range of genres, from romance and mystery to science fiction and history. The
     books in the corpus were selected to have a minimum length of 2000 words and to
     be written in English by authors with verified identities'
+  id: totrans-61
   prefs: []
   type: TYPE_NORMAL
+  zh: '![图片](graphics/square.jpg) **BookCorpus** - 一个包含大量小说和非小说书籍的大型集合。它通过从网络抓取书籍文本创建而成，包括从浪漫和悬疑到科幻和历史等多种类型的书籍。语料库中的书籍被选择为至少2000个单词，并且由身份验证过的作者用英语撰写'
 - en: • 800M words.
+  id: totrans-62
   prefs: []
   type: TYPE_NORMAL
+  zh: • 8亿个单词。
 - en: 'and on two specific language modeling specific tasks ([Figure 1.7](ch01.html#ch01fig07)):'
+  id: totrans-63
   prefs: []
   type: TYPE_NORMAL
+  zh: 并且在两个特定的语言建模特定任务上进行了预训练（[图1.7](ch01.html#ch01fig07)）：
 - en: '![Images](graphics/square.jpg) The Masked Language Modeling (MLM) task (AKA
     the autoencoding task)—this helps BERT recognize token interactions within a single
     sentence.'
+  id: totrans-64
   prefs: []
   type: TYPE_NORMAL
+  zh: '![图片](graphics/square.jpg) 掩码语言建模（MLM）任务（也称为自动编码任务）——这有助于BERT识别单个句子内的标记交互。'
 - en: '![Images](graphics/square.jpg) The Next Sentence Prediction Task—this helps
     BERT understand how tokens interact with each other between sentences.'
+  id: totrans-65
   prefs: []
   type: TYPE_NORMAL
+  zh: '![图片](graphics/square.jpg) 下一个句子预测任务——这有助于BERT理解句子之间标记的交互。'
 - en: '![Images](graphics/01fig06.jpg)'
+  id: totrans-66
   prefs: []
   type: TYPE_IMG
+  zh: '![图片](graphics/01fig06.jpg)'
 - en: '**Figure 1.6** *BERT was originally pre-trained on English Wikipedia and the
     BookCorpus. More modern LLMs are trained on datasets thousands of times larger.*'
+  id: totrans-67
   prefs: []
   type: TYPE_NORMAL
+  zh: '**图1.6** *BERT最初是在英语维基百科和BookCorpus上预训练的。更现代的LLM在数千倍更大的数据集上进行训练。*'
 - en: '![Images](graphics/01fig07.jpg)'
+  id: totrans-68
   prefs: []
   type: TYPE_IMG
+  zh: '![图片](graphics/01fig07.jpg)'
 - en: '**Figure 1.7** *BERT was pre-trained on two tasks: the autoencoding language
     modeling task (referred to as the “masked language modeling” task) to teach it
     individual word embeddings and the “next sentence prediction” task to help it
     learn to embed entire sequences of text.*'
+  id: totrans-69
   prefs: []
   type: TYPE_NORMAL
+  zh: '**图1.7** *BERT 在两个任务上进行了预训练：自动编码语言建模任务（称为“掩码语言建模”任务），以教授它单个词嵌入；以及“下一句预测”任务，以帮助它学习嵌入整个文本序列。*'
 - en: Pre-training on these corpora allowed BERT (mainly via the self-attention mechanism)
     to learn a rich set of language features and contextual relationships. The use
     of large, diverse corpora like these has become a common practice in NLP research,
     as it has been shown to improve the performance of models on downstream tasks.
+  id: totrans-70
   prefs: []
   type: TYPE_NORMAL
+  zh: 在这些语料库上的预训练使BERT（主要通过自注意力机制）学习到丰富的语言特征和上下文关系。使用如此庞大、多样化的语料库已成为NLP研究中的常见做法，因为它已被证明可以提高模型在下游任务上的性能。
 - en: '**Note**'
+  id: totrans-71
   prefs: []
   type: TYPE_NORMAL
+  zh: '**注意**'
 - en: The pre-training process for an LLM can evolve over time as researchers find
     better ways of training LLMs and phase out methods that don’t help as much. For
     example within a year of the original Google BERT release that used the Next Sentence
     Prediction (NSP) pre-training task, a BERT variant called RoBERTa (yes, most of
     these LLM names will be fun) by Facebook AI was shown to not require the NSP task
     to match and even beat the original BERT model’s performance in several areas.
+  id: totrans-72
   prefs: []
   type: TYPE_NORMAL
+  zh: LLM的预训练过程可能会随着时间的推移而演变，因为研究人员发现更好的训练LLM的方法，并淘汰那些帮助不大的方法。例如，在原始Google BERT发布一年后，该模型使用了下一句预测（NSP）预训练任务，Facebook
+    AI的一个BERT变种RoBERTa（是的，这些LLM的名字大多数都很有趣）被证明不需要NSP任务，甚至在多个领域上超过了原始BERT模型的表现。
 - en: Depending on which LLM you decide to use, it will likely be pre-trained differently
     from the rest. This is what sets LLMs apart from each other. Some LLMs are trained
     on proprietary data sources including OpenAI’s GPT family of models in order to
     give their parent companies an edge over their competitors.
+  id: totrans-73
   prefs: []
   type: TYPE_NORMAL
+  zh: 根据你决定使用哪个LLM，它可能与其他LLM的预训练方式不同。这就是LLM之间不同的地方。一些LLM在专有数据源上进行训练，包括OpenAI的GPT系列模型，以便为其母公司提供竞争优势。
 - en: We will not revisit the idea of pre-training often in this book because it’s
     not exactly the “quick” part of a “quick start guide” but it can be worth knowing
     how these models were pre-trained because it’s because of this pre-training that
     we can apply something called transfer learning to let us achieve the state-of-the-art
     results we want, which is a big deal!
+  id: totrans-74
   prefs: []
   type: TYPE_NORMAL
+  zh: 在本书中，我们不会经常回顾预训练的概念，因为它并不是“快速入门指南”中的“快速”部分，但了解这些模型是如何进行预训练的仍然很有价值，因为正是由于这种预训练，我们才能应用迁移学习，以实现我们想要的最新技术水平，这是一个很大的进步！
 - en: Transfer Learning
+  id: totrans-75
   prefs:
   - PREF_H5
   type: TYPE_NORMAL
+  zh: 迁移学习
 - en: Transfer learning is a technique used in machine learning to leverage the knowledge
     gained from one task to improve performance on another related task. Transfer
     learning for LLMs involves taking an LLM that has been pre-trained on one corpus
     of text data and then fine-tuning it for a specific “downstream” task, such as
     text classification or text generation, by updating the model’s parameters with
     task-specific data.
+  id: totrans-76
   prefs: []
   type: TYPE_NORMAL
+  zh: 迁移学习是机器学习中的一种技术，用于利用从一个任务中获得的知识来提高另一个相关任务的表现。对于大型语言模型（LLM）的迁移学习涉及从一个文本数据集上预训练的LLM中提取知识，然后通过使用特定任务的数据更新模型参数，对特定“下游”任务（如文本分类或文本生成）进行微调。
 - en: The idea behind transfer learning is that the pre-trained model has already
     learned a lot of information about the language and relationships between words,
     and this information can be used as a starting point to improve performance on
@@ -418,74 +574,106 @@
     were trained from scratch. This greatly reduces the amount of time and resources
     required to train LLMs. [Figure 1.8](ch01.html#ch01fig08) provides a visual representation
     of this relationship.
+  id: totrans-77
   prefs: []
   type: TYPE_NORMAL
+  zh: 转移学习的理念在于，预训练模型已经学习到了大量关于语言和词语之间关系的信息，这些信息可以用作新任务性能提升的起点。转移学习允许LLMs在比从头开始训练所需的特定任务数据量小得多的情况下进行微调。这大大减少了训练LLMs所需的时间和资源。[图1.8](ch01.html#ch01fig08)提供了这种关系的视觉表示。
 - en: '![Images](graphics/01fig08.jpg)'
+  id: totrans-78
   prefs: []
   type: TYPE_IMG
+  zh: '![图片](graphics/01fig08.jpg)'
 - en: '**Figure 1.8** *The general transfer learning loop involves pre-training a
     model on a generic dataset on some generic self-supervised task and then fine-tuning
     the model on a task-specific dataset.*'
+  id: totrans-79
   prefs: []
   type: TYPE_NORMAL
+  zh: '**图1.8** *一般的转移学习循环涉及在某个通用数据集上对某个通用自监督任务进行模型预训练，然后在该特定任务数据集上微调模型*。'
 - en: Fine-tuning
+  id: totrans-80
   prefs:
   - PREF_H5
   type: TYPE_NORMAL
+  zh: 微调
 - en: Once a LLM has been pre-trained, it can be fine-tuned for specific tasks. Fine-tuning
     involves training the LLM on a smaller, task-specific dataset to adjust its parameters
     for the specific task at hand. This allows the LLM to leverage its pre-trained
     knowledge of the language to improve its accuracy for the specific task. Fine-tuning
     has been shown to drastically improve performance on domain-specific and task-specific
     tasks and lets LLMs adapt quickly to a wide variety of NLP applications.
+  id: totrans-81
   prefs: []
   type: TYPE_NORMAL
+  zh: 一旦LLM完成了预训练，它就可以针对特定任务进行微调。微调涉及在较小的、特定于任务的数据集上训练LLM，以调整其参数以适应手头的特定任务。这允许LLM利用其预训练的语言知识来提高其在特定任务上的准确性。微调已被证明可以显著提高特定领域和特定任务的性能，并使LLMs能够快速适应广泛的NLP应用。
 - en: '[Figure 1.9](ch01.html#ch01fig09) shows the basic fine-tuning loop that we
     will use for our models in later chapters. Whether they are open-sourced or closed-sourced
     the loop is more or less the same:'
+  id: totrans-82
   prefs: []
   type: TYPE_NORMAL
+  zh: '[图1.9](ch01.html#ch01fig09)展示了我们在后续章节中使用的模型的基本微调循环。无论是开源还是闭源，循环基本上是相同的：'
 - en: 1\. We define the model we want to fine-tune as well as any fine-tuning parameters
     (e.g., learning rate)
+  id: totrans-83
   prefs: []
   type: TYPE_NORMAL
+  zh: 1. 我们定义了我们想要微调的模型以及任何微调参数（例如，学习率）
 - en: 2\. We will aggregate some training data (the format and other characteristics
     depend on the model we are updating)
+  id: totrans-84
   prefs: []
   type: TYPE_NORMAL
+  zh: 2. 我们将聚合一些训练数据（格式和其他特征取决于我们正在更新的模型）
 - en: 3\. We compute losses (a measure of error) and gradients (information about
     how to change the model to minimize error)
+  id: totrans-85
   prefs: []
   type: TYPE_NORMAL
+  zh: 3. 我们计算损失（误差的度量）和梯度（关于如何改变模型以最小化误差的信息）
 - en: 4\. We update the model through backpropagation – a mechanism to update model
     parameters to minimize errors
+  id: totrans-86
   prefs: []
   type: TYPE_NORMAL
+  zh: 4. 我们通过反向传播更新模型——这是一种更新模型参数以最小化误差的机制
 - en: 'If some of that went over your head, not to worry: we will rely on pre-built
     tools from Hugging Face’s Transformers package ([Figure 1.9](ch01.html#ch01fig09))
     and OpenAI’s Fine-tuning API to abstract away a lot of this so we can really focus
     on our data and our models.'
+  id: totrans-87
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果有些内容您不太理解，不用担心：我们将依赖Hugging Face的Transformers包（[图1.9](ch01.html#ch01fig09)）和OpenAI的微调API预先构建的工具，以抽象出很多这样的内容，这样我们就可以真正专注于我们的数据和模型。
 - en: '**Note**'
+  id: totrans-88
   prefs: []
   type: TYPE_NORMAL
+  zh: '**注意**'
 - en: You will not need a Hugging Face account or key to follow along and use any
     of this code apart from very specific advanced exercises where I will call it
     out.
+  id: totrans-89
   prefs: []
   type: TYPE_NORMAL
+  zh: 您不需要Hugging Face账户或密钥来跟随并使用任何这些代码，除非是那些我特别指出需要的高级练习。
 - en: '![Images](graphics/01fig09.jpg)'
+  id: totrans-90
   prefs: []
   type: TYPE_IMG
+  zh: '![图片](graphics/01fig09.jpg)'
 - en: '**Figure 1.9** *The Transformers package from Hugging Face provides a neat
     and clean interface for training and fine-tuning LLMs.*'
+  id: totrans-91
   prefs: []
   type: TYPE_NORMAL
+  zh: '**图1.9** *Hugging Face的Transformers包提供了一个整洁且清晰的界面，用于训练和微调LLMs*。'
 - en: Attention
+  id: totrans-92
   prefs:
   - PREF_H5
   type: TYPE_NORMAL
+  zh: 注意
 - en: The name of the original paper that introduced the Transformer was called “Attention
     is all you need”. **Attention** is a mechanism used in deep learning models (not
     just Transformers) that assigns different weights to different parts of the input,
@@ -497,8 +685,10 @@
     on a fixed representation of the input to make predictions. Modern LLMs that rely
     on attention can dynamically focus on different parts of input sequences, allowing
     them to weigh the importance of each part in making predictions.
+  id: totrans-93
   prefs: []
   type: TYPE_NORMAL
+  zh: 引入Transformer的原始论文的名称被称为“Attention is all you need”。**Attention**是一种在深度学习模型（不仅仅是Transformer）中使用的机制，它为输入的不同部分分配不同的权重，使模型能够在执行翻译或摘要等任务时优先考虑和强调最重要的信息。本质上，attention允许模型动态地“关注”输入的不同部分，从而提高性能和结果准确性。在attention普及之前，大多数神经网络平等处理所有输入，模型依赖于输入的固定表示来做出预测。依赖于attention的现代LLMs可以动态地关注输入序列的不同部分，使它们在做出预测时能够权衡每个部分的重要性。
 - en: To recap, LLMs are pre-trained on large corpora and sometimes fine-tuned on
     smaller datasets for specific tasks. Recall that one of the factors behind the
     Transformer’s effectiveness as a language model is that it is highly parallelizable,
@@ -509,8 +699,11 @@
     it enables them to effectively retain information between training loops and tasks
     (i.e. transfer learning), while being able to process lengthy swatches of text
     with ease.
+  id: totrans-94
   prefs: []
   type: TYPE_NORMAL
+  zh: 总结一下，LLMs在大语料库上进行预训练，有时在较小的数据集上进行微调以完成特定任务。回想一下，Transformer作为语言模型有效性的一个因素是它高度可并行化，这允许更快地训练和高效地处理文本。真正使Transformer与其他深度学习架构区分开来的是它使用attention捕获标记之间的长距离依赖关系和关系的能力。换句话说，attention是Transformer-based
+    LLMs的关键组件，它使它们能够在训练循环和任务（即迁移学习）之间有效地保留信息，同时能够轻松处理大量文本。
 - en: Attention is attributed for being the most responsible for helping LLMs learn
     (or at least recognize) internal world models and human-identifiable rules. A
     Stanford study in 2019 showed that certain attention calculations in BERT corresponded
@@ -518,67 +711,93 @@
     BERT was able to notice direct objects of verbs, determiners of nouns, and objects
     of prepositions with remarkably high accuracy from only its pre-training. These
     relationships are presented visually in [Figure 1.10](ch01.html#ch01fig010).
+  id: totrans-95
   prefs: []
   type: TYPE_NORMAL
+  zh: Attention被认为是最有助于LLMs学习（或至少识别）内部世界模型和人类可识别规则的因素。2019年的一项斯坦福大学研究表明，BERT中的某些attention计算与语言学的句法和语法规则概念相对应。例如，他们注意到BERT能够以惊人的高精度从其预训练中识别动词的直接宾语、名词的限定词和介词的宾语。这些关系在[图1.10](ch01.html#ch01fig010)中进行了视觉呈现。
 - en: There is research that explores what other kinds of “rules” LLMs are able to
     learn simply by pre-training and fine-tuning. One example is a series of experiments
     led by researchers at Harvard that explored an LLM’s ability to learn a set of
     rules to a synthetic task like the game of Othello ([Figure 1.11](ch01.html#ch01fig011)).
     They found evidence that an LLM was able to understand the rules of the game simply
     by training on historical move data.
+  id: totrans-96
   prefs: []
   type: TYPE_NORMAL
+  zh: 有研究探讨了LLMs通过预训练和微调能够学习哪些其他类型的“规则”。一个例子是由哈佛大学研究人员领导的一系列实验，他们探索了LLM学习一组规则的能力，这些规则用于合成任务，如黑白棋游戏([图1.11](ch01.html#ch01fig011))。他们发现证据表明，LLM仅通过在历史移动数据上训练就能理解游戏规则。
 - en: '![Images](graphics/01fig10.jpg)'
+  id: totrans-97
   prefs: []
   type: TYPE_IMG
+  zh: '![图片](graphics/01fig10.jpg)'
 - en: '**Figure 1.10** *Research has probed into LLMs to uncover that they seem to
     be recognizing grammatical rules even when they were never explicitly told these
     rules.*'
+  id: totrans-98
   prefs: []
   type: TYPE_NORMAL
+  zh: '**图1.10** 研究已经深入探究LLMs，发现它们似乎在从未明确告知这些规则的情况下也能识别语法规则。'
 - en: '![Images](graphics/01fig11.jpg)'
+  id: totrans-99
   prefs: []
   type: TYPE_IMG
+  zh: '![图片](graphics/01fig11.jpg)'
 - en: '**Figure 1.11** *LLMs may be able to learn all kinds of things about the world,
     whether it be the rules and strategy of a game or the rules of human language.*'
+  id: totrans-100
   prefs: []
   type: TYPE_NORMAL
+  zh: '**图1.11** *LLM可能能够学习关于世界的各种知识，无论是游戏的规则和策略还是人类语言的规则。*'
 - en: For any LLM to learn any kind of rule, however, it has to convert what we perceive
     as text into something machine readable. This is done through a process called
     embedding.
+  id: totrans-101
   prefs: []
   type: TYPE_NORMAL
+  zh: 然而，对于任何LLM要学习任何类型的规则，它必须将我们感知为文本的内容转换为机器可读的形式。这是通过一个称为嵌入的过程来完成的。
 - en: Embeddings
+  id: totrans-102
   prefs:
   - PREF_H5
   type: TYPE_NORMAL
+  zh: 嵌入
 - en: Embeddings are the mathematical representations of words, phrases, or tokens
     in a large-dimensional space. In NLP, embeddings are used to represent the words,
     phrases, or tokens in a way that captures their semantic meaning and relationships
     with other words. There are several types of embeddings, including position embeddings,
     which encode the position of a token in a sentence, and token embeddings, which
     encode the semantic meaning of a token ([Figure 1.12](ch01.html#ch01fig012)).
+  id: totrans-103
   prefs: []
   type: TYPE_NORMAL
+  zh: 嵌入（Embeddings）是单词、短语或标记在大维度空间中的数学表示。在NLP（自然语言处理）中，嵌入用于以捕捉其语义意义和与其他单词之间关系的方式表示单词、短语或标记。存在几种嵌入类型，包括位置嵌入，它编码了标记在句子中的位置，以及标记嵌入，它编码了标记的语义意义（[图1.12](ch01.html#ch01fig012)）。
 - en: '![Images](graphics/01fig12.jpg)'
+  id: totrans-104
   prefs: []
   type: TYPE_IMG
+  zh: '![图片](graphics/01fig12.jpg)'
 - en: '**Figure 1.12** *An example of how BERT uses three layers of embedding for
     a given piece of text. Once the text is tokenized, each token is given an embedding
     and then the values are added up, so each token ends up with an initial embedding
     before any attention is calculated. We won’t focus too much on the individual
     layers of LLM embeddings in this text unless they serve a more practical purpose
     but it is good to know about some of these parts and how they look under the hood!*'
+  id: totrans-105
   prefs: []
   type: TYPE_NORMAL
+  zh: '**图1.12** *BERT如何使用三层嵌入处理给定文本的一个示例。一旦文本被分词，每个标记都会被赋予一个嵌入，然后这些值相加，因此每个标记在计算任何注意力之前都会有一个初始嵌入。除非它们服务于更实际的目的，否则本文不会过多关注LLM嵌入的各个单独层，但了解这些部分及其内部结构是很有帮助的！*'
 - en: LLMs learn different embeddings for tokens based on their pre-training and can
     further update these embeddings during fine-tuning.
+  id: totrans-106
   prefs: []
   type: TYPE_NORMAL
+  zh: LLM根据其预训练学习不同标记的嵌入，并在微调期间进一步更新这些嵌入。
 - en: Tokenization
+  id: totrans-107
   prefs:
   - PREF_H5
   type: TYPE_NORMAL
+  zh: 分词
 - en: Tokenization, as mentioned previously, involves breaking text down into the
     smallest unit of understanding - tokens. These tokens are the pieces of information
     that are embedded into semantic meaning and act as inputs to the attention calculations
@@ -590,8 +809,10 @@
     the **[CLS]** token which BERT automatically injects as the first token of every
     input and is meant to represent an encoded semantic meaning for the entire input
     sequence.
+  id: totrans-108
   prefs: []
   type: TYPE_NORMAL
+  zh: 如前所述，分词（Tokenization）涉及将文本分解成理解的最小单元——标记（tokens）。这些标记是嵌入到语义意义中的信息片段，它们作为注意力计算的输入，进而导致……好吧，LLM（大型语言模型）实际上学习和工作。标记构成了LLM的静态词汇表，并不总是代表完整的单词。标记可以代表标点符号、单个字符，甚至在LLM不知道某个单词的情况下，甚至可以代表子词。几乎所有LLM都有*特殊标记*，这些标记对模型具有特定的意义。例如，BERT模型有几个特殊标记，包括**[CLS]**标记，BERT会自动将其注入每个输入的第一个标记，并旨在代表整个输入序列的编码语义意义。
 - en: Readers may be familiar with techniques like stop words removal, stemming, and
     truncation which are used in traditional NLP. These techniques are not used nor
     are they necessary for LLMs. LLMs are designed to handle the inherent complexity
@@ -600,8 +821,10 @@
     input text to an LLM using these techniques could potentially harm the performance
     of the model by reducing the contextual information and altering the original
     meaning of the text.
+  id: totrans-109
   prefs: []
   type: TYPE_NORMAL
+  zh: 读者可能熟悉诸如停用词去除、词干提取和截断等技术，这些技术在传统NLP中得到了应用。这些技术在LLM中既不被使用，也不是必需的。LLM被设计来处理人类语言的固有复杂性和可变性，包括像“the”和“an”这样的停用词的使用以及词形变化，如时态和拼写错误。使用这些技术修改LLM的输入文本可能会通过减少上下文信息和改变文本的原始意义来损害模型的性能。
 - en: 'Tokenization can also involve several preprocessing steps like **casing**,
     which refers to the capitalization of the tokens. There are two types of casing:
     uncased and cased. In uncased tokenization, all the tokens are lowercased and
@@ -609,65 +832,98 @@
     of the tokens is preserved. The choice of casing can impact the performance of
     the model, as capitalization can provide important information about the meaning
     of a token. An example of this can be found in [Figure 1.13](ch01.html#ch01fig013).'
+  id: totrans-110
   prefs: []
   type: TYPE_NORMAL
+  zh: 分词也可能涉及几个预处理步骤，如 **casing**，它指的是标记的资本化。有两种类型的 casing：uncased 和 cased。在 uncased
+    分词中，所有标记都被转换为小写，并且通常去除字母的重音符号，而在 cased 分词中，标记的资本化被保留。casing 的选择可能会影响模型的表现，因为资本化可以提供关于标记意义的
+    重要信息。一个例子可以在[图 1.13](ch01.html#ch01fig013)中找到。
 - en: '**Note**'
+  id: totrans-111
   prefs: []
   type: TYPE_NORMAL
+  zh: '**注意**'
 - en: It is worth mentioning that even the concept of casing has some bias to it depending
     on the model. To uncase a text - lowercasing and stripping of accents - is a pretty
     Western style preprocessing step. I myself speak Turkish and know that the umlaut
     (e.g. the Ö in my last name) matters and can actually help the LLM understand
     the word being said. Any language model that has not been sufficiently trained
     on diverse corpora may have trouble parsing and utilizing these bits of context.
+  id: totrans-112
   prefs: []
   type: TYPE_NORMAL
+  zh: 值得注意的是，即使是 casing 的概念也因模型而异，存在一些偏见。将文本转换为 uncased（小写并去除重音符号）是一种相当西方化的预处理步骤。我自己会说土耳其语，我知道重音符号（例如我姓氏中的
+    Ö）很重要，实际上可以帮助 LLM 理解所说话的单词。任何没有在多样化语料库上充分训练的语言模型可能都会在解析和利用这些上下文片段时遇到困难。
 - en: '![Images](graphics/01fig13.jpg)'
+  id: totrans-113
   prefs: []
   type: TYPE_IMG
+  zh: '![图片](graphics/01fig13.jpg)'
 - en: '**Figure 1.13** *The choice of uncased versus cased tokenization depends on
     the task. Simple tasks like text classification usually prefer uncased tokenization
     while tasks that derive meaning from case like Named Entity Recognition prefer
     a cased tokenization.*'
+  id: totrans-114
   prefs: []
   type: TYPE_NORMAL
+  zh: '**图 1.13** *是否选择 uncased 或 cased 分词取决于任务。像文本分类这样的简单任务通常更喜欢 uncased 分词，而像命名实体识别这样的任务，由于需要考虑大小写来获取意义，则更喜欢
+    cased 分词。*'
 - en: '[Figure 1.14](ch01.html#ch01fig014) shows an example of tokenization, and in
     particular, an example of how LLMs tend to handle Out of Vocabulary (OOV) phrases.
     OOV phrases are simply phrases/words that the LLM doesn’t recognize as a token
     and has to split up into smaller sub-words. For example, my name (Sinan) is not
     a token in most LLMs (story of my life) so in BERT, the tokenization scheme will
     split my name up into two tokens (assuming uncased tokenization):'
+  id: totrans-115
   prefs: []
   type: TYPE_NORMAL
+  zh: '[图 1.14](ch01.html#ch01fig014) 展示了分词的一个例子，特别是 LLM 处理 Out of Vocabulary (OOV)
+    短语的一个例子。OOV 短语是 LLM 不识别为标记的短语/单词，并必须将其拆分为更小的子词。例如，我的名字（Sinan）在大多数 LLM 中不是一个标记（我的生活故事），所以在
+    BERT 中，分词方案会将我的名字拆分为两个标记（假设 uncased 分词）：'
 - en: '![Images](graphics/square.jpg) sin - the first part of my name'
+  id: totrans-116
   prefs: []
   type: TYPE_NORMAL
+  zh: '![图片](graphics/square.jpg) sin - 我名字的第一部分'
 - en: '![Images](graphics/square.jpg) ##an - a special sub-word token that is different
     from the word “an” and is used only as a means to split up unknown words'
+  id: totrans-117
   prefs: []
   type: TYPE_NORMAL
+  zh: '![图片](graphics/square.jpg) ##an - 一个特殊的子词标记，与单词“an”不同，仅用作拆分未知单词的手段'
 - en: '![Images](graphics/01fig14.jpg)'
+  id: totrans-118
   prefs: []
   type: TYPE_IMG
+  zh: '![图片](graphics/01fig14.jpg)'
 - en: '**Figure 1.14** *Any LLM has to deal with words they’ve never seen before.
     How an LLM tokenizes text can matter if we care about the token limit of an LLM.*'
+  id: totrans-119
   prefs: []
   type: TYPE_NORMAL
+  zh: '**图 1.14** *任何 LLM 都必须处理他们从未见过的单词。如果我们关心 LLM 的标记限制，LLM 如何分词可能会很重要。*'
 - en: Some LLMs limit the number of tokens we can input at any one time so how an
     LLM tokenizes text can matter if we are trying to be mindful about this limit.
+  id: totrans-120
   prefs: []
   type: TYPE_NORMAL
+  zh: 一些 LLM 限制了我们可以一次性输入的标记数量，因此如果我们试图注意这个限制，LLM 如何分词可能会很重要。
 - en: So far, we have talked a lot about language modeling - predicting missing/next
     tokens in a phrase, but modern LLMs also can also borrow from other fields of
     AI to make their models more performant and more importantly more **aligned**
     - meaning that the AI is performing in accordance with a human’s expectation.
     Put another way, an aligned LLM has an objective that matches a human’s objective.
+  id: totrans-121
   prefs: []
   type: TYPE_NORMAL
+  zh: 到目前为止，我们已经讨论了很多关于语言建模的内容——预测短语中缺失/下一个标记，但现代 LLM 也可以从其他 AI 领域借鉴，使它们的模型更高效，更重要的是更
+    **对齐**——这意味着 AI 的表现符合人类的期望。换句话说，一个对齐的 LLM 有一个与人类目标相匹配的目标。
 - en: Beyond Language Modeling—Alignment + RLHF
+  id: totrans-122
   prefs:
   - PREF_H5
   type: TYPE_NORMAL
+  zh: 超越语言建模——对齐 + RLHF
 - en: '**Alignment** in language models refers to how well the model can respond to
     input prompts that match the user’s expectations. Standard language models predict
     the next word based on the preceding context, but this can limit their usefulness
@@ -675,8 +931,11 @@
     and performant ways of aligning language models to a user’s intent. One such broad
     method of aligning language models is through the incorporation of reinforcement
     learning (RL) into the training loop.'
+  id: totrans-123
   prefs: []
   type: TYPE_NORMAL
+  zh: 在语言模型中，**对齐**指的是模型对输入提示与用户期望匹配的程度。标准语言模型根据先前的上下文预测下一个单词，但这可能会限制它们在特定指令或提示方面的有用性。研究人员正在寻找可扩展且性能良好的方法来将语言模型与用户的意图对齐。对齐语言模型的一种广泛方法是将其强化学习
+    (RL) 纳入训练循环。
 - en: '**RL with Human Feedback** (RLHF) is a popular method of aligning pre-trained
     LLMs that uses human feedback to enhance their performance. It allows the LLM
     to learn from feedback on its own outputs from a relatively small, high-quality
@@ -684,89 +943,129 @@
     supervised learning. RLHF has shown significant improvements in modern LLMs like
     ChatGPT. RLHF is one example of approaching alignment with RL, but there are other
     emerging approaches like RL with AI feedback (e.g. Constitutional AI).'
+  id: totrans-124
   prefs: []
   type: TYPE_NORMAL
+  zh: '**基于人类反馈的强化学习** (RLHF) 是一种流行的对预训练 LLM 进行对齐的方法，它使用人类反馈来提高其性能。它允许 LLM 从相对较小、高质量的少量人类反馈中学习其输出的反馈，从而克服了传统监督学习的一些局限性。RLHF
+    在 ChatGPT 等现代 LLM 中显示出显著的改进。RLHF 是通过强化学习 (RL) 接近对齐的一个例子，但还有其他新兴的方法，如基于 AI 反馈的强化学习（例如宪法
+    AI）。'
 - en: Let’s take a look at some of the popular LLMs we’ll be using in this book.
+  id: totrans-125
   prefs: []
   type: TYPE_NORMAL
+  zh: 让我们来看看本书中将使用的一些流行 LLM。
 - en: Popular Modern LLMs
+  id: totrans-126
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 流行现代 LLMs
 - en: BERT, T5, and GPT are three popular LLMs developed by Google, Google, and OpenAI
     respectively. These models differ in their architecture pretty greatly even though
     they all share the Transformer as a common ancestor. Other widely used variants
     of LLMs in the Transformer family include RoBERTa, BART (which we saw earlier
     performing some text classification), and ELECTRA.
+  id: totrans-127
   prefs: []
   type: TYPE_NORMAL
+  zh: BERT、T5 和 GPT 分别是由 Google、Google 和 OpenAI 分别开发的三个流行的 LLM。尽管它们都共享 Transformer
+    作为共同祖先，但它们的架构差异很大。Transformer 家族中其他广泛使用的 LLM 变体包括 RoBERTa、BART（我们之前看到它执行了一些文本分类）和
+    ELECTRA。
 - en: BERT
+  id: totrans-128
   prefs:
   - PREF_H4
   type: TYPE_NORMAL
+  zh: BERT
 - en: BERT ([Figure 1.15](ch01.html#ch01fig015)) is an autoencoding model that uses
     attention to build a bidirectional representation of a sentence, making it ideal
     for sentence classification and token classification tasks.
+  id: totrans-129
   prefs: []
   type: TYPE_NORMAL
+  zh: BERT ([图 1.15](ch01.html#ch01fig015)) 是一个自动编码模型，它使用注意力机制构建句子的双向表示，这使得它非常适合句子分类和标记分类任务。
 - en: '![Images](graphics/01fig15.jpg)'
+  id: totrans-130
   prefs: []
   type: TYPE_IMG
+  zh: '![图片](graphics/01fig15.jpg)'
 - en: '**Figure 1.15** *BERT was one of the first LLMs and continues to be popular
     for many NLP tasks that involve fast processing of large amounts of text.*'
+  id: totrans-131
   prefs: []
   type: TYPE_NORMAL
+  zh: '**图 1.15** *BERT 是最早的 LLM 之一，并且继续在涉及快速处理大量文本的许多 NLP 任务中保持流行.*'
 - en: BERT uses the encoder of the Transformer and ignores the decoder to become exceedingly
     good at processing/understanding massive amounts of text very quickly relative
     to other, slower LLMs that focus on generating text one token at a time. BERT-derived
     architectures, therefore, are best for working with and analyzing large corpora
     quickly when we don’t need to write free text.
+  id: totrans-132
   prefs: []
   type: TYPE_NORMAL
+  zh: BERT 使用了 Transformer 的编码器并忽略了解码器，因此在处理/理解大量文本方面非常出色，相对于其他专注于逐个生成文本的较慢的 LLMs
+    来说，它能够非常快速地完成这些任务。因此，BERT 衍生的架构在不需要编写自由文本的情况下，最适合快速处理和分析大型语料库。
 - en: BERT itself doesn’t classify text or summarize documents but it is often used
     as a pre-trained model for downstream NLP tasks. BERT has become a widely used
     and highly regarded LLM in the NLP community, paving the way for the development
     of even more advanced language models.
+  id: totrans-133
   prefs: []
   type: TYPE_NORMAL
+  zh: BERT 本身不用于对文本进行分类或总结文档，但它经常被用作下游 NLP 任务的预训练模型。BERT 已经成为 NLP 社区中广泛使用且备受推崇的 LLM，为更高级语言模型的发展铺平了道路。
 - en: GPT-3 and ChatGPT
+  id: totrans-134
   prefs:
   - PREF_H4
   type: TYPE_NORMAL
+  zh: GPT-3 和 ChatGPT
 - en: GPT ([Figure 1.16](ch01.html#ch01fig016)), on the other hand, is an autoregressive
     model that uses attention to predict the next token in a sequence based on the
     previous tokens. The GPT family of algorithms (including ChatGPT and GPT-3) is
     primarily used for text generation and has been known for its ability to generate
     natural sounding human-like text.
+  id: totrans-135
   prefs: []
   type: TYPE_NORMAL
+  zh: 另一方面，GPT ([图 1.16](ch01.html#ch01fig016)) 是一个自回归模型，它使用注意力机制根据前一个序列中的标记来预测下一个标记。GPT
+    算法系列（包括 ChatGPT 和 GPT-3）主要用于文本生成，并且以其能够生成自然、类似人类文本的能力而闻名。
 - en: '![Images](graphics/01fig16.jpg)'
+  id: totrans-136
   prefs: []
   type: TYPE_IMG
+  zh: '![图片](graphics/01fig16.jpg)'
 - en: '**Figure 1.16** *The GPT family of models excels at generating free text aligned
     with a user’s intent.*'
+  id: totrans-137
   prefs: []
   type: TYPE_NORMAL
+  zh: '**图1.16** GPT系列模型在生成与用户意图一致的自由文本方面表现出色。'
 - en: GPT relies on the decoder portion of the Transformer and ignores the encoder
     to become exceptionally good at generating text one token at a time. GPT-based
     models are best for generating text given a rather large context window. They
     can also be used to process/understand text as we will see in an upcoming chapter.
     GPT-derived architectures are ideal for applications that require the ability
     to freely write text.
+  id: totrans-138
   prefs: []
   type: TYPE_NORMAL
+  zh: GPT依赖于Transformer的解码器部分，忽略了编码器，从而在逐个生成文本方面表现出色。基于GPT的模型在给定相当大的上下文窗口的情况下生成文本最佳。它们也可以用于处理/理解文本，正如我们将在下一章中看到的。GPT派生的架构非常适合需要能够自由编写文本的应用。
 - en: T5
+  id: totrans-139
   prefs:
   - PREF_H4
   type: TYPE_NORMAL
+  zh: T5
 - en: T5 is a pure encoder/decoder transformer model that was designed to perform
     several NLP tasks, from text classification to text summarization and generation,
     right off the shelf. It is one of the first popular models to be able to boast
     such a feat, in fact. Before T5, LLMs like BERT and GPT-2 generally had to be
     fine-tuned using labeled data before they could be relied on to perform such specific
     tasks.
+  id: totrans-140
   prefs: []
   type: TYPE_NORMAL
+  zh: T5是一个纯编码器/解码器Transformer模型，旨在直接执行多种NLP任务，从文本分类到文本摘要和生成。实际上，它是最早能够吹嘘这种成就的流行模型之一。在T5之前，像BERT和GPT-2这样的LLM通常需要使用标记数据进行微调，才能被依赖来执行这样的特定任务。
 - en: T5 uses both the encoder and decoder of the Transformer to become highly versatile
     in both processing and generating text. T5-based models can perform a wide range
     of NLP tasks, from text classification to text generation, due to their ability
@@ -774,213 +1073,304 @@
     using the decoder ([Figure 1.17](ch01.html#ch01fig017)). T5-derived architectures
     are ideal for applications that require both the ability to process and understand
     text and generate text freely.
+  id: totrans-141
   prefs: []
   type: TYPE_NORMAL
+  zh: T5同时使用Transformer的编码器和解码器，在处理和生成文本方面都变得非常灵活。基于T5的模型可以执行广泛的NLP任务，从文本分类到文本生成，这得益于它们能够使用编码器构建输入文本的表示，并使用解码器生成文本([图1.17](ch01.html#ch01fig017))。T5派生的架构非常适合需要既能处理和理解文本，又能自由生成文本的应用。
 - en: '![Images](graphics/01fig17.jpg)'
+  id: totrans-142
   prefs: []
   type: TYPE_IMG
+  zh: '![图片](graphics/01fig17.jpg)'
 - en: '**Figure 1.17** *T5 was one of the first LLMs to show promise in solving multiple
     tasks at once without any fine-tuning.*'
+  id: totrans-143
   prefs: []
   type: TYPE_NORMAL
+  zh: '**图1.17** T5是第一个在没有微调的情况下同时解决多项任务的LLM之一。'
 - en: T5’s ability to perform multiple tasks with no fine-tuning spurred the development
     of other versatile LLMs that can perform multiple tasks with efficiency and accuracy
     with little/no fine-tuning. GPT-3, released around the same time at T5, also boasted
     this ability.
+  id: totrans-144
   prefs: []
   type: TYPE_NORMAL
+  zh: T5无需微调即可执行多项任务的能力，催生了其他多才多艺的LLM的开发，这些LLM可以以高效和准确的方式执行多项任务，而几乎不需要/不需要微调。与T5同时发布的GPT-3也声称具有这种能力。
 - en: These three LLMs are highly versatile and are used for various NLP tasks, such
     as text classification, text generation, machine translation, and sentiment analysis,
     among others. These three LLMs, along with flavors (variants) of them will be
     the main focus of this book and our applications.
+  id: totrans-145
   prefs: []
   type: TYPE_NORMAL
+  zh: 这三个LLM非常灵活，被用于各种NLP任务，如文本分类、文本生成、机器翻译和情感分析等。这三个LLM以及它们的变体将是本书和我们的应用的主要焦点。
 - en: Domain-Specific LLMs
+  id: totrans-146
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 特定领域LLM
 - en: Domain-specific LLMs are LLMs that are trained specifically in a particular
     subject area, such as biology or finance. Unlike general-purpose LLMs, these models
     are designed to understand the specific language and concepts used within the
     domain they were trained on.
+  id: totrans-147
   prefs: []
   type: TYPE_NORMAL
+  zh: 特定领域LLM是在特定学科领域专门训练的LLM，例如生物学或金融。与通用LLM不同，这些模型旨在理解它们所训练的领域中的特定语言和概念。
 - en: One example of a domain-specific LLM is BioGPT ([Figure 1.18](ch01.html#ch01fig018));
     a domain-specific LLM that is pre-trained on large-scale biomedical literature.
     The model was developed by the AI healthcare company, Owkin, in collaboration
     with Hugging Face. The model is trained on a dataset of over 2 million biomedical
     research articles, making it highly effective for a wide range of biomedical NLP
     tasks such as named entity recognition, relationship extraction, and question-answering.
+  id: totrans-148
   prefs: []
   type: TYPE_NORMAL
+  zh: 一个特定领域LLM的例子是BioGPT ([图1.18](ch01.html#ch01fig018))；这是一个在大规模生物医学文献上预训练的特定领域LLM。该模型由AI医疗公司Owkin与Hugging
+    Face合作开发。该模型在超过200万篇生物医学研究文章的数据集上进行了训练，使其在广泛的生物医学NLP任务中非常有效，例如命名实体识别、关系抽取和问答。
 - en: '![Images](graphics/01fig18.jpg)'
+  id: totrans-149
   prefs: []
   type: TYPE_IMG
+  zh: '![图片](graphics/01fig18.jpg)'
 - en: '**Figure 1.18** *BioGPT is a domain-specific Transformer model pre-trained
     on large-scale biomedical literature. BioGPT’s success in the biomedical domain
     has inspired other domain-specific LLMs such as SciBERT and BlueBERT.*'
+  id: totrans-150
   prefs: []
   type: TYPE_NORMAL
+  zh: '**图1.18** *BioGPT是一个在大规模生物医学文献上预训练的特定领域Transformer模型。BioGPT在生物医学领域的成功激发了其他特定领域的LLM，如SciBERT和BlueBERT。*'
 - en: BioGPT, whose pre-training encoded biomedical knowledge and domain-specific
     jargon into the LLM, can be fine-tuned on smaller datasets, making it adaptable
     for specific biomedical tasks and reducing the need for large amounts of labeled
     data.
+  id: totrans-151
   prefs: []
   type: TYPE_NORMAL
+  zh: BioGPT，其预训练将生物医学知识和特定领域的术语编码到LLM中，可以在较小的数据集上进行微调，使其适用于特定的生物医学任务，并减少对大量标记数据的需要。
 - en: The advantage of using domain-specific LLMs lies in their training on a specific
     set of texts. This allows them to better understand the language and concepts
     used within their specific domain, leading to improved accuracy and fluency for
     NLP tasks that are contained within that domain. By comparison, general-purpose
     LLMs may struggle to handle the language and concepts used in a specific domain
     as effectively.
+  id: totrans-152
   prefs: []
   type: TYPE_NORMAL
+  zh: 使用特定领域LLM的优势在于它们在特定文本集上的训练。这使得它们能够更好地理解其特定领域内使用的语言和概念，从而提高了该领域内NLP任务的准确性和流畅性。相比之下，通用LLM可能难以有效地处理特定领域使用的语言和概念。
 - en: Applications of LLMs
+  id: totrans-153
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: LLM的应用
 - en: 'As we’ve already seen, applications of LLMs vary widely and researchers continue
     to find novel applications of LLMs to this day. We will use LLMs in this book
     in generally three ways:'
+  id: totrans-154
   prefs: []
   type: TYPE_NORMAL
+  zh: 正如我们之前看到的，LLM的应用范围很广，研究人员至今仍在寻找LLM的新颖应用。在这本书中，我们将以三种方式使用LLM：
 - en: '![Images](graphics/square.jpg) Using a pre-trained LLM’s underlying ability
     to process and generate text with no further fine-tuning as part of a larger architecture.'
+  id: totrans-155
   prefs: []
   type: TYPE_NORMAL
+  zh: '![图片](graphics/square.jpg) 利用预训练的LLM处理和生成文本的能力（无需进一步微调）作为更大架构的一部分。'
 - en: '![Images](graphics/square.jpg) For example, creating an information retrieval
     system using a pre-trained BERT/GPT.'
+  id: totrans-156
   prefs: []
   type: TYPE_NORMAL
+  zh: '![图片](graphics/square.jpg) 例如，使用预训练的BERT/GPT创建信息检索系统。'
 - en: '![Images](graphics/square.jpg) Fine-tuning a pre-trained LLM to perform a very
     specific task using Transfer Learning.'
+  id: totrans-157
   prefs: []
   type: TYPE_NORMAL
+  zh: '![图片](graphics/square.jpg) 使用迁移学习将预训练的LLM微调以执行非常具体的任务。'
 - en: '![Images](graphics/square.jpg) For example, fine-tuning T5 to create summaries
     of documents in a specific domain/industry.'
+  id: totrans-158
   prefs: []
   type: TYPE_NORMAL
+  zh: '![图片](graphics/square.jpg) 例如，微调T5以创建特定领域/行业的文档摘要。'
 - en: '![Images](graphics/square.jpg) Asking a pre-trained LLM to solve a task it
     was pre-trained to solve or could reasonably intuit.'
+  id: totrans-159
   prefs: []
   type: TYPE_NORMAL
+  zh: '![图片](graphics/square.jpg) 要求预训练的LLM解决其预训练的任务或可以合理推断的任务。'
 - en: '![Images](graphics/square.jpg) For example, prompting GPT3 to write a blog
     post.'
+  id: totrans-160
   prefs: []
   type: TYPE_NORMAL
+  zh: '![图片](graphics/square.jpg) 例如，提示GPT3撰写博客文章。'
 - en: '![Images](graphics/square.jpg) For example, prompting T5 to perform language
     translation..'
+  id: totrans-161
   prefs: []
   type: TYPE_NORMAL
+  zh: '![图片](graphics/square.jpg) 例如，提示T5执行语言翻译。'
 - en: These methods use LLMs in different ways and while all options take advantage
     of an LLM’s pre-training, only option 2 requires any fine-tuning. Let’s take a
     look at some specific applications of LLMs.
+  id: totrans-162
   prefs: []
   type: TYPE_NORMAL
+  zh: 这些方法以不同的方式使用LLM，尽管所有选项都利用了LLM的预训练，但只有选项2需要任何微调。让我们看看LLM的一些具体应用。
 - en: Classical NLP Tasks
+  id: totrans-163
   prefs:
   - PREF_H4
   type: TYPE_NORMAL
+  zh: 经典自然语言处理任务
 - en: A vast majority of applications of LLMs are delivering state of the art results
     in very common NLP tasks like classification and translation. It’s not that we
     weren’t solving these tasks before Transformers and LLMs, it’s just that now developers
     and practioners can solve them with comparatively less labeled data (due to the
     efficient pre-training of the Transformer on huge corpora) and with a higher degree
     of accuracy.
+  id: totrans-164
   prefs: []
   type: TYPE_NORMAL
+  zh: 大多数LLM的应用都在非常常见的NLP任务（如分类和翻译）中提供最先进的结果。这并不是说在Transformers和LLM出现之前我们没有解决这些任务，只是现在开发者和从业者可以用相对较少的标记数据（由于Transformer在大型语料库上的高效预训练）以及更高的准确性来解决这些问题。
 - en: Text Classification
+  id: totrans-165
   prefs:
   - PREF_H5
   type: TYPE_NORMAL
+  zh: 文本分类
 - en: The text classification task assigns a label to a given piece of text. This
     task is commonly used in sentiment analysis, where the goal is to classify a piece
     of text as positive, negative, or neutral, or in topic classification, where the
     goal is to classify a piece of text into one or more predefined categories. Models
     like BERT can be fine-tuned to perform classification with relatively little labeled
     data as seen in [Figure 1.19](ch01.html#ch01fig019).
+  id: totrans-166
   prefs: []
   type: TYPE_NORMAL
+  zh: 文本分类任务为给定的文本分配一个标签。这项任务在情感分析中常用，其目标是将文本分类为正面、负面或中性，或在主题分类中，其目标是将文本分类到预定义的一个或多个类别中。像
+    BERT 这样的模型可以通过少量标记数据进行微调以执行分类，如图 1.19 所示。
 - en: '![Images](graphics/01fig19.jpg)'
+  id: totrans-167
   prefs: []
   type: TYPE_IMG
+  zh: '![图片](graphics/01fig19.jpg)'
 - en: '**Figure 1.19** *A peek at the architecture of using BERT to achieve fast and
     accurate text classification results. Classification layers usually act on that
     special [CLS] token that BERT uses to encode the semantic meaning of the entire
     input sequence.*'
+  id: totrans-168
   prefs: []
   type: TYPE_NORMAL
+  zh: '**图 1.19** *一瞥使用 BERT 实现快速准确文本分类结果的架构。分类层通常作用于 BERT 用于编码整个输入序列语义意义的特殊 [CLS]
+    标记。*'
 - en: Text classification remains one of the most globally recognizable and solvable
     NLP tasks because when it comes down to it, sometimes we just need to know whether
     this email is “spam” or not and get on with our days!
+  id: totrans-169
   prefs: []
   type: TYPE_NORMAL
+  zh: 文本分类仍然是全球最公认且可解决的 NLP 任务之一，因为归根结底，有时我们只需要知道这封电子邮件是否是“垃圾邮件”以及继续我们的日常生活！
 - en: Translation Tasks
+  id: totrans-170
   prefs:
   - PREF_H5
   type: TYPE_NORMAL
+  zh: 翻译任务
 - en: A harder and yet still classic NLP task is machine translation where the goal
     is to automatically translate text from one language to another while preserving
     meaning and context. Traditionally, this task is quite difficult because it involves
     having sufficient examples and domain knowledge of both languages to accurately
     gauge how well the model is doing but modern LLMs seem to have an easier time
     with this task again due to their pre-training and efficient attention calculations.
+  id: totrans-171
   prefs: []
   type: TYPE_NORMAL
+  zh: 一个更难但仍然是经典的 NLP 任务是机器翻译，其目标是自动将文本从一种语言翻译成另一种语言，同时保留意义和上下文。传统上，这项任务相当困难，因为它需要足够两种语言的示例和领域知识，以便准确评估模型的表现，但现代
+    LLMs 由于其预训练和高效的注意力计算，似乎在这个任务上更容易一些。
 - en: Human Language <> Human Language
+  id: totrans-172
   prefs:
   - PREF_H5
   type: TYPE_NORMAL
+  zh: 人类语言 <> 人类语言
 - en: One of the first applications of attention even before Transformers was for
     machine translation tasks where AI models were expected to translate from one
     human language to another. T5 was one of the first LLMs to tout the ability to
     perform multiple tasks off the shelf ([Figure 1.20](ch01.html#ch01fig020)). One
     of these tasks was the ability to translate English into a few languages and back.
+  id: totrans-173
   prefs: []
   type: TYPE_NORMAL
+  zh: 注意力机制在 Transformers 之前就已经被用于机器翻译任务，其中 AI 模型被期望将一种人类语言翻译成另一种语言。T5 是最早宣称能够直接执行多项任务的
+    LLM 之一（[图 1.20](ch01.html#ch01fig020)）。其中一项任务是将英语翻译成几种语言并返回。
 - en: '![Images](graphics/01fig20.jpg)'
+  id: totrans-174
   prefs: []
   type: TYPE_IMG
+  zh: '![图片](graphics/01fig20.jpg)'
 - en: '**Figure 1.20** *T5 could perform many NLP tasks off the shelf, including grammar
     correction, summarization, and translation.*'
+  id: totrans-175
   prefs: []
   type: TYPE_NORMAL
+  zh: '**图 1.20** *T5 可以直接执行许多 NLP 任务，包括语法纠错、摘要和翻译。*'
 - en: Since T5, language translation in LLMs has only gotten better and more diverse.
     Models like GPT-3 and the latest T5 models can translate between dozens of languages
     with relative ease. Of course this bumps up against one major known limitation
     of LLMs that they are mostly trained from an English-speaking/usually American
     point of view so most LLMs can handle English well and non-English languages,
     well, not as well.
+  id: totrans-176
   prefs: []
   type: TYPE_NORMAL
+  zh: 自从 T5 以来，LLMs 中的语言翻译已经变得更好、更多样化。像 GPT-3 和最新的 T5 模型这样的模型可以相对容易地在几十种语言之间进行翻译。当然，这也触及了
+    LLMs 的一大已知限制，即它们大多数是从英语使用/通常是美国的角度进行训练的，因此大多数 LLMs 在处理英语方面表现良好，而在非英语语言方面，表现则不那么好。
 - en: SQL Generation
+  id: totrans-177
   prefs:
   - PREF_H5
   type: TYPE_NORMAL
+  zh: SQL 生成
 - en: If we consider SQL as a language, then converting English to SQL is really not
     that different from converting English to French ([Figure 1.21](ch01.html#ch01fig021)).
     Modern LLMs can already do this at a basic level off the shelf, but more advanced
     SQL queries often require some fine-tuning.
+  id: totrans-178
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果我们将 SQL 视为一个语言，那么将英语转换为 SQL 与将英语转换为法语（[图 1.21](ch01.html#ch01fig021)）并没有太大的区别。现代
+    LLMs 已经能够在基本水平上直接做到这一点，但更高级的 SQL 查询通常需要一些微调。
 - en: '![Images](graphics/01fig21.jpg)'
+  id: totrans-179
   prefs: []
   type: TYPE_IMG
+  zh: '![图片](graphics/01fig21.jpg)'
 - en: '**Figure 1.21** *Using GPT-3 to generate functioning SQL code from an (albeit
     simple) Postgres schema*'
+  id: totrans-180
   prefs: []
   type: TYPE_NORMAL
+  zh: '**图 1.21** *使用 GPT-3 从（尽管简单）Postgres 架构生成可用的 SQL 代码*'
 - en: If we expand our thinking of what can be considered a “translation” then a lot
     of new opportunities lie ahead of us. For example, what if we wanted to “translate”
     between English and a series of wavelengths that a brain might interpret and execute
     as motor functions. I’m not a neuro-scientist or anything, but that seems like
     a fascinating area of research!
+  id: totrans-181
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果我们扩展对“翻译”的思考，那么前方将出现许多新的机遇。例如，如果我们想要在英语和大脑可能解释并执行为运动功能的一系列波长之间进行“翻译”怎么办。我不是神经科学家或任何东西，但这似乎是一个迷人的研究领域！
 - en: Free Text Generation
+  id: totrans-182
   prefs:
   - PREF_H4
   type: TYPE_NORMAL
+  zh: 自由文本生成
 - en: 'What first caught the world’s eye in terms of modern LLMs like ChatGPT was
     their ability to freely write blogs, emails, and even academic papers. This notion
     of text generation is why many LLMs are affectionately referred to as “Generative
@@ -988,24 +1378,34 @@
     the term “Generative AI” as the specific word “generative” has its own meaning
     in machine learning as the analogous way of learning to a “discriminative” model.
     For more on that, check out my first book: The Principles of Data Science)'
+  id: totrans-183
   prefs: []
   type: TYPE_NORMAL
+  zh: 在现代LLM如ChatGPT方面，首先引起世界关注的是它们自由撰写博客、电子邮件甚至学术论文的能力。这种文本生成的概念是许多LLM被亲切地称为“生成式AI”的原因，尽管这个术语有点过于简化且不够精确。我不会经常使用“生成式AI”这个术语，因为“生成”这个具体词汇在机器学习中有自己的含义，它是与“判别”模型类似的学习方式。更多关于这一点，请参阅我的第一本书：《数据科学原理》）
 - en: We could for example prompt (ask) ChatGPT to help plan out a blog post like
     in [Figure 1.22](ch01.html#ch01fig022). Even if you don’t agree with the results,
     this can help humans with the “tabula rasa” problem and give us something to at
     least edit and start from rather than staring at a blank page for too long.
+  id: totrans-184
   prefs: []
   type: TYPE_NORMAL
+  zh: 例如，我们可以提示（询问）ChatGPT帮助规划一篇博客文章，就像[图1.22](ch01.html#ch01fig022)中所示。即使你不认同结果，这也可以帮助人类解决“白板”问题，并给我们至少编辑和开始的地方，而不是长时间盯着空白页。
 - en: '![Images](graphics/01fig22.jpg)'
+  id: totrans-185
   prefs: []
   type: TYPE_IMG
+  zh: '![图片](graphics/01fig22.jpg)'
 - en: '**Figure 1.22** *ChatGPT can help ideate, scaffold, and even write entire blog
     posts*'
+  id: totrans-186
   prefs: []
   type: TYPE_NORMAL
+  zh: '**图1.22** *ChatGPT可以帮助构思、构建框架，甚至撰写完整的博客文章*'
 - en: '**Note**'
+  id: totrans-187
   prefs: []
   type: TYPE_NORMAL
+  zh: '**注意**'
 - en: I would be remiss if I didn’t mention the controversy that LLMs like this can
     cause at the academic level. Just because an LLM can write entire blogs or even
     essays doesn’t mean we should let them. Just like how the internet caused some
@@ -1014,19 +1414,25 @@
     how to use this technology and proper regulations/rules are put in place, students
     and teachers alike can use ChatGPT and other text-generation-focused AIs safely
     and ethically.
+  id: totrans-188
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果我不提到像这种LLM可能引起的学术界的争议，那将是一个疏忽。仅仅因为一个LLM可以写出完整的博客或甚至论文，并不意味着我们应该让它们这样做。就像互联网导致一些人相信我们再也不需要书籍一样，有些人认为ChatGPT意味着我们再也不需要写任何东西了。只要机构了解如何使用这项技术，并且制定了适当的法规/规则，学生和教师就可以安全、道德地使用ChatGPT和其他以文本生成为重点的AI。
 - en: We will be using ChatGPT to solve a few tasks in this book. We will rely on
     ChatGPT’s ability to contextualize information in its context window and freely
     write back (usually) accurate responses. We will mostly be interacting with ChatGPT
     through the Playground and the API provided by OpenAI as this model is not open
     source.
+  id: totrans-189
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们将在本书中使用ChatGPT来解决几个任务。我们将依赖ChatGPT在其上下文窗口中情境化信息的能力，并自由地（通常）写出准确的回应。我们将主要通过Playground和OpenAI提供的API与ChatGPT交互，因为这个模型不是开源的。
 - en: Information Retrieval / Neural Semantic Search
+  id: totrans-190
   prefs:
   - PREF_H4
   type: TYPE_NORMAL
+  zh: 信息检索/神经语义搜索
 - en: LLMs encode information directly into their parameters via pre-training and
     fine-tuning but keeping them up to date with new information is tricky. We either
     have to further fine-tune the model on new data or run the pre-training steps
@@ -1034,24 +1440,34 @@
     own information retrieval system with a vector database (don’t worry we will go
     into more details on all of this in the next chapter). [Figure 1.23](ch01.html#ch01fig023)
     shows an outline of the architecture we will build.
+  id: totrans-191
   prefs: []
   type: TYPE_NORMAL
+  zh: LLMs通过预训练和微调将信息直接编码到它们的参数中，但保持它们与新的信息同步是困难的。我们要么需要在新的数据上进一步微调模型，要么从头开始再次运行预训练步骤。为了动态地保持信息的新鲜度，我们将构建自己的信息检索系统，使用向量数据库（不用担心，我们将在下一章中详细介绍所有这些）。[图1.23](ch01.html#ch01fig023)展示了我们将构建的架构概要。
 - en: '![Images](graphics/01fig23.jpg)'
+  id: totrans-192
   prefs: []
   type: TYPE_IMG
+  zh: '![图片](graphics/01fig23.jpg)'
 - en: '**Figure 1.23** *Our neural semantic search system will be able to take in
     new information dynamically and be able to retrieve relevant documents quickly
     and accurately given a user’s query using LLMs.*'
+  id: totrans-193
   prefs: []
   type: TYPE_NORMAL
+  zh: '**图1.23** *我们的神经语义搜索系统将能够动态地接收新信息，并且能够使用LLMs根据用户的查询快速准确地检索相关文档。*'
 - en: We will then add onto this system by building a ChatGPT-based chatbot to conversationally
     answer questions from our users.
+  id: totrans-194
   prefs: []
   type: TYPE_NORMAL
+  zh: 接下来，我们将通过构建基于ChatGPT的聊天机器人来扩展这个系统，以便能够以对话方式回答用户的提问。
 - en: Chatbots
+  id: totrans-195
   prefs:
   - PREF_H4
   type: TYPE_NORMAL
+  zh: 聊天机器人
 - en: Everyone loves a good chatbot, right? Well, whether you love them or hate them,
     LLMs’ capacity for holding a conversation is evident through systems like ChatGPT
     and even GPT-3 (as seen in [Figure 1.24](ch01.html#ch01fig024)). The way we architect
@@ -1059,36 +1475,50 @@
     chatbots through intents, entities, and tree-based conversation flows. These concepts
     will be replaced by system prompts, context, and personas – all of which we will
     dive into in the coming chapters.
+  id: totrans-196
   prefs: []
   type: TYPE_NORMAL
+  zh: 每个人都喜欢一个优秀的聊天机器人，对吧？好吧，无论你喜欢还是讨厌它们，通过ChatGPT和GPT-3（如[图1.24](ch01.html#ch01fig024)所示）这样的系统，LLMs进行对话的能力是显而易见的。我们使用LLMs构建聊天机器人的方式将与传统通过意图、实体和基于树的对话流程设计聊天机器人的方式有很大不同。这些概念将被系统提示、上下文和角色所取代——所有这些内容我们将在接下来的章节中深入探讨。
 - en: '![Images](graphics/01fig24.jpg)'
+  id: totrans-197
   prefs: []
   type: TYPE_IMG
+  zh: '![图片](graphics/01fig24.jpg)'
 - en: '**Figure 1.24** *ChatGPT isn’t the only LLM that can hold a conversation. We
     can use GPT-3 to construct a simple conversational chatbot. The text highlighted
     in green represents GPT-3’s output. Note that before the chat even begins, I inject
     context to GPT-3 that would not be shown to the end-user but GPT-3 needs to provide
     accurate responses.*'
+  id: totrans-198
   prefs: []
   type: TYPE_NORMAL
+  zh: '**图1.24** *ChatGPT并不是唯一能够进行对话的LLM。我们可以使用GPT-3构建一个简单的对话聊天机器人。绿色高亮的文本代表GPT-3的输出。请注意，在聊天开始之前，我向GPT-3注入了上下文，这些上下文不会显示给最终用户，但GPT-3需要提供准确的回答。*'
 - en: We have our work cut out for us. I’m excited to be on this journey with you
     and I’m excited to get started!
+  id: totrans-199
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们已经做好了准备。我很高兴能与你一起踏上这段旅程，我也很期待开始！
 - en: Summary
+  id: totrans-200
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 摘要
 - en: LLMs are advanced AI models that have revolutionized the field of NLP. LLMs
     are highly versatile and are used for a variety of NLP tasks, including text classification,
     text generation, and machine translation. They are pre-trained on large corpora
     of text data and can then be fine-tuned for specific tasks.
+  id: totrans-201
   prefs: []
   type: TYPE_NORMAL
+  zh: LLMs是先进的AI模型，它们彻底改变了自然语言处理（NLP）领域。LLMs非常灵活，被用于各种NLP任务，包括文本分类、文本生成和机器翻译。它们在大型文本数据语料库上进行了预训练，然后可以针对特定任务进行微调。
 - en: Using LLMs in this fashion has become a standard step in the development of
     NLP models. In our first case study, we will explore the process of launching
     an application with proprietary models like GPT-3 and ChatGPT. We will get a hands-on
     look at the practical aspects of using LLMs for real-world NLP tasks, from model
     selection and fine-tuning to deployment and maintenance.
+  id: totrans-202
   prefs: []
   type: TYPE_NORMAL
+  zh: 以这种方式使用LLMs已成为NLP模型开发的标准步骤。在我们的第一个案例研究中，我们将探讨使用GPT-3和ChatGPT等专有模型发布应用程序的过程。我们将亲身体验使用LLMs进行实际NLP任务的各个方面，从模型选择和微调到部署和维护。
