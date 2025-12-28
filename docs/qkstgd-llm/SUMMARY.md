@@ -1,4 +1,4 @@
-+   [大语言模型快速启动指南（早起发布）](README.md)
++   [大语言模型快速启动指南（早期发布）](README.md)
 +   [前言](qkstgd-llm_00.md)
 +   [第一部分：大型语言模型简介](qkstgd-llm_01.md)
 +   [1](qkstgd-llm_02.md)
