@@ -1,0 +1,761 @@
+- en: '6'
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Customizing Embeddings and Model Architectures
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Introduction
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: Two full chapters of prompt engineering equipped us with the knowledge of how
+    to effectively interact with (prompt) LLMs, acknowledging their immense potential
+    as well as their limitations and biases. We have also fine-tuned models both open
+    and closed source to expand on an LLM’s pre-training to better solve our own specific
+    tasks. We have even seen a full case study of how semantic search and embedding
+    spaces can help us retrieve relevant information from a dataset with speed and
+    ease.
+  prefs: []
+  type: TYPE_NORMAL
+- en: To further broaden our horizons, we will utilize lessons learned from earlier
+    chapters and dive into the world of fine-tuning embedding models and customizing
+    pre-trained LLM architectures to unlock even greater potential in our LLM implementations.
+    By refining the very foundations of these models, we can cater to specific business
+    use cases and foster improved performance.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Foundation models, while impressive on their own, can be adapted and optimized
+    to suit a variety of tasks through minor to major tweaks in their architectures.
+    This customization enables us to address unique challenges and tailor LLMs to
+    specific business requirements. The underlying embeddings form the basis for these
+    customizations, as they are responsible for capturing the semantic relationships
+    between data points and can significantly impact the success of various tasks.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Recalling our semantic search example, we identified that the original embeddings
+    from OpenAI were designed to preserve semantic similarity, but the bi-encoder
+    was further tuned to cater to asymmetric semantic search, matching short queries
+    with longer passages. In this chapter, we will expand upon this concept, exploring
+    techniques to train a bi-encoder that can effectively capture other business use
+    cases. By doing so, we will uncover the potential of customizing embeddings and
+    model architectures to create even more powerful and versatile LLM applications.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Case Study – Building a Recommendation System
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: The majority of this chapter will explore the role of embeddings and model architectures
+    in designing a recommendation engine using a real-world dataset as our case study.
+    Our objective is to highlight the importance of customizing embeddings and model
+    architectures in achieving better performance and results tailored to specific
+    use cases.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Setting Up the Problem and the Data
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: 'To demonstrate the power of customized embeddings, we will be using the MyAnimeList
+    2020 dataset, which can be accessed on Kaggle at the following link: MyAnimeList
+    2020 Dataset. This dataset contains information about anime titles, ratings (from
+    1-10), and user preferences, offering a rich source of data to build a recommendation
+    engine. [Figure 6.1](ch06.html#ch06fig01) shows a snippet of the dataset on the
+    Kaggle page:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Images](graphics/06fig01.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: '**Figure 6.1** *The MyAnimeList database is one of the largest datasets we
+    have worked with to date. It can be found on Kaggle and it has tens of millions
+    of rows of ratings and thousands of anime titles complete with dense text features
+    describing each anime title.*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: To ensure a fair evaluation of our recommendation engine, we will divide the
+    dataset into separate training and testing sets. This process allows us to train
+    our model on one portion of the data and evaluate its performance on a separate,
+    unseen portion, thereby providing an unbiased assessment of its effectiveness.
+    [Listing 6.1](ch06.html#list6_1) shows a snippet of our code to load the anime
+    titles and split them into a train and test split.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Listing 6.1** *Loading and splitting our anime data*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs: []
+  type: TYPE_PRE
+- en: With our data loaded up and split, let’s take some time to better define what
+    we are actually trying to solve.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Defining the Problem of Recommendation
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: Developing an effective recommendation system is, to put it mildly, a complex
+    task. Human behavior and preferences can be intricate and difficult to predict
+    (understatement of the millennium). The challenge lies in understanding and predicting
+    what users will find appealing or interesting, which is influenced by a multitude
+    of factors.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Recommendation systems need to take into account both user features and item
+    features to generate personalized suggestions. User features can include demographic
+    information like age, browsing history, and past item interactions (which will
+    be the focus of our work in this chapter), while item features can encompass characteristics
+    like genre, price, or popularity. However, these factors alone may not paint the
+    complete picture, as human mood and context also play a significant role in shaping
+    preferences. For instance, a user's interest in a particular item might change
+    depending on their current emotional state or the time of day.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Striking the right balance between exploration and pattern exploitation is also
+    important in recommendation systems. By pattern exploitation, I’m referring to
+    a system recommending items that it is confident the user will like based on their
+    past preferences or are just simply similar to things they have interacted with
+    before, while exploration involves suggesting items that the user might not have
+    considered before. Striking this balance ensures that users continue to discover
+    new content while still receiving recommendations that align with their interests.
+    We will consider both of these factors.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Defining the problem of recommendation is a multifaceted challenge that requires
+    considering various factors such as user and item features, human mood, the number
+    of recommendations to optimize, and the balance between exploration and exploitation.
+    Given all of this, let’s dive in!
+  prefs: []
+  type: TYPE_NORMAL
+- en: Content versus Collaborative Recommendations
+  prefs:
+  - PREF_H5
+  type: TYPE_NORMAL
+- en: 'Recommendation engines can be broadly categorized into two main approaches:
+    content-based and collaborative filtering. **Content-based recommendations** focus
+    on the attributes of the items being recommended, utilizing item features to suggest
+    similar content to users based on their past interactions. In contrast, **collaborative
+    filtering** capitalizes on the preferences and behavior of users, generating recommendations
+    by identifying patterns among users with similar interests or tastes.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: In content-based recommendations, the system extracts relevant features from
+    items, such as genre, keywords, or themes, to build a profile for each user. This
+    profile helps the system understand the user's preferences and suggest items with
+    similar characteristics. For instance, if a user has previously enjoyed action-packed
+    anime titles, the content-based recommendation engine would suggest other anime
+    series with similar action elements.
+  prefs: []
+  type: TYPE_NORMAL
+- en: On the other hand, collaborative filtering can be further divided into user-based
+    and item-based approaches. User-based collaborative filtering finds users with
+    similar preferences and recommends items that those users have liked or interacted
+    with. Item-based collaborative filtering, instead, focuses on finding items that
+    are similar to those the user has previously liked, based on the interactions
+    of other users. In both cases, the underlying principle is to leverage the wisdom
+    of the crowd to make personalized recommendations.
+  prefs: []
+  type: TYPE_NORMAL
+- en: In our case study, we plan to fine-tune a bi-encoder (like the one we saw in
+    [chapter 2](ch02.html#ch02)) to generate embeddings for anime features. Our goal
+    is to minimize the cosine similarity loss in such a way that the similarity between
+    embeddings reflects how common it is that users like both animes.
+  prefs: []
+  type: TYPE_NORMAL
+- en: In fine-tuning a bi-encoder our goal is to create a recommendation system that
+    can effectively identify similar anime titles based on the preferences of promoters
+    and **not** just because they are semantically similar. [Figure 6.2](ch06.html#ch06fig02)
+    shows what this might look like. The resulting embeddings will enable our model
+    to make recommendations that are more likely to align with the tastes of users
+    who are enthusiastic about the content.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Images](graphics/06fig02.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: '**Figure 6.2** *Embedders are generally pre-trained to place embedded data
+    near each other if they are semantically similar. In our case, we want an embedder
+    that places embedded data near each other if they are similar in terms of **user-preferences**.*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: In terms of recommendation techniques, our approach combines elements of both
+    content-based and collaborative recommendations. We leverage content-based aspects
+    by using the features of each anime as input to the bi-encoder. At the same time,
+    we incorporate collaborative filtering by considering the Jaccard score of promoters,
+    which is based on the preferences and behavior of users. This hybrid approach
+    allows us to take advantage of the strengths of both techniques to create a more
+    effective recommendation system.
+  prefs: []
+  type: TYPE_NORMAL
+- en: I got lost here tracking exactly what we’re trying to do. Maybe explaining how
+    we’re going to construct this embedder, and how it will combine collaborative
+    filtering and semantic similarity would be helpful. I realized later that we’re
+    trying this model on the collaborative filtering as a label.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'To summarize, our plan is to:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 1\. Define/construct a text embedding model, either using them as is, or fine-tuning
+    them on user-preference data
+  prefs: []
+  type: TYPE_NORMAL
+- en: 2\. Define a hybrid approach of collaborative filtering (using the jaccard score
+    to define user/anime similarities) and content filtering (semantic similarity
+    of anime titles by way of descriptions, etc) that will influence our user-preference
+    data structure as well as how we score recommendations given to us by the pipeline
+  prefs: []
+  type: TYPE_NORMAL
+- en: 3\. Fine-tune open-source LLMs on a training set of user-preference data
+  prefs: []
+  type: TYPE_NORMAL
+- en: 4\. Run our system on a testing set of user preference data to decide which
+    embedder was responsible for the best anime title recommendations
+  prefs: []
+  type: TYPE_NORMAL
+- en: A 10,000 Foot View of Our Recommendation System
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: 'Our recommendation process will generate personalized anime recommendations
+    for a given user based on their past ratings. Here''s an explanation of the steps
+    in our recommendation engine:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '1\. **Input**: The input for the recommendation engine is a user ID and an
+    integer k (example 3).'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '2\. **Identify highly-rated animes**: For each anime title that the user has
+    rated as a 9 or 10 (a promoting score on the NPS scale), identify k other relevant
+    animes by finding nearest matches in the anime’s embedding space. From these,
+    we consider both how often an anime was recommended and how high the resulting
+    cosine score was in the embedding space to take the top k results for the user.
+    [Figure 6.3](ch06.html#ch06fig03) outlines this process. The pseudo code would
+    look like:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Images](graphics/06fig03.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: '**Figure 6.3** *Step 2 takes in the user and finds k animes **for each** user-promoted
+    (gave a score of 9 or 10) anime. For example if the user promoted 4 animes (6345,
+    4245, 249, 120) and we set k=3, the system will first retrieve 12 semantically
+    similar animes (3 per promoted animes with duplicates allowed) and then de-duplicate
+    any animes that came up multiple times by weighing it slightly more than the original
+    cosine scores. We then take the top k unique recommended anime titles considering
+    both cosine scores to promoted animes and how often occurred in the original list
+    of 12.*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE1]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'The github has the full code to run this step with examples too! For example,
+    given k=3 and user id `205282`, the result of step two would result in the following
+    dictionary where each key represents a different embedding model used and the
+    values are anime title ids and corresponding cosine similarity scores to promoted
+    titles the user liked:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE2]'
+  prefs: []
+  type: TYPE_PRE
+- en: '3\. **Score relevant animes**: For each of the relevant animes identified in
+    the previous step, if the anime is not present in the testing set for that user,
+    ignore it. If we have a user rating for the anime in the testing set, we assign
+    a score to the recommended anime given the NPS-inspired rules:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Images](graphics/square.jpg) If the rating in the testing set for the user
+    and the recommended anime was 9 or 10, the anime is considered a “Promoter” and
+    the system receives +1 points.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Images](graphics/square.jpg) If the rating is 7 or 8, the anime is considered
+    “Passive” and receives 0 points.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Images](graphics/square.jpg) If the rating is between 1 and 6, the anime
+    is considered a “Detractor” and receives -1 point.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: The final output of this recommendation engine is a ranked list of top N (depending
+    on how many we wish to show the user) animes that are most likely to be enjoyed
+    by the user and a score of how well the system did given a testing ground truth
+    set. [Figure 6.4](ch06.html#ch06fig04) shows this entire process at a high level.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Images](graphics/06fig04.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: '**Figure 6.4** *The overall recommendation process involves using an embedder
+    to retrieve similar animes from a user’s already promoted titles. It then assigns
+    a score to the recommendations given if they were present in the testing set of
+    ratings.*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Generating a custom description field to compare items
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: To compare different anime titles and generate recommendations more effectively,
+    we will create our own custom generated description field that incorporates several
+    relevant features from the dataset (Shown in [Figure 6.5](ch06.html#ch06fig05)).
+    This approach offers several advantages and enables us to capture a more comprehensive
+    context of each anime title, resulting in a richer and more nuanced representation
+    of the content.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Images](graphics/06fig05.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: '**Figure 6.5** *Our custom generated description of each anime combines many
+    raw features including the title, genre list, synopsis, producers, and more. This
+    approach can be contrary to how many developers think because instead of generating
+    a structured, tabular dataset, we are deliberately creating natural text representation
+    of our anime titles and we will let our LLM-based embedders capture that in a
+    vector (tabular) form.*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: By combining multiple features, such as plot summaries, character descriptions,
+    and genres, we can create a multidimensional representation of each anime title
+    which allows our model to consider a broader range of information when comparing
+    titles and identifying similarities, leading to more accurate and meaningful recommendations.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Incorporating various features from the dataset into a single description field
+    can also aid in overcoming potential limitations in the dataset, such as missing
+    or incomplete data. By leveraging the collective strength of multiple features,
+    we ensure that our model has access to a more robust and diverse set of information
+    and mitigates the effect of individual titles missing pieces of information.
+  prefs: []
+  type: TYPE_NORMAL
+- en: In addition, using a custom generated description field enables our model to
+    adapt to different user preferences more effectively. Some users may prioritize
+    plot elements, while others may be more interested in genres or mediums (TV series
+    vs movies). By capturing a wide range of features in our description field, we
+    can cater to a diverse set of user preferences and deliver personalized recommendations
+    that align with individual tastes.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Overall, This approach of creating our own custom description field from several
+    individual fields ultimately should result in a recommendation engine that delivers
+    more accurate and relevant content suggestions. [Listing 6.2](ch06.html#list6_2)
+    provides a snippet of the code used to generate these descriptions.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Listing 6.2** *Generating custom descriptions from multiple anime fields*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE3]'
+  prefs: []
+  type: TYPE_PRE
+- en: Setting a Baseline with Foundation Embedders
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: 'Before customizing our embeddings, we will establish a baseline performance
+    using two foundation embedders: OpenAI''s powerful Ada-002 embedder and a small
+    open-source bi-encoder based on a distilled RoBERTa model. These pre-trained models
+    offer a starting point for comparison, helping us to quantify the improvements
+    achieved through customization. We will start with these two models and eventually
+    work our way up to comparing four different embedders – 1 closed-sourced and 3
+    open-sourced.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Preparing our fine-tuning data
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: To attempt to create a robust recommendation engine, we will fine-tune open-source
+    embedders using the Sentence Transformers library. We will begin by calculating
+    the Jaccard Similarity between promoted animes from the training set.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Jaccard similarity** is a simple method to measure the similarity between
+    two sets of data based on the number of elements they share. The Jaccard similarity
+    is calculated by dividing the number of elements that both groups have in common
+    by the total number of distinct elements in both groups combined.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Let's say we have two anime shows, Anime A and Anime B.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Suppose we have the following people who like these shows:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Images](graphics/square.jpg) People who like Anime A: Alice, Bob, Carol,
+    David'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Images](graphics/square.jpg) People who like Anime B: Bob, Carol, Ethan,
+    Frank'
+  prefs: []
+  type: TYPE_NORMAL
+- en: To calculate the Jaccard similarity, we first find the people who like both
+    Anime A and Anime B. In this case, it's Bob and Carol.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Next, we find the total number of distinct people who like either Anime A or
+    Anime B. Here, we have Alice, Bob, Carol, David, Ethan, and Frank.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Now, we can calculate the Jaccard similarity by dividing the number of common
+    elements (2, as Bob and Carol like both shows) by the total number of distinct
+    elements (6, as there are 6 unique people in total).
+  prefs: []
+  type: TYPE_NORMAL
+- en: Jaccard similarity = 2/6 = 1/3 ≈ 0.33
+  prefs: []
+  type: TYPE_NORMAL
+- en: So, the Jaccard similarity between Anime A and Anime B, based on the people
+    who like them, is about 0.33 or 33%. This means that 33% of the distinct people
+    who like either show have similar tastes in anime, as they enjoy both Anime A
+    and Anime B. [Figure 6.6](ch06.html#ch06fig06) shows another example.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Images](graphics/06fig06.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: '**Figure 6.6** *To convert our raw ratings into pairs of animes with associated
+    scores, we will consider every pair of anime titles and compute the jaccard score
+    between promoting users.*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: We will apply this logic to calculate the Jaccard similarity for every pair
+    of animes using a training set of the ratings DataFrame and only keep scores above
+    a certain threshold as “positive examples” (label of 1) and the rest will be considered
+    “negative” (label of 0).
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Important Note: We are free to label any anime pairs with a label between -1
+    and 1 but I am only using 0 and 1 because I’m only using promoting scores to create
+    my data so it’s not fair to say that if the jaccard score between animes is low
+    then the users totally disagree on the anime. That’s not necessarily true! If
+    I expanded this case study I would want to explicitly label animes as -1 if and
+    only if users were genuinely rating them opposite (most users who promote one
+    are detractors of the other).'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Once we have jaccard scores for anime ides, we will need to convert them into
+    tuples of anime descriptions and the cosine label (in our case either 0 or 1)
+    and then we are ready to update our open-source embedders and experiment with
+    different token windows (shown in [Figure 6.7](ch06.html#ch06fig07)).
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Images](graphics/06fig07.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: '**Figure 6.7** *Jaccard scores are converted into cosine labels and then fed
+    into our bi-encoder so it may attempt to learn patterns between the generated
+    anime descriptions and how users co-like the titles.*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Once we have Jaccard similarities between anime pairs, we can convert these
+    to labels for our bi-encoder with a simple rule. In our case, if the score is
+    above 0.3, then we label the pair as positive (label 1) and if the label is <
+    0.1, we label is as “negative” (label 0).
+  prefs: []
+  type: TYPE_NORMAL
+- en: Adjusting Model Architectures
+  prefs:
+  - PREF_H5
+  type: TYPE_NORMAL
+- en: When working with open-source embedders, we have so much more flexibility to
+    change things around if we need to. For example, the open source model I want
+    to use was pre-trained with the ability to only take in 128 tokens at a time and
+    truncate anything longer than that. [Figure 6.8](ch06.html#ch06fig08) shows the
+    histogram of the token lengths for our generated anime descriptions which clearly
+    shows that we have many descriptions that are over 128 tokens, some in the 600
+    range!
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Images](graphics/06fig08.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: '**Figure 6.8** *We have several animes that, after tokenizing, are hundreds
+    of tokens long, some have over 600 tokens.*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: In [Listing 6.3](ch06.html#list6_3), we change the input sequence length to
+    be 384 instead of 128.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Listing 6.3** *Modifying an open-source bi-encoder’s max sequence length*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE4]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Why 384? Well:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Images](graphics/square.jpg) The histogram of token lengths shows that 384
+    would capture most of our animes in their entirely and would truncate the rest'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Images](graphics/square.jpg) 384 = 256 + 128, the sum of 2 binary numbers
+    and we like binary numbers -Modern hardware components, especially GPUs, are designed
+    to perform optimally with binary numbers so they can split up workloads evenly.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Images](graphics/square.jpg) Why not 512 then to capture more training data?
+    I still want to be conservative here. The more I increase this max token window
+    size, the more data I would need to train the system because we are adding parameters
+    to our model and therefore there is more to learn. It will also take more time
+    and compute resources to load, run, and update the larger model.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: • For what it’s worth, I did initially try this process with an embedding size
+    of 512 and got worse results while taking about 20% longer on my machine.
+  prefs: []
+  type: TYPE_NORMAL
+- en: To be explicit, anytime we alter an original pre-trained foundation model in
+    any capacity the model must learn something from scratch. In this case, the model
+    will learn, from scratch, how text longer than 128 tokens can be formatted and
+    how to assign attention scores across a longer text span. It can be difficult
+    to make these model architecture adjustments but often well worth the effort in
+    terms of performance! In our case, changing the max input length to 384 is only
+    the starting line because this model now has to learn about text longer than 128
+    tokens.
+  prefs: []
+  type: TYPE_NORMAL
+- en: With modified bi-encoder architectures, data prepped and ready to go, we are
+    ready to fine-tune!
+  prefs: []
+  type: TYPE_NORMAL
+- en: Fine-tuning Open-Source Embedders Using Sentence Transformers
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: It’s time to fine-tune our open-source embedders using Sentence Transformers.
+    Sentence Transformers as a reminder is a library built on top of the Hugging Face
+    Transformers library.
+  prefs: []
+  type: TYPE_NORMAL
+- en: We create a custom training loop using the Sentence Transformers library shown
+    in [Listing 6.4](ch06.html#list6_4). We use the provided training and evaluation
+    functionalities of the library, such as the 'fit()' method for training and the
+    'evaluate()' method for validation.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Before we begin the fine-tuning process, we need to decide on several hyperparameters,
+    such as learning rate, batch size, and the number of training epochs. I have experimented
+    with various hyperparameter settings to find a good combination that leads to
+    optimal model performance. I will dedicate all of [chapter 8](ch08.html#ch08)
+    to discussing dozens of open-source fine-tuning hyper parameters so if you are
+    looking for a deeper discussion on how I came to these numbers, please refer to
+    [Chapter 8](ch08.html#ch08).
+  prefs: []
+  type: TYPE_NORMAL
+- en: We gauge how well the model learned by checking the change in the cosine similarity
+    which jumped up to the high .8, .9s! That’s great.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Listing 6.4** *Fine-tuning a bi-encoder*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE5]'
+  prefs: []
+  type: TYPE_PRE
+- en: With our fine-tuned bi-encoder, we can generate embeddings for new anime descriptions
+    and compare them with the embeddings of our existing anime database. By calculating
+    the cosine similarity between the embeddings, we can recommend animes that are
+    most similar to the user's preferences.
+  prefs: []
+  type: TYPE_NORMAL
+- en: It’s worth noting that once we go through the process of fine-tuning a single
+    custom embedder using our user preference data, we can then pretty easily swap
+    out different models with similar architectures and run the same code, rapidly
+    expanding our universe of embedder options. For this case study, I also fine-tuned
+    another LLM called `all-mpnet-base-v2` which (at the time of writing) is regarded
+    as a very good open-source embedder for semantic search and clustering purposes.
+    It is a bi-encoder as well so we can simply swap out references to our Roberta
+    model with mpnet and change virtually no code (see the github for the complete
+    case study).
+  prefs: []
+  type: TYPE_NORMAL
+- en: Summary of Results
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: 'In the course of this case study we:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Images](graphics/square.jpg) Generated a custom anime description field using
+    several raw fields from the original dataset'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Images](graphics/square.jpg) Created training data for a bi-encoder from
+    user-anime ratings using a combination of NPS/Jaccard scoring and our generated
+    descriptions'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Images](graphics/square.jpg) Modified an open source architecture to accept
+    a larger token window to account for our longer description field.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Images](graphics/square.jpg) Fine-tuned two bi-encoders with our training
+    data to attempt to create a model that mapped our descriptions to an embedding
+    space more aligned to our user’s preferences'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Images](graphics/square.jpg) Defined an evaluation system using NPS-scoring
+    to reward a promoted recommendation (the user giving it a 9 or a 10 in the testing)
+    and punishing detracted titles (users giving it a 1-6 in the testing set)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'We had four candidates for our embedders:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Images](graphics/square.jpg) `**text-embedding-002**` - OpenAI’s recommended
+    embedder for all use-cases, mostly optimized for semantic similarity'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Images](graphics/square.jpg) `**paraphrase-distilroberta-base-v1**` - An
+    open source model pre-trained to summarize short pieces of text'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Images](graphics/square.jpg) `**anime_encoder**` - The distilroberta model
+    with a modified 384 token window and fine-tuned on our user preference data'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Images](graphics/square.jpg) `**anime_encoder_bigger**` - A larger open source
+    model (`all-mpnet-base-v2`) that was pre-trained with a token window size of 512
+    which I further fine-tuned on our user preference data, same as `anime_encoder`.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[Figure 6.9](ch06.html#ch06fig09) shows our final results for our four embedder
+    candidates across lengthening recommendation windows (how many recommendations
+    we show the user).'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Images](graphics/06fig09.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: '**Figure 6.9** *Our larger open-source model (anime_encoder_bigger) consistently
+    outperforms OpenAI’s embedder in recommending anime titles to our users based
+    on historical preferences.*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Each tick on the x axis here represents showing the user a list of that many
+    anime titles and the y axis is a aggregated score for the embedder using the scoring
+    system outlined before where we also further reward the model if a correct recommendation
+    was placed closer to the front of the list and likeways punish it more if it recommends
+    something that the user is a detractor for closer to the beginning of the list.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Some interesting takeaways:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Images](graphics/square.jpg) The best performing model is our larger fine-tuned
+    model and it consistently outperforms OpenAI’s embedder!'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Images](graphics/square.jpg) The fine-tuned distilroberta model (anime_encoder)
+    underperforms it’s pre-trained cousin who can only take in 128 tokens at a time.
+    This is most likely because:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Images](graphics/square.jpg) The model doesn’t have enough parameters in
+    it’s attention layersto capture the recommendation problem well and its non fine-tuned
+    cousin is simply relying on recommending semantically similar titles.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Images](graphics/square.jpg) The model might require more than 384 tokens
+    to capture all possible relationships.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Images](graphics/square.jpg) All models start to degrade in performance as
+    it is expected to recommend more and more titles which is fair. The more titles
+    anything recommends, the less confident it will be as it goes down the list.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Exploring Exploration
+  prefs:
+  - PREF_H5
+  type: TYPE_NORMAL
+- en: Earlier I mentioned that a recommendation system’s level of “exploration” can
+    be defined as how often it recommends something that the user may not have watched
+    before. We didn’t take any explicit measures to try and encourage exploration
+    but it is still worth seeing how our embedders stack up. [Figure 6.10](ch06.html#ch06fig10)
+    shows a graph of the raw number of animes recommended to all of the users in our
+    test dataset.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Images](graphics/06fig10.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: '**Figure 6.10** *Comparing how many unique animes were recommended during the
+    course of the testing process.*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: OpenAI’s ada and our bigger encoder gave out more recommendations than the two
+    other options but OpenAI clearly seems to be in the lead of diversity of unique
+    animes recommended. This could be a sign (not proof) that our users are not that
+    explorative and tend to gravitate towards the same animes and our fine-tuned bi-encoder
+    is picking up on that and delivering fewer unique results. It could also simply
+    be that the OpenAI ada embedder was trained on such a diverse set of data and
+    is so large in terms of parameters that it is simply better than our fine-tuned
+    model at delivering consistently favored animes at scale.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'To answer these questions and more, we would want to continue our research
+    by, for example we could:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Images](graphics/square.jpg) Try new open sourced models and closed sourced
+    models'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Images](graphics/square.jpg) Design new metrics for quality assurance to
+    test our embedders on a more holistic scale'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Images](graphics/square.jpg) Calculate new training datasets that use other
+    metrics like correlation coefficients instead of jaccard'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Images](graphics/square.jpg) Toggle recommendation system hyper parameters
+    like K. We only ever considered grabbing the first K=3 animes for each promoted
+    anime but what if we let that number vary as well?'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Images](graphics/square.jpg) Run some pre-training on blogs and wikis about
+    anime recommendation and theory so the model has some latent access to information
+    about how to consider recommendations'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Honestly that last one is a bit pie in the sky and would really work best if
+    we could also combine that with some chain of thought prompting on a different
+    LLM but still, this is a big question and sometimes that means we need big ideas
+    and big answers. So I leave it to you now; go have big ideas!
+  prefs: []
+  type: TYPE_NORMAL
+- en: Conclusion
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: In this chapter, I showed you the process of fine-tuning open-source embedding
+    models for a specific use case, which in our case, was generating high-quality
+    anime recommendations based on users' historical preferences. By comparing the
+    performance of our customized models with that of OpenAI's embedder, we observed
+    that a fine-tuned model could consistently outperform OpenAI's embedder.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Customizing embedding models and their architectures for specialized tasks can
+    lead to improved performance and provide a viable alternative to closed-source
+    models, especially when access to labeled data and resources for experimentation
+    is available.
+  prefs: []
+  type: TYPE_NORMAL
+- en: I hope that the success of our fine-tuned model in recommending anime titles
+    serves as a testament to the power and flexibility that open-source models offer,
+    paving the way for further exploration, experimentation, and application in whatever
+    tasks you might have.
+  prefs: []
+  type: TYPE_NORMAL

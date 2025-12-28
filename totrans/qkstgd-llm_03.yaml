@@ -1,0 +1,820 @@
+- en: '2'
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Semantic Search with LLMs
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Introduction
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: 'In the last chapter, we explored the inner workings of language models and
+    the impact that modern LLMs have had on NLP tasks like text classification, generation,
+    and machine translation. There is another powerful application of LLMs that has
+    been gaining traction in recent years: semantic search.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Now you might be thinking that it’s time to finally learn the best ways to talk
+    to ChatGPT and GPT-4 to get the optimal results, and we will start to do that
+    in the next chapter, I promise. In the meantime, I want to show you what else
+    we can build on top of this novel transformer architecture. While text-to-text
+    generative models like GPT are extremely impressive in their own right, one of
+    the most versatile solutions that AI companies offer is the ability to generate
+    text embeddings based on powerful LLMs.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Text embeddings are a way to represent words or phrases as vectors in a high-dimensional
+    space based on their contextual meaning within a corpus of text data. The idea
+    is that if two phrases are similar (we will explore that word in more detail later
+    on in this chapter) then the vectors that represent those phrases should be close
+    together and vice versa. [Figure 2.1](ch02.html#ch02fig01) shows an example of
+    a simple search algorithm. When a user searches for an item to buy – say a magic
+    the gathering trading card they might simply search for “a vintage magic card”.
+    The system should then embed the query such that if two text embeddings that are
+    near each other should indicate that the phrases that were used to generate them
+    are similar.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Images](graphics/02fig01.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: '**Figure 2.1** *Vectors that represent similar phrases should be close together
+    and those that represent dissimilar phrases should be far apart. In this case,
+    if a user wants a trading card they might ask for “a vintage magic card”. A proper
+    semantic search system should embed the query in such a way that it ends up near
+    relevant results (like “magic card”) and far apart from non relevant items (like
+    “a vintage magic kit”) even if they share certain keywords.*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: This map from text to vectors can be thought of as a kind of hash with meaning.
+    We can’t really reverse vectors back to text but rather they are a representation
+    of the text that has the added benefit of carrying the ability to compare points
+    while in their encoded state.
+  prefs: []
+  type: TYPE_NORMAL
+- en: LLM-enabled text embeddings allow us to capture the semantic value of words
+    and phrases beyond just their surface-level syntax or spelling. We can rely on
+    the pre-training and fine-tuning of LLMs to build virtually unlimited applications
+    on top of them by leveraging this rich source of information about language use.
+  prefs: []
+  type: TYPE_NORMAL
+- en: This chapter introduces us to the world of semantic search using LLMs to explore
+    how they can be used to create powerful tools for information retrieval and analysis.
+    In the next chapter, we will build a chatbot on top of GPT-4 that leverages a
+    fully realized semantic search system that we will build in this chapter.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Without further ado, let’s get right into it, shall we?
+  prefs: []
+  type: TYPE_NORMAL
+- en: The Task
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: A traditional search engine would generally take what you type in and then give
+    you a bunch of links to websites or items that contain those words or permutations
+    of the characters that you typed in. So if you typed in “Vintage Magic the Gathering
+    Cards” on a marketplace, you would get items with a title/description that contains
+    combinations of those words. That’s a pretty standard way to search, but it’s
+    not always the best way. For example I might get vintage magic sets to help me
+    learn how to pull a rabbit out of a hat. Fun but not what I asked for.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The terms you input into a search engine may not always align with the *exact*
+    words used in the items you want to see. It could be that the words in the query
+    are too general, resulting in a slew of unrelated findings. This issue often extends
+    beyond just differing words in the results; the same words might carry different
+    meanings than what was searched for. This is where semantic search comes into
+    play, as exemplified by the earlier-mentioned Magic: The Gathering cards scenario.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Asymmetric Semantic Search
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: A **semantic search** system can understand the meaning and context of your
+    search query and match it against the meaning and context of the documents that
+    are available to retrieve. This kind of system can find relevant results in a
+    database without having to rely on exact keyword or n-gram matching but rather
+    rely on a pre-trained LLM to understand the nuance of the query and the documents
+    ([Figure 2.2](ch02.html#ch02fig02)).
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Images](graphics/02fig02.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: '**Figure 2.2** *A traditional keyword-based search might rank a vintage magic
+    kit with the same weight as the item we actually want whereas a semantic search
+    system can understand the actual concept we are searching for*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: The **asymmetric** part of asymmetric semantic search refers to the fact that
+    there is generally an imbalance between the semantic information (basically the
+    size) of the input query and the documents/information that the search system
+    has to retrieve. For example, the search system is trying to match “magic the
+    gathering card” to paragraphs of item descriptions on a marketplace. The four-word
+    search query has much less information than the paragraphs but nonetheless it
+    is what we are comparing.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Asymmetric semantic search systems can get very accurate and relevant search
+    results, even if you don’t use the exact right words in your search. They rely
+    on the learnings of LLMs rather than the user being able to know exactly what
+    needle to search for in the haystack.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'I am of course, vastly oversimplifying the traditional method. There are many
+    ways to make them more performant without switching to a more complex LLM approach
+    and pure semantic search systems are not always the answer. They are not simply
+    “the better way to do search”. Semantic algorithms have their own deficiencies
+    like:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Images](graphics/square.jpg) They can be overly sensitive to small variations
+    in text, such as differences in capitalization or punctuation.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Images](graphics/square.jpg) They struggle with nuanced concepts, such as
+    sarcasm or irony that rely on localized cultural knowledge.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Images](graphics/square.jpg) They can be more computationally expensive to
+    implement and maintain than the traditional method, especially when launching
+    a home-grown system with many open-source components.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Semantic search systems can be a valuable tool in certain contexts, so let’s
+    jump right into how we will architect our solution.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Solution Overview
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: 'The general flow of our asymmetric semantic search system will follow these
+    steps:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Images](graphics/square.jpg) PART I - Ingesting documents ([Figure 2.3](ch02.html#ch02fig03))'
+  prefs: []
+  type: TYPE_IMG
+- en: 1\. Collect documents for embedding
+  prefs: []
+  type: TYPE_NORMAL
+- en: 2\. Create text embeddings to encode semantic information
+  prefs: []
+  type: TYPE_NORMAL
+- en: 3\. Store embeddings in a database for later retrieval given a query
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Images](graphics/02fig03.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: '**Figure 2.3** *Zooming in on Part I, storing documents will consist of doing
+    some pre-processing on our documents, embedding them, and then storing them in
+    some database*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Images](graphics/square.jpg) PART II - Retrieving documents ([Figure 2.4](ch02.html#ch02fig04))'
+  prefs: []
+  type: TYPE_IMG
+- en: 1\. User has a query which may be pre-processed and cleaned
+  prefs: []
+  type: TYPE_NORMAL
+- en: 2\. Retrieve candidate documents
+  prefs: []
+  type: TYPE_NORMAL
+- en: 3\. Re-rank the candidate documents if necessary
+  prefs: []
+  type: TYPE_NORMAL
+- en: 4\. Return the final search results
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Images](graphics/02fig04.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: '**Figure 2.4** *Zooming in on Part II, when retrieving documents we will have
+    to embed our query using the same embedding scheme as we used for the documents
+    and then compare them against the previously stored documents and return the best
+    (closest) document*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: The Components
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: Let’s go over each of our components in more detail to understand the choices
+    we’re making and what considerations we need to take into account.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Text Embedder
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: As we now know, at the heart of any semantic search system is the text embedder.
+    This is the component that takes in a text document, or a single word or phrase,
+    and converts it into a vector. The vector is unique to that text and should capture
+    the contextual meaning of the phrase.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The choice of the text embedder is critical as it determines the quality of
+    the vector representation of the text. We have many options in how we vectorize
+    with LLMs, both open and closed source. To get off of the ground quicker, we are
+    going to use OpenAI’s closed-source “Embeddings” product. In a later section,
+    I’ll go over some open-source options.
+  prefs: []
+  type: TYPE_NORMAL
+- en: OpenAI’s “Embeddings” is a powerful tool that can quickly provide high-quality
+    vectors, but it is a closed-source product, which means we have limited control
+    over its implementation and potential biases. It’s important to keep in mind that
+    when using closed-source products, we may not have access to the underlying algorithms,
+    which can make it difficult to troubleshoot any issues that may arise.
+  prefs: []
+  type: TYPE_NORMAL
+- en: What makes pieces of text “similar”
+  prefs:
+  - PREF_H5
+  type: TYPE_NORMAL
+- en: Once we convert our text into vectors, we have to find a mathematical representation
+    of figuring out if pieces of text are “similar” or not. Cosine similarity is a
+    way to measure how similar two things are. It looks at the angle between two vectors
+    and gives a score based on how close they are in direction. If the vectors point
+    in exactly the same direction, the cosine similarity is 1\. If they’re perpendicular
+    (90 degrees apart), it’s 0\. And if they point in opposite directions, it’s -1\.
+    The size of the vectors doesn’t matter, only their orientation does.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[Figure 2.5](ch02.html#ch02fig05) shows how the cosine similarity would help
+    us retrieve documents given a query.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Images](graphics/02fig05.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: '**Figure 2.5** *In an ideal semantic search scenario, the Cosine Similarity
+    (formula given at the top) gives us a computationally efficient way to compare
+    pieces of text at scale, given that embeddings are tuned to place semantically
+    similar pieces of text near each other (bottom). We start by embedding all items
+    – including the query (bottom left) and then checking the angle between them.
+    The smaller the angle, the larger the cosine similarity (bottom right)*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'We could also turn to other similarity metrics like the dot product or the
+    Euclidean distance but OpenAI embeddings have a special property. The magnitudes
+    (lengths) of their vectors are normalized to length 1, which basically means that
+    we benefit mathematically on two fronts:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Images](graphics/square.jpg) Cosine similarity is identical to the dot product'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Images](graphics/square.jpg) Cosine similarity and Euclidean distance will
+    result in the identical rankings'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'TL;DR: Having normalized vectors (all having a magnitude of 1) is great because
+    we can use a cheap cosine calculation to see how close two vectors are and therefore
+    how close two phrases are semantically via the cosine similarity.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: OpenAI’s embedding
+  prefs:
+  - PREF_H5
+  type: TYPE_NORMAL
+- en: Getting embeddings from OpenAI is as simple as a few lines of code ([Listing
+    2.1](ch02.html#list2_1)). As mentioned previously, this entire system relies on
+    an embedding mechanism that places semantically similar items near each other
+    so that the cosine similiarty is large when the items are actually similar. There
+    are multiple methods we could use to create these embeddings, but we will for
+    now rely on OpenAI’s embedding **engines** to do this work for us. Engines are
+    different embedding mechanism that OpenAI offer. We will use their most recent
+    engine that they recommend for most use-cases.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Listing 2.1** *Getting text embeddings from OpenAI*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs: []
+  type: TYPE_PRE
+- en: It’s worth noting that OpenAI provides several engine options that can be used
+    for text embedding. Each engine may provide different levels of accuracy and may
+    be optimized for different types of text data. At the time of writing, the engine
+    used in the code block is the most recent and the one they recommend using.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Additionally, it is possible to pass in multiple pieces of text at once to the
+    “get_embeddings” function, which can generate embeddings for all of them in a
+    single API call. This can be more efficient than calling “get_embedding” multiple
+    times for each individual text. We will see an example of this later on.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Open-source Embedding Alternatives
+  prefs:
+  - PREF_H5
+  type: TYPE_NORMAL
+- en: While OpenAI and other companies provide powerful text embedding products, there
+    are also several open-source alternatives available for text embedding. A popular
+    one is the bi-encoder with BERT, a powerful deep learning-based algorithm that
+    has been shown to produce state-of-the-art results on a range of natural language
+    processing tasks. We can find pre-trained bi-encoders in many open source repositories,
+    including the **Sentence Transformers** library, which provides pre-trained models
+    for a variety of natural language processing tasks to use off the shelf.
+  prefs: []
+  type: TYPE_NORMAL
+- en: A bi-encoder involves training two BERT models, one to encode the input text
+    and the other to encode the output text ([Figure 2.6](ch02.html#ch02fig06)). The
+    two models are trained simultaneously on a large corpus of text data, with the
+    goal of maximizing the similarity between corresponding pairs of input and output
+    text. The resulting embeddings capture the semantic relationship between the input
+    and output text.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Images](graphics/02fig06.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: '**Figure 2.6** *A bi-encoder is trained in a unique way with two clones of
+    a single LLM trained in parallel to learn similarities between documents. For
+    example, a bi-encoder can learn to associate questions to paragraphs so they appear
+    near each other in a vector space*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[Listing 2.2](ch02.html#list2_2) is an example of embedding text with a pre-trained
+    bi-encoder with the “sentence_transformer” package:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Listing 2.2** *Getting text embeddings from a pre-trained open source bi-encoder*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE1]'
+  prefs: []
+  type: TYPE_PRE
+- en: This code creates an instance of the ‘SentenceTransformer’ class, which is initialized
+    with the pre-trained model ‘multi-qa-mpnet-base-cos-v1’. This model is designed
+    for multi-task learning, specifically for tasks such as question-answering and
+    text classification. This one in particular was pre-trained using asymmetric data
+    so we know it can handle both short queries and long documents and be able to
+    compare them well. We use the ‘encode’ function from the SentenceTransformer class
+    to generate vector embeddings for the documents, with the resulting embeddings
+    stored in the ‘doc_emb’ variable.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Different algorithms may perform better on different types of text data and
+    will have different vector sizes. The choice of algorithm can have a significant
+    impact on the quality of the resulting embeddings. Additionally, open-source alternatives
+    may require more customization and fine-tuning than closed-source products, but
+    they also provide greater flexibility and control over the embedding process.
+    For more examples of using open-source bi-encoders to embed text, check out the
+    code portion of this book!
+  prefs: []
+  type: TYPE_NORMAL
+- en: Document Chunker
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: Once we have our text embedding engine set up, we need to consider the challenge
+    of embedding large documents. It is often not practical to embed entire documents
+    as a single vector, particularly when dealing with long documents such as books
+    or research papers. One solution to this problem is to use document chunking,
+    which involves dividing a large document into smaller, more manageable chunks
+    for embedding.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Max Token Window Chunking
+  prefs:
+  - PREF_H5
+  type: TYPE_NORMAL
+- en: One approach to document chunking is max token window chunking. This is one
+    of the easiest methods to implement and involves splitting the document into chunks
+    of a given max size. So if we set a token window to be 500, then we’d expect each
+    chunk to be just below 500 tokens. Having our chunks all be around the same size
+    will also help make our system more consistent.
+  prefs: []
+  type: TYPE_NORMAL
+- en: One common concern of this method is that we might accidentally cut off some
+    important text between chunks, splitting up the context. To mitigate this, we
+    can set overlapping windows with a specified amount of tokens to overlap so we
+    have tokens shared between chunks. This of course introduces a sense of redundancy
+    but this is often fine in service of higher accuracy and latency.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Let’s see an example of overlapping window chunking with some sample text ([Listing
+    2.3](ch02.html#list2_3)). Let’s begin by ingesting a large document. How about
+    a recent book I wrote with over 400 pages?
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Listing 2.3** *Ingesting an entire textbook*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE2]'
+  prefs: []
+  type: TYPE_PRE
+- en: And now let’s chunk this document by getting chunks of at most a certain token
+    size ([Listing 2.4](ch02.html#list2_4)).
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Listing 2.4** *Chunking the textbook with and without overlap*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE3]'
+  prefs: []
+  type: TYPE_PRE
+- en: With overlap, we see an increase in the number of document chunks but around
+    the same size. The higher the overlapping factor, the more redundancy we introduce
+    into the system. The max token window method does not take into account the natural
+    structure of the document and may result in information being split up between
+    chunks or chunks with overlapping information, confusing the retrieval system.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Finding Custom Delimiters
+  prefs:
+  - PREF_H6
+  type: TYPE_NORMAL
+- en: To help aid our chunking method, we could search for custom natural delimiters.
+    We would identify natural white spaces within the text and use them to create
+    more meaningful units of text that will end up in document chunks that will eventually
+    get embedded ([Figure 2.7](ch02.html#ch02fig07)).
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Images](graphics/02fig07.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: '**Figure 2.7** *Max-token chunking (on the left) and natural whitespace chunking
+    (on the right) can be done with or without overlap. The natural whitespace chunking
+    tends to end up with non-uniform chunk sizes.*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Let’s look for common whitespaces in the textbook ([Listing 2.5](ch02.html#list2_5)).
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Listing 2.5** *Chunking the textbook with natural whitespace*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE4]'
+  prefs: []
+  type: TYPE_PRE
+- en: The most common double white space is two newline characters in a row which
+    is actually how I earlier distinguished between pages which makes sense. The most
+    natural whitespace in a book is by page. In other cases, we may have found natural
+    whitespace between paragraphs as well. This method is very hands-on and requires
+    a good amount of familiarity and knowledge of the source documents.
+  prefs: []
+  type: TYPE_NORMAL
+- en: We can also turn to more machine learning to get slightly more creative with
+    how we architect document chunks.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Using Clustering to Create Semantic Documents
+  prefs:
+  - PREF_H5
+  type: TYPE_NORMAL
+- en: Another approach to document chunking is to use clustering to create semantic
+    documents. This approach involves creating new documents by combining small chunks
+    of information that are semantically similar ([Figure 2.8](ch02.html#ch02fig08)).
+    This approach requires some creativity, as any modifications to the document chunks
+    will alter the resulting vector. We could use an instance of Agglomerative clustering
+    from scikit-learn, for example, where similar sentences or paragraphs are grouped
+    together to form new documents.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Images](graphics/02fig08.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: '**Figure 2.8** *We can group any kinds of document chunks together by using
+    some separate semantic clustering system (shown on the right) to create brand
+    new documents with chunks of information in them that are similar to each other.*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Let’s try to cluster together those chunks we found from the textbook in our
+    last section ([Listing 2.6](ch02.html#list2_6)).
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Listing 2.6** *Clustering pages of the document by semantic similarity*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE5]'
+  prefs: []
+  type: TYPE_PRE
+- en: This approach tends to yield chunks that are more cohesive semantically but
+    suffer from pieces of content being out of context with surrounding text. This
+    approach works well when the chunks you start with are known to not necessarily
+    relate to each other i.e. chunks are more independent of one another.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Use Entire Documents Without Chunking
+  prefs:
+  - PREF_H5
+  type: TYPE_NORMAL
+- en: Alternatively, it is possible to use entire documents without chunking. This
+    approach is probably the easiest option overall but will have drawbacks when documents
+    are far too long and we hit a context window limit when we embed the text. We
+    also might fall victim to the documents being filled with extraneous disparate
+    context points and the resulting embeddings may be trying to encode too much and
+    may suffer in quality. These drawbacks compound for very large (multi-page) documents.
+  prefs: []
+  type: TYPE_NORMAL
+- en: It is important to consider the trade-offs between chunking and using entire
+    documents when selecting an approach for document embedding ([Table 2.1](ch02.html#ch02tab01)).
+    Once we decide how we want to chunk our documents, we need a home for the embeddings
+    we create. Locally, we can rely on matrix operations for quick retrieval, but
+    we are building for the cloud here, so let’s look at our database options.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Table 2.1** *Outlining different document chunking methods with pros and
+    cons*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Images](graphics/02tab01.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Vector Databases
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: A **vector database** is a data storage system that is specifically designed
+    to both store and retrieve vectors quickly. This type of database is useful for
+    storing embeddings generated by an LLM which encode and store the semantic meaning
+    of our documents or chunks of documents. By storing embeddings in a vector database,
+    we can efficiently perform nearest-neighbor searches to retrieve similar pieces
+    of text based on their semantic meaning.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Pinecone
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: Pinecone is a vector database that is designed for small to medium-sized datasets
+    (usually ideal for less than 1 million entries). It is easy to get started with
+    Pinecone for free, but it also has a pricing plan that provides additional features
+    and increased scalability. Pinecone is optimized for fast vector search and retrieval,
+    making it a great choice for applications that require low-latency search, such
+    as recommendation systems, search engines, and chatbots.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Open-source Alternatives
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: There are several open-source alternatives to Pinecone that can be used to build
+    a vector database for LLM embeddings. One such alternative is Pgvector, a PostgreSQL
+    extension that adds support for vector data types and provides fast vector operations.
+    Another option is Weaviate, a cloud-native, open-source vector database that is
+    designed for machine learning applications. Weaviate provides support for semantic
+    search and can be integrated with other machine learning tools such as TensorFlow
+    and PyTorch. ANNOY is an open-source library for approximate nearest neighbor
+    search that is optimized for large-scale datasets. It can be used to build a custom
+    vector database that is tailored to specific use cases.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Re-ranking the Retrieved Results
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: After retrieving potential results from a vector database given a query using
+    a similarity like cosine similarity, it is often useful to re-rank them to ensure
+    that the most relevant results are presented to the user ([Figure 2.9](ch02.html#ch02fig09)).
+    One way to re-rank results is by using a cross-encoder, which is a type of transformer
+    model that takes pairs of input sequences and predicts a score indicating how
+    relevant the second sequence is to the first. By using a cross-encoder to re-rank
+    search results, we can take into account the entire query context rather than
+    just individual keywords. This of course will add some overhead and worsen our
+    latency but it could help us in terms of performance. I will take the time to
+    outline some results in a later section to compare and contrast using and not
+    using a cross-encoder.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Images](graphics/02fig09.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: '**Figure 2.9** *A cross-encoder (left) takes in two pieces of text and outputs
+    a similarity score without returning a vectorized format of the text. A bi-encoder
+    (right), on the other hand, embeds a bunch of pieces of text into vectors up front
+    and then retrieves them later in real time given a query (e.g. looking up “I’m
+    a Data Scientist”)*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: One popular source of cross-encoder models is the Sentence Transformers library,
+    which is where we found our bi-encoders earlier. We can also fine-tune a pre-trained
+    cross-encoder model on our task-specific dataset to improve the relevance of search
+    results and provide more accurate recommendations.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Another option for re-ranking search results is by using a traditional retrieval
+    model like BM25, which ranks results by the frequency of query terms in the document
+    and takes into account term proximity and inverse document frequency. While BM25
+    does not take into account the entire query context, it can still be a useful
+    way to re-rank search results and improve the overall relevance of the results.
+  prefs: []
+  type: TYPE_NORMAL
+- en: API
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: We now need a place to put all of these components so that users can access
+    the documents in a fast, secure, and easy way. To do this, let’s create an API.
+  prefs: []
+  type: TYPE_NORMAL
+- en: FastAPI
+  prefs:
+  - PREF_H5
+  type: TYPE_NORMAL
+- en: '**FastAPI** is a web framework for building APIs with Python quickly. It is
+    designed to be both fast and easy to set up, making it an excellent choice for
+    our semantic search API. FastAPI uses the Pydantic data validation library to
+    validate request and response data and uses the high-performance ASGI server,
+    uvicorn.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Setting up a FastAPI project is straightforward and requires minimal configuration.
+    FastAPI provides automatic documentation generation with the OpenAPI standard,
+    which makes it easy to build API documentation and client libraries. [Listing
+    2.7](ch02.html#list2_7) is a skeleton of what that file would look like.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Listing 2.7** *FastAPI skeleton code*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE6]'
+  prefs: []
+  type: TYPE_PRE
+- en: For the full file, be sure to check out the code repository for this book!
+  prefs: []
+  type: TYPE_NORMAL
+- en: Putting It All Together
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: We now have a solution for all of our components. Let’s take a look at where
+    we are in our solution. Items in bold are new from the last time we outlined this
+    solution.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Images](graphics/square.jpg) PART I - Ingesting documents'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 1\. Collect documents for embedding - **Chunk them**
+  prefs: []
+  type: TYPE_NORMAL
+- en: 2\. Create text embeddings to encode semantic information - **OpenAI’s Embedding**
+  prefs: []
+  type: TYPE_NORMAL
+- en: 3\. Store embeddings in a database for later retrieval given a query - **Pinecone**
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Images](graphics/square.jpg) PART II - Retrieving documents'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 1\. User has a query which may be pre-processed and cleaned - **FastAPI**
+  prefs: []
+  type: TYPE_NORMAL
+- en: 2\. Retrieve candidate documents - **OpenAI’s Embedding + Pinecone**
+  prefs: []
+  type: TYPE_NORMAL
+- en: 3\. Re-rank the candidate documents if necessary - **Cross-Encoder**
+  prefs: []
+  type: TYPE_NORMAL
+- en: 4\. Return the final search results - **FastAPI**
+  prefs: []
+  type: TYPE_NORMAL
+- en: With all of these moving parts, let’s take a look at our final system architecture
+    in [Figure 2.10](ch02.html#ch02fig010).
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Images](graphics/02fig10.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: '**Figure 2.10** *Our complete semantic search architecture using two closed-source
+    systems (OpenAI and Pinecone) and an open source API framework (FastAPI)*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: We now have a complete end to end solution for our semantic search. Let’s see
+    how well the system performs against a validation set.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Performance
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: 'I’ve outlined a solution to the problem of semantic search, but I want to also
+    talk about how to test how these different components work together. For this,
+    let’s use a well-known dataset to run against: the **BoolQ** dataset - a question
+    answering dataset for yes/no questions containing nearly 16K examples. This dataset
+    has pairs of (question, passage) that indicate for a given question, that passage
+    would be the best passage to answer the question.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[Table 2.2](ch02.html#ch02tab02) outlines a few trials I ran and coded up in
+    the code for this book. I use combinations of embedders, re-ranking solutions,
+    and a bit of fine-tuning to try and see how well the system performs on two fronts:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 1\. Performance - as indicated by the **top result accuracy**. For each known
+    pair of (question, passage) in our BoolQ validation set - 3,270 examples, we will
+    test if the system’s top result is the intended passage. This is not the only
+    metric we could have used. The sentence_transformers library has other metrics
+    including ranking evaluation, correlation evaluation, and more
+  prefs: []
+  type: TYPE_NORMAL
+- en: 2\. Latency - I want to see how long it takes to run through these examples
+    using Pinecone, so for each embedder, I reset the index and uploaded new vectors
+    and used cross-encoders in my laptop’s memory to keep things simple and standardized.
+    I will measure latency in **minutes** it took to run against the validation set
+    of the BoolQ dataset
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Table 2.2** *Performance results from various combinations against the BoolQ
+    validation set*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Images](graphics/02tab02.jpg)![Images](graphics/02tab02a.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Some experiments I didn’t try include the following:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 1\. Fine-tuning the cross-encoder for more epochs and spending more time finding
+    optimal learning parameters (e.g. weight decay, learning rate scheduler, etc)
+  prefs: []
+  type: TYPE_NORMAL
+- en: 2\. Using other OpenAI embedding engines
+  prefs: []
+  type: TYPE_NORMAL
+- en: 3\. Fine-tuning an open-source bi-encoder on the training set
+  prefs: []
+  type: TYPE_NORMAL
+- en: Note that the models I used for the cross-encoder and the bi-encoder were both
+    specifically pre-trained on data that is similar to asymmetric semantic search.
+    This is important because we want the embedder to produce vectors for both short
+    queries and long documents and place them near each other when they are related.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Let’s assume we want to keep things simple to get things off of the ground and
+    use only the OpenAI embedder and do no re-ranking (row 1) in our application.
+    Let’s consider the costs associated with using FastAPI, Pinecone, and OpenAI for
+    text embeddings.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The Cost of Closed-Source
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: We have a few components in play and not all of them are free. Fortunately FastAPI
+    is an open-source framework and does not require any licensing fees. Our cost
+    with FastAPI is hosting which could be on a free tier depending on what service
+    we use. I like Render which has a free tier but also pricing starts at $7/month
+    for 100% uptime. At the time of writing, Pinecone offers a free tier with a limit
+    of 100,000 embeddings and up to 3 indexes, but beyond that, they charge based
+    on the number of embeddings and indexes used. Their Standard plan charges $49/month
+    for up to 1 million embeddings and 10 indexes.
+  prefs: []
+  type: TYPE_NORMAL
+- en: OpenAI offers a free tier of their text embedding service, but it is limited
+    to 100,000 requests per month. Beyond that, they charge $0.0004 per 1,000 tokens
+    for the embedding engine we used - Ada-002\. If we assume an average of 500 tokens
+    per document, the cost per document would be $0.0002\. For example, if we wanted
+    to embed 1 million documents, it would cost approximately $200.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'If we want to build a system with 1 million embeddings, and we expect to update
+    the index once a month with totally fresh embeddings, the total cost per month
+    would be:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Pinecone Cost = $49
+  prefs: []
+  type: TYPE_NORMAL
+- en: OpenAI Cost = $200
+  prefs: []
+  type: TYPE_NORMAL
+- en: FastAPI Cost = $7
+  prefs: []
+  type: TYPE_NORMAL
+- en: Total Cost = $49 + $200 + $7 = **$256/month**
+  prefs: []
+  type: TYPE_NORMAL
+- en: A nice binary number :) Not intended but still fun.
+  prefs: []
+  type: TYPE_NORMAL
+- en: These costs can quickly add up as the system scales, and it may be worth exploring
+    open-source alternatives or other strategies to reduce costs - like using open-source
+    bi-encoders for embedding or Pgvector as your vector database.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Summary
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: With all of these components accounted for, our pennies added up, and alternatives
+    available at every step of the way, I’ll leave you all to it. Enjoy setting up
+    your new semantic search system and be sure to check out the complete code for
+    this - including a fully working FastAPI app with instructions on how to deploy
+    it - on the book’s code repository and experiment to your heart’s content to try
+    and make this work as well as possible for your domain-specific data.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Stay tuned for our next chapter where we will build on this API with a chatbot
+    built using GPT-4 and our retrieval system.
+  prefs: []
+  type: TYPE_NORMAL

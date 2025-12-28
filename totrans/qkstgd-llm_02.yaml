@@ -1,0 +1,1094 @@
+- en: '1'
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Overview of Large Language Models
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Ever since an advanced artificial intelligence (AI) deep learning model called
+    the Transformer was introduced by a team at Google Brain in 2017, it has become
+    the standard for tackling various natural language processing (NLP) tasks in academia
+    and industry. It is likely that you have interacted with a Transformer model today
+    without even realizing it, as Google uses BERT to enhance its search engine by
+    better understanding users’ search queries. The GPT family of models from OpenAI
+    have also received attention for their ability to generate human-like text and
+    images.
+  prefs: []
+  type: TYPE_NORMAL
+- en: These Transformers now power applications such as GitHub’s Copilot (developed
+    by OpenAI in collaboration with Microsoft), which can convert comments and snippets
+    of code into fully functioning source code that can even call upon other LLMs
+    (like in [Listing 1.1](ch01.html#list1_1)) to perform NLP tasks.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Listing 1.1** Using the Copilot LLM to get an output from Facebook’s BART
+    LLM'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'In this listing, I use Copilot to take in only a Python function definition
+    and some comments I wrote and wrote all of the code to make the function do what
+    I wrote. No cherry-picking here, just a fully working python function that I can
+    call like this:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE1]'
+  prefs: []
+  type: TYPE_PRE
+- en: It appears we are surrounded by LLMs, but just what are they doing under the
+    hood? Let’s find out!
+  prefs: []
+  type: TYPE_NORMAL
+- en: What Are Large Language Models (LLMs)?
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: '**Large language models** (LLMs) are AI models that are usually (but not necessarily)
+    derived from the Transformer architecture and are designed to *understand* and
+    *generate* human language, code, and much more. These models are trained on vast
+    amounts of text data, allowing them to capture the complexities and nuances of
+    human language. LLMs can perform a wide range of language tasks, from simple text
+    classification to text generation, with high accuracy, fluency, and style.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: In the healthcare industry, LLMs are being used for electronic medical record
+    (EMR) processing, clinical trial matching, and drug discovery. In finance, LLMs
+    are being utilized for fraud detection, sentiment analysis of financial news,
+    and even trading strategies. LLMs are also used for customer service automation
+    via chatbots and virtual assistants. With their versatility and highly performant
+    natures, Transformer-based LLMs are becoming an increasingly valuable asset in
+    a variety of industries and applications.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Note**'
+  prefs: []
+  type: TYPE_NORMAL
+- en: I will use the term **understand** a fair amount in this text. I am usually
+    referring to “Natural Language Understanding” (NLU) which is a research branch
+    of NLP that focuses on developing algorithms and models that can accurately interpret
+    human language. As we will see, NLU models excel at tasks such as classification,
+    sentiment analysis, and named entity recognition. However, it is important to
+    note that while these models can perform complex language tasks, they do not possess
+    true understanding in the way humans do.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The success of LLMs and Transformers is due to the combination of several ideas.
+    Most of these ideas had been around for years but were also being actively researched
+    around the same time. Mechanisms such as attention, transfer learning, and scaling
+    up neural networks which provide the scaffolding for Transformers were seeing
+    breakthroughs right around the same time. [Figure 1.1](ch01.html#ch01fig01) outlines
+    some of the biggest advancements in NLP in the last few decades, all leading up
+    to the invention of the Transformer.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Images](graphics/01fig01.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: '**Figure 1.1** *A brief history of Modern NLP highlights using deep learning
+    to tackle language modeling, advancements in large scale semantic token embeddings
+    (Word2vec), sequence to sequence models with attention (something we will see
+    in more depth later in this chapter), and finally the Transformer in 2017.*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: The Transformer architecture itself is quite impressive. It can be highly parallelized
+    and scaled in ways that previous state of the art NLP models could not be, allowing
+    it to scale to much larger data sets and training times than previous NLP models.
+    The Transformer uses a special kind of attention calculation called **self-attention**
+    to allow each word in a sequence to “attend to” (look to for context) all other
+    words in the sequence, enabling it to capture long-range dependencies and contextual
+    relationships between words. Of course, no architecture is perfect. Transformers
+    are still limited to an input context window which represents the maximum length
+    of text it can process at any given moment.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Since the advent of the Transformer in 2017, the ecosystem around using and
+    deploying Transformers has only exploded. The aptly named “Transformers” library
+    and its supporting packages have made it accessible for practitioners to use,
+    train, and share models, greatly accelerating its adoption and being used by thousands
+    of organizations and counting. Popular LLM repositories like Hugging Face have
+    popped up, providing access to powerful open-source models to the masses. In short,
+    using and productionizing a Transformer has never been easier.
+  prefs: []
+  type: TYPE_NORMAL
+- en: That’s where this book comes in.
+  prefs: []
+  type: TYPE_NORMAL
+- en: My goal is to guide you on how to use, train, and optimize all kinds of LLMs
+    for practical applications while giving you just enough insight into the inner
+    workings of the model to know how to make optimal decisions about model choice,
+    data format, fine-tuning parameters, and so much more.
+  prefs: []
+  type: TYPE_NORMAL
+- en: My aim is to make using Transformers accessible for software developers, data
+    scientists, analysts, and hobbyists alike. To do that, we should start on a level
+    playing field and learn a bit more about LLMs.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Definition of LLMs
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: 'To back up only slightly, we should talk first about the specific NLP task
+    that LLMs and Transformers are being used to solve and provides the foundation
+    layer for their ability to solve a multitude of tasks. **Language modeling** is
+    a subfield of NLP that involves the creation of statistical/deep learning models
+    for predicting the likelihood of a sequence of tokens in a specified **vocabulary**
+    (a limited and known set of tokens). There are generally two kinds of language
+    modeling tasks out there: autoencoding tasks and autoregressive tasks [Figure
+    1.2](ch01.html#ch01fig02))'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Note**'
+  prefs: []
+  type: TYPE_NORMAL
+- en: The term **token** refers to the smallest unit of semantic meaning created by
+    breaking down a sentence or piece of text into smaller units and are the basic
+    inputs for an LLM. Tokens can be words but also can be “sub-words” as we will
+    see in more depth throughout this book. Some readers may be familiar with the
+    term “n-gram” which refers to a sequence of n consecutive tokens.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Images](graphics/01fig02.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: '**Figure 1.2** *Both the autoencoding and autoregressive language modeling
+    task involves filling in a missing token but only the autoencoding task allows
+    for context to be seen on both sides of the missing token.*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Autoregressive** language models are trained to predict the next token in
+    a sentence, based only on the previous tokens in the phrase. These models correspond
+    to the decoder part of the transformer model, and a mask is applied to the full
+    sentence so that the attention heads can only see the tokens that came before.
+    Autoregressive models are ideal for text generation and a good example of this
+    type of model is GPT.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Autoencoding** language models are trained to reconstruct the original sentence
+    from a corrupted version of the input. These models correspond to the encoder
+    part of the transformer model and have access to the full input without any mask.
+    Autoencoding models create a bidirectional representation of the whole sentence.
+    They can be fine-tuned for a variety of tasks such as text generation, but their
+    main application is sentence classification or token classification. A typical
+    example of this type of model is BERT.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: To summarize, Large Language Models (LLMs) are language models that are either
+    autoregressive, autoencoding, or a combination of the two. Modern LLMs are usually
+    based on the Transformer architecture which is what we will use but they can be
+    based on another architecture. The defining feature of LLMs is their large size
+    and large training datasets which enables them to perform complex language tasks,
+    such as text generation and classification, with high accuracy and with little
+    to no fine-tuning.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[Table 1.1](ch01.html#ch01tab01) shows the disk size, memory usage, number
+    of parameters, and approximate size of the pre-training data for several popular
+    large language models (LLMs). Note that these sizes are approximate and may vary
+    depending on the specific implementation and hardware used.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Table 1.1 Comparison of Popular Large Language Models (LLMs)**'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Images](graphics/01tab01.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: But size is everything. Let’s look at some of the key characteristics of LLMs
+    and then dive into how LLMs learn to read and write.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Key Characteristics of LLMs
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: 'The original Transformer architecture, as devised in 2017, was a **sequence-to-sequence
+    model**, which means it had two main components:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Images](graphics/square.jpg) An **encoder** which is tasked with taking in
+    raw text, splitting them up into its core components (more on this later), converting
+    them into vectors (similar to the Word2vec process), and using attention to *understand*
+    the context of the text'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Images](graphics/square.jpg) A **decoder** which excels at *generating* text
+    by using a modified type of attention to predict the next best token'
+  prefs: []
+  type: TYPE_NORMAL
+- en: As shown in [Figure 1.3](ch01.html#ch01fig03), The Transformer has many other
+    sub-components that we won’t get into that promotes faster training, generalizability,
+    and better performance. Today’s LLMs are for the most part variants of the original
+    Transformer. Models like BERT and GPT dissect the Transformer into only an encoder
+    and decoder (respectively) in order to build models that excel in understanding
+    and generating (also respectively).
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Images](graphics/01fig03.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: '**Figure 1.3** *The original Transformer has two main components: an encoder
+    which is great at understanding text, and a decoder which is great at generating
+    text. Putting them together makes the entire model a “sequence to sequence” model.*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'In general, LLMs can be categorized into three main buckets:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Images](graphics/square.jpg) **Autoregressive models**, such as GPT, which
+    predict the next token in a sentence based on the previous tokens. They are effective
+    at generating coherent free-text following a given context'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Images](graphics/square.jpg) **Autoencoding models**, such as BERT, which
+    build a bidirectional representation of a sentence by masking some of the input
+    tokens and trying to predict them from the remaining ones. They are adept at capturing
+    contextual relationships between tokens quickly and at scale which make them great
+    candidates for text classification tasks for example.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Images](graphics/square.jpg) **Combinations** of autoregressive and autoencoding,
+    like T5, which can use the encoder and decoder to be more versatile and flexible
+    in generating text. It has been shown that these combination models can generate
+    more diverse and creative text in different contexts compared to pure decoder-based
+    autoregressive models due to their ability to capture additional context using
+    the encoder.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Images](graphics/01fig04.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: '**Figure 1.4** *A breakdown of the key characteristics of LLMs based on how
+    they are derived from the original Transformer architecture.*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[Figure 1.4](ch01.html#ch01fig04) shows the breakdown of the key characteristics
+    of LLMs based on these three buckets.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: More Context Please
+  prefs:
+  - PREF_H5
+  type: TYPE_NORMAL
+- en: No matter how the LLM is constructed and what parts of the Transformer it is
+    using, they all care about context ([Figure 1.5](ch01.html#ch01fig05)). The goal
+    is to understand each token as it relates to the other tokens in the input text.
+    Beginning with the popularity of Word2vec around 2013, NLP practitioners and researchers
+    were always curious about the best ways of combining semantic meaning (basically
+    word definitions) and context (with the surrounding tokens) to create the most
+    meaningful token embeddings possible. The Transformer relies on the attention
+    calculation to make this combination a reality.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Images](graphics/01fig05.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: '**Figure 1.5** *LLMs are great at understanding context. The word “Python”
+    can have different meanings depending on the context. We could be talking about
+    a snake, or a pretty cool coding language.*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Choosing what kind of Transformer derivation you want isn’t enough. Just choosing
+    the encoder doesn’t mean your Transformer is magically good at understanding text.
+    Let’s take a look at how these LLMs actually learn to read and write.
+  prefs: []
+  type: TYPE_NORMAL
+- en: How LLMs Work
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: How an LLM is pre-trained and fine-tuned makes all the difference between an
+    alright performing model and something state of the art and highly accurate. We’ll
+    need to take a quick look into how LLMs are pre-trained to understand what they
+    are good at, what they are bad at, and whether or not we would need to update
+    them with our own custom data.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Pre-training
+  prefs:
+  - PREF_H5
+  type: TYPE_NORMAL
+- en: Every LLM on the market has been **pre-trained** on a large corpus of text data
+    and on specific language modeling related tasks. During pre-training, the LLM
+    tries to learn and understand general language and relationships between words.
+    Every LLM is trained on different corpora and on different tasks.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'BERT, for example, was originally pre-trained on two publicly available text
+    corpora ([Figure 1.6](ch01.html#ch01fig06)):'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Images](graphics/square.jpg) **English Wikipedia** - a collection of articles
+    from the English version of Wikipedia, a free online encyclopedia. It contains
+    a range of topics and writing styles, making it a diverse and representative sample
+    of English language text'
+  prefs: []
+  type: TYPE_NORMAL
+- en: • At the time 2.5 billion words.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Images](graphics/square.jpg) **The BookCorpus** - a large collection of fiction
+    and non-fiction books. It was created by scraping book text from the web and includes
+    a range of genres, from romance and mystery to science fiction and history. The
+    books in the corpus were selected to have a minimum length of 2000 words and to
+    be written in English by authors with verified identities'
+  prefs: []
+  type: TYPE_NORMAL
+- en: • 800M words.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'and on two specific language modeling specific tasks ([Figure 1.7](ch01.html#ch01fig07)):'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Images](graphics/square.jpg) The Masked Language Modeling (MLM) task (AKA
+    the autoencoding task)—this helps BERT recognize token interactions within a single
+    sentence.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Images](graphics/square.jpg) The Next Sentence Prediction Task—this helps
+    BERT understand how tokens interact with each other between sentences.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Images](graphics/01fig06.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: '**Figure 1.6** *BERT was originally pre-trained on English Wikipedia and the
+    BookCorpus. More modern LLMs are trained on datasets thousands of times larger.*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Images](graphics/01fig07.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: '**Figure 1.7** *BERT was pre-trained on two tasks: the autoencoding language
+    modeling task (referred to as the “masked language modeling” task) to teach it
+    individual word embeddings and the “next sentence prediction” task to help it
+    learn to embed entire sequences of text.*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Pre-training on these corpora allowed BERT (mainly via the self-attention mechanism)
+    to learn a rich set of language features and contextual relationships. The use
+    of large, diverse corpora like these has become a common practice in NLP research,
+    as it has been shown to improve the performance of models on downstream tasks.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Note**'
+  prefs: []
+  type: TYPE_NORMAL
+- en: The pre-training process for an LLM can evolve over time as researchers find
+    better ways of training LLMs and phase out methods that don’t help as much. For
+    example within a year of the original Google BERT release that used the Next Sentence
+    Prediction (NSP) pre-training task, a BERT variant called RoBERTa (yes, most of
+    these LLM names will be fun) by Facebook AI was shown to not require the NSP task
+    to match and even beat the original BERT model’s performance in several areas.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Depending on which LLM you decide to use, it will likely be pre-trained differently
+    from the rest. This is what sets LLMs apart from each other. Some LLMs are trained
+    on proprietary data sources including OpenAI’s GPT family of models in order to
+    give their parent companies an edge over their competitors.
+  prefs: []
+  type: TYPE_NORMAL
+- en: We will not revisit the idea of pre-training often in this book because it’s
+    not exactly the “quick” part of a “quick start guide” but it can be worth knowing
+    how these models were pre-trained because it’s because of this pre-training that
+    we can apply something called transfer learning to let us achieve the state-of-the-art
+    results we want, which is a big deal!
+  prefs: []
+  type: TYPE_NORMAL
+- en: Transfer Learning
+  prefs:
+  - PREF_H5
+  type: TYPE_NORMAL
+- en: Transfer learning is a technique used in machine learning to leverage the knowledge
+    gained from one task to improve performance on another related task. Transfer
+    learning for LLMs involves taking an LLM that has been pre-trained on one corpus
+    of text data and then fine-tuning it for a specific “downstream” task, such as
+    text classification or text generation, by updating the model’s parameters with
+    task-specific data.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The idea behind transfer learning is that the pre-trained model has already
+    learned a lot of information about the language and relationships between words,
+    and this information can be used as a starting point to improve performance on
+    a new task. Transfer learning allows LLMs to be fine-tuned for specific tasks
+    with much smaller amounts of task-specific data than it would require if the model
+    were trained from scratch. This greatly reduces the amount of time and resources
+    required to train LLMs. [Figure 1.8](ch01.html#ch01fig08) provides a visual representation
+    of this relationship.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Images](graphics/01fig08.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: '**Figure 1.8** *The general transfer learning loop involves pre-training a
+    model on a generic dataset on some generic self-supervised task and then fine-tuning
+    the model on a task-specific dataset.*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Fine-tuning
+  prefs:
+  - PREF_H5
+  type: TYPE_NORMAL
+- en: Once a LLM has been pre-trained, it can be fine-tuned for specific tasks. Fine-tuning
+    involves training the LLM on a smaller, task-specific dataset to adjust its parameters
+    for the specific task at hand. This allows the LLM to leverage its pre-trained
+    knowledge of the language to improve its accuracy for the specific task. Fine-tuning
+    has been shown to drastically improve performance on domain-specific and task-specific
+    tasks and lets LLMs adapt quickly to a wide variety of NLP applications.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[Figure 1.9](ch01.html#ch01fig09) shows the basic fine-tuning loop that we
+    will use for our models in later chapters. Whether they are open-sourced or closed-sourced
+    the loop is more or less the same:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 1\. We define the model we want to fine-tune as well as any fine-tuning parameters
+    (e.g., learning rate)
+  prefs: []
+  type: TYPE_NORMAL
+- en: 2\. We will aggregate some training data (the format and other characteristics
+    depend on the model we are updating)
+  prefs: []
+  type: TYPE_NORMAL
+- en: 3\. We compute losses (a measure of error) and gradients (information about
+    how to change the model to minimize error)
+  prefs: []
+  type: TYPE_NORMAL
+- en: 4\. We update the model through backpropagation – a mechanism to update model
+    parameters to minimize errors
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'If some of that went over your head, not to worry: we will rely on pre-built
+    tools from Hugging Face’s Transformers package ([Figure 1.9](ch01.html#ch01fig09))
+    and OpenAI’s Fine-tuning API to abstract away a lot of this so we can really focus
+    on our data and our models.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Note**'
+  prefs: []
+  type: TYPE_NORMAL
+- en: You will not need a Hugging Face account or key to follow along and use any
+    of this code apart from very specific advanced exercises where I will call it
+    out.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Images](graphics/01fig09.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: '**Figure 1.9** *The Transformers package from Hugging Face provides a neat
+    and clean interface for training and fine-tuning LLMs.*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Attention
+  prefs:
+  - PREF_H5
+  type: TYPE_NORMAL
+- en: The name of the original paper that introduced the Transformer was called “Attention
+    is all you need”. **Attention** is a mechanism used in deep learning models (not
+    just Transformers) that assigns different weights to different parts of the input,
+    allowing the model to prioritize and emphasize the most important information
+    while performing tasks like translation or summarization. Essentially, attention
+    allows a model to “focus” on different parts of the input dynamically, leading
+    to improved performance and more accurate results. Before the popularization of
+    attention, most neural networks processed all inputs equally and the models relied
+    on a fixed representation of the input to make predictions. Modern LLMs that rely
+    on attention can dynamically focus on different parts of input sequences, allowing
+    them to weigh the importance of each part in making predictions.
+  prefs: []
+  type: TYPE_NORMAL
+- en: To recap, LLMs are pre-trained on large corpora and sometimes fine-tuned on
+    smaller datasets for specific tasks. Recall that one of the factors behind the
+    Transformer’s effectiveness as a language model is that it is highly parallelizable,
+    allowing for faster training and efficient processing of text. What really sets
+    the Transformer apart from other deep learning architectures is its ability to
+    capture long-range dependencies and relationships between tokens using attention.
+    In other words, attention is a crucial component of Transformer-based LLMs, and
+    it enables them to effectively retain information between training loops and tasks
+    (i.e. transfer learning), while being able to process lengthy swatches of text
+    with ease.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Attention is attributed for being the most responsible for helping LLMs learn
+    (or at least recognize) internal world models and human-identifiable rules. A
+    Stanford study in 2019 showed that certain attention calculations in BERT corresponded
+    to linguistic notions of syntax and grammar rules. For example, they noticed that
+    BERT was able to notice direct objects of verbs, determiners of nouns, and objects
+    of prepositions with remarkably high accuracy from only its pre-training. These
+    relationships are presented visually in [Figure 1.10](ch01.html#ch01fig010).
+  prefs: []
+  type: TYPE_NORMAL
+- en: There is research that explores what other kinds of “rules” LLMs are able to
+    learn simply by pre-training and fine-tuning. One example is a series of experiments
+    led by researchers at Harvard that explored an LLM’s ability to learn a set of
+    rules to a synthetic task like the game of Othello ([Figure 1.11](ch01.html#ch01fig011)).
+    They found evidence that an LLM was able to understand the rules of the game simply
+    by training on historical move data.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Images](graphics/01fig10.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: '**Figure 1.10** *Research has probed into LLMs to uncover that they seem to
+    be recognizing grammatical rules even when they were never explicitly told these
+    rules.*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Images](graphics/01fig11.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: '**Figure 1.11** *LLMs may be able to learn all kinds of things about the world,
+    whether it be the rules and strategy of a game or the rules of human language.*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: For any LLM to learn any kind of rule, however, it has to convert what we perceive
+    as text into something machine readable. This is done through a process called
+    embedding.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Embeddings
+  prefs:
+  - PREF_H5
+  type: TYPE_NORMAL
+- en: Embeddings are the mathematical representations of words, phrases, or tokens
+    in a large-dimensional space. In NLP, embeddings are used to represent the words,
+    phrases, or tokens in a way that captures their semantic meaning and relationships
+    with other words. There are several types of embeddings, including position embeddings,
+    which encode the position of a token in a sentence, and token embeddings, which
+    encode the semantic meaning of a token ([Figure 1.12](ch01.html#ch01fig012)).
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Images](graphics/01fig12.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: '**Figure 1.12** *An example of how BERT uses three layers of embedding for
+    a given piece of text. Once the text is tokenized, each token is given an embedding
+    and then the values are added up, so each token ends up with an initial embedding
+    before any attention is calculated. We won’t focus too much on the individual
+    layers of LLM embeddings in this text unless they serve a more practical purpose
+    but it is good to know about some of these parts and how they look under the hood!*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: LLMs learn different embeddings for tokens based on their pre-training and can
+    further update these embeddings during fine-tuning.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Tokenization
+  prefs:
+  - PREF_H5
+  type: TYPE_NORMAL
+- en: Tokenization, as mentioned previously, involves breaking text down into the
+    smallest unit of understanding - tokens. These tokens are the pieces of information
+    that are embedded into semantic meaning and act as inputs to the attention calculations
+    which leads to ... well, the LLM actually learning and working. Tokens make up
+    an LLMs static vocabulary and don’t always represent entire words. Tokens can
+    represent punctuation, individual characters, or even a sub-word if a word is
+    not known to the LLM. Nearly all LLMs also have *special tokens* that have specific
+    meaning to the model. For example, the BERT model has a few special tokens including
+    the **[CLS]** token which BERT automatically injects as the first token of every
+    input and is meant to represent an encoded semantic meaning for the entire input
+    sequence.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Readers may be familiar with techniques like stop words removal, stemming, and
+    truncation which are used in traditional NLP. These techniques are not used nor
+    are they necessary for LLMs. LLMs are designed to handle the inherent complexity
+    and variability of human language, including the usage of stop words like “the”
+    and “an” and variations in word forms like tenses and misspellings. Altering the
+    input text to an LLM using these techniques could potentially harm the performance
+    of the model by reducing the contextual information and altering the original
+    meaning of the text.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Tokenization can also involve several preprocessing steps like **casing**,
+    which refers to the capitalization of the tokens. There are two types of casing:
+    uncased and cased. In uncased tokenization, all the tokens are lowercased and
+    usually accents from letters are stripped, while in cased tokenization, the capitalization
+    of the tokens is preserved. The choice of casing can impact the performance of
+    the model, as capitalization can provide important information about the meaning
+    of a token. An example of this can be found in [Figure 1.13](ch01.html#ch01fig013).'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Note**'
+  prefs: []
+  type: TYPE_NORMAL
+- en: It is worth mentioning that even the concept of casing has some bias to it depending
+    on the model. To uncase a text - lowercasing and stripping of accents - is a pretty
+    Western style preprocessing step. I myself speak Turkish and know that the umlaut
+    (e.g. the Ö in my last name) matters and can actually help the LLM understand
+    the word being said. Any language model that has not been sufficiently trained
+    on diverse corpora may have trouble parsing and utilizing these bits of context.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Images](graphics/01fig13.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: '**Figure 1.13** *The choice of uncased versus cased tokenization depends on
+    the task. Simple tasks like text classification usually prefer uncased tokenization
+    while tasks that derive meaning from case like Named Entity Recognition prefer
+    a cased tokenization.*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[Figure 1.14](ch01.html#ch01fig014) shows an example of tokenization, and in
+    particular, an example of how LLMs tend to handle Out of Vocabulary (OOV) phrases.
+    OOV phrases are simply phrases/words that the LLM doesn’t recognize as a token
+    and has to split up into smaller sub-words. For example, my name (Sinan) is not
+    a token in most LLMs (story of my life) so in BERT, the tokenization scheme will
+    split my name up into two tokens (assuming uncased tokenization):'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Images](graphics/square.jpg) sin - the first part of my name'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Images](graphics/square.jpg) ##an - a special sub-word token that is different
+    from the word “an” and is used only as a means to split up unknown words'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Images](graphics/01fig14.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: '**Figure 1.14** *Any LLM has to deal with words they’ve never seen before.
+    How an LLM tokenizes text can matter if we care about the token limit of an LLM.*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Some LLMs limit the number of tokens we can input at any one time so how an
+    LLM tokenizes text can matter if we are trying to be mindful about this limit.
+  prefs: []
+  type: TYPE_NORMAL
+- en: So far, we have talked a lot about language modeling - predicting missing/next
+    tokens in a phrase, but modern LLMs also can also borrow from other fields of
+    AI to make their models more performant and more importantly more **aligned**
+    - meaning that the AI is performing in accordance with a human’s expectation.
+    Put another way, an aligned LLM has an objective that matches a human’s objective.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Beyond Language Modeling—Alignment + RLHF
+  prefs:
+  - PREF_H5
+  type: TYPE_NORMAL
+- en: '**Alignment** in language models refers to how well the model can respond to
+    input prompts that match the user’s expectations. Standard language models predict
+    the next word based on the preceding context, but this can limit their usefulness
+    for specific instructions or prompts. Researchers are coming up with scalable
+    and performant ways of aligning language models to a user’s intent. One such broad
+    method of aligning language models is through the incorporation of reinforcement
+    learning (RL) into the training loop.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**RL with Human Feedback** (RLHF) is a popular method of aligning pre-trained
+    LLMs that uses human feedback to enhance their performance. It allows the LLM
+    to learn from feedback on its own outputs from a relatively small, high-quality
+    batch of human feedback, thereby overcoming some of the limitations of traditional
+    supervised learning. RLHF has shown significant improvements in modern LLMs like
+    ChatGPT. RLHF is one example of approaching alignment with RL, but there are other
+    emerging approaches like RL with AI feedback (e.g. Constitutional AI).'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Let’s take a look at some of the popular LLMs we’ll be using in this book.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Popular Modern LLMs
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: BERT, T5, and GPT are three popular LLMs developed by Google, Google, and OpenAI
+    respectively. These models differ in their architecture pretty greatly even though
+    they all share the Transformer as a common ancestor. Other widely used variants
+    of LLMs in the Transformer family include RoBERTa, BART (which we saw earlier
+    performing some text classification), and ELECTRA.
+  prefs: []
+  type: TYPE_NORMAL
+- en: BERT
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: BERT ([Figure 1.15](ch01.html#ch01fig015)) is an autoencoding model that uses
+    attention to build a bidirectional representation of a sentence, making it ideal
+    for sentence classification and token classification tasks.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Images](graphics/01fig15.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: '**Figure 1.15** *BERT was one of the first LLMs and continues to be popular
+    for many NLP tasks that involve fast processing of large amounts of text.*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: BERT uses the encoder of the Transformer and ignores the decoder to become exceedingly
+    good at processing/understanding massive amounts of text very quickly relative
+    to other, slower LLMs that focus on generating text one token at a time. BERT-derived
+    architectures, therefore, are best for working with and analyzing large corpora
+    quickly when we don’t need to write free text.
+  prefs: []
+  type: TYPE_NORMAL
+- en: BERT itself doesn’t classify text or summarize documents but it is often used
+    as a pre-trained model for downstream NLP tasks. BERT has become a widely used
+    and highly regarded LLM in the NLP community, paving the way for the development
+    of even more advanced language models.
+  prefs: []
+  type: TYPE_NORMAL
+- en: GPT-3 and ChatGPT
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: GPT ([Figure 1.16](ch01.html#ch01fig016)), on the other hand, is an autoregressive
+    model that uses attention to predict the next token in a sequence based on the
+    previous tokens. The GPT family of algorithms (including ChatGPT and GPT-3) is
+    primarily used for text generation and has been known for its ability to generate
+    natural sounding human-like text.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Images](graphics/01fig16.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: '**Figure 1.16** *The GPT family of models excels at generating free text aligned
+    with a user’s intent.*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: GPT relies on the decoder portion of the Transformer and ignores the encoder
+    to become exceptionally good at generating text one token at a time. GPT-based
+    models are best for generating text given a rather large context window. They
+    can also be used to process/understand text as we will see in an upcoming chapter.
+    GPT-derived architectures are ideal for applications that require the ability
+    to freely write text.
+  prefs: []
+  type: TYPE_NORMAL
+- en: T5
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: T5 is a pure encoder/decoder transformer model that was designed to perform
+    several NLP tasks, from text classification to text summarization and generation,
+    right off the shelf. It is one of the first popular models to be able to boast
+    such a feat, in fact. Before T5, LLMs like BERT and GPT-2 generally had to be
+    fine-tuned using labeled data before they could be relied on to perform such specific
+    tasks.
+  prefs: []
+  type: TYPE_NORMAL
+- en: T5 uses both the encoder and decoder of the Transformer to become highly versatile
+    in both processing and generating text. T5-based models can perform a wide range
+    of NLP tasks, from text classification to text generation, due to their ability
+    to build representations of the input text using the encoder and generate text
+    using the decoder ([Figure 1.17](ch01.html#ch01fig017)). T5-derived architectures
+    are ideal for applications that require both the ability to process and understand
+    text and generate text freely.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Images](graphics/01fig17.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: '**Figure 1.17** *T5 was one of the first LLMs to show promise in solving multiple
+    tasks at once without any fine-tuning.*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: T5’s ability to perform multiple tasks with no fine-tuning spurred the development
+    of other versatile LLMs that can perform multiple tasks with efficiency and accuracy
+    with little/no fine-tuning. GPT-3, released around the same time at T5, also boasted
+    this ability.
+  prefs: []
+  type: TYPE_NORMAL
+- en: These three LLMs are highly versatile and are used for various NLP tasks, such
+    as text classification, text generation, machine translation, and sentiment analysis,
+    among others. These three LLMs, along with flavors (variants) of them will be
+    the main focus of this book and our applications.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Domain-Specific LLMs
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: Domain-specific LLMs are LLMs that are trained specifically in a particular
+    subject area, such as biology or finance. Unlike general-purpose LLMs, these models
+    are designed to understand the specific language and concepts used within the
+    domain they were trained on.
+  prefs: []
+  type: TYPE_NORMAL
+- en: One example of a domain-specific LLM is BioGPT ([Figure 1.18](ch01.html#ch01fig018));
+    a domain-specific LLM that is pre-trained on large-scale biomedical literature.
+    The model was developed by the AI healthcare company, Owkin, in collaboration
+    with Hugging Face. The model is trained on a dataset of over 2 million biomedical
+    research articles, making it highly effective for a wide range of biomedical NLP
+    tasks such as named entity recognition, relationship extraction, and question-answering.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Images](graphics/01fig18.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: '**Figure 1.18** *BioGPT is a domain-specific Transformer model pre-trained
+    on large-scale biomedical literature. BioGPT’s success in the biomedical domain
+    has inspired other domain-specific LLMs such as SciBERT and BlueBERT.*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: BioGPT, whose pre-training encoded biomedical knowledge and domain-specific
+    jargon into the LLM, can be fine-tuned on smaller datasets, making it adaptable
+    for specific biomedical tasks and reducing the need for large amounts of labeled
+    data.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The advantage of using domain-specific LLMs lies in their training on a specific
+    set of texts. This allows them to better understand the language and concepts
+    used within their specific domain, leading to improved accuracy and fluency for
+    NLP tasks that are contained within that domain. By comparison, general-purpose
+    LLMs may struggle to handle the language and concepts used in a specific domain
+    as effectively.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Applications of LLMs
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: 'As we’ve already seen, applications of LLMs vary widely and researchers continue
+    to find novel applications of LLMs to this day. We will use LLMs in this book
+    in generally three ways:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Images](graphics/square.jpg) Using a pre-trained LLM’s underlying ability
+    to process and generate text with no further fine-tuning as part of a larger architecture.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Images](graphics/square.jpg) For example, creating an information retrieval
+    system using a pre-trained BERT/GPT.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Images](graphics/square.jpg) Fine-tuning a pre-trained LLM to perform a very
+    specific task using Transfer Learning.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Images](graphics/square.jpg) For example, fine-tuning T5 to create summaries
+    of documents in a specific domain/industry.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Images](graphics/square.jpg) Asking a pre-trained LLM to solve a task it
+    was pre-trained to solve or could reasonably intuit.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Images](graphics/square.jpg) For example, prompting GPT3 to write a blog
+    post.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Images](graphics/square.jpg) For example, prompting T5 to perform language
+    translation..'
+  prefs: []
+  type: TYPE_NORMAL
+- en: These methods use LLMs in different ways and while all options take advantage
+    of an LLM’s pre-training, only option 2 requires any fine-tuning. Let’s take a
+    look at some specific applications of LLMs.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Classical NLP Tasks
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: A vast majority of applications of LLMs are delivering state of the art results
+    in very common NLP tasks like classification and translation. It’s not that we
+    weren’t solving these tasks before Transformers and LLMs, it’s just that now developers
+    and practioners can solve them with comparatively less labeled data (due to the
+    efficient pre-training of the Transformer on huge corpora) and with a higher degree
+    of accuracy.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Text Classification
+  prefs:
+  - PREF_H5
+  type: TYPE_NORMAL
+- en: The text classification task assigns a label to a given piece of text. This
+    task is commonly used in sentiment analysis, where the goal is to classify a piece
+    of text as positive, negative, or neutral, or in topic classification, where the
+    goal is to classify a piece of text into one or more predefined categories. Models
+    like BERT can be fine-tuned to perform classification with relatively little labeled
+    data as seen in [Figure 1.19](ch01.html#ch01fig019).
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Images](graphics/01fig19.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: '**Figure 1.19** *A peek at the architecture of using BERT to achieve fast and
+    accurate text classification results. Classification layers usually act on that
+    special [CLS] token that BERT uses to encode the semantic meaning of the entire
+    input sequence.*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Text classification remains one of the most globally recognizable and solvable
+    NLP tasks because when it comes down to it, sometimes we just need to know whether
+    this email is “spam” or not and get on with our days!
+  prefs: []
+  type: TYPE_NORMAL
+- en: Translation Tasks
+  prefs:
+  - PREF_H5
+  type: TYPE_NORMAL
+- en: A harder and yet still classic NLP task is machine translation where the goal
+    is to automatically translate text from one language to another while preserving
+    meaning and context. Traditionally, this task is quite difficult because it involves
+    having sufficient examples and domain knowledge of both languages to accurately
+    gauge how well the model is doing but modern LLMs seem to have an easier time
+    with this task again due to their pre-training and efficient attention calculations.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Human Language <> Human Language
+  prefs:
+  - PREF_H5
+  type: TYPE_NORMAL
+- en: One of the first applications of attention even before Transformers was for
+    machine translation tasks where AI models were expected to translate from one
+    human language to another. T5 was one of the first LLMs to tout the ability to
+    perform multiple tasks off the shelf ([Figure 1.20](ch01.html#ch01fig020)). One
+    of these tasks was the ability to translate English into a few languages and back.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Images](graphics/01fig20.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: '**Figure 1.20** *T5 could perform many NLP tasks off the shelf, including grammar
+    correction, summarization, and translation.*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Since T5, language translation in LLMs has only gotten better and more diverse.
+    Models like GPT-3 and the latest T5 models can translate between dozens of languages
+    with relative ease. Of course this bumps up against one major known limitation
+    of LLMs that they are mostly trained from an English-speaking/usually American
+    point of view so most LLMs can handle English well and non-English languages,
+    well, not as well.
+  prefs: []
+  type: TYPE_NORMAL
+- en: SQL Generation
+  prefs:
+  - PREF_H5
+  type: TYPE_NORMAL
+- en: If we consider SQL as a language, then converting English to SQL is really not
+    that different from converting English to French ([Figure 1.21](ch01.html#ch01fig021)).
+    Modern LLMs can already do this at a basic level off the shelf, but more advanced
+    SQL queries often require some fine-tuning.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Images](graphics/01fig21.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: '**Figure 1.21** *Using GPT-3 to generate functioning SQL code from an (albeit
+    simple) Postgres schema*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: If we expand our thinking of what can be considered a “translation” then a lot
+    of new opportunities lie ahead of us. For example, what if we wanted to “translate”
+    between English and a series of wavelengths that a brain might interpret and execute
+    as motor functions. I’m not a neuro-scientist or anything, but that seems like
+    a fascinating area of research!
+  prefs: []
+  type: TYPE_NORMAL
+- en: Free Text Generation
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: 'What first caught the world’s eye in terms of modern LLMs like ChatGPT was
+    their ability to freely write blogs, emails, and even academic papers. This notion
+    of text generation is why many LLMs are affectionately referred to as “Generative
+    AI”, although that term is a bit reductive and imprecise. I will not often use
+    the term “Generative AI” as the specific word “generative” has its own meaning
+    in machine learning as the analogous way of learning to a “discriminative” model.
+    For more on that, check out my first book: The Principles of Data Science)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: We could for example prompt (ask) ChatGPT to help plan out a blog post like
+    in [Figure 1.22](ch01.html#ch01fig022). Even if you don’t agree with the results,
+    this can help humans with the “tabula rasa” problem and give us something to at
+    least edit and start from rather than staring at a blank page for too long.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Images](graphics/01fig22.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: '**Figure 1.22** *ChatGPT can help ideate, scaffold, and even write entire blog
+    posts*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Note**'
+  prefs: []
+  type: TYPE_NORMAL
+- en: I would be remiss if I didn’t mention the controversy that LLMs like this can
+    cause at the academic level. Just because an LLM can write entire blogs or even
+    essays doesn’t mean we should let them. Just like how the internet caused some
+    to believe that we’d never need books again, some argue that ChatGPT means that
+    we’ll never need to write anything again. As long as institutions are aware of
+    how to use this technology and proper regulations/rules are put in place, students
+    and teachers alike can use ChatGPT and other text-generation-focused AIs safely
+    and ethically.
+  prefs: []
+  type: TYPE_NORMAL
+- en: We will be using ChatGPT to solve a few tasks in this book. We will rely on
+    ChatGPT’s ability to contextualize information in its context window and freely
+    write back (usually) accurate responses. We will mostly be interacting with ChatGPT
+    through the Playground and the API provided by OpenAI as this model is not open
+    source.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Information Retrieval / Neural Semantic Search
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: LLMs encode information directly into their parameters via pre-training and
+    fine-tuning but keeping them up to date with new information is tricky. We either
+    have to further fine-tune the model on new data or run the pre-training steps
+    again from scratch. To dynamically keep information fresh, we will architect our
+    own information retrieval system with a vector database (don’t worry we will go
+    into more details on all of this in the next chapter). [Figure 1.23](ch01.html#ch01fig023)
+    shows an outline of the architecture we will build.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Images](graphics/01fig23.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: '**Figure 1.23** *Our neural semantic search system will be able to take in
+    new information dynamically and be able to retrieve relevant documents quickly
+    and accurately given a user’s query using LLMs.*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: We will then add onto this system by building a ChatGPT-based chatbot to conversationally
+    answer questions from our users.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Chatbots
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: Everyone loves a good chatbot, right? Well, whether you love them or hate them,
+    LLMs’ capacity for holding a conversation is evident through systems like ChatGPT
+    and even GPT-3 (as seen in [Figure 1.24](ch01.html#ch01fig024)). The way we architect
+    chatbots using LLMs will be quite different from the traditional way of designing
+    chatbots through intents, entities, and tree-based conversation flows. These concepts
+    will be replaced by system prompts, context, and personas – all of which we will
+    dive into in the coming chapters.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Images](graphics/01fig24.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: '**Figure 1.24** *ChatGPT isn’t the only LLM that can hold a conversation. We
+    can use GPT-3 to construct a simple conversational chatbot. The text highlighted
+    in green represents GPT-3’s output. Note that before the chat even begins, I inject
+    context to GPT-3 that would not be shown to the end-user but GPT-3 needs to provide
+    accurate responses.*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: We have our work cut out for us. I’m excited to be on this journey with you
+    and I’m excited to get started!
+  prefs: []
+  type: TYPE_NORMAL
+- en: Summary
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: LLMs are advanced AI models that have revolutionized the field of NLP. LLMs
+    are highly versatile and are used for a variety of NLP tasks, including text classification,
+    text generation, and machine translation. They are pre-trained on large corpora
+    of text data and can then be fine-tuned for specific tasks.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Using LLMs in this fashion has become a standard step in the development of
+    NLP models. In our first case study, we will explore the process of launching
+    an application with proprietary models like GPT-3 and ChatGPT. We will get a hands-on
+    look at the practical aspects of using LLMs for real-world NLP tasks, from model
+    selection and fine-tuning to deployment and maintenance.
+  prefs: []
+  type: TYPE_NORMAL

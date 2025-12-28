@@ -1,0 +1,830 @@
+- en: '7'
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Moving Beyond Foundation Models
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Introduction
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: In our previous chapters, we have focused on using or fine-tuning existing pre-trained
+    models such as BERT to tackle a variety of natural language processing and computer
+    vision tasks. While these models have demonstrated state-of-the-art performance
+    on a wide range of benchmarks, they may not be sufficient for solving more complex
+    or domain-specific tasks that require a deeper understanding of the problem.
+  prefs: []
+  type: TYPE_NORMAL
+- en: In this chapter, we explore the concept of constructing novel LLM architectures
+    by combining existing models. By combining different models, we can leverage their
+    strengths to create a hybrid architecture that performs either better than the
+    individual models or simply to solve a task that wasn’t possible previously.
+  prefs: []
+  type: TYPE_NORMAL
+- en: We will be building a Visual Question and Answering system (VQA), combining
+    the text processing capabilities of BERT, the image processing capabilities of
+    a Vision Transformer (yes those exist), and the text generation capabilities of
+    the open sourced GPT-2 to solve complex visual reasoning tasks. We will also explore
+    the field of reinforcement learning and how it can be used to fine-tune pre-trained
+    LLMs. Let’s dive in shall we?
+  prefs: []
+  type: TYPE_NORMAL
+- en: Case Study—Visual Q/A
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: '**Visual Question Answering** (VQA) is a challenging task that requires understanding
+    and reasoning about both images and natural language (visualized in [Figure 7.1](ch07.html#ch07fig01)).
+    Given an image and a related question in natural language, the objective is to
+    generate a textual response that answers the question correctly. I showed a brief
+    example of using pre-trained VQA systems in [Chapter 5](ch05.html#ch05) in a prompt
+    chaining example but now we are going to make our own!'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Images](graphics/07fig01.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: '**Figure 7.1** *A Visual Question and Answering system (VQA) generally takes
+    in two modes (types) of data - image and text - and will return a human readable
+    answer to the question. This image outlines one of the most basic approaches to
+    this problem where the image and text are encoded by separate encoders and a final
+    layer predicts a single word as an answer.*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'In this section, we focus on how to construct a VQA+LLM system using existing
+    models and techniques. We start by introducing the foundational models used for
+    this task: BERT, ViT, and GPT-2\. We then explore how to combine these models
+    to create a hybrid architecture capable of processing both textual and visual
+    inputs and generating coherent textual outputs.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: We also demonstrate how to fine-tune the model using a dataset specifically
+    designed for VQA tasks. We use the VQA v2.0 dataset, which contains a large number
+    of images along with natural language questions about the images and corresponding
+    answers. We explain how to prepare this dataset for training and evaluation and
+    how to fine-tune the model using the dataset.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Introduction to our models - The Vision Transformer and GPT2, and DistilBERT
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: 'In this section, we introduce three foundational models that we will be using
+    in our constructed multimodal system: the Vision Transformer, GPT-2, and DistilBERT.
+    These models, while not currently state-of-the-art, are nonetheless powerful LLMs
+    and have been widely used in various natural language processing and computer
+    vision tasks. It’s also worth noting that when we are considering with LLMs to
+    work with, we don’t always have to go right for the top shelf LLM as they tend
+    to be larger and slower to use. With the right data, and the right motivation,
+    we can make the smaller LLMs work just as well for our specific use-cases.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Our Text Processor - DistilBERT
+  prefs:
+  - PREF_H5
+  type: TYPE_NORMAL
+- en: DistilBERT is a distilled version of the popular BERT model that has been optimized
+    for speed and memory efficiency. It is a pre-trained model that uses knowledge
+    distillation to transfer knowledge from the larger BERT model to a smaller and
+    more efficient one. This allows it to run faster and consume less memory while
+    still retaining much of the performance of the larger model.
+  prefs: []
+  type: TYPE_NORMAL
+- en: DistilBERT should have prior knowledge of language that will help during training,
+    thanks to transfer learning. This allows it to understand natural language text
+    with high accuracy.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Our Image Processor—Vision Transformer
+  prefs:
+  - PREF_H5
+  type: TYPE_NORMAL
+- en: The Vision Transformer is a transformer-based architecture that is specifically
+    designed for image understanding. It is a model that uses a self-attention mechanism
+    to extract relevant features from images. It is a newer model that has gained
+    popularity in recent years and has shown to be effective in various computer vision
+    tasks.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The Vision Transformer (ViT) has been pre-trained like BERT has on a dataset
+    of images known as Imagenet and therefore should hold prior knowledge of image
+    structures that should help during training as well. This allows it to understand
+    and extract relevant features from images with high accuracy.
+  prefs: []
+  type: TYPE_NORMAL
+- en: We should note that when we use ViT, we should try to use the same image preprocessing
+    steps that it used during pre-training so that the model has an easier time learning
+    the new image sets. This is not strictly necessary and has its pros and cons.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Pros of reusing the same preprocessing steps:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '1\. **Consistency with pre-training**: Using data in the same format and distribution
+    as during its pre-training can lead to better performance and faster convergence.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '2\. **Leveraging prior knowledge**: Since the model has been pre-trained on
+    a large dataset, it has already learned to extract meaningful features from images.
+    Using the same preprocessing steps allows the model to apply this prior knowledge
+    effectively to the new dataset.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '3\. **Improved generalization**: The model is more likely to generalize well
+    to new data if the preprocessing steps are consistent with its pre-training, as
+    it has already seen a wide variety of image structures and features.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Cons of reusing the same preprocessing steps:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '1\. **Limited flexibility**: Re-using the same preprocessing steps may limit
+    the model''s ability to adapt to new data distributions or specific characteristics
+    of the new dataset, which may require different preprocessing techniques for optimal
+    performance.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '2\. **Incompatibility with new data**: In some cases, the new dataset may have
+    unique properties or structures that are not well-suited to the original preprocessing
+    steps, which could lead to suboptimal performance if the preprocessing steps are
+    not adapted accordingly.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '3\. **Overfitting to pre-training data**: Relying too heavily on the same preprocessing
+    steps might cause the model to overfit to the specific characteristics of the
+    pre-training data, reducing its ability to generalize to new and diverse datasets.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: We will re-use the ViT image preprocessor for now. [Figure 7.2](ch07.html#ch07fig02)
+    shows a sample of an image before preprocessing and the same image after it has
+    gone though ViT’s standard preprocessing steps.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Images](graphics/07fig02.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: '**Figure 7.2** *Image systems like the Vision Transformer (ViT) generally have
+    to standardize images to a set format with pre-defined normalization steps so
+    that each image is processed as fairly and consistently as possible. For some
+    images (like the downed tree in the top row) the image preprocessing really takes
+    away context at the cost of standardization across all images.*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Our Text decoder - GPT2
+  prefs:
+  - PREF_H5
+  type: TYPE_NORMAL
+- en: GPT-2 is OpenAI’s precursor to GPT-3 (probably obvious) but more importantly
+    is an open-source generative language model that is pre-trained on a large corpus
+    of text data. GPT-2 was pre-trained on about 40 GB of data and so should also
+    have prior knowledge of words that will help during training, again thanks to
+    transfer learning.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The combination of these three models - DistilBERT for text processing, Vision
+    Transformer for image processing, and GPT-2 for text decoding - will provide the
+    basis for our multimodal system as shown in [Figure 7.3](ch07.html#ch07fig03).
+    These models all have prior knowledge and we will rely on transfer learning capabilities
+    to allow them to effectively process and generate highly accurate and relevant
+    outputs for complex natural language and computer vision tasks.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Images](graphics/07fig03.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: '**Figure 7.3** *A VQA system can have its final single-token-prediction layer
+    replaced with an entirely separate language model like open-source GPT2\. The
+    VQA system we are going to build has three transformer-based models working side
+    by side to solve a single albeit very challenging task.*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Hidden States Projection and Fusion
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: When we feed our text and image inputs into their respective models (DistilBERT
+    and Vision Transformer), they produce output tensors that contain useful feature
+    representations of the inputs. However, these features are not necessarily in
+    the same format, and they may have different dimensionalities.
+  prefs: []
+  type: TYPE_NORMAL
+- en: To address this, we use linear projection layers to project the output tensors
+    of the text and image models onto a shared dimensional space. This allows us to
+    fuse the features extracted from the text and image inputs effectively. The shared
+    dimensional space makes it possible to combine the text and image features (by
+    averaging them in our case) and feed them into the decoder (GPT-2) to generate
+    a coherent and relevant textual response.
+  prefs: []
+  type: TYPE_NORMAL
+- en: But how will GPT-2 accept these inputs from the encoding models? The answer
+    to that is a type of attention mechanism known as cross-attention.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Cross-Attention: What is it, and Why is it Critical?'
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: Cross-attention is the mechanism that will allow our multimodal system to learn
+    the interactions between our text and image inputs and the output text we want
+    to generate. It is a critical component of the base transformer architecture that
+    allows it to incorporate information from inputs to outputs (the hallmark of a
+    sequence to sequence model) effectively. The cross-attention calculation is honestly
+    the same as self-attention but between two different sequences rather than a single
+    one. In cross attention, the input sequence (or combined sequences in our case
+    because we will be inputting both text and images) will serve as the key and value
+    input (which will be a combination of the query from the image and text encoder),
+    whereas the output sequence acts as the query inputs (our text-generating GPT-2)
+  prefs: []
+  type: TYPE_NORMAL
+- en: Query, Key, and Value in Attention
+  prefs:
+  - PREF_H5
+  type: TYPE_NORMAL
+- en: The three internal components of attention – query, key, and value - haven’t
+    really come up before in this book because frankly we haven’t really needed to
+    understand why they exists, we simply relied on their ability to learn patterns
+    in our data for us but it’s time to take a closer look at how these components
+    interact so we can fully understand how cross-attention is working.
+  prefs: []
+  type: TYPE_NORMAL
+- en: In self-attention mechanisms used by transformers, Query, Key, and Value are
+    the three components that are crucial for determining the importance of each input
+    token relative to others in the sequence. The Query represents the token for which
+    we want to compute the attention weights, while the Keys and Values represent
+    the other tokens in the sequence. The attention scores are computed by taking
+    the dot product between the Query and the Keys, scaling it by a normalization
+    factor, and then multiplying it by the Values to create a weighted sum.
+  prefs: []
+  type: TYPE_NORMAL
+- en: In simpler terms, the Query is employed to extract pertinent information from
+    other tokens, as determined by the attention scores. The Keys help identify which
+    tokens are relevant to the Query, while the Values supply the corresponding information.
+    This can be visualized in [Figure 7.4](ch07.html#ch07fig04).
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Images](graphics/07fig04.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: '**Figure 7.4** *These two images yield the scaled dot product attention value
+    for the word “like” in the input “I like cats”. Every input token to a Transformer
+    based LLM has an associated “query”, “key”, and “value” representation. The scaled-dot
+    product attention calculation generates attention scores for each query token
+    by taking the dot product with the key tokens (top) and then those scores are
+    used to contextualize the value tokens with proper weighting (bottom) yielding
+    a final vector for each token in the input that is now aware of the other tokens
+    in the input and how much it should be paying attention to them. In this case,
+    the token “like” should be paying 22% of its attention to the token “I”, 42% of
+    attention to itself (yes, tokens need to pay attention to themselves – as we all
+    should frankly – because they are part of the sequence and thus provide context),
+    and 36% of its attention to the word “cats”.*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: In cross-attention, the Query, Key, and Value matrices serve slightly different
+    purposes. In this case, the Query represents the output of one modality (e.g.,
+    text), while the Keys and Values represent the outputs of another modality (e.g.,
+    image). Cross-attention is used to calculate attention scores that determine the
+    degree of importance given to the output of one modality when processing the other
+    modality.
+  prefs: []
+  type: TYPE_NORMAL
+- en: In a multimodal system, cross-attention calculates attention weights that express
+    the relevance between text and image inputs (see [Figure 7.5](ch07.html#ch07fig05)).
+    The Query is the output of the text model, while the Keys and Values are the output
+    of the image model. The attention scores are computed by taking the dot product
+    between the Query and the Keys and scaling it by a normalization factor. The resulting
+    attention weights are then multiplied by the Values to create the weighted sum,
+    which is utilized to generate a coherent and relevant textual response. [Listing
+    7.1](ch07.html#list7_1) shows the hidden state sizes for our three models.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Images](graphics/07fig05.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: '**Figure 7.5** *Our VQA system needs to fuse the encoded knowledge from the
+    image and text encoders and pass that fusion to the GPT-2 model via the cross-attention
+    mechanism which will take the fused key and value vectors (See [Figure 7.4](ch07.html#ch07fig04)
+    for more on that) from the image and text encoders and pass it onto our decoder
+    GPT-2 to use to scale its own attention calculations.*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Listing 7.1** *Revealing LLMs’ Hidden States*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs: []
+  type: TYPE_PRE
+- en: In our case, all models have the same hidden state size so in theory we don’t
+    need to project anything but it is still good practice to include projection layers
+    so that the model has a trainable layer that translates our text/image representations
+    into something more meaningful for the decoder.
+  prefs: []
+  type: TYPE_NORMAL
+- en: At first, our cross-attention attention parameters will have to be initially
+    randomized and it will need to be learned during training. During the training
+    process, the model learns to assign higher attention weights to relevant features
+    while filtering out irrelevant ones. This way, the system can better understand
+    the relationship between the text and image inputs, and generate more relevant
+    and accurate textual responses. By assigning higher attention weights to relevant
+    features while filtering out irrelevant ones, our system can better understand
+    the relationship between the text and image inputs, generating more accurate and
+    relevant textual responses.
+  prefs: []
+  type: TYPE_NORMAL
+- en: With the ideas of cross-attention, fusion, and our models handy, let’s move
+    on to defining a multimodal architecture.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Our Custom MultiModal Model
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: Before getting deeper into the code, I should note that not all of the code
+    that powers this example is in these pages, but all of it lives in the notebooks
+    on the github. I highly recommend following along using both!
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'When creating a novel PyTorch Module (which we are doing) the main methods
+    we need to define are the constructor (__init__) that will instantiate our three
+    Transformer models and potentially freeze layers to speed up training (more on
+    that in the next chapter) and the **forward** method which will take in inputs
+    and potentially labels to generate an output and a loss value (remember loss is
+    the same as error, the lower the better). The forward method will take the following
+    as inputs:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Images](graphics/square.jpg) **input_ids**: A tensor containing the input
+    IDs for the text tokens. These IDs are generated by the tokenizer based on the
+    input text. The shape of the tensor is [batch_size, sequence_length].'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Images](graphics/square.jpg) **attention_mask**: A tensor of the same shape
+    as input_ids that indicates which input tokens should be attended to (value 1)
+    and which should be ignored (value 0). This is mainly used to handle padding tokens
+    in the input sequence.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Images](graphics/square.jpg) **decoder_input_ids**: A tensor containing the
+    input IDs for the decoder tokens. These IDs are generated by the tokenizer based
+    on the target text, which is used as a prompt for the decoder during training.
+    The shape of the tensor during training is [batch_size, target_sequence_length]
+    but at inference time will simply be a start token so the model will have to generate
+    the rest.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Images](graphics/square.jpg) **image_features**: A tensor containing the
+    preprocessed image features for each sample in the batch. The shape of the tensor
+    is [batch_size, num_features, feature_dimension].'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Images](graphics/square.jpg) **labels**: A tensor containing the ground truth
+    labels for the target text. The shape of the tensor is [batch_size, target_sequence_length].
+    These labels are used to compute the loss during training but won’t exist at inference
+    time because if we had the labels then we wouldn’t need this model!'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[Listing 7.2](ch07.html#list7_2) shows a snippet of the code it takes to create
+    a custom model from our three separate Transformer-based models (BERT, ViT, and
+    GPT2). The full class can of course be found in the repository for your copy and
+    pasting needs.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Listing 7.2** *A snippet of our multi modal model*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE1]'
+  prefs: []
+  type: TYPE_PRE
+- en: With a model defined and properly adjusted for cross-attention, let’s take a
+    look at the data that will power our engine.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Our Data—Visual QA
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: Our dataset comes from [https://visualqa.org](https://visualqa.org) with samples
+    shown in [Figure 7.6](ch07.html#ch07fig06). The dataset contains pairs of open-ended
+    questions about images with human-annotated answers. The dataset is meant to produce
+    questions that require an understanding of vision, language and just a bit of
+    commonsense knowledge to answer.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Images](graphics/07fig06.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: '**Figure 7.6** *The VisualQA.org website has a dataset with open-ended questions
+    about images.*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Parsing the Dataset for Our Model
+  prefs:
+  - PREF_H5
+  type: TYPE_NORMAL
+- en: '[Listing 7.3](ch07.html#list7_3) shows a function I wrote to parse the image
+    files and creates a dataset that we can use with HuggingFace’s Trainer object.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Listing 7.3** *Parsing the Visual QA files*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE2]'
+  prefs: []
+  type: TYPE_PRE
+- en: The VQA Training Loop
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: Training is not going to be so different from what we have done before. Most
+    of the hard work was done in our data parsing to be honest. We get to use the
+    HuggingFace Trainer and TrainingArguments objects with our custom model and training
+    will simply come down to expecting a drop in our validation loss. Full code can
+    be found on our repository with a snippet found in [Listing 7.4](ch07.html#list7_4).
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Listing 7.4** *Training Loop for VQA*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE3]'
+  prefs: []
+  type: TYPE_PRE
+- en: There’s a lot of code that powers this example so once again, I would highly
+    recommend following along with the notebook on the github for the full code and
+    comments!
+  prefs: []
+  type: TYPE_NORMAL
+- en: Summary of Results
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: '[Figure 7.7](ch07.html#ch07fig07) shows a sample of images with a few questions
+    asked of it. Note that some of the responses are more than a single token which
+    is an immediate benefit of having the LLM as our decoder as opposed to outputting
+    a single token like in standard VQA systems.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Images](graphics/07fig07.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: '**Figure 7.7** *Our VQA system is not half bad at answering out of sample questions
+    about images even though we used pretty small models (in terms of number of parameters
+    and especially compared to what is considered state of the art today). Each percentage
+    is the aggregated token prediction probabilities that GPT-2 generated while answering
+    the given questions. Clearly it is getting some questions wrong and with more
+    training/data we can reduce errors even further!*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: But this is only a sample of data and not a very holistic representation of
+    performance. To showcase how our model training went, [Figure 7.8](ch07.html#ch07fig08)
+    shows the drastic change in our language modeling loss value after only one epoch.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Images](graphics/07fig08.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: '**Figure 7.8** *After only one epoch, our VQA system showed a massive drop
+    in validation loss which is great!*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Our model is far from perfect and will require some more advanced training strategies
+    and a ton of more data before it can really be considered state of the art but
+    you know what? Free data, free models, and (mostly) free compute power of my own
+    laptop yielded and not half bad VQA system.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Let’s step away from the idea of pure language modeling and image processing
+    for just a moment and step into the world of a novel way of fine-tuning language
+    models using its powerful cousin - reinforcement learning.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Case Study—Reinforcement Learning from Feedback
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: We have seen over and over the remarkable capabilities of language models in
+    this book and usually we have dealt with relatively objective tasks like classification
+    and when the task was more subjective like semantic retrieval and anime recommendations,
+    we had to take some time to define an objective quantitative metric to guide the
+    model’s fine-tuning and overall system performance. In general, defining what
+    constitutes “good” output text can be challenging, as it is often subjective and
+    task/context-dependent. Different applications may require different “good” attributes,
+    such as creativity for storytelling, readability for summarization, or code-functionality
+    for code snippets.
+  prefs: []
+  type: TYPE_NORMAL
+- en: When we fine-tune LLMs, we must design a loss function to guide training but
+    designing a loss function that captures these more subjective attributes can seem
+    intractable, and most language models continue to be trained using a simple next-token
+    prediction loss (auto-regressive language modeling), such as cross-entropy. As
+    for output evaluation, there are some metrics that were designed to better capture
+    human preferences, such as BLEU or ROUGE; however, these metrics still have limitations,
+    as they only compare generated text to reference texts using simple rules and
+    heuristics. We could use an embedding similarity to compare outputs to ground
+    truth sequences but this only considers semantic information which isn’t always
+    the only thing we need to compare. We might want to consider the style of the
+    text for example.
+  prefs: []
+  type: TYPE_NORMAL
+- en: If only we could use live feedback (human or automated) for evaluating generated
+    text as a performance measure or even as a loss function to optimize the model.
+    Well you can probably see where this is going because that's where **Reinforcement
+    Learning from Feedback** (RLHF for human feedback and RLAIF for AI feedback) comes
+    into play. By employing reinforcement learning methods, RLF can directly optimize
+    a language model using real-time feedback, allowing models trained on a general
+    corpus of text data to align more closely with nuanced human values.
+  prefs: []
+  type: TYPE_NORMAL
+- en: ChatGPT is one of the first notable applications of RLHF and while OpenAI provides
+    an impressive explanation of RLHF, it doesn't cover everything, so I’ll fill in
+    the gaps.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The training process basically breaks down into three core steps (shown in
+    [Figure 7.9](ch07.html#ch07fig09)):'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Images](graphics/07fig09.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: '**Figure 7.9** *The core steps of a reinforcement learning based LLM training
+    consists of pre-training an LLM, defining and potentially training a reward model,
+    and using that reward model to update the LLM from step 1.*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 1\. **Pretraining a language model** - Pretraining a language model involves
+    training the model on a large corpus of text data, such as articles, books, and
+    websites or could even be a curated dataset. During this phase, the model learns
+    to generate text for general corpora or in service of a task. This process helps
+    the model to learn grammar, syntax, and some level of semantics from the text
+    data. The objective function used during pre-training is typically the cross-entropy
+    loss, which measures the difference between the predicted token probabilities
+    and the true token probabilities. Pretraining allows the model to acquire a foundational
+    understanding of the language, which can later be fine-tuned for specific tasks.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 2\. **Defining (potentially training) a reward model** - After pretraining the
+    language model, the next step is to define a reward model that can be used to
+    evaluate the quality of the generated text. This involves gathering human feedback,
+    such as rankings or scores for different text samples, which can be used to create
+    a dataset of human preferences. The reward model aims to capture these preferences,
+    and can be trained as a supervised learning problem, where the goal is to learn
+    a function that maps generated text to a reward signal (a scalar value) that represents
+    the quality of the text according to human feedback. The reward model serves as
+    a proxy for human evaluation and is used during the reinforcement learning phase
+    to guide the fine-tuning process.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 3\. **Fine-tuning the LM with reinforcement learning** - With a pretrained language
+    model and a reward model in place, the final step is to fine-tune the language
+    model using reinforcement learning techniques. In this phase, the model generates
+    text, receives feedback from the reward model, and updates its parameters based
+    on the reward signal. The objective is to optimize the language model such that
+    the generated text aligns closely with human preferences. Popular reinforcement
+    learning algorithms used in this context include Proximal Policy Optimization
+    (PPO) and Trust Region Policy Optimization (TRPO). Fine-tuning with reinforcement
+    learning allows the model to adapt to specific tasks and generate text that better
+    reflects human values and preferences.
+  prefs: []
+  type: TYPE_NORMAL
+- en: We are going to perform this process in its entirety in the next chapter but
+    to set up this pretty complicated process I am going to outline a simpler version
+    first. In our version we will take a pre-trained LLM off the shelf (FLAN-T5),
+    use an already defined and trained reward model, and really focus on step 3 -
+    the reinforcement learning loop.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Our model - FLAN-T5
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: We have seen and used FLAN-T5 (visualized in an image taken from the original
+    FLAN-T5 paper in [Figure 7.10](ch07.html#ch07fig10)) before so this should hopefully
+    be a refresher. FLAN-T5 is an encoder-decoder model (effectively a pure Transformer
+    model) which means it already has trained cross-attention layers built in and
+    it has the benefit of being instruction fine-tuned (like GPT3.5, ChatGPT, and
+    GPT-4 were). We are going to use the open-sourced “small” version of the model.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Images](graphics/07fig10.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: '**Figure 7.10** *FLAN-T5 is an encoder-decoder architecture that has been instruction-fine-tuned
+    and is open-sourced.*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: In the next chapter, we will perform our own version of instruction fine-tuning
+    but for now, we will borrow this already instruction-fine-tuned LLM from the good
+    people at Google AI and move on to define a reward model.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Our Reward Model—Sentiment and Grammar Correctness
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: A reward model has to take in the output of an LLM (in our case a sequence of
+    text) and returns a scalar (single number) reward which should numerically represent
+    feedback on the output. This feedback can come from an actual human which would
+    be very slow to run or could come from another language model or even a more complicated
+    system that ranks potential model outputs, and those rankings are converted to
+    rewards. As long as we are assigning a scalar reward for each output, it is a
+    viable reward system.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'In the next chapter, we will be doing some really interesting work to define
+    our own reward model but for now we will again rely on the hard work of others
+    and use the following pre-built LLMS:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Images](graphics/square.jpg) Sentiment from the `cardiffnlp/twitter-roberta-base-sentiment`
+    LLM - the idea is to promote summaries that are neutral in nature so the reward
+    from this model will be defined as the logit value (logit values can be negative
+    which is preferred) of the **“neutral”** class'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Images](graphics/square.jpg) A “grammar score” from the `textattack/roberta-base-CoLA`
+    LLM - we want our summaries to be grammatically correct so using a score from
+    this model should promote summaries that are easier to read. The reward will be
+    defined as the logit value of the **“grammatically correct”** class'
+  prefs: []
+  type: TYPE_NORMAL
+- en: I should note that by choosing these classifiers to form the basis of our reward
+    system, I am implicitly trusting in their performance. I checked out their descriptions
+    on the HuggingFace model repository to see how they were trained and what performance
+    metrics I could find but in general be aware that the reward systems play a big
+    role in this process so if they are not aligned with how you truly would reward
+    text sequences, you are in for some trouble.
+  prefs: []
+  type: TYPE_NORMAL
+- en: A snippet of the code that translates generated text into scores (rewards) using
+    a weighted sum of logits from our two models can be found in [Listing 7.5](ch07.html#list7_5).
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Listing 7.5** *Defining our reward system*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE4]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'With a model and a reward system ready to go, we just need to introduce one
+    final net new component, our Reinforcement Learning library: TRL.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Transformer Reinforcement Learning
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: 'Transformer reinforcement learning (TRL) is an open-source library we can use
+    to train transformer models with reinforcement learning. The library is integrated
+    with our favorite package: HuggingFace `transformers`.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: The TRL library supports both pure decoder models like GPT-2 and GPT-Neo (more
+    on that in the next chapter) as well as Sequence to Sequence models like FLAN-T5\.
+    All models can be optimized using what is known as **Proximal Policy Optimization**
+    (PPO). Honestly I won’t into how it works in this book but it’s definitely something
+    for you to look up if you’re curious. TRL also has many examples on their github
+    page if you want to see even more applications.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[Figure 7.11](ch07.html#ch07fig11) shows the high level process of our (for
+    now) simplified RLF loop.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Images](graphics/07fig11.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: '**Figure 7.11** *Our first Reinforcement Learning from Feedback loop has our
+    pre-trained LLM (FLAN-T5) learning from a pre-curated dataset and a pre-built
+    reward system. In the next chapter, we will see this loop performed with much
+    more customization and rigor.*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Let’s jump into defining our training loop with some code to really see some
+    results here.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The RL Training Loop
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: 'Our RL fine-tuning loop has a few steps:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '1\. Instantiate **two** version of our model:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: a. Our “reference” model which is the original FLAN-T5 model which will never
+    be updated **ever**
+  prefs: []
+  type: TYPE_NORMAL
+- en: b. Our “current” model which will get updated after every batch of data
+  prefs: []
+  type: TYPE_NORMAL
+- en: 2\. Grab a batch of data from a source (in our case we will use a corpus of
+    news articles I found from HuggingFace)
+  prefs: []
+  type: TYPE_NORMAL
+- en: 3\. Calculate rewards from our two reward models and aggregate into a single
+    scalar (number) as a weighted sum of the two rewards
+  prefs: []
+  type: TYPE_NORMAL
+- en: '4\. Pass the rewards to the TRL package which calculates two things:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: a. How to update the model slightly based on the reward system
+  prefs: []
+  type: TYPE_NORMAL
+- en: b. How divergent the text is from text generated from the reference model (this
+    is measured the **KL-Divergence** between our two outputs. We won’t have the chance
+    to go deep into this calculation in this text but simply put, it measures the
+    difference between two sequences (two pieces of text in our case) with the goal
+    of not letting the outputs diverge too far from the original model’s generation
+    capacity.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 5\. TRL updates the “current” model from the batch of data, logs anything to
+    a reporting system (I like the free Weights & Biases platform) and start over
+    from the beginning of the steps!
+  prefs: []
+  type: TYPE_NORMAL
+- en: This training loop can be visualized in [Figure 7.12](ch07.html#ch07fig12).
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Images](graphics/07fig12.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: '**Figure 7.12** *Our RL training loop has 4 main steps: our LLM will generate
+    an output, our reward system will assign a scalar reward (positive for good, negative
+    for bad), the TRL library will factor in rewards and divergence before doing any
+    updating, and then finally the PPO policy will update the LLM.*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: A snippet of this training loop is in [Listing 7.6](ch07.html#list7_6) with
+    the entire loop defined in our code repository.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Listing 7.6** *Defining our RL Training Loop with TRL*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE5]'
+  prefs: []
+  type: TYPE_PRE
+- en: Let’s see how it does after 2 epochs!
+  prefs: []
+  type: TYPE_NORMAL
+- en: Summary of Results
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: '[Figure 7.13](ch07.html#ch07fig13) shows how rewards were given over the training
+    loop of 2 epochs. We can see that as the system progressed, we were giving out
+    more rewards which is generally a good sign. I should note that the rewards started
+    out pretty high so FLAN-T5 was already giving relatively neutral and readable
+    responses so I would not expect drastic changes in the summaries.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Images](graphics/07fig13.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: '**Figure 7.13** *Our system is giving out more rewards as training progresses
+    (the graph is smoothed to see the overall movement).*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: But what do these adjusted generations look like? [Figure 7.14](ch07.html#ch07fig14)
+    shows a sample of generated summaries before and after our RL fine-tuning
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Images](graphics/07fig14.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: '**Figure 7.14** *Our fine-tuned model barely differs in most summaries but
+    does tend to use more neutral sounding words that are grammatically correct and
+    easy to read.*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: This is our first example of a non supervised data fine-tuning of an LLM. We
+    never gave FLAN-T5 example pairs of (article, summary) to learn **how** to summarize
+    articles and that’s important. FLAN-T5 has already seen supervised datasets on
+    summarization so it should already know how to do that. All we wanted to do was
+    to nudge the responses to be more aligned with a reward metric that we defined.
+    Our next chapter will see a much more in depth example of this where we train
+    an LLM with supervised data, train our own reward system, and do this same TRL
+    loop with (in my opinion) much more interesting results.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Conclusion
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: Foundation models like FLAN-T5, ChatGPT, GPT-4, Cohere’s Command Series, GPT-2,
+    BERT are a wonderful starting point to solve a wide variety of tasks. Fine-tuning
+    them with supervised labeled data to fine-tune classifications, embeddings can
+    get us even further but some tasks require us to get creative with our fine-tuning
+    processes, with our data, and with our model architectures. This chapter is scratching
+    the surface of what is possible. The next two chapters will dive even deeper on
+    how to modify models, use data more creatively, and even start to answer the question
+    of how do we share our amazing work with the world with efficient deployments
+    of LLMs so I’ll see you there!
+  prefs: []
+  type: TYPE_NORMAL

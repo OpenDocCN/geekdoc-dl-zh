@@ -1,0 +1,558 @@
+- en: '3'
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: First Steps with Prompt Engineering
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Introduction
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: In our previous chapter, we built a semantic search system that leveraged the
+    power of Large Language Models (LLMs) to find relevant documents based on natural
+    language queries. The system was able to understand the meaning behind the queries
+    and retrieve accurate results, thanks to the pre-training of the LLMs on vast
+    amounts of text.
+  prefs: []
+  type: TYPE_NORMAL
+- en: However, building an effective LLM-based application can require more than just
+    plugging in a pre-trained model and feeding it data and we might want to lean
+    on the learnings of massively large language models to help complete the loop.
+    This is where prompt engineering begins to come into the picture.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Prompt Engineering
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: '**Prompt engineering** involves crafting prompts that effectively communicate
+    the task at hand to the LLM, leading to accurate and useful outputs ([Figure 3.1](ch03.html#ch03fig01)).
+    It is a skill that requires an understanding of the nuances of language, the specific
+    domain being worked on, and the capabilities and limitations of the LLM being
+    used.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Images](graphics/03fig01.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: '**Figure 3.1** *Prompt engineering is how we construct inputs to LLMs to get
+    a desired output.*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: In this chapter, we will delve deeper into the art of prompt engineering, exploring
+    techniques and best practices for crafting effective prompts that lead to accurate
+    and relevant outputs. We will cover topics such as structuring prompts for different
+    types of tasks, fine-tuning models for specific domains, and evaluating the quality
+    of LLM outputs.
+  prefs: []
+  type: TYPE_NORMAL
+- en: By the end of this chapter, you will have the skills and knowledge needed to
+    create powerful LLM-based applications that leverage the full potential of these
+    cutting-edge models.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Alignment in Language Models
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: '**Alignment** in language models refers to how well the model can understand
+    and respond to input prompts that are in line with what the user expected. In
+    standard language modeling, a model is trained to predict the next word or sequence
+    of words based on the context of the preceding words. However, this approach does
+    not allow for specific instructions or prompts to be given to the model, which
+    can limit its usefulness for certain applications.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Prompt engineering can be challenging if the language model has not been aligned
+    with the prompts, as it may generate irrelevant or incorrect responses. However,
+    some language models have been developed with extra alignment features, such as
+    Constitutional AI-driven Reinforcement Learning from AI Feedback (RLAIF) from
+    Anthropic or Reinforcement Learning with Human Feedback (RLHF) in OpenAI’s GPT
+    series, which can incorporate explicit instructions and feedback into the model’s
+    training. These alignment techniques can improve the model’s ability to understand
+    and respond to specific prompts, making them more useful for applications such
+    as question-answering or language translation ([Figure 3.2](ch03.html#ch03fig02)).
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Images](graphics/03fig02.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: '**Figure 3.2** *Even modern LLMs like GPT-3 need alignment to behave how we
+    want them to. The original GPT-3 model released in 2020 is a pure auto-regressive
+    language model and tries to “complete the thought” and gives me some misinformation
+    pretty freely. In January 2022, GPT-3’s first aligned version was released (InstructGPT)
+    and was able to answer questions in a more succinct and accurate manner.*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: This chapter will focus on language models that have been specifically designed
+    and trained to be aligned with instructional prompts. These models have been developed
+    with the goal of improving their ability to understand and respond to specific
+    instructions or tasks. These include models like GPT-3, ChatGPT (closed-source
+    models from OpenAI), FLAN-T5 (an open-source model from Google), and Cohere’s
+    command series (closed-source), which have been trained using large amounts of
+    data and techniques such as transfer learning and fine-tuning to be more effective
+    at generating responses to instructional prompts. Through this exploration, we
+    will see the beginnings of fully working NLP products and features that utilize
+    these models, and gain a deeper understanding of how to leverage aligned language
+    models’ full capabilities.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Just Ask
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: The first and most important rule of prompt engineering for instruction aligned
+    language models is to be clear and direct in what you are asking for. When we
+    give an LLM a task to complete, we want to make sure that we are communicating
+    that task as clearly as possible. This is especially true for simple tasks that
+    are straightforward for the LLM to accomplish.
+  prefs: []
+  type: TYPE_NORMAL
+- en: In the case of asking GPT-3 to correct the grammar of a sentence, a direct instruction
+    of “Correct the grammar of this sentence” is all you need to get a clear and accurate
+    response. The prompt should also clearly indicate the phrase to be corrected ([Figure
+    3.3](ch03.html#ch03fig03)).
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Images](graphics/03fig03.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: '**Figure 3.3** *The best way to get started with an LLM aligned to answer queries
+    from humans is to simply ask.*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Note**'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Many figures are screenshots of an LLM’s playground. Experimenting with prompt
+    formats in the playground or via an online interface can help identify effective
+    approaches, which can then be tested more rigorously using larger data batches
+    and the code/API for optimal output.
+  prefs: []
+  type: TYPE_NORMAL
+- en: To be even more confident in the LLM’s response, we can provide a clear indication
+    of the input and output for the task by adding prefixes. Let’s take another simple
+    example asking GPT-3 to translate a sentence from English to Turkish.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'A simple “just ask” prompt will consist of three elements:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Images](graphics/square.jpg) A direct instruction: “Translate from English
+    to Turkish.” which belongs at the top of the prompt so the LLM can pay attention
+    to it (pun intended) while reading the input, which is next'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Images](graphics/square.jpg) The English phrase we want translated preceded
+    by “English:” which is our clearly designated input'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Images](graphics/square.jpg) A space designated for the LLM to answer to
+    give it’s answer which we will add the intentionally similar prefix “Turkish:”'
+  prefs: []
+  type: TYPE_NORMAL
+- en: These three elements are all part of a direct set of instructions with an organized
+    answer area. By giving GPT-3 this clearly constructed prompt, it will be able
+    to recognize the task being asked of it and fill in the answer correctly ([Figure
+    3.4](ch03.html#ch03fig04)).
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Images](graphics/03fig04.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: '**Figure 3.4** *This more fleshed out version of our just ask prompt has three
+    components: a clear and concise set of instructions, our input prefixed by an
+    explanatory label and a prefix for our output followed by a colon and no further
+    whitespace.*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: We can expand on this even further by asking the GPT-3 to output multiple options
+    for our corrected grammar by asking GPT-3 to give results back as a numbered list
+    ([Figure 3.5](ch03.html#ch03fig05)).
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Images](graphics/03fig05.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: '**Figure 3.5** *Part of giving clear and direct instructions is telling the
+    LLM how to structure the output. In this example, we ask GPT-3 to give grammatically
+    correct versions as a numbered list.*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Therefore, when it comes to prompt engineering, the rule of thumb is simple:
+    when in doubt, just ask. Providing clear and direct instructions is crucial to
+    getting the most accurate and useful outputs from an LLM.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Few-shot Learning
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: When it comes to more complex tasks that require a deeper understanding of language,
+    giving an LLM a few examples can go a long way in helping an LLM produce accurate
+    and consistent outputs. Few-shot learning is a powerful technique that involves
+    providing an LLM with a few examples of a task to help it understand the context
+    and nuances of the problem.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Few-shot learning has been a pretty major focus of research in the field of
+    LLMs. The creators of GPT-3 even recognized the potential of this technique, which
+    is evident from the fact that the original GPT-3 research paper was titled “Language
+    Models are Few-Shot Learners”.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Few-shot learning is particularly useful for tasks that require a certain tone,
+    syntax, or style, and for fields where the language used is specific to a particular
+    domain. [Figure 3.6](ch03.html#ch03fig06) shows an example of asking GPT-3 to
+    classify a review as being subjective or not. Basically this is a binary classification
+    task.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Images](graphics/03fig06.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: '**Figure 3.6** *A simple binary classification for whether a given review is
+    subjective or not. The top two examples show how LLMs can intuit a task’s answer
+    from only a few examples where the bottom two examples show the same prompt structure
+    without any examples (referred to as “zero-shot”) and cannot seem to answer how
+    we want it to.*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: In the following figure, we can see that the few-shot examples are more likely
+    to produce expected results because the LLM can look back at some examples to
+    intuit from.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Few-shot learning opens up new possibilities for how we can interact with LLMs.
+    With this technique, we can provide an LLM with an understanding of a task without
+    explicitly providing instructions, making it more intuitive and user-friendly.
+    This breakthrough capability has paved the way for the development of a wide range
+    of LLM-based applications, from chatbots to language translation tools.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Output Structuring
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: LLMs can generate text in a variety of formats, sometimes with too much variety.
+    It can be helpful to structure the output in a specific way to make it easier
+    to work with and integrate into other systems. We’ve actually seen this previously
+    in this chapter when we asked GPT-3 to give us an answer in a numbered list. We
+    can also make an LLM give back structured data formats like JSON (JavaScript Object
+    Notation) as the output [Figure 3.7](ch03.html#ch03fig07)).
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Images](graphics/03fig07.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: '**Figure 3.7** *Simply asking GPT-3 to give a response back as a JSON (top)
+    does give back a valid JSON but the keys are also in Turkish which may not be
+    what we want. We can be more specific in our instruction by giving a one-shot
+    example (bottom) which makes the LLM output the translation in the exact JSON
+    format we requested.*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: By structuring LLM output in structured formats, developers can more easily
+    extract specific information and pass it on to other services. Additionally, using
+    a structured format can help ensure consistency in the output and reduce the risk
+    of errors or inconsistencies when working with the model.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Prompting Personas
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: Specific word choices in our prompts can greatly influence the output of the
+    model. Even small changes to the prompt can lead to vastly different results.
+    For example, adding or removing a single word can cause the LLM to shift its focus
+    or change its interpretation of the task. In some cases, this may result in incorrect
+    or irrelevant responses, while in other cases, it may produce the exact output
+    desired.
+  prefs: []
+  type: TYPE_NORMAL
+- en: To account for these variations, researchers and practitioners often create
+    different “personas” for the LLM, representing different styles or voices that
+    the model can adopt depending on the prompt. These personas can be based on specific
+    topics, genres, or even fictional characters, and are designed to elicit specific
+    types of responses from the LLM ([Figure 3.8](ch03.html#ch03fig08)).
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Images](graphics/03fig08.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: '**Figure 3.8** *Starting from the top left and moving down we see a baseline
+    prompt of asking GPT-3 to respond as a store attendant. We can inject some more
+    personality by asking it to respond in an “excitable” way or even as a pirate!
+    We can also abuse this system by asking the LLM to respond in a rude manner or
+    even horribly as an anti-Semite. Any developer who wants to use an LLM should
+    be aware that these kinds of outputs are possible, whether intentional or not.
+    We will talk about advanced output validation techniques in a future chapter that
+    can help mitigate this behavior.*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: By taking advantage of personas, LLM developers can better control the output
+    of the model and end-users of the system can get a more unique and tailored experience.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Personas may not always be used for positive purposes. Just like any tool or
+    technology, some people may use LLMs to evoke harmful messages like if we asked
+    an LLM to imitate an anti-Semite like in the last figure. By feeding the LLMs
+    with prompts that promote hate speech or other harmful content, individuals can
+    generate text that perpetuates harmful ideas and reinforces negative stereotypes.
+    Creators of LLMs tend to take steps to mitigate this potential misuse, such as
+    implementing content filters and working with human moderators to review the output
+    of the model. Individuals who want to use LLMs must also be responsible and ethical
+    when using LLMs and consider the potential impact of their actions (or the actions
+    the LLM take on their behalf) on others.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Working with Prompts Across Models
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: Prompts are highly dependent on the architecture and training of the language
+    model, meaning that what works for one model may not work for another. For example,
+    ChatGPT, GPT-3 (which is different from ChatGPT), T5, and models in the Cohere
+    command series all have different underlying architectures, pre-training data
+    sources, and training approaches, which all impact the effectiveness of prompts
+    when working with them. While some prompts may transfer between models, others
+    may need to be adapted or re-engineered to work with a specific model.
+  prefs: []
+  type: TYPE_NORMAL
+- en: In this section, we will explore how to work with prompts across models, taking
+    into account the unique features and limitations of each model to develop effective
+    prompts that can guide language models to generate the desired output.
+  prefs: []
+  type: TYPE_NORMAL
+- en: ChatGPT
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: Some LLMs can take in more than just a single “prompt”. Models that are aligned
+    to conversational dialogue like ChatGPT can take in a **system prompt** and multiple
+    “user” and “assistant” prompts ([Figure 3.8](ch03.html#ch03fig08a)). The system
+    prompt is meant to be a general directive for the conversation and will generally
+    include overarching rules and personas to follow. The user and assistant prompts
+    are messages between the user and the LLM respectively. For any LLM you choose
+    to look at, be sure to check out their documentation for specifics on how to structure
+    input prompts.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Images](graphics/03fig08a.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: '**Figure 3.8** *ChatGPT takes in an overall system prompt as well as any number
+    of user and assistant prompts that simulate an ongoing conversation.*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Cohere
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: We’ve already seen Cohere’s command series of models in action previously in
+    this chapter but as an alternative to OpenAI, it’s a good time to show that prompts
+    cannot always be simply ported over from one model to another. Usually we need
+    to alter the prompt slightly to allow another LLM to do its work.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Let’s return to our simple translation example. Let’s ask OpenAI and Cohere
+    to translate something from English to Turkish ([Figure 3.10](ch03.html#ch03fig10)).
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Images](graphics/03fig10.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: '**Figure 3.10** *OpenAI’s GPT-3 can take a translation instruction without
+    much hand-holding whereas the cohere model seems to require a bit more structure.*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: It seems that the Cohere model I chose required a bit more structuring than
+    the OpenAI version. That doesn’t mean that the Cohere is worse than GPT-3, it
+    just means that we need to think about how our prompt is structured for a given
+    LLM.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Open-Source Prompt Engineering
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: It wouldn’t be fair to talk about prompt engineering and not talk about open-source
+    models like GPT-J and FLAN-T5\. When working with them, prompt engineering is
+    a critical step to get the most out of their pre-training and fine-tuning which
+    we will start to cover in the next chapter. These models can generate high-quality
+    text output just like their closed-source counterparts but unlike closed-source
+    models like GPT and Cohere, open-source models offer greater flexibility and control
+    over prompt engineering, enabling developers to customize prompts and tailor output
+    to specific use cases during fine-tuning.
+  prefs: []
+  type: TYPE_NORMAL
+- en: For example, a developer working on a medical chatbot may want to create prompts
+    that focus on medical terminology and concepts, while a developer working on a
+    language translation model may want to create prompts that emphasize grammar and
+    syntax. With open-source models, developers have the flexibility to fine-tune
+    prompts to their specific use cases, resulting in more accurate and relevant text
+    output.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Another advantage of prompt engineering in open-source models is collaboration
+    with other developers and researchers. Open-source models have a large and active
+    community of users and contributors, which allows developers to share their prompt
+    engineering strategies, receive feedback, and collaborate on improving the overall
+    performance of the model. This collaborative approach to prompt engineering can
+    lead to faster progress and more significant breakthroughs in natural language
+    processing research.
+  prefs: []
+  type: TYPE_NORMAL
+- en: It pays to remember how open-source models were pre-trained and fine-tuned (if
+    they were at all). For example, GPT-J is simply an auto-regressive language model,
+    so we’d expect things like few shot prompting to work better than simply asking
+    a direct instructional promp,t whereas FLAN-T5 was specifically fine-tuned with
+    instructional prompting in mind so while few-shots will still be on the table,
+    we can also rely on the simplicity of just asking ([Figure 3.11](ch03.html#ch03fig011)).
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Images](graphics/03fig11.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: '**Figure 3.11** *Open source models can vary drastically in how they were trained
+    and how they expect prompts. Models like GPT-J which is not instruction aligned
+    has a hard time answering a direct instruction (bottom left) whereas FLAN-T5 which
+    was aligned to instructions does know how to accept instructions (bottom right).
+    Both models are able to intuit from few-shot learning but FLAN-T5 seems to be
+    having trouble with our subjective task. Perhaps a great candidate for some fine-tuning!
+    Coming soon to a chapter near you.*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Building a Q/A bot with ChatGPT
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: Let’s build a very simple Q/A bot using ChatGPT and the semantic retrieval system
+    we built in the last chapter. Recall that one of our API endpoints is used to
+    retrieve documents from our BoolQ dataset given a natural query.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Note**'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Both ChatGPT (GPT 3.5) and GPT-4 are conversational LLMs and take in the same
+    kind of system prompt as well as user prompts assistant prompts. When I say we
+    are using ChatGPT, we could be using either GPT 3.5 or GPT-4\. Our repository
+    uses the most up to date model (which at the time of writing is GPT-4).
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'All we need to do to get off the ground is:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 1\. Design a system prompt for ChatGPT
+  prefs: []
+  type: TYPE_NORMAL
+- en: 2\. Search for context in our knowledge with every new user message
+  prefs: []
+  type: TYPE_NORMAL
+- en: 3\. Inject any context we find from our DB directly into ChatGPT’s system prompt
+  prefs: []
+  type: TYPE_NORMAL
+- en: 4\. Let ChatGPT do its job and answer the question
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[Figure 3.12](ch03.html#ch03fig011) outlines these high level steps:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Images](graphics/03fig12.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: '**Figure 3.12** *A 10,000 foot view of our chatbot that uses ChatGPT to provide
+    a conversational interface in front of our semantic search API.*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'To dig into it one step deeper, [Figure 3.13](ch03.html#ch03fig013) shows how
+    this will work at the prompt level, step by step:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Images](graphics/03fig13.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: '**Figure 3.13** *Starting from the top left and reading left to right, these
+    four states represent how our bot is architected. Every time a user says something
+    that surfaces a confident document from our knowledge base, that document is inserted
+    directly into the system prompt where we tell ChatGPT to only use documents from
+    our knowledge base.*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Let’s wrap all of this logic into a Python class that will have a skeleton like
+    in [Listing 3.1](ch03.html#list3_1).
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Listing 3.1 *A ChatGPT Q/A bot***'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs: []
+  type: TYPE_PRE
+- en: A full implementation of this code using GPT-4 is in the book’s repository and
+    [Figure 3.14](ch03.html#ch03fig014) presents a sample conversation we can have
+    with it.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Images](graphics/03fig14.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: '**Figure 3.14** *Asking our bot about information from the BoolQ dataset yields
+    cohesive and conversational answers whereas when I ask about Barack Obama’s age
+    (which is information not present in the knowledge base) the AI politely declines
+    to answer even though that is general knowledge it would try to use otherwise.*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: As a part of testing, I decided to try something out of the box and built a
+    new namespace in the same vector database (Thank you, Pinecone) and I chunked
+    documents out of a PDF of a Star Wars-themed card game I like. I wanted to use
+    the chatbot to ask basic questions about the game and let ChatGPT retrieve portions
+    of the manual to answer my questions. [Figure 3.15](ch03.html#ch03fig015) was
+    the result!
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Images](graphics/03fig15.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: '**Figure 3.15** *The same architecture and system prompt against a new knowledge
+    base of a card game manual. Now I can ask questions in the manual but my questions
+    from BoolQ are no longer in scope.*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Not bad at all if I may say so.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Summary
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: Prompt engineering, the process of designing and optimizing prompts to improve
+    the performance of language models can be fun, iterative, and sometimes tricky!
+    We saw many tips and tricks on how to get started such as understanding alignment,
+    just asking, few-shot learning, output structuring, prompting personas, and working
+    with prompts across models. We also built our own chatbot using ChatGPT’s prompt
+    interface that was able to tie into the API we built in the last chapter.
+  prefs: []
+  type: TYPE_NORMAL
+- en: There is a strong correlation between proficient prompt engineering and effective
+    writing. A well-crafted prompt provides the model with clear instructions, resulting
+    in an output that closely aligns with the desired response. When a human can comprehend
+    and create the expected output from a given prompt, it is indicative of a well-structured
+    and useful prompt for the LLM. However, if a prompt allows for multiple responses
+    or is in general vague, then it is likely too ambiguous for an LLM. This parallel
+    between prompt engineering and writing highlights that the art of writing effective
+    prompts is more like crafting data annotation guidelines or engaging in skillful
+    writing than it is similar to traditional engineering practices.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Prompt engineering is an important process for improving the performance of
+    language models. By designing and optimizing prompts, language models can better
+    understand and respond to user inputs. In a later chapter, we will revisit prompt
+    engineering with some more advanced topics like LLM output validation, chain of
+    thought prompting to force an LLM to think out loud, and chaining multiple prompts
+    together into larger workflows.
+  prefs: []
+  type: TYPE_NORMAL
