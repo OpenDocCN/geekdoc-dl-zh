@@ -16,6 +16,7 @@
 +   [PaperSpace 博客中文翻译](docs/paperspace/README.md)
 +   [PyTorch 从零到全部](docs/pt-0toall/README.md)
 +   [PyImgSearch 博客中文翻译](docs/pyimagesearch/README.md)
++   [大语言模型快速启动指南（早起发布）](docs/qkstgd-llm/README.md)
 +   [人类反馈的强化学习之书](docs/rlhf-bk/README.md)
 +   [TensorFlow 从零到全部](docs/tf-0toall/README.md)
 +   [TensorFlow Rager 教程](docs/tf-eager-tut/README.md)
