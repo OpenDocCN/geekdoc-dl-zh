@@ -1,4 +1,4 @@
-# 《检索增强生成系统实用方法》
+# 检索增强生成系统的实践方法
 
 > 原文：[`mallahyari.github.io/rag-ebook/index.html`](https://mallahyari.github.io/rag-ebook/index.html)
 

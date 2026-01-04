@@ -16,6 +16,7 @@
 +   [精通 JAX 编程](docs/ms-jax-prog/README.md)
 +   [NeptuneAI 博客中文翻译](docs/neptuneai/README.md)
 +   [PaperSpace 博客中文翻译](docs/paperspace/README.md)
++   [检索增强生成系统的实践方法](docs/prac-aprc-rag-sys/README.md)
 +   [PyTorch 从零到全部](docs/pt-0toall/README.md)
 +   [PyImgSearch 博客中文翻译](docs/pyimagesearch/README.md)
 +   [大语言模型快速启动指南（早期发布）](docs/qkstgd-llm/README.md)

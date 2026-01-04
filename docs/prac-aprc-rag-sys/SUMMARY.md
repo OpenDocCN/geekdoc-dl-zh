@@ -1,0 +1,8 @@
++   [检索增强生成系统的实践方法](README.md)
++   [检索增强生成系统的实践方法](prac-aprc-rag-sys_1.md)
++   [1   引言](prac-aprc-rag-sys_2.md)
++   [2 Retrieval Augmented Generation (RAG)](prac-aprc-rag-sys_3.md)
++   [3 RAG 管道实现](prac-aprc-rag-sys_4.md)
++   [4  从简单到高级的 RAG](prac-aprc-rag-sys_5.md)
++   [5  RAG 可观察性工具](prac-aprc-rag-sys_6.md)
++   [参考文献](prac-aprc-rag-sys_7.md)
