@@ -8,6 +8,7 @@
 +   [EZYang 博客翻译](docs/ezyang/README.md)
 +   [与 TensorFlow 的初次接触](docs/first_contact_with_tensorFlow/README.md)
 +   [生成式人工智能手册](docs/genai-hb/README.md)
++   [高等教育的生成式人工智能指南](docs/genai-hiedu/README.md)
 +   [如何扩展你的模型](docs/hwt-sclup-yrmdl/README.md)
 +   [TensorFlow 学习指南](docs/learning-tf-zh/README.md)
 +   [LiLianWeng 博客中文翻译](docs/lilianweng/README.md)
