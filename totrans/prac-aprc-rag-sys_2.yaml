@@ -1,0 +1,503 @@
+- en: 1  Introduction
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 原文：[https://mallahyari.github.io/rag-ebook/intro.html](https://mallahyari.github.io/rag-ebook/intro.html)
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: In this chapter, we will lay the foundation for building a chat-to-PDF app using
+    Large Language Models (LLMs) with a focus on the Retrieval-Augmented Generation
+    approach. We’ll explore the fundamental concepts and technologies that underpin
+    this project.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 1.1 The Role of LLMs in NLP
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Large Language Models (LLMs) play a crucial role in Natural Language Processing
+    (NLP). These models have revolutionized the field of NLP by their ability to understand
+    and generate human-like text. With advances in deep learning and neural networks,
+    LLMs have become valuable assets in various NLP tasks, including language translation,
+    text summarization, and chatbot development.
+  prefs: []
+  type: TYPE_NORMAL
+- en: One of the key strengths of LLMs lies in their capacity to learn from vast amounts
+    of text data. By training on massive datasets, LLMs can capture complex linguistic
+    patterns and generate coherent and contextually appropriate responses. This enables
+    them to produce high-quality outputs that are indistinguishable from human-generated
+    text.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'LLMs are trained using a two-step process: pre-training and fine-tuning. During
+    pre-training, models are exposed to a large corpus of text data and learn to predict
+    the next word in a sentence. This helps them develop a strong understanding of
+    language structure and semantics. In the fine-tuning phase, the models are further
+    trained on task-specific data to adapt their knowledge to specific domains or
+    tasks.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: The versatility and effectiveness of LLMs make them a powerful tool in advancing
+    the field of NLP. They have not only improved the performance of existing NLP
+    systems but have also opened up new possibilities for developing innovative applications.
+    With continued research and development, LLMs are expected to further push the
+    boundaries of what is possible in natural language understanding and generation.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Large Language Models (LLMs) represent a breakthrough in NLP, allowing machines
+    to understand and generate human-like text at an unprecedented level of accuracy
+    and fluency. Some of the key roles of LLMs in NLP include:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Natural Language Understanding (NLU):** LLMs can comprehend the nuances of
+    human language, making them adept at tasks such as sentiment analysis, entity
+    recognition, and language translation.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**Text Generation:** LLMs excel at generating coherent and contextually relevant
+    text. This capability is invaluable for content generation, chatbots, and automated
+    writing.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**Question Answering:** LLMs are particularly powerful in question answering
+    tasks. They can read a given text and provide accurate answers to questions posed
+    in natural language.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**Summarization:** LLMs can summarize lengthy documents or articles, distilling
+    the most important information into a concise form.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**Conversational AI:** They serve as the backbone of conversational AI systems,
+    enabling chatbots and virtual assistants to engage in meaningful and context-aware
+    conversations.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**Information Retrieval:** LLMs can be used to retrieve relevant information
+    from vast corpora of text, which is crucial for applications like search engines
+    and document retrieval.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**Customization:** LLMs can be fine-tuned for specific tasks or domains, making
+    them adaptable to a wide range of applications.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 1.2 The Importance of Question Answering over PDFs
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: '*Question answering over PDF documents addresses a critical need in information
+    retrieval and document processing. Here, we’ll explore why it is important and
+    how LLMs can play a pivotal role:*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The Importance of Question Answering over PDFs:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Document Accessibility:** PDF is a widely used format for storing and sharing
+    documents. However, extracting information from PDFs, especially in response to
+    specific questions, can be challenging for users. Question answering over PDFs
+    enhances document accessibility.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**Efficient Information Retrieval:** For researchers, students, and professionals,
+    finding answers within lengthy PDF documents can be time-consuming. Question-answering
+    systems streamline this process, enabling users to quickly locate the information
+    they need.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**Enhanced User Experience:** In various domains, including legal, medical,
+    and educational, users often need precise answers from PDF documents. Implementing
+    question answering improves the user experience by providing direct and accurate
+    responses.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**Automation and Productivity:** By automating the process of extracting answers
+    from PDFs, organizations can save time and resources. This automation can be particularly
+    beneficial in scenarios where large volumes of documents need to be processed.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**Scalability:** As the volume of digital documents continues to grow, scalable
+    solutions for question answering over PDFs become increasingly important. LLMs
+    can handle large datasets and diverse document types.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: In various industries, there is a growing demand for efficient information retrieval
+    from extensive collections of PDF documents. Take, for example, a legal firm or
+    department collaborating with the Federal Trade Commission (FTC) to process updated
+    information about legal cases and proceedings. Their task often involves processing
+    a substantial volume of documents, sifting through them, and extracting relevant
+    case information—a labor-intensive process.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '*Bachground: Every year the FTC brings hundreds of cases against individuals
+    and companies for violating consumer protection and competition laws that the
+    agency enforces. These cases can involve fraud, scams, identity theft, false advertising,
+    privacy violations, anti-competitive behavior and more.*'
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: The advent of the Retrieval-Augmented Generation (RAG) approach marks a new
+    era in question and answering that promises to revolutionize workflows within
+    these industries.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 1.3 The Retrieval-Augmented Generation Approach
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: '*The Retrieval-Augmented Generation approach is a cutting-edge technique that
+    combines the strengths of information retrieval and text generation. Let’s explore
+    this approach in detail:*'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The Retrieval-Augmented Generation Approach:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The Retrieval-Augmented Generation approach combines two fundamental components,
+    retrieval and generation, to create a powerful system for question answering and
+    content generation. Here’s an overview of this approach:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Retrieval Component:** This part of the system is responsible for searching
+    and retrieving relevant information from a database of documents. It uses techniques
+    such as indexing, ranking, and query expansion to find the most pertinent documents.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**Generation Component:** Once the relevant documents are retrieved, the generation
+    component takes over. It uses LLMs to process the retrieved information and generate
+    coherent and contextually accurate responses to user queries.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**Benefits:** The key advantage of this approach is its ability to provide
+    answers based on existing knowledge (retrieval) while also generating contextually
+    rich responses (generation). It combines the strengths of both worlds to deliver
+    high-quality answers.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**Use Cases:** Retrieval-Augmented Generation is particularly useful for question
+    answering over large document collections, where traditional search engines may
+    fall short in providing concise and informative answers.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**Fine-Tuning:** Successful implementation of this approach often involves
+    fine-tuning LLMs on domain-specific data to improve the quality of generated responses.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: By understanding the role of LLMs in NLP, the importance of question answering
+    over PDFs, and the principles behind the Retrieval-Augmented Generation approach,
+    you have now laid the groundwork for building your chat-to-PDF app using these
+    advanced technologies. In the following chapters, we will delve deeper into the
+    technical aspects and practical implementation of this innovative solution.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 1.4 A Brief History of LLMs
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Lately, ChatGPT, as well as DALL-E-2 and Codex, have been getting a lot of attention.
+    This has sparked curiosity in many who want to know more about what’s behind their
+    impressive performance. ChatGPT and other Generative AI (GAI) technologies fall
+    into a category called Artificial Intelligence Generated Content (AIGC). This
+    means they’re all about using AI models to create content like images, music,
+    and written language. The whole idea behind AIGC is to make creating conetent
+    faster and easier.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '*AIGC is achieved by extracting and understanding intent information from instructions
+    provided by human, and generating the content according to its knowledge and the
+    intent information. In recent years, large-scale models have become increasingly
+    important in AIGC as they provide better intent extraction and thus, improved
+    generation results.*'
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: With more data and bigger models, these AI systems can make things that look
+    and sound quite realistic and high-quality. The following shows an example of
+    text prompting that generates images according to the instructions, leveraging
+    the OpenAI DALL-E-2 model.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![text2image-intro](../Images/5246520ed3534b1771ccc1e3acafdffd.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Figure 1.1: Examples of AIGC in image generation. [Image source](https://arxiv.org/pdf/2303.04226.pdf)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'In the realm of Generative AI (GAI), models can typically be divided into two
+    categories: unimodal models and multimodal models. Unimodal models operate by
+    taking instructions from the same type of data as the content they generate, while
+    multimodal models are capable of receiving instructions from one type of data
+    and generating content in another type. The following figure illustrates these
+    two categories of models.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![overview-of-AIGC-intro](../Images/9909eb1cc21b87ba6ed08f779dc63ba1.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Figure 1.2: Overview of AIGC model types. [Image source](https://arxiv.org/pdf/2303.04226.pdf)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: These models have found applications across diverse industries, such as art
+    and design, marketing, and education. It’s evident that in the foreseeable future,
+    AIGC will remain a prominent and continually evolving research area with artificial
+    intelligence.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 1.4.1 Foundation Models
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: Speaking of LLMs and GenAI, we cannot overlook the significant role played by
+    Transformer models.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '*Transformer is the backbone architecture for many state-of-the-art models,
+    such as GPT, DALL-E, Codex, and so on.*'
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: Transformer started out to address the limitations of traditional models like
+    RNNs when dealing with variable-length sequences and context. The heart of the
+    Transformer is its self-attention mechanism, allowing the model to focus on different
+    parts of an input sequence. It comprises an encoder and a decoder. The encoder
+    processes the input sequence to create hidden representations, while the decoder
+    generates an output sequence. Each encoder and decoder layer includes multi-head
+    attention and feed-forward neural networks. Multi-head attention, a key component,
+    assigns weights to tokens based on relevance, enhancing the model’s performance
+    in various NLP tasks. The Transformer’s inherent parallelizability minimizes inductive
+    biases, making it ideal for large-scale pre-training and adaptability to different
+    downstream tasks.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Transformer architecture has dominated natural language processing, with two
+    main types of pre-trained language models based on training tasks: masked language
+    modeling (e.g., BERT) and autoregressive language modeling (e.g., GPT-3). Masked
+    language models predict masked tokens within a sentence, while autoregressive
+    models focus on predicting the next token given previous ones, making them more
+    suitable for generative tasks. RoBERTa and XL-Net are classic examples of masked
+    language models and have further improved upon the BERT architecture with additional
+    training data and techniques.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![category-of-llms-intro](../Images/fa6f9993af477275a012a740e181b978.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Figure 1.3: Categories of pre-trained LLMs. [Image source](https://arxiv.org/pdf/2303.04226.pdf)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'In this graph, you can see two types of information flow indicated by lines:
+    the black line represents bidirectional information flow, while the gray line
+    represents left-to-right information flow. There are three main model categories:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Encoder models like BERT, which are trained with context-aware objectives.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Decoder models like GPT, which are trained with autoregressive objectives.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Encoder-decoder models like T5 and BART, which merge both approaches. These
+    models use context-aware structures as encoders and left-to-right structures as
+    decoders.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 1.4.2 Reinforcement Learning from Human Feedback
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: To improve AI-generated content (AIGC) alignment with user intent, i.e., considerations
+    in *usefulness* and *truthfulness*, reinforcement learning from human feedback
+    (RLHF) has been applied in models like Sparrow, InstructGPT, and ChatGPT.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The RLHF pipeline involves three steps: *pre-training*, *reward learning*,
+    and *fine-tuning with reinforcement learning*. In reward learning, human feedback
+    on diverse responses is used to create reward scalars. Fine-tuning is done through
+    reinforcement learning with Proximal Policy Optimization (PPO), aiming to maximize
+    the learned reward.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: However, the field lacks benchmarks and resources for RL, which is seen as a
+    challenge. But this is changing day-by day. For example, an open-source library
+    called RL4LMs was introduced to address this gap. Claude, a dialogue agent, uses
+    *Constitutional AI*, where the reward model is learned via RL from AI feedback.
+    The focus is on reducing harmful outputs, with guidance from a set of principles
+    provided by humans. See more about the topic of *Constitutional AI* in one of
+    our blog post [here](https://mlnotes.substack.com/p/ai-supervised-ai).
+  prefs: []
+  type: TYPE_NORMAL
+- en: 1.4.3 GAN
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: Generative Adversarial Networks (GANs) are widely used for image generation.
+    GANs consist of a generator and a discriminator. The generator creates new data,
+    while the discriminator decides if the input is real or not.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The design of the generator and discriminator influences GAN training and performance.
+    Various GAN variants have been developed, including LAPGAN, DCGAN, Progressive
+    GAN, SAGAN, BigGAN, StyleGAN, and methods addressing mode collapse like D2GAN
+    and GMAN.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The following graph illustrates some of the categories of vision generative
+    models.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![category-of-visionGenModels-intro](../Images/a055afb44cdf3aa9de491dd020a689ac.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Figure 1.4: Categories of vision generative models. [Image source](https://arxiv.org/pdf/2303.04226.pdf)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Although GAN models are not the focus of our book, they are essential in powering
+    multi-modality applications such as the diffusion models.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 1.4.4 Applications
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: Chatbots are probably one of the most popular applications for LLMs.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Chatbots are computer programs that mimic human conversation through text-based
+    interfaces. They use language models to understand and respond to user input.
+    Chatbots have various use cases, like customer support and answering common questions.
+    Our “*chat with your PDF documents*” is a up-and-coming use case!
+  prefs: []
+  type: TYPE_NORMAL
+- en: Other notable examples include Xiaoice, developed by Microsoft, which expresses
+    empathy, and Google’s Meena, an advanced chatbot. Microsoft’s Bing now incorporates
+    ChatGPT, opening up new possibilities for chatbot development.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![KG-apps-intro](../Images/504df5a1ad13cc3d6a4b7a9793a70086.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Figure 1.5: Knowlege Graph for Applications. [Image source](https://arxiv.org/pdf/2303.04226.pdf)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: This graph illustrates the relationships among current research areas, applications,
+    and related companies. Research areas are denoted by dark blue circles, applications
+    by light blue circles, and companies by green circles.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'In addition, we have previously written about chatbots and now they are part
+    of history, but still worth reviewing:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Blogpost: [What Does A Chatbot Look Like Under the Hood?](https://open.substack.com/pub/mlnotes/p/what-does-a-chatbot-look-like-under?r=164sm1&utm_campaign=post&utm_medium=web)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Blogpost: [What Is Behind the Scene of A Chatbot NLU?](https://open.substack.com/pub/mlnotes/p/what-is-behind-the-scene-of-a-chatbot?r=164sm1&utm_campaign=post&utm_medium=web)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Blogpost: [What More Can You Do with Chatbots?](https://open.substack.com/pub/mlnotes/p/what-more-can-you-do-with-chatbots?r=164sm1&utm_campaign=post&utm_medium=web)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Of course, chatbots are not the only application. There are vast possibilities
+    in arts and design, music generation, education technology, coding and beyond
+    - your imagination doesn’t need to stop here.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 1.4.5 Prompt Learning
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: Prompt learning is a new concept in language models. Instead of predicting \(y\)
+    given \(x\), it aims to find a template \(x^\prime\) that predicts \(P(y|x^\prime)\).
+  prefs: []
+  type: TYPE_NORMAL
+- en: '*Normally, prompt learning will freeze the language model and directly perform
+    few-shot or zero- shot learning on it. This enables the language models to be
+    pre-trained on large amount of raw text data and be adapted to new domains without
+    tuning it again. Hence, prompt learning could help save much time and efforts.*'
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: 'Traditionally, prompt learning involves prompting the model with a task, and
+    it can be done in two stages: prompt engineering and answer engineering.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Prompt engineering:** This involves creating prompts, which can be either
+    discrete (manually designed) or continuous (added to input embeddings) to convey
+    task-specific information.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Answer engineering:** After reformulating the task, the generated answer
+    must be mapped to the correct answer space.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Besides single-prompt, *multi-prompt methods* combine multiple prompts for better
+    predictions, and *prompt augmentation* basically beefs up the prompt to generate
+    better results.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Moreover, in-context learning, a subset of prompt learning, has gained popularity.
+    It enhances model performance by incorporating a pre-trained language model and
+    supplying input-label pairs and task-specific instructions to improve alignment
+    with the task.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Overall, in the dynamic landscape of language models, tooling and applications,
+    the graph below illustrates to the evolution of language model engineering. With
+    increasing flexibility along the x-axis and rising complexity along the y-axis,
+    this graph offers a bird’s-eye view of the choices and challenges faced by developers,
+    researchers and companies.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![emg-RAG-LLM](../Images/da0f4a9a0a8a71e45e703adcc31f003f.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Figure 1.6: Emerging RAG & Prompt Engineering Architecture for LLMs. [Image
+    source](https://cobusgreyling.medium.com/updated-emerging-rag-prompt-engineering-architectures-for-llms-17ee62e5cbd9)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: In the top-right corner, you can see the complex, yet powerful tools like OpenAI,
+    Cohere, and Anthropic (to-be-added), which have pushed the boundaries of what
+    language models can achieve. Along the diagonal, the evolution of prompt engineering
+    is displayed, from static prompts to templates, prompt chaining, RAG pipelines,
+    autonomous agents, and prompt tuning. On the more flexible side, options like
+    Haystack and LangChain have excelled, presenting broader horizons for those seeking
+    to harness the versatility of language models.
+  prefs: []
+  type: TYPE_NORMAL
+- en: This graph serves as a snapshot of the ever-evolving landscape of toolings in
+    the realm of language model and prompt engineering today, providing a roadmap
+    for those navigating the exciting possibilities and complexities of this field.
+    It is likely going to be changing every day, reflecting the continuous innovation
+    and dynamism in the space.
+  prefs: []
+  type: TYPE_NORMAL
+- en: In the next Chapter we’ll turn our focus to more details of Retrieval Augmented
+    Generation (RAG) pipelines. We will break down their key components, architecture,
+    and the key steps involved in building an efficient retrieval system.
+  prefs: []
+  type: TYPE_NORMAL

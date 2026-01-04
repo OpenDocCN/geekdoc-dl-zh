@@ -1,0 +1,718 @@
+- en: 3  RAG Pipeline Implementation
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 原文：[https://mallahyari.github.io/rag-ebook/03_prepare_data.html](https://mallahyari.github.io/rag-ebook/03_prepare_data.html)
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: 3.1 Preprocessing PDF documents
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Before we can harness the power of Large Language Models (LLMs) and particularly
+    RAG method for question answering over PDF documents, it’s essential to prepare
+    our data. PDFs, while a common format for documents, pose unique challenges for
+    text extraction and analysis. In this section, we’ll explore the critical steps
+    involved in preprocessing PDF documents to make them suitable for our Chat-to-PDF
+    app. These steps are not only essential for PDFs but are also applicable to other
+    types of files. However, our primary focus is on PDF documents due to their prevalence
+    in various industries and applications.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 3.1.1 PDF Text Extraction
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: 'PDFs may contain a mix of text, images, tables, and other elements. To enable
+    text-based analysis and question answering, we need to extract the textual content
+    from PDFs. Here’s how you can accomplish this:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Text Extraction Tools:** Explore available tools and libraries like PyPDF2,
+    pdf2txt, or PDFMiner to extract text from PDF files programmatically.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Handling Scanned Documents:** If your PDFs contain scanned images instead
+    of selectable text, you may need Optical Character Recognition (OCR) software
+    to convert images into machine-readable text.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Quality Control:** Check the quality of extracted text and perform any necessary
+    cleanup, such as removing extraneous characters or fixing formatting issues.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 3.1.2 Handling Multiple Pages
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: 'PDF documents can span multiple pages, and maintaining context across pages
+    is crucial for question answering. Here’s how you can address this challenge:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Page Segmentation:** Segment the document into logical units, such as paragraphs
+    or sections, to ensure that context is preserved.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Metadata Extraction:** Extract metadata such as document titles, authors,
+    page numbers, and creation dates. This metadata can aid in improving searchability
+    and answering user queries.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 3.1.3 Text Cleanup and Normalization
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: 'PDFs may introduce artifacts or inconsistencies that can affect the quality
+    of the extracted text. To ensure the accuracy of question answering, perform text
+    cleanup and normalization:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Whitespace and Punctuation:** Remove or replace excessive whitespace and
+    special characters to enhance text readability.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Formatting Removal:** Eliminate unnecessary formatting, such as font styles,
+    sizes, and colors, which may not be relevant for question answering.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Spellchecking:** Check and correct spelling errors that might occur during
+    the extraction process.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 3.1.4 Language Detection
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: If your PDF documents include text in multiple languages, it is a good idea
+    to implement language detection algorithms to identify the language used in each
+    section. This information can be useful when selecting appropriate LLM models
+    for question answering.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 3.2 Data Ingestion Pipeline Implementation
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'As it has been depicted in [Figure 2.3](02_rag.html#fig-rag-data-pipeline)
+    the first step of the data ingestion pipeline is *extracting and spliting text
+    from the pdf documents*. There are several packages for this goal including:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PyPDF2](https://pypdf2.readthedocs.io/en/3.0.0/)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[pdfminer.six](https://pdfminersix.readthedocs.io/en/latest/)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[unstructured](https://github.com/Unstructured-IO/unstructured)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '*Note* *If you have scanned pdfs, you can utilize libraries such as **unstructured**,
+    **pdf2image** and **pytesseract**.*  *Additionally, there are data loaders hub
+    like [llamahub](https://llamahub.ai/) that contains tens of data loaders for reading
+    and connecting a wide variety data sources to a Large Language Model (LLM).'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Finally, there are packages like [llamaindex](https://gpt-index.readthedocs.io/en/stable/index.html),
+    and [langchain](https://python.langchain.com/docs/get_started/introduction). These
+    are frameworks that faciliates developing applications powered by LLMs. Therefore,
+    they have implemented many of these data loaders including extracting and spliting
+    text from pdf files.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Step 1: Install necessary libraries**'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs: []
+  type: TYPE_PRE
+- en: '***Step 2: Load the pdf file and extract the text from it**'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Code below will iterate over the pages of the pdf file, extract the text and
+    add it to the `documents` list object, see [Figure 3.1](#fig-load-pdf).
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Load pdf files](../Images/be27629d726d92c9d69eeb5813496211.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Figure 3.1: Load pdf files'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Now every page has become a separate document that we can later *embed (vectorize)*
+    and *store* in the vector database. However, some pages could be very lengthy
+    and other ones could be very short as page length varies. This could signaficantly
+    impact the quality of the document search and retrieval.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Additionally, LLMs have a limited context window (token limit), i.e. they can
+    handle certain number of tokens (a token roughly equals to a word). Therefore,
+    we instead first concatenate all the pages into a long text document and then
+    split that document into smaller reletively equal size chunks. We then embed each
+    chunk of text and insert into the vector database.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Nevertheless, since we are going to use `llamaindex` and `langchain` frameworks
+    for the RAG pipeline, Let’s utilize the features and functions these frameworks
+    offer. They have data loaders and splitters that we can use to read and split
+    pdf files. You can see the code in [Figure 3.2](#fig-langchain-dataloader).
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Langchain data loader](../Images/c66fdd1506da59e16b7dd0e8996878f2.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Figure 3.2: Langchain data loader'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '`pdf_content[0]` contains the entire content of pdf, and has s special structure.
+    It is a `Document` object with some properties including `page_content` and `metadata`.
+    `page_content` is the textual content and `metadata` contains some metadata about
+    the pdf. Here’s the partial output the `Document` object of our pdf in [Figure 3.3](#fig-langchain-dataloader-output).'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Langchain data loader output](../Images/afe331763882884e6f412be13ba495b3.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Figure 3.3: Langchain data loader output'
+  prefs: []
+  type: TYPE_NORMAL
+- en: A `Document` object is a generic class for storing a piece of unstructured text
+    and its associated metadata. See [here](https://api.python.langchain.com/en/latest/schema/langchain.schema.document.Document.html#langchain.schema.document.Document)
+    for more information.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Step 3: Split the text into smaller chunks**'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'There are several different text splitters. For more information see [langchain
+    API](https://api.python.langchain.com/en/latest/api_reference.html#module-langchain.text_splitter),
+    or [llamaIndex documentation](https://docs.llamaindex.ai/en/stable/examples/low_level/oss_ingestion_retrieval.html#use-a-text-splitter-to-split-documents).
+    Two common ones are:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '`CharacterTextSplitter`: Split text based on a certain number characters.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '`TokenTextSplitter`: Split text to tokens using model tokenizer.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: The following code in [Figure 3.4](#fig-langchain-text-split) chunks the pdf
+    content into sizes no greater than 1000, with a bit of overlap to allow for some
+    continued context.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Langchain text split method](../Images/df4021fc07b692730b57459e030e3107.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Figure 3.4: Langchain text split method'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Here’s the number of chunks created from splitting the pdf file.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE1]'
+  prefs: []
+  type: TYPE_PRE
+- en: '***Step 4: Embed and store the documents in the vector database**'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'In this step we need to convert chunks of text into embedding vectors. There
+    are plenty of embedding models we can use including OpenAI models, Huggingface
+    models, and Cohere models. You can even define your own custom embedding model.
+    Selecting an embedding model depnds on several factors:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Cost:** Providers such as OpenAI or Cohere charge for embeddings, albeit
+    it’s cheap, when you scale to thusands of pdf files, it will become prohibitive.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Latency and speed:** Hosting an embedding model on your server reduce the
+    latency, whereas using vendors’ API increases the latency.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Convenience:** Using your own embedding model needs more compute resource
+    and maintainance whereas using vendors APIs like OpenAI gives you a hassle-free
+    experience.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Similar to having several choices for embedding models, there are so many options
+    for choosing a vector database, which is out the scope of this book.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[Figure 3.5](#fig-vector-db1) shows some of the most popular vector database
+    vendors and some of the features of their hosting. This [blog](https://thedataquarry.com/posts/vector-db-1/)
+    fully examines these vector databases from different perspective.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![vector databases](../Images/39f923ccaa9ee4ba5ed7918862284dfe.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Figure 3.5: Various vector databases. [Image source](https://thedataquarry.com/posts/vector-db-1/)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: We are going to use OpenAI models, particularly `text-embedding-ada-002` for
+    embedding. Furthermore, we choose [Qdrant](https://qdrant.tech/) as our vector
+    database. It’s open source, fast, very flexible, and offers a free clould-based
+    tier.
+  prefs: []
+  type: TYPE_NORMAL
+- en: We first install the `openai` and `qdrant` package.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE2]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*We also require an API key that we can get it from [here](https://platform.openai.com/account/api-keys).'
+  prefs: []
+  type: TYPE_NORMAL
+- en: If we set `OPENAI_API_KEY` environment variable to our API key, we can easily
+    call the functions that needs it without getting any error. Otherwise we can pass
+    the API key parameter to functions requiring it. [Figure 3.6](#fig-langchain-qdrant-setup)
+    shows how to do it.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Qdrant vector database setup via Langchain](../Images/c49fd183fe7f992ead03121a78acb0d5.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Figure 3.6: Qdrant vector database setup via Langchain'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Please note that there are several different ways to achieve the same goal (embedding
+    and storing in the vector database). You can use `Qdrant` client library directly
+    instead of using the langchain wrapper for it. Also, you can first create embeddings
+    separately and then store them in the Qdrant vector database. Here, we embedded
+    the documents and stored them all by calling `Qdrant.from_documents()`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: In addition, you can use Qdrant cloud vector database to store the embeddings
+    and use their REST API to interact with it, unlike this example where the index
+    is stored locally in the `/tmp/local_qdrant` directory. This approach is suitable
+    for testing and POC (Proof-Of-Concept), not for production environment.
+  prefs: []
+  type: TYPE_NORMAL
+- en: We can try and see how we can search and retrieve relevant documents from the
+    vector database. For instance, let’s see what the answer to the question *“what
+    is knearest neighbor?”*. See the output in [Figure 3.7](#fig-langchain-query-example).
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Question answering example with output](../Images/c9a7f11cb00aba29b93a195aa04258d7.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Figure 3.7: Question answering example with output'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Awesome! The retrieved answer seems quite relevant.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The entire code is displayed in [Figure 3.8](#fig-langchain-query-retrieval-fullcode).
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![The entire code for retrieval component](../Images/9b02a6f4a7045a494e149161a591cfe2.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Figure 3.8: The entire code for retrieval component****  ****## 3.3 Generation
+    Component Implementation'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[Figure 3.9](#fig-rag-pipeline-simplified) illustrates a simplified version
+    of the RAG pipeline we saw in [Chapter 2](02_rag.html). So far our **Retrieval**
+    component of the RAG is implemented. In the next section we will implement the
+    **Generation** component.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![rag pipeline](../Images/fb5c30e350d250ed3c354c72f5ee492b.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Figure 3.9: RAG pipeline'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The steps for generating a response for a user’s question are:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Step 1:** Embed the user’s query using the same model used for embedding
+    documents'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Step 2:** Pass the query embedding to vector database, search and retrieve
+    the top-k documents (i.e. context) from the vector database'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Step 3:** Create a “prompt” and include the user’s query and context in it'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Step 4:** Call the LLM and pass the the prompt'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Step 5:** Get the generated response from LLM and display it to the user'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Again, we can follow each step one by one, or utilize the features langchain
+    or llamaIndex provide. We are going to use langchain in this case.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Langchain includes [several kinds](https://api.python.langchain.com/en/latest/api_reference.html#module-langchain.chains)
+    of built-in question-answering chains. A *chain* in LangChain refers to a sequence
+    of calls to components, which can include other chains or external tools. In order
+    to create a question answering chain, we use:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**load_qa_chain:** `load_qa_chain()` is a function in Langchain that loads
+    a pre-configured question answering chain. It takes in a language model like OpenAI,
+    a chain type (e.g. “stuff” for extracting answers from text), and optionally a
+    prompt template and memory object. The function returns a `QuestionAnsweringChain`
+    instance that is ready to take in documents and questions to generate answers.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**load_qa_with_sources_chain:** This is very similar to `load_qa_chain` except
+    it contains sources/metadata along with the returned response.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**RetrievalQA:** `RetrievalQA` is a class in Langchain that creates a question
+    answering chain using retrieval. It combines a retriever, prompt template, and
+    LLM together into an end-to-end QA pipeline. The prompt template formats the question
+    and retrieved documents into a prompt for the LLM. This chain retrieves relevant
+    documents from a vector database for a given query, and then generates an answer
+    using those documents.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**RetrievalQAWithSourcesChain:** It is a variant of RetrievalQA that returns
+    relevant source documents used to generate the answer. This chain returns an `AnswerWithSources`
+    object containing the answer string and a list of source IDs.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Here’s the code demonstraing the implementation, [Figure 3.10](#fig-langchain-response-generation):'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Response generation using Langchain chain](../Images/4beb53ede3a72e46d226390bde4246a3.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Figure 3.10: Response generation using Langchain chain'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[Figure 3.11](#fig-load-qa-with-resource-chain) shows how to use `load_qa_with_sources_chain`:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Using `load_qa_with_sources_chain` chain for response generation](../Images/cf1fd6e060d6953c4cc7ac1e832e7163.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Figure 3.11: Using `load_qa_with_sources_chain` chain for response generation'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Similarly, if we use `RetrievalQA`, we will have [Figure 3.12](#fig-retrieval-qa):'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![The usage of `RetrievalQA` chain` chain for response generation](../Images/de0e2d96a245ad366defc21cfef4919a.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Figure 3.12: The usage of `RetrievalQA` chain'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'And here’s the code when we use `RetrievalQAWithSourcesChain`, [Figure 3.13](#fig-retrieval-qa-with-resource):'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Code snippet for using Langchain `RetrievalQAWithSourcesChain`](../Images/fcbb58b80ac8af0e2648df33f719e0b3.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Figure 3.13: Code snippet for using Langchain `RetrievalQAWithSourcesChain`
+    for response generation'
+  prefs: []
+  type: TYPE_NORMAL
+- en: As you can see, it’s fairly straight forward to implement RAG (or say a prototype
+    RAG application) using frameworks like langchain or llamaIndex. However, when
+    it comes to deploying RAG to production and scaling the system, it becomes notoriously
+    challenging. There are a lot of nuances that will affect the quality of the RAG,
+    and we need to take them into consideration. We will discuss some of the main
+    challenges and how to address them in the next few sections.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 3.4 Impact of Text Splitting on Retrieval Augmented Generation (RAG) Quality
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'In the context of building a Chat-to-PDF app using Large Language Models (LLMs),
+    one critical aspect that significantly influences the quality of your Retrieval
+    Augmented Generation (RAG) system is how you split text from PDF documents. Text
+    splitting can be done at two levels: *splitting by character* and *splitting by
+    token*. The choice you make between these methods can have a profound impact on
+    the effectiveness of your RAG system. Let’s delve into the implications of each
+    approach.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 3.4.1 Splitting by Character
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: 'Advantages:'
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: '**Fine-Grained Context:** Splitting text by character retains the finest granularity
+    of context within a document. Each character becomes a unit of input, allowing
+    the model to capture minute details.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Challenges:'
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: '**Long Sequences:** PDF documents often contain long paragraphs or sentences.
+    Splitting by character can result in extremely long input sequences, which may
+    surpass the model’s maximum token limit, making it challenging to process and
+    generate responses.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Token Limitations:** Most LLMs, such as GPT-3, have token limits, often around
+    4,000 tokens. If a document exceeds this limit, you’ll need to truncate or omit
+    sections, potentially losing valuable context.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Increased Inference Time:** Longer sequences require more inference time,
+    which can lead to slower response times and increased computational costs.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 3.4.2 Splitting by Token
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: 'Advantages:'
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: '**Token Efficiency:** Splitting text by token ensures that each input sequence
+    remains within the model’s token limit, allowing for efficient processing.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Balanced Context:** Each token represents a meaningful unit, striking a balance
+    between granularity and manageability.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Scalability:** Splitting by token accommodates documents of varying lengths,
+    making the system more scalable and adaptable.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Challenges:'
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: '**Contextual Information:** Token-based splitting may not capture extremely
+    fine-grained context, potentially missing nuances present in character-level splitting.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 3.4.3 Finding the Right Balance
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: 'The choice between character-level and token-level splitting is not always
+    straightforward and may depend on several factors:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Document Types:** Consider the types of PDF documents in your collection.
+    Technical manuals with precise details may benefit from character-level splitting,
+    while general documents could work well with token-level splitting.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Model Limitations:** Take into account the token limits of your chosen LLM.
+    If the model’s limit is a significant constraint, token-level splitting becomes
+    a necessity.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**User Experience:** Assess the trade-off between detailed context and response
+    time. Character-level splitting might provide richer context but at the cost of
+    slower responses.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 3.4.4 Hybrid Approaches
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: In practice, you can also explore hybrid approaches to text splitting. For instance,
+    you might use token-level splitting for most of the document and switch to character-level
+    splitting when a specific question requires fine-grained context.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The impact of text splitting on RAG quality cannot be overstated. It’s a critical
+    design consideration that requires a balance between capturing detailed context
+    and ensuring system efficiency. Carefully assess the nature of your PDF documents,
+    the capabilities of your chosen LLM, and user expectations to determine the most
+    suitable text splitting strategy for your Chat-to-PDF app. Regular testing and
+    user feedback can help refine this choice and optimize the overall quality of
+    your RAG system.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 3.5 Impact of Metadata in the Vector Database on Retrieval Augmented Generation
+    (RAG)
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: The inclusion of metadata about the data stored in the vector database is another
+    factor that can significantly enhance the quality and effectiveness of your Retrieval
+    Augmented Generation (RAG) system. Metadata provides valuable contextual information
+    about the PDF documents, making it easier for the RAG model to retrieve relevant
+    documents and generate accurate responses. Here, we explore the ways in which
+    metadata can enhance your RAG system.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 3.5.1 Contextual Clues
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: 'Metadata acts as contextual clues that help the RAG model better understand
+    the content and context of each PDF document. Typical metadata includes information
+    such as:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Document Title:** The title often provides a high-level summary of the document’s
+    content.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Author:** Knowing the author can offer insights into the document’s perspective
+    and expertise.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Keywords and Tags:** Keywords and tags can highlight the main topics or themes
+    of the document.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Publication Date:** The date of publication provides a temporal context,
+    which is crucial for understanding the relevance of the document.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Document Type:** Differentiating between research papers, user manuals, and
+    other types of documents can aid in tailoring responses appropriately.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 3.5.2 Improved Document Retrieval
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: 'With metadata available in the vector database, the retrieval component of
+    your RAG system can become more precise and efficient. Here’s how metadata impacts
+    document retrieval:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Relevance Ranking:** Metadata, such as document titles, keywords, and tags,
+    can be used to rank the documents based on relevance to a user query. Documents
+    with metadata matching the query can be given higher priority during retrieval.
+    For example, if a user asks a question related to “machine learning,” documents
+    with “machine learning” in their keywords or tags might be given priority during
+    retrieval.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Filtering:** Metadata can be used to filter out irrelevant documents early
+    in the retrieval process, reducing the computational load and improving response
+    times. For instance, if a user asks about “biology,” documents with metadata indicating
+    they are engineering manuals can be excluded from consideration.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Enhanced Query Understanding:** Metadata provides additional context for
+    the user’s query, allowing the RAG model to better understand the user’s intent
+    and retrieve documents that align with that intent. For example, if the metadata
+    includes the publication date, the RAG model can consider the temporal context
+    when retrieving documents.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 3.5.3 Contextual Response Generation
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: 'Metadata can also play a crucial role in the generation component of your RAG
+    system. Here’s how metadata impacts response generation:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Context Integration:** Metadata can be incorporated into the response generation
+    process to provide more contextually relevant answers. For example, including
+    the publication date when answering a historical question.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Customization:** Metadata can enable response customization. For instance,
+    the tone and style of responses can be adjusted based on the author’s information.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Enhanced Summarization:** Metadata can aid in the summarization of retrieved
+    documents, allowing the RAG model to provide concise and informative responses.
+    For instance, if the metadata includes the document type as “research paper,”
+    the RAG system can generate a summary that highlights the key findings or contributions
+    of the paper.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 3.5.4 User Experience and Trust
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: Including metadata in the RAG system not only enhances its technical capabilities
+    but also improves the overall user experience. Users are more likely to trust
+    and find value in a system that provides contextually relevant responses. Metadata
+    can help build this trust by demonstrating that the system understands and respects
+    the nuances of the user’s queries.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Overall, incorporating metadata about data in the vector database of your Chat-to-PDF
+    app’s RAG system can significantly elevate its performance and user experience.
+    Metadata acts as a bridge between the user’s queries and the content of PDF documents,
+    facilitating more accurate retrieval and generation of responses.
+  prefs: []
+  type: TYPE_NORMAL
+- en: As we conclude our exploration of the nuts and bolts of RAG pipelines in this
+    Chapter, it’s time to move on to more complex topics. In Chapter 4, we’ll take
+    a deep dive and try to address some of the retrieval and generation challenges
+    that come with implementing advanced RAG systems.
+  prefs: []
+  type: TYPE_NORMAL
+- en: We’ll discuss the optimal chunk size for efficient retrieval, consider the balance
+    between context and efficiency, and introduce additional resources for evaluating
+    RAG performance. Furthermore, we’ll explore retrieval chunks versus synthesis
+    chunks and ways to embed references to text chunks for better understanding.
+  prefs: []
+  type: TYPE_NORMAL
+- en: We’ll also investigate how to rethink retrieval methods for heterogeneous document
+    corpora, delve into hybrid document retrieval, and examine the role of query rewriting
+    in enhancing RAG capabilities.****
+  prefs: []
+  type: TYPE_NORMAL
