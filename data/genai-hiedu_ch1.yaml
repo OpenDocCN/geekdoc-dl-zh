@@ -1,0 +1,1142 @@
+- en: 1. 高等教育中的人工智能简介
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'DOI: [10.4324/9781003459026-1](https://dx.doi.org/10.4324/9781003459026-1)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 人工智能的一个小输入，对人类的一个巨大输出。
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: ''
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: 周凯丽·陈
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: 1.1 简介
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 人工智能（AI）、大数据和物联网（IoT）的进步颠覆了许多行业，同样，它们也有潜力彻底改变教育领域。在这方面引起波澜的一个工具是*聊天生成预训练转换器*——最著名的ChatGPT，这是由OpenAI开发的一个预训练语言处理模型。在本章中，我们将首先介绍人工智能、大数据、物联网和生成式人工智能（GenAI）的概念，为读者提供对这些技术的基本理解，并提供一些来自教育环境的具体例子。为了使读者具备将人工智能融入课堂的决策所需的知识，本章还将概述人工智能的一些基本技术方面。然后，我们将深入探讨为什么ChatGPT是高等教育的变革者，这个工具能做什么，以及为什么它突然获得了如此巨大的关注。本章将以我们可能对人工智能和ChatGPT在教育中的应用提出的问题结束。
+  prefs: []
+  type: TYPE_NORMAL
+- en: 1.2 人工智能（AI）
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 当我们思考人工智能时，可能会立即将其与科幻小说和闪亮的机器人联系起来；然而，实际上，人工智能的科学已经存在了几十年。根据术语*人工智能（AI）*本身，它是由计算机算法和程序组成的、由人类制造的系统，可以执行通常需要人类智能的任务。我们可以在我们日常生活中使用的软件程序中找到它，例如YouTube、亚马逊、淘宝、Meta（Facebook）、谷歌翻译、谷歌地图、微软必应等平台。这些“智能”被集成到具有图像处理、语音识别、决策、语言翻译甚至人工创造力的能力的系统中。
+  prefs: []
+  type: TYPE_NORMAL
+- en: 人工智能是在机器中模拟人类智能，这些机器被设计成像人类一样思考和行动。人工智能涉及开发算法和模型，使计算机能够从数据中学习，并根据这些数据做出预测或决策。近年来电子和计算硬件的进步使得人工智能的发展取得了巨大的飞跃，使得计算能力更快，数据存储和内存容量增加，以及创造了新的算法，如深度学习。
+  prefs: []
+  type: TYPE_NORMAL
+- en: 1.2.1 三种类型的人工智能
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: 人工智能自20世纪50年代诞生以来已经取得了长足的进步。根据研究人员和人工智能哲学家们的观点，人工智能已经经历了显著的变化和扩展（例如，[Cordeschi,
+    2007](#ref1_11); [Shao et al., 2022](#ref1_53))，新的进步不断建立在先前的发展之上，从而产生了越来越复杂的系统。目前，根据机器智能的复杂性和范围，已经确定了人工智能的三个广泛类别：人工狭窄智能（ANI）、人工通用智能（AGI）和人工超级智能（ASI）。[图1.1](#fig1_1)展示了人工智能的类型。虽然这些可以被认为是人工智能的进化阶段，但应注意的是，AGI和ASI仍然是理论概念，并不一定通过线性进步来实现。
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![三种人工智能类型包括人工狭窄智能、人工通用智能和人工超级智能。](images/fig1_1_B.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: '[图1.1 三种人工智能类型。](#R_fig1_1)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**人工狭窄智能（ANI）**指的是设计用于执行特定任务并在大数据集上训练以精确执行任务的系统，例如下棋或翻译语言。然而，它们无法执行需要人类水平智能的任务。ANI帮助我们在社会领域取得了许多突破，例如在语音识别和物体识别或检测领域（[LeCun
+    et al., 2015](#ref1_29)）。Siri、Alexa、分析金融数据以寻找模式和异常的欺诈检测系统，以及使用传感器、摄像头和GPS数据来控制车辆的自动驾驶汽车，都是ANI的例子。这些系统通常被称为“弱人工智能”([Thierer
+    et al., 2017](#ref1_57))，因为它们的功能有限，并且由于针对狭窄定义的任务进行了优化，缺乏一般“智能”。'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**通用人工智能 (AGI)** 指的是将能够执行人类能够完成的任何智力任务的机器系统。AGI 指的是人工智能的一个假设的未来阶段，它“[弥合]了当前人工智能程序（其范围狭窄）与虚构中常见的
+    AGI 系统类型之间的差距” ([Goertzel, 2014](#ref1_17), p.2)。与 ANI 不同，AGI 系统将具备理解或学习任何智力任务的能力。它还将具有推理的能力。这样的系统将拥有更通用的智能，而不会局限于特定任务。AGI
+    被认为是人工智能进化的下一步，通常被称为“强人工智能” ([Mills, 2018](#ref1_41))。根据研究和新闻报道，人工智能研究实验室和公司尚未达到这一发展阶段
+    ([Baum & Villasenor, 2023](#ref1_7); [Bove, 2023](#ref1_9); [Gillani, 2023](#ref1_15))，但
+    AGI 是人工智能领域许多研究者的目标。AGI 的一个例子可能是一个能够启动和执行广泛任务的工具，例如一个教学软件，它可以分配课堂作业、为学生制定日程安排、批改作业、与行政人员、社区合作伙伴和其他学生协调，并适应新情况，所有这些都不需要人为干预或重新编程。'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**人工超级智能（ASI）**是最终概念化的AI进化类型（[Yampolskiy，2016](#ref1_60)），在这种类型中，系统将在所有可能的方面超越人类智能，并具有在所有任务中，包括创造性、一般知识和解决问题的更高阶思维技能中超越我们的能力。有些人认为，ASI系统将能够解决复杂问题、做出决策，甚至可能拥有意识和情感（例如，[Barney，2023](#ref1_6)；[Marri，2018](#ref1_34)）。这种复杂性有时被称为“AI奇点”([Grossman，2023](#ref1_18)）。在这个语境中，“奇点”一词借自物理学领域，在那里它被用来描述一个时空点，我们理解的规则会崩溃，例如在黑洞的中心。在AI的语境中，奇点将代表一个点，机器变得如此先进，以至于人类心智无法预测或理解其行为或影响。这可能包括AI改进其设计并创造越来越强大的机器的连续代。这种类型的AI仍然是纯粹推测性的，其确切的发展时间表尚不清楚。然而，ASI及其对社会的影响引发了众多伦理和道德问题。ASI通常被描绘成对人类的一种潜在威胁，并且有关如何确保其安全发展和部署的辩论正在进行（[Bostrom，2014](#ref1_8)；[Yudkowsky，2006](#ref1_61)）。在思考ASI时，它通常与虚构的描绘相关联，如《终结者》中的Skynet，*漫威*系列中的Vision，或电影《我，机器人》中的AI机器人（Sonny）。'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 目前，我们仍处于ANI阶段，我们的系统被设计来执行特定任务，而AGI和ASI仍然是持续研究和推测的领域。未来进步的潜力是巨大的，AI对社会的影响继续是研究和辩论的主题。
+  prefs: []
+  type: TYPE_NORMAL
+- en: 1.3 大数据和物联网（IoT）
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 大数据和物联网（IoT）的增长创造了一个平台，AI可以在广泛的行业和应用中应用，从医疗保健和金融到零售和交通。大数据和物联网的进步也极大地影响了我们的生活方式，使我们的生活更加便利和高效，从而提高了生产力和生活质量。
+  prefs: []
+  type: TYPE_NORMAL
+- en: 1.3.1 什么是大数据？
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: 你可能听说过“大数据”这个术语。正如其名称所示，大数据指的是大量数据（[Favaretto等人，2020](#ref1_14)；[Kitchin & McArdle，2016](#ref1_25)），但你是否知道数据可以以各种形式存在，如文本、数字、图像、音频记录和视频？
+  prefs: []
+  type: TYPE_NORMAL
+- en: 大数据指的是过于复杂和庞大的数据集，传统数据处理系统无法高效处理（[McAfee & Brynjolfsson, 2012](#ref1_37)）。它们可以是结构化、半结构化或非结构化数据，这些数据来自各种来源，包括社交媒体、电子商务平台、传感器、政府数据、金融数据、电信和游戏行业，以及系统和软件日志。结构化数据是有组织的信息，以特定的和预定义的格式组织，例如表格、电子表格和数据库（[Sarker,
+    2021](#ref1_51)）。这些数据已经有一定的分类。结构化数据的例子包括客户记录、金融交易和库存清单。这类数据易于使用传统数据处理工具进行搜索、排序和分析。另一方面，非结构化数据是不适合整齐地放入预定义类别或结构中的信息（[Sarker,
+    2021](#ref1_51)）。通常需要专门的工具和技术来提取有意义的见解。非结构化数据的例子包括社交媒体帖子、电子邮件和客户反馈。
+  prefs: []
+  type: TYPE_NORMAL
+- en: 不同类型的数据可以增强数据分析的全面性和精确性。大量数据的可用性使得AI算法能够更准确地学习和做出预测。有了大数据，AI模型可以在更大的数据集上训练，并做出更明智和可靠的预测。因此，管理、处理和从大数据中提取见解通常需要专门的工具和技术，例如数据仓库、机器学习和分布式计算。然而，重要的不仅仅是数据的数量——组织如何使用这些数据也同样重要。大数据可以用于分析，从而得出更好的决策和战略举措。[表1.1](#table1_1)展示了大数据各种来源的例子列表（[Agrawal
+    et al., 2011](#ref1_1)；[Raghupathi & Raghupathi, 2014](#ref1_47)；[Sagiroglu &
+    Sinanc, 2013](#ref1_50)）。
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[表1.1 大数据各种来源的例子](#R_table1_1)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '| **社交媒体** |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '|'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 社交网络帖子：在Meta（Facebook）、X（之前为Twitter）、Instagram和LinkedIn等社交媒体平台上发布的帖子。
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 在线视频：上传到YouTube、Vimeo等平台的视频。
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 用户生成内容：用户在各种网站和平台上生成的评论、评分和其他类型的内容。
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 社交媒体广告：广告商在社交媒体平台上收集的用户行为、偏好和对广告的反应数据。
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '|'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '| **电子商务** |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '|'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 电子商务交易：通过亚马逊、eBay和其他网站进行的在线购买。
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 银行交易：通过在线银行平台进行的交易，包括账单支付、货币转账和其他金融交易。
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 股票市场交易：通过在线股票交易平台进行的交易。
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 医疗交易：通过在线平台进行的电子健康记录（EHR）交易和其他医疗相关交易。
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '|'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '| **传感器** |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '|'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 环境传感器：追踪温度、湿度、气压和其他环境参数的记录。
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: GPS传感器：追踪人员、车辆和其他物体的位置和移动。
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 医疗传感器：在医疗保健中用于监测生命体征和跟踪患者的健康状况。
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 工业传感器：监控工业机械的性能和追踪生产过程。
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 交通传感器：追踪道路和高速公路上车辆的流量，用于提供交通管理和分析数据。
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 零售传感器：监控零售环境中顾客的行为，用于提供营销和销售分析数据。
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 家庭自动化传感器：追踪智能家居中电器、照明、供暖和冷却等系统的使用记录。
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '|'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '| **政府、金融、电信和游戏行业** |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '|'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 政府：政府机构生成数据，如人口统计数据、犯罪统计和税务记录。
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 金融服务业：金融机构生成数据，包括交易记录、客户行为和市场数据。
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 电信服务：电信公司生成数据，包括通话记录、网络性能数据和客户使用数据。
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 游戏公司：在线游戏平台生成数据，包括玩家行为、游戏内交易和性能指标。
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '|'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '| **系统和软件日志** |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '|'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 网络服务器日志：追踪所有对网络服务器的请求记录，包括请求类型、源IP地址和请求时间等信息。
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 应用日志：追踪由软件应用程序生成的事件记录，例如错误消息、性能指标和用户操作。
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 网络日志：追踪网络活动记录，包括有关网络流量、安全事件和系统事件的信息。
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 系统日志：追踪由操作系统生成的事件记录，如启动事件、系统崩溃和安全事件。
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 安全日志：追踪与安全相关的事件记录，例如尝试和成功的登录尝试、安全设置的更改以及安全事件。
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '|'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 1.3.1.1 大数据的特点
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: 2001年，Gartner分析师道格·兰尼（Doug Laney）首次提出了“三大特征”——体积（Volume）、速度（Velocity）和多样性（Variety）作为大数据的主要特征（[Laney,
+    2001](#ref1_28)）。这三个“V”构成了一个关键框架，影响着组织和研究人员如何接近和使用大数据。除了兰尼的工作之外，研究还提出了其他重要的特征，如真实性、可变性和价值（[Jin
+    et al., 2015](#ref1_21); [Kitchin & McArdle, 2016](#ref1_25); [Sagiroglu & Sinanc,
+    2013](#ref1_50); [Sharma, 2022](#ref1_54); [Song & Zhu, 2015](#ref1_55)）。这些特征总结在[表1.2](#table1_2)中，通常用于支持组织在关于大数据的决策中，以及确定处理、分析和从这些数据中提取洞察力的最佳方式。[Kitchin和McArdle（2016）](#ref1_25)提供了大数据本体特征的清晰概述。
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[表1.2 大数据特征](#R_table1_2)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '| **体积**指的是组织、个人和系统生成和存储的大量数据。随着数字技术的兴起，大数据通常涉及拍字节、艾字节，甚至泽字节的数据。 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| **速度**指的是数据生成和持续处理的速度。大数据是实时生成和处理的，需要我们快速响应并使用大量的处理能力来跟上不断变化的情况。 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| **多样性**指的是大数据中存在的各种类型和格式的数据。这些可以包括结构化数据，如电子表格或数据库，以及非结构化数据，如社交媒体评论中的文本。 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| **真实性**，也称为数据保证，指的是数据的品质、准确性和完整性（[Gillis, 2021](#ref1_16); [Raghupathi &
+    Raghupathi, 2014](#ref1_47)）。这是一个重要的方面，因为大数据只有在数据可靠和可信的情况下才有用。例如，数据的完整性或数据输入错误（如拼写错误和输入错误）就是其中的例子。
+    |'
+  prefs: []
+  type: TYPE_TB
+- en: '| **可变性**指的是数据含义的不断变化（[McNulty, 2017](#ref1_40)）。例如，某些词语的解释可能取决于它们被使用的具体上下文。
+    |'
+  prefs: []
+  type: TYPE_TB
+- en: '| **价值**指的是数据可以做什么，以及大数据可以提供的价值（[Gillis, 2021](#ref1_16)）。从数据中推断价值的方式因案例而异。
+    |'
+  prefs: []
+  type: TYPE_TB
+- en: '| **复杂性**指的是数据集中的复杂性，例如来自科学模拟的时间变化协变量的数据（[Hong 等人，2018](#ref1_19)）。数据在结构上可能非常复杂，并且可能存在复杂的关系，这使得识别模式、相关性和洞察变得困难。一个来自教育环境的例子是分析来自各种来源的大量数据以分析学生的留存情况。可能存在多个变量，例如学生的个人特征、学术支持服务和机构的教学法，这些都应该在数据分析中予以考虑。在此背景下，大数据的复杂性需要高级分析技能、强大的数据处理工具和稳健的数据管理基础设施。
+    |'
+  prefs: []
+  type: TYPE_TB
+- en: '| **全面性**指的是正在分析的数据的全面性（[Mayer-Schonberger & Cukier，2013](#ref1_36)）。这表示数据应该涵盖分析主题的所有方面，以提供一个完整的画面。一个例子是学生表现，通过包括所有学生群体而不是仅仅捕捉样本，以及从所有相关方面收集数据来实现全面性，例如考试成绩、辅导和作业完成率、课堂参与程度、课外活动和成就，以及教师评估。
+    |'
+  prefs: []
+  type: TYPE_TB
+- en: '| **关联性**指的是数据集之间的关系和它们可以如何被链接、关联和集成以提供有意义的见解和信息（[Boyd & Crawford，2012](#ref1_10)）。一个来自金融行业的例子是，将来自股票市场、客户行为信息和市场趋势等不同来源的大量数据集成进行分析，以识别趋势和相关性。
+    |'
+  prefs: []
+  type: TYPE_TB
+- en: '| **扩展性**指的是数据如何可以被扩展、扩展或与其他数据源和系统集成（[Marz & Warren，2012](#ref1_35)）。这包括添加新数据源的能力，以及将来自不同来源的数据组合或关联起来，以获得收集信息的更全面视角。例如，健康记录可以与来自临床研究和医疗设备的生成数据进行分析，为识别疾病模式提供更全面的见解，以及提高患者护理和治疗水平。
+    |'
+  prefs: []
+  type: TYPE_TB
+- en: 1.3.1.2 高等教育中大数据及其特征的例子
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: 教育中的大数据——例如，关于学生学习的数据和分析——具有上述所有特征。*数据量*可以指从各种来源收集和分析大量数据，包括学生成绩单、考试成绩、人口统计数据以及来自在线学习平台的出勤和参与数据。*数据速度*可以指学习平台上学生进度和成就的实时更新。收集的数据来源的*多样性*可能非常广泛，包括成绩、作业（如反思日记、视频演示和作品集）的分数以及学生活动日志（如通信渠道和出勤记录）。数据的*真实性*可能指学生在提供错误信息时出现的错误和拼写错误，或者学生在一定时间后退课后缺失的数据。为了应对这些挑战，机构可能使用复杂的算法和模型从收集的数据中提取洞察力，并为包括学生保留、课程设计和资源配置在内的领域做出明智的决策。使用创新模型整合和分析来自不同来源和不同格式的数据可能会增加大数据的*复杂性*。*可变性*也是一个关注点，例如学生有不同的学习速度和模式。数据的*完整性*也是一个挑战，因为收集的数据可能无法捕捉到学生表现的完整图景。例如，可能被忽视的因素包括学习环境或社会经济背景，这些因素可能影响学生的学习。数据的*关联性*，例如将学生的成绩与一天中的时间和他们所学的课程联系起来，可以使系统提供有意义的洞察。最后，大数据的*扩展性*可能指收集那些失败、更改课程、进行海外交流或休学一年的学生的数据，以获得对学生学习的更全面理解。
+  prefs: []
+  type: TYPE_NORMAL
+- en: 1.3.2 物联网（IoT）是什么？
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: 物联网（Internet of Things，IoT）指的是由物理对象和事物（例如，智能手机、智能手表、家庭自动化控制、健身追踪器）组成的网络，这些对象和事物可以通过有线和无线网络相互交互和协作，以及生成、交换、发送和接收数据
+    ([Atzori 等人，2010](#ref1_5)；[Li 等人，2015](#ref1_30))。物联网设备产生大量数据，当与大数据结合时，可用于训练和改进人工智能算法。物联网和人工智能是高度互补的技术，人工智能能够分析物联网设备生成的数据量，包括实时数据，以提供有价值的见解并促进快速和自动化的决策。物联网也可能成为可持续性的游戏改变者：根据世界经济论坛的一篇文章
+    ([Arias 等人，2018](#ref1_3))，84%的现有物联网部署有助于实现联合国可持续发展目标。物联网提供了一个平台，以更智能的方式连接一切和每个人，提高我们的生活质量，并造福我们的地球。
+  prefs: []
+  type: TYPE_NORMAL
+- en: 对于不熟悉物联网的人来说，他们可能存在一个误解，即物联网仅指连接到互联网的设备；然而，物联网涵盖的远不止这些。具有电子部件、软件和传感器的设备，这些传感器允许它们连接和交换数据，例如蓝牙设备，也是物联网的一部分。术语“物联网”（Internet
+    of Things）是由凯文·阿什顿（Kevin Ashton）在1999年在他担任宝洁公司（Procter & Gamble）员工期间提出的 ([Lueth，2014](#ref1_31)；[Ashton，2009](#ref1_4))。在他优化供应链的工作中，他试图将一种名为*射频识别*（Radio
+    Frequency Identification，RFID）的具有前景的技术引起他高级管理层的注意。鉴于当时互联网的广泛普及及其与该概念的相关性，阿什顿将他的演示文稿命名为“物联网”。然而，直到2010年，物联网才开始受到广泛关注
+    ([Lueth，2014](#ref1_31))。
+  prefs: []
+  type: TYPE_NORMAL
+- en: 1.3.2.1 物联网的特性
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: 物联网（IoT）具有独特的特性。通过了解这些特性，人们可以更好地掌握和识别物联网及其能力的底层技术，确定物联网应用的范围，物联网所包含和可以集成的设备和系统的类型，其局限性以及安全和隐私的影响。这些信息可用于做出关于物联网系统和设备的设计、部署和使用方面的明智决策。此外，对物联网特性的深刻理解可以促进创新物联网解决方案和影响的发展，这些解决方案和影响可以解决和克服现有系统和设备的挑战和局限性
+    ([Motta 等人，2019](#ref1_42)；[Rose 等人，2015](#ref1_48)；[Atzori 等人，2010](#ref1_5))。物联网的特征由[表1.3](#table1_3)中给出的关键特征所描述。
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[表1.3 物联网特性](#R_table1_3)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '| **连接性**: 物联网指的是两个或多个可以通信和交换数据的对象或事物之间的网络，例如设备与互联网的连接。 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| **互操作性**: 物联网设备需要无论其底层技术、平台或品牌名称如何都能无缝协作（[Magan, 2023](#ref1_32)）。设备之间的互操作性对于确保数据可以有效地收集、处理和分析至关重要。
+    |'
+  prefs: []
+  type: TYPE_TB
+- en: '| **可扩展性**: 物联网可以扩展，其中系统和网络可以轻松扩展或缩小规模以适应不断变化的需求，而不会影响其性能（[Magan, 2023](#ref1_32)）。可扩展性对于确保物联网系统和网络在连接设备数量增加时保持功能和效率至关重要。
+    |'
+  prefs: []
+  type: TYPE_TB
+- en: '| **智能**: 物联网设备、系统和网络必须具备“智能”，能够感知和分析数据，并使用算法、软件和硬件的组合相互交互。 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| **身份**: 身份是物联网的一个概念（[Uikey, 2022](#ref1_59)），例如，物联网设备的唯一身份可以实现对特定设备的跟踪和远程控制（例如，监控安装在家庭中的摄像头）。
+    |'
+  prefs: []
+  type: TYPE_TB
+- en: '| **自主性**: 物联网系统具有独立操作的能力，无需人为干预。 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| **安全性**: 由于物联网系统和设备容易受到网络威胁的影响，因此需要采取适当的内置安全措施。物联网设备通常存储敏感的个人数据；如果设备丢失或被盗，可能会对用户的安全造成问题。防火墙、加密、数据保护软件和访问控制可以集成到物联网设备中，以防止数据盗窃和未经授权的访问。
+    |'
+  prefs: []
+  type: TYPE_TB
+- en: '| **实时性**: 物联网系统和设备能够实现实时连接和数据交换。 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| **远程监控**: 物联网系统具有监控能力。通过远程监控，物联网传感器可以允许传输精确数据，用于监控设备状态和控制设备性能（[Murphy, 2022](#ref1_43)）。
+    |'
+  prefs: []
+  type: TYPE_TB
+- en: '| **标准化**: 物联网设备应遵循标准化协议、数据格式和规则，以确保互操作性、一致性和道德使用。协议和标准的示例包括约束应用协议（CoAP）、消息队列遥测传输（MQTT）和低功耗蓝牙（BLE）（[Pratt,
+    2023](#ref1_46)）。 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| **可持续性**: 物联网网络、系统和设备消耗能源并产生废物。因此，考虑它们对环境的影响并确保其可持续性非常重要。 |'
+  prefs: []
+  type: TYPE_TB
+- en: 1.3.2.2 物联网及其在高等教育中的特征示例
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: 一个集成了不同物联网系统设备的智能教室，例如传感器、摄像头、笔记本电脑、平板电脑、交互式白板、学习管理系统、学生信息系统、打印机、扫描仪和可穿戴设备，是物联网在教育中实施的例子。
+  prefs: []
+  type: TYPE_NORMAL
+- en: '*连接性*使设备和系统能够根据需要形成网络以传输和接收数据。教室中的物联网（IoT）是*可扩展的*，能够改变其任务的范围，并轻松地适应连接的设备数量。网络中的每个设备都有一个独特的*身份*，确保学生和教师可以安全地识别和访问他们需要的设备和数据。*互操作性*使诸如作业提交和文档或资源在学生和教师之间共享等流程能够无缝地简化。*安全性*在智能教室中尤为重要，因为它对于保护数据至关重要，特别是像成绩和学生的个人信息这样的敏感信息，防止未经授权的访问。智能教室中的物联网设备必须设计有强大的安全措施，以确保保护私人敏感信息。网络中的设备也是*自主的*，这意味着它们可以在没有人为干预的情况下做出决定并采取行动。例如，如果房间变得太热，智能传感器可以自动调节温度。该系统还具有*智能*功能，例如机器学习算法，用于处理收集到的数据并做出预测，以造福课堂。这使得教师能够跟踪学生的进度并确定需要额外支持的区域。该系统遵循行业*标准化*，以确保来自不同供应商的不同设备可以在标准协议下有效地无缝协同工作。此外，使用的设备和系统旨在*可持续*，利用节能和减废技术以减少碳足迹，同时通过自动照明和空调系统保持成本效益。通过结合这些特性，这个智能教室系统示例为高等教育机构提供了一个解决方案，以改善学生体验，通过技术简化操作，并创建一个更高效和可持续的学习环境。'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 1.4 生成式人工智能（GenAI）
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 生成式人工智能（Generative AI，简称GenAI）是人工智能的一个子集，涉及创建新的数据或内容（[Dilmegani, 2023](#ref1_12);
+    [McKinsey Consultant, 2023](#ref1_38); [Altexsoft, 2022](#ref1_2)）。术语“生成式”指的是人工智能产生新颖输出的能力，而不仅仅是简单地复制、分类、处理和分析输入。它可以生成从文本、图像、音频和视频，到自然语言文本甚至计算机编码的任何内容。
+  prefs: []
+  type: TYPE_NORMAL
+- en: 生成式人工智能（GenAI）的概念根植于计算机科学和人工智能领域。这种技术的最早提及之一可以追溯到20世纪80年代计算机科学家约翰·霍普菲尔德（John
+    Hopfield）的工作，他提出了“霍普菲尔德网络”的概念，这是一种可以训练生成新模式或序列的计算机神经网络（[Kampakis, 2022](#ref1_23);
+    [麦肯锡全球研究院，2018](#ref1_39)）。随着研究人员和实践者努力开发更复杂的生成架构和深度学习算法，包括生成对抗网络（GANs）、变分自编码器（VAEs）和基于转换器的模型（例如GPT-3生成预训练转换器3），机器学习和人工神经网络领域得到了发展。在GenAI中有两个重要的模型：判别建模和生成建模（[Altexsoft,
+    2022](#ref1_2)）。
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**判别建模**是一种机器学习方法，旨在将现有的数据点分类或归类到特定的类别或类别中。虽然这种模型能够区分类别之间的边界，但它仅被训练来告知差异，并不理解数据是如何生成的。使用这种方法进行的机器学习任务被归类为*监督式机器学习任务*。这种方法的目的是区分不同的类别，然后基于其训练的数据做出预测。'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 例如，在教育领域，假设我们想要开发一个模型，该模型可以根据学生的过往表现、考试成绩和出勤记录来预测学生是否能够通过特定的考试。判别模型会分析提供的数据，识别通过考试和未通过考试的学生之间的差异，然后基于这些差异做出预测。该模型仅仅试图区分通过考试和未通过考试的学生——它不考虑学生为何会取得某些结果，并且仅旨在做出准确的预测。
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**生成建模**是一种机器学习方法，它侧重于根据从现有数据中学习到的模式和关系创建新的数据，这些数据与训练数据相似。使用这种方法进行的机器学习任务被归类为*无监督和半监督机器学习任务*。生成建模方法的目的是创建与之前所见相似的新示例，这些示例代表了数据中的潜在模式和关系。'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 教育中生成建模的一个例子可以是生成测验或测试的新问题的系统。该模型将从训练集中学习过去问题的模式和分布，然后使用这些信息生成风格和内容相似的新问题。这可以用于为班级创建新的练习问题，根据每个学生的学习进度创建适应性测试，或者为个别学生创建独特的测试以防止作弊。
+  prefs: []
+  type: TYPE_NORMAL
+- en: 1.4.1 GenAI 的应用
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: 现在，通用人工智能（GenAI）已经在各个行业中得到广泛应用，包括图像和音频合成，以及文本、代码和视频生成。例如，GenAI 可以用来生成实际不存在的物体或场景的逼真图像，或者创建听起来像真实人的合成语音。GenAI
+    还可以用于工程和建筑等领域生成新的设计或原型，或者生成新的音乐作品或艺术品 ([Kumar, 2023](#ref1_27); [Marr, 2023](#ref1_33))。[图
+    1.2](#fig1_2) 展示了一个图像合成的例子，[表 1.4](#table1_4) 展示了一个代码生成的例子。[表 1.5](#table1_5)
+    提供了一些 GenAI 应用类型和软件的示例。
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![（a）Chat GPT 为电动汽车生成的带有机器人的画作。（b）Chat GPT 为电动汽车生成的带有机器人的画作。（c）Dall E 3 为电动汽车生成的带有机器人的画作。（d）Dall
+    E 3 为电动汽车生成的带有机器人的画作。](images/fig1_2_B.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: '[图 1.2 ChatGPT Dall.E3 生成的图像。](#R_fig1_2)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[表 1.4 ChatGPT 生成的代码](#R_table1_4)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '| 用户 | 你可以为模拟的 DoctorBot 创建插件吗？ |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| ChatGPT | 当然可以！为模拟的 DoctorBot 创建插件涉及多个步骤，包括定义目的、设计用户界面和实现逻辑。以下是为创建 DoctorBot
+    插件的基本大纲：'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 定义目的：
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 症状检查/一般医疗信息/药物提醒等。
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: 设计用户界面：
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 基于文本的聊天界面/语音识别/多选题等。
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: 实现逻辑：
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 为了简化，让我们使用 Python 创建一个基本的症状检查器：
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: '```py'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'class DoctorBot:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'def __init__(self):'
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: self.symptoms = {
+  prefs:
+  - PREF_IND
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: '“headache”: “You might have a migraine or tension headache. If it persists,
+    please see a doctor.”,'
+  prefs:
+  - PREF_IND
+  - PREF_IND
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: '“fever”: “You might have an infection. Please monitor your temperature and
+    see a doctor if it remains high.”,'
+  prefs:
+  - PREF_IND
+  - PREF_IND
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: '“cough”: “It could be a cold or flu. If it persists or is severe, please see
+    a doctor.”'
+  prefs:
+  - PREF_IND
+  - PREF_IND
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: '}'
+  prefs:
+  - PREF_IND
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: 'def check_symptom(self, symptom):'
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: return self.symptoms.get(symptom, “I’m not sure about that symptom. Please consult
+    a doctor.”)
+  prefs:
+  - PREF_IND
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: 'def main():'
+  prefs: []
+  type: TYPE_NORMAL
+- en: bot = DoctorBot()
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: 'while True:'
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: 'symptom = input(“Please describe your symptom: “).lower()'
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: 'if symptom == “exit”:'
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: break
+  prefs:
+  - PREF_IND
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: print(bot.check_symptom(symptom))
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: 'if __name__ == “__main__”:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: main()
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: '```'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '|'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[表 1.5 生成式人工智能应用类型和软件示例](#R_table1_5)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '| 应用 | 行业/目的 | 流行软件应用 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| **图像合成**: 生成式AI算法可以用于创建独特和富有创意的艺术作品，如数字绘画、雕塑和图形设计。它还可以用于医学影像分析，以检测疾病的早期迹象和医学异常。重要的是要提到Deepfakes，这是一种允许生成合成图像和视频的AI技术。在AI中的图像识别和处理通常使用卷积神经网络（CNN）。
+    | 艺术与设计、医疗保健、电影、广告 | Stable Diffusion、Dall-E、Runway ML、Midjourney、DeepAI、Fotor、Reface、FaceApp、SpeakPic、Syntegra、AlphaFold2
+    |'
+  prefs: []
+  type: TYPE_TB
+- en: '| **视频生成**: 生成式AI可以用于创建看起来像真实拍摄的视频，或创建动画短片。 | 电影、广告、各行业的客户服务 | Pictory、Synthesia、VEED
+    |'
+  prefs: []
+  type: TYPE_TB
+- en: '| **音乐和音频创作**: 生成式AI可以用于创作新的音乐作品，混音现有歌曲，并生成定制音效。 | 音乐制作、医疗保健、各行业的客户服务 | Amper
+    Music、Jukebox、MuseTree、MuseNet、Musico、Vall-E、WaveNet、Flowtron |'
+  prefs: []
+  type: TYPE_TB
+- en: '| **文本到语音，语音到语音**: 生成式AI可以用于将文本转换为语音或促进实时语音翻译。例如，它可以使虚拟助手在应用程序或设备中“说话”。 | 各行业的客户服务、电子、旅游、休闲
+    | Siri、Alexa、Google Assistant |'
+  prefs: []
+  type: TYPE_TB
+- en: '| **文本生成**: 生成式AI可以用于创建文案、广告和营销活动的文案内容。它可以用来撰写故事、文章和其他形式的文本，包括与虚拟助手和帮助聊天机器人的对话。它还具有将文本从一种语言翻译成另一种语言的能力，打破语言障碍，实现更高效的沟通。
+    | 营销、广告、新闻业、剧本和故事创作、医疗保健、各行业的客户服务 | ChatGPT、BARD、Bing、Quillbot、Jasper、Google Translate、Photomath
+    |'
+  prefs: []
+  type: TYPE_TB
+- en: '| **代码生成**: 生成式AI可以开发、编写和调试计算机编程代码。 | 所有需要编程的各行业 | Google的AutoML、OpenAI Codex、GitHub
+    Co-pilot、Polycoder、Amazon CodeWhisperer |'
+  prefs: []
+  type: TYPE_TB
+- en: 大多数应用都结合了图像、文本、代码、视频和音频生成以及机器学习算法来产生问题的解决方案。一个将这些元素综合用于全面教育工具的例子可能是一个智能辅导系统。该系统可以使用GenAI算法根据学生的学习需求和进度定制学习材料，通过叙述教育文本或代码的片段来制作个性化的视频课程，并结合图像或动画等视觉辅助工具，以帮助学生理解复杂的概念。该系统还可以创建评估和评分描述符来评估学生对材料的理解，生成问题和测验来加强学习。此外，还可以根据学生的表现生成音频反馈，以自然和吸引人的方式提供指导和鼓励。这个例子展示了GenAI在教育中创造沉浸式、个性化、有效学习体验的变革能力。通过利用AI的力量，教师可以节省时间和资源，从而将注意力集中在其他优先事项上，如课堂教学和支持学生。
+  prefs: []
+  type: TYPE_NORMAL
+- en: 1.5 ChatGPT – 教育领域的颠覆者？
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 一种在包括教育在内的多个领域都获得了巨大人气的特定AI工具是ChatGPT（Chat Generative Pre-trained Transformer）。ChatGPT是由OpenAI开发的一个预训练文本生成语言模型，它使用基于transformer的语言架构([Srivastava,
+    2022](#ref1_56); [Joshi, 2021](#ref1_22); [Kulshrestha, 2020](#ref1_26))，这是一种非常适合自然语言处理任务的深度神经网络。它能够根据接收到的输入理解并生成类似人类的文本。此外，它经过大量数据的训练，这使得它能够学习人类语言的模式、风格和复杂性，使其成为沟通的卓越工具。ChatGPT具备语言生成、翻译、总结以及问答等功能，在技术行业中引起了巨大的波澜([Zaveri,
+    2023](#ref1_62))。
+  prefs: []
+  type: TYPE_NORMAL
+- en: ChatGPT的兴起及其受欢迎程度与多个因素相关：ChatGPT正在重新定义机器学习的边界([Rosenbaum, 2023](#ref1_49))；它在生成具有无限可能性的结果方面效率很高([Pace,
+    2023](#ref1_44); [Petrova, 2023](#ref1_45))；并且通过大量信息的训练变得知识渊博([Shankland, 2023](#ref1_52))。人工智能已经存在十多年了，但该领域的最近进步使其更加易于访问和用户友好。随着ChatGPT，OpenAI决定允许公众访问该软件，其用户友好的界面以及其以类似人类的方式理解和回应自然语言的能力，使其与之前的AI模型区分开来。此外，COVID-19大流行加速了向在线和虚拟互动的转变。由于远程工作和学习的经验增加，以及在线融资和购物的普及度提高，公众对在线功能的认识和接受度有所增长。因此，对像ChatGPT这样的创新解决方案的需求更大，以满足公众的不同需求([Zaveri,
+    2023](#ref1_62))。
+  prefs: []
+  type: TYPE_NORMAL
+- en: 在教育领域，疫情已成为个人认识到全日制虚拟学习益处和潜力的刺激因素。在疫情之前，传统的面对面教学和学习的模式被许多人视为唯一、首选或最有效的教育方法。COVID-19的突然爆发和传播，导致大规模封锁和社会距离措施的实施，迫使大学、学院和学校关闭其物理校园，转向虚拟教学和学习。随着突然的在线转变，许多人不得不适应并接受在线教育，从而逐渐认识到这种模式在提供高质量教育方面的可能性和能力。这也为在课堂上利用技术开辟了新的机会。例如，ChatGPT预计将在教学和学习的未来发挥重要作用，通过取代那些可以自动化的部分，推动教育发展和实施更好的实践（[Jacobsen,
+    2023](#ref1_20)）。在后疫情时代，我们开始看到许多教育机构开始接受允许学生远程继续教育的可能性，这增加了教育的可及性和灵活性，同时也为学习创造了新的机会。甚至像伦敦大学学院（UCL）或伦敦国王学院这样的知名大学也在提供多种途径实现远程教育，例如提供在线硕士学位课程([UCL,
+    n.d.](#ref1_58))和国际预科课程的混合模式([King’s College London, n.d.](#ref1_24))。在线课程使学生能够在家中参加讲座和完成作业，这可以节省通勤的时间和金钱。此外，虚拟学习环境可以设计成促进包容性，更好地支持有特殊需求的学生，并确保偏远地区的人也能获得教学和学习的机会。对在线学习的需求不断增长，也导致了AI驱动的虚拟助手如ChatGPT的普及和采用增加，这可以进一步提高教育的可及性、效率和效果。例如，ChatGPT可以作为全天候的虚拟助手，为学生提供实时响应的查询，提供个性化的支持和指导，并在保持学习进度方面提供帮助。
+  prefs: []
+  type: TYPE_NORMAL
+- en: 总的来说，COVID-19大流行加速了向在线和虚拟学习的转变。因此，公众的行为和态度发生了变化，教育受众现在对AI工具的使用更加开放。我们还应注意到，关于AI对教育影响的讨论最近激增并不一定是晚的；尽管AI已经存在了50年，但它的教育影响只有在ChatGPT最近的发展中才获得了相当大的关注。虽然像Google
+    Translate这样的工具可能在某些教育领域产生了显著影响，但其影响与ChatGPT的潜力相比相形见绌。凭借其提供即时和定制反馈、促进自然语言交互以及作为教学和研究助手的能力，ChatGPT和其他生成式AI工具已成为高等教育变革的力量。这种技术有潜力从根本上改变学生学习的模式，同时支持教育者在教学和学习中克服挑战和障碍。
+  prefs: []
+  type: TYPE_NORMAL
+- en: 1.6 生成式AI的担忧与挑战
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 尽管AI具有潜在的好处，但其使用也引发了重要的伦理和社会问题。这些问题包括对工作替代、隐私和责任的关注，以及AI被用于恶意目的的可能性。生成式AI发展的一个关键驱动力是提升创造性过程([Eapen等人，2023](#ref1_13))。通过实施算法和机器学习模型，生成式AI具有生成新内容和独特内容的能力，这是传统手动方法无法实现的。然而，产生新颖输出的好处也带来了潜在的缺点，包括生成有偏见或不公平的输出，或不适或有害的内容的风险。需要解决几个方面的问题：需要在人类和机器价值之间以及控制上找到平衡；需要确保生成的内容具有高质量和相关性；以及需要处理AI复杂性质产生的伦理考量。在我们继续开发和部署AI到各个行业的过程中，仔细考虑这些问题是非常重要的。在[第3章](ch3.xhtml)中，我们将探讨并进一步讨论生成式AI在高等教育中的机遇和担忧。
+  prefs: []
+  type: TYPE_NORMAL
+- en: 1.7 ChatGPT是如何工作的？
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 对于许多读者来说，他们感兴趣的是了解ChatGPT工作的整体图景，因此，我们下面整理了一个关于其工作原理的高级概述，也请参阅[图1.3](#fig1_3)。如果您希望深入了解技术细节，请阅读[第6章](ch6.xhtml)。
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![展示Chat G P T工作流程的流程图。步骤包括输入、G P T编码、注意力和解码，以及输出。](images/fig1_3_B.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: '[图1.3 ChatGPT是如何工作的？](#R_fig1_3)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 以最简单的方式解释，ChatGPT是一种在大量文本上训练的软件。在其训练阶段，ChatGPT接触到了来自各种来源的大量文本，如网站、书籍、论坛。它通过预测句子中的下一个词来学习。这种训练有助于ChatGPT识别语言中的模式和结构。它使用称为Transformer的结构来衡量你问题中哪些部分最重要以及你的提示如何与所有训练过的数据相关联，因此，GPT代表生成预训练的Transformer。
+  prefs: []
+  type: TYPE_NORMAL
+- en: 1.7.1 当你输入一个问题（也称为提示）时会发生什么？
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: '[表1.6](#table1_6) 展示了ChatGPT的工作步骤。'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[表1.6 ChatGPT工作步骤](#R_table1_6)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '| 在ChatGPT中输入问题（提示）时会发生什么 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| [ChatGPT中的用户输入/提示] |'
+  prefs: []
+  type: TYPE_TB
+- en: “什么的首都是？”
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '|'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '| [编码] |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- |'
+  prefs: []
+  type: TYPE_TB
+- en: 例如，“capital”的向量可能与训练中出现的每个首都形式的标记相关，例如“Dublin”、“London”、“Paris”等。已经从训练中存在的“Paris”向量将与“France”相关
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 其他单词的向量以类似的方式创建
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '|'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '| [注意力机制：词权重] | [注意力机制：词权重]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: “What” (中等权重)
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: “is” (低权重)
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: “the” (中等权重)
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: “capital” (高权重)
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: “of” (中等权重)
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '|'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '| [解码] |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- |'
+  prefs: []
+  type: TYPE_TB
+- en: ChatGPT 理解用户正在询问一个首都
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '|'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '| [预测序列] |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- |'
+  prefs: []
+  type: TYPE_TB
+- en: “The capital of”
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: “The capital of France”
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: “The capital of France is”
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: “法国的首都是巴黎。”
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '|'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '| [ChatGPT输出/响应] |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- |'
+  prefs: []
+  type: TYPE_TB
+- en: “法国的首都是巴黎。”
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '|'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**输入**：你输入一系列单词（例如，“What is the capital of”），也称为提示。'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**编码**：该模型将每个词转换为一个称为向量的数值表示。这种表示捕捉了词的意义及其与其他词的关系，这些词是模型训练过的。'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**注意**：使用名为“自注意力”的方法，ChatGPT模型衡量你问题中每个词的重要性。例如，在我们的例子中，“capital”可能比“is”更重要。目标是把握你的问题/提示的本质。了解主题有助于模型理解相关词，如“of”和“the”。'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**解码与预测**：一旦模型从单词权重（注意力）和它与训练过的其他单词之间的关系（嵌入）中理解了你的问题的上下文，它就开始预测最佳单词序列以作为回答。这是基于输入——编码信息和注意力权重。GPT产生一系列单词作为答案。每个单词都与主题和其他单词有特定的相关性。模型预测下一个单词。然后它继续使用原始输入和它已经预测的单词来猜测后续单词。这个过程会重复，直到形成一个完整的答案或直到模型决定答案已经完整。'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**输出**：模型提供生成的单词序列作为回答（例如，“法国的首都是巴黎。”）。'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 重要的是要注意，虽然这个解释提供了一个概述，但模型的实际工作涉及大量的复杂数学和同时发生的流程。模型已经在数十亿这样的序列上进行了训练，随着时间的推移，它不断改进其做出准确和连贯预测的能力。
+  prefs: []
+  type: TYPE_NORMAL
+- en: 1.8 GenAI如何从文本生成图像？
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 对于许多读者来说，机器根据文本描述创建图像的概念可能听起来像科幻小说。然而，在生成式人工智能（GenAI）中，这已经成为现实。为了阐明这一能力，我们制作了一个关于GenAI在从文本生成图像方面的概述。请参阅[图1.5](#fig1_5)以获取视觉表示。那些想要深入了解的人可以探索[第6章](ch6.xhtml)。
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![一个1920 x 1080像素的图像，包含RGB像素。](images/fig1_4_B.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: '[图1.4 显示RGB像素的图像。](#R_fig1_4)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![一个展示文本到图像过程的流程图。步骤包括输入、文本编码器、图像生成器和输出。](images/fig1_5_B.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: '[图1.5 文本到图像处理过程。](#R_fig1_5)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 计算机处理数字。无论是文本、图像还是声音，计算机都将它们解释为数字。而且每个图像都是由像素组成的。每个像素都有颜色，由三个数字表示：红色、绿色和蓝色（RGB）。因此，图像本质上是一个数字三元组的矩阵。正如你在[图1.4](#fig1_4)中可以看到的，数字图像由一个大小表示，例如1920像素
+    × 1080像素。每个像素代表图像中的一个位置，如x、y坐标，然后在每个像素处都有一个颜色，由三个数字表示，一个表示红色的量，另一个表示绿色的量，还有一个表示蓝色的量（RGB）。这导致了一个向量（数字列表）的矩阵（数组），如[13,8,255,0,0]，它可以代表整个图像。
+  prefs: []
+  type: TYPE_NORMAL
+- en: 与ChatGPT遇到的大量文本数据类似，GenAI图像生成软件是在大量的视觉和文本数据集上训练的。可以将其想象为一个拥有百科全书式知识风格的艺术家、主题和场景。这可以从简单的绘画到复杂的照片不等。
+  prefs: []
+  type: TYPE_NORMAL
+- en: 通过这个训练过程，生成式人工智能（GenAI）学会了词语和视觉之间的复杂性。它开始理解“日落”这个词可能会唤起橙色和粉红色的色调，或者“雪山”对应于晴朗的天空中的白色山峰。
+  prefs: []
+  type: TYPE_NORMAL
+- en: 生成式人工智能（GenAI）能力的一个途径是生成对抗网络（GAN）。这涉及一对——一个生成器（艺术家）和一个判别器（评论家）。艺术家生成，评论家评估。随着时间的推移，生成器在生成能够通过判别器批评的图像方面变得越来越好。[图1.5](#fig1_5)展示了如何通过提示将文本生成图像。
+  prefs: []
+  type: TYPE_NORMAL
+- en: 1.8.1 当你输入一个问题（也称为提示）来生成图像时，会发生什么？
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: '**输入**：用户提供一个文本提示（例如，“被秋树环绕的宁静湖泊”）。'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**文本编码**：这个过程类似于理解文本生成。为了从文本生成图像，模型首先将文本输入编码成有意义的数值表示。这通常是通过使用一个单独的模型来完成的，例如一个训练好的转换器。'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**图像生成器**：一旦文本被编码成数值格式，它就被用作生成器的输入或条件。这个过程使用扩散来创建图像。扩散是一种使图像模糊的技术。这种模糊的外观类似于旧电视上的雪花，通常被称为“噪声”。噪声仅仅是随机的颜色/像素。你可以通过向像素添加随机数来使图像变得模糊。相反，为了澄清模糊的图像，你需要调整随机数，使它们产生一个连贯的图像。在这一步，生成器随后生成一个与文本描述相对应的图像，如图[图1.6](#fig1_6)所示。![扩散过程通过一系列图像展示，最初清晰，然后逐渐变为雪花。](images/fig1_6_B.jpg)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[图1.6 展示扩散过程](#R_fig1_6)'
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: '**细化**：判别器评估生成的图像，确保其与初始描述的一致性。这个反馈循环，经过多次迭代，细化了视觉输出。'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**输出结果**：结果是向用户展示的视觉表示（例如，一幅平静的湖泊图像，树木披上了秋天的色彩），如图[图1.7](#fig1_7)所示。![为提示“被秋树环绕的宁静湖泊”生成的两个图像](images/fig1_7_B.jpg)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[图1.7 由提示“被秋树环绕的宁静湖泊”生成的图像响应](#R_fig1_7)'
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: 1.9 结论
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 教育的未来不仅仅是数字化；它是智能的、响应式的，并且是定制的。想象一下，教室就像一个高科技生态系统，实时调整以适应每个学生的需求。想象一下像ChatGPT这样的AI工具，随时准备帮助，日夜解答问题。COVID-19推动我们上网，现在，像物联网和生成式AI这样的技术正将我们带入下一个层次。未来的教室？它是创新的、灵活的，建立在突破性技术之上。随着我们乘风破浪，有一点是明确的：学习即将变得更加激动人心。
+  prefs: []
+  type: TYPE_NORMAL
+- en: 参考文献
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: '[Agrawal, D., Bernstein, P., Bertino, E., Davidson, S., Dayal, U., Franklin,
+    M., Gehrke, J., Haas, L., Halevy, A., Han, J., Jagadish, H. V., Labridinis, A.,
+    Madden, S., Papakonstantinou, Y., Patel, J., Ramakrishnan, R., Ross, K., Shahabi,
+    C., Suciu, D.](#R_ref1_1), … & Widom, J. (2011). *大数据2011-1* 的挑战与机遇。[白皮书]。普渡大学e-Pubs。2023年10月17日检索，来自
+    [https://docs.lib.purdue.edu/cctech/1/](https://docs.lib.purdue.edu)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Altexsoft](#R_ref1_2) (2022年10月13日). 生成式AI模型解释。2023年10月18日检索，来自 [https://www.altexsoft.com/blog/generative-ai/](https://www.altexsoft.com)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Arias, R, Lueth, K. L. & Rastogi, A.](#R_ref1_3) (2018年1月21日). 物联网对可持续性的影响。世界经济论坛。2023年10月18日检索，来自
+    [https://www.weforum.org/agenda/2018/01/effect-technology-sustainability-sdgs-internet-things-iot/](https://www.weforum.org)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Ashton, K.](#R_ref1_4) (2009). 那个“物联网”的事情。RFID Journal, *22*(7), 97–114.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Atzori, L., Iera, A., & Morabito, G.](#R_ref1_5) (2010). 物联网：综述。计算机网络，*54*(15),
+    2787–2805。 [https://doi.org/10.1016/j.comnet.2010.05.010](https://doi.org/10.1016/j.comnet.2010.05.010)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Barney, N.](#R_ref1_6) (2023年3月). 人工超级智能 (ASI). TechTarget. 2023年10月17日检索，来自
+    [https://www.techtarget.com/searchenterpriseai/definition/artificial-superintelligence-ASI](https://www.techtarget.com)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Baum, J., & Villasenor, J.](#R_ref1_7) (2023年7月18日). 我们离超越人类智能的AI有多近？布鲁金斯学会。2023年10月17日检索，来自
+    [https://www.brookings.edu/articles/how-close-are-we-to-ai-that-surpasses-human-intelligence/](https://www.brookings.edu)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Bostrom, N.](#R_ref1_8) (2014). 超级智能：路径、危险、策略。牛津大学出版社。'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Bove, T.](#R_ref1_9) (2023年5月4日). 谷歌DeepMind的CEO表示，我们可能“只需几年”就能达到具有人类水平智能的AI。财富杂志。2023年10月17日检索，来自
+    [https://fortune.com/2023/05/03/google-deepmind-ceo-agi-artificial-intelligence/](https://fortune.com)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Boyd, D.，& Crawford, K.](#R_ref1_10) (2012)。大数据的批判性问题：对文化、技术及学术现象的挑战。信息、传播与社会，*15*(5)，662–679。[https://doi.org/10.1080/1369118X.2012.678878](https://doi.org/10.1080/1369118X.2012.678878)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Cordeschi, R.](#R_ref1_11) (2007)。人工智能五十年：重审其起源。应用人工智能，*21*(4–5)，259–279。[https://doi.org/10.1080/08839510701252304](https://doi.org/10.1080/08839510701252304)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Dilmegani, C.](#R_ref1_12) (2023年9月29日)。2023年100+个生成式人工智能应用/用例。AIMultiple。2023年10月18日检索，来自[https://research.aimultiple.com/generative-ai-applications/](https://research.aimultiple.com)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Eapen, T. T.，Finkenstadt, D. J.，Folk, J.，& Venkataswamy, L.](#R_ref1_13) (2023)。生成式人工智能如何增强人类创造力。哈佛商业评论。2023年10月19日检索，来自[https://hbr.org/2023/07/how-generative-ai-can-augment-human-creativity](https://hbr.org)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Favaretto, M.，De Clercq, E.，Schneble, C. O.，Elger, B. S.](#R_ref1_14) (2020)。你对大数据的定义是什么？研究人员对十年现象的理解。PLOS
+    ONE，*15*(2)，e0228987。[https://doi.org/10.1371/journal.pone.0228987](https://doi.org/10.1371/journal.pone.0228987)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Gillani, N.](#R_ref1_15) (2023年4月19日)。人工智能是否会达到人类水平智能？我们询问了五位专家。The Conversation。2023年10月19日检索，来自[https://theconversation.com/will-ai-ever-reach-human-level-intelligence-we-asked-five-experts-202515](https://theconversation.com)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Gillis, A. S.](#R_ref1_16) (2021年3月). 大数据的5个V。TechTarget。2023年10月18日检索，来自[https://www.techtarget.com/searchdatamanagement/definition/5-Vs-of-big-data](https://www.techtarget.com)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Goertzel, B.](#R_ref1_17) (2014)。通用人工智能：概念、现状与未来展望。通用人工智能杂志，*5*(1)，1–46。[https://doi.org/10.2478/jagi-2014-0001](https://doi.org/10.2478/jagi-2014-0001)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Grossman, G.](#R_ref1_18) (2023年2月11日)。生成式人工智能可能只是人工智能奇点的预兆。VentureBeat。2023年10月17日检索，来自[https://venturebeat.com/ai/generative-ai-may-only-be-a-foreshock-to-ai-singularity/](https://venturebeat.com)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Hong, Y., Zhang, M., & Meeker, W. Q.](#R_ref1_19) (2018)。大数据与可靠性应用：复杂性维度。质量技术杂志，*50*(2)，135–149。[https://doi.org/10.1080/00224065.2018.1438007](https://doi.org/10.1080/00224065.2018.1438007)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Jacobsen, P.](#R_ref1_20) (2023年2月8日)。为什么ChatGPT将使高等教育变得更好。FEE Stories。2023年10月19日检索，来自[https://fee.org/articles/chatgpt-will-change-higher-ed-for-the-better/](https://fee.org)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Jin, X., Wah, B. W., Cheng, X., & Wang, Y.](#R_ref1_21) (2015). 大数据研究的重要性和挑战。大数据研究，*2*(2)，59–64。[https://doi.org/10.1016/j.bdr.2015.01.006](https://doi.org/10.1016/j.bdr.2015.01.006)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Joshi, P.](#R_ref1_22) (2021, July 23). 最新最先进模型的指南。Analytics Vidhya。2023年10月19日从[https://www.analyticsvidhya.com/blog/2019/06/understanding-transformers-nlp-state-of-the-art-models/](https://www.analyticsvidhya.com)检索。'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Kampakis, S.](#R_ref1_23) (2022, November 19). *Tom Burns on Hopfield networks
+    and the nature of general AI* [Interview]。Hackernoon。2023年10月18日从[https://hackernoon.com/tom-burns-on-hopfield-networks-and-the-nature-of-general-ai](https://hackernoon.com)检索。'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[King’s College London](#R_ref1_24). (n.d.). 金王学院国际基金会。2023年10月19日从[https://www.kcl.ac.uk/international-foundation](https://www.kcl.ac.uk)检索。'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Kitchin, R., & McArdle, G.](#R_ref1_25) (2016). 什么使大数据成为大数据？探讨26个数据集的本体特征。大数据与社会，*3*(1)。[https://doi.org/10.1177/2053951716631130](https://doi.org/10.1177/2053951716631130)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Kulshrestha, R.](#R_ref1_26) (2020, June 29). 转换器。Medium。2023年10月19日从[https://towardsdatascience.com/transformers-89034557de14](https://towardsdatascience.com)检索。'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Kumar, S. M.](#R_ref1_27) (2023, June 23). 生成式AI如何改变建筑、工程和建筑行业。经济时报。2023年10月19日从[https://economictimes.indiatimes.com/news/how-to/how-generative-ai-can-transform-architecture-engineering-construction/articleshow/101225327.cms?from=mdr](https://economictimes.indiatimes.com)检索。'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Laney, D.](#R_ref1_28) (2001). 3D数据管理：控制数据量、速度和多样性。META Group。'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[LeCun, Y, Bengio, Y., & Hinton, G.](#R_ref1_29) (2015). 深度学习。自然，*521*，436–444。[https://doi.org/10.1038/nature14539](https://doi.org/10.1038/nature14539)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Li, S., Xu, L. D. & Zhao, S.](#R_ref1_30) (2015). 物联网：综述。信息系统前沿，*17*，243–259。[https://doi.org/10.1007/s10796-014-9492-7](https://doi.org/10.1007/s10796-014-9492-7)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Lueth, K. L.](#R_ref1_31) (2014, December 19). 为什么物联网被称为物联网：定义、历史、区分。物联网分析市场洞察。2023年10月18日从[https://iot-analytics.com/internet-of-things-definition/](https://iot-analytics.com)检索。'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Magan, S.](#R_ref1_32) (2023, October 18). 物联网的特点：定义、用途和关键特性解释。Unstop。2023年10月18日从[https://unstop.com/blog/characteristics-of-iot](https://unstop.com)检索。'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Marr, B.](#R_ref1_33) (2023, October 5)。生成式AI正在改变音乐：民主化创作的愿景。Forbes。2023年10月19日检索自
+    [https://www.forbes.com/sites/bernardmarr/2023/10/05/generative-ai-is-revolutionizing-music-loudlys-vision-for-democratizing-creation/?sh=3c00b9b775bd](https://www.forbes.com)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Marri, S.](#R_ref1_34) (2018, July 9). 超级智能和情商可以共存吗？Forbes India。2023年10月17日检索自
+    [https://www.forbesindia.com/blog/technology/can-super-intelligence-and-emotional-intelligence-co-exist/](https://www.forbesindia.com)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Marz, N., & Warren, J.](#R_ref1_35) (2012). 大数据：可扩展实时数据系统的原理和最佳实践（MEAP版）。Manning。'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Mayer-Schonberger, V., & Cukier, K.](#R_ref1_36) (2013). 大数据：一场将改变我们生活、工作和思考方式的革命。John
+    Murray。'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[McAfee, A., & Brynjolfsson, E.](#R_ref1_37) (2012)。大数据：管理革命。哈佛商业评论。'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[McKinsey Consultant](#R_ref1_38)。(2023, January 19)。什么是生成式AI？2023年10月18日检索自
+    [https://www.mckinsey.com/featured-insights/mckinsey-explainers/what-is-generative-ai](https://www.mckinsey.com)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[McKinsey Global Institute](#R_ref1_39)。(2018, May 8)。深度学习的起源和先驱。McKinsey &
+    Company。2023年10月18日检索自 [https://www.mckinsey.com/featured-insights/artificial-intelligence/deep-learnings-origins-and-pioneers](https://www.mckinsey.com)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[McNulty, E](#R_ref1_40), (2017, May 8). 理解大数据：七个V。Dataconomy。2023年10月18日检索自
+    [http://dataconomy.com/seven-vs-big-data/](http://dataconomy.com)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Mills, T.](#R_ref1_41) (2018, September 17)。AI与AGI：有何区别？Forbes。2023年10月17日检索自
+    [https://www.forbes.com/sites/forbestechcouncil/2018/09/17/ai-vs-agi-whats-the-difference/?sh=cc4150838ee1](https://www.forbes.com)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Motta, R. C., Silva, V., & Travassos, G. H.](#R_ref1_42) (2019). 深入理解物联网范式及其挑战。软件工程研究与发展杂志，*7*。[https://doi.org/10.5753/jserd.2019.14](https://doi.org/10.5753/jserd.2019.14)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Murphy, M.](#R_ref1_43) (2022, May 7). 物联网远程监控：它是如何工作的，应用，好处。Hologram。2023年10月18日检索自
+    [https://www.hologram.io/blog/iot-remote-monitoring/](https://www.hologram.io)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Pace, M.](#R_ref1_44) (2023, January 17). ChatGPT：为何这个热门AI工具引起了关注和争议。Spinnaker。2023年10月19日检索自
+    [https://unfspinnaker.com/98982/features/chatgpt-why-the-trending-ai-tool-has-captured-attention-and-controversy/](https://unfspinnaker.com)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Petrova, M.](#R_ref1_45) (2023, February 2). *为什么ChatGPT是AI的变革者* [视频]。CNBC。[https://www.cnbc.com/video/2023/02/02/why-chatgpt-is-a-game-changer-for-ai.html](https://www.cnbc.com)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Pratt, M. K.](#R_ref1_46) (2023, 7月12日). 最常用的12种物联网协议和标准*。TechTarget*。2023年10月18日检索，来自
+    [https://www.techtarget.com/iotagenda/tip/Top-12-most-commonly-used-IoT-protocols-and-standards](https://www.techtarget.com)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Raghupathi, W., & Raghupathi, V.](#R_ref1_47) (2014). 医疗保健中的大数据分析：承诺与潜力。健康信息科学和系统，*2*。[https://doi.org/10.1186/2047-2501-2-3](https://doi.org/10.1186/2047-2501-2-3)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Rose, K., Eldridge, S., & Chapin, L.](#R_ref1_48) (2015). 物联网：概述。互联网协会（ISOC）。'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Rosenbaum, E.](#R_ref1_49) (2023, 2月11日). ChatGPT人工智能炒作周期达到顶峰，但即使技术怀疑论者也不期望崩溃。CNBC。2023年2月11日检索，来自
+    [https://www.cnbc.com/2023/02/11/chatgpt-ai-hype-cycle-is-peaking-but-even-tech-skeptics-doubt-a-bust.html](https://www.cnbc.com)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Sagiroglu, S., & Sinanc, S.](#R_ref1_50) (2013, 五月). *大数据：综述*. 2013年国际协作技术与系统会议（CTS），美国圣地亚哥（第42–47页）。[https://doi.org/10.1109/CTS.2013.6567202](https://doi.org/10.1109/CTS.2013.6567202)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Sarker, I. H.](#R_ref1_51) (2021). 机器学习：算法、实际应用和研究方向。SN计算机科学，*2*，160。[https://doi.org/10.1007/s42979-021-00592-x](https://doi.org/10.1007/s42979-021-00592-x)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Shankland, S.](#R_ref1_52) (2023, 2月19日). 为什么我们如此着迷于令人惊叹的ChatGPT人工智能聊天机器人。CNET。2023年10月19日检索，来自
+    [https://www.cnet.com/tech/computing/why-were-all-obsessed-with-the-mind-blowing-chatgpt-ai-chatbot/](https://www.cnet.com)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Shao, Z., Zhao, R., Yuan, S., Ding, M., & Wang, Y.](#R_ref1_53) (2022). 过去十年人工智能的演变追踪与新兴趋势预测。专家系统应用，*209*，118211。
+    [https://doi.org/10.1016/j.eswa.2022.118221](https://doi.org/10.1016/j.eswa.2022.118221)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Sharma, R.](#R_ref1_54) (2022, 9月1日). 大数据的特点：类型和5V。UpGrad。2023年10月17日检索，来自
+    [https://www.upgrad.com/blog/characteristics-of-big-data/](https://www.upgrad.com)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Song, I.-Y., & Zhu, Y.](#R_ref1_55) (2015). 大数据和数据科学：我们应该教授什么？专家系统，*33*(4)，364–373。
+    [https://doi.org/10.1111/exsy.12130](https://doi.org/10.1111/exsy.12130)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Srivastava, A.](#R_ref1_56) (2022, 8月8日). 自然语言处理中的transformers及其优势是什么。Knoldus。2023年10月19日检索，来自
+    [https://blog.knoldus.com/what-are-transformers-in-nlp-and-its-advantages/](https://blog.knoldus.com)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Thierer, A. D., O’Sullivan, A. O., & Russell, R.](#R_ref1_57) (2017). *人工智能与公共政策*.
+    Mercatus Research，乔治梅森大学Mercatus研究中心，阿灵顿。[https://doi.org/10.13140/RG.2.2.14942.33604](https://doi.org/10.13140/RG.2.2.14942.33604)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[UCL](#R_ref1_58) （不详）。专业人士的灵活学习 – UCL的在线MSc课程. UCL医学院. 2023年10月19日从[https://www.ucl.ac.uk/medical-sciences/study/flexible-learning-professionals-online-msc-programmes-ucl](https://www.ucl.ac.uk)检索.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Uikey, P.](#R_ref1_59) (2022年11月26日). 物联网（IoT）的特点. DataTrained. 2023年10月18日从[https://datatrained.com/post/characteristics-of-iot/](https://datatrained.com)检索.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Yampolskiy, R. V.](#R_ref1_60) (2016). 人工智能超级智能：一种未来导向的方法. CRC出版社.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Yudkowsky, E.](#R_ref1_61) (2006). 人工智能作为全球风险中的积极和消极因素. 在N. Bostrom和M. M.
+    Ćirković（主编）的《全球灾难性风险》（第308-345页）. 牛津大学出版社.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Zaveri, P.](#R_ref1_62) (2023年2月3日). 微软与OpenAI的历史性交易表明，ChatGPT将成为2023年的定义性技术.
+    Business Insider. 2023年10月19日从[https://www.businessinsider.com/why-generative-ai-chatgpt-the-defining-tech-of-this-year-2023-1?r=US&IR=T](https://www.businessinsider.com)检索.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
