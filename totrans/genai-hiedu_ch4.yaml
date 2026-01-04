@@ -1,0 +1,1635 @@
+- en: 4 Redesigning Assessment in the AI Era
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'DOI: [10.4324/9781003459026-4](https://dx.doi.org/10.4324/9781003459026-4)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: This “arms race” between assessing GenAI and AI tools used by students could
+    lead to a scenario where genuine learning takes a backseat to merely “gaming the
+    system”.
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: ''
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: Cecilia KY Chan
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: 4.1 Introduction
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'The current pedagogical landscape of higher education can be visualised as
+    a complex web where learning outcomes, pedagogy, and assessment mechanisms intersect.
+    At its core, assessment serves as a barometer for both educators and learners,
+    offering insights into educational effectiveness and areas of improvement. From
+    the vantage point of curriculum design, the triad of learning outcomes, pedagogies,
+    and assessment tools plays a fundamental role. While learning outcomes encapsulate
+    the desired educational objectives, pedagogies outline the means to achieve them.
+    Assessment, then, serves as the evaluation mechanism, answering the pivotal question:
+    Have the students truly learned?'
+  prefs: []
+  type: TYPE_NORMAL
+- en: As we enter the era of AI, the emergence of GenAI offers a pivotal transformation
+    in this complex landscape. GenAI, with its advanced capabilities, can redefine
+    assessment methodologies, providing real-time, adaptive, and personalised evaluations
+    and feedback. While its potential to streamline and enhance assessment practices
+    is unprecedented, it also brings forth ethical considerations and challenges in
+    maintaining academic integrity, fairness, and human-centric conflicts. The integration
+    of GenAI in assessment transcends traditional boundaries, opening new avenues
+    for innovation while also demanding a thoughtful reckoning with its implications.
+  prefs: []
+  type: TYPE_NORMAL
+- en: For students, assessment often dictates their learning approaches. As noted
+    by [Ramsden (2003)](#ref4_34), students’ perceptions of assessment can profoundly
+    influence their learning strategies, oscillating between deep, holistic understanding
+    and surface-level memorisation. This places immense responsibility on educators
+    to craft assessments that not only evaluate but also inspire genuine learning.
+    This chapter will explore the multi-faceted role of GenAI in shaping the future
+    of assessment, reflecting both its promises and perils with recent research findings,
+    and providing some strategies and assessment framework for teachers to rethink
+    and redesign their assessment in the GenAI era.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 4.2 The Evolution of Assessment and Outcomes-Based Learning in Higher Education
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'In education, assessment stands as an unshakable pillar, underpinning the foundation
+    of academic endeavours and pedagogical aspirations. Traditionally understood as
+    the systematic evaluation of student learning, assessment spans a continuum from
+    gauging knowledge and skill acquisition to understanding changes in attitudes
+    and beliefs; in short, assessment drives learning ([Rust, 2002](#ref4_36)). This
+    intricate balance of measurement is designed with four primary purposes: 1). Judging
+    academic achievement, 2). Safeguarding academic standards and quality, 3). Ensuring
+    accountability to stakeholders, and 4). Crucially, steering student learning ([Chan,
+    2023](#ref4_9), p. 41, Ch 3).'
+  prefs: []
+  type: TYPE_NORMAL
+- en: While the purposes of assessment have remained consistent over time, the methodologies,
+    tools, and perspectives surrounding assessment have evolved ([Fischer et al.,
+    2023](#ref4_22); [Scott, 2020](#ref4_37)), reflecting changing educational philosophies
+    and societal demands. For example, historically, summative assessment, also known
+    as *Assessment of Learning*, was primarily viewed as the driving force behind
+    students’ learning. This type of assessment is often associated with grades and
+    occurs at the end of the learning cycle. This perspective was rooted in the belief
+    that the anticipation of grades, marks, or evaluations would motivate students
+    to study, understand, and retain information. In essence, the looming presence
+    of a final assessment dictated the pace, approach, and intensity of a student’s
+    study habits. However, in recent years, the growing recognition of formative assessment
+    has been playing an important role in student learning. Formative assessment,
+    often termed *Assessment for Learning* (AfL), is the process of providing feedback
+    to students throughout the learning process, with the goal of helping them to
+    improve their understanding and performance. This type of assessment typically
+    uses criterion-reference to compare students’ achievements to specific goals or
+    benchmarks. Michael Scriven introduced the concept of formative assessment in
+    the 1960s to differentiate it from summative assessment. [Black and Wiliam (1998)](#ref4_4)
+    posited that an assessment becomes truly formative when its results guide and
+    modify instructional methods to better suit students’ needs. Echoing this sentiment,
+    [Wiggins (1998)](#ref4_44) emphasised that the primary objective of formative
+    assessment is to facilitate and elevate students’ learning, rather than just to
+    monitor it.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Traditionally, summative and formative assessments were viewed in distinct silos;
+    the former focused on end-of-learning evaluations and the latter on ongoing feedback
+    during the learning process. However, this binary view has been challenged and
+    reshaped. For instance, at the University of British Columbia, a two-stage exam
+    approach blurs the line between these assessments ([Gilley & Clarkston, 2014](#ref4_23)).
+    In this method, students initially take the exam individually, followed by a collaborative
+    re-examination in small groups. This not only promotes individual accountability
+    but also encourages peer feedback and collaborative learning, combining the evaluative
+    nature of summative assessment with the feedback-driven approach of formative
+    assessment. Such innovative practices underscore that summative and formative
+    assessments aren’t mutually exclusive but can be harmoniously integrated ([Chan,
+    2023](#ref4_9), p. 45, Ch 3; [Dixson & Worrell, 2016](#ref4_18)). As pedagogical
+    research advances, the dichotomy between these assessments becomes less pronounced,
+    recognising that they can often serve dual purposes and mutually enrich the learning
+    experience.
+  prefs: []
+  type: TYPE_NORMAL
+- en: In a recent article by [Fischer et al. (2023)](#ref4_22), the perspective of
+    traditional assessment is once again being challenged. The article demonstrates
+    the contemporary understanding of assessment goes beyond its mere function as
+    a motivator. In fact, in today’s educational landscape, the role of assessment
+    is not just to gauge learning but to foster a deeper, more holistic understanding
+    of subjects, skills, and attitudes ([Chan & Luk, 2022](#ref4_12)). One of the
+    key shifts in this perspective is the recognition of higher education’s responsibility
+    to promote lifelong learning. Assessment, in this paper ([Fischer et al., 2023](#ref4_22)),
+    is seen as a tool to support students in developing evaluative judgement capabilities
+    – i.e., the ability to critically assess their work and the work of their peers
+    ([Tai et al., 2018](#ref4_40)).
+  prefs: []
+  type: TYPE_NORMAL
+- en: In the dynamic sphere of higher education, the assessment landscape continues
+    to evolve, reflecting the multi-faceted nature of the educational journey. Central
+    to this evolution is the understanding that true learning transcends mere knowledge
+    acquisition. Instead, it encompasses a holistic approach that integrates feedback
+    and reflection with conventional methodologies of learning outcomes, learning
+    approaches, and assessment.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Assessment has often relegated feedback to a secondary role, treated as a mere
+    by-product of evaluation. Similarly, reflection, the process of introspection
+    and critical thinking about one’s learning experiences, remains an unintentional
+    component in curriculum design. However, to truly understand and optimise the
+    learning process, feedback and reflection must be given their rightful place at
+    the forefront of educational methodologies.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Reflection, as I articulated it in my book *Assessment for Experiential Learning*
+    ([Chan, 2023](#ref4_9), p. 160, Ch. 5), is “how you see yourself before, now and
+    after; how you see yourself from different perspectives; how you see yourself
+    after certain situations or experiences; how you see yourself, your actions and
+    your behaviours after you observe others”. Such introspection is foundational
+    for metacognitive development, fostering higher-order thinking processes. Furthermore,
+    established educational theories, from Bloom’s Taxonomy ([Bloom, 1956](#ref4_5))
+    to Biggs’ SOLO taxonomy ([Biggs & Collis, 1982](#ref4_3)), underscore the significance
+    of reflection in deep learning. Reflection not only nurtures higher cognitive
+    skills but also facilitates transformative learning, wherein learners integrate
+    new information, critically evaluate past knowledge, and derive new insights.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Feedback, on the other hand, is more than just a response to student performance.
+    In its essence, feedback is a dialogue – a continuous exchange of information
+    between the educator and the learner. As [Carless and Boud (2018)](#ref4_8) emphasise,
+    feedback is a process wherein learners interpret information from various sources
+    and utilise it to enhance their work or learning strategies. Without meaningful
+    feedback, the learning process remains incomplete, limiting the depth and breadth
+    of the learning experience.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '*Assessment as Learning*, as articulated by [Earl (2003)](#ref4_19), is a profound
+    shift from traditional assessment paradigms. Rather than seeing assessment as
+    an external process imposed upon students, it reframes assessment as a self-regulated
+    learning process. Central to this is the intertwining of feedback and reflection,
+    which together create a dynamic loop of continuous improvement and self-awareness
+    ([Carless, 2015](#ref4_7), p. 199). Feedback, both formal and informal, serves
+    as a mirror for students in the assessment-as-learning approach. As students embark
+    on self-assessment and peer assessment, feedback becomes an integral component,
+    offering insights, clarifications, and directions for improvement. Whether it
+    is feedback they give to themselves, feedback from peers, or feedback from educators,
+    it acts as a guidepost, highlighting areas of strength and those needing further
+    development. While feedback provides direction, reflection is the mechanism that
+    internalises this feedback. Through reflection, students don’t just passively
+    receive feedback but actively engage with it. They question their understanding,
+    dissect their thought processes, and, most importantly, they make conscious decisions
+    about their learning paths. Reflecting on feedback allows students to adjust their
+    strategies, realign their goals, and solidify their understanding.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: The traditional landscape of higher education assessment, while effective in
+    measuring specific learning outcomes, often falls short in providing a comprehensive
+    understanding of the student’s learning journey ([Boud & Falchikov, 2006](#ref4_6)).
+    The predominant focus on high-stakes examinations promotes rote learning and does
+    not foster critical thinking or self-awareness ([Stobart, 2008](#ref4_39); [Wiliam,
+    2011](#ref4_45)). Feedback, when provided, is often delayed, generic, and not
+    actionable, limiting its potential to guide and improve student performance. Furthermore,
+    the absence of structured reflective practices in curriculum design means that
+    students miss out on opportunities for self-assessment and personal growth. Reflection,
+    despite its recognised importance, is challenging to assess, primarily because
+    it requires understanding a learner’s past, present, and future directions ([Chan
+    & Lee, 2021](#ref4_10)). This complexity, combined with various institutional
+    and sociocultural factors, often relegates reflection to the periphery of the
+    educational process.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Integrating feedback and reflection into the assessment landscape is not just
+    about adding two more components to the curriculum. It is about reimagining the
+    entire educational process. When students receive timely, specific, and actionable
+    feedback, they become active participants in their learning journey, taking responsibility
+    for their growth. With structured reflection opportunities, students can introspect,
+    analyse, and derive insights from their experiences, fostering a deeper understanding
+    of the subject and themselves.
+  prefs: []
+  type: TYPE_NORMAL
+- en: And in the midst of this ongoing evolution, the advent of GenAI promises yet
+    another significant transformation in the assessment dimension. As we currently
+    transition from emphasising mere knowledge acquisition towards a more holistic,
+    formative process that prioritises feedback and reflection, GenAI brings potential
+    to further refine this shift. The unparalleled data-processing capabilities and
+    adaptability of GenAI can augment the assessment process, allowing for more nuanced,
+    real-time feedback and adaptive approach to learning. However, as educators, while
+    we harness the power of GenAI, it is imperative to ensure that assessments remain
+    grounded in authentic learning experiences, challenging students in ways that
+    stimulate genuine reflection, develop evaluative judgement and foster a deeper,
+    metacognitive approach to learning. As GenAI becomes a more integrated tool in
+    the educational landscape, the challenge lies in designing or redesigning assessments
+    that leverage its capabilities while ensuring that the focus remains on promoting
+    profound, meaningful learning. The future of assessment, with the convergence
+    of traditional pedagogies and advanced AI technologies, is on the horizon, beckoning
+    educators to navigate this uncharted territory with both enthusiasm and discernment.
+    [Figure 4.1](#fig4_1) shows a modified outcomes-based approach with an emphasis
+    on assessment.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Learning outcomes in student learning that is supplanted with reflection
+    and feedback.](images/fig4_1_B.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: '[Figure 4.1 Outcomes-Based Approach to Student Learning with Reflection and
+    Feedback.](#R_fig4_1)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 4.3 Challenges in Assessment in the Traditional Era
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: The challenges in academic knowledge assessment are manifold and have been intricately
+    woven into the fabric of education for decades. Central to these challenges is
+    the multi-faceted purpose of assessment. While the primary role of assessment
+    should ideally be to guide and improve student learning, it often dons multiple
+    hats, sometimes serving as a tool for bureaucratic mandates or accountability
+    checks. [Fendrich (2007)](#ref4_21) critically observes that many current assessment
+    practices resemble mere “accountability” exercises rather than genuine efforts
+    to enhance the quality of education. Moreover, there is a stark disparity in how
+    teachers and students perceive assessment. While educators often view it as a
+    tool for reporting, students see it as a mere culminating grade, signalling the
+    end of their learning process ([Chan et al., 2017](#ref4_14); [Montgomery & Baker,
+    2007](#ref4_31); [Sonnleitner & Kovacs, 2020](#ref4_38); [Van de Watering & Van
+    der Rijt, 2006](#ref4_41)).
+  prefs: []
+  type: TYPE_NORMAL
+- en: This perception dilemma is exacerbated by the common pitfalls in assessment
+    design. Constructive misalignment, where there is a mismatch between learning
+    activities, outcomes, and assessment methods, is still prevalent. Often, simplistic
+    assessment methods, like multiple-choice questions, are used in scenarios that
+    demand deeper evaluations, while more complex methods are misapplied in simpler
+    contexts. The historical reliance on high-stakes examinations ([Stobart, 2008](#ref4_39);
+    [Wiliam, 2011](#ref4_45)) further compounds the issue, leading to rote learning
+    and fostering a competitive rather than a collaborative learning environment.
+    Such systems, especially when they employ norm-referencing standards, often discourage
+    true learning and collaboration among students.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Feedback, a crucial element of the learning process, presents its own set of
+    challenges. While timely and personalised feedback can significantly enhance student
+    learning, it also means a considerable workload for educators. This becomes even
+    more pronounced in the era of mass higher education where student numbers are
+    burgeoning. Group assessments, despite their potential benefits, bring logistical
+    nightmares. Without clear objectives and expectations, they can sow discord among
+    students and dilute the educational benefits they are meant to provide. Furthermore,
+    the growing trend towards modular curricula means students grapple with increased
+    assessment workloads, leaving little room for deep learning.
+  prefs: []
+  type: TYPE_NORMAL
+- en: In addition, assessing experiential learning types of pedagogical approaches
+    presents unique challenges distinct from those of traditional academic knowledge
+    assessment ([Kuh, 2008](#ref4_27)). One significant issue is the ambiguity surrounding
+    the learning outcomes related to experiential learning. As [Luk and Chan (2021)](#ref4_30)
+    elucidated, while there are general learning outcomes, each student’s experience
+    and motivation can lead to specific outcomes, complicating the design of aligned
+    assessments. Experiential learning often focuses less on mastering specific knowledge
+    and more on acquiring or enhancing particular competencies, necessitating meticulously
+    crafted assessment designs.
+  prefs: []
+  type: TYPE_NORMAL
+- en: There is an evident lack of clarity around the conceptualisation of competencies
+    ([Chan et al., 2017](#ref4_14)). The absence of a clear definition or set list
+    of competencies students should develop makes it challenging to determine what
+    and how to assess. This is compounded by the fact that experiential learning outcomes
+    often aren’t tied directly to specific academic disciplines, making them harder
+    for educators to evaluate.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The logistics and practicalities of assessment in experiential learning further
+    intensify the challenges. Given that experiential learning often involves various
+    parties, assessments might require input from multiple stakeholders, complicating
+    the logistical aspects. Additionally, determining the optimal individuals to provide
+    feedback, the timing, and the method of delivery presents its own set of dilemmas.
+    Ensuring validity, reliability, and the meaningful integration of assessment as
+    part of the learning journey are paramount yet intricate tasks in experiential
+    learning.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Adding to these challenges is the scepticism around innovative assessment methods.
+    Both educators and students often remain wary of unfamiliar assessment techniques,
+    such as peer, self-assessment and authentic assessment, even when they have the
+    potential to enhance learning outcomes. A further challenge lies in the conception
+    and execution of authentic assessments that mirror real-world scenarios. Students
+    resonate with assessments they perceive as authentic, but creating such assessments
+    demands considerable time and resources. Additionally, perceptions of authenticity
+    vary among students, based on their individual experiences. The desire for authenticity
+    is underscored by the call from education experts globally for assessments to
+    more closely mirror real-world tasks.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Lastly, the spectre of academic dishonesty has morphed into a more insidious
+    form with the rise of contract cheating, where students can easily purchase bespoke
+    essays, undermining the very essence of academic integrity ([Awdry et al., 2022](#ref4_1)).
+  prefs: []
+  type: TYPE_NORMAL
+- en: More details on the challenges in assessment can be found in my open access
+    book on Assessment for Experiential Learning ([Chan, 2023](#ref4_9), p. 39, Ch.
+    3).
+  prefs: []
+  type: TYPE_NORMAL
+- en: 4.4 Challenges in Assessment in the GenAI Era
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: The introduction of GenAI in academic assessment has ushered in both transformative
+    possibilities and unprecedented challenges. At the forefront of these challenges
+    is the potential erosion of human-centric evaluation. While GenAI can process
+    vast amounts of data and provide real-time, adaptive evaluations, it may lack
+    the nuanced understanding of individual learners’ journeys, potentially leading
+    to overly standardised assessments that do not cater to individual learning styles
+    or cultural contexts. This poses the risk of oversimplifying complex learning
+    processes and reducing the richness of human experience to mere data points.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Moreover, the ethical implications of GenAI-driven assessment are vast. Issues
+    of data privacy and security come to the fore, as students’ learning patterns,
+    strengths, and weaknesses are analysed and stored. Without robust safeguards,
+    this sensitive information could be misused or fall into the wrong hands. Furthermore,
+    GenAI, by its very nature, learns and evolves based on the data it receives. If
+    this data is biased or unrepresentative, it could perpetuate and even exacerbate
+    existing educational inequities, reinforcing stereotypes and further marginalising
+    already disadvantaged student populations. For example, in the Department of Social
+    Work and Social Administration at the University of Hong Kong, departmental guidelines
+    are provided to maintain the confidentiality of clients’ data in accordance with
+    the ethical practices of the social work profession and the requirements of the
+    Personal Data (Privacy) Ordinance. However, as most AI tools use large language
+    models (LLMs), which are typically deployed and hosted in the cloud, and given
+    that some of these AI tools may use data for training or other purposes, stringent
+    guidelines and AI literacy training must be provided for students if they wish
+    to use AI-generated language models for fieldwork courses.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The academic integrity of GenAI-driven assessments also comes under scrutiny.
+    As AI tools become more accessible, there is the looming threat of students leveraging
+    advanced AI tools to artificially enhance their performance or even engage in
+    sophisticated forms of cheating. This “arms race” between evaluative GenAI and
+    AI tools used by students could lead to a scenario where genuine learning takes
+    a backseat to merely “gaming the system”. Thus, on one hand, we are trying to
+    prepare our students to be future-ready with AI capability, but on the other hand,
+    we are concerned about our students lacking the genuine knowledge and skills on
+    what the future expected of them if they use AI tools in a non-constructive way.
+    In an Urban Planning and Design course at the University of Hong Kong, a teacher
+    is exploring the design of an essay-based assessment using GenAI. The teacher
+    suggests that students: i) Use GenAI tools to generate a 2000-word essay on a
+    relevant topic, ii) Reflect upon and critique the AI-generated work, analysing
+    its strengths, weaknesses, and overall coherence, and iii) Craft their own comprehensive
+    essay drawing on their evaluations and criticisms from part ii. I was consulted
+    regarding this essay design. While I find the integration of GenAI commendable,
+    the teacher needs to carefully consider the actual objectives and outcomes of
+    both the assessment and the course. If the intent behind having students use AI
+    for generating a 2000-word essay is simply to acquaint them with GenAI tools,
+    that is one aspect of learning. But, if the focus lies on the reflective critique
+    in part ii and the essay composition in part iii, these objectives must be clearly
+    delineated. Would students be deterred from using GenAI to complete part iii,
+    or would that be permissible? If allowed, what then becomes the primary purpose
+    of the assessment? Furthermore, addressing the proper attribution of the tool
+    is crucial. Equally important is the provision of clear criteria and rubrics for
+    the students.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Additionally, while GenAI offers the allure of efficiency, there is a real concern
+    about over-reliance ([Chan & Tsi, 2023](#ref4_11)). From our research findings,
+    some students mentioned
+  prefs: []
+  type: TYPE_NORMAL
+- en: “*It is concerning especially for students as it can limit genuine development
+    of skills that are necessary in the world/future occupations*.”
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: ''
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: '*“Unfortunately, people may get lazier and use less of their own brain to think.”*'
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: and some teachers are
+  prefs: []
+  type: TYPE_NORMAL
+- en: “*Very concerned. Students already have poor critical thinking and information
+    search skills in general.”*
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: A student actually said
+  prefs: []
+  type: TYPE_NORMAL
+- en: “*I think it is safe to say that ChatGPT has spoiled me because it is becoming
+    pretty hard for me to write a full sentence without the temptation to ask ChatGPT
+    to fix it for me. Because they always use better words when you are trying to
+    express.”*
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: The human touch in education, characterised by empathy, understanding, and mentorship,
+    risks being
+  prefs: []
+  type: TYPE_NORMAL
+- en: sidelined, leading to an impersonal and detached learning environment as a student
+    mentioned. In our findings, some students and teachers are not concerned the rapid
+    adoption and widespread use of AI technologies, as they believe *“Humans are more
+    creative and empathetic than AI*.
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: The reduction of face-to-face interactions and feedback sessions, replaced by
+    automated feedback, might strip the learning process of its inherent human connection.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Looking ahead, as GenAI becomes more integrated into educational systems, the
+    challenge will also lie in ensuring educators and administrators are adequately
+    trained to understand, interpret, and act on GenAI-driven insights. Without proper
+    training, there is a danger of misinterpreting the usage of GenAI or placing undue
+    emphasis on GenAI recommendations without critical evaluation. In the research
+    findings, one teacher stressed
+  prefs: []
+  type: TYPE_NORMAL
+- en: While it may deeply transform education and work, I believe there is a path
+    to be taken where AI tools can be harnessed and be beneficial to students, workers
+    and society at large. But this is a narrow path, which I think requires very careful
+    thinking, constant education about AI models and their evolution, communication
+    between teachers and students or between policymakers and the public, clear boundaries
+    when it comes to what is permitted and what is not etc. It is a matter to grasping
+    the opportunity quickly and responsibly.
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: 'While GenAI holds the promise to revolutionise academic assessment by making
+    it more streamlined, personalised, and data-driven, it also brings forth a plethora
+    of challenges. Balancing the potential of GenAI with its pitfalls will be crucial,
+    ensuring that the evolution of assessment remains anchored in the core tenets
+    of education: fostering genuine learning, upholding integrity, and ensuring equity.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 4.5 Redesigning Assessment with GenAI
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: The integration of GenAI into higher education offers transformative opportunities,
+    yet it also presents distinct challenges, especially in the domain of assessment.
+    As students gain access to sophisticated tools capable of generating detailed
+    responses, there emerges an urgent need to redefine what authentic student work
+    looks like and how to effectively evaluate it. Redesigning assessment should no
+    longer emphasise only the destination (final product, grades or degrees) but the
+    journey of learning itself (process). Addressing these challenges requires a deep
+    understanding of GenAI’s capabilities and limitations, coupled with innovative
+    assessment strategies that emphasise critical thinking, originality, and a comprehensive
+    understanding of the subject matter.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Recognising the intricacies of this new educational environment, it becomes
+    pivotal for educators and institutions to devise adaptive strategies that leverage
+    AI’s strengths while safeguarding the core principles of genuine learning and
+    academic integrity. In this section, we will delve into diverse strategies aimed
+    at preserving the integrity and enhancing the effectiveness of assessments in
+    the GenAI era. Subsequently, in [Section 4.6](#sec4_6), we will provide a framework
+    that highlight the assessment types best tailored for the AI-driven landscape.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Outlined here are **Six Assessment Redesign Pivotal Strategies (SARPS)**, each
+    addressing a specific aspect of assessment in the AI era:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Each of these strategies, while distinct in its approach, converges on a shared
+    goal, ensuring that higher education assessments remain real, robust, relevant,
+    and resonant in the age of AI. In the subsequent sections, we will delve deeper
+    into each of these facets, exploring their significance, application, and potential
+    for transforming the assessment landscape in higher education.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 4.5.1 Integrate Multiple Assessment Methods
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: 'Assessment is more than just a measure of student learning; it is a multi-faceted
+    tool that can inform instruction, motivate learners, and provide a comprehensive
+    picture of a student’s skills, knowledge, and understanding. In today’s complex
+    academic landscape, heightened by the advent of technologies like GenAI, relying
+    on a singular method or source of assessment is insufficient. Here are the reasons
+    why and how integrating multiple assessment source and methods can be beneficial:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Diversity in Perspective via Multiple Assessment Sources:**'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Embracing varied assessment sources becomes vital to cater to the diverse needs
+    of students and ensure a holistic evaluation of their abilities. Among these sources
+    are:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'AI-assisted assessment: These leverage the computational prowess of AI to provide
+    quick and objective feedback, especially useful for large cohorts of students
+    or for preliminary checks. For instance, AI can instantly grade multiple-choice
+    or fill-in-the-blank type questions, ensuring consistent and unbiased assessment.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Peer-reviewed assessment: Engaging peers in the review process can foster collaborative
+    learning and offer different perspectives on a piece of work. Peer reviews can
+    also aid in enhancing soft skills such as critical appraisal and constructive
+    feedback. Additionally, by evaluating their peers, students often reflect upon
+    and reinforce their own understanding ([Chan & Wong, 2021](#ref4_13)).'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Teacher-led assessment: These remain irreplaceable, given the depth of feedback
+    and the insightful understanding instructors bring to the table. They can identify
+    not just the correctness of an answer but the underlying thought process, creativity,
+    and problem-solving strategies applied.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Mitigation of Bias and Error:** Every assessment method has inherent biases
+    and potential for error. For instance, AI assessment might lack perception, while
+    human assessment can sometimes be influenced by implicit biases. By integrating
+    multiple methods, these biases can be counteracted, leading to a more balanced
+    and fair assessment.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Holistic Understanding:** Different methods probe different facets of understanding.
+    While AI might excel in assessing quantitative skills or factual knowledge, peer
+    reviews can shed light on communicative skills, and teachers can gauge deeper
+    cognitive skills, analytical abilities, and creativity. Together, they provide
+    a more rounded view of a student’s capabilities.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Flexibility and Adaptability:** As the course progresses, educators can choose
+    to lean more on one method over another based on the nature of the content or
+    the skills being assessed. For instance, a coding assignment might benefit from
+    both AI assessment (for syntax and basic functionality) and peer/teacher reviews
+    (for code efficiency, structure, and documentation).'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Feedback Richness:** Multiple assessment methods ensure diverse feedback.
+    AI can provide immediate responses, peers can offer relatability and shared learning
+    insights, and teachers can provide expert critiques. This richness can be invaluable
+    for a student’s growth and understanding.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: In an era where technology is rapidly influencing pedagogical practices, striking
+    a balance between human touch and computational efficiency becomes pivotal. By
+    integrating AI-assisted, peer-reviewed, and teacher-led assessments, educators
+    can harness the strengths of each, ensuring a thorough, equitable, and comprehensive
+    assessment process.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 4.5.2 Promote Authentic Assessments in the AI Era
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: In a rapidly evolving educational landscape where AI-driven tools are becoming
+    increasingly sophisticated, traditional assessment methods often fall short. As
+    mentioned earlier, the true measure of a student’s understanding and skills transcends
+    rote memorisation and regurgitation. Authentic assessments, which mimic real-world
+    challenges and require students to apply their knowledge in practical contexts,
+    have become pivotal in this context. Here are some reasons why and how they can
+    be beneficial.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Real-world Application:** Authentic assessments focus on tasks that mirror
+    real-world challenges. For example, instead of merely asking business students
+    to memorise marketing theories, they might be tasked with creating a full-fledged
+    marketing campaign for a product, factoring in current market trends, budget constraints,
+    and target demographics.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Depth of Understanding:** Traditional exams may test knowledge at a surface
+    or non-authentic level, but real-world projects and case studies force students
+    to delve deep, synthesise various pieces of information, and apply their knowledge
+    in holistic ways. This approach ensures that students are not just memorising
+    content but truly understanding and internalising it, it is also more meaningful
+    for the students.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Diverse Skill Assessment:** Projects, case studies, and problem-solving scenarios
+    often require a range of competencies, such as research, collaboration, critical
+    thinking, creativity, and communication, among others. This multi-faceted approach
+    provides a more comprehensive picture of a student’s abilities.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Reducing the reliance on AI assistant:** Tasks like oral examinations, presentations,
+    and interviews inherently require human interaction, making it difficult for students
+    to rely heavily on AI for answers. Such formats not only test knowledge but also
+    gauge a student’s communication skills, confidence, and ability to think on their
+    feet.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: In the age of AI, authentic assessments that simulate real-world challenges
+    and integrate diverse skills offer a robust way to evaluate and foster genuine
+    student learning and growth. Such assessments ensure that the essence of education,
+    which is the holistic development of an individual, remains uncompromised.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 4.5.3 Promoting Academic Integrity and Genuineness in the AI Era
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: The academic landscape is facing unprecedented challenges concerning integrity
+    and original thought. While AI offers myriad tools that can enrich the learning
+    experience, its ubiquitous presence can tempt students into undue reliance, often
+    blurring the lines between assistance and academic dishonesty. Consequently, it
+    is crucial to establish strong ethical foundations in students and stress the
+    importance of genuine scholarly effort.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Understanding AI’s Role in Academia:** Institutions should offer AI literacy
+    workshops or courses that explicitly address the capabilities and limitations
+    of AI in academic study and research. By understanding what AI can and cannot
+    do, students are better equipped to use it as a tool rather than a crutch. Showcasing
+    case studies on both positive and negative applications of AI in academic contexts
+    can help students understand real-world implications such as the AI literacy course
+    mentioned in [Chapter 2](ch2.xhtml).'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Reinforcing Academic Integrity:** Beyond traditional honour codes, institutions
+    should create AI-specific guidelines, elucidating what constitutes misuse. For
+    example, using AI to generate essay content could be flagged as dishonest, while
+    using AI to analyse data for that essay might be acceptable with proper attributions.
+    Multiple assessment approaches can be used wherein AI tools may not be as effective,
+    ensuring students rely on their understanding and abilities.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Ethics Workshops:** Regular workshops emphasising ethical considerations
+    in using AI can be beneficial. Topics could range from the philosophical implications
+    of AI dependency to more concrete discussions on plagiarism in the AI age. Engaging
+    students in debates and discussions about these topics can foster a deeper understanding
+    and appreciation of academic ethics.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Consequences and Accountability:** Clearly defined consequences for AI-related
+    academic misconduct should be established. This can range from redoing assignments
+    to more severe actions for repeated offenses. Peer review systems, where students
+    assess the work of their peers, can also help in maintaining accountability, as
+    students become stakeholders in the process of upholding integrity.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Celebrating Original Thought:** Institutions should prioritise and celebrate
+    genuine student innovation and effort. Awards or recognitions for outstanding
+    original research or projects can serve as incentives for students to put in authentic
+    work. Encouraging students to publish or present their genuine work can also motivate
+    them to strive for originality and deep understanding, rather than superficial
+    completion of tasks.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Through comprehensive guidelines, consistent ethics training, and a culture
+    that celebrates originality, institutions can foster an environment where students
+    leverage AI responsibly, maintaining the sanctity of academic pursuits.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 4.5.4 Embracing AI as a Learning Partner
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: The dawning of the AI era has significantly transformed the educational ecosystem.
+    Instead of approaching AI with trepidation and merely as a challenge to academic
+    integrity, educators and institutions can channel its profound capabilities to
+    enrich and enhance learning experiences. By positioning AI as a collaborative
+    tool, rather than just a potential problem, students and educators can unearth
+    fresh avenues of mutual learning and reasoning, all while retaining the essence
+    of human intuition and insight.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**The Dynamics of Dual Learning:** Propose assignments where students and AI
+    tackle problems together. For example, in a mathematics assignment, while AI can
+    provide solutions, students can be tasked with explaining the reasoning or even
+    identifying potential errors in the AI’s methods. Encourage students to compare
+    their reasoning processes with AI. This could be in the form of essays or reflections
+    where students evaluate the differences in approach, advantages, and limitations
+    of both human and AI logic.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Integrating AI in Research:** Students can utilise AI tools for vast data
+    analysis tasks particularly with AI tools such as Code Interpreter, allowing them
+    to focus on interpreting results, drawing connections, and crafting conclusions.
+    AI can help students in scouring extensive databases to find relevant literature,
+    with students then critically analysing and synthesising the information.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Facilitating Interactive Learning:** Use AI-driven platforms to offer personalised
+    learning experiences. These platforms can identify individual student weaknesses
+    and strengths, providing tailored resources and exercises. In some disciplines,
+    AI can also help create accurate simulations or models based on students’ hypotheses,
+    allowing them to test and refine their ideas in real time. For example, the Center
+    of Innovation in Nursing Education at the University of Hong Kong offers a unique
+    blend of traditional nursing training and cutting-edge technology. The center
+    boasts sophisticated computerised manikins and a simulated clinical environment,
+    serving as a hub for nursing students to sharpen their skills in client care and
+    clinical decision-making. Nursing students of all levels interact with lifelike
+    manikins, engage in virtual reality scenarios, work with robots, and utilise other
+    state-of-the-art equipment to simulate real-world procedures and situations in
+    a risk-free setting. Integration with AI has the potential to further enhance
+    this learning environment. An AI-driven platform can tailor simulations based
+    on individual student performance, pinpointing specific areas of weakness and
+    strength. Such a platform, in future research, could dynamically adjust scenarios
+    to ensure that students are consistently challenged, thereby facilitating deeper
+    learning and understanding. Especially in disciplines like nursing, where precision
+    is paramount, AI can generate accurate simulations or models. This allows students
+    to test hypotheses, make informed decisions, and witness real-time results without
+    the repercussions of real-world consequences.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Feedback and Continuous Improvement:** AI can provide students with immediate
+    feedback on assignments, enabling them to understand mistakes and rectify them
+    promptly. And, over time, AI can track a student’s progress, helping educators
+    identify areas that might need reinforcement or further instruction.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Promoting Creativity:** For subjects like art and music, AI tools can suggest
+    compositions or designs based on current trends, with students then adding their
+    unique touch or interpretation.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: In reframing the narrative around AI in education, from mere utility or challenge
+    to an active collaborative partner, we pave the way for a future where technology
+    and human intellect operate in tandem. Such an alliance not only enriches the
+    learning process but also equips students with the skills and perspectives necessary
+    for a world where AI is increasingly interwoven into the fabric of daily life.
+    By championing collaboration over confrontation, educators can foster a dynamic
+    environment of growth, exploration, and mutual respect between students and the
+    digital tools at their disposal.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 4.5.5 Prioritising Soft Skills in Assessments in the AI Era
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: While AI can sift through vast datasets, generate answers to complex questions,
+    and even simulate human-like tasks, it still falls short in replicating the intrinsic
+    qualities that make us inherently human. These qualities, often referred to as
+    “soft skills”, encompass our emotional intelligence, empathy, communication abilities,
+    teamwork, leadership, and more. Prioritising the assessment of these skills ensures
+    that the next generation is not just technologically adept but also socially and
+    emotionally competent.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**The Inimitable Essence of Soft Skills:** Soft skills are complex and multi-faceted,
+    often shaped by individual experiences, cultural backgrounds, and personal values.
+    While AI might be able to mimic a sympathetic response, genuine empathy, arising
+    from understanding another’s feelings, remains a uniquely human trait, this is
+    why AI affectiveness for human emotions (i.e.) the third element of the AI literacy
+    framework is important (see [Ch 2](ch2.xhtml), [section 2.5](ch2.xhtml#sec2_5)).
+    The real essence of teamwork lies in understanding, compromise, and mutual respect,
+    elements challenging for any algorithm to grasp fully. Soft skills development
+    is beyond any algorithm. This is echoed by our research findings, a student mentioned
+    “*this may lead to a decrease in critical thinking and make decisions only based
+    on the information that AI provides to them*.” For more information on soft skills,
+    please check out the Holistic Competency and Virtue Education website – [https://www.have.hku.hk/](https://www.have.hku.hk).'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**The Long-term Benefits of Soft Skills:** As Prof. Peter Salovey, the current
+    president of Yale University, aptly puts it, “*I.Q. gets you hired, but E.Q. gets
+    you promoted*.” Technical skills might land you a job, but it is often the soft
+    skills that propel you into promotions, leadership roles, and underpin long-term
+    career success. A society where individuals can communicate effectively, lead
+    with empathy, and collaborate seamlessly is undoubtedly more resilient and harmonious.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**AI’s Role in Enhancing Soft Skills Education:** Although soft skills seem
+    to be not penetrable by AI, AI can still assist. AI can analyse student interactions
+    in virtual classrooms to identify areas where soft skills might be lacking, providing
+    educators with insights to fine-tune their teaching methods. In addition, AI-driven
+    platforms can design personalised soft skills training modules for students, ensuring
+    that each individual’s unique needs are addressed.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: While AI continues to reshape the academic horizon, it is imperative that the
+    education system not lose sight of the intrinsic human qualities that AI can’t
+    replicate. By integrating soft skills assessment into the curriculum and leveraging
+    platforms, educators can ensure that students are equipped not just with knowledge
+    but also with the essential skills to navigate the complex tapestry of human interactions
+    and challenges in the real world. The International Holistic Competency Foundation
+    encourages courses with soft skills development to accredit their courses, providing
+    students the evidence and recognition of their skills. More details can be found
+    at [https://www.ihcfoundation.net/](https://www.ihcfoundation.net).
+  prefs: []
+  type: TYPE_NORMAL
+- en: 4.5.6 Prioritising Feedback Over Grades in the AI Era
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: AI provides us an opportunity for a paradigm shift in how students are assessed
+    in educational settings. The traditional grading system, which often boils down
+    a student’s performance to a single score, might not adequately capture the depth
+    and breadth of a student’s learning journey. Feedback, unlike a static grade,
+    provides insights into the specifics of what a student understood, partially grasped,
+    or missed entirely. This not only gives students a clearer picture of their strengths
+    and areas for improvement but also promotes a growth mindset. Instead of seeing
+    their abilities as fixed, students can view mistakes as opportunities for growth
+    and refinement. Emphasising feedback over grades addresses this by prioritising
+    holistic understanding and continuous improvement.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Immediate Feedback Through AI:** One of the advantages of integrating AI
+    into the educational process is its ability to provide instant feedback. For example,
+    if a student is working on a math problem or writing an essay, AI can immediately
+    point out calculation errors or grammatical mistakes. This allows the student
+    to correct and learn from errors in real time, rather than waiting for a graded
+    paper to be returned days or weeks later. Immediate feedback is known to enhance
+    learning, as the connection between action and consequence is fresh in the student’s
+    mind.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Human Machine co-feedback:** While AI can provide swift feedback on objective
+    elements, human instructors bring a depth and nuance that AI currently cannot
+    replicate. They can delve into the subtleties of a student’s thought process,
+    offer insights on the effectiveness of their argumentation, or even gauge and
+    provide feedback on softer skills such as teamwork or oral presentations. This
+    combination of AI’s immediacy and human depth ensures a comprehensive feedback
+    mechanism.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Reduced Stress and Anxiety:** Traditional grading systems can induce significant
+    stress, as students might fixate on achieving a particular score rather than truly
+    understanding the material. Feedback-centric systems prioritise understanding
+    and growth, potentially reducing the performance pressure students often feel.
+    Additionally, since students sometimes hesitate to ask teachers for feedback on
+    what they perceive as minor issues, AI can provide assistance without any reservations
+    from the students. As a student mentioned, *“ChatGPT won’t judge me.”*'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Encouraging Lifelong Learning:** In the professional world, continuous feedback
+    is a norm. Whether it is a project review, client feedback, or performance appraisals,
+    feedback forms the core of professional growth. By emphasising feedback over grades,
+    educational institutions better prepare students for this reality, fostering adaptive
+    learners equipped to handle the ever-evolving challenges of the AI era.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Practical Considerations:** Implementing a feedback-focused system would
+    require structural changes. There would be a need for platforms (potentially AI-driven)
+    that allow for continuous student submissions, immediate feedback loops, and easy
+    tracking of student progress over time. Faculty training would also be paramount,
+    ensuring educators can provide constructive feedback and utilise AI tools effectively.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: While grades have been a staple of assessment for a long time, the AI era presents
+    an opportune moment to reevaluate their dominance. Transitioning towards a feedback-centric
+    approach, integrating both AI and human insights, ensures that assessments align
+    more closely with the ultimate goal of education – that is, fostering understanding,
+    curiosity, and continuous growth.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 4.6 AI Assessment Integration Framework
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: The inexorable march of AI into the educational sector beckons a rethinking
+    of traditional assessment methods. As educators grapple with the possibilities
+    and challenges posed by AI, it becomes imperative to both understand its capabilities
+    and to find ways to integrate these capabilities harmoniously into assessment
+    strategies. The AI Assessment Integration Framework is an endeavour in this direction,
+    presenting nine distinct types of assessments, each thoughtfully designed to address
+    different facets of learning and evaluation in the AI era.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Rather than totally replacing traditional assessment methods, the “AI Assessment
+    Integration” framework seeks to enhance them, acknowledging that while AI can
+    be a potent tool for certain tasks, there are uniquely human skills and competencies
+    that it cannot replicate and are developed in conjunction with the challenges
+    we so far studied and came across as well as the insights from literature ([Dillion
+    et al., 2023](#ref4_17); [Lichtenthaler, 2018](#ref4_29)). This framework is constructed
+    with a vision of symbiosis: marrying the strengths of AI with the depth and breadth
+    of human learning experiences, as shown in [Figure 4.2](#fig4_2).'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![A list of the components in the A I assessment integration framework.](images/fig4_2_B.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: '[Figure 4.2 AI Assessment Integration Framework.](#R_fig4_2)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Each of the nine types of assessments within the “AI Assessment Integration”
+    framework represents a distinct lens through which student learning can be evaluated.
+    From Performance-based assessments that focus on real-world applications of knowledge,
+    to Ethical and Societal Impact Assessments that highlight the importance of understanding
+    AI’s broader implications, the framework offers a roadmap for educators navigating
+    the intersection of AI and assessment. Through the framework, the hope is to offer
+    educators a structured approach to understanding and harnessing the potential
+    of AI in enhancing educational assessments. The below are the nine categories.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Performance-based assessment
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Personalised or contextualised type of assessment
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Human-centric competency assessment
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Human-machine partnership assessment
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Project- or scenario-based assessment
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Time-sensitive AI-generated adaptive assessment
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Metacognitive assessment
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Ethical and societal impact assessment
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Lifelong learning portfolio assessment
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: We will now discuss each of these assessments in depth, demonstrating with a
+    case scenario for teachers to ponder how they can redesign and integrate their
+    assessment with AI.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 4.6.1 Performance-Based Assessment
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: Performance-based assessment stands out as one of the most authentic assessment
+    methods within the educational sphere. Its emphasis on showcasing the application
+    of skills and knowledge in real-world or simulated scenarios is a stark contrast
+    to traditional testing. In higher education, where the goal is not just the acquisition
+    of knowledge but also its practical application, performance-based assessment
+    becomes invaluable. It allows students to demonstrate many competencies, such
+    as critical thinking and problem-solving abilities.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 4.6.2 Personalised or Contextualised Assessment
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: Personalised or contextualised assessment operates on the principle that every
+    student’s academic journey is a unique trajectory. In higher education, each student
+    embarks on a unique learning journey, influenced by diverse backgrounds, experiences,
+    and goals. Personalised or contextualised assessment opposes the usual one-size-fits-all
+    approach, the assessment provides uniqueness in student’s individual progress
+    and comprehension levels. As students navigate through the assessment, the complexity
+    and context of responses vary based on their learning profile and journey, providing
+    a genuine piece of student work.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Central to this assessment is the integration of AI. Beyond its function as
+    a research assistant, the AI tool acts as an analytical companion, suggesting
+    relevant readings, and offering critical insights. It provides layers of depth
+    to the literary exploration, ensuring students have a well-rounded understanding.
+    However, the AI’s role remains complementary; students must still chart their
+    own journey, interpreting both the poem and the AI’s insights through their personal
+    lens. This marriage of technology, literature, and personal narrative creates
+    a truly enriching academic experience, pushing boundaries and redefining literary
+    analysis in the modern age.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 4.6.3 Human-Centric Competency Assessment
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: Human-centric competency assessment is a method that evaluates a set of skills
+    that are uniquely human and difficult for AI to replicate. These skills can range
+    from leadership and teamwork to empathy and creative problem solving. Given the
+    rapid advancements in automation, focusing on these competencies ensures that
+    students hone skills that are both valuable in the workforce and resistant to
+    automation.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 4.6.4 Human– Machine Partnership Assessment
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: Human– machine partnership assessment is a method that evaluates students’ capabilities
+    to interact, collaborate, and leverage AI tools effectively. As the world increasingly
+    integrates AI into various sectors, the aptitude to synergise with AI becomes
+    a paramount skill. This assessment focuses on tasks that challenge students to
+    utilise AI tools while ensuring their inputs and decisions remain integral to
+    the outcome. The type of assessment used in this method should involve evaluating
+    students’ proficiency in using these tools. For instance, this could involve a
+    surgery simulation using AI/VR or 3D drawing with AI tools, such as those found
+    on [Autodesk.com](http://Autodesk.com). In these types of assessments, if the
+    AI component is too advanced or does too much of the work, it might overshadow
+    the student’s genuine input. For instance, if an AI-powered design tool automatically
+    optimises 90% of a student’s project, it is challenging to assess the student’s
+    actual skill, thus, teachers need to decide the assessment appropriately.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 4.6.5 Project- or Scenario-Based Assessment
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: Project-based assessment (PBA) is an evaluative approach that emphasises the
+    application of knowledge and skills in a practical, real-world context over an
+    extended period. Unlike traditional assessment that might test students on specific
+    content knowledge, PBA focuses on the process of learning itself. It typically
+    encompasses intricate tasks requiring research, collaboration, critical thinking,
+    and presentation. As students work through the multi-faceted challenges, they
+    not only demonstrate understanding but also develop essential life skills such
+    as teamwork, problem solving, and effective communication. The intricate and diverse
+    nature of these tasks, coupled with the individual and collaborative thought processes
+    involved, makes it challenging for AI to duplicate authentically.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 4.6.6 Time-Sensitive AI-Generated Adaptive Assessment
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: Time-sensitive AI-generated adaptive assessment harnesses the computational
+    prowess of AI to generate questions on the fly, adapting to the student’s level
+    of understanding and ensuring that every student gets a unique set of questions.
+    These assessments are time-bound, making it challenging for students to consult
+    external sources or other AI systems.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 4.6.7 Meta-cognitive Assessment
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: Meta-cognitive assessment revolves around evaluating a student’s awareness and
+    understanding of their cognitive processes. It is not just about assessing what
+    a student knows, but how they approach and reflect on the learning and problem-solving
+    process. Through this method, educators gain insights into a student’s ability
+    to analyse their strategies, foresee their performance on future tasks, and reflect
+    on their thought patterns. By honing in on these introspective capabilities, the
+    assessment focuses on skills that AI tools currently cannot replicate, making
+    it especially relevant in an AI-integrated educational environment.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 4.6.8 Ethical and Societal Impact Assessment
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: An ethical and societal impact assessment is an assessment process used to understand,
+    identify, evaluate, and respond to the potential ethical and societal implications
+    of a particular project, policy, programme, technology, or other initiative. It
+    aims to anticipate and address the unintended and unforeseen consequences that
+    may arise, ensuring that these initiatives align with societal values, human rights,
+    and ethical principles. This type of assessment often involves a participatory
+    approach, consulting with a diverse range of stakeholders, including community
+    members, experts, policymakers, and those potentially affected by the initiative.
+    Instead of just assessing the current impacts, ethical and societal impact assessment
+    tries to anticipate future implications, ensuring that long-term societal effects
+    are considered. The assessment usually concludes with a set of recommendations
+    or strategies to mitigate negative impacts and enhance positive outcomes. While
+    AI can identify patterns and provide data-driven insights, making ethical judgements
+    often requires human intuition. What is deemed ethically acceptable can change
+    over time. AI models, which often rely on historical data, might not always be
+    attuned to these shifts. In addition, capturing and interpreting the diverse values
+    and opinions of stakeholders is a complex task.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 4.6.9 Lifelong Learning Portfolio Assessment
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: Lifelong learning portfolio assessment is an approach that centres on continuous
+    self-reflection and skill development over extended periods, often encompassing
+    a student’s entire academic and professional journey. By curating a digital portfolio,
+    students collect, organise, and showcase their work, achievements, and milestones.
+    This method provides both students and educators with a rich, longitudinal perspective
+    on a learner’s growth, areas of proficiency, and evolution of skills and competencies.
+    Unlike traditional assessments that capture a snapshot of a student’s abilities
+    at a single point in time, the lifelong learning portfolio offers a dynamic, in-depth
+    view of the learner’s journey, emphasising the process of learning and self-improvement
+    which is not easy to replicate with AI tools.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 4.7 GenAI Text Detection
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: The chapter of assessment would not be complete without discussing GenAI text
+    detection, given that this GenAI text has emerged as one of the biggest concerns
+    for both educators and students alike, particularly when it comes to text-based
+    assignments ([Dalalah & Dalalah, 2023](#ref4_15); [Perkins et al., 2023](#ref4_33);
+    [Rudolph et al., 2023](#ref4_35)). The ease with which students can employ GenAI
+    to produce text assignments necessitates a robust mechanism to ensure the authenticity
+    and originality of the submitted work. Therefore, exploring the GenAI text detection
+    approaches and tools is imperative to uphold academic integrity and to foster
+    a genuine learning environment. Through various detection methodologies such as
+    text complexity analysis, perplexity, burstiness, and entropy analysis, among
+    others, educators can discern between human-generated and AI-generated text, ensuring
+    a fair and conducive academic milieu for both teaching and learning endeavours.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 4.7.1 GenAI Text Detection Approaches
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: 'The detection of GenAI text encompasses a multitude of methods aimed at distinguishing
+    human-produced text from text generated by AI, especially large language models
+    (LLMs). Below are some of the methods with a brief description to explain how
+    each method works:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Text Complexity Analysis:** Analysing syntactic complexity, which involves
+    examining the structural intricacies of text, can be pivotal in identifying AI-generated
+    text. Generative models might exhibit distinct patterns in complexity compared
+    to human-authored text ([Dascalu, 2014](#ref4_16)).'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Style Analysis:** This method entails analysing stylistic elements like word
+    choice, sentence structure, and tone to discern between human and AI-generated
+    text.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Perplexity:** Perplexity measures how well a model predicts subsequent words
+    based on preceding context. It is a statistical measure of how well a language
+    model can predict the next word in a sequence of words. Lower perplexity indicates
+    better prediction, which can be a hallmark of generative models. It is used for
+    evaluating and comparing model performance ([Mukherjee, 2023](#ref4_32)).'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Burstiness:** Coupled with perplexity, burstiness is a measure of the frequency
+    with which certain words or phrases appear in a text. In the context of detecting
+    GenAI text, burstiness can be used to identify patterns of language use that are
+    indicative of machine-generated text. GenAI tends to produce text that is less
+    varied and more repetitive than human-generated text, which can lead to bursty
+    patterns of language use ([Mukherjee, 2023](#ref4_32)).'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Entropy Analysis:** Entropic (Randomness) measures, reflecting the balance
+    between predictability and unpredictability in language, can be employed to analyse
+    written text. This involves analysing the entropy or randomness of the text, which
+    can indicate whether it was generated by a machine or a human. A measure of the
+    average amount of choice associated with words, can provide insights into vocabulary
+    usage patterns differentiating human and AI-generated text. Such measures might
+    unveil distinguishing characteristics between human and AI-generated text ([Bentz
+    et al., 2017](#ref4_2); [Estevez-Rams, E et al., 2019](#ref4_20)).'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Domain-Specific Knowledge:** Leveraging domain-specific knowledge, like constructing
+    domain-specific lexicons, can help in distinguishing between human and machine-generated
+    text, especially in sentiment classification tasks. This involves using knowledge
+    about a specific domain, such as scientific or legal writing, to detect whether
+    the text was generated by AI.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Sentence Length Distribution:** GenAI text tends to have more evenly distributed
+    sentence lengths than human-written text, which tends to have a wider range of
+    sentence lengths. It generally involves analysing the distribution of sentence
+    lengths to discern patterns unique to AI-generated text.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Repetition:** GenAI text may repeat certain phrases or ideas more frequently
+    than human-written text, as the AI may be more likely to generate similar patterns.
+    It involves analysing the frequency and patterns of word or phrase repetition,
+    which might vary between human and AI-generated text ([Jakesch et al., 2023](#ref4_24)).'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Coherence:** GenAI text may lack coherence, as it may generate text that
+    does not have a clear or logical structure or flow. It typically involves evaluating
+    the logical consistency and structure of text to discern between human and AI-generated
+    text.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: These methods can be deployed singularly or in combination to enhance the accuracy
+    and robustness of AI-generated text detection mechanisms. The different metrics
+    used to detect generative AI text are often used in combination with various approaches.
+    For example, text complexity analysis and perplexity scores are often used in
+    combination with metadata analysis, which involves examining information such
+    as authorship, publication date, and source to determine the likelihood of the
+    text being generated by AI. Similarly, style analysis can be used in combination
+    with plagiarism detection to identify similarities in writing style between a
+    suspected generative AI text and known sources.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Overall, a combination of different approaches and metrics is typically used
+    to detect generative AI text, as no single method is foolproof. By examining multiple
+    aspects of a text, researchers and software can increase their accuracy in identifying
+    whether a piece of writing was generated by AI or written by a human. In the next
+    section, we consolidate the results from various research studies pertaining to
+    the effectiveness of existing AI detection software tools.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 4.7.2 GenAI Text Detection Tools
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: The narrative surrounding GenAI detection software is nuanced, with both potential
+    benefits and significant shortcomings. Drawing on a headline from USA Today, “Student
+    Was Falsely Accused of Cheating With AI – And She Won’t Be the Last”, it is evident
+    that while these tools are developed to uphold academic integrity, they may also
+    spawn unwarranted accusations of dishonesty. The case at UC Davis, as reported
+    by USA Today, showcases a situation where a student was wrongfully accused of
+    cheating by a GenAI detection tool, leading to a stressful and unjust scenario
+    ([Jimenez, 2023](#ref4_25)).
+  prefs: []
+  type: TYPE_NORMAL
+- en: The episode at UC Davis isn’t isolated; rather, it is indicative of a broader
+    challenge faced by educational institutions worldwide. The concern about students
+    utilising GenAI like ChatGPT to quickly generate passable essays led to the emergence
+    of startups creating products aimed at distinguishing human-authored text from
+    machine-generated text. However, these tools are not infallible ([Williams, 2023](#ref4_46)).
+    A study, spearheaded by [Weber-Wulff et al. (2023)](#ref4_43), evaluated 14 GenAI
+    detection tools including well-known ones like Turnitin, GPT Zero, and Compilatio.
+    These tools generally operate by identifying characteristics typical of AI-generated
+    text, such as repetition, and then calculating the likelihood of the text being
+    AI-generated. The study revealed that these tools struggled to identify ChatGPT-generated
+    text that had been slightly modified by humans or obfuscated with a paraphrasing
+    tool. For instance, the detection tools could identify human-written text with
+    an average accuracy of 96%, but their performance dropped significantly when it
+    came to detecting AI-generated text– 74% accuracy for unaltered ChatGPT text,
+    which further plummeted to 42% when the text was slightly edited. These findings
+    underscore the ease with which students could potentially bypass these detection
+    tools simply by making minor modifications to the AI-generated text.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Another study examines the effectiveness of university assessments in detecting
+    Open AI’s GPT-4 generated content, aided by the Turnitin AI detection tool ([Perkins
+    et al., 2023](#ref4_33)). Despite the tool identifying 91% of the experimental
+    submissions as containing AI-generated content, only 54.8% of the content was
+    actually detected, hinting at the use of adversarial techniques like prompt engineering
+    as effective evasion methods. The results suggest a need for enhanced AI detection
+    software and increased awareness and training for faculty in utilising these tools,
+    especially as the scoring between genuine and AI-generated submissions was found
+    to be comparably close. Similar studies ([Khalil & Er, 2023](#ref4_26); [Walters,
+    2023](#ref4_42)) also produced similar outcomes. [Lancaster (2023)](#ref4_28)
+    introduces a digital watermarking technique as a possible solution to identify
+    AI-generated text, though a small-scale study suggests it is promising but not
+    a foolproof solution against misuse.
+  prefs: []
+  type: TYPE_NORMAL
+- en: One of the major shortcomings of these tools, as highlighted by the researchers,
+    is their inability to fulfil their advertised promises of accurately detecting
+    AI-generated text. Despite the apparent deficiencies, companies continue to roll
+    out products claiming to address AI-text detection, albeit with varying levels
+    of success. For example, Turnitin achieved some level of detection accuracy with
+    a relatively low false-positive rate. However, the overarching sentiment among
+    some experts is that the whole notion of trying to spot AI-written text is flawed,
+    suggesting that the focus should rather be on addressing the underlying issue
+    of AI usage in academia ([Williams, 2023](#ref4_46)).
+  prefs: []
+  type: TYPE_NORMAL
+- en: This evolving narrative underscores the imperative for a balanced approach in
+    deploying GenAI detection tools within educational settings. It is crucial to
+    consider the potential for false positives and the undue stress and unfair treatment
+    that may arise from reliance on these tools. While there are tools available,
+    their effectiveness in accurately detecting AI-generated text, especially when
+    slightly modified, is still a substantial challenge. Moreover, as the creators
+    of these detection tools continue to refine their algorithms in response to the
+    evolving capabilities of generative AI, the dialogue surrounding the ethics, effectiveness,
+    and implementation of such software in academic environments remains a pertinent
+    and ongoing discussion.
+  prefs: []
+  type: TYPE_NORMAL
+- en: As we move forward, it is crucial to have a multi-faceted approach, including
+    policy development, student and staff training, discipline-specific interventions,
+    revised assessment design, improved detection techniques, and a student partnership
+    approach to uphold academic integrity in the face of advancing AI technologies.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 4.8 Conclusions
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: As we stand on the cusp of an educational revolution, brought forth by the rapid
+    advancements in GenAI, it becomes imperative for educators, learners, and institutions
+    to introspect, innovate, and integrate. The landscape of higher education, with
+    its intricate web of learning outcomes, pedagogies, and assessment tools, is poised
+    for transformative change. But with this change comes responsibility. The potential
+    of GenAI is vast, promising real-time, adaptive evaluations and feedback mechanisms
+    that could redefine the very essence of assessment. However, this potential must
+    be harnessed judiciously, ensuring that the core tenets of education – authenticity,
+    integrity, equity, and genuine learning – remain at the forefront.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Throughout this chapter, we explored the evolution of assessment, reflecting
+    on its challenges and innovations in both traditional and GenAI contexts. The
+    intricacies of assessment in the traditional era, marked by its multi-faceted
+    purposes and often misaligned perceptions, set the stage for the profound transformations
+    GenAI can bring. However, the introduction of GenAI also raises a plethora of
+    ethical, logistical, and pedagogical questions. The SARPS and the AI Assessment
+    Integration Framework, with its nine distinct assessment types, serve as beacons,
+    guiding educators through the uncharted waters of AI-integrated assessment.
+  prefs: []
+  type: TYPE_NORMAL
+- en: But as we reimagine and redesign assessment for the GenAI era, it is crucial
+    to remember that technology, no matter how advanced, should serve as a tool, not
+    a replacement. The human essence of education, marked by empathy, mentorship,
+    and a deep understanding of individual learning journeys, remains irreplaceable.
+    GenAI offers a platform to augment this human touch, providing educators with
+    insights, automations, and personalisation that can enhance the learning experience.
+    Yet, the onus remains on educators to ensure that GenAI’s integration is meaningful,
+    ethical, and centred around the learner.
+  prefs: []
+  type: TYPE_NORMAL
+- en: In conclusion, the GenAI era beckons a renewed focus on the holistic journey
+    of learning. Redesigning assessment is not just about leveraging advanced technologies
+    but also re-envisioning the entire educational process. It is about prioritising
+    feedback over grades, process over products, and authentic learning experiences
+    over rote memorisation. As we navigate this transformative era, it is our collective
+    responsibility as educators, learners, and stakeholders to ensure that the future
+    of assessment remains grounded in the principles that have always defined quality
+    education. With thoughtful integration, critical evaluation, and a learner-centric
+    approach, the future of assessment in the GenAI era looks promising, replete with
+    opportunities for profound, meaningful learning.
+  prefs: []
+  type: TYPE_NORMAL
+- en: References
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: '[Awdry, R., Dawson, P., & Sutherland-Smith, W.](#R_ref4_1) (2022). Contract
+    cheating: To legislate or not to legislate – Is that the question? Assessment
+    & Evaluation in Higher Education, *47*(5), 712–726\. [https://doi.org/10.1080/02602938.2021.1957773](https://doi.org/10.1080/02602938.2021.1957773)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Bentz, C., Alikaniotis, D., Cysouw, M., & Ferrer-i-Cancho, R.](#R_ref4_2)
+    (2017). The entropy of words – Learnability and expressivity across more than
+    1000 languages. Entropy, *19*(6), 275\. [https://doi.org/10.3390/e19060275](https://doi.org/10.3390/e19060275)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Biggs, J.B., & Collis, K.F.](#R_ref4_3) (1982). Evaluating the quality of
+    learning: The SOLO taxonomy. Academic Press.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Black, P., & Wiliam, D.](#R_ref4_4) (1998). Inside the black box: Raising
+    standards through classroom assessment. The Phi Delta Kappan, *80*(2), 139–148.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Bloom, B.](#R_ref4_5) (1956). Taxonomy of educational objectives. Longmans,
+    Green and Co.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Boud, D., & Falchikov, N.](#R_ref4_6) (2006). Aligning assessment with long-term
+    learning. Assessment & Evaluation in Higher Education, *31*(4), 399–413\. [https://doi.org/10.1080/02602930600679050](https://doi.org/10.1080/02602930600679050)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Carless, D.](#R_ref4_7) (2015). Excellence in university assessment: Learning
+    from award-winning practice. Routledge.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Carless, D., & Boud, D.](#R_ref4_8) (2018). The development of student feedback
+    literacy: Enabling uptake of feedback. Assessment & Evaluation in Higher Education,
+    *43*(8), 1315–1325\. [https://doi.org/10.1080/02602938.2018.1463354](https://doi.org/10.1080/02602938.2018.1463354)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Chan, C.K.Y.](#R_ref4_9) (2023). Assessment for experiential learning. Taylor
+    & Francis.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Chan, C.K.Y., & Lee, K.K.W.](#R_ref4_10) (2021). Reflection literacy: A multilevel
+    perspective on the challenges of using reflections in higher education through
+    a comprehensive literature review. Educational Research Review, *32*. [https://doi.org/10.1016/j.edurev.2020.100376](https://doi.org/10.1016/j.edurev.2020.100376)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Chan, C. K. Y., & Tsi, L.H.Y.](#R_ref4_11) (2023). The AI revolution in education:
+    Will AI replace or assist teachers in higher education? *arXiv preprint*. [https://doi.org/10.48550/arXiv.2305.01185](https://doi.org/10.48550/arXiv.2305.01185)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Chan, C.K.Y., & Luk, Y.Y.L.](#R_ref4_12) (2022). Eight years after the 3–3–4
+    curriculum reform: The current state of undergraduates’ holistic competency development
+    in Hong Kong. Studies in Educational Evaluation, *74*. [https://doi.org/10.1016/j.stueduc.2022.101168](https://doi.org/10.1016/j.stueduc.2022.101168)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Chan, C.K.Y. & Wong, Y.H.H.](#R_ref4_13) (2021). Students’ perception of written,
+    audio, video and face-to-face reflective approaches for holistic competency development.
+    Active Learning in Higher Education. [https://doi.org/10.1177/14697874211054449](https://doi.org/10.1177/14697874211054449)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Chan, C.K.Y., Fong, E.T.Y., Luk, L.Y.Y., & Ho, R.](#R_ref4_14) (2017). A review
+    of literature on challenges in the development and implementation of generic competencies
+    in higher education curriculum. International Journal of Educational Development,
+    *57*, 1–10\. [https://doi.org/10.1016/j.ijedudev.2017.08.010](https://doi.org/10.1016/j.ijedudev.2017.08.010)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Dalalah, D., & Dalalah, O. M.](#R_ref4_15) (2023). The false positives and
+    false negatives of generative AI detection tools in education and academic research:
+    The case of ChatGPT. The International Journal of Management Education, *21*(2),
+    100822.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Dascalu, M.](#R_ref4_16) (2014). Analyzing discourse and text complexity for
+    learning and collaborating. In Analyzing discourse and text complexity for learning
+    and collaborating (pp. 1–3). Springer. [https://doi.org/10.1007/978-3-319-03419-5](https://doi.org/10.1007/978-3-319-03419-5)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Dillion, D., Tandon, N., Gu, Y., & Gray, K.](#R_ref4_17) (2023). Can AI language
+    models replace human participants? Trends in Cognitive Sciences, *27*(7), 597–600\.
+    [https://doi.org/10.1016/j.tics.2023.04.008](https://doi.org/10.1016/j.tics.2023.04.008)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Dixson, D.D., & Worrell, F.C.](#R_ref4_18) (2016). Formative and summative
+    assessment in the classroom. Theory into Practice, *55*(2), 153–159\. [https://doi.org/10.1080/00405841.2016.1148989](https://doi.org/10.1080/00405841.2016.1148989)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Earl, L.M.](#R_ref4_19) (2003). Assessment as learning: Using classroom assessment
+    to maximize student learning. Corwin Press.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Estevez-Rams, E., Mesa-Rodriguez, A., & Estevez-Moya, D.](#R_ref4_20) (2019).
+    Complexity-entropy analysis at different levels of organisation in written language.
+    PLoS ONE, *14*(5), e0214863\. [https://doi.org/10.1371/journal.pone.0214863](https://doi.org/10.1371/journal.pone.0214863)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Fendrich, L.](#R_ref4_21) (2007). A pedagogical straitjacket. The Chronicle
+    of Higher Education, *53*(40), 1–5.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Fischer, J., Bearman, M., Boud, D., & Tai, J.](#R_ref4_22) (2023). How does
+    assessment drive learning? A focus on students’ development of evaluative judgement.
+    Assessment & Evaluation in Higher Education. [https://doi.org/10.1080/02602938.2023.2206986](https://doi.org/10.1080/02602938.2023.2206986)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Gilley, B.H., & Clarkston, B.](#R_ref4_23) (2014). Collaborative testing:
+    Evidence of learning in a controlled in-class study of undergraduate students.
+    Journal of College Science Teaching, *43*(3), 83–91\. [https://doi.org/10.2505/4/jcst14_043_03_83](https://doi.org/10.2505/4/jcst14_043_03_83)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Jakesch, M., Hancock, J. T., & Naaman, M.](#R_ref4_24) (2023). Human heuristics
+    for AI-generated language are flawed. Proceedings of the National Academy of Sciences,
+    *120*(11), e2208839120.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Jimenez, K.](#R_ref4_25) (2023, April 12). Professors are using ChatGPT detector
+    tools to accuse students of cheating. But what if the software is wrong? USA Today.
+    [https://eu.usatoday.com/story/news/education/2023/04/12/how-ai-detection-tool-spawned-false-cheating-case-uc-davis/11600777002/](https://eu.usatoday.com)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Khalil, M., & Er, E.](#R_ref4_26) (2023). Will ChatGPT get you caught? Rethinking
+    of plagiarism detection. arXiv:2302.04335v1\. [https://doi.org/10.48550/arXiv.2302.04335](https://doi.org/10.48550/arXiv.2302.04335)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Kuh, G.D.](#R_ref4_27) (2008). High-impact educational practices: What they
+    are, who has access to them, and why they matter. AAC&U.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Lancaster, T.](#R_ref4_28) (2023). Artificial intelligence, text generation
+    tools and ChatGPT – Does digital watermarking offer a solution? International
+    Journal for Educational Integrity, *19*(10), 1–16\. Retrieved from [https://link.springer.com/article/10.1007/s40979-023-00131-6](https://link.springer.com)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Lichtenthaler, U.](#R_ref4_29) (2018). Substitute or synthesis: The interplay
+    between human and artificial intelligence. Research-Technology Management, *61*(5),
+    12–14\. [https://doi.org/10.1080/08956308.2018.1495962](https://doi.org/10.1080/08956308.2018.1495962)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Luk, Y.Y.L., & Chan, C.K.Y.](#R_ref4_30) (2021). Students’ learning outcomes
+    from engineering internship: A provisional framework. Studies in Continuing Education,
+    *44*(3), 526–545\. [https://doi.org/10.1080/0158037X.2021.1917536](https://doi.org/10.1080/0158037X.2021.1917536)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Montgomery, J. L., & Baker, W.](#R_ref4_31) (2007). Teacher-written feedback:
+    Student perceptions, teacher self-assessment, and actual teacher performance.
+    Journal of Second Language Writing, *16*(2), 82–99\. [https://doi.org/10.1016/j.jslw.2007.04.002](https://doi.org/10.1016/j.jslw.2007.04.002)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Mukherjee, S.](#R_ref4_32) (2023, June 15). Unveiling perplexity: Measuring
+    success of LLMs and generative AI models. Retrieved from [https://ramblersm.medium.com/the-significance-of-perplexity-in-evaluating-llms-and-generative-ai-62e290e791bc](https://ramblersm.medium.com)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Perkins, M., Roe, J., Postma, D., McGaughran, J., & Hickerson, D.](#R_ref4_33)
+    (2023). Game of tones: Faculty detection of GPT-4 generated content in university
+    assessments. arXiv preprint. arXiv:2305.18081'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Ramsden, P.](#R_ref4_34) (2003). Learning to teach in higher education. Routledge.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Rudolph, J., Tan, S., & Tan, S.](#R_ref4_35) (2023). ChatGPT: Bullshit spewer
+    or the end of traditional assessments in higher education? Journal of Applied
+    Learning and Teaching, *6*(1).'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Rust, C.](#R_ref4_36) (2002). The impact of assessment on student learning:
+    How can the research literature practically help to inform the development of
+    departmental assessment strategies and learner-centred assessment practices? Active
+    Learning in Higher Education, *3*(2), 145–158\. [https://doi.org/10.1177/1469787402003002004](https://doi.org/10.1177/1469787402003002004)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Scott, I.M.](#R_ref4_37) (2020). Beyond ‘driving’: The relationship between
+    assessment, performance and learning. Medical Education, *54*(1), 54–59\. [https://doi.org/10.1111/medu.13935](https://doi.org/10.1111/medu.13935)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Sonnleitner, P., & Kovacs, C.](#R_ref4_38) (2020). Differences between students’
+    and teachers’ fairness perceptions: Exploring the potential of a self-administered
+    questionnaire to improve teachers’ assessment practices. Frontiers in Education,
+    *5*. [https://doi.org/10.3389/feduc.2020.00017](https://doi.org/10.3389/feduc.2020.00017)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Stobart, G.](#R_ref4_39) (2008). Testing times: The uses and abuses of assessment.
+    Routledge.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Tai, J., Ajjawi, R., Boud, D., Dawson, P., & Panadero, E.](#R_ref4_40) (2018).
+    Developing evaluative judgement: Enabling students to make decisions about the
+    quality of work. Higher Education, *76*(3), 467–481\. [https://doi.org/10.1007/s10734-017-0220-3](https://doi.org/10.1007/s10734-017-0220-3)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Van de Watering, G., & Van der Rijt, J.](#R_ref4_41) (2006). Teachers’ and
+    students’ perceptions of assessments: A review and a study into the ability and
+    accuracy of estimating the difficulty levels of assessment items. Educational
+    Research Review, *1*(2), 133–147\. [https://doi.org/10.1016/j.edurev.2006.05.001](https://doi.org/10.1016/j.edurev.2006.05.001)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Walters, W. H.](#R_ref4_42) (2023). The effectiveness of software designed
+    to detect AI-generated writing: A comparison of 16 AI text detectors. Open Information
+    Science, *7*(1), 20220158\. [https://doi.org/10.1515/opis-2022-0158](https://doi.org/10.1515/opis-2022-0158)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Weber-Wulff, D., Anohina-Naumeca, A., Bjelobaba, S., Foltýnek, T., Guerrero-Dib,
+    J., Popoola, O., Šigut, P., & Waddington, L.](#R_ref4_43) (2023). Testing of detection
+    tools for AI-generated text. Preprint. [https://doi.org/10.48550/arXiv.2306.15666](https://doi.org/10.48550/arXiv.2306.15666)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Wiggins, G.](#R_ref4_44) (1998). Educative assessment. Designing assessments
+    to inform and improve student performance. Jossey-Bass Publishers'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Wiliam, D.](#R_ref4_45) (2011). Embedded formative assessment. Solution Tree
+    Press.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Williams, R.](#R_ref4_46) (2023, July 7). AI-text detection tools are really
+    easy to fool. MIT Technology Review. Retrieved from [https://www.technologyreview.com/2023/07/07/1075982/ai-text-detection-tools-are-really-easy-to-fool/](https://www.technologyreview.com)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL

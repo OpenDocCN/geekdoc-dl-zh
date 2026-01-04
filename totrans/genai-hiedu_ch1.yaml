@@ -1,0 +1,1597 @@
+- en: 1 Introduction to Artificial Intelligence in Higher Education
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'DOI: [10.4324/9781003459026-1](https://dx.doi.org/10.4324/9781003459026-1)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: One small input for AI, one giant outcome for humanity.
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: ''
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: Cecilia KY Chan
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: 1.1 Introduction
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: The advancement of Artificial Intelligence (AI), Big Data, and the Internet
+    of Things (IoT) has disrupted many industries and, likewise, has the potential
+    to revolutionise the field of education. One tool that has been making waves in
+    this regard is the *Chat Generative Pre-trained Transformer* – best known as ChatGPT,
+    a pretrained language processing model developed by OpenAI. In this chapter, we
+    will first introduce the concepts of AI, Big Data, IoT and Generative AI (GenAI)
+    to offer our readers a basic understanding of these technologies, providing some
+    concrete examples from educational settings. To equip readers with the necessary
+    knowledge to make informed decisions on incorporating AI into the classroom, this
+    chapter will also go over some fundamental technical aspects of AI. We will then
+    delve into why ChatGPT is a game changer for higher education, what the tool is
+    capable of, and why it has suddenly gained such significant attention. This chapter
+    will conclude with questions that we may have regarding the application of AI
+    and ChatGPT in education.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 1.2 Artificial Intelligence (AI)
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: When thinking about AI, we might immediately associate it with science fiction
+    and shiny robots; in fact, however, the science of AI has been around for decades.
+    As per the term *Artificial Intelligence (AI)* itself, it is a man-made system
+    of computer-based algorithms and programmes that can perform tasks typically requiring
+    human intelligence. We can find it in software programmes that we use in our everyday
+    lives, from platforms like YouTube, Amazon and Taobao, Meta (Facebook), Google
+    Translate, Google Maps, Microsoft Bing and more. These “intelligences” are built
+    into such systems that have capabilities in image processing, speech recognition,
+    decision-making, language translation, and even artificial creativity.
+  prefs: []
+  type: TYPE_NORMAL
+- en: AI is the simulation of human intelligence in machines that are designed to
+    think and act like humans. AI involves the development of algorithms and models
+    that enable computers to learn from data and make predictions or decisions based
+    on said data. Advancements in electronics and computing hardware over recent years
+    have allowed for huge leaps in the development of AI, enabling faster computing
+    power, increased data and memory storage, and the creation of new algorithms such
+    as deep learning.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 1.2.1 Three Types of AI
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: 'Artificial Intelligence has come a long way since its inception in the 1950s.
+    According to researchers and AI philosophers, AI has already gone through significant
+    change and expansion (e.g., [Cordeschi, 2007](#ref1_11); [Shao et al., 2022](#ref1_53)),
+    with new advancements continually building upon prior developments to produce
+    increasingly sophisticated systems. Currently, discourse has identified three
+    broad categories of AI, based on the complexity and extent of machine intelligence:
+    Artificial Narrow Intelligence (ANI), Artificial General Intelligence (AGI), and
+    Artificial Super Intelligence (ASI). [Figure 1.1](#fig1_1) shows the types of
+    AI. While these can be considered as the evolutionary stages of AI, it should
+    be noted that AGI and ASI are still theoretical concepts and not necessarily achieved
+    through linear progression.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![The three types of artificial intelligence are artificial narrow intelligence,
+    artificial general intelligence, and artificial super intelligence.](images/fig1_1_B.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: '[Figure 1.1 Three Types of Artificial Intelligence.](#R_fig1_1)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Artificial Narrow Intelligence (ANI)** refers to systems that are designed
+    to perform specific tasks and are trained on large datasets to execute the tasks
+    with precision, such as playing chess or translating languages. However, they
+    are not capable of performing tasks that require human-level intelligence. ANI
+    has helped us make numerous breakthroughs in society, such as in the domains of
+    speech recognition and object recognition or detection ([LeCun et al., 2015](#ref1_29)).
+    Siri, Alexa, fraud detection systems which analyse financial data for patterns
+    and anomalies, as well as self-driving cars that use data from sensors, cameras
+    and GPS to control vehicles, are all examples of ANI. These systems are often
+    referred to as “weak AI” ([Thierer et al., 2017](#ref1_57)) as they have limited
+    capabilities and lack general ‘intelligence’ due to being optimised for narrowly-defined
+    tasks.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Artificial General Intelligence (AGI)** refers to machine systems that will
+    become capable of performing any intellectual task that humans are capable of.
+    AGI refers to a hypothetical future stage of AI which “[bridges] the gap between
+    current AI programs, which are narrow in scope, and the types of AGI systems commonly
+    seen in fiction” ([Goertzel, 2014](#ref1_17), p.2). Unlike ANI, AGI systems will
+    possess the ability to understand or learn any intellectual task that we can.
+    It will also have the ability to reason. Such systems would have a more general-purpose
+    intelligence and not be restricted to a specific task. AGI is considered the next
+    step in the evolution of AI and is often referred to as “strong AI” ([Mills, 2018](#ref1_41)).
+    According to research and news articles, AI research labs and companies have not
+    reached this stage of development ([Baum & Villasenor, 2023](#ref1_7); [Bove,
+    2023](#ref1_9); [Gillani, 2023](#ref1_15)), but AGI is the goal of many researchers
+    in the field of AI. An example of AGI could be a tool that is able to initiate
+    and perform a wide range of tasks such as a teaching software that can assign
+    classwork, devise schedules for students, correct classwork, coordinate with administrative
+    staff, community partners, and other students, and adapt to new situations, all
+    without the need for human intervention or reprogramming.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Artificial Super Intelligence (ASI)** is the final conceptualised type of
+    AI evolution ([Yampolskiy, 2016](#ref1_60)), where systems would surpass human
+    intelligence in every possible aspect and possess the ability to outsmart us in
+    all tasks, including higher-order thinking skills such as creativity, general
+    knowledge, and problem solving. Some believe that ASI systems would have the ability
+    to solve complex problems, make decisions, and even possess consciousness and
+    emotions (e.g., [Barney, 2023](#ref1_6); [Marri, 2018](#ref1_34)). This type of
+    sophistication is sometimes referred to as “AI singularity” ([Grossman, 2023](#ref1_18)).
+    The term “singularity” in this context is borrowed from the field of physics,
+    where it is used to describe a point in space-time where the rules, as we understand
+    them, break down, such as at the centre of a black hole. In the context of AI,
+    the singularity would represent a point where machines become so advanced that
+    human minds can no longer predict or understand the former’s behaviour or implications.
+    This could include AI improving its design and creating successive generations
+    of increasingly powerful machines. This type of AI is still purely speculative,
+    and the exact timeline for its development is unknown. However, the development
+    of ASI and its impact on society raises many ethical and moral questions. ASI
+    is often portrayed as a potential threat to humanity, and there are debates about
+    how to ensure its safe development and deployment ([Bostrom, 2014](#ref1_8); [Yudkowsky,
+    2006](#ref1_61)). When contemplating ASI, it is often associated with fictional
+    depictions such as Skynet in *The Terminator*, Vision from the *Marvel* franchise,
+    or the AI robot (Sonny) in *I, Robot*.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Currently, we are still in the stage of ANI, where our systems are designed
+    to perform specific tasks, whereas AGI and ASI remain as areas of continued research
+    and speculation. The potential for future advancements is immense, and the impact
+    that AI will have on society continues to be the subject of research and debate.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 1.3 Big Data and the Internet of Things (IoT)
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: The growth of Big Data and the Internet of Things (IoT) has created a platform
+    in which AI can be applied in a wide range of industries and applications, from
+    healthcare and finance to retail and transportation. The progress of Big Data
+    and IoT also greatly impacts how we live, enabling greater convenience and efficiency,
+    in turn leading to improved productivity and enhanced quality of life.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 1.3.1 What Is Big Data?
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: You may have heard of the term “Big Data”. As indicated by its name, Big Data
+    refers to a vast amount of data ([Favaretto et al., 2020](#ref1_14); [Kitchin
+    & McArdle, 2016](#ref1_25)), but did you know that data can come in various forms,
+    such as text, numbers, images, audio recordings, and videos?
+  prefs: []
+  type: TYPE_NORMAL
+- en: Big Data refers to extremely large datasets that are too complex and voluminous
+    for traditional data processing systems to handle efficiently ([McAfee & Brynjolfsson,
+    2012](#ref1_37)). They can be structured, semi-structured, and unstructured data
+    generated or retrieved from various sources, including social media, e-commerce
+    platforms, sensors, government data, financial data, telecommunication and gaming
+    industries, and system and software logs. Structured data is information that
+    is organised in a specific and predefined format, such as tables, spreadsheets,
+    and databases ([Sarker, 2021](#ref1_51)). The data is already somewhat categorised.
+    Examples of structured data include customer records, financial transactions,
+    and inventory lists. This type of data is easily searchable, sortable, and analysed
+    using conventional data processing tools. On the other hand, unstructured data
+    is information that does not fit neatly into predefined categories or structures
+    ([Sarker, 2021](#ref1_51)). It often requires specialised tools and techniques
+    to extract meaningful insights. Examples of unstructured data include social media
+    posts, emails, and customer feedback.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Different types of data can enhance the comprehensiveness and precision of data
+    analysis. The availability of large amounts of data has allowed AI algorithms
+    to learn and make predictions more accurately. With Big Data, AI models can be
+    trained on larger datasets and make predictions that are more informed and reliable.
+    As a result, managing, processing, and extracting insights from Big Data often
+    requires specialised tools and techniques, for example data warehousing, machine
+    learning, and distributed computing. Yet, it is not only the amount of data that
+    is important – it is what organisations do with the data. Big Data can be analysed
+    for insights which lead to better decisions and strategic moves. [Table 1.1](#table1_1)
+    shows a list of examples of various sources of Big Data ([Agrawal et al., 2011](#ref1_1);
+    [Raghupathi & Raghupathi, 2014](#ref1_47); [Sagiroglu & Sinanc, 2013](#ref1_50)).
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[Table 1.1 Examples of Various Sources of Big Data](#R_table1_1)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '| **Social Media** |'
+  prefs: []
+  type: TYPE_TB
+- en: '|'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Social network posts: Posts made on social media platforms such as Meta (Facebook),
+    X (previously Twitter), Instagram, and LinkedIn.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Online videos: Videos uploaded to platforms like YouTube, Vimeo, and others.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'User-generated content: Reviews, ratings, and other types of content generated
+    by users on various websites and platforms.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Social media advertising: Data collected by advertisers on users’ behaviours,
+    preferences, and responses to ads on social media platforms.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '|'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '| **E-commerce** |'
+  prefs: []
+  type: TYPE_TB
+- en: '|'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'E-commerce transactions: Online purchases made through websites such as Amazon,
+    eBay, and others.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Banking transactions: Transactions made through online banking platforms, including
+    bill payments, money transfers, and other financial transactions.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Stock market transactions: Transactions made through online stock trading platforms.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Healthcare transactions: Electronic health record (EHR) transactions and other
+    healthcare-related transactions made through online platforms.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '|'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '| **Sensors** |'
+  prefs: []
+  type: TYPE_TB
+- en: '|'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Environmental sensors: Tracked records of temperature, humidity, air pressure,
+    and other environmental parameters.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'GPS sensors: Tracked locations and movements of people, vehicles, and other
+    objects.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Medical sensors: Used in healthcare to monitor vital signs and track patients’
+    health status.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Industrial sensors: Monitored performance of industrial machinery and tracked
+    production processes.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Traffic sensors: Tracked flow of vehicles on roads and highways used to provide
+    data for traffic management and analysis.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Retail sensors: Monitored customer behaviour in retail environments used to
+    provide data for marketing and sales analysis.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Home automation sensors: Tracked usage records of appliances, lighting, heating
+    and cooling, and other systems in smart homes.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '|'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '| **Government, Financial, Telecommunication and Gaming Industries** |'
+  prefs: []
+  type: TYPE_TB
+- en: '|'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Government: Data generated by government agencies, such as demographic data,
+    crime statistics, and tax records.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Financial services: Data generated by financial institutions, including transaction
+    records, customer behaviour, and market data.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Telecommunications services: Data generated by telecommunication companies,
+    including call records, network performance data, and customer usage data.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Gaming companies: Data generated by online gaming platforms, including player
+    behaviour, in-game transactions, and performance metrics.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '|'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '| **System and Software Logs** |'
+  prefs: []
+  type: TYPE_TB
+- en: '|'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Web server logs: Tracked records of all the requests made to a web server,
+    including information such as the type of request, the source IP address, and
+    the time of the request.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Application logs: Tracked records of events generated by software applications,
+    such as error messages, performance metrics, and user actions.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Network logs: Tracked records of network activity, including information about
+    network traffic, security events, and system events.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'System logs: Tracked records of events generated by operating systems, such
+    as boot events, system crashes, and security events.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Security logs: Tracked records of security-related events, such as attempted
+    and successful login attempts, changes to security settings, and security incidents.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '|'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 1.3.1.1 Characteristics of Big Data
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: In 2001, Gartner analyst Doug Laney first introduced “three Vs” as the main
+    traits of Big Data – Volume, Velocity, and Variety ([Laney, 2001](#ref1_28)).
+    These “three Vs” form a key framework which influences how organisations and researchers
+    approach and use Big Data. In addition to Laney’s work, studies have suggested
+    other significant characteristics, such as Veracity, Variability, and Value ([Jin
+    et al., 2015](#ref1_21); [Kitchin & McArdle, 2016](#ref1_25); [Sagiroglu & Sinanc,
+    2013](#ref1_50); [Sharma, 2022](#ref1_54); [Song & Zhu, 2015](#ref1_55)). These
+    characteristics, summarised in [Table 1.2](#table1_2), are often used to support
+    organisations in making decisions regarding Big Data, and to determine the best
+    ways to process, analyse, as well as extract insights from said data. [Kitchin
+    and McArdle (2016)](#ref1_25) provided a clear overview of the ontological traits
+    of Big Data.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[Table 1.2 Characteristics of Big Data](#R_table1_2)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '| **Volume** refers to the large amounts of data generated and stored by organisations,
+    individuals, and systems. With the rise of digital technologies, Big Data often
+    involves petabytes, exabytes, or even zettabytes of data. |'
+  prefs: []
+  type: TYPE_TB
+- en: '| **Velocity** refers to the speed at which data is generated and continuously
+    processed. Big Data is generated and processed in real time, requiring us to respond
+    quickly and use large amounts of processing power to keep up with changing circumstances.
+    |'
+  prefs: []
+  type: TYPE_TB
+- en: '| **Variety** refers to the diverse types and formats of data present within
+    Big Data. These can range from structured data, such as spreadsheets or databases,
+    to unstructured data, such as texts from social media commentaries. |'
+  prefs: []
+  type: TYPE_TB
+- en: '| **Veracity**, also known as data assurance, refers to the quality, accuracy,
+    and integrity of the data ([Gillis, 2021](#ref1_16); [Raghupathi & Raghupathi,
+    2014](#ref1_47)). This is an important aspect as Big Data is only useful if the
+    data is reliable and trustworthy. Examples include the completeness of data or
+    data entry errors from typos and incorrect entries. |'
+  prefs: []
+  type: TYPE_TB
+- en: '| **Variability** refers to the meaning of data constantly changing ([McNulty,
+    2017](#ref1_40)). For example, the interpretation of certain words may depend
+    on the specific context(s) in which they are used. |'
+  prefs: []
+  type: TYPE_TB
+- en: '| **Value** refers to what can be done with data, and the value(s) that Big
+    Data can offer ([Gillis, 2021](#ref1_16)). How value is inferred from data is
+    distinct from case to case. |'
+  prefs: []
+  type: TYPE_TB
+- en: '| **Complexity** refers to complications in a dataset, such as data with time-varying
+    covariates from scientific simulations ([Hong et al., 2018](#ref1_19)). Data can
+    be very complex in structure and may have complicated relationships, making it
+    difficult to identify patterns, correlations, and insights. An example from the
+    educational setting that demonstrates the complexity of Big Data is analysing
+    large amounts of data from various sources for student retention. There may be
+    multiple variables at play, such as individual student characteristics, academic
+    support services, and pedagogies of institutions, which should be considered within
+    the data analysis. The complexity of Big Data in this context requires advanced
+    analytical skills, powerful data processing tools, and a robust data management
+    infrastructure. |'
+  prefs: []
+  type: TYPE_TB
+- en: '| **Exhaustivity** refers to the comprehensiveness of the data being analysed
+    ([Mayer-Schonberger & Cukier, 2013](#ref1_36)). It signifies that the data should
+    cover all aspects of the topic being analysed to provide a complete picture. An
+    example is student performance, where exhaustiveness is achieved by including
+    the entire population of students and not just capturing a sample, and that data
+    is gathered from all related aspects, for example test scores, tutorial and homework
+    completion rates, class participation levels, extra-curricular activities, and
+    achievements, as well as teacher evaluations. |'
+  prefs: []
+  type: TYPE_TB
+- en: '| **Relationality** refers to the relationship and connections between datasets
+    and the ways in which they can be linked, related, and integrated to provide meaningful
+    insights and information ([Boyd & Crawford, 2012](#ref1_10)). An example from
+    the financial industry is where large amounts of data from various sources such
+    as the stock market, information on customer behaviours, and market trends are
+    integrated for analysis to identify trends and correlations. |'
+  prefs: []
+  type: TYPE_TB
+- en: '| **Extensionality** refers to how data can be extended, expanded, or integrated
+    with other data sources and systems ([Marz & Warren, 2012](#ref1_35)). This includes
+    the ability to add new data sources, and to combine or relate data from different
+    sources to achieve a more comprehensive view of the information collected. For
+    example, health records could be analysed with data generated from clinical research
+    and healthcare devices, offering more comprehensive insights for the identification
+    of disease patterns, as well as advance patient care and treatment. |'
+  prefs: []
+  type: TYPE_TB
+- en: 1.3.1.2 Example of Big Data and Its Characteristics in Higher Education
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: Big Data in education – for example, educational data and analytics regarding
+    student learning – has all of the above characteristics. The *volume* can refer
+    to collecting and analysing large amounts of data from various sources, including
+    student transcripts, test scores, demographic information, and attendance and
+    engagement data from online learning platforms. The *velocity* of the data could
+    refer to real-time updates of student progress and achievements on a learning
+    platform. The *variety* of data sources collected can be vast, including grades,
+    scores from assignments (such as reflective journals, video presentations, and
+    portfolios), and data logs of student activity (such as logs from communication
+    channels and attendance records). *Veracity* of the data may refer to students
+    giving incorrect information with errors and typos, or missing data as students
+    drop courses after a certain period of time. To address these challenges, institutions
+    may use complex algorithms and models to extract insights from collected data,
+    and make informed decisions for areas including student retention, curriculum
+    design, and resource allocation. Integrating and analysing data from various sources
+    and in different formats using innovative models may contribute to the *complexity*
+    of the Big Data. *Variability* is another a concern, such as students having different
+    learning paces and patterns. The *exhaustiveness* of the data is also a challenge,
+    as the data collected may not capture the full picture of student performance.
+    As an example, factors such as learning environment or socio-economic background
+    which may influence student learning could be overlooked. The *relationality*
+    of the data, such as linking students’ grades to the time of day and to the courses
+    they have taken, can enable the system to provide meaningful insights. Finally,
+    the *extensionality* of Big Data may refer to collection of data on students who
+    fail, change programmes, undertake an overseas exchange, or take a gap year, to
+    gain a more comprehensive understanding of student learning.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 1.3.2 What is the Internet of Things (IoT)?
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: 'The Internet of Things (IoT) refers to the network of physical objects and
+    things (e.g., smartphones, smart watches, home automation controls, fitness trackers)
+    which can interact and cooperate with each other through wired and wireless networks,
+    as well as generate, exchange, send, and receive data ([Atzori et al., 2010](#ref1_5);
+    [Li et al., 2015](#ref1_30)). IoT devices generate vast amounts of data which,
+    when combined with Big Data, can be used to train and improve AI algorithms. IoT
+    and AI are highly complementary technologies, with AI capable of analysing the
+    volumes of data generated by IoT devices, including real-time data, in order to
+    provide valuable insights and facilitate prompt and automated decision-making.
+    IoT could also be a game changer for sustainability: according to an article from
+    the World Economic Forum ([Arias et al., 2018](#ref1_3)), 84% of existing IoT
+    deployments have the ability to contribute to the achievement of the United Nations’
+    Sustainable Development Goals. IoT provides a platform to connect everything and
+    everyone in a smarter way, improving our quality of life and benefitting our planet.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Those unfamiliar with IoT may hold a misconception that it only refers to devices
+    connected to the Internet; however, IoT encompasses much more than that. Devices
+    with electronics parts, software, and sensors that allow them to connect and exchange
+    data, such as Bluetooth devices, are also part of IoT. The term “Internet of Things”
+    was coined by Kevin Ashton in 1999 during his employment at Procter & Gamble ([Lueth,
+    2014](#ref1_31); [Ashton, 2009](#ref1_4)). During his work to optimise supply
+    chains, he sought to bring to his senior management’s attention, a promising technology
+    known as *Radio Frequency Identification* – RFID. Given the widespread popularity
+    of the internet at the time and its relevance to the concept, Ashton labelled
+    his presentation with the title, “Internet of Things”. However, it was only since
+    2010 that IoT began gaining widespread attention ([Lueth, 2014](#ref1_31)).
+  prefs: []
+  type: TYPE_NORMAL
+- en: 1.3.2.1 Characteristics of IoT
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: IoT has distinct characteristics. By understanding what they are, one can better
+    grasp and identify the underlying technology of IoT and its capabilities, determine
+    the scope of IoT applications, the types of devices and systems that IoT incorporates
+    and can be integrated with, its limitations, and the security and privacy implications.
+    This information can be used to make informed decisions about the design, deployment,
+    and use of IoT systems and devices. Furthermore, a profound understanding of IoT
+    characteristics can facilitate development of innovative IoT solutions and implications
+    which can address and overcome the challenges and limitations of existing systems
+    and devices ([Motta et al., 2019](#ref1_42); [Rose et al., 2015](#ref1_48); [Atzori
+    et al., 2010](#ref1_5)). IoT is characterised by the key features given in [Table
+    1.3](#table1_3).
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[Table 1.3 Characteristics of IoT](#R_table1_3)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '| **Connectivity**: IoT refers to the network between two or more objects or
+    things which can communicate and exchange data, such as the connection of a device
+    to the internet. |'
+  prefs: []
+  type: TYPE_TB
+- en: '| **Interoperability**: IoT devices need to work together seamlessly regardless
+    of their underlying technology, platform, or brand names ([Magan, 2023](#ref1_32)).
+    Interoperability between devices is essential to ensure that data can be collected,
+    processed, and analysed effectively. |'
+  prefs: []
+  type: TYPE_TB
+- en: '| **Scalability**: IoT can be scaled, where systems and networks can be easily
+    expanded or reduced in size to adapt to changing needs, without affecting their
+    performance ([Magan, 2023](#ref1_32)). Scalability is critical to ensure that
+    IoT systems and networks remain functional and efficient as the number of connected
+    devices increases. |'
+  prefs: []
+  type: TYPE_TB
+- en: '| **Intelligence**: IoT devices, systems, and networks must have the “intelligence”
+    to sense and analyse data and interact with each other, using a combination of
+    algorithms, software, and hardware. |'
+  prefs: []
+  type: TYPE_TB
+- en: '| **Identity**: Identity is a concept of IoT ([Uikey, 2022](#ref1_59)) where,
+    for example, the unique identity of an IoT device enables the tracking and remote
+    control of this specific device (e.g., monitoring cameras installed in homes).
+    |'
+  prefs: []
+  type: TYPE_TB
+- en: '| **Autonomous**: IoT systems have the ability to operate independently, without
+    the need for human intervention. |'
+  prefs: []
+  type: TYPE_TB
+- en: '| **Security**: IoT systems and devices require proper, built-in security measures
+    given their vulnerability to cyber threats. IoT devices often hold sensitive personal
+    information; if the device is lost or stolen, it may cause safety issues for the
+    user. Firewalls, encryption, data protection software, and access controls can
+    be integrated into IoT devices to prevent data theft and unauthorised access.
+    |'
+  prefs: []
+  type: TYPE_TB
+- en: '| **Real-time**: IoT systems and devices enable real-time connection and data
+    exchange. |'
+  prefs: []
+  type: TYPE_TB
+- en: '| **Remote monitoring**: IoT systems have monitoring capabilities. With remote
+    monitoring, IoT sensors can allow transmission of precise data for monitoring
+    of device conditions and control over device performance ([Murphy, 2022](#ref1_43)).
+    |'
+  prefs: []
+  type: TYPE_TB
+- en: '| **Standardisation**: IoT devices should follow standardised protocols, data
+    formats, and rules to ensure interoperability, consistency, and ethical use. Examples
+    of protocols and standards include the Constrained Application Protocol (CoAP),
+    Message Queuing Telemetry Transport (MQTT), and Bluetooth Low Energy (BLE) ([Pratt,
+    2023](#ref1_46)). |'
+  prefs: []
+  type: TYPE_TB
+- en: '| **Sustainability**: IoT networks, systems, and devices consume energy and
+    generate waste. Therefore, it is important to consider their impact on the environment
+    and to ensure that they are sustainable. |'
+  prefs: []
+  type: TYPE_TB
+- en: 1.3.2.2 Example of IoT and Its Characteristics in Higher Education
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: A smart classroom integrating different IoT systems and devices, such as sensors,
+    cameras, laptops, tablets, interactive whiteboards, learning management systems,
+    student information systems, printers, scanners, and wearable devices, is an example
+    of how IoT can be implemented in education.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '*Connectivity* enables devices and systems to form a network for transmitting
+    and receiving data as required. IoT in the classroom is *scalable*, capable of
+    changing the scope of its tasks and easily accommodating the number of devices
+    connected. Each device in the network has a unique *identity*, ensuring that students
+    and teachers can securely identify and access the devices and data they need.
+    *Interoperability* enables seamless streamlining processes such as in the submission
+    of assignments and sharing of documents or resources between students and teachers.
+    *Security* is particularly important in a smart classroom as it is essential to
+    protect data, especially sensitive information such as grades and students’ personal
+    details, from unauthorised access. IoT devices in a smart classroom must be designed
+    with robust security measures to ensure the protection of private and sensitive
+    information. The devices in the network are also *autonomous*, meaning they can
+    make decisions and take actions without human intervention. For example, if a
+    room becomes too warm, a smart sensor can automatically adjust the temperature.
+    The system further has *intelligence* capabilities such as machine learning algorithms,
+    to process collected data and make predictions to benefit the class. This enables
+    teachers to track student progress and identify areas where additional support
+    is needed. The system follows industry *standardisation* to ensure that different
+    devices from different vendors can work effectively and seamlessly together under
+    standardised protocols. Additionally, the devices and systems used are designed
+    for *sustainability*, utilising energy-efficient and waste-reduction technologies
+    to reduce the carbon footprint, while maintaining cost-effectiveness with automatic
+    lighting and air conditioning systems. By incorporating these characteristics,
+    this smart classroom system example provides a solution for higher education institutions
+    to improve student experiences, streamline operations with technologies, and create
+    a more efficient and sustainable learning environment.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 1.4 Generative Artificial Intelligence (GenAI)
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Generative AI (GenAI) is a subset of artificial intelligence that involves creating
+    new data or content ([Dilmegani, 2023](#ref1_12); [McKinsey Consultant, 2023](#ref1_38);
+    [Altexsoft, 2022](#ref1_2)). The term “generative” refers to the capability of
+    AI to produce novel outputs rather than simply reproducing, categorising, processing,
+    and analysing inputs. It can generate anything from text, images, audio, and videos,
+    to natural-language text and even computer coding.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The concept of GenAI is rooted in the field of computer science and artificial
+    intelligence. One of the earliest references to such a technology can be found
+    in the work of computer scientist John Hopfield in the 1980s, who proposed the
+    idea of a “Hopfield network”, a type of computer neural network that could be
+    trained to generate new patterns or sequences ([Kampakis, 2022](#ref1_23); [McKinsey
+    Global Institute, 2018](#ref1_39)). The fields of machine learning and artificial
+    neural networks have evolved over time as researchers and practitioners worked
+    to develop more sophisticated generative architecture and deep learning algorithms,
+    including generative adversarial networks (GANs), variational autoencoders (VAEs),
+    and transformer-based models (e.g. GPT-3 Generative Pretrained Transformer 3).
+    There are two important models in GenAI: Discriminative and Generative Modelling
+    ([Altexsoft, 2022](#ref1_2)).'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Discriminative modelling** is a type of machine learning approach that aims
+    to classify or categorise existing data points into specific classes or categories.
+    While this model is able to distinguish the boundaries between classes, it is
+    trained only to tell the differences and does not understand how data is generated.
+    Machine learning tasks using this approach are classified as *supervised machine
+    learning tasks*. The goal of this approach is to discriminate or make a distinction
+    between the different classes, and then make predictions based on the data it
+    has been trained on.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: For example, in education, let’s say we want to develop a model that can predict
+    whether a student will pass or fail a particular exam based on their past performance,
+    test scores, and attendance records. The discriminative model would look at the
+    data provided, identify the differences between students who passed the exam and
+    those who failed, then make predictions based on those differences. The model
+    is simply trying to distinguish between students who passed and those who failed
+    – it does not consider why students achieve certain outcomes, and only aims to
+    make accurate predictions.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Generative modelling** is a type of machine learning approach that focuses
+    on creating new data that resembles the data it was trained on, based on the patterns
+    and relationships learned from existing data. Machine learning tasks using this
+    approach are classified *as unsupervised and semi-supervised machine learning
+    tasks*. The goal of the generative modelling approach is to create new examples
+    that are similar to those it has seen before, which are representative of the
+    underlying patterns and relationships in the data.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: An example of generative modelling in education could be a system that generates
+    new questions for a quiz or test. The model would learn the patterns and distribution
+    of past questions from a training set, and subsequently use that information to
+    generate new questions that are similar in style and content. This could be useful
+    for creating new practice problems for a class, adaptive tests for each student
+    based on their learning progress, or creating unique tests for individual students
+    to prevent cheating.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 1.4.1 Applications of GenAI
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: Today, GenAI is already widely applied across various industries, including
+    image and audio synthesis, and text, code and video generation. For example, GenAI
+    can be used to generate realistic images of objects or scenes which do not actually
+    exist, or to create synthetic speech that sounds like a real person. GenAI can
+    also be used to generate new designs or prototypes in fields such as engineering
+    and architecture, or to generate new music compositions or pieces of art ([Kumar,
+    2023](#ref1_27); [Marr, 2023](#ref1_33)). [Figure 1.2](#fig1_2) shows an example
+    of an image synthesis and [Table 1.4](#table1_4) shows an example of a code generation.
+    [Table 1.5](#table1_5) provides some examples of the types of applications and
+    software of GenAI.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![(a) A painting generated by Chat G P T for an electrical car with a robot.
+    (b) A painting generated by Chat G P T for an electrical car with a robot. (c)
+    A painting generated by Dall E 3 for an electrical car with a robot. (d) A painting
+    generated by Dall E 3 for an electrical car with a robot.](images/fig1_2_B.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: '[Figure 1.2 ChatGPT Dall.E3 Generated Images.](#R_fig1_2)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[Table 1.4 ChatGPT Generated Codes](#R_table1_4)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '| User | Can you create a plugin for a simulated DoctorBot? |'
+  prefs: []
+  type: TYPE_TB
+- en: '| ChatGPT | Certainly! Creating a plugin for a simulated DoctorBot involves
+    multiple steps, including defining the purpose, designing the user interface,
+    and implementing the logic. Below is a basic outline for creating a DoctorBot
+    plugin:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Define the Purpose:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Symptom checker/General medical information/Medication reminders etc.
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: 'Design the User Interface:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Text-based chat interface/Voice recognition/Multi-choice questions etc.
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: 'Implement the Logic:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'For simplicity, let’s create a basic symptom checker using Python:'
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs: []
+  type: TYPE_PRE
+- en: '|'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[Table 1.5 Examples of Types of Generative AI Applications and Software](#R_table1_5)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '| Applications | Industries/Purposes | Popular Software Apps |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| **Image synthesis**: Generative AI algorithms can be used to create unique
+    and creative works of art, such as digital paintings, sculptures, and graphic
+    designs. It can also be used in medical imaging analysis to detect early signs
+    of diseases and medical anomalies. It is important to mention Deepfakes, a type
+    of AI technology that allows the generation of synthetic images and videos of
+    people. Image recognition and processing in AI often use a Convolutional Neural
+    Network (CNN). | Art and Design, Healthcare, Film, Advertising | Stable Diffusion,
+    Dall-E, Runway ML, Midjourney, DeepAI, Fotor, Reface, FaceApp, SpeakPic, Syntegra,
+    AlphaFold2 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| **Video generation**: Generative AI can be used to create videos that look
+    like they were shot in real life, or create an animated short film. | Film, Advertising,
+    Customer Service for various industries | Pictory, Synthesia, VEED |'
+  prefs: []
+  type: TYPE_TB
+- en: '| **Music and audio creation**: Generative AI can be used to create new music
+    compositions, remix existing songs, and generate custom sound effects. | Music
+    Production, Healthcare, Customer Service for various industries | Amper Music,
+    Jukebox, MuseTree, MuseNet, Musico, Vall-E, WaveNet, Flowtron |'
+  prefs: []
+  type: TYPE_TB
+- en: '| **Text-to-speech, speech-to-speech**: Generative AI can be used to convert
+    text into speech or facilitate real-time speech translation. For example, it can
+    enable virtual assistants to “speak” in applications or devices. | Customer service
+    for various industries, Electronics, Travel, Leisure | Siri, Alexa, Google Assistant
+    |'
+  prefs: []
+  type: TYPE_TB
+- en: '| **Text generation**: Generative AI can be used to create copywriting, advertisements,
+    and content for marketing campaigns. It can be used to write stories, articles,
+    and other forms of text, including conversations with virtual assistants and help
+    chatbots. It also has the power to translate text from one language to another,
+    breaking down language barriers and enabling more efficient communication. | Marketing,
+    Advertising, Journalism, Script and Story Writing, Healthcare, Customer Service
+    for various industries | ChatGPT, BARD, Bing, Quillbot, Jasper, Google Translate,
+    Photomath |'
+  prefs: []
+  type: TYPE_TB
+- en: '| **Code generation**: Generative AI can develop, write, and debug computer
+    programming codes. | All industries that require programming | Google’s AutoML,
+    OpenAI Codex, GitHub Co-pilot, Polycoder, Amazon CodeWhisperer |'
+  prefs: []
+  type: TYPE_TB
+- en: Most applications use a combination of image, text, code, video, and audio generation
+    alongside machine learning algorithms to produce solutions to a problem. One example
+    of how all of these could be used in a comprehensive educational tool could be
+    through an intelligent tutoring system. This system can use GenAI algorithms to
+    customise learning materials for individual students based on their learning needs
+    and progress, produce personalised video lessons by narrating snippets of educational
+    text or code, combine it with visual aids such as images or animations, in order
+    to support students in understanding complex concepts. The system can also create
+    assessment and grading descriptors to assess students’ understanding of materials,
+    generating questions and quizzes to reinforce learning. Moreover, audio feedback
+    can also be generated for students as based on their performance, providing guidance
+    and encouragement in a natural and engaging manner. This example demonstrates
+    the transformative capabilities of GenAI in education to create an immersive,
+    personalised, and effective learning experience. By harnessing the power of AI,
+    teachers can free up time and resources, allowing them to focus on other priorities
+    like classroom instruction and providing support to students.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 1.5 ChatGPT – A Game Changer in Education?
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: One particular AI tool that has gained massive popularity, including in education,
+    is ChatGPT (Chat Generative Pre-trained Transformer). ChatGPT is a pretrained
+    text-generation language model developed by OpenAI that uses a transformer-based
+    language architecture ([Srivastava, 2022](#ref1_56); [Joshi, 2021](#ref1_22);
+    [Kulshrestha, 2020](#ref1_26)), a type of deep neural network well suited for
+    natural language processing tasks. It has the ability to understand and generate
+    human-like text based on the input it receives. In addition, it has been trained
+    on a massive amount of data which has allowed it to learn the patterns, styles,
+    and complexities of human language, making it a remarkable tool for communication.
+    With capabilities in language generation, translation, summarisation, and questioning
+    and answering, ChatGPT has caused a huge ripple in the technological industry
+    ([Zaveri, 2023](#ref1_62)).
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The rise of ChatGPT and its popularity are connected to a number of factors:
+    ChatGPT is redefining the boundaries of machine learning ([Rosenbaum, 2023](#ref1_49));
+    it is efficient in generating results with endless possibilities ([Pace, 2023](#ref1_44);
+    [Petrova, 2023](#ref1_45)); and it is knowledgeable with training from huge volumes
+    of information ([Shankland, 2023](#ref1_52)). AI has been around for more than
+    a decade, but recent advancements in the field have made it more accessible and
+    user-friendly. With ChatGPT, OpenAI’s decision to allow public access to the software,
+    its user-friendly interface, and its ability to understand and respond to natural
+    language in a human-like manner, sets it apart from previous AI models. Additionally,
+    the COVID-19 pandemic has accelerated the shift towards online and virtual interactions.
+    The public has grown in their awareness and acceptance of online functionality
+    given their increased experiences with remote working and learning, as well as
+    through the increased popularity of online financing and shopping. As a result,
+    there is a greater demand for innovative solutions like ChatGPT to cater to different
+    needs of the public ([Zaveri, 2023](#ref1_62)).'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Within the field of education, the pandemic has become a stimulus for individuals
+    to recognise the benefits and potentials of full-time virtual learning. Before
+    the pandemic, traditional, in-person teaching and learning was regarded as the
+    sole, favoured, or most effective approach to education for many individuals.
+    The sudden outbreak and spread of COVID-19, resulting in widespread lockdowns
+    and social distancing measures, forced universities, colleges, and schools to
+    close their physical campuses and transition to virtual teaching and learning.
+    With the sudden shift online, many have had to adapt and embrace online education,
+    leading to gradual recognition of the possibilities and capabilities such a mode
+    holds for delivering high-quality education. This has also opened up new opportunities
+    for utilising technology in classrooms. For example, ChatGPT is expected to play
+    a significant role in the future of teaching and learning, driving education to
+    develop and undertake better practices by replacing those which could be automated
+    ([Jacobsen, 2023](#ref1_20)). In the post-COVID era, we are beginning to see many
+    educational institutions opening up to the possibility of allowing students to
+    continue their education remotely, which increases accessibility and flexibility,
+    as well as creates new opportunities for learning. Even renowned universities
+    such as University College London (UCL) or Kings College London are providing
+    numerous pathways to go remote by offering online Masters programmes ([UCL, n.d.](#ref1_58))
+    and blended options for International Foundation programmes ([King’s College London,
+    n.d.](#ref1_24)). Online courses allow students to attend lectures and complete
+    assignments from the comfort of their own homes, which can save time and money
+    on commuting. Moreover, virtual learning environments can be designed to promote
+    inclusivity, better support students with special needs, and ensure that those
+    in remote areas can still access teaching and learning. The growing demand for
+    online learning has also led to the increased popularity and adoption of AI-powered
+    virtual assistants like ChatGPT, which can further enhance the accessibility,
+    efficiency, and effectiveness of education. For instance, ChatGPT can serve as
+    a 24/7 virtual assistant that offers real-time responses to students’ queries,
+    provide personalised support and guidance, and provide assistance in maintaining
+    learning progress.
+  prefs: []
+  type: TYPE_NORMAL
+- en: All in all, the COVID-19 pandemic has accelerated the shift towards online and
+    virtual learning. As a result, behaviours and attitudes of the public have changed,
+    and educational audiences are now much more receptive to the use of AI tools.
+    We should also note that the recent surge of discussion regarding AI’s impact
+    on education is not necessarily late; despite the 50-year presence of AI, its
+    impact on education has only gained considerable prominence with the recent advancement
+    of ChatGPT. While tools like Google Translate may have made notable impacts on
+    certain educational domains, its impact pales in comparison to the potentials
+    of ChatGPT. With its capabilities of providing immediate and tailored feedback,
+    facilitating natural language interactions, and serving as both a teaching and
+    research assistant, ChatGPT and other GenAI tools have established themselves
+    as a transformative force for higher education. Such technology has the potential
+    to fundamentally change the way students learn while also supporting educators
+    in overcoming challenges and obstacles in teaching and learning.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 1.6 Generative AI Concerns and Challenges
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'Despite its potential benefits, the utilisation of AI raises important ethical
+    and social issues. These include concerns about job displacement, privacy, and
+    accountability, as well as the potential for AI to be used for malicious purposes.
+    One of the key drivers behind the development of generative AI is the desire to
+    elevate the creative process ([Eapen et al., 2023](#ref1_13)). By implementing
+    algorithms and machine learning models, generative AI possesses the capacity to
+    generate new and unique content that cannot be achieved through traditional, manual
+    methods. However, the benefit of producing novel outputs also introduces potential
+    drawbacks, including the risk of generating biased or unfair outputs, or content
+    that is inappropriate or harmful. Several aspects are to be addressed: the need
+    to strike a balance between human and machine values and control; the need to
+    ensure that generated content is of high quality and relevancy; and the need to
+    navigate the ethical considerations arising from the complex nature of AI. It
+    is important that we carefully consider these issues as we continue to develop
+    and deploy AI in across industries. In [Chapter 3](ch3.xhtml), we will explore
+    and further discuss opportunities and concerns for GenAI in higher education.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 1.7 How Does ChatGPT Work?
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: For many readers, they are interested in understanding the big picture how ChatGPT
+    works, thus, we have put together a high-level overview of how it works below,
+    please also see [Figure 1.3](#fig1_3). If you wish to go deeper into the technicalities,
+    please read [Chapter 6](ch6.xhtml).
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![A flowchart that shows how Chat G P T works. The steps are input, G P T encoding,
+    attention, and decoding, and output.](images/fig1_3_B.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: '[Figure 1.3 How Does ChatGPT Work?](#R_fig1_3)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: In the simplest way of explaining, ChatGPT is a type of software trained on
+    huge amounts of text. During its training phase, ChatGPT is exposed to vast amounts
+    of text from variety of sources such as websites, books, forums. It learns by
+    predicting the next word in sentences. The training helps ChatGPT to recognise
+    patterns and structures in language. It uses a structure called the Transformer
+    to weigh which parts of your question are most important and how your prompt relates
+    to all the data it has trained on, and thus, GPT stands for Generative Pre-trained
+    Transformer.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 1.7.1 So What Happens When You Type in a Question (Also Known as Prompt)?
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: '[Table 1.6](#table1_6) shows the steps of how ChatGPT works.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[Table 1.6 Steps Showing How ChatGPT Works](#R_table1_6)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '| What happens when you type in a question (prompt) in ChatGPT |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| [User Input/Prompt in ChatGPT] |'
+  prefs: []
+  type: TYPE_TB
+- en: “What is the capital of?”
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '|'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '| [Encoding] |'
+  prefs: []
+  type: TYPE_TB
+- en: Vector for ‘capital’ for example might relate to a every token form its training
+    that is a capital e.g. ‘Dublin’, ‘London’, ‘Paris’, etc. The vector for ‘Paris’
+    which already exists from training would relate to ‘France’
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Vector for the other words are created in a similar way
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '|'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '| [Attention Mechanism: Word Weights] | [Attention Mechanism: Word Weights]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: “What” (medium weight)
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: “is” (low weight)
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: “the” (medium weight)
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: “capital” (high weight)
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: “of” (medium weight)
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '|'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '| [Decoding] |'
+  prefs: []
+  type: TYPE_TB
+- en: ChatGPT grasps that the user is asking about a capital city
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '|'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '| [Prediction Sequence] |'
+  prefs: []
+  type: TYPE_TB
+- en: “The capital of”
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: “The capital of France”
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: “The capital of France is”
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: “The capital of France is Paris.”
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '|'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '| [ChatGPT Output/Response] |'
+  prefs: []
+  type: TYPE_TB
+- en: “The capital of France is Paris.”
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '|'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Input**: You type in a sequence of words (e.g., “What is the capital of”)
+    also known as a prompt.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Encoding**: The model translates each word into a numerical representation
+    called a vector. This representation captures the word’s meaning and its relation
+    to other words which it has been trained on.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Attention**: Using a method called “self-attention”, the ChatGPT model weighs
+    the importance of each word in your question. For instance, in our example, “capital”
+    might be given more weight than “is”. The goal is to grasp the essence of your
+    question/prompt. Knowing the topic helps the model understand related words, like
+    “of” and “the”.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Decoding & Prediction**: Once the model understands the context of your question
+    from the word weightings (attention) and relationship to other words it has been
+    trained on (embedding), it starts predicting the best sequence of words for a
+    response. This is based on the input – the encoding information and the attention
+    weights. GPT produces a series of words as an answer. Each word has a specific
+    relevance to the topic and the other words. The model predicts the next word.
+    Then it continues, using both the original input and the words it has already
+    predicted to guess subsequent words. This process repeats until a full answer
+    is formed or until the model decides the answer is complete.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Output**: The model provides the generated sequence of words as a response
+    (e.g., “The capital of France is Paris.”).'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: It is important to note that while this explanation provides an overview, the
+    actual workings of the model involve a lot of intricate math and processes happening
+    simultaneously. The model has been trained on billions of such sequences, refining
+    its ability to make accurate and coherent predictions over time.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 1.8 How does GenAI Generate Images from Text?
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: For many readers, the concept of machines creating images based on textual descriptions
+    might sound like science fiction. Yet, in GenAI, this has become a reality. To
+    shed some light on this capability, we have crafted a high-level overview of how
+    GenAI works in the context of generating images from text. Please refer to [Figure
+    1.5](#fig1_5) for a visual representation. Those desiring a deeper dive can explore
+    [Chapter 6](ch6.xhtml).
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![A 1920 by 1080 pixel image along with an R G B pixel.](images/fig1_4_B.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: '[Figure 1.4 An Image Showing RGB Pixel.](#R_fig1_4)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![A flowchart that shows the text to image process. The steps are input, text
+    encoder, image generator, and output.](images/fig1_5_B.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: '[Figure 1.5 The Text to Image Process.](#R_fig1_5)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Computers work with numbers. Whether it is text, image, or sound, a computer
+    interprets it as numbers. And every image is made of pixels. Each pixel has a
+    colour, represented by three numbers: red, green, and blue (RGB). An image, then,
+    is essentially a matrix of number trios. As you can see in [Figure 1.4](#fig1_4),
+    digital images are represented by a size for example 1920 pixels × 1080 pixels.
+    Each pixel represents a location on the image like x, y coordinates and then at
+    each pixel there is a colour represented by three numbers for, one for the amount
+    of red, another for the amount of green, and another for the amount of blue (RGB).
+    This results in a matrix (array) of vectors (list of numbers) like [13,8,255,0,0]
+    which can represent the whole image.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Much like how ChatGPT encounters enormous amounts of textual data, GenAI Image
+    generation software is trained on vast visual and textual datasets. Think of it
+    as an artist with an encyclopedic knowledge of styles, subjects, and scenes. This
+    can range from simplistic drawings to intricate photographs.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Through this training process, GenAI learns the complexity between words and
+    visuals. It begins to understand that the word “sunset” might evoke hues of orange
+    and pink, or that a “snowy mountain” corresponds to white peaks against a clear
+    sky.
+  prefs: []
+  type: TYPE_NORMAL
+- en: One approach to GenAI’s capability is the Generative Adversarial Network (GAN).
+    This involves a duo – a generator (the artist) and a discriminator (the critic).
+    The artist generates, and the critic evaluates. Over time, the generator gets
+    better at producing images that can pass the discriminator’s critique. [Figure
+    1.5](#fig1_5) shows how text is prompted and generated into image.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 1.8.1 So What Happens When You Type in a Question (Also Known as Prompt) to
+    Generate an Image?
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: '**Input**: A user provides a textual prompt (e.g., “A serene lake surrounded
+    by autumn trees”).'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Textual Encoding**: This process is similar to understanding text generation.
+    To produce an image from text, the model first encodes the text input into a meaningful
+    numerical representation. This is usually done using a separate model, such as
+    a trained transformer.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Image Generator**: Once the text is encoded into a numerical format, it is
+    used as an input or condition for the generator. This process uses diffusion to
+    create the image. Diffusion is a technique to make images fuzzy. This fuzzy appearance
+    is similar to static on old televisions, often referred to as “noise”. Noise is
+    merely random colours/pixels. You can make an image noisy by adding random numbers
+    to its pixels. Conversely, to clarify a noisy image, you adjust the random numbers
+    so they produce a coherent image. In this step, the generator then produces an
+    image that corresponds to the textual description as shown in [Figure 1.6](#fig1_6).![The
+    diffusion process is shown with a series of images that is clear at first and
+    then fades into static.](images/fig1_6_B.jpg)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Figure 1.6 Showing the Diffusion Process.](#R_fig1_6)'
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: '**Refinement**: The discriminator evaluates the generated image, ensuring its
+    alignment with the initial description. This feedback loop, over multiple iterations,
+    refines the visual output.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Output**: The result is a visual representation (e.g., an image of a calm
+    lake with trees draped in autumnal colours) presented to the user as shown in
+    [Figure 1.7](#fig1_7).![Two images that are generated for the prompt, “A serene
+    lake surrounded by autumn trees.”](images/fig1_7_B.jpg)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Figure 1.7 The Image Response Generated From the Prompt “A Serene Lake Surrounded
+    by Autumn Trees”.](#R_fig1_7)'
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: 1.9 Conclusions
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'The future of education is not just digital; it is smart, responsive, and tailored.
+    Imagine classrooms that function like a high-tech ecosystem, adjusting to the
+    needs of every student in real time. Imagine AI tools like ChatGPT, always ready
+    to help, answering questions day or night. COVID-19 pushed us online, and now,
+    tech like IoT and GenAI is taking us to the next level. The classroom of the future?
+    It is innovative, flexible, and built on groundbreaking technology. As we ride
+    this wave, one thing is clear: learning is about to get a whole lot more exciting.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: References
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: '[Agrawal, D., Bernstein, P., Bertino, E., Davidson, S., Dayal, U., Franklin,
+    M., Gehrke, J., Haas, L., Halevy, A., Han, J., Jagadish, H. V., Labridinis, A.,
+    Madden, S., Papakonstantinou, Y., Patel, J., Ramakrishnan, R., Ross, K., Shahabi,
+    C., Suciu, D.](#R_ref1_1), … & Widom, J. (2011). *Challenges and opportunities
+    with Big Data 2011-1*. [White paper]. Purdue e-Pubs. Retrieved October 17, 2023,
+    from [https://docs.lib.purdue.edu/cctech/1/](https://docs.lib.purdue.edu)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Altexsoft](#R_ref1_2). (2022, October 13). Generative AI models explained.
+    Retrieved October 18, 2023, from [https://www.altexsoft.com/blog/generative-ai/](https://www.altexsoft.com)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Arias, R, Lueth, K. L. & Rastogi, A.](#R_ref1_3) (2018, January 21). The effect
+    of the Internet of Things on sustainability. World Economic Forum. Retrieved 18
+    October, 2023, from [https://www.weforum.org/agenda/2018/01/effect-technology-sustainability-sdgs-internet-things-iot/](https://www.weforum.org)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Ashton, K.](#R_ref1_4) (2009). That ‘Internet of Things’ thing. RFID Journal,
+    *22*(7), 97–114.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Atzori, L., Iera, A., & Morabito, G.](#R_ref1_5) (2010). The Internet of Things:
+    A survey. Computer Networks, *54*(15), 2787–2805\. [https://doi.org/10.1016/j.comnet.2010.05.010](https://doi.org/10.1016/j.comnet.2010.05.010)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Barney, N.](#R_ref1_6) (2023, March). Artificial Super Intelligence (ASI).
+    TechTarget. Retrieved October 17, 2023, from [https://www.techtarget.com/searchenterpriseai/definition/artificial-superintelligence-ASI](https://www.techtarget.com)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Baum, J., & Villasenor, J.](#R_ref1_7) (2023, July 18). How close are we to
+    AI that surpasses human intelligence? Brookings. Retrieved October 17, 2023, from
+    [https://www.brookings.edu/articles/how-close-are-we-to-ai-that-surpasses-human-intelligence/](https://www.brookings.edu)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Bostrom, N.](#R_ref1_8) (2014). Superintelligence: Paths, dangers, strategies.
+    Oxford University Press.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Bove, T.](#R_ref1_9) (2023, May 4). CEO of Google’s DeepMind says we could
+    be ‘just a few years’ from A.I. that has human-level intelligence. Fortune. Retrieved
+    October 17, 2023, from [https://fortune.com/2023/05/03/google-deepmind-ceo-agi-artificial-intelligence/](https://fortune.com)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Boyd, D., & Crawford, K.](#R_ref1_10) (2012). Critical questions for big data:
+    Provocations for a cultural, technological, and scholarly phenomenon. Information,
+    Communication & Society, *15*(5), 662–679\. [https://doi.org/10.1080/1369118X.2012.678878](https://doi.org/10.1080/1369118X.2012.678878)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Cordeschi, R.](#R_ref1_11) (2007). AI turns fifty: Revising its origins. Applied
+    Artificial Intelligence, *21*(4–5), 259–279\. [https://doi.org/10.1080/08839510701252304](https://doi.org/10.1080/08839510701252304)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Dilmegani, C.](#R_ref1_12) (2023, September 29). Top 100+ generative AI applications/use
+    cases in 2023\. AIMultiple. Retrieved October 18, 2023, from [https://research.aimultiple.com/generative-ai-applications/](https://research.aimultiple.com)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Eapen, T. T., Finkenstadt, D. J., Folk, J., & Venkataswamy, L.](#R_ref1_13)
+    (2023). How generative AI can augment human creativity. Harvard Business Review.
+    Retrieved October 19, 2023, from [https://hbr.org/2023/07/how-generative-ai-can-augment-human-creativity](https://hbr.org)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Favaretto, M., De Clercq, E., Schneble, C. O., Elger, B. S.](#R_ref1_14) (2020).
+    What is your definition of Big Data? Researchers’ understanding of the phenomenon
+    of the decade. PLoS ONE, *15*(2), e0228987\. [https://doi.org/10.1371/journal.pone.0228987](https://doi.org/10.1371/journal.pone.0228987)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Gillani, N.](#R_ref1_15) (2023, April 19). Will AI ever reach human-level
+    intelligence? We asked five experts. The Conversation. Retrieved October 19, 2023,
+    from [https://theconversation.com/will-ai-ever-reach-human-level-intelligence-we-asked-five-experts-202515](https://theconversation.com)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Gillis, A. S.](#R_ref1_16) (2021, March). 5 V’s of Big Data. TechTarget. Retrieved
+    October 18, 2023, from [https://www.techtarget.com/searchdatamanagement/definition/5-Vs-of-big-data](https://www.techtarget.com)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Goertzel, B.](#R_ref1_17) (2014). Artificial general intelligence: Concept,
+    state of the art, and future prospects. Journal of Artificial General Intelligence,
+    *5*(1), 1–46\. [https://doi.org/10.2478/jagi-2014-0001](https://doi.org/10.2478/jagi-2014-0001)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Grossman, G.](#R_ref1_18) (2023, February 11). Generative AI may only be a
+    foreshock to AI singularity. VentureBeat. Retrieved October 17, 2023, from [https://venturebeat.com/ai/generative-ai-may-only-be-a-foreshock-to-ai-singularity/](https://venturebeat.com)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Hong, Y., Zhang, M., & Meeker, W. Q.](#R_ref1_19) (2018). Big data and reliability
+    applications: The complexity dimension. Journal of Quality Technology, *50*(2),
+    135–149\. [https://doi.org/10.1080/00224065.2018.1438007](https://doi.org/10.1080/00224065.2018.1438007)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Jacobsen, P.](#R_ref1_20) (2023, February 8). Why ChatGPT will change Higher
+    Ed for the better. FEE Stories. Retrieved October 19, 2023, from [https://fee.org/articles/chatgpt-will-change-higher-ed-for-the-better/](https://fee.org)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Jin, X., Wah, B. W., Cheng, X., & Wang, Y.](#R_ref1_21) (2015). Significance
+    and challenges of big data research. Big Data Research, *2*(2), 59–64\. [https://doi.org/10.1016/j.bdr.2015.01.006](https://doi.org/10.1016/j.bdr.2015.01.006)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Joshi, P.](#R_ref1_22) (2021, July 23). Guide to the Latest State-of-the-Art
+    Models. Analytics Vidhya. Retrieved October 19, 2023, from [https://www.analyticsvidhya.com/blog/2019/06/understanding-transformers-nlp-state-of-the-art-models/](https://www.analyticsvidhya.com)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Kampakis, S.](#R_ref1_23) (2022, November 19). *Tom Burns on Hopfield networks
+    and the nature of general AI* [Interview]. Hackernoon. Retrieved October 18, 2023,
+    from [https://hackernoon.com/tom-burns-on-hopfield-networks-and-the-nature-of-general-ai](https://hackernoon.com)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[King’s College London](#R_ref1_24). (n.d.). King’s international foundation.
+    Retrieved October 19, 2023, from [https://www.kcl.ac.uk/international-foundation](https://www.kcl.ac.uk)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Kitchin, R., & McArdle, G.](#R_ref1_25) (2016). What makes Big Data, Big Data?
+    Exploring the ontological characteristics of 26 datasets. Big Data & Society,
+    *3*(1). [https://doi.org/10.1177/2053951716631130](https://doi.org/10.1177/2053951716631130)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Kulshrestha, R.](#R_ref1_26) (2020, June 29). Transformers. Medium. Retrieved
+    October 19, 2023, from [https://towardsdatascience.com/transformers-89034557de14](https://towardsdatascience.com)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Kumar, S. M.](#R_ref1_27) (2023, June 23). How generative AI can transform
+    architecture, engineering, construction. The Economic Times. Retrieved October
+    19, 2023, from [https://economictimes.indiatimes.com/news/how-to/how-generative-ai-can-transform-architecture-engineering-construction/articleshow/101225327.cms?from=mdr](https://economictimes.indiatimes.com)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Laney, D.](#R_ref1_28) (2001). 3D data management: Controlling data volume,
+    velocity and variety. META Group.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[LeCun, Y, Bengio, Y., & Hinton, G.](#R_ref1_29) (2015). Deep learning. Nature,
+    *521*, 436–444\. [https://doi.org/10.1038/nature14539](https://doi.org/10.1038/nature14539)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Li, S., Xu, L. D. & Zhao, S.](#R_ref1_30) (2015). The Internet of Things:
+    A survey. Information Systems Frontiers, *17*, 243–259\. [https://doi.org/10.1007/s10796-014-9492-7](https://doi.org/10.1007/s10796-014-9492-7)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Lueth, K. L.](#R_ref1_31) (2014, December 19). Why the Internet of Things
+    is called Internet of Things: Definition, history, disambiguation. IoT Analytics
+    Market Insights. Retrieved 18 October, 2023, from [https://iot-analytics.com/internet-of-things-definition/](https://iot-analytics.com)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Magan, S.](#R_ref1_32) (2023, October 18). Characteristics of IoT: Definition,
+    uses & key features explained. Unstop. Retrieved October 18, 2023, from [https://unstop.com/blog/characteristics-of-iot](https://unstop.com)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Marr, B.](#R_ref1_33) (2023, October 5). Generative AI is revolutionizing
+    music: The vision for democratizing creation. Forbes. Retrieved October 19, 2023,
+    from [https://www.forbes.com/sites/bernardmarr/2023/10/05/generative-ai-is-revolutionizing-music-loudlys-vision-for-democratizing-creation/?sh=3c00b9b775bd](https://www.forbes.com)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Marri, S.](#R_ref1_34) (2018, July 9). Can super intelligence and emotional
+    intelligence co-exist? Forbes India. Retrieved October 17, 2023, from [https://www.forbesindia.com/blog/technology/can-super-intelligence-and-emotional-intelligence-co-exist/](https://www.forbesindia.com)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Marz, N., & Warren, J.](#R_ref1_35) (2012). Big Data: Principles and best
+    practices of scalable realtime data systems (MEAP ed.). Manning.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Mayer-Schonberger, V., & Cukier, K.](#R_ref1_36) (2013). Big Data: A revolution
+    that will change how we live, work and think. John Murray.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[McAfee, A., & Brynjolfsson, E.](#R_ref1_37) (2012). Big data: The management
+    revolution. Harvard Business Review.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[McKinsey Consultant](#R_ref1_38). (2023, January 19). What is generative AI?
+    Retrieved October 18, 2023, from [https://www.mckinsey.com/featured-insights/mckinsey-explainers/what-is-generative-ai](https://www.mckinsey.com)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[McKinsey Global Institute](#R_ref1_39). (2018, May 8). Deep learning’s origins
+    and pioneers. McKinsey & Company. Retrieved October 18, 2023, from [https://www.mckinsey.com/featured-insights/artificial-intelligence/deep-learnings-origins-and-pioneers](https://www.mckinsey.com)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[McNulty, E](#R_ref1_40), (2017, May 8). Understanding Big Data: The seven
+    V’s. Dataconomy. Retrieved October 18, 2023, from [http://dataconomy.com/seven-vs-big-data/](http://dataconomy.com)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Mills, T.](#R_ref1_41) (2018, September 17). AI vs AGI: What’s the difference?
+    Forbes. Retrieved October 17, 2023, from [https://www.forbes.com/sites/forbestechcouncil/2018/09/17/ai-vs-agi-whats-the-difference/?sh=cc4150838ee1](https://www.forbes.com)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Motta, R. C., Silva, V., & Travassos, G. H.](#R_ref1_42) (2019). Towards a
+    more in-depth understanding of the IoT Paradigm and its challenges. Journal of
+    Software Engineering Research and Development, *7*. [https://doi.org/10.5753/jserd.2019.14](https://doi.org/10.5753/jserd.2019.14)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Murphy, M.](#R_ref1_43) (2022, May 7). IoT remote monitoring: How it works,
+    applications, benefits. Hologram. Retrieved October 18, 2023, from [https://www.hologram.io/blog/iot-remote-monitoring/](https://www.hologram.io)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Pace, M.](#R_ref1_44) (2023, January 17). ChatGPT: Why the trending AI tool
+    has captured attention and controversy. Spinnaker. Retrieved October 19, 2023,
+    from [https://unfspinnaker.com/98982/features/chatgpt-why-the-trending-ai-tool-has-captured-attention-and-controversy/](https://unfspinnaker.com)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Petrova, M.](#R_ref1_45) (2023, February 2). *Why ChatGPT is a game changer
+    for AI* [Video]. CNBC. [https://www.cnbc.com/video/2023/02/02/why-chatgpt-is-a-game-changer-for-ai.html](https://www.cnbc.com)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Pratt, M. K.](#R_ref1_46) (2023, July 12). Top 12 most commonly used IoT protocols
+    and standards*. TechTarget*. Retrieved October 18, 2023, from [https://www.techtarget.com/iotagenda/tip/Top-12-most-commonly-used-IoT-protocols-and-standards](https://www.techtarget.com)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Raghupathi, W., & Raghupathi, V.](#R_ref1_47) (2014). Big data analytics in
+    healthcare: Promise and potential. Health Information Science and Systems, *2*.
+    [https://doi.org/10.1186/2047-2501-2-3](https://doi.org/10.1186/2047-2501-2-3)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Rose, K., Eldridge, S., & Chapin, L.](#R_ref1_48) (2015). The internet of
+    things: An overview. The Internet Society (ISOC).'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Rosenbaum, E.](#R_ref1_49) (2023, February 11). The ChatGPT AI hype cycle
+    is peaking, but even tech skeptics don’t expect a bust. CNBC. Retrieved from [https://www.cnbc.com/2023/02/11/chatgpt-ai-hype-cycle-is-peaking-but-even-tech-skeptics-doubt-a-bust.html](https://www.cnbc.com)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Sagiroglu, S., & Sinanc, S.](#R_ref1_50) (2013, May). *Big data: A review*.
+    2013 International Conference on Collaboration Technologies and Systems (CTS),
+    San Diego, USA (pp. 42–47). [https://doi.org/10.1109/CTS.2013.6567202](https://doi.org/10.1109/CTS.2013.6567202)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Sarker, I. H.](#R_ref1_51) (2021). Machine learning: Algorithms, real-world
+    applications and research directions. SN Computer Science, *2*, 160\. [https://doi.org/10.1007/s42979-021-00592-x](https://doi.org/10.1007/s42979-021-00592-x)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Shankland, S.](#R_ref1_52) (2023, February 19). Why we’re obsessed with the
+    mind-blowing ChatGPT AI chatbot. CNET. Retrieved October 19, 2023, from [https://www.cnet.com/tech/computing/why-were-all-obsessed-with-the-mind-blowing-chatgpt-ai-chatbot/](https://www.cnet.com)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Shao, Z., Zhao, R., Yuan, S., Ding, M., & Wang, Y.](#R_ref1_53) (2022). Tracing
+    the evolution of AI in the past decade and forecasting the emerging trends. Expert
+    Systems with Applications, *209*, 118211\. [https://doi.org/10.1016/j.eswa.2022.118221](https://doi.org/10.1016/j.eswa.2022.118221)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Sharma, R.](#R_ref1_54) (2022, September 1). Characteristics of Big Data:
+    Types and 5V’s. UpGrad. Retrieved October 17, 2023, from [https://www.upgrad.com/blog/characteristics-of-big-data/](https://www.upgrad.com)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Song, I.-Y., & Zhu, Y.](#R_ref1_55) (2015). Big data and data science: What
+    should we teach? Expert Systems, *33*(4), 364–373\. [https://doi.org/10.1111/exsy.12130](https://doi.org/10.1111/exsy.12130)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Srivastava, A.](#R_ref1_56) (2022, August 8). What are transformers in NLP
+    and its advantages. Knoldus. Retrieved October 19, 2023, from [https://blog.knoldus.com/what-are-transformers-in-nlp-and-its-advantages/](https://blog.knoldus.com)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Thierer, A. D., O’Sullivan, A. O., & Russell, R.](#R_ref1_57) (2017). *Artificial
+    intelligence and public policy*. Mercatus Research, Mercatus Center at George
+    Mason University, Arlington [https://doi.org/10.13140/RG.2.2.14942.33604](https://doi.org/10.13140/RG.2.2.14942.33604)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[UCL](#R_ref1_58) (n.d.). Flexible learning for professionals – Online MSc
+    programmes at UCL. UCL Faculty of Medical Sciences. Retrieved October 19, 2023,
+    from [https://www.ucl.ac.uk/medical-sciences/study/flexible-learning-professionals-online-msc-programmes-ucl](https://www.ucl.ac.uk)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Uikey, P.](#R_ref1_59) (2022, November 26). Characteristics of IoT (Internet
+    of Things). DataTrained. Retrieved October 18, 2023, from [https://datatrained.com/post/characteristics-of-iot/](https://datatrained.com)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Yampolskiy, R. V.](#R_ref1_60) (2016). Artificial SuperIntelligence: A futuristic
+    approach. CRC Press.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Yudkowsky, E.](#R_ref1_61) (2006). Artificial intelligence as a positive and
+    negative factor in global risk. In N. Bostrom & M. M. Ćirković (Eds.), Global
+    catastrophic risks (pp. 308–345). Oxford University Press.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Zaveri, P.](#R_ref1_62) (2023, February 3). Microsoft’s landmark deal with
+    OpenAI shows that ChatGPT is going to be the defining technology of 2023. Business
+    Insider. Retrieved October 19, 2023, from [https://www.businessinsider.com/why-generative-ai-chatgpt-the-defining-tech-of-this-year-2023-1?r=US&IR=T](https://www.businessinsider.com)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL

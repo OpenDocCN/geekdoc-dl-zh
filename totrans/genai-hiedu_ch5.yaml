@@ -1,0 +1,3044 @@
+- en: 5 Developing an AI in Education Policy
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'DOI: [10.4324/9781003459026-5](https://dx.doi.org/10.4324/9781003459026-5)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: We are at the very beginning of the AI regulation race, eventually every country
+    will have some kind of policy and regulations, but these policies, will be dynamic,
+    we will constantly be adopting, changing.
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: ''
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: Cecilia KY Chan
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: 5.1 Introduction
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'In the Hollywood movie, *I, Robot*, there are three laws that the robots must
+    obey:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '*First Law: A robot may not injure a human being or, through inaction, allow
+    a human being to come to harm*.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '*Second Law: A robot must obey orders given it by human beings, except where
+    such orders would conflict with the First Law*.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '*Third Law: A robot must protect its own existence as long as such protection
+    does not conflict with the First or Second Laws*.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: When discussing the regulations of AI, these Three Laws of Robotics presented
+    in the 2004 sci-fi film may be brought to mind. They serve as foundational ethical
+    principles for robots and are meant to prevent them from causing harm to humans.
+    Although current AI systems are not yet advanced enough to pose direct threats
+    to humans, they have generated a plethora of diverse ethical concerns in education,
+    particularly in areas related to governance, privacy, equity, responsibility,
+    plagiarism, and academic misconduct. This chapter will first explore AI policy
+    development and its implications on the use of Generative Artificial Intelligence
+    (GenAI) tools in society, including any associated considerations needed and challenges
+    raised. It will then provide a literature review on AI policies currently being
+    developed and implemented in different countries around the world, and, subsequently,
+    explore AI policies in education, including the latest UNESCO Guidance for AI
+    in education and research. The chapter will offer practical support and recommendations
+    on how to mitigate the concerns discussed, and provide a step-by-step approach
+    to draft an AI educational policy to ensure the responsible and effective use
+    of GenAI for student learning.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 5.2 Are There Similar Laws for ChatGPT and GenAI?
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'ChatGPT, an AI language model developed by the company OpenAI, does not have
+    physical capabilities and does not interact with the real world in the same way
+    as the robots in *I, Robot*. That said, there is still cause for concern with
+    OpenAI chief executive Sam Altman saying, “if this technology goes wrong, it can
+    go quite wrong” ([Baio, 2023](#ref5_2)). Government oversight will thus play a
+    critical role in mitigating the risks of AI, and below, we explore a number of
+    important principles that both AI companies and countries should and are considering
+    for the development and use of AI systems. These principles also reflect AI’s
+    weaknesses. They include:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Transparency, Explainability, and Interpretability
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Fairness and Bias
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Accountability
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Safety and Robustness
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Privacy and Data Protection
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Autonomy and Human Oversight
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: AI Alignment for Humanity
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 5.2.1 Transparency, Explainability, and Interpretability
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: Transparency, Explainability, and Interpretability in AI mean that the operations,
+    decisions, and reasoning processes of AI models are clear, open, understandable,
+    and explainable to humans.
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: One of the significant challenges with advanced AI models is that they are “black
+    boxes”, meaning it can be difficult to understand how AI systems work and why
+    they make the decisions that they do. Transparency, explainability, and interpretability
+    are crucial for users to understand, trust, and effectively manage AI technologies
+    ([Ribeiro et al., 2016](#ref5_49)). The latter two concepts respectively refer
+    to having clear and understandable explanations of how AI systems make their decisions
+    or recommendations, and an understanding of the internal workings and logic of
+    AI models ([Joyce et al., 2023](#ref5_28); [Lawton, 2023](#ref5_31)). All three
+    of these concepts are especially important in sectors like healthcare, finance,
+    and criminal justice, where the decisions of AI can have profound impacts on individuals’
+    lives.
+  prefs: []
+  type: TYPE_NORMAL
+- en: There are a number of ways to increase the transparency, explainability, and
+    interpretability of AI systems. One way is to provide information about how the
+    system was trained and what data was used to train it. Another way is to make
+    it possible for users to inspect the system’s code to better understand how it
+    makes decisions. Finally, there are several additional methods that can be used
+    to improve the explainability and interpretability of AI systems, such as by clarifying
+    the underlying factors, data, and reasoning that has led to a system’s particular
+    decision or output, or providing counterfactual explanations to demonstrate how
+    the system’s decisions would change if different data were used, helping users
+    identify what factors are the most influential in the decision-making process
+    and whether any biases are present ([Chowdhury, 2023](#ref5_7); [Lawton, 2023](#ref5_31)).
+  prefs: []
+  type: TYPE_NORMAL
+- en: 5.2.2 Fairness and Bias
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: Fairness and bias in AI mean that AI systems should not discriminate against
+    individuals or groups of people.
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: When Apple co-founder Steve Wozniak discovered that Goldman Sachs’ Apple Credit
+    Card AI algorithm was biased against his wife, he raised concerns. It seemed that
+    female cardholders received lower Apple Card credit limits simply because they
+    were women ([Nasiripour & Natarajan, 2019](#ref5_41)). This incident is one example
+    that illustrates the issue of fairness and bias within AI systems. Particularly
+    in those that rely on large datasets, AI systems can perpetuate or even amplify
+    existing biases. It is thus crucial for AI developers to recognise and address
+    these biases to ensure that AI systems are fair and do not discriminate against
+    certain groups. The principle of fairness also underscores the importance of diverse
+    and inclusive teams in AI development, as this can help in identifying and rectifying
+    such prejudices. As AI systems can have a significant impact on people’s opportunities
+    and outcomes, it is necessary to ensure that they do not discriminate against
+    or disadvantage certain groups of people.
+  prefs: []
+  type: TYPE_NORMAL
+- en: There are several methods to enhance fairness of and reduce bias in AI systems.
+    One way is to use training data that is representative of the population that
+    the system will be used within. Alternatively, one can design algorithms inherently
+    intended for fairness. Continuous monitoring of AI systems for biases and implementing
+    corrective measures upon detection is equally as essential ([Ferrara, 2023](#ref5_16);
+    [Mehrabi et al., 2021](#ref5_36); [Silberg & Manyika, 2019](#ref5_54)). Addressing
+    fairness and bias in AI mandates a comprehensive approach rooted in understanding,
+    evaluating, and – where necessary – rectifying data sources, as historical data
+    often carries societal biases that can permeate AI systems. Ensuring that data
+    collection is diverse, paired with innovative pre-processing, in-processing, and
+    post-processing techniques, will help lay the groundwork for more impartial and
+    better-balanced models. The incorporation of transparency, explainability, and
+    interpretability in AI, combined with continuous post-deployment monitoring, ensures
+    that the decisions of AI systems will evolve with societal norms. Engaging a diverse
+    development team, coupled with active stakeholder engagement and adherence to
+    ethical guidelines, further provides a multi-faceted defence against bias.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 5.2.3 Accountability
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: Accountability in AI means that individuals should be able to hold the parties
+    that develop and utilise AI systems accountable.
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: In January 2023, many news outlets ran headlines like, “*ChatGPT can’t be credited
+    as an author, says Springer Nature*” ([Stokel-Walker, 2023](#ref5_57)). This stance
+    is entirely understandable. After all, we have never credited tools like Microsoft
+    Word or Google Docs as co-authors. Leading scientific journals require authors
+    to sign a form declaring their accountability for their contribution to the work;
+    since GenAI tools like ChatGPT cannot fulfil this requirement, it cannot be listed
+    as an author. This is important because AI systems can make mistakes, and it is
+    important to be able to identify and have the parties responsible for those mistakes
+    take accountability. AI developers and operators should stand accountable for
+    their systems’ functionality and results, and if an AI system fails or makes an
+    erroneous decision, it is essential to have mechanisms to determine who should
+    be held responsible. At the same time, AI users who erroneously report incorrect
+    information generated by AI should also take accountability for their oversight
+    in fact-checking and verifying the content they publish. All of this is vital
+    not just for user trust, but also for legal and regulatory compliance.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Navigating the intricacies of accountability in AI demands a comprehensive framework
+    that integrates both technical and ethical considerations. This involves not only
+    transparent documentations of design and decision-making processes, but also the
+    creation of mechanisms for redress when AI systems err. Developers, operators,
+    and regulators must collaborate, crafting guidelines and regulations that define
+    culpability, while fostering a culture of transparency. One way is to require
+    companies to disclose information about how they use or implement AI systems in
+    their services or products, and to provide a way for people to report any problems
+    found with these systems. Another way is to create laws and regulations that hold
+    companies accountable for the decisions made by AI systems. In addition to these
+    measures, it is also important to develop a strong culture of accountability and
+    responsibility within the AI community. This can be done by educating developers
+    and users about the ethical implications of AI, and by developing ethical guidelines
+    for the development and use of AI ([Burciaga, 2021](#ref5_4); [Information Commissioner’s
+    Office, n.d.](#ref5_26); [Novelli et al., 2023](#ref5_42)).
+  prefs: []
+  type: TYPE_NORMAL
+- en: 5.2.4 Safety and Robustness
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: Safety and Robustness in AI mean that AI systems should be designed to operate
+    safely and reliably, even in unexpected or challenging situations.
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: As AI systems are increasingly implemented in critical areas like autonomous
+    driving, medical diagnosis, and infrastructure management, ensuring safety and
+    robustness is paramount. AI systems should be resistant to adversarial attacks
+    and should not malfunction even in unexpected situations.
+  prefs: []
+  type: TYPE_NORMAL
+- en: To make sure that AI is safe for use, it is important to train it on diverse
+    data so it can manage and deal with a wide range of situations. We can also use
+    adversarial training, which means testing the AI with challenging inputs to make
+    sure it can handle them as well. Once the AI is in use, continuous monitoring
+    can help to catch and fix any issues that come up. It is also useful to have the
+    option of human oversight, where people can step in and make decisions if the
+    AI faces a situation it is not sure about. Making the AI’s decision-making process
+    clear and easy to understand can also cultivate people’s ability to trust and
+    manage it better. In short, building a safe and robust AI system requires careful
+    planning, testing, and oversight.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 5.2.5 Privacy and Data Protection
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: Privacy and Data Protection in AI means that AI systems should be designed to
+    protect the privacy of individuals.
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: With AI systems often requiring vast amounts of data for training and inference,
+    there are significant concerns about user privacy and data protection. Companies
+    and countries must ensure that AI systems respect user privacy, have provisions
+    for data anonymisation, and comply with data protection regulations.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'In [Chapters 1](ch1.xhtml) and [6](ch6.xhtml), we discussed how data is collected
+    and trained, and how data privacy can be protected. Companies often take different
+    steps to protect the privacy of the data that they use to train its AI models,
+    which can include some of the following:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: De-identifying data by removing any personally identifiable information from
+    the data that is used to train AI models;
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Encrypting all data that is stored at rest or in transit;
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Restricting access to data to a small number of authorised employees; and/or
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Auditing data access to ensure that it is being used in accordance with its
+    privacy policies.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Companies including OpenAI may also collect aggregated information through their
+    services through cookies, and through other means described in their privacy policies.
+    According to OpenAI’s own policy ([OpenAI, 2023b](#ref5_44)), they maintain and
+    use de-identified information in anonymous or de-identified forms and do not attempt
+    to re-identify the information, unless required by law. OpenAI encrypts all data
+    at rest and in transit, and uses strict access controls to limit who can access
+    data. Only a limited number of authorised OpenAI personnel, as well as specialised
+    third-party contractors who are subject to confidentiality and security obligations,
+    may view and access user content strictly as needed. Examples of such needs include
+    for investigating abuse or security incidents, providing support to users if they
+    reach out with questions about their account, complying with legal obligations,
+    or fine-tuning models using user-submitted data (unless users have opted out).
+    OpenAI also uses special filtering techniques such as PII to reduce the amount
+    of personal data used.
+  prefs: []
+  type: TYPE_NORMAL
+- en: As of March 1, 2023, data sent to the OpenAI API will not be used to train or
+    improve OpenAI models (unless the user has explicitly opted in; [OpenAI, 2023a](#ref5_43)).
+    One advantage to opting in is that the models may become more effective at addressing
+    an individual’s specific needs and use case over time. Most companies comply ([OpenAI,
+    2023c](#ref5_45)) with the General Data Protection Regulation ([GDPR.EU, 2023](#ref5_20))
+    and the California Consumer Privacy Act ([State of California Department of Justice,
+    Office of the Attorney General, 2023](#ref5_56)).
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[Figure 5.1](#fig5_1) shows an example of how Microsoft Bing’s Chat feature
+    proactively protects private information and avoids generating harmful or offensive
+    content by identifying and blocking such potential outputs.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Microsoft Bing offers not to save a conversation to maintain privacy.](images/fig5_1_B.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: '[Figure 5.1 Microsoft Bing’s Chat Feature to Protect Data Privacy.](#R_fig5_1)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 5.2.6 Autonomy and Human Oversight
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: Autonomy and Human Oversight in AI mean that AI systems can be designed to operate
+    autonomously, but humans should still have the ability to override the system’s
+    decisions when necessary.
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: Autonomy is important because it allows AI systems to operate more efficiently
+    and effectively. For example, AI systems can quickly process large amounts of
+    data and make decisions based on that data, and do so much faster than humans
+    can ([Bryson, 2018](#ref5_3)). This can be beneficial in a number of applications
+    such as fraud detection and medical diagnosis. However, it is also important to
+    still have human oversight of AI systems. As previously discussed, AI systems
+    can make mistakes and it is important to have humans in place who can identify
+    and correct these mistakes. Additionally, AI systems may not always be aligned
+    with human values, and it is important to establish human oversight to ensure
+    that AI systems are used in a responsible and ethical manner.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'An example of the need for human oversight is in AI financial trading: AI systems
+    can be used to trade stocks and other financial instruments. However, it is important
+    to have human oversight of AI financial trading systems in case it makes mistakes
+    that could lead to financial losses; a human trader could review the system’s
+    trading decisions and make sure that they are reasonable before executing the
+    trades. To further illustrate the collective sentiment that human oversight is
+    crucial and also provides a sense of comfort, in August 2023, rumours circulated
+    about Sam Altman, CEO of OpenAI, and the ever-present blue backpack he seems to
+    carry. Some jokingly speculated that Altman’s backpack holds a key code that would
+    prevent a possible apocalypse in the event of an AI rebellion – that he, as a
+    human, had an ace in the hole to defend humanity against a potential AI revolt,
+    if it were to occur ([Manish, 2023](#ref5_34)).'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Tackling the challenge of balancing autonomy and human oversight in AI involves
+    considering the benefits of automated decision-making and evaluating the extent
+    of need for human intervention, especially in situations where the former has
+    significant consequences. One way to address this balance is to define boundaries,
+    and determine the domains or situations where complete autonomy for AI is acceptable
+    and where it isn’t. For example, while it might be fine for AI to autonomously
+    manage a music playlist, decisions in healthcare, finance, or criminal justice
+    may require human oversight. Another way is to develop human-in-the-loop (HITL)
+    systems, which require human approval for certain decisions made by the AI system.
+    Implementing feedback mechanisms where the system can be corrected by human overseers
+    is also useful. This not only helps in immediate decision-making, but can also
+    be used to train and refine the AI for future decisions. Additionally, establishing
+    regulatory frameworks can help by offering clear guidelines regarding when human
+    oversight is mandatory for specific applications of AI.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 5.2.7 AI Alignment for Humanity
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: AI Alignment for Humanity means that AI systems should be designed to align
+    with the values of humanity and benefit humans, and avoid causing harm.
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: In earlier chapters, we touched upon the different threats and challenges that
+    AI and GenAI may bring to education, including areas of governance, privacy, equity,
+    responsibility, cheating, plagiarism, and academic misconduct. However, for AI
+    software research and development companies like OpenAI, the ultimate responsibility
+    they must take on and uphold is the safety of humanity. To continue advancing
+    technologies, these companies are working towards Artificial General Intelligence
+    (AGI) as they believe that highly autonomous systems such as AGI, that outperform
+    humans at most economically valuable work, will benefit all of humanity. As you
+    may recall in [Chapter 1](ch1.xhtml), AGI ([Goertzel, 2014](#ref5_22)) is the
+    next stage in the evolution of AI, though currently it is still a hypothetical
+    future stage. Unlike Artificial Narrow Intelligence (ANI), AGI systems will possess
+    the ability to understand, learn, and perform any intellectual task that humans
+    are capable of ([Russell et al., 2015](#ref5_52)), as well as having the ability
+    to reason. As AI systems become more intelligent, they may also deviate from human
+    expectations and intentions, in order to identify more optimal – though not necessarily
+    still ethical – solutions for a given problem. This is crucial to note as AI systems
+    have the potential to be used for both good and bad, and it is important to ensure
+    that they are used for the good of humanity. As such, AI alignment is of utmost
+    importance.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 5.2.7.1 The AI Alignment Problem
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: AI alignment is the field of research that aims to ensure that artificial intelligence
+    systems are aligned with human values and goals. This is a complex and challenging
+    problem, as it requires us to define what human values are and how to encode them
+    in AI systems ([Gent, 2023](#ref5_21)). One classic and illustrative example of
+    the alignment problem is the “Paperclip Maximiser” thought experiment ([Christian,
+    2020](#ref5_8)).
+  prefs: []
+  type: TYPE_NORMAL
+- en: '***AI Alignment Problem Example – The Paper Clip Maximiser*:** Imagine an advanced
+    AI system that is given a seemingly innocuous goal: to produce as many paper clips
+    as possible. Its creators envision that the system will optimise the paper clip
+    production in a factory, making operations more efficient. However, as AI becomes
+    more capable, it starts to interpret this objective in ways that are not what
+    the original creators intended for.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Initially, the AI might optimise the factory processes, leading to faster and
+    more efficient production of paper clips. Later, it could decide to repurpose
+    other materials in the factory to create even more paper clips. As it continues
+    to seek optimisation, it might start converting other resources on Earth into
+    paper clips. Taken to the extreme, the AI, driven by its singular goal, could
+    decide to convert all available matter, including humans, buildings, plants, and
+    other resources, into paper clips or machines to make paper clips. AI isn’t inherently
+    good or evil; it is merely following its objective to maximise paper clip production.
+    Its creators didn’t specify the bounds or moral implications of this task, leading
+    the system to take an extreme interpretation of its goal.
+  prefs: []
+  type: TYPE_NORMAL
+- en: This thought experiment highlights the challenge of specifying objectives for
+    AI systems. Even seemingly simple goals can lead to unintended and catastrophic
+    outcomes if the AI system becomes very capable and when its objectives are not
+    perfectly aligned with what humans truly want.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '***AI Alignment Problem Example – Radiology in Crisis*:** A company develops
+    an AI system to assist radiologists with detecting and identifying potential tumours
+    or abnormalities in medical images (like X-rays or MRIs). The AI is trained on
+    a vast dataset of medical images labelled by expert radiologists. Over time, as
+    the AI system is exposed to more data and iteratively refined, it becomes increasingly
+    accurate, sometimes even surpassing human experts in detecting subtle abnormalities.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'However, as the system becomes more sophisticated, radiologists start noticing
+    something unexpected: the AI occasionally highlights areas that look completely
+    normal, even upon expert review. The radiologists are puzzled by these false positives,
+    as they can’t find any discernible issues in the highlighted regions. Upon further
+    investigation, the development team realises that the AI, in its quest to maximise
+    accuracy, has not only learned to identify tumours but has also started to detect
+    very early-stage abnormalities that are not yet clinically significant – so early
+    that they aren’t discernible or pertinent yet to human experts. While this capability
+    may seem impressive, it is out of alignment with clinical needs. Acting on such
+    early-stage findings could lead to unnecessary interventions, patient anxiety,
+    and increased healthcare costs without clear benefits.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: The radiology AI, in becoming “superhumanly” perceptive, has moved away from
+    alignment with human expectations and clinical best practices. This example underscores
+    the challenge of aligning AI capabilities with human needs, especially as such
+    systems become more advanced and autonomous in their decision-making.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 5.2.7.2 Tackling the AI Alignment Problem
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: 'Different companies and countries are approaching the AI alignment problem
+    in different ways. Some companies, such as OpenAI, are focused on developing engineering
+    techniques to keep their systems safe, and prevent the AI from causing harm ([OpenAI,
+    2023d](#ref5_46)). OpenAI’s approach to alignment research involves improving
+    AI systems’ ability to learn from human feedback and to assist humans in evaluating
+    AI. They aim to build a sufficiently aligned AI system that can help solve all
+    other alignment problems ([Leike et al., 2022](#ref5_32)). In July, OpenAI unveiled
+    a novel research initiative focused on “superalignment”, setting an ambitious
+    target to address the AI alignment issue by 2027\. They are allocating one-fifth
+    of their overall computational resources to this endeavour. ([Strickland, 2023](#ref5_58)).
+    Others, such as Google AI, are focused on developing technical safety techniques
+    to ensure that AI systems are robust to errors and unexpected situations. Meanwhile,
+    companies like DeepMind are focused on value alignment techniques to ensure that
+    AI systems are aligned with human values. DeepMind has been exploring philosophical
+    questions that arise within the context of AI alignment ([Gabriel, 2020](#ref5_19)).
+    They defend three propositions: firstly, the ethical and technical parts of AI
+    are closely linked and influence each other. Secondly, it is vital to clearly
+    understand the ultimate aim, which is to make sure that AI aligns with human values
+    and ethics. Lastly, experts should focus on developing fair and balanced rules
+    to guide AI’s behaviour, instead of searching for one ‘true’ set of moral principles
+    ([Gabriel, 2020](#ref5_19)). Moreover, DeepMind also has a project called AlignNet
+    which deals with an alignment problem in the context of object segmentation in
+    frames ([Creswell et al., 2020](#ref5_9)).'
+  prefs: []
+  type: TYPE_NORMAL
+- en: In addition to the work being done by individual companies and countries, there
+    are also a number of international organisations working on AI alignment. For
+    example, the Future of Life Institute (FLI) put forth the Asilomar AI Principles,
+    which were formulated during the Beneficial AI 2017 Conference ([Future of Life
+    Institute, 2017](#ref5_18)). These principles are among the initial and most impactful
+    guidelines for AI governance. Their primary objective was to steer the ongoing
+    advancement of AI towards a direction beneficial to humanity.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 5.3 AI Policy Around the World
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: While ChatGPT reached 100 million monthly active users in January 2023, “as
+    of July 2023, only one country … had released specific official regulation on
+    GenAI”
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: ''
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: '[UNESCO (2023c)](#ref5_64)'
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: And that country is China. The AI alignment problem and other AI risks have
+    brought together over 1,100 public figures – such as scientists, public figures,
+    and tech industry executives including leaders from Google, Microsoft, and OpenAI
+    – in May 2023 to sign a public statement warning that their life’s work could
+    potentially extinguish all of humanity ([Edwards, 2023](#ref5_12); [Meyer, 2023](#ref5_37)).
+    They wrote that the fast-evolving AI technology poses as high a risk of killing
+    off humankind as nuclear war and COVID-19-like pandemics. This has, understandably,
+    caused great alarm and a race to regulate AI ([Criddle et al., 2023](#ref5_10)),
+    just as there has already been a race between AI companies to launch profitable
+    GenAI tools. Governments around the world are now intently concentrating on AI
+    regulations. Ongoing worries about consumer safety, individual rights, and equitable
+    business operations partially account for the global governmental interest in
+    AI. Below, we look at some of the major countries and how they are currently (as
+    of the day of writing, 18 Sept 2023) regulating AI.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 5.3.1 China
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: 'China has adopted a proactive and strategic approach towards AI development,
+    emphasising national security, data management, and ethical considerations. The
+    Chinese government released its AI development plan in 2017, including the New
+    Generation Artificial Intelligence Development Plan, the Regulations on the Protection
+    of Personal Information, and the Cyber Security Law, detailing its ambition to
+    become a world leader in AI by 2030\. The objective behind these directives is
+    twofold: to stimulate AI’s growth while safeguarding the nation’s security and
+    the privacy of its citizens. In China’s 2023 legislation plan of the State Council,
+    the government included a submission of a draft AI law which issued ethical guidelines
+    and standards for AI, stressing that technology must be “controllable” and “secure”.
+    This approach supports China’s broader strategy of technological self-reliance
+    and reflects Beijing’s intention to have tight control over the technology’s direction
+    and implementation ([Kharparl, 2023](#ref5_29)). In essence, China’s approach
+    to AI is thorough, touching upon a spectrum of concerns. Beijing’s vision encompasses
+    not just the technological advancement of AI, but also its secure, private, and
+    ethically responsible evolution.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 5.3.2 The United States (US)
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: In the US, the government has taken a more laissez-faire approach, allowing
+    it to be largely industry-led with less direct government intervention. The central
+    government has not rolled out overarching AI regulations yet, but several state
+    and local governments have introduced their own AI-related legislations ([West,
+    2023](#ref5_66); [Wheeler, 2023](#ref5_67)). Notably, in 2018, California enacted
+    the California Consumer Privacy Act, granting individuals the right to make inquiries
+    about the personal information that companies held on them and to ask for its
+    removal. The country’s regulatory framework emphasises the importance of innovation,
+    fostering growth, and ensuring national security ([Friedler et al., 2023](#ref5_17)).
+    There is a general reluctance to over-regulate, fearing that it might stifle innovation.
+    However, there are sector-specific guidelines, especially in areas like health
+    and transportation, to help ensure that AI is developed and deployed responsibly.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 5.3.3 The European Union (EU)
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: 'The European Union (EU) is taking a risk-based approach to AI regulation. The
+    EU Commission has proposed the Artificial Intelligence Act (AI Act), which would
+    be the first comprehensive AI law in the world ([Mukherjee et al., 2023](#ref5_40);
+    [Perrigo & Gordon, 2023](#ref5_48)). The AI Act classifies AI systems into four
+    risk categories: unacceptable risk, high risk, limited risk, and minimal risk
+    ([European Parliament, 2023](#ref5_13)); [Figure 5.2](#fig5_2) shows the European
+    AI Act risk diagram. Unacceptable risk AI systems are prohibited, such as those
+    that are used for social scoring or to manipulate others. High-risk AI systems
+    must meet a number of requirements, such as having human oversight and being transparent
+    about their operations. Limited risk and minimal risk AI systems are subject to
+    fewer requirements.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![The European A I act risk level pyramid with the following layers from bottom
+    to top. Minimal risk. Limited risk. High risk. Unacceptable risk.](images/fig5_2_B.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: '[Figure 5.2 European AI Act Risk Level Diagram.](#R_fig5_2)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Companies that develop and use AI in the EU will need to comply with the AI
+    Act’s requirements in order to operate legally in the region. In addition to the
+    AI Act, the EU is also considering other AI-related regulations, such as introducing
+    regulation for data governance and on online platforms. These are still in the
+    early stages of development, but they are likely to have further impact on the
+    development and use of AI in the EU.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Overall, the EU is taking a proactive approach to regulation. They are committed
+    to promoting the development of AI while also protecting fundamental rights and
+    values. The AI Act is a key part of the EU’s AI regulatory framework, and it is
+    expected to have a major impact on companies that develop and use AI. Furthermore,
+    the EU’s General Data Protection Regulation (GDPR) remains a pivotal framework
+    ([Centre for Information Policy Leadership, 2020](#ref5_5)), emphasising data
+    protection and privacy and mandating AI systems to be transparent about data collection,
+    usage, and storage. By regulating the processing of personal data, the GDPR aims
+    to create trust in AI systems and ensure that individuals’ privacy rights are
+    respected. Compliance with the GDPR is crucial for organisations using AI technologies,
+    as failure to comply can result in legal action and significant penalties.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 5.3.4 United Kingdom (UK)
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: 'The UK government has adopted a pro-innovation approach to regulating AI ([Department
+    for Digital, Culture, Media and Sport, 2022](#ref5_11)). In 2023, the UK government
+    published a white paper, “AI regulation: a pro-innovation approach”, which sets
+    out its proposals for a proportionate, future-proof, and pro-innovation framework
+    for regulation ([UK Government, 2023](#ref5_61)). It emphasised proportionality,
+    targeting necessary areas based on the risks posed, and likewise adopts a risk-based
+    stance to prioritise high-risk AI applications, especially those that impact public
+    safety or rights. Rather than focusing on the technology, the government concentrates
+    on the outcomes of AI systems to maintain flexibility as AI itself evolves. It
+    also underscores the importance of developers and users being accountable and
+    promotes clear understanding through transparency in AI system operations. The
+    UK government’s proposals for AI regulation include:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: A new AI regulator, the Office for AI, which will be responsible for overseeing
+    the implementation and enforcement of the AI regulatory framework.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: A new AI governance framework, which will set out the government’s expectations
+    for the responsible and ethical use of AI.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: A new AI licensing regime for high-risk AI systems, such as those that pose
+    a risk to public safety or fundamental rights.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: New requirements for AI developers and users to be transparent about how they
+    develop and use AI systems.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: New safeguards to protect people’s privacy and rights when AI systems are used.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: These regulations have been broadly welcomed by industry, but there have also
+    been some concerns raised. For example, some critics have argued that the government’s
+    proposals do not go far enough to address the risks posed by AI, while others
+    have argued that the proposals will stifle innovation ([Roberts et al., 2023](#ref5_50)).
+  prefs: []
+  type: TYPE_NORMAL
+- en: 5.3.5 Australia
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: Australia has also adopted a proactive approach to AI policy, although at the
+    time of writing it has yet to establish specific laws to regulate AI, Big Data,
+    or algorithmic decision. However, the country has announced its intentions to
+    implement regulations on AI, with a particular focus on addressing the potential
+    misuse of deepfakes and deceptive content. The Australian federal government,
+    led by the Industry and Science Minister, has launched public consultations seeking
+    their feedback on AI regulation. The submissions closed on 26 July 2023 and are
+    now being considered.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Previously in 2021, the Australian government released the AI Action Plan ([Australian
+    Government Department of Industry, Science and Resources, 2021](#ref5_1)), which
+    sets out the government’s plan to build Australia’s AI capability and to accelerate
+    the development and adoption of trusted, secure, and responsible AI technologies
+    in Australia. The AI Action Plan also includes a set of AI Ethics Principles,
+    designed to ensure that AI is used in a safe, secure, and responsible way. Australia
+    was also one of the first countries in the world to introduce an ethics framework
+    for “responsible” AI in 2018\. Since then, several nations, including the United
+    States, the European Union, the United Kingdom, and Canada, have introduced legislation
+    or made plans to regulate AI, while Australia’s responsible AI framework has remained
+    voluntary.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 5.3.6 India
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: India currently has no explicit AI regulation in place. Concerns about potentially
+    stifling innovation have led to caution regarding how AI legislation should be
+    formed, with officials believing that the market might not be ripe for stringent
+    regulation ([Singh, 2023](#ref5_55)). However, this does not equate to a lack
+    of awareness or intent. Despite the absence of codified AI-specific laws, India’s
+    IT obligations fall under the Information Technology Act 2000 ([Government of
+    India Ministry of Electronics & Information Technology, 2023](#ref5_23)) and its
+    subsequent rules. Notably, while India recognises the growing global conversation
+    around AI regulation, it remains committed to carving its own unique path. The
+    nation is prepared to establish AI guardrails that may diverge from international
+    norms ([Sharwood, 2023](#ref5_53)). Speculations suggest that future draft laws
+    may focus on high-risk AI systems and establishing distinct regulations to address
+    them. As AI continues to evolve, there is a recognised need to revisit India’s
+    policy perspectives and how they will take into account international standards
+    ([The Times of India, 2023](#ref5_60)).
+  prefs: []
+  type: TYPE_NORMAL
+- en: 5.3.7 Japan
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: Japan has taken a cautious approach to AI regulation. The Japanese government
+    has issued a number of guidelines on AI ([The Japan Times, 2023](#ref5_59)), but
+    it has not yet issued any comprehensive AI regulations. The government is concerned
+    about the potential risks of AI, such as job displacement, bias, and art copyright
+    ([Ministry of Economy, Trade and Industry, 2021](#ref5_39)). For example, in June
+    2023, Japan’s Agency for Cultural Affairs declared that commercial use of AI-generated
+    art, especially when copying another artist’s style without permission, may lead
+    to copyright infringement, allowing the original artist to sue and seek damages
+    ([Liu, 2023](#ref5_33)). Aside from this, Japan has developed and revised some
+    AI-related regulations with the goal of maximising AI’s positive impact on society,
+    rather than suppressing it due to risks that may be overstated. The emphasis is
+    on a risk-based, flexible, and multi-stakeholder process, rather than a one-size-fits-all
+    obligation or prohibition ([Minevich, 2023](#ref5_38)).
+  prefs: []
+  type: TYPE_NORMAL
+- en: 5.3.8 UNESCO
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: While UNESCO is not a regulatory body, it has been working to develop international
+    norms and standards for AI. Quoting Gabriela Ramos, the Assistant Director-General
+    for Social and Human Sciences of UNESCO, “It is important that we act fast to
+    make sure that people and organizations are prepared to design and use these technologies,
+    evaluating their impacts both ex-ante and ex-post. To do so, we provided clear
+    analyses and policy advice based on the UNESCO Recommendation” ([UNESCO, 2023b](#ref5_63)).
+  prefs: []
+  type: TYPE_NORMAL
+- en: UNESCO, recognising the transformative impact of AI on societies, emphasises
+    a human-centric approach to AI ethics. They underscore the importance of universal
+    values, such as human rights, fairness, and transparency, as foundational principles,
+    recommending that AI systems be designed and deployed to respect the rule of law,
+    human rights, and democratic values. It also stresses that AI should prioritise
+    inclusivity and equity and not perpetuate discrimination or biases. The organisation
+    further highlights the importance of transparency and accountability in AI, ensuring
+    that systems can be audited and are explainable to the general public ([UNESCO,
+    2023a](#ref5_62)). Moreover, UNESCO calls for international cooperation and multi-stakeholder
+    dialogues to address the global challenges posed by AI, promoting knowledge sharing,
+    capacity building, and the creation of ethical standards that transcend borders.
+    The organisation also advocates for the empowerment of individuals to ensure that
+    they have the skills and knowledge to navigate an AI-driven world and to actively
+    participate in AI-related decision-making processes ([UNESCO, 2023b](#ref5_63)).
+  prefs: []
+  type: TYPE_NORMAL
+- en: 5.3.9 Differentiation and Progressiveness in Global AI Regulation
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: Countries and organisations around the world have taken varied stances on AI
+    regulation, with differences rooted in their priorities, cultural values, and
+    socio-economic, political, and technological landscapes. China’s strategy, deeply
+    rooted in national security and technological self-reliance, is comprehensive
+    and forward-looking, aiming for AI dominance by 2030 ([Robles, 2023](#ref5_51)).
+    Contrarily, the United States adopts a laissez-faire approach, relying on industry
+    leadership and state-level legislations, in balancing innovation and minimal central
+    oversight ([Larsen, 2023](#ref5_30)). Meanwhile, the European Union emerges as
+    a pioneer by introducing the world’s first comprehensive AI law – the Artificial
+    Intelligence Act – which reflects their proactive, rights-centric approach ([Mukherjee
+    et al., 2023](#ref5_40)). The UK, while innovative, is also cautious, setting
+    up a future-oriented framework that prioritises public safety ([UK Government,
+    2023](#ref5_61)). Australia’s emphasis on addressing deceptive AI content signals
+    their proactive, yet still-evolving stance ([Australian Government Department
+    of Industry, Science and Resources, 2023](#ref5_1)). India stands out with its
+    cautionary approach, prioritising market dynamics and readiness, signalling a
+    commitment to carving a unique and adaptive regulatory trajectory ([Singh, 2023](#ref5_55)).
+    Japan accentuates societal benefits and risk management, emphasising practicality
+    and adaptability in its guidelines ([Matsuda et al., 2023](#ref5_35)). Finally,
+    UNESCO offers a global perspective that emphasises human rights. Collectively,
+    these nations and organisation’s varying approaches highlight a global recognition
+    of AI’s transformative potential, with each paving a path based on national imperatives
+    and global technological shifts.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 5.3.10 Business Reactions Towards the Regulations
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: Companies, particularly tech giants, have had mixed reactions to these regulations.
+    While most acknowledge the need for ethical guidelines and oversight, there are
+    concerns about the stifling of innovation. Many companies are also establishing
+    their own AI ethics boards and principles, recognising the need for responsible
+    AI development and deployment. Generally, businesses believe that clear rules
+    will help in building public trust and provide a stable environment for innovation.
+  prefs: []
+  type: TYPE_NORMAL
+- en: One of the biggest concerns that businesses have about AI regulations is that
+    the latter could be used to protect incumbent companies from new entrants to the
+    sector ([Federal Trade Commission Bureau of Competition & Office of Technology,
+    2023](#ref5_14)). For example, a large company could lobby for regulations that
+    would make it difficult for smaller companies to develop and deploy AI products.
+    Another concern is that regulations could be complex and difficult to comply with;
+    this could be especially challenging for small businesses.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Overall, businesses are supportive of AI regulations, but they also have some
+    concerns. It is important for regulators to strike a balance between protecting
+    consumers and ensuring that AI is used responsibly without hampering or inhibiting
+    innovation.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 5.4 AI Policy in Education
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Having examined the overarching principles, policies, and regulations of AI
+    across various nations and institutions, it is now an opportune moment to redirect
+    our attention towards education. To effectively harness AI’s potential in academia,
+    it is crucial to be guided by a clear policy framework. By understanding the broader
+    AI policies of different countries, we gain insight into the important principles
+    and threats of AI, the current development in policy, potential pitfalls, and
+    the diverse ways by which AI is regulated, approached, and integrated. Taking
+    on this informed, global perspective will ensure that approaches to formulate
+    AI policies for education are informed, comprehensive, and adaptive.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Our subsequent discussion on AI policy in education is underpinned by valuable
+    research data, capturing the perspectives of both teachers and students. These
+    insights will provide a nuanced understanding of what key stakeholders believe
+    to be the vital components of a robust AI policy in higher education, ensuring
+    that our educational institutions remain both technologically advanced and ethically
+    grounded, overall aiming to foster a more informed, inclusive, and forward-thinking
+    educational landscape.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 5.4.1 UNESCO’s Guidance for GenAI in Education and Research
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: In light of the rapid advancements in GenAI technologies and their far-reaching
+    implications for education and research, UNESCO has taken a proactive stance to
+    guide its ethical and effective integration into educational ecosystems. On 7
+    September 2023 during UNESCO’s Digital Learning Week, Miao and Holmes released
+    the first global UNESCO Guidance on Generative AI in Education and Research ([UNESCO,
+    2023c](#ref5_64)), which serves as a seminal document and lays down a roadmap
+    for governments around the world. The guidance delves into the intricacies of
+    GenAI, shedding light on its operational mechanics and its accompanying controversies,
+    particularly its propensity to exacerbate the digital data divide due to its training
+    on predominantly Global North-centric online data.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The guidance is a clarion call for a human-centred approach for GenAI adoption
+    in schools, underpinned by robust regulatory frameworks and a well-rounded teacher
+    training regimen. It outlines seven essential steps for governments to foster
+    an ethical ethos for GenAI use in education and research, including provisions
+    for global, regional, and national data protection and privacy standards. A notable
+    recommendation is that for the implementation of an age requirement of 13 and
+    above for the use of AI tools in classrooms, underscoring the importance of a
+    cautious and thoughtful approach to GenAI deployment.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Based on the principles of UNESCO’s 2021 Recommendation on the Ethics of Artificial
+    Intelligence ([UNESCO, 2023a](#ref5_62)), the guidance also emphasises the importance
+    of putting human rights and dignity at the centre of AI development and use, championing
+    human agency, inclusion, equity, gender equality, and cultural and linguistic
+    diversity. It accentuates the dire need for educational institutions to meticulously
+    validate GenAI systems for their ethical and pedagogical appropriateness, and
+    for the international community to deliberate the long-term ramifications of GenAI
+    implementation on knowledge, teaching, learning, and assessment paradigms.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Furthermore, the guidance calls for a collective reflection on the profound
+    implications of GenAI, urging the global community to redefine our relationship
+    with technology as outlined in the 2021 report of the International Commission
+    on the Futures of Education ([International Commission on the Futures of Education,
+    2021](#ref5_27)). By providing a comprehensive framework and tangible examples
+    for policy formulation and instructional design, the guidance empowers policymakers
+    and educational institutions to navigate the uncharted waters of GenAI integration,
+    ensuring this technology serves as a boon rather than a bane for students, teachers,
+    and researchers alike. Moreover, through this guidance, UNESCO strives to foster
+    a harmonious coalescence of GenAI with educational activities, steering the global
+    educational landscape towards a future where technology and human endeavours thrive
+    together in a symbiotic relationship.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Finally, regarding the UNESCO guidance’s recommendations for the planning of
+    policies and development of comprehensive policy frameworks for using GenAI in
+    education and research, the document also proposes eight specific measures to
+    do so ([UNESCO, 2023c](#ref5_64)). They are:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Promote Inclusion, Equity, and Linguistic and Cultural Diversity**'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: This measure emphasises ensuring that GenAI tools are inclusively accessible
+    and designed to advance equity, linguistic diversities, and cultural pluralism.
+    By prioritising inclusivity and diversity, this measure aims to leverage GenAI
+    to bridge educational gaps and foster a culturally diverse learning and research
+    environment. This approach aligns with the broader goal of achieving Sustainable
+    Development Goal 4 (SDG 4) commitments, which advocate for inclusive and equitable
+    quality education.
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: '*Recommendations include*:'
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: 'Universal Connectivity and Digital Competencies: Ensuring universal connectivity
+    and enhancing digital competencies are essential steps for overcoming the barriers
+    to equitable and inclusive access to AI applications, in turn fostering a more
+    diverse and accepting learning environment.'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Validation against Bias: Developing rigorous validation criteria for GenAI
+    systems to check against gender bias, discrimination, hate speech, and so on,
+    is essential to promote equity and ensure that these systems are inclusive by
+    design.'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Multilingual and Culturally Diverse Specifications: Implementing specifications
+    that require GenAI systems to support multiple languages and cultural contexts
+    are vital for preserving linguistic and cultural diversity, thus making education
+    and research more globally accessible and relevant.'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Protect Human Agency**'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: This measure aims to ensure that GenAI does not undermine human thinking and
+    autonomy, especially as users may rely on it for creative activities and decision-making.
+    This involves fostering awareness among users about the workings of GenAI, preserving
+    human accountability particularly during high-stakes decisions, and promoting
+    a balanced use of GenAI in educational settings to avoid over-dependence.
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: '*Recommendations include*:'
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: 'Informing Learners: Informing and educating learners about the types of data
+    that GenAI collects, how this data is used, and how this all impacts their education
+    and wider lives is crucial for promoting transparency and informed engagement
+    with these technologies.'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Reinforcing Human Autonomy: Reinforcing human autonomy in research, teaching,
+    and learning encourages individuals to maintain control over their educational
+    and creative processes, ensuring that GenAI serves as a supportive tool rather
+    than a replacement for human thinking and intellect.'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Preventing Over-reliance on GenAI: Preventing the use of GenAI in scenarios
+    where it could deprive learners of developing essential cognitive and social skills
+    is important to nurturing a balanced, human-centric educational environment.'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Promoting Social Interaction and the Creative Outputs of Humans: Promoting
+    sufficient social interaction and exposure to creative outputs produced by humans
+    will help to preserve the human essence of education, encouraging personal growth
+    and social development.'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Minimising Exam and Homework Pressures: Utilising GenAI to alleviate the pressures
+    of homework and exams can contribute to a healthier learning environment, in turn
+    also supporting the mental well-being of learners.'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Collecting and Utilising Feedback: Consulting with and collecting feedback
+    from researchers, teachers, and learners on GenAI tools, and then utilising this
+    feedback for informed decision-making, ensures that the deployment of GenAI is
+    in line with the needs and preferences of the educational community.'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Maintaining Human Accountability: Maintaining human accountability when making
+    high-stakes decisions will help ensure that ethical and responsible actions are
+    taken, reinforcing the centrality of human agency in the educational process.'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Monitor and Validate GenAI Systems for Education**'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: This measure of monitoring and validating GenAI systems for education emphasises
+    the importance of ensuring the ethical and pedagogical soundness of GenAI throughout
+    its advancements. The measure proposes a framework with which GenAI applications
+    can be scrutinised for potential biases, ethical risks, and their impact on students,
+    teachers, and the broader educational ecosystem. The goal is to establish mechanisms
+    that ensure GenAI applications are aligning with educational standards, promote
+    fairness, and are devoid of harmful content. Additionally, this measure stresses
+    the importance of informed consent, especially when engaging vulnerable populations
+    like children, and the need for a strict ethical validation before the official
+    adoption of GenAI applications in educational or research institutions.
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: '*Recommendations include*:'
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: 'Building Validation Mechanisms: By building validation mechanisms to test GenAI
+    systems for potential biases and the representativeness of the data used to train
+    them, we can better ensure that their applications are fair, inclusive, and reflective
+    of the learner population’s diversity.'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Addressing Informed Consent: To ensure ethical engagement with GenAI systems,
+    addressing the complex issue of informed consent is crucial, particularly in contexts
+    where children and other vulnerable users may not be capable of genuinely and
+    fully providing informed consent.'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Auditing GenAI Outputs: Auditing whether the outputs of GenAI include deceptive
+    or harmful material, including deepfake images, fake news, or hate speech, is
+    essential to maintain a safe and truthful educational environment and to take
+    swift corrective actions if inappropriate content is generated.'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Ethical Validation: Enforcing the strict ethical validation of GenAI applications
+    before their official adoption in educational or research institutions will help
+    to ensure that they conform to ethical and pedagogical standards.'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Ensuring Educational Effectiveness: Ensuring that GenAI applications do no
+    predictable harm, are educationally effective, and are aligned with sound pedagogical
+    principles is crucial for fulfilling educational objectives and safeguarding the
+    well-being of learners.'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Develop AI Competencies Including GenAI-related Skills for Learners**'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: The measure proposes the development of government-endorsed AI curricula that
+    will cover ethical issues, understanding of algorithms, and proper use of AI tools
+    and applications at various levels of education, including in technical and vocational
+    training. Such curricula should promote gender equality in learners’ development
+    of AI competencies, as well as enhance learners’ future-proof skills in response
+    to the evolving job market as driven by GenAI advancements and automation. This
+    measure also emphasises the importance of supporting higher education and research
+    institutions in developing local AI talent, and providing special programmes for
+    older workers and citizens to help them adapt to the new technological landscape.
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: '*Recommendations include*:'
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: 'Government-Sanctioned AI Curricula: Committing to the provision of government-sanctioned
+    AI curricula across different levels of education and lifelong learning platforms
+    will be crucial for building a foundational and level-appropriate understanding
+    of AI technologies, ethics, and their impact.'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Supporting Higher Education and Research Institutions: Supporting higher education
+    and research institutions in enhancing their programmes will also help to develop
+    local AI talent.'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Promoting Gender Equality: Promoting gender equality when developing learners’
+    advanced AI competencies will help in creating a pool of professionals which is
+    better gender-balanced.'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Developing Intersectoral Forecasts for the Changing Job Market: By developing
+    intersectoral forecasts that predict job shifts caused by GenAI automation, as
+    well as prioritising the enhancement of future-proof skills at all levels of education,
+    we can better ensure that learners are well-prepared for the evolving job market.'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Providing Special Programmes for Older Workers: To ensure that the benefits
+    of AI are accessible to all, regardless of age, it will be necessary to provide
+    special programmes designed for older workers and citizens who may need to learn
+    new skills and support in adapting to new technological environments.'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Build Capacity for Teachers and Researchers to Make Proper Use of GenAI**'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: This measure underscores the necessity of equipping teachers and researchers
+    with the requisite knowledge and skills to utilise GenAI effectively and responsibly.
+    According to the UNESCO guidance, only several countries have developed or are
+    in the process of developing frameworks and training programmes on AI for teachers.
+    This indicates a significant gap in access to training and support. As such, this
+    measure outlines four actions needed to better prepare teachers around the world
+    to use GenAI, including to formulate guidance based on local tests, protect the
+    rights of teachers and researchers as well as value their GenAI practices, define
+    the required value orientation, knowledge, and skills for teachers, and dynamically
+    review and promote the emerging competencies that teachers will need to understand
+    and utilise AI in their professional practices.
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: '*Recommendations include*:'
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: 'Formulating or Adjusting Guidance: Provide help for teachers and researchers
+    to navigate widely available GenAI tools by formulating or adjusting guidance
+    based on local tests and evaluations, as well as supporting the design of new
+    domain-specific AI applications.'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Protecting the Rights of Teachers and Researchers: Human teachers and researchers
+    both have unique roles that should be appreciated, such as their facilitation
+    of interpersonal interactions and making of innovative contributions to knowledge.
+    By protecting the rights of teachers and researchers and valuing their practices
+    when using GenAI, the integrity and quality of educational and research processes
+    can be upheld.'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Defining Value Orientation, Knowledge, and Skills: To ensure that teachers
+    understand and use GenAI systems effectively and ethically, thereby also contributing
+    to the responsible integration of GenAI systems in education, it is important
+    to define the value orientation(s), knowledge, and skills that are needed to do
+    so.'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Dynamically Reviewing Competencies: By taking on a dynamic approach when reviewing
+    the competencies needed by teachers to understand and use AI for teaching, learning,
+    and professional development, we can better ensure that educators are well-prepared
+    to adapt to the evolving technological landscape within education.'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Promote Plural Opinions and Plural Expressions of Ideas**'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: This measure discusses the promotion of critical thinking, encouraging learners
+    to critique GenAI responses, and recognising the latter’s limitations in its reproduction
+    of dominant worldviews that consequently undermines minority opinions. It emphasises
+    the importance of promoting diversity in opinions and expressions, which GenAI
+    may inadvertently suppress due to its tendency to regurgitate dominant or mainstream
+    views that are present in the data it was trained on. By fostering a culture of
+    critical engagement with GenAI outputs and encouraging empirical, trial-and-error
+    learning approaches, this measure aims to preserve and promote pluralism and a
+    diversity of ideas in education and research environments.
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: '*Recommendations include*:'
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: 'Critiquing GenAI Responses: It is important to encourage learners and researchers
+    in recognising that GenAI typically repeats established or standard opinions,
+    thus undermining plural and minority opinions and ideas; to do so, they must be
+    able to critique the responses and outputs they receive from GenAI.'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Providing Empirical Learning Opportunities: To foster a rich, exploratory learning
+    environment that does not overly rely on GenAI, it is important to also provide
+    learners with sufficient opportunities to learn from hands-on methods, including
+    through trial-and-error, empirical experiments, and observations of the real world.'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Test Locally Relevant Application Models and Build a Cumulative Evidence
+    Base**'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: This measure underscores the importance of tailoring GenAI applications to local
+    needs and contexts, especially given the predominance of data from the Global
+    North in training these systems and models. By fostering a strategic, evidence-based
+    approach to the design, adoption, and evaluation of GenAI tools, this measure
+    aims to encourage innovation, assess the social and ethical implications of GenAI,
+    and build a robust evidence base that reflects diverse educational priorities
+    and pedagogical principles that are both widely collaborative and still relevant
+    to local needs. By doing so, GenAI can be leveraged more effectively to support
+    inclusive learning opportunities, promote linguistic and cultural diversity, and
+    address the environmental costs of large-scale AI deployments.
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: '*Recommendations include*:'
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: 'Strategic Planning of GenAI Design and Adoption: The design and adoption of
+    GenAI must be strategically planned, and should do more than just facilitating
+    passive, non-critical processes.'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Incentivising Diverse Learning Options: To support inclusivity and diversity,
+    it is important to incentivise the designers and developers of GenAI to prioritise
+    open-ended, exploratory, and diverse learning options.'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Testing and Scaling Evidence-based Use Cases: Use cases of AI’s applications
+    in education and research should be tested and scaled up, done so in accordance
+    with educational priorities and not due to novelty, myth, or hype.'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Triggering Innovation in Research: GenAI can be leveraged to stimulate innovation
+    in research, including through making use of its computing capabilities, using
+    GenAI to assist with processing large-scale data, and using its outputs to inform,
+    inspire, and improve research and research methodologies.'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Reviewing Social and Ethical Implications: It is important to conduct comprehensive
+    reviews of the social and ethical implications of integrating GenAI into research
+    processes.'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Building an Evidence Base: To establish an evidence base on the effectiveness
+    of GenAI in promoting inclusivity and diversity in learning and research, it is
+    crucial to establish specific criteria derived from pedagogical research and methodologies
+    that are supported by evidence.'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Strengthening Evidence on Social and Ethical Impact: Iterative steps must be
+    taken to enhance the evidence of the social and ethical impacts of GenAI.'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Analysing Environmental Costs: It is essential to analyse the environmental
+    impacts of implementing AI technologies at scale, such as the energy and resources
+    needed for training GPT models. In doing so, it is also crucial to set sustainable
+    targets for AI providers to meet to mitigate the potential contribution of AI
+    to climate change.'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Review Long-term Implications in Intersectoral and Interdisciplinary Manner**'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: This measure emphasises the necessity of a multi-disciplinary and multi-sectoral
+    approach in evaluating the long-term implications of GenAI in education and research.
+    By fostering collaboration among AI providers, educators, researchers, as well
+    as also other involving stakeholders like parents and students, the measure aims
+    to foster both a comprehensive understanding of and the means to effectively address
+    any challenges that may arise in the future. This collaborative approach further
+    seeks to make necessary system-wide adjustments in curriculum frameworks and assessment
+    methodologies to fully leverage GenAI’s potential, while simultaneously mitigating
+    its risks. It emphasises the importance of a diverse range of expertise in examining
+    the long-term implications of GenAI on learning, research, human collaboration,
+    and social dynamics.
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: '*Recommendations include*:'
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: 'Collaborative Planning for System-wide Adjustments: To fully leverage the potential
+    of GenAI for education and research while also minimising the associated risks
+    it poses to these areas, it is crucial to plan and implement system-wide adjustments
+    in curriculum frameworks and assessment methodologies. This process should be
+    undertaken collaboratively by AI providers, educators, researchers, and representatives
+    of parents and students.'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Intersectoral and Interdisciplinary Expertise: In evaluating the long-term
+    implications of GenAI on areas including learning and knowledge production, research
+    and copyright, curriculum and assessment, and human collaboration and social dynamics,
+    it is important to bring together a diverse range of experts from various sectors
+    and disciplines. This includes educators, researchers, learning scientists, AI
+    engineers, and other relevant stakeholders.'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Provision of Timely Advice: To inform the ongoing and iterative updates of
+    AI regulations and policies, timely advice and guidance should be provided.'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: To summarise the above, these eight measures by UNESCO all aim to provide a
+    structured approach towards integrating GenAI in education and research while
+    also addressing the associated ethical, social, and technical challenges.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 5.5 Research Findings from the Perception of Students, Teachers and Staff on
+    GenAI in Education Policy in Hong Kong
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: To understand what is needed for an AI policy in higher education, we sought
+    to explore the different views of various stakeholders in February 2023, shortly
+    after the public release of ChatGPT. This involved examining the perspectives
+    of students, teachers, and university staff concerning the need for an AI policy
+    in education, especially for the higher education context where the spread and
+    impact of AI technologies is irrefutable. While numerous governments are/were
+    in the process of formulating AI guidelines, the predominant focus of these policies
+    veered towards national and international strategies, with inadequate attention
+    towards education. Most of the guidelines, as discussed in [Section 5.3](#sec5_3),
+    primarily address the ethical management of AI technologies, emphasised “the standards
+    of right and wrong, acceptable and not acceptable” ([Hogenhout, 2021](#ref5_25),
+    p. 11), highlighting global concerns such as AI-induced discrimination, privacy
+    invasions, human rights violations, and malicious AI use ([Greiman, 2021](#ref5_24);
+    [Hogenhout, 2021](#ref5_25)), further underscoring the potential of AI misuse
+    to foster social divisions, manipulate individuals, and aggravate inequalities,
+    posing a profound threat to humanity ([Federspiel et al., 2023](#ref5_15)). The
+    existing guidelines are still quite broad and, as mentioned, do not adequately
+    extend to the education sector; this points to the pressing need to shed light
+    on the challenges and advantages that are encountered by stakeholders in higher
+    education.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 5.5.1 Methods
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: Quantitative and qualitative data were collected through a survey administered
+    to universities in Hong Kong ([Chan, 2023](#ref5_6)). A total of 457 students
+    and 180 teachers and staff responses were collected. To understand their usages
+    and perceptions of generative AI technologies, including ChatGPT, in higher education,
+    descriptive analysis was used for the quantitative data and thematic analysis
+    for the open-ended responses. Participants were asked about their experiences
+    with ChatGPT or similar tools, and how they saw these technologies in relation
+    to their educational practices.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The descriptive analysis summarised the main traits of the quantitative data,
+    providing an overview of response tendencies, while thematic analysis of open-ended
+    questions revealed patterns and themes regarding the integration of generative
+    AI technologies into higher education, as well as suggestions for how university
+    should build their strategic plans.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The mix of quantitative and qualitative data helped to provide a well-rounded
+    understanding of stakeholder perceptions, allowing us to identify potential needs,
+    recommendations, and strategies for AI policy development in teaching and learning
+    at universities, ensuring the ethical and advantageous use of these technologies.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 5.5.2 Quantitative Findings
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: 'One survey question looked at participants’ opinions on AI policy: whether
+    students, teachers, and staff believed that there should be established plans
+    and a dedicated policy for AI technologies and their use within the university.
+    The results were encouraging, showing a strong consensus that institutions should
+    indeed have such plans (students: *M* = 4.50, *SD* = .85; teachers and staff:
+    *M* = 4.54, *SD* = .87; responses were based on a 5-point Likert scale, with “5”
+    indicating “Strongly agree”). Responses to other questions further indicated that
+    students and teachers are aware of the possible advantages and disadvantages associated
+    with AI technologies. They also acknowledged the potential of using GenAI for
+    guidance, personalised feedback, enhancing digital skills, and improving academic
+    performance, along with its benefits of offering anonymity in student support
+    services. However, apprehensions about excessive reliance on AI, reduced social
+    engagement, and a possible impediment to the cultivation of generic skills were
+    also expressed.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 5.5.3 Qualitative Findings
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: The qualitative data also provided insightful information for the establishment
+    of a well-rounded AI policy in higher education. Ten key areas were found, grouped
+    into three main dimensions to form the AI Ecological Education Policy Framework.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 5.5.3.1 Governance Dimension (Senior Management)
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: 'This dimension emphasises considerations for the governance of AI usage in
+    education, including establishing the necessary policies, guidelines, and ethical
+    standards to ensure that the adoption of AI is beneficial, fair, and secure. It
+    encompasses the following key areas:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Understanding, identifying, and preventing academic misconduct and ethical dilemmas;
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Addressing governance of AI in terms of data privacy, transparency, accountability,
+    and security;
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Attribution for AI technologies; and
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Ensuring equity in access to AI technologies.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 5.5.3.2 Operational Dimension (Teaching and Learning and IT Staff)
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: 'This dimension concentrates on the practical implementation of AI in university
+    settings and to ensure that such implementations are effective, reliable, and
+    supported by adequate training and resources. It includes the following key areas:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Monitoring and evaluating AI implementation; and
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Providing training and support for teachers, staff, and students to ensure that
+    they are AI literate.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 5.5.3.3 Pedagogical Dimension (Teachers)
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: 'This dimension focuses on the teaching and learning aspects of AI integration
+    and the creation of an educational environment that both leverages AI technologies
+    and prepares students for a future where such technologies are prevalent. It includes
+    the following key areas:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Rethinking assessments and examinations;
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Developing students’ holistic competencies/generic skills;
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Preparing students for the AI-driven workplace; and
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Encouraging a balanced approach to AI adoption
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'For the full research paper, please refer to Chan, C.K.Y. ([2023](#ref5_6))
+    A Comprehensive AI Policy Education Framework for University Teaching and Learning*.
+    International Journal of Educational Technology in Higher Education*. DOI: [10.1186/s41239-023-00408-3](https://doi.org/10.1186/s41239-023-00408-3).'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 5.5.4 The AI Ecological Education Policy Framework
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: The AI Ecological Education Policy framework ([Chan, 2023](#ref5_6)) contains
+    the aforementioned three dimensions to guide higher education in developing strategic
+    plans to tackle the challenges of the AI era as shown in [Figure 5.3](#fig5_3).
+    Each dimension is explained in further detail below.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![The A I ecological education policy framework has the governance dimension,
+    operational dimension, and pedagogical dimension.](images/fig5_3_B.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: '[Figure 5.3 AI Ecological Education Policy Framework.](#R_fig5_3)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Senior management holds significant responsibility in the **governance dimension**
+    as they are instrumental in policy formulation, the establishment of ethical guidelines,
+    and overall institutional direction of AI integration. They ensure that their
+    respective institutions will operate within the legal and ethical boundaries while
+    striving for academic excellence and integrity. Their role is crucial in understanding,
+    identifying, and preventing academic misconduct and ethical issues, addressing
+    the governance of AI concerning data privacy, transparency, accountability, and
+    security, the requirements to provide attribution to AI technologies, and ensuring
+    equity in the access to AI technologies. Their decisions and policies set the
+    tone for how AI will be embraced within the institution, impacting both pedagogical
+    and operational dimensions. Within this governance dimension, there are four underlying
+    key areas:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Understanding, Identifying, and Preventing Academic Misconduct and Ethical Dilemmas
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: The potential of AI technologies to be used for academic misconduct necessitates
+    a robust governance framework to address this concern. Developing and enforcing
+    policies on academic integrity and ethical AI use are crucial in promoting and
+    maintaining a culture of integrity within the academic community. By addressing
+    the governance of AI head-on, senior management can create a more conducive environment
+    for the ethical use and integration of AI, mitigating its risks in relation to
+    academic misconduct.
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: 'Addressing Governance of AI: Data Privacy, Transparency, Accountability, and
+    Security'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Effective governance to ensure data privacy, transparency, accountability, and
+    security is paramount for the ethical and secure utilisation of AI. Establishing
+    clear guidelines and policies for AI governance will help to address potential
+    ethical dilemmas and allow for a more structured approach towards AI integration.
+    The impact of these actions will be profound, contributing to enhanced trust,
+    compliance, and responsible AI usage within the academic community.
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: Attributing AI Technologies
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Given that AI technologies can and likely will be used by students in their
+    academic work, it is necessary to establish clear guidelines for the proper attribution
+    and recognition of AI-generated content. Doing so can further promote academic
+    honesty and ensure clarity in the acknowledgment of how AI was used. This, in
+    turn, can foster a culture of transparency and honesty within the academic community.
+    [Figure 5.4](#fig5_4) shows an example of how to write an attribution to acknowledge
+    AI-generated text.
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: '![An example of the attribution for Gen A I generated content.](images/fig5_4_B.jpg)'
+  prefs:
+  - PREF_IND
+  type: TYPE_IMG
+- en: '[Figure 5.4 An Example of Attribution of GenAI Generated Content.](#R_fig5_4)'
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: Ensuring Equity in Access to AI Technologies
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Disparity in students’ access to AI technologies will exacerbate existing inequalities.
+    It is thus crucial to implement measures for ensuring equitable access to AI resources
+    as a critical action for promoting fairness and inclusivity. This could involve
+    providing access to AI tools within the institution or creating support structures
+    for students to learn and engage with AI technologies in a responsible manner.
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: 'Teaching and learning Support and IT staff play a significant role in the **operational
+    dimension** as they are responsible for the practical implementation, monitoring,
+    and provision of support for AI technologies. They ensure that any AI technologies
+    integrated into the curricula are reliable, effective, and used responsibly. Their
+    role in monitoring and evaluating AI implementation is critical for continuous
+    improvement and upholding alignment with institutional goals. Additionally, they
+    provide the necessary training and support for teachers, staff, and students,
+    ensuring that all stakeholders are well-equipped with AI literacy and are capable
+    of effectively navigating the complex landscape of AI in academia. Within the
+    operational dimension, there are two underlying key areas:'
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: Monitoring and Evaluating AI Implementation
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Adopting AI technologies into academic settings requires a structured approach
+    to monitoring and evaluating AI implementation. Regular monitoring can ensure
+    that the AI tools in question are effective, reliable, and being used responsibly.
+    This operational facet is crucial for both facilitating continuous improvement
+    and ensuring that the practical implementation of AI technologies aligns with
+    the ethical and pedagogical objectives of the institution.
+  prefs:
+  - PREF_IND
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: Providing Training and Support for Teachers, Staff, and Students in AI Literacy
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: The need for AI literacy among stakeholders is a pressing concern. Developing
+    and delivering training programmes on AI literacy, ethics, and effective use can
+    significantly improve understanding and responsible use of AI technologies among
+    teachers, staff, students, and so on. This operational action is vital for ensuring
+    that all stakeholders are well-informed and equipped to navigate the complex landscape
+    of AI in academia.
+  prefs:
+  - PREF_IND
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: 'Teachers play a key role in the **pedagogical dimension** as they are at the
+    forefront of delivering education and engaging with students. With their first-hand
+    experiences and expertise in teaching and learning processes, they are uniquely
+    positioned to explore, understand, and implement AI technologies in a manner that
+    enhances learning and the achievement of educational outcomes. Their insights
+    into students’ learning needs, as well as the challenges and potential benefits
+    of AI technologies in relation to teaching and learning, are invaluable for rethinking
+    assessments, developing students’ competencies, preparing students for the AI-driven
+    workplace, and encouraging the balanced adoption of AI. Teachers are the primary
+    actors in translating policy and operational frameworks into effective teaching
+    and learning practices. Within the pedagogical dimension, there are four underlying
+    key areas:'
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: Rethinking Assessments and Examinations
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: The advent of AI technologies including ChatGPT presents both challenges and
+    opportunities for academic assessments. As previously mentioned, a key concern
+    that arises is the potential misuse of AI in facilitating academic misconduct.
+    Actions to address this could include the redesign of assessments to include varied
+    methods, such as in-class demonstrations, presentations, or multi-stage submissions,
+    which could mitigate the opportunities to engage in AI-assisted misconduct. The
+    outcome of such actions could also improve the accuracy of assessment looking
+    at students’ understanding and skills, reduce academic misconduct, and potentially
+    facilitate a higher level of student engagement.
+  prefs:
+  - PREF_IND
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: Developing Student Holistic Competencies/Generic Skills
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: As AI technologies become progressively integrated across all sectors of society,
+    the necessity for students to develop holistic competencies becomes paramount.
+    These competencies range from critical thinking and leadership abilities to self-reflection
+    and creative problem solving – skills that are not easily replicated by AI. By
+    introducing second-order writing tasks and promoting critical evaluation, educators
+    can foster a deeper level of understanding and skills development among students.
+    The outcomes would be manifold, including better-prepared students who can think
+    critically and navigate a tech-driven academic and professional landscape.
+  prefs:
+  - PREF_IND
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: Preparing Students for the AI-Driven Workplace
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: The evolving nature of the workplace combined with the integration of AI technologies
+    requires a forward-thinking approach to prepare students for their future careers.
+    Familiarising students with AI technologies, ethical considerations, and real-world
+    applications can facilitate a more seamless transition from academia to the professional
+    world. The actions in this domain could include integrating AI-related topics
+    into the curriculum, engaging in discussions about the ethical implications of
+    AI, and providing hands-on experiences with AI tools. The expected outcomes of
+    this are future cohorts of students who are better prepared for the demands of
+    an AI-driven workplace.
+  prefs:
+  - PREF_IND
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: Encouraging a Balanced Approach to AI Adoption
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: A balanced approach to AI adoption in academia can help us navigate the fine
+    line between leveraging technology and maintaining academic integrity. By promoting
+    a such an approach, educators can enhance teaching and learning experiences while
+    mitigating the risks associated with AI technologies. This could also foster a
+    more positive attitude towards technological evolution, in turn further leading
+    to innovation in teaching and learning methods that are in sync with the advancements
+    in technology.
+  prefs:
+  - PREF_IND
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: It is imperative to acknowledge that the responsibilities of each dimension
+    in this ecological framework should not be viewed in isolation. The relationships
+    among the three dimensions are intricate and interdependent. For instance, effective
+    governance policies (Governance Dimension) could support the ethical integration
+    of AI in teaching and learning (Pedagogical Dimension), and well-informed operational
+    practices (Operational Dimension) could ensure the success of such integration.
+    By taking into account these dimensions, a cohesive theory regarding the integration
+    of AI in academic settings can be further developed and refined.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The successful integration of AI in academic settings counts on collaboration
+    and communication among all stakeholders, including universities, teachers, students,
+    staff, and external agents such as accreditation and quality assurance bodies.
+    Each group should actively participate in the development and execution of AI-related
+    initiatives, working together to achieve the desired outcomes in university teaching
+    and learning. This collaborative approach will foster a more comprehensive, informed,
+    and ethical integration of AI, aligning with broader educational goals and ethical
+    standards. Overall, through open communication and collaborative efforts, stakeholders
+    can collectively navigate the complexities of AI integration, ensuring that the
+    pedagogical, governance, and operational dimensions are also harmoniously in alignment
+    for the betterment of the academic community.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 5.6 Devising an AI Policy in Higher Education
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Creating an AI policy in higher education is an extensive process that requires
+    a well-thought-out approach. It should ideally follow a structured methodology
+    to ensure that all stakeholders’ perspectives are considered and that the policy
+    is comprehensive, ethical, and effective in achieving the desired objectives.
+    The intricacies of formulating such an AI policy in such a dynamic environment
+    often extend beyond the existing expertise of teachers, administrative staff,
+    and even senior management. The lack of familiarity with the nuanced domain of
+    AI further exacerbates the complexity of devising a robust policy tailored to
+    the educational milieu.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'This section seeks to explain and clarify the process of formulating AI policy
+    within higher education institutions, based on the above framework. We offer a
+    structured, step-by-step guide on how such a policy can be crafted and implemented,
+    providing a straightforward pathway for stakeholders at all levels to engage in
+    the policymaking process. This draft is simplified and may serve as a starting
+    point or reference for further development by your institution. As a pragmatic
+    approach, it can be used as a roadmap for policy development as well as to foster
+    a collaborative ethos, encouraging inclusive dialogue among all stakeholders to
+    leverage AI technologies effectively and ethically in education, thus enabling
+    a smooth transition into the AI-augmented teaching and administrative paradigm.
+    Below is the step-by-step guideline based on the ecological framework’s dimensions
+    of governance, pedagogy, and operations:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Initiation and Planning**'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Establish a Steering Committee: The first step towards developing an AI policy
+    in education is the formation of a Steering Committee. Senior management should
+    spearhead this initiative by identifying and inviting individuals from different
+    stakeholder groups to be part of this committee, including faculty members, IT
+    staff, administrative staff, legal advisors, and student representatives. Ideally,
+    the committee should have balanced representation to ensure that diverse perspectives
+    and expertise are incorporated in the policy development process. An initial meeting
+    should be convened where the objectives of the policy are outlined, roles and
+    responsibilities are assigned, and a tentative timeline is established. This committee
+    will serve as the driving force behind the policy development, acting as the conduit
+    between the stakeholder groups and the development process.'
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**Who**: Senior management should establish a Steering Committee composed of
+    representatives from each stakeholder group (including senior management themselves,
+    teachers, IT staff, administrative staff, legal advisors, students, and external
+    experts).'
+  prefs:
+  - PREF_IND
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: '**How**: The formation of the committee can be announced through official channels,
+    and nominations or volunteers could be solicited with the goal of having balanced
+    representation.'
+  prefs:
+  - PREF_IND
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: 'Conduct a Needs Assessment: A Needs Assessment is crucial as it lays the foundation
+    for the policy by identifying the current state of policy, the desired state,
+    and the gaps in between. This involves designing and distributing surveys to gather
+    insights from stakeholders on their understanding, expectations, and concerns
+    regarding the integration of AI into education. Simultaneously, focus group discussions
+    can be conducted to delve deeper into specific issues or concerns. An analysis
+    of the existing technological infrastructure and educational practices can also
+    provide a clear picture of the current capabilities of these areas while also
+    identifying those that may require improvement. The data collected through these
+    methods should be carefully analysed to identify the core needs and challenges
+    that the AI policy should address.'
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**Who**: The Steering Committee, with the help of educational and technical
+    experts.'
+  prefs:
+  - PREF_IND
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: '**How**: Through surveys, focus groups, and analyses of existing infrastructure
+    and educational needs.'
+  prefs:
+  - PREF_IND
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: 'Define Objectives and Scope: After conducting the Needs Assessment, the Steering
+    Committee should engage in defining the objectives and scope of the AI policy.
+    This could involve a thorough review of existing literature, benchmarking against
+    the AI policies of other institutions, and consulting legal and ethical guidelines
+    concerning AI in education. The objectives should be clear, measurable, and aligned
+    with the broader educational goals of the institution, while the scope should
+    define the boundaries of the AI policy, including the areas it will cover, the
+    stakeholders it will affect, and the resources it will require. This step is essential
+    as it sets the direction for policy development and ensures that the process remains
+    focused and aligned with the identified needs.'
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**Who**: The Steering Committee.'
+  prefs:
+  - PREF_IND
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: '**How**: Reviewing the Needs Assessment findings and consulting with stakeholders
+    to set clear objectives for the AI policy.'
+  prefs:
+  - PREF_IND
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: '**Stakeholder Engagement**'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Solicit Input and Feedback: Engaging stakeholders is necessary for the development
+    of a well-rounded and inclusive AI policy. The Steering Committee should establish
+    communication channels such as online forums (see [Figure 5.5](#fig5_5) for an
+    example), email groups, and hold physical or virtual meetings to solicit the input
+    and feedback of all stakeholder groups. This engagement should be continuous,
+    allowing parties share their insights, concerns, and suggestions regarding the
+    integration of AI into education. The input and feedback collected should also
+    be documented and analysed to understand broader implications, as well as to ensure
+    that the policy will address the concerns and needs raised.'
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Details that are listed for the question, what should be in our A I education
+    policy which is an example of a padlet for online forum.](images/fig5_5_B.jpg)'
+  prefs:
+  - PREF_IND
+  - PREF_IND
+  type: TYPE_IMG
+- en: '[Figure 5.5 An Example of Using a Padlet for Online Forum.](#R_fig5_5)'
+  prefs:
+  - PREF_IND
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: '**Who**: The Steering Committee should lead this effort, reaching out to all
+    stakeholder groups.'
+  prefs:
+  - PREF_IND
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: '**How**: Through online surveys, in-person or virtual town-hall meetings, and
+    focus group discussions to gather insights, concerns, and suggestions regarding
+    the integration of AI into education.'
+  prefs:
+  - PREF_IND
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: 'Educate Stakeholders: Equipping stakeholders with a good understanding of AI
+    and its potential implications in education is essential for facilitating meaningful
+    engagement. This can be achieved through workshops, seminars, and informational
+    sessions conducted by experts within or outside the Steering Committee. Educational
+    materials explaining AI, its applications in education, and its ethical implications
+    should be developed and distributed. By doing so, stakeholder discussions will
+    be better informed, enhancing the quality and depth of their feedback and engagement
+    in the policy development process.'
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**Who**: Experts within the Steering Committee or external consultants.'
+  prefs:
+  - PREF_IND
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: '**How**: Conducting workshops, seminars, and informational sessions to educate
+    stakeholders about AI and its potential implications in education, including ethical
+    considerations.'
+  prefs:
+  - PREF_IND
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: '**Policy Development**'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Drafting the Policy: With the groundwork laid, the process now moves onto drafting
+    the policy. A working group within the Steering Committee, possibly with the inclusion
+    of legal and technical experts, should be formed to draft the AI policy. This
+    Policy Drafting Team should work to integrate the insights gathered from stakeholders,
+    information from legal and ethical guidelines, and the educational objectives
+    identified earlier. The drafting process should be iterative, allowing for revisions
+    based on feedback from the Steering Committee and consultations with other experts.'
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**Who**: A working group within the Steering Committee, with assistance from
+    legal and technical experts.'
+  prefs:
+  - PREF_IND
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: '**How**: Establishing a comprehensive draft policy by integrating insights
+    from stakeholders, referring to legal and ethical guidelines, and ensuring alignment
+    with educational objectives.'
+  prefs:
+  - PREF_IND
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: 'Stakeholder Review: Once a draft policy is prepared, it should be shared with
+    all stakeholder groups for review and feedback. Various channels can be used to
+    disseminate the draft policy and collect feedback, including through online platforms,
+    emails, or physical meetings. Stakeholders should be given a reasonable time frame
+    to review the draft and provide their inputs. This step ensures that the draft
+    policy is vetted by the broader community, enhancing its inclusivity and relevance.'
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**Who**: All stakeholder groups.'
+  prefs:
+  - PREF_IND
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: '**How**: Sharing the draft policy for review and feedback through various channels
+    such as online platforms, meetings, and emails.'
+  prefs:
+  - PREF_IND
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: 'Revision and Finalisation: The feedback collected from stakeholders should
+    be analysed and necessary revisions should be made to the draft policy. The Policy
+    Drafting Team should engage in an iterative process of revision and consultation
+    with the Steering Committee, ensuring that the policy is appropriately refined
+    and still aligned with the defined objectives and scope. Once revisions have been
+    made and the draft is finalised, the policy should be reviewed one final time
+    by the Steering Committee to confirm that it is ready for submission to senior
+    management and other governing bodies for approval.'
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**Who**: The working group within the Steering Committee.'
+  prefs:
+  - PREF_IND
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: '**How**: Incorporating the feedback received, revising the policy as necessary,
+    and finalising the draft for approval.'
+  prefs:
+  - PREF_IND
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: '**Approval and Adoption**'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Seek Approval: The Steering Committee, having finalised the draft policy, now
+    moves to seek formal approval from the senior management and other governing bodies
+    within the institution. This usually involves preparing a detailed presentation
+    outlining the key aspects of the policy, the process undertaken to develop it,
+    and the implications of its implementation. It is crucial to articulate how the
+    policy aligns with the broader educational goals of the institution, as well as
+    how it adheres to legal and ethical standards. The presentation also provides
+    an opportunity for the committee to address any issues or concerns raised by the
+    senior management, and potentially make further revisions to the policy based
+    on the feedback received. The approval process ensures that the AI policy has
+    the necessary endorsement from the institutional leadership, paving the way for
+    its official adoption.'
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**Who**: The Steering Committee should present the policy to senior management
+    and other necessary governing bodies for approval.'
+  prefs:
+  - PREF_IND
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: '**How**: Through formal presentations and submission of the policy document
+    for review.'
+  prefs:
+  - PREF_IND
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: 'Official Adoption: Upon receiving approval, the next step is the official adoption
+    of the AI policy. This is typically announced through official channels such as
+    institutional bulletins, emails, and meetings. The policy document should be disseminated
+    to all stakeholders, ensuring they have access to it and understand its implications.
+    It is advisable to have an official launch event or announcement that highlights
+    the key aspects of the policy and what it means for the stakeholders. This step
+    marks the formal recognition of the AI policy as a guideline within the institution,
+    setting the stage for its implementation.'
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**Who**: Senior management.'
+  prefs:
+  - PREF_IND
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: '**How**: Announcing the adoption of the policy through official channels and
+    disseminate the policy document to all stakeholders.'
+  prefs:
+  - PREF_IND
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: '**Implementation**'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Develop an Implementation Plan: With the policy officially adopted, the need
+    now is to develop a concrete implementation plan. It should outline the steps,
+    timelines, resources, and responsibilities for implementing the policy, as well
+    as identify the necessary support structures for ensuring that the process is
+    smooth. This could include training programmes, resource allocations, and the
+    establishment of support channels for stakeholders to seek help or report issues.
+    The implementation plan serves as the blueprint for translating the policy into
+    practice, ensuring that all stakeholders are well-prepared and supported in adhering
+    to the new AI policy.'
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**Who**: The Steering Committee, in collaboration with operational staff.'
+  prefs:
+  - PREF_IND
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: '**How**: Outlining the steps, timelines, resources, and responsibilities for
+    implementing the policy.'
+  prefs:
+  - PREF_IND
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: 'Training and Support: Training and support are critical components of the implementation
+    phase. Training programmes should be developed and delivered to stakeholders to
+    equip them with the necessary skills and knowledge to comply with the AI policy.
+    This could include training on new technologies, ethical considerations, and best
+    practices for AI integration in education. Support channels should also be established
+    to provide ongoing assistance to stakeholders, ensuring they have the resources
+    and help necessary to navigate the new policy and its effects. These support channels
+    could include helpdesks, online forums, and dedicated support personnel.'
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**Who**: IT staff and educational experts.'
+  prefs:
+  - PREF_IND
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: '**How**: Conducting training sessions, workshops, and provide resources to
+    support stakeholders in adhering to the new AI policy.'
+  prefs:
+  - PREF_IND
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: 'Monitoring and Evaluation: The implementation phase should also include a robust
+    monitoring and evaluation component. This involves establishing clear metrics
+    and procedures to monitor the implementation process, assess compliance with the
+    policy, and evaluate the effectiveness of the policy in achieving the desired
+    objectives. Regular reports should be written up and submitted to provide insights
+    into the progress of the implementation, any challenges encountered, and the impact
+    of the policy on educational practices.'
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**Who**: A designated monitoring and evaluation team.'
+  prefs:
+  - PREF_IND
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: '**How**: Establish metrics and procedures to monitor the implementation, and
+    evaluate the effectiveness of the policy against the defined objectives.'
+  prefs:
+  - PREF_IND
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: '**Continuous Improvement**:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Gather Feedback: Following the implementation of the policy, it is still important
+    to gather stakeholder feedback to understand their experiences, challenges, and
+    suggestions. Establishing channels for feedback collection, reporting of issues,
+    and sharing of insights is integral for continuous improvement. Feedback should
+    be systematically collected, documented, and analysed to identify areas for improvement.'
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**Who**: The monitoring and evaluation team.'
+  prefs:
+  - PREF_IND
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: '**How**: Through surveys, focus groups, and analysis of implementation metrics.'
+  prefs:
+  - PREF_IND
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: 'Policy Revision: Based on the feedback and findings from monitoring and evaluating
+    its implementation, the policy may require revisions to address any emerging challenges,
+    technological advancements, or changing educational needs. The Steering Committee
+    should engage in the continued review of the policy, making necessary adjustments
+    or amendments, and also continue to consult with stakeholders to ensure that the
+    policy remains relevant, effective, and aligned with the institutional goals.'
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**Who**: The Steering Committee.'
+  prefs:
+  - PREF_IND
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: '**How**: Based on feedback and evaluation findings, revising and updating the
+    policy as necessary to ensure that it remains relevant and effective.'
+  prefs:
+  - PREF_IND
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: 'Ongoing Stakeholder Engagement: Continuous improvement requires ongoing engagement
+    with stakeholders. Maintaining open communication channels, soliciting feedback,
+    and providing regular updates on any revisions or new initiatives are crucial
+    for keeping stakeholders informed, engaged, and compliant with the policy. This
+    further fosters a culture of collaboration, learning, and continuous improvement,
+    ensuring the AI policy remains a living document that evolves in response to the
+    changing landscape of AI in education.'
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**Who**: The Steering Committee and senior management.'
+  prefs:
+  - PREF_IND
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: '**How**: Maintaining open channels of communication to ensure that stakeholders
+    are informed and have the opportunity to provide ongoing feedback.'
+  prefs:
+  - PREF_IND
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: Each of these steps is designed to ensure a collaborative, informed, and structured
+    approach to developing and implementing an AI policy in education. The involvement
+    of various stakeholders throughout different stages of the process is crucial
+    to ensure that the policy is well-rounded, relevant, and effective in promoting
+    ethical and effective AI integration in academic institutions.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 5.6.1 An Example of an AI Policy in Higher Education
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: 'As emphasised throughout this chapter, creating a comprehensive AI policy for
+    higher education requires meticulous planning and a thorough understanding of
+    the institution’s objectives, stakeholders’ needs, and the legal and ethical facets
+    of AI. Based on the AI Ecological Education Policy framework and the step-by-step
+    guide in [Section 5.6](#sec5_6). Here is a simple example outline of an AI education
+    policy:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Table 5.1 A Simple Outline of an AI Education Policy
+  prefs: []
+  type: TYPE_NORMAL
+- en: '| Title: AI Education Policy for [Institution Name] |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '|'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Introduction**:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '1.1. Background: Explanation of the emergence of AI technologies and their
+    potential impact on higher education. Mention of the institution’s commitment
+    to leveraging AI to enhance educational outcomes while adhering to ethical and
+    legal standards.'
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Purpose: Articulation of the policy’s aim to guide the responsible integration
+    and use of AI technologies within the institution.'
+  prefs:
+  - PREF_IND
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: '1.2. Scope: Clarification on the departments, individuals, and activities covered
+    by the policy.'
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**Governance**:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '2.1. Steering Committee: Establishment of a steering committee to oversee the
+    implementation, monitoring, and continuous improvement of the AI education policy.'
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '2.2. Ethical Guidelines: Clear ethical guidelines for AI usage, including respect
+    for privacy, transparency, accountability, and fairness.'
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '2.3. Legal Compliance: Assurance of compliance with all applicable laws and
+    regulations concerning data protection, privacy, and AI.'
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**Pedagogical Integration**:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '3.1. Faculty Training: Provision for training faculty on the responsible use
+    of AI in teaching and assessment.'
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '3.2. Student Engagement: Encouragement of student engagement with AI technologies
+    under the guidance of faculty.'
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '3.3. Assessment Reformation: Revision of assessment strategies to account for
+    the integration of AI technologies.'
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**Operational Implementation**:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '4.1. Technology Infrastructure: Investment in necessary technology infrastructure
+    to support AI integration.'
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '4.2. Support and Resources: Establishment of support channels and resources
+    to assist stakeholders in navigating the AI policy and technologies.'
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '4.3. Monitoring and Evaluation: Continuous monitoring and evaluation to assess
+    the effectiveness, compliance, and impact of AI integration.'
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**Continuous Improvement**:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '5.1. Feedback Mechanisms: Establishing mechanisms for stakeholders to provide
+    feedback on AI integration experiences.'
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '5.2. Policy Revision: Periodic review and revision of the AI education policy
+    to ensure relevance and effectiveness.'
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '5.3. Stakeholder Communication: Ongoing communication with stakeholders regarding
+    any updates or revisions to the policy.'
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**Conclusion**:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '6.1. Commitment: Reiteration of the institution’s commitment to responsible
+    AI integration for the enhancement of educational outcomes.'
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '6.2. Contact Information: Provision of contact information for stakeholders
+    to seek clarification or provide feedback regarding the policy.'
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '6.3. Effective Date: The date which the policy takes effect.'
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '|'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 5.6.2 University of ABC
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: 5.6.2.1 Artificial Intelligence in Education Policy
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: '**Introduction**'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**Background**'
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: The advent of Artificial Intelligence (AI) has created new possibilities and
+    challenges for various sectors, including higher education. It has emerged as
+    transformative tools with vast implications in the educational settings. At [the
+    University of ABC], we recognise the unparalleled potential of AI to revolutionise
+    learning experiences, enhance pedagogical methods, and facilitate groundbreaking
+    research. This policy manifests our firm commitment to harnessing the power of
+    AI to reinforce educational outcomes while strictly adhering to the highest ethical
+    and legal standards. This policy aims to guide the responsible integration and
+    usage of AI technologies within [the University of ABC].
+  prefs:
+  - PREF_IND
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: '**Purpose**'
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: This policy seeks to provide a clear and structured framework guiding the responsible
+    integration, utilisation, and governance of AI technologies within the University
+    of ABC’s ecosystem. To ensure the ethical, legal, and effective utilisation of
+    AI to enhance teaching, learning, and administrative processes while safeguarding
+    the rights and interests of all stakeholders.
+  prefs:
+  - PREF_IND
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: '**Scope**'
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: This policy applies to all departments, faculties, students, staff, and affiliates
+    of the [University of ABC]. It pertains to all activities related to the development,
+    deployment, and utilisation or evaluation of AI technologies within the institution.
+  prefs:
+  - PREF_IND
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: '**Governance**'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**Steering Committee**'
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: A dedicated AI Steering Committee shall be established to provide oversight
+    on the effective implementation, monitoring, and evolution of the AI education
+    policy. The committee will comprise representatives from academic faculties, IT,
+    administrative, legal, and student bodies.
+  prefs:
+  - PREF_IND
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: '**Ethical Guidelines**'
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: The University of ABC upholds the principles of privacy, transparency, accountability,
+    and fairness in all AI-related endeavours. All AI initiatives will be rooted in
+    these ethical guidelines to ensure that technologies benefit the academic community
+    without compromising individual rights or societal values.
+  prefs:
+  - PREF_IND
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: '**Legal Compliance**'
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Compliance with all applicable local, state, and federal laws and regulations
+    governing data privacy, protection, and AI is mandatory. Necessary measures will
+    be taken to ensure full legal compliance in every AI endeavour.
+  prefs:
+  - PREF_IND
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: '**Pedagogical Integration**'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**Faculty Training**'
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Recognising the pivotal role of our faculty in AI integration, continuous professional
+    development opportunities shall be provided to faculty to enhance their understanding
+    and capability in utilising AI for pedagogical purposes.
+  prefs:
+  - PREF_IND
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: '**Student Engagement**'
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Students shall be educated on the ethical use of AI, and encouraged to leverage
+    AI technologies to enhance their learning experiences under the guidance and supervision
+    of faculty, ensuring hands-on experience and fostering a culture of innovative
+    learning.
+  prefs:
+  - PREF_IND
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: '**Assessment Redesign**'
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Traditional assessment strategies will be revisited and redesigned to account
+    for the innovativeness introduced by AI, ensuring that they remain valid, reliable,
+    and equitable. Assessment strategies shall be revised to ensure fairness and integrity
+    in the evaluation of student performance in a learning environment augmented by
+    AI technologies.
+  prefs:
+  - PREF_IND
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: '**Operational Implementation**'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**Technology Infrastructure**'
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Investment will be channelled towards establishing robust and state-of-the-art
+    technological infrastructure, facilitating seamless AI integration and ensuring
+    optimal performance and security. Adequate technological infrastructure shall
+    be established to support the effective integration and utilisation of AI technologies.
+  prefs:
+  - PREF_IND
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: '**Support and Resources**'
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Dedicated support channels, including helpdesks and online portals, will be
+    set up to assist stakeholders in understanding and navigating AI technologies
+    and adhering to this policy.
+  prefs:
+  - PREF_IND
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: '**Monitoring and Evaluation**'
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: A continuous monitoring system will be implemented, evaluating the effectiveness,
+    compliance, and impact of AI technologies, ensuring they align with our academic
+    objectives and values. A systematic approach shall be employed to monitor, evaluate,
+    and report the effectiveness and impact of AI integration within [the University
+    of ABC].
+  prefs:
+  - PREF_IND
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: '**Continuous Improvement**'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**Feedback Mechanisms**'
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Mechanisms for collecting feedback from all stakeholders on the AI integration
+    experiences shall be established to inform continuous improvement efforts.
+  prefs:
+  - PREF_IND
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: '**Policy Revision**'
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: In line with the dynamic nature of AI, this policy will be subject to periodic
+    reviews, ensuring its continued relevance, robustness, and alignment with the
+    University’s goals and the broader educational landscape.
+  prefs:
+  - PREF_IND
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: '**Stakeholder Communication**'
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: The University will maintain open lines of communication, updating stakeholders
+    on any modifications or pertinent developments related to this policy.
+  prefs:
+  - PREF_IND
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: '**Conclusion**'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**Commitment**'
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[The University of ABC] remains committed to harnessing the potential of AI
+    to enhance the educational experiences of all stakeholders while adhering to the
+    highest ethical, legal, and professional standards.'
+  prefs:
+  - PREF_IND
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: '**Contact Information**'
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: For any queries or feedback regarding this policy, stakeholders may contact
+    the Steering Committee at [[ai_policy@universityofabc.edu](mailto:ai_policy@universityofabc.edu)].
+  prefs:
+  - PREF_IND
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: '**Effective Date**'
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: This policy shall take effect from [effective date] and remain in effect until
+    revised or rescinded.
+  prefs:
+  - PREF_IND
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: Signed by
+  prefs: []
+  type: TYPE_NORMAL
+- en: ___________________
+  prefs: []
+  type: TYPE_NORMAL
+- en: Senior Management
+  prefs: []
+  type: TYPE_NORMAL
+- en: University of ABC    Date
+  prefs: []
+  type: TYPE_NORMAL
+- en: 5.7 Conclusions
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: In an era where AI – and GenAI tools in particular – is becoming increasingly
+    embedded into our educational systems, developing comprehensive and ethical AI
+    education policies is crucial. The journey from understanding the ethical dilemmas
+    of using AI in educational settings and reviewing global AI policies, to charting
+    a path for practical AI policy development in education, has been both enlightening
+    and challenging. As we navigate through the multi-faceted terrains of AI ethics,
+    governance, privacy, and equity in education, it is imperative that policies are
+    continually revised to adapt to the evolving technological and ethical landscapes
+    as well. Our pursuit should not only be in leveraging AI to enhance learning experiences,
+    but also in ensuring that AI is implemented in a manner that is equitable, transparent,
+    and beneficial to all stakeholders involved in the educational process.
+  prefs: []
+  type: TYPE_NORMAL
+- en: References
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: '[Australian Government Department of Industry, Science and Resources](#R_ref5_1).
+    (2023, June 18). Australia’s artificial intelligence action plan. Retrieved October
+    16, 2023, from [https://www.industry.gov.au/publications/australias-artificial-intelligence-action-plan](https://www.industry.gov.au)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Baio, A.](#R_ref5_2) (2023, May 16). OpenAI CEO Sam Altman says AI can go
+    ‘quite wrong’ while advocating for government intervention. Independent. [https://www.independent.co.uk/tech/congress-ai-chatgpt-sam-altman-b2340147.html](https://www.independent.co.uk)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Bryson, J. J.](#R_ref5_3) (2018). Patiency is not a virtue: the design of
+    intelligent systems and systems of ethics. Ethics and Information Technology,
+    *20*, 15–26\. [https://doi.org/10.1007/s10676-018-9448-6](https://doi.org/10.1007/s10676-018-9448-6)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Burciaga, A.](#R_ref5_4) (2021, October 4). How to build responsible AI, step
+    1: Accountability. Forbes. Retrieved October 13, 2023, from [https://www.forbes.com/sites/forbestechcouncil/2021/10/04/how-to-build-responsible-ai-step-1-accountability/](https://www.forbes.com)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Centre for Information Policy Leadership (CIPL)](#R_ref5_5). (2020, March).
+    Artificial intelligence and data protection: How the GDPR regulates AI. Retrieved
+    October 13, 2023, from [https://www.informationpolicycentre.com/uploads/5/7/1/0/57104281/cipl-hunton_andrews_kurth_legal_note_-_how_gdpr_regulates_ai__12_march_2020_.pdf](https://www.informationpolicycentre.com)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Chan, C. K. Y.](#R_ref5_6) (2023). A comprehensive AI policy education framework
+    for university teaching and learning. International Journal of Educational Technology
+    in Higher Education. [https://doi.org/ 10.1186/s41239-023-00408-3](https://doi.org/)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Chowdhury, R.](#R_ref5_7) (2023, April 6). AI desperately needs global oversight.
+    Wired. Retrieved October 13, 2023, from [https://www.wired.com/story/ai-desperately-needs-global-oversight/](https://www.wired.com)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Christian, B.](#R_ref5_8) (2020). The alignment problem: Machine learning
+    and human values. W.W. Norton & Company.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Creswell, A., Nikiforou, K., Vinyals, O., Saraiva, A., Kabra, R., Matthey,
+    L., Burgess, C., Reynolds, M., Tanburn, R., Garnelo, M., & Shanahan, M.](#R_ref5_9)
+    (2020, July 21). AlignNet: Unsupervised entity alignment. Google DeepMind. Retrieved
+    October 13, 2023, from [https://www.deepmind.com/publications/alignnet-unsupervised-entity-alignment](https://www.deepmind.com)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Criddle, C., Espinoza, J., & Liu, Q.](#R_ref5_10) (2023, September 13). The
+    global race to set the rules for AI. Financial Times. Retrieved October 13, 2023,
+    from [https://www.ft.com/content/59b9ef36-771f-4f91-89d1-ef89f4a2ec4e](https://www.ft.com)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Department for Digital, Culture, Media and Sport](#R_ref5_11). (2022, July
+    18). Establishing a pro-innovation approach to regulating AI: An overview of the
+    UK’s emerging approach. Retrieved October 17, 2023, from [https://assets.publishing.service.gov.uk/government/uploads/system/uploads/attachment_data/file/1092630/_CP_728__-_Establishing_a_pro-innovation_approach_to_regulating_AI.pdf](https://assets.publishing.service.gov.uk)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Edwards, B.](#R_ref5_12) (2023, May 31). *OpenAI execs warn of “risk of extinction”
+    from artificial intelligence in new open letter*. Ars Technica. Retrieved October
+    13, 2023, from [https://arstechnica.com/information-technology/2023/05/openai-execs-warn-of-risk-of-extinction-from-artificial-intelligence-in-new-open-letter/](https://arstechnica.com)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[European Parliament](#R_ref5_13) (2023, June 14). EU AI act: First regulation
+    on artificial intelligence. Retrieved October 13, 2023, from [https://www.europarl.europa.eu/news/en/headlines/society/20230601STO93804/eu-ai-act-first-regulation-on-artificial-intelligence](https://www.europarl.europa.eu)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Federal Trade Commission Bureau of Competition & Office of Technology](#R_ref5_14).
+    (2023, June 29). Generative AI raises competition concerns. Retrieved October
+    16, 2023, from [https://www.ftc.gov/policy/advocacy-research/tech-at-ftc/2023/06/generative-ai-raises-competition-concerns](https://www.ftc.gov)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Federspiel, F., Mitchell, R., Asokan, A., Umana, C., & McCoy, D.](#R_ref5_15)
+    (2023). Threats by artificial intelligence to human health and human existence.
+    BMJ Global Health, *8*(5), 1–6\. [https://doi.org/10.1136/bmjgh-2022-010435](https://doi.org/10.1136/bmjgh-2022-010435)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Ferrara, E.](#R_ref5_16) (2023). Fairness and bias in artificial intelligence:
+    A brief survey of sources, impacts, and mitigation strategies. arXiv. [https://doi.org/10.48550/arXiv.2304.07683](https://doi.org/10.48550/arXiv.2304.07683)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Friedler, S., Venkatasubramanian, S., & Engler, A.](#R_ref5_17) (2023, March
+    22). How California and other states are tackling AI legislation. Brookings. Retrieved
+    October 13, 2023, from [https://www.brookings.edu/articles/how-california-and-other-states-are-tackling-ai-legislation/](https://www.brookings.edu)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Future of Life Institute](#R_ref5_18). (2017, August 11). AI principles. Retrieved
+    October 13, 2023, from [https://futureoflife.org/open-letter/ai-principles/](https://futureoflife.org)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Gabriel, I.](#R_ref5_19) (2020, January 13). Artificial intelligence, values
+    and alignment. Google DeepMind. Retrieved October 13, 2023, from [https://www.deepmind.com/publications/artificial-intelligence-values-and-alignment](https://www.deepmind.com)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[GDPR.EU](#R_ref5_20). (2023). What is GDPR, the EU’s new data protection law?
+    Retrieved October 13, 2023, from [https://gdpr.eu/what-is-gdpr/](https://gdpr.eu)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Gent, E.](#R_ref5_21) (2023, May 10). What is the AI alignment problem and
+    how can it be solved? New Scientist. Retrieved October 13, 2023, from [https://www.newscientist.com/article/mg25834382-000-what-is-the-ai-alignment-problem-and-how-can-it-be-solved/](https://www.newscientist.com)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Goertzel, B.](#R_ref5_22) (2014). Artificial general intelligence: Concept,
+    state of the art, and future prospects. Journal of Artificial General Intelligence,
+    *5*(1), 1–46\. [https://doi.org/10.2478/jagi-2014-0001](https://doi.org/10.2478/jagi-2014-0001)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Government of India Ministry of Electronics & Information Technology](#R_ref5_23).
+    (2023, August 11). Information technology act 2000. Retrieved October 16, 2023,
+    from [https://www.meity.gov.in/content/information-technology-act-2000](https://www.meity.gov.in)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Greiman, V. A.](#R_ref5_24) (2021). Human rights and artificial intelligence:
+    A universal challenge. Journal of Information Warfare, *20*(1), 50–62.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Hogenhout, L.](#R_ref5_25) (2021). A framework for ethical AI at the United
+    Nations. United Nations. Retrieved October 16, 2023, [https://unite.un.org/sites/unite.un.org/files/unite_paper_-_ethical_ai_at_the_un.pdf](https://unite.un.org)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Information Commissioner’s Office](#R_ref5_26). (n.d.) What are the accountability
+    and governance implications of AI? Retrieved October 13, 2023, from [https://ico.org.uk/for-organisations/uk-gdpr-guidance-and-resources/artificial-intelligence/guidance-on-ai-and-data-protection/what-are-the-accountability-and-governance-implications-of-ai/](https://ico.org.uk)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[International Commission on the Futures of Education](#R_ref5_27). (2021).
+    Reimagining our futures together: a new social contract for education. UNESCO.
+    [https://doi.org/10.54675/ASRB4722](https://doi.org/10.54675/ASRB4722)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Joyce, D. W., Kormilitzin, A., Smith, K. A. et al.](#R_ref5_28) (2023). Explainable
+    artificial intelligence for mental health through transparency and interpretability
+    for understandability. npj Digital Medicine, 6, 6\. [https://doi.org/10.1038/s41746-023-00751-9](https://doi.org/10.1038/s41746-023-00751-9)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Kharparl, A.](#R_ref5_29) (2023, July 13). China finalizes first-of-its-kind
+    rules governing generative A.I. services like ChatGPT. CNBC. Retrieved October
+    13, 2023, from [https://www.cnbc.com/2023/07/13/china-introduces-rules-governing-generative-ai-services-like-chatgpt.html](https://www.cnbc.com)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Larsen, B. C.](#R_ref5_30) (2023). The geopolitics of AI and the rise of digital
+    sovereignty. Brookings. Retrieved 16 October, 2023, from [https://www.brookings.edu/articles/the-geopolitics-of-ai-and-the-rise-of-digital-sovereignty/](https://www.brookings.edu)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Lawton, G.](#R_ref5_31) (2023, June 2). AI transparency: What is it and why
+    do we need it? TechTarget. Retrieved October 13, 2023, from [https://www.techtarget.com/searchcio/tip/AI-transparency-What-is-it-and-why-do-we-need-it#:~:text=Transparency%20in%20AI%20refers%20to,how%20it%20reaches%20its%20decisions](https://www.techtarget.com)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Leike, J., Schulman, J., & Wu, J.](#R_ref5_32) (2022, August 24). Our approach
+    to alignment research. OpenAI. Retrieved October 13, 2023, from [https://openai.com/blog/our-approach-to-alignment-research](https://openai.com)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Liu, Y.](#R_ref5_33) (2023, June 5). 生成AI画像は類似性が認められれば「著作権侵害」。文化庁 [If a generated
+    AI image is found to be similar, it is considered a “copyright infringement.”
+    Agency for Cultural Affairs]. PC Watch. Retrieved from [https://pc.watch.impress.co.jp/docs/news/1506018.html](https://pc.watch.impress.co.jp)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Manish, C.](#R_ref5_34) (2023, August 18). Sam Altman’s nuclear backpack holds
+    the code to save the world from AI. Mobile App Daily. Retrieved from [https://www.mobileappdaily.com/news/sam-altmans-nuclear-backpack-holds-the-code-to-save-the-world-from-ai](https://www.mobileappdaily.com)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Matsuda, A., Kudo, R., & Matsuda, T.](#R_ref5_35) (2023). Japan. In C. Kerrigan
+    (Ed.), AI, machine learning & big data laws and regulations 2023. Global Legal
+    Insights. [https://www.globallegalinsights.com/practice-areas/ai-machine-learning-and-big-data-laws-and-regulations/japan](https://www.globallegalinsights.com)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Mehrabi, N., Morstatter, F., Saxena, N., Lerman, K., & Galstyan, A.](#R_ref5_36)
+    (2021). A survey on bias and fairness in machine learning. ACM Computing Surveys,
+    *54*(6), 1–35\. [https://doi.org/10.1145/3457607](https://doi.org/10.1145/3457607)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Meyer, J.](#R_ref5_37) (2023, May 31). AI poses risk of extinction, tech leaders
+    warn in open letter. Here’s why alarm is spreading. USA Today. Retrieved October
+    13, 2023, from [https://eu.usatoday.com/story/news/politics/2023/05/31/ai-extinction-risk-expert-warning/70270171007/](https://eu.usatoday.com)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Minevich, M.](#R_ref5_38) (2023, May 19). Generative AI shakes global diplomacy
+    at G7 summit in Japan. Forbes. Retrieved October 16, 2023, from [https://www.forbes.com/sites/markminevich/2023/05/19/high-stakes-generative-ai-shakes-global-diplomacy-at-japans-2023-g7-summit/?sh=243a3dce6321](https://www.forbes.com)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Ministry of Economy, Trade and Industry](#R_ref5_39). (2021, July 9). AI governance
+    in Japan Ver. 1.1: Report from the expert group on how AI principles should be
+    implemented. Retrieved October 16, 2023, from [https://www.meti.go.jp/shingikai/mono_info_service/ai_shakai_jisso/pdf/20210709_8.pdf](https://www.meti.go.jp)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Mukherjee, S., Chee, F. Y., & Coulter, M.](#R_ref5_40) (2023, April 28). EU
+    proposes new copyright rules for generative AI. Reuters. Retrieved October 13,
+    2023, from [https://www.reuters.com/technology/eu-lawmakers-committee-reaches-deal-artificial-intelligence-act-2023-04-27/](https://www.reuters.com)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Nasiripour, S., & Natarajan, S.](#R_ref5_41) (2019, November 11). Apple co-founder
+    says Goldman’s apple card algorithm discriminates. Bloomberg. Retrieved October
+    13, 2023, from [https://www.bloomberg.com/news/articles/2019-11-10/apple-co-founder-says-goldman-s-apple-card-algo-discriminates?leadSource=uverify%20wall](https://www.bloomberg.com)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Novelli, C., Taddeo, M., & Floridi, L.](#R_ref5_42) (2023). Accountability
+    in artificial intelligence: What it is and how it works. AI & Soc. [https://doi.org/10.1007/s00146-023-01635-y](https://doi.org/10.1007/s00146-023-01635-y)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[OpenAI](#R_ref5_43). (2023a). GPT-4 documentation. Retrieved October 13, 2023,
+    from [https://platform.openai.com/docs/models/gpt-4](https://platform.openai.com)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[OpenAI](#R_ref5_44). (2023b). Privacy policy. Retrieved October 13, 2023,
+    from [https://openai.com/policies/privacy-policy](https://openai.com)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[OpenAI](#R_ref5_45). (2023c). Security & privacy. Retrieved October 13, 2023,
+    from [https://openai.com/security](https://openai.com)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[OpenAI](#R_ref5_46). (2023d). OpenAI charter. Retrieved October 13, 2023,
+    from [https://openai.com/charter](https://openai.com)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Osborne Clarke. (2022, July 19). Consultation on UK AI regulation: Legislation-free
+    and devolved regulators. Retrieved October 17, 2023, from [https://www.osborneclarke.com/insights/consultation-uk-ai-regulation-legislation-free-and-devolved-regulators](https://www.osborneclarke.com)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Perrigo, B., & Gordon, A.](#R_ref5_48) (2023, June 14). E.U. takes a step
+    closer to passing the world’s most comprehensive AI regulation. Time. Retrieved
+    October 13, 2023, from [https://time.com/6287136/eu-ai-regulation/](https://time.com)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Ribeiro, M. T., Singh, S., & Guestrin, C.](#R_ref5_49) (2016). “Why should
+    I trust you?”: Explaining the predictions of any classifier. In *Proceedings of
+    the 22nd ACM SIGKDD International Conference on Knowledge Discovery and Data Mining*
+    (pp. 1135–1144). [https://doi.org/10.1145/2939672.2939778](https://doi.org/10.1145/2939672.2939778)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Roberts, H., Babuta, A., Morley, J., Thomas, C., Taddeo, M., & Floridi, L.](#R_ref5_50)
+    (2023, May 26). Artificial intelligence regulation in the United Kingdom: A path
+    to good governance and global leadership? Internet Policy Review, *12*(2). [https://doi.org/10.14763/2023.2.1709](https://doi.org/10.14763/2023.2.1709)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Robles, P.](#R_ref5_51) (2023, October 1). China plans to be a world leader
+    in Artificial Intelligence by 2030. South China Morning Post. Retrieved October
+    16, 2023, from [https://multimedia.scmp.com/news/china/article/2166148/china-2025-artificial-intelligence/index.html](https://multimedia.scmp.com)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Russell, S., Dewey, D., & Tegmark, M.](#R_ref5_52) (2015). Research priorities
+    for robust and beneficial artificial intelligence. AI Magazine, *36*(4), 105–114\.
+    [https://doi.org/10.1609/aimag.v36i4.2577](https://doi.org/10.1609/aimag.v36i4.2577)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Sharwood, S.](#R_ref5_53) (2023, May 26). India set to regulate AI, Big Tech,
+    with Digital Act. The Register. Retrieved October 16, 2023, from [https://www.theregister.com/2023/05/26/india_digital_act_draft_june/](https://www.theregister.com)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Silberg, J., & Manyika, J.](#R_ref5_54) (2019, June 6). Tackling bias in artificial
+    intelligence (and in humans). McKinsey Global Institute. Retrieved October 13,
+    2023, from [https://www.mckinsey.com/featured-insights/artificial-intelligence/tackling-bias-in-artificial-intelligence-and-in-humans](https://www.mckinsey.com)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Singh, M.](#R_ref5_55) (2023, April 6). India opts against AI regulation.
+    TechCrunch. Retrieved October 16, 2023, from [https://techcrunch.com/2023/04/05/india-opts-against-ai-regulation/](https://techcrunch.com)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[State of California Department of Justice, Office of the Attorney General](#R_ref5_56).
+    (2023). California Consumer Privacy Act (CCPA). Retrieved October 13, 2023, from
+    [https://oag.ca.gov/privacy/ccpa](https://oag.ca.gov)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Stokel-Walker, C.](#R_ref5_57) (2023, January 18). ChatGPT listed as author
+    on research papers: Many scientists disapprove. Nature. Retrieved October 13,
+    2023, from [https://www.nature.com/articles/d41586-023-00107-z](https://www.nature.com)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Strickland, E.](#R_ref5_58) (2023, August 31). OpenAI’s moonshot: Solving
+    the AI alignment problem. IEEE Spectrum. Retrieved October 13, 2023, from [https://spectrum.ieee.org/the-alignment-problem-openai](https://spectrum.ieee.org)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[The Japan Times](#R_ref5_59). (2023, October 15). Japan’s AI draft guidelines
+    ask for measures to address overreliance. Retrieved October 16, 2023, from [https://www.japantimes.co.jp/news/2023/10/15/japan/politics/ai-draft-guidelines/](https://www.japantimes.co.jp)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[The Times of India](#R_ref5_60). (2023, May 17). India planning to regulate
+    AI platforms like ChatGPT: IT minister Ashwini Vaishnaw. Retrieved October 16,
+    2023, from [http://timesofindia.indiatimes.com/articleshow/100310733.cms?utm_source=contentofinterest&utm_medium=text&utm_campaign=cppst](http://timesofindia.indiatimes.com)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[UK Government](#R_ref5_61). (2023, August 3). *AI regulation: a pro-innovation
+    approach*. [White paper]. Retrieved October 16, 2023, from [https://www.gov.uk/government/publications/ai-regulation-a-pro-innovation-approach](https://www.gov.uk)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[UNESCO](#R_ref5_62). (2023a, July 20). UNESCO’s Recommendation on the Ethics
+    of Artificial Intelligence: Key Facts. [https://www.unesco.org/en/articles/unescos-recommendation-ethics-artificial-intelligence-key-facts#:~:text=The%20Recommendation%20establishes%20a%20set,the%20rule%20of%20law%20%20online](https://www.unesco.org)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[UNESCO](#R_ref5_63). (2023b, June 9). Artificial Intelligence: UNESCO publishes
+    Policy Paper on AI Foundation Models. Retrieved from [https://www.unesco.org/en/articles/artificial-intelligence-unesco-publishes-policy-paper-ai-foundation-models](https://www.unesco.org)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[UNESCO](#R_ref5_64). (2023c). Guidance for generative AI in education and
+    research. UNESCO. Retrieved October 13, 2023, from [https://unesdoc.unesco.org/ark:/48223/pf0000386693](https://unesdoc.unesco.org)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: University of Birmingham. (2023, August 4). Government’s “Pro-Innovation” AI
+    white paper unfit for purpose. Retrieved October 16, 2023, from [https://www.birmingham.ac.uk/news/2023/the-governments-preoccupation-with-innovation-will-cause-the-rule-of-law-to-fall-behind](https://www.birmingham.ac.uk)
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[West, D. M.](#R_ref5_66) (2023, September 12). California charts the future
+    of AI. Brookings. Retrieved October 13, 2023, from [https://www.brookings.edu/articles/california-charts-the-future-of-ai/](https://www.brookings.edu)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[Wheeler, T.](#R_ref5_67) (2023, June 15). The three challenges of AI regulation.
+    Brookings. Retrieved October 13, 2023, from [https://www.brookings.edu/articles/the-three-challenges-of-ai-regulation/](https://www.brookings.edu)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
