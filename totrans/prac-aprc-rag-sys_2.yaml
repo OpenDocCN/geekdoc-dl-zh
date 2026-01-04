@@ -1,218 +1,294 @@
 - en: 1  Introduction
+  id: totrans-0
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
+  zh: 1   引言
 - en: 原文：[https://mallahyari.github.io/rag-ebook/intro.html](https://mallahyari.github.io/rag-ebook/intro.html)
+  id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 原文：[https://mallahyari.github.io/rag-ebook/intro.html](https://mallahyari.github.io/rag-ebook/intro.html)
 - en: In this chapter, we will lay the foundation for building a chat-to-PDF app using
     Large Language Models (LLMs) with a focus on the Retrieval-Augmented Generation
     approach. We’ll explore the fundamental concepts and technologies that underpin
     this project.
+  id: totrans-2
   prefs: []
   type: TYPE_NORMAL
+  zh: 在本章中，我们将为使用大型语言模型（LLMs）构建聊天到PDF应用奠定基础，重点关注检索增强生成方法。我们将探讨支撑此项目的根本概念和技术。
 - en: 1.1 The Role of LLMs in NLP
+  id: totrans-3
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 1.1 LLMs在自然语言处理（NLP）中的作用
 - en: Large Language Models (LLMs) play a crucial role in Natural Language Processing
     (NLP). These models have revolutionized the field of NLP by their ability to understand
     and generate human-like text. With advances in deep learning and neural networks,
     LLMs have become valuable assets in various NLP tasks, including language translation,
     text summarization, and chatbot development.
+  id: totrans-4
   prefs: []
   type: TYPE_NORMAL
+  zh: 大型语言模型（LLMs）在自然语言处理（NLP）中扮演着至关重要的角色。这些模型通过理解和生成类似人类的文本的能力，彻底改变了NLP领域。随着深度学习和神经网络的发展，LLMs已成为各种NLP任务中的宝贵资产，包括语言翻译、文本摘要和聊天机器人开发。
 - en: One of the key strengths of LLMs lies in their capacity to learn from vast amounts
     of text data. By training on massive datasets, LLMs can capture complex linguistic
     patterns and generate coherent and contextually appropriate responses. This enables
     them to produce high-quality outputs that are indistinguishable from human-generated
     text.
+  id: totrans-5
   prefs: []
   type: TYPE_NORMAL
+  zh: LLMs的一个关键优势在于它们能够从大量的文本数据中学习。通过在大型数据集上进行训练，LLMs可以捕捉复杂的语言模式，并生成连贯且与上下文相关的响应。这使得它们能够产生高质量输出，其质量与人类生成的文本难以区分。
 - en: 'LLMs are trained using a two-step process: pre-training and fine-tuning. During
     pre-training, models are exposed to a large corpus of text data and learn to predict
     the next word in a sentence. This helps them develop a strong understanding of
     language structure and semantics. In the fine-tuning phase, the models are further
     trained on task-specific data to adapt their knowledge to specific domains or
     tasks.'
+  id: totrans-6
   prefs: []
   type: TYPE_NORMAL
+  zh: LLMs的训练过程分为两步：预训练和微调。在预训练阶段，模型接触到大量的文本数据，并学会预测句子中的下一个单词。这有助于它们发展对语言结构和语义的深刻理解。在微调阶段，模型在特定任务的数据上进行进一步训练，以适应特定领域或任务。
 - en: The versatility and effectiveness of LLMs make them a powerful tool in advancing
     the field of NLP. They have not only improved the performance of existing NLP
     systems but have also opened up new possibilities for developing innovative applications.
     With continued research and development, LLMs are expected to further push the
     boundaries of what is possible in natural language understanding and generation.
+  id: totrans-7
   prefs: []
   type: TYPE_NORMAL
+  zh: LLMs的多样性和有效性使它们成为推动NLP领域发展的强大工具。它们不仅提高了现有NLP系统的性能，还开辟了开发创新应用的新可能性。随着持续的研究和开发，预计LLMs将进一步拓展自然语言理解和生成可能性的边界。
 - en: 'Large Language Models (LLMs) represent a breakthrough in NLP, allowing machines
     to understand and generate human-like text at an unprecedented level of accuracy
     and fluency. Some of the key roles of LLMs in NLP include:'
+  id: totrans-8
   prefs: []
   type: TYPE_NORMAL
+  zh: 大型语言模型（LLMs）是NLP领域的一项突破，使机器能够以前所未有的准确性和流畅度理解和生成类似人类的文本。LLMs在NLP中的关键作用包括：
 - en: '**Natural Language Understanding (NLU):** LLMs can comprehend the nuances of
     human language, making them adept at tasks such as sentiment analysis, entity
     recognition, and language translation.'
+  id: totrans-9
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: '**自然语言理解（NLU）：** LLMs能够理解人类语言的细微差别，使它们擅长情感分析、实体识别和语言翻译等任务。'
 - en: '**Text Generation:** LLMs excel at generating coherent and contextually relevant
     text. This capability is invaluable for content generation, chatbots, and automated
     writing.'
+  id: totrans-10
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: '**文本生成：** LLMs在生成连贯且与上下文相关的文本方面表现出色。这种能力对于内容生成、聊天机器人和自动写作来说非常宝贵。'
 - en: '**Question Answering:** LLMs are particularly powerful in question answering
     tasks. They can read a given text and provide accurate answers to questions posed
     in natural language.'
+  id: totrans-11
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: '**问答：** LLMs在问答任务中特别强大。它们可以阅读给定的文本，并以自然语言提供准确的答案。'
 - en: '**Summarization:** LLMs can summarize lengthy documents or articles, distilling
     the most important information into a concise form.'
+  id: totrans-12
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: '**总结：** 大型语言模型（LLMs）可以总结长篇文档或文章，将最重要的信息提炼成简洁的形式。'
 - en: '**Conversational AI:** They serve as the backbone of conversational AI systems,
     enabling chatbots and virtual assistants to engage in meaningful and context-aware
     conversations.'
+  id: totrans-13
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: '**对话式人工智能：** 它们是对话式人工智能系统的骨架，使聊天机器人和虚拟助手能够进行有意义的、上下文感知的对话。'
 - en: '**Information Retrieval:** LLMs can be used to retrieve relevant information
     from vast corpora of text, which is crucial for applications like search engines
     and document retrieval.'
+  id: totrans-14
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: '**信息检索：** 大型语言模型（LLMs）可以用于从大量文本语料库中检索相关信息，这对于搜索引擎和文档检索等应用至关重要。'
 - en: '**Customization:** LLMs can be fine-tuned for specific tasks or domains, making
     them adaptable to a wide range of applications.'
+  id: totrans-15
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: '**定制化：** LLMs可以根据特定任务或领域进行微调，使其适应广泛的用途。'
 - en: 1.2 The Importance of Question Answering over PDFs
+  id: totrans-16
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 1.2 在PDF上进行问答的重要性
 - en: '*Question answering over PDF documents addresses a critical need in information
     retrieval and document processing. Here, we’ll explore why it is important and
     how LLMs can play a pivotal role:*'
+  id: totrans-17
   prefs: []
   type: TYPE_NORMAL
+  zh: '*在PDF文档上进行问答解决了信息检索和文档处理中的关键需求。在这里，我们将探讨其重要性以及LLMs如何发挥关键作用：*'
 - en: 'The Importance of Question Answering over PDFs:'
+  id: totrans-18
   prefs: []
   type: TYPE_NORMAL
+  zh: 在PDF上进行问答的重要性：
 - en: '**Document Accessibility:** PDF is a widely used format for storing and sharing
     documents. However, extracting information from PDFs, especially in response to
     specific questions, can be challenging for users. Question answering over PDFs
     enhances document accessibility.'
+  id: totrans-19
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: '**文档可访问性：** PDF是一种广泛用于存储和共享文档的格式。然而，从PDF中提取信息，尤其是针对特定问题的信息，对于用户来说可能具有挑战性。在PDF上进行问答增强了文档的可访问性。'
 - en: '**Efficient Information Retrieval:** For researchers, students, and professionals,
     finding answers within lengthy PDF documents can be time-consuming. Question-answering
     systems streamline this process, enabling users to quickly locate the information
     they need.'
+  id: totrans-20
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: '**高效信息检索：** 对于研究人员、学生和专业人士来说，在长篇PDF文档中寻找答案可能耗时。问答系统简化了这一过程，使用户能够快速找到所需信息。'
 - en: '**Enhanced User Experience:** In various domains, including legal, medical,
     and educational, users often need precise answers from PDF documents. Implementing
     question answering improves the user experience by providing direct and accurate
     responses.'
+  id: totrans-21
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: '**增强用户体验：** 在法律、医疗和教育等各个领域，用户通常需要从PDF文档中获得精确的答案。实施问答系统通过提供直接和准确的响应来改善用户体验。'
 - en: '**Automation and Productivity:** By automating the process of extracting answers
     from PDFs, organizations can save time and resources. This automation can be particularly
     beneficial in scenarios where large volumes of documents need to be processed.'
+  id: totrans-22
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: '**自动化与生产力提升：** 通过自动化从PDF中提取答案的过程，组织可以节省时间和资源。这种自动化在需要处理大量文档的场景中尤其有益。'
 - en: '**Scalability:** As the volume of digital documents continues to grow, scalable
     solutions for question answering over PDFs become increasingly important. LLMs
     can handle large datasets and diverse document types.'
+  id: totrans-23
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: '**可扩展性：** 随着数字文档数量的持续增长，可扩展的PDF问答解决方案变得越来越重要。LLMs可以处理大型数据集和多种文档类型。'
 - en: In various industries, there is a growing demand for efficient information retrieval
     from extensive collections of PDF documents. Take, for example, a legal firm or
     department collaborating with the Federal Trade Commission (FTC) to process updated
     information about legal cases and proceedings. Their task often involves processing
     a substantial volume of documents, sifting through them, and extracting relevant
     case information—a labor-intensive process.
+  id: totrans-24
   prefs: []
   type: TYPE_NORMAL
+  zh: 在各个行业中，从大量的PDF文档集中高效检索信息的需求正在不断增长。以一家法律公司或部门为例，它们与联邦贸易委员会（FTC）合作处理有关法律案件和诉讼的更新信息。他们的任务通常涉及处理大量文档，筛选它们，并提取相关案件信息——这是一个劳动密集型的过程。
 - en: '*Bachground: Every year the FTC brings hundreds of cases against individuals
     and companies for violating consumer protection and competition laws that the
     agency enforces. These cases can involve fraud, scams, identity theft, false advertising,
     privacy violations, anti-competitive behavior and more.*'
+  id: totrans-25
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: '*背景：每年，FTC都会对数百起个人和公司提起诉讼，指控他们违反了该机构执行的消费者保护和竞争法。这些案件可能涉及欺诈、诈骗、身份盗窃、虚假广告、隐私侵犯、反竞争行为等。*'
 - en: The advent of the Retrieval-Augmented Generation (RAG) approach marks a new
     era in question and answering that promises to revolutionize workflows within
     these industries.
+  id: totrans-26
   prefs: []
   type: TYPE_NORMAL
+  zh: 追溯增强生成（RAG）方法的问世标志着问答领域的新纪元，它承诺将彻底改变这些行业的工作流程。
 - en: 1.3 The Retrieval-Augmented Generation Approach
+  id: totrans-27
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 1.3 检索增强生成方法
 - en: '*The Retrieval-Augmented Generation approach is a cutting-edge technique that
     combines the strengths of information retrieval and text generation. Let’s explore
     this approach in detail:*'
+  id: totrans-28
   prefs: []
   type: TYPE_NORMAL
+  zh: '*检索增强生成方法是一种前沿技术，它结合了信息检索和文本生成的优势。让我们详细探讨这种方法：*'
 - en: 'The Retrieval-Augmented Generation Approach:'
+  id: totrans-29
   prefs: []
   type: TYPE_NORMAL
+  zh: 检索增强生成方法：
 - en: 'The Retrieval-Augmented Generation approach combines two fundamental components,
     retrieval and generation, to create a powerful system for question answering and
     content generation. Here’s an overview of this approach:'
+  id: totrans-30
   prefs: []
   type: TYPE_NORMAL
+  zh: 检索增强生成方法结合了两个基本组件，检索和生成，以创建一个强大的问答和内容生成系统。以下是这种方法的一个概述：
 - en: '**Retrieval Component:** This part of the system is responsible for searching
     and retrieving relevant information from a database of documents. It uses techniques
     such as indexing, ranking, and query expansion to find the most pertinent documents.'
+  id: totrans-31
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: '**检索组件：** 系统的这一部分负责从文档数据库中搜索和检索相关信息。它使用诸如索引、排名和查询扩展等技术来找到最相关的文档。'
 - en: '**Generation Component:** Once the relevant documents are retrieved, the generation
     component takes over. It uses LLMs to process the retrieved information and generate
     coherent and contextually accurate responses to user queries.'
+  id: totrans-32
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: '**生成组件：** 一旦检索到相关文档，生成组件就会接管。它使用大型语言模型（LLMs）来处理检索到的信息，并生成对用户查询的连贯且语境准确的响应。'
 - en: '**Benefits:** The key advantage of this approach is its ability to provide
     answers based on existing knowledge (retrieval) while also generating contextually
     rich responses (generation). It combines the strengths of both worlds to deliver
     high-quality answers.'
+  id: totrans-33
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: '**优势：** 这种方法的关键优势在于其能够基于现有知识提供答案（检索）的同时，也能生成语境丰富的响应（生成）。它结合了两者的优势，以提供高质量的答案。'
 - en: '**Use Cases:** Retrieval-Augmented Generation is particularly useful for question
     answering over large document collections, where traditional search engines may
     fall short in providing concise and informative answers.'
+  id: totrans-34
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: '**用例：** 检索增强生成对于在大规模文档集合上进行问答特别有用，在这种情况下，传统的搜索引擎可能无法提供简洁且信息丰富的答案。'
 - en: '**Fine-Tuning:** Successful implementation of this approach often involves
     fine-tuning LLMs on domain-specific data to improve the quality of generated responses.'
+  id: totrans-35
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: '**微调：** 这种方法的成功实施通常涉及在特定领域的数据上对LLMs进行微调，以提高生成响应的质量。'
 - en: By understanding the role of LLMs in NLP, the importance of question answering
     over PDFs, and the principles behind the Retrieval-Augmented Generation approach,
     you have now laid the groundwork for building your chat-to-PDF app using these
     advanced technologies. In the following chapters, we will delve deeper into the
     technical aspects and practical implementation of this innovative solution.
+  id: totrans-36
   prefs: []
   type: TYPE_NORMAL
+  zh: 通过理解LLMs在NLP中的作用、在PDF上进行问答的重要性以及检索增强生成方法背后的原则，你现在已经为使用这些先进技术构建你的聊天到PDF应用程序奠定了基础。在接下来的章节中，我们将更深入地探讨这种创新解决方案的技术方面和实际实施。
 - en: 1.4 A Brief History of LLMs
+  id: totrans-37
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 1.4 LLMs的简要历史
 - en: Lately, ChatGPT, as well as DALL-E-2 and Codex, have been getting a lot of attention.
     This has sparked curiosity in many who want to know more about what’s behind their
     impressive performance. ChatGPT and other Generative AI (GAI) technologies fall
@@ -220,61 +296,85 @@
     means they’re all about using AI models to create content like images, music,
     and written language. The whole idea behind AIGC is to make creating conetent
     faster and easier.
+  id: totrans-38
   prefs: []
   type: TYPE_NORMAL
+  zh: 近期，ChatGPT、DALL-E-2和Codex都受到了很多关注。这激发了很多人对它们背后卓越表现的好奇心。ChatGPT和其他生成式人工智能（GAI）技术属于一个被称为人工智能生成内容（AIGC）的类别。这意味着它们都是关于使用AI模型来创建图像、音乐和书面语言等内容的。AIGC背后的整个想法是使内容创建更快、更简单。
 - en: '*AIGC is achieved by extracting and understanding intent information from instructions
     provided by human, and generating the content according to its knowledge and the
     intent information. In recent years, large-scale models have become increasingly
     important in AIGC as they provide better intent extraction and thus, improved
     generation results.*'
+  id: totrans-39
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: '*AIGC是通过从人类提供的指令中提取和理解意图信息，并根据其知识和意图信息生成内容来实现的。近年来，大规模模型在AIGC中变得越来越重要，因为它们提供了更好的意图提取，从而改善了生成结果。*'
 - en: With more data and bigger models, these AI systems can make things that look
     and sound quite realistic and high-quality. The following shows an example of
     text prompting that generates images according to the instructions, leveraging
     the OpenAI DALL-E-2 model.
+  id: totrans-40
   prefs: []
   type: TYPE_NORMAL
+  zh: 随着数据的增多和模型的增大，这些人工智能系统可以创造出看起来和听起来都非常逼真和高质量的物品。以下是一个根据指示生成图像的文本提示示例，利用了OpenAI的DALL-E-2模型。
 - en: '![text2image-intro](../Images/5246520ed3534b1771ccc1e3acafdffd.png)'
+  id: totrans-41
   prefs: []
   type: TYPE_IMG
+  zh: '![text2image-intro](../Images/5246520ed3534b1771ccc1e3acafdffd.png)'
 - en: 'Figure 1.1: Examples of AIGC in image generation. [Image source](https://arxiv.org/pdf/2303.04226.pdf)'
+  id: totrans-42
   prefs: []
   type: TYPE_NORMAL
+  zh: 图1.1：图像生成中AIGC的示例。[图片来源](https://arxiv.org/pdf/2303.04226.pdf)
 - en: 'In the realm of Generative AI (GAI), models can typically be divided into two
     categories: unimodal models and multimodal models. Unimodal models operate by
     taking instructions from the same type of data as the content they generate, while
     multimodal models are capable of receiving instructions from one type of data
     and generating content in another type. The following figure illustrates these
     two categories of models.'
+  id: totrans-43
   prefs: []
   type: TYPE_NORMAL
+  zh: 在生成人工智能（GAI）领域，模型通常可以分为两类：单模态模型和多模态模型。单模态模型通过接收与它们生成的内容相同类型的数据的指令来操作，而多模态模型能够接收一种类型的数据的指令并在另一种类型的内容中生成内容。以下图展示了这两种类型的模型。
 - en: '![overview-of-AIGC-intro](../Images/9909eb1cc21b87ba6ed08f779dc63ba1.png)'
+  id: totrans-44
   prefs: []
   type: TYPE_IMG
+  zh: '![overview-of-AIGC-intro](../Images/9909eb1cc21b87ba6ed08f779dc63ba1.png)'
 - en: 'Figure 1.2: Overview of AIGC model types. [Image source](https://arxiv.org/pdf/2303.04226.pdf)'
+  id: totrans-45
   prefs: []
   type: TYPE_NORMAL
+  zh: 图1.2：AIGC模型类型概述。[图片来源](https://arxiv.org/pdf/2303.04226.pdf)
 - en: These models have found applications across diverse industries, such as art
     and design, marketing, and education. It’s evident that in the foreseeable future,
     AIGC will remain a prominent and continually evolving research area with artificial
     intelligence.
+  id: totrans-46
   prefs: []
   type: TYPE_NORMAL
+  zh: 这些模型已在艺术与设计、市场营销和教育等多个行业中得到应用。显然，在可预见的未来，AIGC将继续是人工智能领域一个突出且不断发展的研究领域。
 - en: 1.4.1 Foundation Models
+  id: totrans-47
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 1.4.1 基础模型
 - en: Speaking of LLMs and GenAI, we cannot overlook the significant role played by
     Transformer models.
+  id: totrans-48
   prefs: []
   type: TYPE_NORMAL
+  zh: 提到大型语言模型（LLMs）和通用人工智能（GenAI），我们无法忽视Transformer模型所扮演的显著角色。
 - en: '*Transformer is the backbone architecture for many state-of-the-art models,
     such as GPT, DALL-E, Codex, and so on.*'
+  id: totrans-49
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: '*Transformer是许多最先进模型（如GPT、DALL-E、Codex等）的骨干架构。*'
 - en: Transformer started out to address the limitations of traditional models like
     RNNs when dealing with variable-length sequences and context. The heart of the
     Transformer is its self-attention mechanism, allowing the model to focus on different
@@ -286,8 +386,10 @@
     in various NLP tasks. The Transformer’s inherent parallelizability minimizes inductive
     biases, making it ideal for large-scale pre-training and adaptability to different
     downstream tasks.
+  id: totrans-50
   prefs: []
   type: TYPE_NORMAL
+  zh: Transformer最初是为了解决传统模型（如RNNs）在处理可变长度序列和上下文时的局限性而设计的。Transformer的核心是其自注意力机制，允许模型关注输入序列的不同部分。它由编码器和解码器组成。编码器处理输入序列以创建隐藏表示，而解码器生成输出序列。每个编码器和解码器层都包含多头注意力和前馈神经网络。多头注意力是一个关键组件，根据相关性为标记分配权重，从而增强了模型在各种自然语言处理（NLP）任务中的性能。Transformer的内在并行化能力最小化了归纳偏差，使其非常适合大规模预训练和适应不同的下游任务。
 - en: 'Transformer architecture has dominated natural language processing, with two
     main types of pre-trained language models based on training tasks: masked language
     modeling (e.g., BERT) and autoregressive language modeling (e.g., GPT-3). Masked
@@ -296,49 +398,69 @@
     suitable for generative tasks. RoBERTa and XL-Net are classic examples of masked
     language models and have further improved upon the BERT architecture with additional
     training data and techniques.'
+  id: totrans-51
   prefs: []
   type: TYPE_NORMAL
+  zh: Transformer架构在自然语言处理领域占据主导地位，基于训练任务主要有两种预训练语言模型：掩码语言模型（例如BERT）和自回归语言模型（例如GPT-3）。掩码语言模型预测句子中的掩码标记，而自回归模型则专注于根据前面的标记预测下一个标记，这使得它们更适合生成任务。RoBERTa和XL-Net是掩码语言模型的经典例子，它们通过额外的训练数据和技巧进一步改进了BERT架构。
 - en: '![category-of-llms-intro](../Images/fa6f9993af477275a012a740e181b978.png)'
+  id: totrans-52
   prefs: []
   type: TYPE_IMG
+  zh: '![category-of-llms-intro](../Images/fa6f9993af477275a012a740e181b978.png)'
 - en: 'Figure 1.3: Categories of pre-trained LLMs. [Image source](https://arxiv.org/pdf/2303.04226.pdf)'
+  id: totrans-53
   prefs: []
   type: TYPE_NORMAL
+  zh: 图1.3：预训练LLM的类别。[图片来源](https://arxiv.org/pdf/2303.04226.pdf)
 - en: 'In this graph, you can see two types of information flow indicated by lines:
     the black line represents bidirectional information flow, while the gray line
     represents left-to-right information flow. There are three main model categories:'
+  id: totrans-54
   prefs: []
   type: TYPE_NORMAL
+  zh: 在这个图表中，你可以看到由线条表示的两种类型的信息流：黑色线条表示双向信息流，而灰色线条表示从左到右的信息流。有三个主要模型类别：
 - en: Encoder models like BERT, which are trained with context-aware objectives.
+  id: totrans-55
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 使用上下文感知目标训练的编码器模型，如BERT。
 - en: Decoder models like GPT, which are trained with autoregressive objectives.
+  id: totrans-56
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 使用自回归目标训练的解码器模型，如GPT。
 - en: Encoder-decoder models like T5 and BART, which merge both approaches. These
     models use context-aware structures as encoders and left-to-right structures as
     decoders.
+  id: totrans-57
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 将两种方法结合的编码器-解码器模型，如T5和BART，这些模型使用上下文感知结构作为编码器，并使用从左到右的结构作为解码器。
 - en: 1.4.2 Reinforcement Learning from Human Feedback
+  id: totrans-58
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 1.4.2 从人类反馈中进行强化学习
 - en: To improve AI-generated content (AIGC) alignment with user intent, i.e., considerations
     in *usefulness* and *truthfulness*, reinforcement learning from human feedback
     (RLHF) has been applied in models like Sparrow, InstructGPT, and ChatGPT.
+  id: totrans-59
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了提高人工智能生成内容（AIGC）与用户意图的匹配度，即考虑*实用性*和*真实性*，强化学习从人类反馈（RLHF）已被应用于Sparrow、InstructGPT和ChatGPT等模型中。
 - en: 'The RLHF pipeline involves three steps: *pre-training*, *reward learning*,
     and *fine-tuning with reinforcement learning*. In reward learning, human feedback
     on diverse responses is used to create reward scalars. Fine-tuning is done through
     reinforcement learning with Proximal Policy Optimization (PPO), aiming to maximize
     the learned reward.'
+  id: totrans-60
   prefs: []
   type: TYPE_NORMAL
+  zh: RLHF管道包括三个步骤：*预训练*、*奖励学习*和*通过强化学习的微调*。在奖励学习中，使用对各种响应的人类反馈来创建奖励标量。微调是通过使用近端策略优化（PPO）的强化学习来完成的，目的是最大化学习的奖励。
 - en: However, the field lacks benchmarks and resources for RL, which is seen as a
     challenge. But this is changing day-by day. For example, an open-source library
     called RL4LMs was introduced to address this gap. Claude, a dialogue agent, uses
@@ -346,140 +468,202 @@
     The focus is on reducing harmful outputs, with guidance from a set of principles
     provided by humans. See more about the topic of *Constitutional AI* in one of
     our blog post [here](https://mlnotes.substack.com/p/ai-supervised-ai).
+  id: totrans-61
   prefs: []
   type: TYPE_NORMAL
+  zh: 然而，该领域缺乏RL的基准和资源，这被视为一个挑战。但这种情况正在一天天改变。例如，一个名为RL4LMs的开源库被引入以解决这一差距。Claude，一个对话代理，使用*宪法AI*，其中奖励模型是通过从AI反馈中学习的RL来学习的。重点是减少有害输出，并从人类提供的一系列原则中得到指导。更多关于*宪法AI*主题的信息，请参阅我们的博客文章[这里](https://mlnotes.substack.com/p/ai-supervised-ai)。
 - en: 1.4.3 GAN
+  id: totrans-62
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 1.4.3 GAN
 - en: Generative Adversarial Networks (GANs) are widely used for image generation.
     GANs consist of a generator and a discriminator. The generator creates new data,
     while the discriminator decides if the input is real or not.
+  id: totrans-63
   prefs: []
   type: TYPE_NORMAL
+  zh: 生成对抗网络（GANs）被广泛用于图像生成。GANs由生成器和判别器组成。生成器创建新的数据，而判别器决定输入是否为真实。
 - en: The design of the generator and discriminator influences GAN training and performance.
     Various GAN variants have been developed, including LAPGAN, DCGAN, Progressive
     GAN, SAGAN, BigGAN, StyleGAN, and methods addressing mode collapse like D2GAN
     and GMAN.
+  id: totrans-64
   prefs: []
   type: TYPE_NORMAL
+  zh: 生成器和判别器的设计影响GAN的训练和性能。已经开发了各种GAN变体，包括LAPGAN、DCGAN、渐进式GAN、SAGAN、BigGAN、StyleGAN以及解决模式崩溃的方法，如D2GAN和GMAN。
 - en: The following graph illustrates some of the categories of vision generative
     models.
+  id: totrans-65
   prefs: []
   type: TYPE_NORMAL
+  zh: 下面的图表说明了视觉生成模型的一些类别。
 - en: '![category-of-visionGenModels-intro](../Images/a055afb44cdf3aa9de491dd020a689ac.png)'
+  id: totrans-66
   prefs: []
   type: TYPE_IMG
+  zh: '![category-of-visionGenModels-intro](../Images/a055afb44cdf3aa9de491dd020a689ac.png)'
 - en: 'Figure 1.4: Categories of vision generative models. [Image source](https://arxiv.org/pdf/2303.04226.pdf)'
+  id: totrans-67
   prefs: []
   type: TYPE_NORMAL
+  zh: 图1.4：视觉生成模型的类别。[图片来源](https://arxiv.org/pdf/2303.04226.pdf)
 - en: Although GAN models are not the focus of our book, they are essential in powering
     multi-modality applications such as the diffusion models.
+  id: totrans-68
   prefs: []
   type: TYPE_NORMAL
+  zh: 尽管生成对抗网络（GAN）模型不是我们书籍的重点，但它们对于驱动多模态应用，如扩散模型，是至关重要的。
 - en: 1.4.4 Applications
+  id: totrans-69
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 1.4.4 应用
 - en: Chatbots are probably one of the most popular applications for LLMs.
+  id: totrans-70
   prefs: []
   type: TYPE_NORMAL
+  zh: 聊天机器人可能是LLM最流行的应用之一。
 - en: Chatbots are computer programs that mimic human conversation through text-based
     interfaces. They use language models to understand and respond to user input.
     Chatbots have various use cases, like customer support and answering common questions.
     Our “*chat with your PDF documents*” is a up-and-coming use case!
+  id: totrans-71
   prefs: []
   type: TYPE_NORMAL
+  zh: 聊天机器人是通过基于文本的界面模拟人类对话的计算机程序。它们使用语言模型来理解和响应用户输入。聊天机器人有多种用途，如客户支持和回答常见问题。我们的“*与你的PDF文档聊天*”是一个新兴的用例！
 - en: Other notable examples include Xiaoice, developed by Microsoft, which expresses
     empathy, and Google’s Meena, an advanced chatbot. Microsoft’s Bing now incorporates
     ChatGPT, opening up new possibilities for chatbot development.
+  id: totrans-72
   prefs: []
   type: TYPE_NORMAL
+  zh: 其他值得注意的例子包括微软开发的Xiaoice，它能够表达同理心，以及谷歌的高级聊天机器人Meena。微软的Bing现在集成了ChatGPT，为聊天机器人的开发开辟了新的可能性。
 - en: '![KG-apps-intro](../Images/504df5a1ad13cc3d6a4b7a9793a70086.png)'
+  id: totrans-73
   prefs: []
   type: TYPE_IMG
+  zh: '![KG-apps-intro](../Images/504df5a1ad13cc3d6a4b7a9793a70086.png)'
 - en: 'Figure 1.5: Knowlege Graph for Applications. [Image source](https://arxiv.org/pdf/2303.04226.pdf)'
+  id: totrans-74
   prefs: []
   type: TYPE_NORMAL
+  zh: 图1.5：应用知识图谱。[图片来源](https://arxiv.org/pdf/2303.04226.pdf)
 - en: This graph illustrates the relationships among current research areas, applications,
     and related companies. Research areas are denoted by dark blue circles, applications
     by light blue circles, and companies by green circles.
+  id: totrans-75
   prefs: []
   type: TYPE_NORMAL
+  zh: 此图说明了当前研究领域、应用和相关公司之间的关系。研究领域用深蓝色圆圈表示，应用用浅蓝色圆圈表示，公司用绿色圆圈表示。
 - en: 'In addition, we have previously written about chatbots and now they are part
     of history, but still worth reviewing:'
+  id: totrans-76
   prefs: []
   type: TYPE_NORMAL
+  zh: 此外，我们之前已经撰写了关于聊天机器人的文章，现在它们已成为历史的一部分，但仍值得回顾：
 - en: 'Blogpost: [What Does A Chatbot Look Like Under the Hood?](https://open.substack.com/pub/mlnotes/p/what-does-a-chatbot-look-like-under?r=164sm1&utm_campaign=post&utm_medium=web)'
+  id: totrans-77
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 博文：[聊天机器人内部是什么样的？](https://open.substack.com/pub/mlnotes/p/what-does-a-chatbot-look-like-under?r=164sm1&utm_campaign=post&utm_medium=web)
 - en: 'Blogpost: [What Is Behind the Scene of A Chatbot NLU?](https://open.substack.com/pub/mlnotes/p/what-is-behind-the-scene-of-a-chatbot?r=164sm1&utm_campaign=post&utm_medium=web)'
+  id: totrans-78
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 博文：[聊天机器人NLU背后的场景是什么？](https://open.substack.com/pub/mlnotes/p/what-is-behind-the-scene-of-a-chatbot?r=164sm1&utm_campaign=post&utm_medium=web)
 - en: 'Blogpost: [What More Can You Do with Chatbots?](https://open.substack.com/pub/mlnotes/p/what-more-can-you-do-with-chatbots?r=164sm1&utm_campaign=post&utm_medium=web)'
+  id: totrans-79
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 博文：[你还能用聊天机器人做什么？](https://open.substack.com/pub/mlnotes/p/what-more-can-you-do-with-chatbots?r=164sm1&utm_campaign=post&utm_medium=web)
 - en: Of course, chatbots are not the only application. There are vast possibilities
     in arts and design, music generation, education technology, coding and beyond
     - your imagination doesn’t need to stop here.
+  id: totrans-80
   prefs: []
   type: TYPE_NORMAL
+  zh: 当然，聊天机器人并非唯一的应用。在艺术与设计、音乐生成、教育技术、编码等领域都有广阔的可能性——你的想象力无需止步于此。
 - en: 1.4.5 Prompt Learning
+  id: totrans-81
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 1.4.5 提示学习
 - en: Prompt learning is a new concept in language models. Instead of predicting \(y\)
     given \(x\), it aims to find a template \(x^\prime\) that predicts \(P(y|x^\prime)\).
+  id: totrans-82
   prefs: []
   type: TYPE_NORMAL
+  zh: 提示学习是语言模型中的一个新概念。它不是在给定 \(x\) 的条件下预测 \(y\)，而是旨在找到一个模板 \(x^\prime\)，该模板可以预测 \(P(y|x^\prime)\)。
 - en: '*Normally, prompt learning will freeze the language model and directly perform
     few-shot or zero- shot learning on it. This enables the language models to be
     pre-trained on large amount of raw text data and be adapted to new domains without
     tuning it again. Hence, prompt learning could help save much time and efforts.*'
+  id: totrans-83
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: '*通常，提示学习会将语言模型冻结，并直接在其上进行少量样本或零样本学习。这使得语言模型可以在大量原始文本数据上预训练，并适应新领域而无需再次调整。因此，提示学习可以帮助节省大量时间和精力*。'
 - en: 'Traditionally, prompt learning involves prompting the model with a task, and
     it can be done in two stages: prompt engineering and answer engineering.'
+  id: totrans-84
   prefs: []
   type: TYPE_NORMAL
+  zh: 传统上，提示学习涉及通过提示来引导模型，这可以分为两个阶段：提示工程和答案工程。
 - en: '**Prompt engineering:** This involves creating prompts, which can be either
     discrete (manually designed) or continuous (added to input embeddings) to convey
     task-specific information.'
+  id: totrans-85
   prefs: []
   type: TYPE_NORMAL
+  zh: '**提示工程**：这涉及到创建提示，这些提示可以是离散的（手动设计）或连续的（添加到输入嵌入中），以传达特定任务的信息。'
 - en: '**Answer engineering:** After reformulating the task, the generated answer
     must be mapped to the correct answer space.'
+  id: totrans-86
   prefs: []
   type: TYPE_NORMAL
+  zh: '**答案工程**：在重新定义任务后，生成的答案必须映射到正确的答案空间。'
 - en: Besides single-prompt, *multi-prompt methods* combine multiple prompts for better
     predictions, and *prompt augmentation* basically beefs up the prompt to generate
     better results.
+  id: totrans-87
   prefs: []
   type: TYPE_NORMAL
+  zh: 除了单提示之外，*多提示方法*结合多个提示以获得更好的预测，而*提示增强*基本上是增强提示以生成更好的结果。
 - en: Moreover, in-context learning, a subset of prompt learning, has gained popularity.
     It enhances model performance by incorporating a pre-trained language model and
     supplying input-label pairs and task-specific instructions to improve alignment
     with the task.
+  id: totrans-88
   prefs: []
   type: TYPE_NORMAL
+  zh: 此外，上下文学习，作为提示学习的一个子集，已经变得流行。它通过结合预训练的语言模型，提供输入-标签对和特定任务的指令，以改善与任务的匹配来提高模型性能。
 - en: Overall, in the dynamic landscape of language models, tooling and applications,
     the graph below illustrates to the evolution of language model engineering. With
     increasing flexibility along the x-axis and rising complexity along the y-axis,
     this graph offers a bird’s-eye view of the choices and challenges faced by developers,
     researchers and companies.
+  id: totrans-89
   prefs: []
   type: TYPE_NORMAL
+  zh: 总体而言，在语言模型和工具应用的动态景观中，下面的图表展示了语言模型工程的演变。随着x轴上的灵活性增加和y轴上的复杂性上升，此图提供了开发者、研究人员和公司面临的选择和挑战的鸟瞰图。
 - en: '![emg-RAG-LLM](../Images/da0f4a9a0a8a71e45e703adcc31f003f.png)'
+  id: totrans-90
   prefs: []
   type: TYPE_IMG
+  zh: '![emg-RAG-LLM](../Images/da0f4a9a0a8a71e45e703adcc31f003f.png)'
 - en: 'Figure 1.6: Emerging RAG & Prompt Engineering Architecture for LLMs. [Image
     source](https://cobusgreyling.medium.com/updated-emerging-rag-prompt-engineering-architectures-for-llms-17ee62e5cbd9)'
+  id: totrans-91
   prefs: []
   type: TYPE_NORMAL
+  zh: 图1.6：LLMs的兴起RAG与Prompt Engineering架构。[图片来源](https://cobusgreyling.medium.com/updated-emerging-rag-prompt-engineering-architectures-for-llms-17ee62e5cbd9)
 - en: In the top-right corner, you can see the complex, yet powerful tools like OpenAI,
     Cohere, and Anthropic (to-be-added), which have pushed the boundaries of what
     language models can achieve. Along the diagonal, the evolution of prompt engineering
@@ -487,17 +671,24 @@
     autonomous agents, and prompt tuning. On the more flexible side, options like
     Haystack and LangChain have excelled, presenting broader horizons for those seeking
     to harness the versatility of language models.
+  id: totrans-92
   prefs: []
   type: TYPE_NORMAL
+  zh: 在右上角，你可以看到像OpenAI、Cohere和Anthropic（待添加）这样的复杂而强大的工具，它们已经推动了语言模型所能达到的边界。在对角线上，展示了Prompt
+    Engineering的演变，从静态提示到模板、提示链、RAG管道、自主代理和提示调整。在更灵活的一侧，像Haystack和LangChain这样的选项表现出色，为那些寻求利用语言模型多面性的人提供了更广阔的视野。
 - en: This graph serves as a snapshot of the ever-evolving landscape of toolings in
     the realm of language model and prompt engineering today, providing a roadmap
     for those navigating the exciting possibilities and complexities of this field.
     It is likely going to be changing every day, reflecting the continuous innovation
     and dynamism in the space.
+  id: totrans-93
   prefs: []
   type: TYPE_NORMAL
+  zh: 此图作为当前语言模型和Prompt Engineering领域工具演变的一个快照，为那些探索这一领域激动人心的可能性和复杂性的导航者提供了一个路线图。它很可能会每天都在变化，反映出该领域持续的创新和活力。
 - en: In the next Chapter we’ll turn our focus to more details of Retrieval Augmented
     Generation (RAG) pipelines. We will break down their key components, architecture,
     and the key steps involved in building an efficient retrieval system.
+  id: totrans-94
   prefs: []
   type: TYPE_NORMAL
+  zh: 在下一章中，我们将转向检索增强生成（RAG）管道的更多细节。我们将分解其关键组件、架构以及构建高效检索系统涉及的关键步骤。

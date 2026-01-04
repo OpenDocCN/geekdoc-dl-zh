@@ -1,11 +1,15 @@
 - en: 2  Retrieval Augmented Generation (RAG)
+  id: totrans-0
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
+  zh: 2 Retrieval Augmented Generation (RAG)
 - en: 原文：[https://mallahyari.github.io/rag-ebook/02_rag.html](https://mallahyari.github.io/rag-ebook/02_rag.html)
+  id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 原文：[https://mallahyari.github.io/rag-ebook/02_rag.html](https://mallahyari.github.io/rag-ebook/02_rag.html)
 - en: Generative AI, a subset of artificial intelligence, has revolutionized the field
     of text generation. It has paved the way for machines to generate human-like text,
     offering a myriad of benefits in various applications. From content creation and
@@ -14,12 +18,16 @@
     However, it is essential to recognize that despite its remarkable capabilities,
     generative AI systems have limitations, one of which is their reliance on the
     data they have been trained on to generate responses.
+  id: totrans-2
   prefs: []
   type: TYPE_NORMAL
+  zh: 生成式AI是人工智能的一个子集，它彻底改变了文本生成的领域。它为机器生成类似人类的文本铺平了道路，在各种应用中提供了众多好处。从内容创作和聊天机器人到语言翻译和自然语言理解，生成式AI在自然语言处理的世界中被证明是一个强大的工具。然而，认识到尽管它具有非凡的能力，但生成式AI系统仍然存在局限性，其中之一是它们依赖于训练数据来生成响应是至关重要的。
 - en: 2.1 The Limitation of Generative AI
+  id: totrans-3
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 2.1 生成式AI的局限性
 - en: Generative AI models, such as GPT3 (Generative Pre-trained Transformer), have
     been trained on vast datasets containing text from the internet. While this training
     process equips them with a broad understanding of language and context, it also
@@ -28,81 +36,113 @@
     may not always be accurate or contextually relevant, especially when dealing with
     niche topics or recent developments that may not be adequately represented in
     their training data.
+  id: totrans-4
   prefs: []
   type: TYPE_NORMAL
+  zh: 生成式AI模型，如GPT3（生成预训练变换器），是在包含互联网文本的大量数据集上训练的。虽然这一训练过程使它们具备了广泛的语言和上下文理解，但也引入了局限性。这些模型只能生成与它们训练数据中存在的模式和信息的文本。因此，它们的回答可能并不总是准确或上下文相关的，尤其是在处理其训练数据中可能没有得到充分代表的利基主题或最新发展时。
 - en: '2.1.1 Example: Transforming Customer Support with RAG'
+  id: totrans-5
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 2.1.1 示例：利用RAG改进客户支持
 - en: Imagine you’re the owner of a thriving e-commerce platform, selling a wide range
     of products from electronics to fashion. You’ve recently integrated a chatbot
     to assist your customers with inquiries, but you’re starting to see its limitations.
     Let’s explore how Retrieval-Augmented Generation (RAG) can help overcome these
     limitations and enhance the customer support experience.
+  id: totrans-6
   prefs: []
   type: TYPE_NORMAL
+  zh: 想象一下，你是一家繁荣的电子商务平台的拥有者，销售从电子产品到时尚的各种产品。你最近集成了一个聊天机器人来帮助客户解答疑问，但你开始看到它的局限性。让我们探讨如何利用检索增强生成（RAG）来克服这些局限性并提升客户支持体验。
 - en: '**Limitations of a Traditional Large Language Model (LLM)**'
+  id: totrans-7
   prefs: []
   type: TYPE_NORMAL
+  zh: '**传统大型语言模型（LLM）的局限性**'
 - en: 'Your existing chatbot is built around a traditional Large Language Model (LLM).
     While it’s knowledgeable about general product information, your customers are
     increasingly seeking more specific and real-time assistance. Here are some challenges
     you’ve encountered:'
+  id: totrans-8
   prefs: []
   type: TYPE_NORMAL
+  zh: 您现有的聊天机器人是基于传统的大型语言模型（LLM）构建的。虽然它对一般产品信息有所了解，但您的客户越来越需要更具体和实时的帮助。以下是您遇到的一些挑战：
 - en: '**Product Availability:** Customers often inquire about the availability of
     specific items, especially during sales or promotions. The LLM can provide information
     based on its training data, but it doesn’t have access to real-time inventory
     data.'
+  id: totrans-9
   prefs: []
   type: TYPE_NORMAL
+  zh: '**产品可用性：** 客户经常询问特定产品的可用性，尤其是在促销期间。LLM可以根据其训练数据提供信息，但它无法访问实时库存数据。'
 - en: '**Shipping and Delivery:** Customers frequently ask about shipping times, tracking
     information, and potential delays. The LLM can provide standard shipping policies,
     but it can’t offer real-time updates on the status of an individual order.'
+  id: totrans-10
   prefs: []
   type: TYPE_NORMAL
+  zh: '**运输和配送：** 客户经常询问运输时间、跟踪信息和可能的延误。LLM可以提供标准运输政策，但它无法提供单个订单状态的实时更新。'
 - en: '**Product Reviews:** Shoppers want to know about recent product reviews and
     ratings to make informed decisions. The LLM lacks access to the latest customer
     reviews and sentiment analysis.'
+  id: totrans-11
   prefs: []
   type: TYPE_NORMAL
+  zh: '**产品评论：** 购物者希望了解最新的产品评论和评分，以便做出明智的决定。LLM无法访问最新的客户评论和情感分析。'
 - en: '**Promotions and Discounts:** Customers seek information about ongoing promotions,
     discounts, and special offers. The LLM can only provide details based on the data
     it was trained on, missing out on time-sensitive deals.'
+  id: totrans-12
   prefs: []
   type: TYPE_NORMAL
+  zh: '**促销和折扣**：客户寻求有关正在进行中的促销、折扣和特别优惠的信息。LLM只能根据其训练的数据提供详细信息，从而错过了时间敏感的交易。'
 - en: 2.1.2 How RAG Transforms Customer Support
+  id: totrans-13
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 2.1.2 如何RAG转换客户支持
 - en: 'Now, let’s introduce RAG into your e-commerce customer support system:'
+  id: totrans-14
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在，让我们将RAG引入您的电子商务客户支持系统：
 - en: 'Retrieval of Real-Time Data: With RAG, your chatbot can connect to your e-commerce
     platform’s databases and data warehouses in real-time. It can retrieve the latest
     information about product availability, stock levels, and shipping status.'
+  id: totrans-15
   prefs: []
   type: TYPE_NORMAL
+  zh: 实时数据的检索：使用RAG，您的聊天机器人可以实时连接到您的电子商务平台的数据库和数据仓库。它可以检索有关产品可用性、库存水平和运输状态的最新信息。
 - en: '**Incorporating User Reviews:** RAG can scrape and analyze customer reviews
     and ratings from your website, social media, and other sources. It can then generate
     responses that include recent reviews, helping customers make informed choices.'
+  id: totrans-16
   prefs: []
   type: TYPE_NORMAL
+  zh: '**整合用户评价**：RAG可以从您的网站、社交媒体和其他来源抓取和分析客户评价和评分。然后，它可以生成包含最新评价的响应，帮助顾客做出明智的选择。'
 - en: '**Dynamic Promotions:** RAG can access your promotion database and provide
     up-to-the-minute details about ongoing discounts, flash sales, and limited-time
     offers. It can even suggest personalized promotions based on a user’s browsing
     history.'
+  id: totrans-17
   prefs: []
   type: TYPE_NORMAL
+  zh: '**动态促销**：RAG可以访问您的促销数据库，并提供有关正在进行中的折扣、闪购和限时优惠的最新详细信息。它甚至可以根据用户的浏览历史建议个性化的促销活动。'
 - en: '**Order Tracking:** RAG can query your logistics system to provide customers
     with real-time tracking information for their orders. It can also proactively
     notify customers of any delays or issues.'
+  id: totrans-18
   prefs: []
   type: TYPE_NORMAL
+  zh: '**订单跟踪**：RAG可以查询您的物流系统，为顾客提供其订单的实时跟踪信息。它还可以主动通知顾客任何延误或问题。'
 - en: 2.2 Introducing Retrieval Augmented Generation (RAG)
+  id: totrans-19
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 2.2 介绍检索增强生成（RAG）
 - en: To address the limitation of generative AI, researchers and engineers have developed
     innovative approaches, one of which is the Retrieval Augmented Generation (RAG)
     approach. RAG initially caught the interest of generative AI developers following
@@ -116,8 +156,12 @@
     mechanisms empowers RAG to access up-to-date information and context, making it
     particularly valuable for applications where accurate and current information
     is critical.
+  id: totrans-20
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了解决生成式AI的限制，研究人员和工程师已经开发了创新的方法，其中之一就是检索增强生成（Retrieval Augmented Generation）方法。RAG最初在Facebook
+    AI Research发布了一篇题为“*Retrieval-Augmented Generation for Knowledge-Intensive NLP
+    Tasks*”的标志性论文（[Lewis等人2020](references.html#ref-lewis2020retrieval)）后引起了生成式AI开发者的兴趣。RAG结合了生成式AI和检索技术的优势，以增强生成文本的质量和相关性。与传统仅依赖其内部知识的生成模型不同，RAG在生成响应之前，会额外检索来自外部来源的信息，如数据库、文档或网络。这种检索机制的整合使RAG能够访问最新信息和上下文，使其在需要准确和最新信息的应用中特别有价值。
 - en: In this chapter, we will delve deeper into the Retrieval Augmented Generation
     (RAG) approach, exploring its architecture, advantages, and real-world applications.
     By doing so, we will gain a better understanding of how RAG represents a significant
@@ -125,198 +169,268 @@
     limitations posed by reliance on static training data. Understanding the key concepts
     and components of this approach is essential for building an effective chat-to-PDF
     app.
+  id: totrans-21
   prefs: []
   type: TYPE_NORMAL
+  zh: 在本章中，我们将更深入地探讨检索增强生成（Retrieval Augmented Generation）方法，探索其架构、优势和实际应用。通过这样做，我们将更好地理解RAG如何代表生成式AI能力提升的重要一步，并克服对静态训练数据依赖的限制。理解这一方法的关键概念和组成部分对于构建有效的聊天到PDF应用至关重要。
 - en: 2.2.1 Key Concepts and Components
+  id: totrans-22
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 2.2.1 关键概念和组成部分
 - en: 'To grasp the essence of Retrieval-Augmented Generation, let’s explore its key
     concepts and components:'
+  id: totrans-23
   prefs: []
   type: TYPE_NORMAL
+  zh: 要掌握检索增强生成（Retrieval-Augmented Generation）的精髓，让我们探索其关键概念和组成部分：
 - en: '**Retrieval Component:** The retrieval component is responsible for searching
     and selecting relevant information from a database or corpus of documents. This
     component utilizes techniques like document indexing, query expansion, and ranking
     to identify the most suitable documents based on the user’s query.'
+  id: totrans-24
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: '**检索组件**：检索组件负责从数据库或文档集合中搜索和选择相关信息。该组件利用诸如文档索引、查询扩展和排名等技术，根据用户的查询识别最合适的文档。'
 - en: '**Generation Component:** Once the relevant documents are retrieved, the generation
     component takes over. It leverages Large Language Models (LLMs) such as GPT-3
     to process the retrieved information and generate coherent and contextually accurate
     responses. This component is responsible for converting retrieved facts into human-readable
     answers.'
+  id: totrans-25
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: '**生成组件**：一旦检索到相关文档，生成组件便接管工作。它利用大型语言模型（LLMs）如GPT-3来处理检索到的信息并生成连贯且上下文准确的响应。该组件负责将检索到的事实转换为人类可读的答案。'
 - en: '**Interaction Loop:** Retrieval-Augmented Generation often involves an interaction
     loop between the retrieval and generation components. The initial retrieval may
     not always return the perfect answer, so the generation component can refine and
     enhance the response iteratively by referring back to the retrieval results.'
+  id: totrans-26
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: '**交互循环**：检索增强生成通常涉及检索和生成组件之间的交互循环。初始检索可能不会总是返回完美的答案，因此生成组件可以通过参考检索结果，迭代地优化和增强响应。'
 - en: '**Fine-Tuning:** Successful implementation of this approach often requires
     fine-tuning LLMs on domain-specific data. Fine-tuning adapts the model to understand
     and generate content relevant to the specific knowledge domain, improving the
     quality of responses.'
+  id: totrans-27
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: '**微调**：成功实施此方法通常需要针对特定领域的数据对LLMs进行微调。微调使模型能够理解和生成与特定知识领域相关的内容，从而提高响应的质量。'
 - en: '**Latent Space Representations:** Retrieval models often convert documents
     and queries into latent space representations, making it easier to compare and
     rank documents based on their relevance to a query. These representations are
     crucial for efficient retrieval.'
+  id: totrans-28
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: '**潜在空间表示法**：检索模型通常将文档和查询转换为潜在空间表示，这使得根据查询的相关性比较和排名文档变得更加容易。这些表示对于高效的检索至关重要。'
 - en: '**Attention Mechanisms:** Both the retrieval and generation components typically
     employ attention mechanisms. Attention mechanisms help the model focus on the
     most relevant parts of the input documents and queries, improving the accuracy
     of responses.'
+  id: totrans-29
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: '**注意力机制**：检索和生成组件通常都采用注意力机制。注意力机制有助于模型关注输入文档和查询中最相关的部分，从而提高响应的准确性。'
 - en: 2.2.2 How It Improves Question Answering
+  id: totrans-30
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 2.2.2 如何改进问答
 - en: 'The Retrieval-Augmented Generation approach offers several advantages for question
     answering:'
+  id: totrans-31
   prefs: []
   type: TYPE_NORMAL
+  zh: 检索增强生成方法在问答方面提供了几个优势：
 - en: '**Access to a Wide Knowledge Base:** By integrating retrieval, the system can
     access a vast knowledge base, including large document collections. This enables
     the model to provide answers that may not be present in its pre-training data,
     making it highly informative.'
+  id: totrans-32
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: '**访问广泛的知识库**：通过集成检索，系统可以访问庞大的知识库，包括大量的文档集合。这使得模型能够提供其预训练数据中可能不存在的信息，使其信息量非常丰富。'
 - en: '**Contextual Understanding:** The generation component uses the context provided
     by the retrieval results to generate answers that are not only factually accurate
     but also contextually relevant. This contextual understanding leads to more coherent
     and precise responses.'
+  id: totrans-33
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: '**上下文理解**：生成组件使用检索结果提供的上下文来生成不仅事实准确而且上下文相关的答案。这种上下文理解导致更连贯和精确的响应。'
 - en: '**Iterative Refinement:** The interaction loop between retrieval and generation
     allows the system to iteratively refine its responses. If the initial response
     is incomplete or incorrect, the generation component can make further inquiries
     or clarifications based on the retrieval results, leading to improved answers.'
+  id: totrans-34
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: '**迭代优化**：检索和生成组件之间的交互循环允许系统迭代优化其响应。如果初始响应不完整或不正确，生成组件可以根据检索结果进行进一步的查询或澄清，从而得到改进的答案。'
 - en: '**Adaptability to Diverse Queries:** Retrieval-Augmented Generation can handle
     a wide range of user queries, including complex and multi-faceted questions. It
     excels in scenarios where simple keyword-based search engines may fall short.'
+  id: totrans-35
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: '**适应多样化查询**：检索增强生成可以处理广泛的用户查询，包括复杂和多方面的提问。它在简单基于关键词的搜索引擎可能不足的场合表现出色。'
 - en: '**Fine-Tuning for Specific Domains:** By fine-tuning the model on domain-specific
     data, you can tailor it to excel in particular knowledge domains. This makes it
     a valuable tool for specialized question answering tasks, such as legal or medical
     consultations.'
+  id: totrans-36
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: '**针对特定领域的微调**：通过在特定领域的数据上微调模型，你可以使其在特定知识领域表现出色。这使得它成为专门问答任务（如法律或医学咨询）的有价值工具。'
 - en: In summary, Retrieval-Augmented Generation is a dynamic approach that combines
     the strengths of retrieval and generation to provide accurate, contextually relevant,
     and informative answers to user queries. Understanding its key components and
     advantages is essential as we move forward in building our chat-to-PDF app, which
     will leverage this approach to enhance question answering over PDF documents.
+  id: totrans-37
   prefs: []
   type: TYPE_NORMAL
+  zh: 总结来说，检索增强生成是一种动态方法，它结合了检索和生成的优势，为用户查询提供准确、上下文相关且信息丰富的答案。理解其关键组件和优势对于我们在构建聊天到PDF应用的过程中至关重要，该应用将利用这种方法来增强对PDF文档的问答功能。
 - en: 2.3 RAG Architecture
+  id: totrans-38
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 2.3 RAG架构
 - en: 'At its core, RAG is a framework that synergizes two vital components:'
+  id: totrans-39
   prefs: []
   type: TYPE_NORMAL
+  zh: 在其核心，RAG是一个框架，它协同两个关键组件：
 - en: '**Retrieval Model:** This component specializes in searching and retrieving
     relevant information from extensive datasets, such as documents, articles, or
     databases. It identifies passages or documents that contain information related
     to a user’s query.'
+  id: totrans-40
   prefs: []
   type: TYPE_NORMAL
+  zh: '**检索模型**：该组件专门从大量数据集中搜索和检索相关信息，如文档、文章或数据库。它识别包含与用户查询相关信息段落的文档。'
 - en: '**Generation Model:** On the other hand, the generation model excels in crafting
     coherent and contextually rich responses to user queries. It’s often based on
     large language models (LLMs) like GPT-3, which can generate human-like text. [Figure 2.1](#fig-rag-architecture)
     shows the RAG architecture.'
+  id: totrans-41
   prefs: []
   type: TYPE_NORMAL
+  zh: '**生成模型**：另一方面，生成模型擅长构建对用户查询的连贯且上下文丰富的响应。它通常基于大型语言模型（LLMs）如GPT-3，可以生成类似人类的文本。[图2.1](#fig-rag-architecture)展示了RAG架构。'
 - en: '![RAG architecture](../Images/e0ef86e8e20c84b145361aec6cb470f5.png)'
+  id: totrans-42
   prefs: []
   type: TYPE_IMG
+  zh: '![RAG架构](../Images/e0ef86e8e20c84b145361aec6cb470f5.png)'
 - en: 'Figure 2.1: RAG architechture'
+  id: totrans-43
   prefs: []
   type: TYPE_NORMAL
+  zh: 图2.1：RAG架构
 - en: 2.4 Building the Retrieval System
+  id: totrans-44
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 2.4 构建检索系统
 - en: In this section, we will focus on building the retrieval system, a critical
     component of the chat-to-PDF app that enables the extraction of relevant information
     from PDF documents. This section is essential for implementing the Retrieval-Augmented
     Generation approach effectively.
+  id: totrans-45
   prefs: []
   type: TYPE_NORMAL
+  zh: 在本节中，我们将专注于构建检索系统，这是聊天到PDF应用的一个关键组件，它能够从PDF文档中提取相关信息。本节对于有效地实施检索增强生成方法至关重要。
 - en: 2.4.1 Choosing a Retrieval Model
+  id: totrans-46
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 2.4.1 选择检索模型
 - en: 'Choosing the right retrieval model is a crucial decision when building your
     chat-to-PDF app. Retrieval models determine how efficiently and accurately the
     system can find and rank relevant documents in response to user queries. Here
     are some considerations when selecting a retrieval model:'
+  id: totrans-47
   prefs: []
   type: TYPE_NORMAL
+  zh: 选择合适的检索模型是在构建你的聊天到PDF应用时一个至关重要的决策。检索模型决定了系统在响应用户查询时如何高效和准确地找到并排序相关文档。在选择检索模型时，以下是一些需要考虑的因素：
 - en: '**TF-IDF (Term Frequency-Inverse Document Frequency):** TF-IDF is a classical
     retrieval model that calculates the importance of terms in a document relative
     to a corpus. It’s simple to implement and effective for certain tasks.'
+  id: totrans-48
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**TF-IDF（词频-逆文档频率）**：TF-IDF是一个经典的检索模型，它计算了术语在文档相对于语料库的重要性。它易于实现，对于某些任务来说很有效。'
 - en: '**BM25:** BM25 is an improved version of TF-IDF that accounts for document
     length and term saturation. It’s often more effective in modern retrieval tasks.'
+  id: totrans-49
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**BM25**：BM25是TF-IDF的一个改进版本，它考虑了文档长度和词频饱和度。在现代检索任务中，它通常更有效。'
 - en: '**Vector Space Models:** These models represent documents and queries as vectors
     in a high-dimensional space. Cosine similarity or other distance metrics are used
     to rank documents. Implementations like Latent Semantic Analysis (LSA) and Word
     Embeddings (e.g., Word2Vec) can be used.'
+  id: totrans-50
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**向量空间模型**：这些模型将文档和查询表示为高维空间中的向量。使用余弦相似度或其他距离度量来对文档进行排序。可以使用如潜在语义分析（LSA）和词嵌入（例如Word2Vec）等实现。'
 - en: '**Neural Ranking Models:** Modern neural models, such as BERT-based models,
     are increasingly popular for retrieval tasks due to their ability to capture complex
     semantic relationships. They can be fine-tuned for specific tasks and domains.'
+  id: totrans-51
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**神经排名模型**：现代基于BERT的神经模型因其捕捉复杂语义关系的能力而越来越受到检索任务的青睐。它们可以根据特定任务和领域进行微调。'
 - en: '**Hybrid Models:** Combining multiple retrieval models, such as a combination
     of TF-IDF and neural models, can offer the benefits of both approaches.'
+  id: totrans-52
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**混合模型**：结合多个检索模型，例如TF-IDF和神经模型的组合，可以提供两种方法的优点。'
 - en: '**Domain and Data Size:** Consider the specific requirements of your chat-to-PDF
     app. Some retrieval models may be more suitable for small or specialized document
     collections, while others excel in handling large, diverse corpora.'
+  id: totrans-53
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**领域和数据大小**：考虑您的聊天到PDF应用的具体需求。某些检索模型可能更适合小型或专业文档集合，而其他模型在处理大型、多样化的语料库方面表现出色。'
 - en: '**Scalability:** Ensure that the chosen retrieval model can scale to meet the
     needs of your application, especially if you anticipate handling a substantial
     volume of PDF documents.'
+  id: totrans-54
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**可扩展性**：确保所选的检索模型可以扩展以满足您应用的需求，尤其是如果您预计要处理大量的PDF文档。'
 - en: 2.5 Embeddings and Vector Databases for Retrieval in RAG
+  id: totrans-55
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 2.5 RAG 中的检索嵌入和向量数据库
 - en: In addition to selecting an appropriate retrieval model, leveraging embeddings
     and vector databases can significantly enhance the performance and efficiency
     of the retrieval component within your chat-to-PDF app. Vector embeddings are
@@ -326,92 +440,126 @@
     capture semantic and contextual relationships between words, documents, or other
     textual entities, making them highly valuable in various applications, including
     the retrieval component of Retrieval Augmented Generation (RAG).
+  id: totrans-56
   prefs: []
   type: TYPE_NORMAL
+  zh: 除了选择合适的检索模型外，利用嵌入和向量数据库可以显著提高您聊天到PDF应用中检索组件的性能和效率。向量嵌入是现代信息检索和自然语言处理中的一个基本概念。它们将文本数据转换为数值向量，使计算机能够在数学和几何空间中理解和操作文本数据。这些嵌入捕捉了单词、文档或其他文本实体之间的语义和上下文关系，使它们在各种应用中非常有价值，包括检索增强生成（RAG）的检索组件。
 - en: '2.5.1 Vector Embeddings: An Overview'
+  id: totrans-57
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 2.5.1 向量嵌入：概述
 - en: Vector embeddings represent words, phrases, sentences, or even entire documents
     as points in a high-dimensional vector space. The key idea is to map each textual
     element into a vector in such a way that semantically similar elements are located
     close to each other in this space, while dissimilar elements are further apart.
     This geometric representation facilitates similarity calculations, clustering,
     and other operations.
+  id: totrans-58
   prefs: []
   type: TYPE_NORMAL
+  zh: 向量嵌入将单词、短语、句子甚至整个文档表示为高维向量空间中的点。关键思想是将每个文本元素映射到向量中，使得语义上相似元素在这个空间中彼此靠近，而不同元素则相距较远。这种几何表示有助于相似度计算、聚类和其他操作。
 - en: 'Examples of Vector Embeddings:'
+  id: totrans-59
   prefs: []
   type: TYPE_NORMAL
+  zh: 向量嵌入的示例：
 - en: '**Word Embeddings (Word2Vec, GloVe):** Word embeddings represent individual
     words as vectors. For example, “king” and “queen” may be represented as vectors
     that are close together in the vector space because they share similar semantic
     properties.'
+  id: totrans-60
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: '**词嵌入（Word2Vec, GloVe）**：词嵌入将单个单词表示为向量。例如，“king”和“queen”可能被表示为在向量空间中彼此靠近的向量，因为它们具有相似的语义属性。'
 - en: '**Document Embeddings (Doc2Vec, BERT):** Document embeddings map entire documents
     (such as PDFs) into vectors. Two documents discussing similar topics will have
     embeddings that are close in the vector space.'
+  id: totrans-61
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: '**文档嵌入（Doc2Vec, BERT）**：文档嵌入将整个文档（如PDF文件）映射到向量中。讨论相似主题的两个文档将在向量空间中具有接近的嵌入。'
 - en: 'There are abundent of tutorials and resources that can help you learn more
     about vector embeddings. Here are some resources that can help you get started:'
+  id: totrans-62
   prefs: []
   type: TYPE_NORMAL
+  zh: 有许多教程和资源可以帮助您学习更多关于向量嵌入的知识。以下是一些可以帮助您入门的资源：
 - en: '[Vector Embeddings Explained](https://weaviate.io/blog/vector-embeddings-explained)'
+  id: totrans-63
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '[向量嵌入解释](https://weaviate.io/blog/vector-embeddings-explained)'
 - en: '[Google Vector embeddings](https://cloud.google.com/blog/topics/developers-practitioners/meet-ais-multitool-vector-embeddings)'
+  id: totrans-64
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '[Google 向量嵌入](https://cloud.google.com/blog/topics/developers-practitioners/meet-ais-multitool-vector-embeddings)'
 - en: '[What are vector embeddings](https://www.elastic.co/what-is/vector-embedding)'
+  id: totrans-65
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '[什么是向量嵌入](https://www.elastic.co/what-is/vector-embedding)'
 - en: 2.5.2 Vector Databases and Their Role in Enhancing Retrieval
+  id: totrans-66
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 2.5.2 向量数据库及其在增强检索中的作用
 - en: Vector databases, also known as similarity search engines or vector index databases,
     play a crucial role in the retrieval component of RAG by efficiently storing and
     retrieving these vector embeddings. They are specialized databases designed for
     retrieving vectors based on similarity, making them well-suited for scenarios
     where similarity between data points needs to be calculated quickly and accurately.
+  id: totrans-67
   prefs: []
   type: TYPE_NORMAL
+  zh: 向量数据库，也称为相似度搜索引擎或向量索引数据库，在RAG的检索组件中发挥着至关重要的作用，通过高效地存储和检索这些向量嵌入。它们是专门为基于相似度检索向量而设计的数据库，非常适合需要快速且准确地计算数据点之间相似度的场景。
 - en: 'How Vector Databases Enhance Retrieval in RAG:'
+  id: totrans-68
   prefs: []
   type: TYPE_NORMAL
+  zh: 如何通过向量数据库增强RAG的检索：
 - en: '**Fast Retrieval:** Vector databases employ indexing structures optimized for
     similarity search. They use algorithms like approximate nearest neighbor (ANN)
     search to quickly locate the most similar vectors, even in large datasets containing
     numerous documents.'
+  id: totrans-69
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: '**快速检索：**向量数据库采用针对相似度搜索优化的索引结构。它们使用近似最近邻（ANN）搜索等算法，即使在包含大量文档的大型数据集中，也能快速定位最相似的向量。'
 - en: '**Scalability:** Vector databases can efficiently scale as the corpus of documents
     grows. This ensures that retrieval performance remains consistent, regardless
     of the dataset’s size.'
+  id: totrans-70
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: '**可扩展性：**随着文档语料库的增长，向量数据库可以有效地进行扩展。这确保了检索性能的一致性，无论数据集的大小如何。'
 - en: '**Advanced Similarity Scoring:** These databases offer a range of similarity
     metrics, such as cosine similarity or Jaccard index, allowing you to fine-tune
     the relevance ranking of retrieved documents based on your specific requirements.'
+  id: totrans-71
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: '**高级相似度评分：**这些数据库提供了一系列相似度度量，如余弦相似度或Jaccard指数，允许您根据具体需求微调检索文档的相关性排名。'
 - en: '**Integration with Retrieval Models:** Vector databases can be seamlessly integrated
     into your retrieval system. They complement retrieval models like TF-IDF, BM25,
     or neural ranking models by providing an efficient means of candidate document
     selection based on vector similarity.'
+  id: totrans-72
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: '**与检索模型的集成：**向量数据库可以无缝集成到您的检索系统中。它们通过提供基于向量相似性的高效候选文档选择方法，补充了TF-IDF、BM25或神经排名模型等检索模型。'
 - en: 'All of these factors has resulted in numerous new vector databases. Selecting
     and depending on one of these databases can have long-lasting consequences and
     dependencies within your system. Ideally, we opt for a vector database that exhibits
@@ -419,18 +567,26 @@
     Some of these vector databases are: [Qdrant](https://qdrant.tech/), [Weaviate](https://weaviate.io/),
     [Pinecone](https://www.pinecone.io/), [pgvector](https://github.com/pgvector/pgvector),
     [Milvus](https://milvus.io/), and [Chroma](https://www.trychroma.com/).'
+  id: totrans-73
   prefs: []
   type: TYPE_NORMAL
+  zh: 所有这些因素都导致了众多新的向量数据库的出现。选择并依赖这些数据库之一可能会在您的系统中产生长期的影响和依赖。理想情况下，我们选择一个具有强大可扩展性、同时保持成本效益并最小化延迟的向量数据库。这些向量数据库包括：[Qdrant](https://qdrant.tech/)、[Weaviate](https://weaviate.io/)、[Pinecone](https://www.pinecone.io/)、[pgvector](https://github.com/pgvector/pgvector)、[Milvus](https://milvus.io/)和[Chroma](https://www.trychroma.com/)。
 - en: '![vector databases comparison](../Images/b9f392eb092f11e5f10f9d15e623dc92.png)'
+  id: totrans-74
   prefs: []
   type: TYPE_IMG
+  zh: '![向量数据库比较](../Images/b9f392eb092f11e5f10f9d15e623dc92.png)'
 - en: 'Figure 2.2: Vector databases comparison. [Image source](https://docs.google.com/spreadsheets/d/1oAeF4Q7ILxxfInGJ8vTsBck3-2U9VV8idDf3hJOozNw/edit#gid=0)'
+  id: totrans-75
   prefs: []
   type: TYPE_NORMAL
+  zh: 图2.2：向量数据库比较。[图片来源](https://docs.google.com/spreadsheets/d/1oAeF4Q7ILxxfInGJ8vTsBck3-2U9VV8idDf3hJOozNw/edit#gid=0)
 - en: 2.6 RAG Data Ingestion Pipeline
+  id: totrans-76
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 2.6 RAG数据摄取管道
 - en: Before your Chat-to-PDF app can effectively retrieve information from a vector
     database, it’s imperative to preprocess the PDF documents and create a structured
     and searchable index for the preprocessed data. This searchable index serves as
@@ -438,126 +594,180 @@
     catalog. It empowers your system to swiftly and accurately locate relevant information
     within PDF documents, enhancing the efficiency and precision of the retrieval
     process.
+  id: totrans-77
   prefs: []
   type: TYPE_NORMAL
+  zh: 在您的Chat-to-PDF应用能够有效地从向量数据库中检索信息之前，预处理PDF文档并创建预处理数据的结构化和可搜索索引至关重要。这个可搜索索引是您应用程序的基石，类似于精心组织的图书馆目录。它使您的系统能够迅速且准确地定位PDF文档中的相关信息，从而提高检索过程的效率和精度。
 - en: '[Figure 2.3](#fig-rag-data-pipeline) illustrates the RAG data ingestion pipeline.
     in [Chapter 3](03_prepare_data.html), we will fully discuss how to prepare, index,
     and store the documents in a vector database.'
+  id: totrans-78
   prefs: []
   type: TYPE_NORMAL
+  zh: '[图2.3](#fig-rag-data-pipeline)展示了RAG数据摄取管道。在[第3章](03_prepare_data.html)中，我们将全面讨论如何在向量数据库中准备、索引和存储文档。'
 - en: '![RAG Data ingestion pipeline](../Images/022a474a9052ed198780d358a8c0f3ce.png)'
+  id: totrans-79
   prefs: []
   type: TYPE_IMG
+  zh: '![RAG数据摄取管道](../Images/022a474a9052ed198780d358a8c0f3ce.png)'
 - en: 'Figure 2.3: RAG data ingestion pipeline'
+  id: totrans-80
   prefs: []
   type: TYPE_NORMAL
+  zh: 图2.3：RAG数据摄取管道
 - en: 2.7 Challenges of Retrieval-Augmented Generation
+  id: totrans-81
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 2.7 检索增强生成面临的挑战
 - en: The adoption of Retrieval-Augmented Generation (RAG) represents a significant
     advancement in natural language processing and information retrieval. However,
     like any complex AI system, RAG presents a set of challenges that must be addressed
     to fully harness its potential. In this section, we explore some of the key challenges
     associated with RAG.
+  id: totrans-82
   prefs: []
   type: TYPE_NORMAL
+  zh: 采用检索增强生成（RAG）代表了自然语言处理和信息检索领域的一项重大进步。然而，像任何复杂的AI系统一样，RAG也带来了一系列挑战，必须解决这些问题才能充分发挥其潜力。在本节中，我们探讨了与RAG相关的一些关键挑战。
 - en: 2.7.1 Data Quality and Relevance
+  id: totrans-83
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 2.7.1 数据质量和相关性
 - en: 'RAG heavily relies on the availability of high-quality and relevant data for
     both retrieval and generation tasks. Challenges in this area include:'
+  id: totrans-84
   prefs: []
   type: TYPE_NORMAL
+  zh: RAG在检索和生成任务中高度依赖于高质量和相关的数据。该领域的挑战包括：
 - en: '**Noisy Data:** Incomplete, outdated, or inaccurate data sources can lead to
     retrieval of irrelevant information, impacting the quality of generated responses.'
+  id: totrans-85
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**噪声数据**：不完整、过时或不准确的数据源可能导致检索到不相关信息，影响生成响应的质量。'
 - en: '**Bias and Fairness:** Biases present in training data may lead to biased retrieval
     and generation, perpetuating stereotypes or misinformation.'
+  id: totrans-86
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**偏差和公平性**：训练数据中存在的偏差可能导致检索和生成的偏差，从而延续刻板印象或错误信息。'
 - en: 2.7.2 Integration Complexity
+  id: totrans-87
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 2.7.2 集成复杂性
 - en: 'Integrating retrieval and generation components seamlessly is non-trivial,
     as it involves bridging different architectures and models. Challenges include:'
+  id: totrans-88
   prefs: []
   type: TYPE_NORMAL
+  zh: 无缝集成检索和生成组件并非易事，因为它涉及到连接不同的架构和模型。挑战包括：
 - en: '**Model Compatibility:** Ensuring that the retrieval and generation models
     work harmoniously, especially when combining traditional methods (e.g., TF-IDF)
     with neural models (e.g., GPT-3).'
+  id: totrans-89
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**模型兼容性**：确保检索和生成模型能够和谐工作，尤其是在将传统方法（例如TF-IDF）与神经网络模型（例如GPT-3）结合时。'
 - en: '**Latency and Efficiency:** Balancing the need for real-time responsiveness
     with the computational resources required for retrieval and generation.'
+  id: totrans-90
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**延迟和效率**：在实时响应需求和检索及生成所需的计算资源之间取得平衡。'
 - en: 2.7.3 Scalability
+  id: totrans-91
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 2.7.3 可扩展性
 - en: 'Scaling RAG systems to handle large volumes of data and user requests can be
     challenging:'
+  id: totrans-92
   prefs: []
   type: TYPE_NORMAL
+  zh: 将RAG系统扩展以处理大量数据和用户请求可能具有挑战性：
 - en: '**Indexing Efficiency:** As the document corpus grows, maintaining an efficient
     and up-to-date index becomes crucial for retrieval speed.'
+  id: totrans-93
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**索引效率**：随着文档语料库的增长，保持高效和最新的索引对于检索速度至关重要。'
 - en: '**Model Scaling:** Deploying large-scale neural models for both retrieval and
     generation may require substantial computational resources.'
+  id: totrans-94
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**模型扩展**：为检索和生成部署大规模神经网络模型可能需要大量的计算资源。'
 - en: 2.7.4 Evaluation Metrics
+  id: totrans-95
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 2.7.4 评估指标
 - en: 'Evaluating the performance of RAG systems presents difficulties:'
+  id: totrans-96
   prefs: []
   type: TYPE_NORMAL
+  zh: 评估RAG系统的性能存在困难：
 - en: '**Lack of Gold Standards:** In some cases, there may be no clear gold standard
     for evaluating the relevance and quality of retrieved documents.'
+  id: totrans-97
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**缺乏黄金标准**：在某些情况下，可能没有明确的黄金标准来评估检索文档的相关性和质量。'
 - en: '**Diverse User Needs:** Users have diverse information needs, making it challenging
     to develop universal evaluation metrics.'
+  id: totrans-98
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**多样化的用户需求**：用户有不同的信息需求，这使得开发通用的评估指标具有挑战性。'
 - en: 2.7.5 Domain Adaptation
+  id: totrans-99
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 2.7.5 领域适应
 - en: 'Adapting RAG systems to specific domains or industries can be complex:'
+  id: totrans-100
   prefs: []
   type: TYPE_NORMAL
+  zh: 将RAG系统适应特定领域或行业可能很复杂：
 - en: '**Domain-Specific Knowledge:** Incorporating domain-specific knowledge and
     jargon into retrieval and generation.'
+  id: totrans-101
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**领域特定知识**：将领域特定知识和术语纳入检索和生成。'
 - en: '**Training Data Availability:** The availability of domain-specific training
     data for fine-tuning models.'
+  id: totrans-102
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**训练数据可用性**：为微调模型提供领域特定训练数据。'
 - en: Addressing these challenges is essential to unlock the full potential of RAG
     in various applications, from question answering to content generation. As research
     and development in this field continue, finding innovative solutions to these
     challenges will be critical for building robust and reliable RAG systems that
     deliver accurate, relevant, and trustworthy information to users.
+  id: totrans-103
   prefs: []
   type: TYPE_NORMAL
+  zh: 解决这些挑战对于释放RAG在各种应用中的全部潜力至关重要，从问答到内容生成。随着该领域的研究和开发继续进行，找到解决这些挑战的创新解决方案对于构建稳健且可靠的RAG系统至关重要，这些系统能够向用户提供准确、相关和可信的信息。
 - en: As we conclude our exploration of the foundations and the retrieval component
     of Retrieval-Augmented Generation (RAG) systems in this Chapter, we now turn our
     attention to the practical implementation of RAG pipelines in Chapter 3\. In this
@@ -566,11 +776,17 @@
     pipeline. We’ll also discuss the generation components that make RAG systems work.
     Further, Chapter 3 explores the impact of text splitting methods on RAG quality
     and the crucial role of metadata in enhancing the overall RAG experience.
+  id: totrans-104
   prefs: []
   type: TYPE_NORMAL
+  zh: 在本章中，我们结束了对于检索增强生成（RAG）系统的基础和检索组件的探索，现在我们将注意力转向第3章中RAG管道的实际实施。在下一章中，我们将深入探讨这些系统如何运作的细节，从PDF文档的预处理和数据摄取管道开始。我们还将讨论使RAG系统工作的生成组件。此外，第3章探讨了文本分割方法对RAG质量的影响以及元数据在提升整体RAG体验中的关键作用。
 - en: 'Lewis, Patrick, Ethan Perez, Aleksandra Piktus, Fabio Petroni, Vladimir Karpukhin,
     Naman Goyal, Heinrich Küttler, et al. 2020\. “Retrieval-Augmented Generation for
     Knowledge-Intensive Nlp Tasks.” *Advances in Neural Information Processing Systems*
     33: 9459–74.'
+  id: totrans-105
   prefs: []
   type: TYPE_NORMAL
+  zh: 'Lewis, Patrick, Ethan Perez, Aleksandra Piktus, Fabio Petroni, Vladimir Karpukhin,
+    Naman Goyal, Heinrich Küttler, 等人. 2020. “检索增强生成在知识密集型自然语言处理任务中的应用。” *神经信息处理系统进展*
+    33: 9459–74.'

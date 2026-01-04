@@ -1,15 +1,21 @@
 - en: 3  RAG Pipeline Implementation
+  id: totrans-0
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
+  zh: 3 RAG管道实现
 - en: 原文：[https://mallahyari.github.io/rag-ebook/03_prepare_data.html](https://mallahyari.github.io/rag-ebook/03_prepare_data.html)
+  id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 原文：[https://mallahyari.github.io/rag-ebook/03_prepare_data.html](https://mallahyari.github.io/rag-ebook/03_prepare_data.html)
 - en: 3.1 Preprocessing PDF documents
+  id: totrans-2
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 3.1 预处理PDF文档
 - en: Before we can harness the power of Large Language Models (LLMs) and particularly
     RAG method for question answering over PDF documents, it’s essential to prepare
     our data. PDFs, while a common format for documents, pose unique challenges for
@@ -18,443 +24,662 @@
     app. These steps are not only essential for PDFs but are also applicable to other
     types of files. However, our primary focus is on PDF documents due to their prevalence
     in various industries and applications.
+  id: totrans-3
   prefs: []
   type: TYPE_NORMAL
+  zh: 在我们能够利用大型语言模型（LLMs）和特别是RAG方法对PDF文档进行问答之前，准备我们的数据至关重要。虽然PDF是文档的常见格式，但在文本提取和分析方面提出了独特的挑战。在本节中，我们将探讨预处理PDF文档以使其适合我们的Chat-to-PDF应用程序的关键步骤。这些步骤不仅对PDF至关重要，而且适用于其他类型的文件。然而，我们的主要焦点是PDF文档，因为它们在各个行业和应用中都很普遍。
 - en: 3.1.1 PDF Text Extraction
+  id: totrans-4
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 3.1.1 PDF文本提取
 - en: 'PDFs may contain a mix of text, images, tables, and other elements. To enable
     text-based analysis and question answering, we need to extract the textual content
     from PDFs. Here’s how you can accomplish this:'
+  id: totrans-5
   prefs: []
   type: TYPE_NORMAL
+  zh: PDF可能包含文本、图像、表格和其他元素的混合。为了启用基于文本的分析和问答，我们需要从PDF中提取文本内容。以下是您如何完成此操作的方法：
 - en: '**Text Extraction Tools:** Explore available tools and libraries like PyPDF2,
     pdf2txt, or PDFMiner to extract text from PDF files programmatically.'
+  id: totrans-6
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**文本提取工具：** 探索可用的工具和库，如PyPDF2、pdf2txt或PDFMiner，以编程方式从PDF文件中提取文本。'
 - en: '**Handling Scanned Documents:** If your PDFs contain scanned images instead
     of selectable text, you may need Optical Character Recognition (OCR) software
     to convert images into machine-readable text.'
+  id: totrans-7
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**处理扫描文档：** 如果您的PDF包含可选择的文本而不是扫描图像，您可能需要光学字符识别（OCR）软件将图像转换为机器可读文本。'
 - en: '**Quality Control:** Check the quality of extracted text and perform any necessary
     cleanup, such as removing extraneous characters or fixing formatting issues.'
+  id: totrans-8
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**质量控制：** 检查提取文本的质量，并执行任何必要的清理，如删除多余的字符或修复格式问题。'
 - en: 3.1.2 Handling Multiple Pages
+  id: totrans-9
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 3.1.2 处理多页文档
 - en: 'PDF documents can span multiple pages, and maintaining context across pages
     is crucial for question answering. Here’s how you can address this challenge:'
+  id: totrans-10
   prefs: []
   type: TYPE_NORMAL
+  zh: PDF文档可能跨越多页，保持跨页面的上下文对于问答至关重要。以下是您如何应对这一挑战的方法：
 - en: '**Page Segmentation:** Segment the document into logical units, such as paragraphs
     or sections, to ensure that context is preserved.'
+  id: totrans-11
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**页面分割：** 将文档分割成逻辑单元，如段落或部分，以确保上下文得到保留。'
 - en: '**Metadata Extraction:** Extract metadata such as document titles, authors,
     page numbers, and creation dates. This metadata can aid in improving searchability
     and answering user queries.'
+  id: totrans-12
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**元数据提取：** 提取文档标题、作者、页码和创建日期等元数据。这些元数据有助于提高搜索性和回答用户查询。'
 - en: 3.1.3 Text Cleanup and Normalization
+  id: totrans-13
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 3.1.3 文本清理和规范化
 - en: 'PDFs may introduce artifacts or inconsistencies that can affect the quality
     of the extracted text. To ensure the accuracy of question answering, perform text
     cleanup and normalization:'
+  id: totrans-14
   prefs: []
   type: TYPE_NORMAL
+  zh: PDF可能引入影响提取文本质量的伪影或不一致性。为确保问答的准确性，执行文本清理和规范化：
 - en: '**Whitespace and Punctuation:** Remove or replace excessive whitespace and
     special characters to enhance text readability.'
+  id: totrans-15
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**空白符和标点符号：** 移除或替换过多的空白符和特殊字符，以提高文本可读性。'
 - en: '**Formatting Removal:** Eliminate unnecessary formatting, such as font styles,
     sizes, and colors, which may not be relevant for question answering.'
+  id: totrans-16
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**格式去除：** 消除不必要的格式，如字体样式、大小和颜色，这些可能对问答不相关。'
 - en: '**Spellchecking:** Check and correct spelling errors that might occur during
     the extraction process.'
+  id: totrans-17
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**拼写检查：** 检查并纠正提取过程中可能出现的拼写错误。'
 - en: 3.1.4 Language Detection
+  id: totrans-18
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 3.1.4 语言检测
 - en: If your PDF documents include text in multiple languages, it is a good idea
     to implement language detection algorithms to identify the language used in each
     section. This information can be useful when selecting appropriate LLM models
     for question answering.
+  id: totrans-19
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果您的PDF文档包含多种语言的文本，实施语言检测算法以识别每个部分的所用语言是一个好主意。此信息在选择适当的LLM模型进行问答时可能很有用。
 - en: 3.2 Data Ingestion Pipeline Implementation
+  id: totrans-20
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 3.2 数据摄取管道实现
 - en: 'As it has been depicted in [Figure 2.3](02_rag.html#fig-rag-data-pipeline)
     the first step of the data ingestion pipeline is *extracting and spliting text
     from the pdf documents*. There are several packages for this goal including:'
+  id: totrans-21
   prefs: []
   type: TYPE_NORMAL
+  zh: 如 [图 2.3](02_rag.html#fig-rag-data-pipeline) 所示，数据摄取管道的第一步是 *从 PDF 文档中提取和分割文本*。为此目的有几个包，包括：
 - en: '[PyPDF2](https://pypdf2.readthedocs.io/en/3.0.0/)'
+  id: totrans-22
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '[PyPDF2](https://pypdf2.readthedocs.io/en/3.0.0/)'
 - en: '[pdfminer.six](https://pdfminersix.readthedocs.io/en/latest/)'
+  id: totrans-23
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '[pdfminer.six](https://pdfminersix.readthedocs.io/en/latest/)'
 - en: '[unstructured](https://github.com/Unstructured-IO/unstructured)'
+  id: totrans-24
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '[unstructured](https://github.com/Unstructured-IO/unstructured)'
 - en: '*Note* *If you have scanned pdfs, you can utilize libraries such as **unstructured**,
     **pdf2image** and **pytesseract**.*  *Additionally, there are data loaders hub
     like [llamahub](https://llamahub.ai/) that contains tens of data loaders for reading
     and connecting a wide variety data sources to a Large Language Model (LLM).'
+  id: totrans-25
   prefs: []
   type: TYPE_NORMAL
+  zh: '*注意* 如果您已经扫描了 PDF，您可以使用如 **unstructured**、**pdf2image** 和 **pytesseract** 等库。此外，还有数据加载器中心如
+    [llamahub](https://llamahub.ai/)，其中包含数十个用于读取和将各种数据源连接到大型语言模型（LLM）的数据加载器。'
 - en: Finally, there are packages like [llamaindex](https://gpt-index.readthedocs.io/en/stable/index.html),
     and [langchain](https://python.langchain.com/docs/get_started/introduction). These
     are frameworks that faciliates developing applications powered by LLMs. Therefore,
     they have implemented many of these data loaders including extracting and spliting
     text from pdf files.
+  id: totrans-26
   prefs: []
   type: TYPE_NORMAL
+  zh: 最后，还有一些像 [llamaindex](https://gpt-index.readthedocs.io/en/stable/index.html)
+    和 [langchain](https://python.langchain.com/docs/get_started/introduction) 这样的包。这些是促进开发由
+    LLM 驱动的应用程序的框架。因此，它们实现了许多这些数据加载器，包括从 PDF 文件中提取和分割文本。
 - en: '**Step 1: Install necessary libraries**'
+  id: totrans-27
   prefs: []
   type: TYPE_NORMAL
+  zh: '**步骤 1：安装必要的库**'
 - en: '[PRE0]'
+  id: totrans-28
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE0]'
 - en: '***Step 2: Load the pdf file and extract the text from it**'
+  id: totrans-29
   prefs: []
   type: TYPE_NORMAL
+  zh: '**步骤 2：加载 PDF 文件并从中提取文本**'
 - en: Code below will iterate over the pages of the pdf file, extract the text and
     add it to the `documents` list object, see [Figure 3.1](#fig-load-pdf).
+  id: totrans-30
   prefs: []
   type: TYPE_NORMAL
+  zh: 下面的代码将遍历 PDF 文件的页面，提取文本并将其添加到 `documents` 列表对象中，如图 [3.1](#fig-load-pdf) 所示。
 - en: '![Load pdf files](../Images/be27629d726d92c9d69eeb5813496211.png)'
+  id: totrans-31
   prefs: []
   type: TYPE_IMG
+  zh: '![加载 PDF 文件](../Images/be27629d726d92c9d69eeb5813496211.png)'
 - en: 'Figure 3.1: Load pdf files'
+  id: totrans-32
   prefs: []
   type: TYPE_NORMAL
+  zh: 图 3.1：加载 PDF 文件
 - en: Now every page has become a separate document that we can later *embed (vectorize)*
     and *store* in the vector database. However, some pages could be very lengthy
     and other ones could be very short as page length varies. This could signaficantly
     impact the quality of the document search and retrieval.
+  id: totrans-33
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在，每一页都已成为一个独立的文档，我们可以在以后将其 *嵌入（向量化）* 并 *存储* 在向量数据库中。然而，一些页面可能非常长，而其他页面可能非常短，因为页面长度各不相同。这可能会显著影响文档搜索和检索的质量。
 - en: Additionally, LLMs have a limited context window (token limit), i.e. they can
     handle certain number of tokens (a token roughly equals to a word). Therefore,
     we instead first concatenate all the pages into a long text document and then
     split that document into smaller reletively equal size chunks. We then embed each
     chunk of text and insert into the vector database.
+  id: totrans-34
   prefs: []
   type: TYPE_NORMAL
+  zh: 此外，大型语言模型（LLM）有一个有限的内容窗口（令牌限制），即它们可以处理一定数量的令牌（一个令牌大致等于一个单词）。因此，我们首先将所有页面连接成一个长的文本文档，然后将该文档分割成更小的相对相等大小的块。然后我们将每个文本块嵌入并插入到向量数据库中。
 - en: Nevertheless, since we are going to use `llamaindex` and `langchain` frameworks
     for the RAG pipeline, Let’s utilize the features and functions these frameworks
     offer. They have data loaders and splitters that we can use to read and split
     pdf files. You can see the code in [Figure 3.2](#fig-langchain-dataloader).
+  id: totrans-35
   prefs: []
   type: TYPE_NORMAL
+  zh: 然而，由于我们打算使用 `llamaindex` 和 `langchain` 框架进行 RAG 管道，让我们利用这些框架提供的功能和函数。它们具有数据加载器和分割器，我们可以使用它们来读取和分割
+    PDF 文件。您可以在 [图 3.2](#fig-langchain-dataloader) 中看到代码。
 - en: '![Langchain data loader](../Images/c66fdd1506da59e16b7dd0e8996878f2.png)'
+  id: totrans-36
   prefs: []
   type: TYPE_IMG
+  zh: '![Langchain 数据加载器](../Images/c66fdd1506da59e16b7dd0e8996878f2.png)'
 - en: 'Figure 3.2: Langchain data loader'
+  id: totrans-37
   prefs: []
   type: TYPE_NORMAL
+  zh: 图 3.2：Langchain 数据加载器
 - en: '`pdf_content[0]` contains the entire content of pdf, and has s special structure.
     It is a `Document` object with some properties including `page_content` and `metadata`.
     `page_content` is the textual content and `metadata` contains some metadata about
     the pdf. Here’s the partial output the `Document` object of our pdf in [Figure 3.3](#fig-langchain-dataloader-output).'
+  id: totrans-38
   prefs: []
   type: TYPE_NORMAL
+  zh: '`pdf_content[0]` 包含了整个 PDF 的内容，并具有特殊的结构。它是一个具有一些属性（包括 `page_content` 和 `metadata`）的
+    `Document` 对象。`page_content` 是文本内容，而 `metadata` 包含有关 PDF 的元数据。以下是我们的 PDF 的 `Document`
+    对象的部分输出，如图 [3.3](#fig-langchain-dataloader-output) 所示。'
 - en: '![Langchain data loader output](../Images/afe331763882884e6f412be13ba495b3.png)'
+  id: totrans-39
   prefs: []
   type: TYPE_IMG
+  zh: '![Langchain 数据加载器输出](../Images/afe331763882884e6f412be13ba495b3.png)'
 - en: 'Figure 3.3: Langchain data loader output'
+  id: totrans-40
   prefs: []
   type: TYPE_NORMAL
+  zh: 图 3.3：Langchain 数据加载器输出
 - en: A `Document` object is a generic class for storing a piece of unstructured text
     and its associated metadata. See [here](https://api.python.langchain.com/en/latest/schema/langchain.schema.document.Document.html#langchain.schema.document.Document)
     for more information.
+  id: totrans-41
   prefs: []
   type: TYPE_NORMAL
+  zh: '`Document` 对象是一个用于存储非结构化文本及其相关元数据的通用类。更多信息请参阅 [这里](https://api.python.langchain.com/en/latest/schema/langchain.schema.document.Document.html#langchain.schema.document.Document)。'
 - en: '**Step 3: Split the text into smaller chunks**'
+  id: totrans-42
   prefs: []
   type: TYPE_NORMAL
+  zh: '**步骤 3：将文本分割成更小的块**'
 - en: 'There are several different text splitters. For more information see [langchain
     API](https://api.python.langchain.com/en/latest/api_reference.html#module-langchain.text_splitter),
     or [llamaIndex documentation](https://docs.llamaindex.ai/en/stable/examples/low_level/oss_ingestion_retrieval.html#use-a-text-splitter-to-split-documents).
     Two common ones are:'
+  id: totrans-43
   prefs: []
   type: TYPE_NORMAL
+  zh: 有几种不同的文本分割器。更多信息请参阅 [langchain API](https://api.python.langchain.com/en/latest/api_reference.html#module-langchain.text_splitter)，或
+    [llamaIndex 文档](https://docs.llamaindex.ai/en/stable/examples/low_level/oss_ingestion_retrieval.html#use-a-text-splitter-to-split-documents)。两种常见的是：
 - en: '`CharacterTextSplitter`: Split text based on a certain number characters.'
+  id: totrans-44
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: '`CharacterTextSplitter`：基于一定数量的字符分割文本。'
 - en: '`TokenTextSplitter`: Split text to tokens using model tokenizer.'
+  id: totrans-45
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: '`TokenTextSplitter`：使用模型分词器将文本分割成标记。'
 - en: The following code in [Figure 3.4](#fig-langchain-text-split) chunks the pdf
     content into sizes no greater than 1000, with a bit of overlap to allow for some
     continued context.
+  id: totrans-46
   prefs: []
   type: TYPE_NORMAL
+  zh: '[图 3.4](#fig-langchain-text-split) 中的以下代码将 PDF 内容分割成不大于 1000 个大小的块，并留有一定的重叠，以便保持一些连续的上下文。'
 - en: '![Langchain text split method](../Images/df4021fc07b692730b57459e030e3107.png)'
+  id: totrans-47
   prefs: []
   type: TYPE_IMG
+  zh: '![Langchain 文本分割方法](../Images/df4021fc07b692730b57459e030e3107.png)'
 - en: 'Figure 3.4: Langchain text split method'
+  id: totrans-48
   prefs: []
   type: TYPE_NORMAL
+  zh: 图 3.4：Langchain 文本分割方法
 - en: Here’s the number of chunks created from splitting the pdf file.
+  id: totrans-49
   prefs: []
   type: TYPE_NORMAL
+  zh: 这里是分割 PDF 文件所创建的块的数量。
 - en: '[PRE1]'
+  id: totrans-50
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE1]'
 - en: '***Step 4: Embed and store the documents in the vector database**'
+  id: totrans-51
   prefs: []
   type: TYPE_NORMAL
+  zh: '***步骤 4：将文档嵌入并存储在向量数据库中***'
 - en: 'In this step we need to convert chunks of text into embedding vectors. There
     are plenty of embedding models we can use including OpenAI models, Huggingface
     models, and Cohere models. You can even define your own custom embedding model.
     Selecting an embedding model depnds on several factors:'
+  id: totrans-52
   prefs: []
   type: TYPE_NORMAL
+  zh: 在这一步，我们需要将文本块转换为嵌入向量。我们可以使用包括 OpenAI 模型、Huggingface 模型和 Cohere 模型在内的许多嵌入模型。您甚至可以定义自己的自定义嵌入模型。选择嵌入模型取决于几个因素：
 - en: '**Cost:** Providers such as OpenAI or Cohere charge for embeddings, albeit
     it’s cheap, when you scale to thusands of pdf files, it will become prohibitive.'
+  id: totrans-53
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**成本：** 例如 OpenAI 或 Cohere 这样的供应商会收取嵌入费用，尽管价格便宜，但当您扩展到数千个 PDF 文件时，这将成为一个障碍。'
 - en: '**Latency and speed:** Hosting an embedding model on your server reduce the
     latency, whereas using vendors’ API increases the latency.'
+  id: totrans-54
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**延迟和速度：** 在您的服务器上托管嵌入模型可以减少延迟，而使用供应商的 API 会增加延迟。'
 - en: '**Convenience:** Using your own embedding model needs more compute resource
     and maintainance whereas using vendors APIs like OpenAI gives you a hassle-free
     experience.'
+  id: totrans-55
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**便利性：** 使用自己的嵌入模型需要更多的计算资源和维护，而使用 OpenAI 等供应商的 API 则可以给您带来无烦恼的体验。'
 - en: Similar to having several choices for embedding models, there are so many options
     for choosing a vector database, which is out the scope of this book.
+  id: totrans-56
   prefs: []
   type: TYPE_NORMAL
+  zh: 与选择嵌入模型有多个选择类似，选择向量数据库也有许多选项，但这超出了本书的范围。
 - en: '[Figure 3.5](#fig-vector-db1) shows some of the most popular vector database
     vendors and some of the features of their hosting. This [blog](https://thedataquarry.com/posts/vector-db-1/)
     fully examines these vector databases from different perspective.'
+  id: totrans-57
   prefs: []
   type: TYPE_NORMAL
+  zh: '[图 3.5](#fig-vector-db1) 展示了一些最受欢迎的向量数据库供应商及其托管的一些功能。这篇 [博客](https://thedataquarry.com/posts/vector-db-1/)
+    从不同角度全面考察了这些向量数据库。'
 - en: '![vector databases](../Images/39f923ccaa9ee4ba5ed7918862284dfe.png)'
+  id: totrans-58
   prefs: []
   type: TYPE_IMG
+  zh: '![向量数据库](../Images/39f923ccaa9ee4ba5ed7918862284dfe.png)'
 - en: 'Figure 3.5: Various vector databases. [Image source](https://thedataquarry.com/posts/vector-db-1/)'
+  id: totrans-59
   prefs: []
   type: TYPE_NORMAL
+  zh: 图 3.5：各种向量数据库。[图片来源](https://thedataquarry.com/posts/vector-db-1/)
 - en: We are going to use OpenAI models, particularly `text-embedding-ada-002` for
     embedding. Furthermore, we choose [Qdrant](https://qdrant.tech/) as our vector
     database. It’s open source, fast, very flexible, and offers a free clould-based
     tier.
+  id: totrans-60
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们将使用 OpenAI 模型，特别是 `text-embedding-ada-002` 进行嵌入。此外，我们选择 [Qdrant](https://qdrant.tech/)
+    作为我们的向量数据库。它是开源的，速度快，非常灵活，并提供免费云服务等级。
 - en: We first install the `openai` and `qdrant` package.
+  id: totrans-61
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们首先安装 `openai` 和 `qdrant` 包。
 - en: '[PRE2]'
+  id: totrans-62
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE2]'
 - en: '*We also require an API key that we can get it from [here](https://platform.openai.com/account/api-keys).'
+  id: totrans-63
   prefs: []
   type: TYPE_NORMAL
+  zh: '*我们还需要一个 API 密钥，我们可以从 [这里](https://platform.openai.com/account/api-keys) 获取。'
 - en: If we set `OPENAI_API_KEY` environment variable to our API key, we can easily
     call the functions that needs it without getting any error. Otherwise we can pass
     the API key parameter to functions requiring it. [Figure 3.6](#fig-langchain-qdrant-setup)
     shows how to do it.
+  id: totrans-64
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果我们将 `OPENAI_API_KEY` 环境变量设置为我们的 API 密钥，我们可以轻松调用需要它的函数而不会出现任何错误。否则，我们可以将 API
+    密钥参数传递给需要它的函数。[图 3.6](#fig-langchain-qdrant-setup) 展示了如何操作。
 - en: '![Qdrant vector database setup via Langchain](../Images/c49fd183fe7f992ead03121a78acb0d5.png)'
+  id: totrans-65
   prefs: []
   type: TYPE_IMG
+  zh: '![通过 Langchain 设置 Qdrant 向量数据库](../Images/c49fd183fe7f992ead03121a78acb0d5.png)'
 - en: 'Figure 3.6: Qdrant vector database setup via Langchain'
+  id: totrans-66
   prefs: []
   type: TYPE_NORMAL
+  zh: 图 3.6：通过 Langchain 设置 Qdrant 向量数据库
 - en: Please note that there are several different ways to achieve the same goal (embedding
     and storing in the vector database). You can use `Qdrant` client library directly
     instead of using the langchain wrapper for it. Also, you can first create embeddings
     separately and then store them in the Qdrant vector database. Here, we embedded
     the documents and stored them all by calling `Qdrant.from_documents()`.
+  id: totrans-67
   prefs: []
   type: TYPE_NORMAL
+  zh: 请注意，有几种不同的方法可以实现相同的目标（嵌入和存储在向量数据库中）。您可以直接使用 `Qdrant` 客户端库，而不是使用 langchain 包装器。此外，您可以先单独创建嵌入，然后将它们存储在
+    Qdrant 向量数据库中。在这里，我们通过调用 `Qdrant.from_documents()` 将文档嵌入并存储。
 - en: In addition, you can use Qdrant cloud vector database to store the embeddings
     and use their REST API to interact with it, unlike this example where the index
     is stored locally in the `/tmp/local_qdrant` directory. This approach is suitable
     for testing and POC (Proof-Of-Concept), not for production environment.
+  id: totrans-68
   prefs: []
   type: TYPE_NORMAL
+  zh: 此外，您可以使用 Qdrant 云向量数据库存储嵌入，并使用其 REST API 与其交互，与这个示例中索引存储在 `/tmp/local_qdrant`
+    目录本地不同。这种方法适用于测试和 POC（概念验证），但不适用于生产环境。
 - en: We can try and see how we can search and retrieve relevant documents from the
     vector database. For instance, let’s see what the answer to the question *“what
     is knearest neighbor?”*. See the output in [Figure 3.7](#fig-langchain-query-example).
+  id: totrans-69
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以尝试查看如何从向量数据库中搜索和检索相关文档。例如，让我们看看问题的答案 *“什么是 knearest neighbor？”*。请参阅 [图 3.7](#fig-langchain-query-example)
+    中的输出。
 - en: '![Question answering example with output](../Images/c9a7f11cb00aba29b93a195aa04258d7.png)'
+  id: totrans-70
   prefs: []
   type: TYPE_IMG
+  zh: '![带有输出的问答示例](../Images/c9a7f11cb00aba29b93a195aa04258d7.png)'
 - en: 'Figure 3.7: Question answering example with output'
+  id: totrans-71
   prefs: []
   type: TYPE_NORMAL
+  zh: 图 3.7：带有输出的问答示例
 - en: Awesome! The retrieved answer seems quite relevant.
+  id: totrans-72
   prefs: []
   type: TYPE_NORMAL
+  zh: 太棒了！检索到的答案似乎非常相关。
 - en: The entire code is displayed in [Figure 3.8](#fig-langchain-query-retrieval-fullcode).
+  id: totrans-73
   prefs: []
   type: TYPE_NORMAL
+  zh: 完整的代码显示在 [图 3.8](#fig-langchain-query-retrieval-fullcode) 中。
 - en: '![The entire code for retrieval component](../Images/9b02a6f4a7045a494e149161a591cfe2.png)'
+  id: totrans-74
   prefs: []
   type: TYPE_IMG
+  zh: '![检索组件的完整代码](../Images/9b02a6f4a7045a494e149161a591cfe2.png)'
 - en: 'Figure 3.8: The entire code for retrieval component****  ****## 3.3 Generation
     Component Implementation'
+  id: totrans-75
   prefs: []
   type: TYPE_NORMAL
+  zh: 图 3.8：检索组件的完整代码****  ****## 3.3 生成组件实现
 - en: '[Figure 3.9](#fig-rag-pipeline-simplified) illustrates a simplified version
     of the RAG pipeline we saw in [Chapter 2](02_rag.html). So far our **Retrieval**
     component of the RAG is implemented. In the next section we will implement the
     **Generation** component.'
+  id: totrans-76
   prefs: []
   type: TYPE_NORMAL
+  zh: '[图 3.9](#fig-rag-pipeline-simplified) 展示了我们曾在 [第 2 章](02_rag.html) 中看到的 RAG
+    管道的简化版本。到目前为止，我们的 RAG 的 **检索** 组件已实现。在下一节中，我们将实现 **生成** 组件。'
 - en: '![rag pipeline](../Images/fb5c30e350d250ed3c354c72f5ee492b.png)'
+  id: totrans-77
   prefs: []
   type: TYPE_IMG
+  zh: '![rag 管道](../Images/fb5c30e350d250ed3c354c72f5ee492b.png)'
 - en: 'Figure 3.9: RAG pipeline'
+  id: totrans-78
   prefs: []
   type: TYPE_NORMAL
+  zh: 图 3.9：RAG 管道
 - en: 'The steps for generating a response for a user’s question are:'
+  id: totrans-79
   prefs: []
   type: TYPE_NORMAL
+  zh: 生成用户问题的响应的步骤是：
 - en: '**Step 1:** Embed the user’s query using the same model used for embedding
     documents'
+  id: totrans-80
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**步骤 1:** 使用与嵌入文档相同的模型嵌入用户的查询'
 - en: '**Step 2:** Pass the query embedding to vector database, search and retrieve
     the top-k documents (i.e. context) from the vector database'
+  id: totrans-81
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**步骤 2:** 将查询嵌入传递到向量数据库，搜索并检索来自向量数据库的前 k 个文档（即上下文）'
 - en: '**Step 3:** Create a “prompt” and include the user’s query and context in it'
+  id: totrans-82
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**步骤 3:** 创建一个“提示”，并在其中包含用户的查询和上下文'
 - en: '**Step 4:** Call the LLM and pass the the prompt'
+  id: totrans-83
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**步骤 4:** 调用 LLM 并传递提示'
 - en: '**Step 5:** Get the generated response from LLM and display it to the user'
+  id: totrans-84
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**步骤 5:** 从 LLM 获取生成的响应并将其显示给用户'
 - en: Again, we can follow each step one by one, or utilize the features langchain
     or llamaIndex provide. We are going to use langchain in this case.
+  id: totrans-85
   prefs: []
   type: TYPE_NORMAL
+  zh: 再次，我们可以逐个步骤进行，或者利用 langchain 或 llamaIndex 提供的功能。在这种情况下，我们将使用 langchain。
 - en: 'Langchain includes [several kinds](https://api.python.langchain.com/en/latest/api_reference.html#module-langchain.chains)
     of built-in question-answering chains. A *chain* in LangChain refers to a sequence
     of calls to components, which can include other chains or external tools. In order
     to create a question answering chain, we use:'
+  id: totrans-86
   prefs: []
   type: TYPE_NORMAL
+  zh: Langchain 包含[多种内置问答链](https://api.python.langchain.com/en/latest/api_reference.html#module-langchain.chains)。在
+    LangChain 中，*链*指的是一系列对组件的调用，这可能包括其他链或外部工具。为了创建一个问答链，我们使用：
 - en: '**load_qa_chain:** `load_qa_chain()` is a function in Langchain that loads
     a pre-configured question answering chain. It takes in a language model like OpenAI,
     a chain type (e.g. “stuff” for extracting answers from text), and optionally a
     prompt template and memory object. The function returns a `QuestionAnsweringChain`
     instance that is ready to take in documents and questions to generate answers.'
+  id: totrans-87
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: '**load_qa_chain**：`load_qa_chain()`是Langchain中的一个函数，用于加载一个预配置的问答链。它接受一个语言模型，如OpenAI，一个链类型（例如，用于从文本中提取答案的“stuff”），以及可选的提示模板和内存对象。该函数返回一个`QuestionAnsweringChain`实例，该实例已准备好接受文档和问题以生成答案。'
 - en: '**load_qa_with_sources_chain:** This is very similar to `load_qa_chain` except
     it contains sources/metadata along with the returned response.'
+  id: totrans-88
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: '**load_qa_with_sources_chain**：这与`load_qa_chain`非常相似，但它包含源/元数据以及返回的响应。'
 - en: '**RetrievalQA:** `RetrievalQA` is a class in Langchain that creates a question
     answering chain using retrieval. It combines a retriever, prompt template, and
     LLM together into an end-to-end QA pipeline. The prompt template formats the question
     and retrieved documents into a prompt for the LLM. This chain retrieves relevant
     documents from a vector database for a given query, and then generates an answer
     using those documents.'
+  id: totrans-89
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: '**RetrievalQA**：`RetrievalQA`是Langchain中的一个类，它使用检索创建一个问答链。它将检索器、提示模板和LLM组合成一个端到端的QA管道。提示模板将问题和检索到的文档格式化为LLM的提示。此链从向量数据库中检索与给定查询相关的文档，然后使用这些文档生成答案。'
 - en: '**RetrievalQAWithSourcesChain:** It is a variant of RetrievalQA that returns
     relevant source documents used to generate the answer. This chain returns an `AnswerWithSources`
     object containing the answer string and a list of source IDs.'
+  id: totrans-90
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: '**RetrievalQAWithSourcesChain**：它是RetrievalQA的一个变体，返回用于生成答案的相关源文档。此链返回一个包含答案字符串和源ID列表的`AnswerWithSources`对象。'
 - en: 'Here’s the code demonstraing the implementation, [Figure 3.10](#fig-langchain-response-generation):'
+  id: totrans-91
   prefs: []
   type: TYPE_NORMAL
+  zh: 这里是代码示例，[图3.10](#fig-langchain-response-generation)：
 - en: '![Response generation using Langchain chain](../Images/4beb53ede3a72e46d226390bde4246a3.png)'
+  id: totrans-92
   prefs: []
   type: TYPE_IMG
+  zh: '![使用Langchain链进行响应生成](../Images/4beb53ede3a72e46d226390bde4246a3.png)'
 - en: 'Figure 3.10: Response generation using Langchain chain'
+  id: totrans-93
   prefs: []
   type: TYPE_NORMAL
+  zh: 图3.10：使用Langchain链进行响应生成
 - en: '[Figure 3.11](#fig-load-qa-with-resource-chain) shows how to use `load_qa_with_sources_chain`:'
+  id: totrans-94
   prefs: []
   type: TYPE_NORMAL
+  zh: '[图3.11](#fig-load-qa-with-resource-chain)展示了如何使用`load_qa_with_sources_chain`：'
 - en: '![Using `load_qa_with_sources_chain` chain for response generation](../Images/cf1fd6e060d6953c4cc7ac1e832e7163.png)'
+  id: totrans-95
   prefs: []
   type: TYPE_IMG
+  zh: '![使用`load_qa_with_sources_chain`链进行响应生成的用法](../Images/cf1fd6e060d6953c4cc7ac1e832e7163.png)'
 - en: 'Figure 3.11: Using `load_qa_with_sources_chain` chain for response generation'
+  id: totrans-96
   prefs: []
   type: TYPE_NORMAL
+  zh: 图3.11：使用`load_qa_with_sources_chain`链进行响应生成
 - en: 'Similarly, if we use `RetrievalQA`, we will have [Figure 3.12](#fig-retrieval-qa):'
+  id: totrans-97
   prefs: []
   type: TYPE_NORMAL
+  zh: 类似地，如果我们使用`RetrievalQA`，我们将有[图3.12](#fig-retrieval-qa)：
 - en: '![The usage of `RetrievalQA` chain` chain for response generation](../Images/de0e2d96a245ad366defc21cfef4919a.png)'
+  id: totrans-98
   prefs: []
   type: TYPE_IMG
+  zh: '![使用`RetrievalQA`链进行响应生成的用法](../Images/de0e2d96a245ad366defc21cfef4919a.png)'
 - en: 'Figure 3.12: The usage of `RetrievalQA` chain'
+  id: totrans-99
   prefs: []
   type: TYPE_NORMAL
+  zh: 图3.12：`RetrievalQA`链的用法
 - en: 'And here’s the code when we use `RetrievalQAWithSourcesChain`, [Figure 3.13](#fig-retrieval-qa-with-resource):'
+  id: totrans-100
   prefs: []
   type: TYPE_NORMAL
+  zh: 当我们使用`RetrievalQAWithSourcesChain`时，这里是相应的代码，[图3.13](#fig-retrieval-qa-with-resource)：
 - en: '![Code snippet for using Langchain `RetrievalQAWithSourcesChain`](../Images/fcbb58b80ac8af0e2648df33f719e0b3.png)'
+  id: totrans-101
   prefs: []
   type: TYPE_IMG
+  zh: '![使用Langchain `RetrievalQAWithSourcesChain`的代码片段](../Images/fcbb58b80ac8af0e2648df33f719e0b3.png)'
 - en: 'Figure 3.13: Code snippet for using Langchain `RetrievalQAWithSourcesChain`
     for response generation'
+  id: totrans-102
   prefs: []
   type: TYPE_NORMAL
+  zh: 图3.13：使用Langchain `RetrievalQAWithSourcesChain`进行响应生成的代码片段
 - en: As you can see, it’s fairly straight forward to implement RAG (or say a prototype
     RAG application) using frameworks like langchain or llamaIndex. However, when
     it comes to deploying RAG to production and scaling the system, it becomes notoriously
     challenging. There are a lot of nuances that will affect the quality of the RAG,
     and we need to take them into consideration. We will discuss some of the main
     challenges and how to address them in the next few sections.
+  id: totrans-103
   prefs: []
   type: TYPE_NORMAL
+  zh: 正如你所见，使用langchain或llamaIndex等框架实现RAG（或者说是RAG的原型应用）相当直接。然而，当涉及到将RAG部署到生产环境和扩展系统时，这变得极具挑战性。有许多细微之处会影响RAG的质量，我们需要考虑它们。在接下来的几节中，我们将讨论一些主要挑战以及如何解决它们。
 - en: 3.4 Impact of Text Splitting on Retrieval Augmented Generation (RAG) Quality
+  id: totrans-104
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 3.4 文本分割对检索增强生成（RAG）质量的影响
 - en: 'In the context of building a Chat-to-PDF app using Large Language Models (LLMs),
     one critical aspect that significantly influences the quality of your Retrieval
     Augmented Generation (RAG) system is how you split text from PDF documents. Text
@@ -462,110 +687,154 @@
     token*. The choice you make between these methods can have a profound impact on
     the effectiveness of your RAG system. Let’s delve into the implications of each
     approach.'
+  id: totrans-105
   prefs: []
   type: TYPE_NORMAL
+  zh: 在使用大型语言模型（LLM）构建Chat-to-PDF应用时，一个关键方面是显著影响你的检索增强生成（RAG）系统质量的是如何从PDF文档中分割文本。文本分割可以在两个级别上进行：*按字符分割*和*按标记分割*。你在这两种方法之间的选择可能会对你的RAG系统的有效性产生深远影响。让我们深入探讨每种方法的含义。
 - en: 3.4.1 Splitting by Character
+  id: totrans-106
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 3.4.1 按字符分割
 - en: 'Advantages:'
+  id: totrans-107
   prefs:
   - PREF_H4
   type: TYPE_NORMAL
+  zh: 优点：
 - en: '**Fine-Grained Context:** Splitting text by character retains the finest granularity
     of context within a document. Each character becomes a unit of input, allowing
     the model to capture minute details.'
+  id: totrans-108
   prefs: []
   type: TYPE_NORMAL
+  zh: '**细粒度上下文:** 通过按字符分割文本保留文档中上下文的细粒度。每个字符成为一个输入单元，允许模型捕捉到细微的细节。'
 - en: 'Challenges:'
+  id: totrans-109
   prefs:
   - PREF_H4
   type: TYPE_NORMAL
+  zh: 挑战：
 - en: '**Long Sequences:** PDF documents often contain long paragraphs or sentences.
     Splitting by character can result in extremely long input sequences, which may
     surpass the model’s maximum token limit, making it challenging to process and
     generate responses.'
+  id: totrans-110
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**长序列:** PDF文档通常包含长段落或句子。按字符分割可能会导致非常长的输入序列，这可能会超过模型的最高标记限制，使其难以处理和生成响应。'
 - en: '**Token Limitations:** Most LLMs, such as GPT-3, have token limits, often around
     4,000 tokens. If a document exceeds this limit, you’ll need to truncate or omit
     sections, potentially losing valuable context.'
+  id: totrans-111
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**标记限制:** 大多数LLM，如GPT-3，都有标记限制，通常在4,000个标记左右。如果文档超过这个限制，你需要截断或省略部分内容，这可能会丢失有价值的信息。'
 - en: '**Increased Inference Time:** Longer sequences require more inference time,
     which can lead to slower response times and increased computational costs.'
+  id: totrans-112
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**增加推理时间:** 较长的序列需要更多的推理时间，这可能导致响应时间变慢和计算成本增加。'
 - en: 3.4.2 Splitting by Token
+  id: totrans-113
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 3.4.2 按标记分割
 - en: 'Advantages:'
+  id: totrans-114
   prefs:
   - PREF_H4
   type: TYPE_NORMAL
+  zh: 优点：
 - en: '**Token Efficiency:** Splitting text by token ensures that each input sequence
     remains within the model’s token limit, allowing for efficient processing.'
+  id: totrans-115
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**标记效率:** 通过标记分割文本确保每个输入序列都保持在模型的标记限制内，从而实现高效处理。'
 - en: '**Balanced Context:** Each token represents a meaningful unit, striking a balance
     between granularity and manageability.'
+  id: totrans-116
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**平衡的上下文:** 每个标记代表一个有意义的单元，在粒度和可管理性之间取得平衡。'
 - en: '**Scalability:** Splitting by token accommodates documents of varying lengths,
     making the system more scalable and adaptable.'
+  id: totrans-117
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**可扩展性:** 通过标记进行分割可以适应不同长度的文档，使系统更具可扩展性和适应性。'
 - en: 'Challenges:'
+  id: totrans-118
   prefs:
   - PREF_H4
   type: TYPE_NORMAL
+  zh: 挑战：
 - en: '**Contextual Information:** Token-based splitting may not capture extremely
     fine-grained context, potentially missing nuances present in character-level splitting.'
+  id: totrans-119
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**上下文信息:** 基于标记的分割可能无法捕捉到极其细粒度的上下文，可能会错过字符级分割中存在的细微差别。'
 - en: 3.4.3 Finding the Right Balance
+  id: totrans-120
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 3.4.3 寻找合适的平衡
 - en: 'The choice between character-level and token-level splitting is not always
     straightforward and may depend on several factors:'
+  id: totrans-121
   prefs: []
   type: TYPE_NORMAL
+  zh: 在字符级和标记级分割之间的选择并不总是直接的，可能取决于几个因素：
 - en: '**Document Types:** Consider the types of PDF documents in your collection.
     Technical manuals with precise details may benefit from character-level splitting,
     while general documents could work well with token-level splitting.'
+  id: totrans-122
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**文档类型:** 考虑你收藏中的PDF文档类型。具有精确细节的技术手册可能从字符级分割中受益，而一般文档可能适合使用标记级分割。'
 - en: '**Model Limitations:** Take into account the token limits of your chosen LLM.
     If the model’s limit is a significant constraint, token-level splitting becomes
     a necessity.'
+  id: totrans-123
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**模型限制**：考虑所选LLM的标记限制。如果模型的限制是一个重大约束，标记级别分割就变得必要。'
 - en: '**User Experience:** Assess the trade-off between detailed context and response
     time. Character-level splitting might provide richer context but at the cost of
     slower responses.'
+  id: totrans-124
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**用户体验**：评估详细上下文和响应时间之间的权衡。字符级别分割可能提供更丰富的上下文，但代价是响应速度较慢。'
 - en: 3.4.4 Hybrid Approaches
+  id: totrans-125
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 3.4.4 混合方法
 - en: In practice, you can also explore hybrid approaches to text splitting. For instance,
     you might use token-level splitting for most of the document and switch to character-level
     splitting when a specific question requires fine-grained context.
+  id: totrans-126
   prefs: []
   type: TYPE_NORMAL
+  zh: 在实践中，你也可以探索文本分割的混合方法。例如，你可能对大多数文档使用标记级别分割，当特定问题需要细粒度上下文时，切换到字符级别分割。
 - en: The impact of text splitting on RAG quality cannot be overstated. It’s a critical
     design consideration that requires a balance between capturing detailed context
     and ensuring system efficiency. Carefully assess the nature of your PDF documents,
@@ -573,146 +842,198 @@
     suitable text splitting strategy for your Chat-to-PDF app. Regular testing and
     user feedback can help refine this choice and optimize the overall quality of
     your RAG system.
+  id: totrans-127
   prefs: []
   type: TYPE_NORMAL
+  zh: 文本分割对RAG质量的影响不容小觑。这是一个关键的设计考虑因素，需要在捕获详细上下文和确保系统效率之间取得平衡。仔细评估你的PDF文档的性质、所选LLM的能力以及用户期望，以确定适用于你的Chat-to-PDF应用的文本分割策略。定期测试和用户反馈可以帮助改进这一选择并优化RAG系统的整体质量。
 - en: 3.5 Impact of Metadata in the Vector Database on Retrieval Augmented Generation
     (RAG)
+  id: totrans-128
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 3.5 向量数据库中元数据对检索增强生成（RAG）的影响
 - en: The inclusion of metadata about the data stored in the vector database is another
     factor that can significantly enhance the quality and effectiveness of your Retrieval
     Augmented Generation (RAG) system. Metadata provides valuable contextual information
     about the PDF documents, making it easier for the RAG model to retrieve relevant
     documents and generate accurate responses. Here, we explore the ways in which
     metadata can enhance your RAG system.
+  id: totrans-129
   prefs: []
   type: TYPE_NORMAL
+  zh: 向量数据库中存储的数据的元数据包括另一个可以显著提高你的检索增强生成（RAG）系统质量和有效性的因素。元数据提供了关于PDF文档的有价值上下文信息，使得RAG模型更容易检索相关文档并生成准确的响应。在这里，我们探讨了元数据如何增强你的RAG系统。
 - en: 3.5.1 Contextual Clues
+  id: totrans-130
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 3.5.1 上下文线索
 - en: 'Metadata acts as contextual clues that help the RAG model better understand
     the content and context of each PDF document. Typical metadata includes information
     such as:'
+  id: totrans-131
   prefs: []
   type: TYPE_NORMAL
+  zh: 元数据作为上下文线索，有助于RAG模型更好地理解每个PDF文档的内容和上下文。典型的元数据包括如下信息：
 - en: '**Document Title:** The title often provides a high-level summary of the document’s
     content.'
+  id: totrans-132
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**文档标题**：标题通常提供了文档内容的概述。'
 - en: '**Author:** Knowing the author can offer insights into the document’s perspective
     and expertise.'
+  id: totrans-133
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**作者**：了解作者可以提供关于文档视角和专长的见解。'
 - en: '**Keywords and Tags:** Keywords and tags can highlight the main topics or themes
     of the document.'
+  id: totrans-134
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**关键词和标签**：关键词和标签可以突出文档的主要主题或主题。'
 - en: '**Publication Date:** The date of publication provides a temporal context,
     which is crucial for understanding the relevance of the document.'
+  id: totrans-135
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**发布日期**：发布日期提供了时间上下文，这对于理解文档的相关性至关重要。'
 - en: '**Document Type:** Differentiating between research papers, user manuals, and
     other types of documents can aid in tailoring responses appropriately.'
+  id: totrans-136
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**文档类型**：区分研究论文、用户手册和其他类型的文档有助于适当定制响应。'
 - en: 3.5.2 Improved Document Retrieval
+  id: totrans-137
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 3.5.2 改进的文档检索
 - en: 'With metadata available in the vector database, the retrieval component of
     your RAG system can become more precise and efficient. Here’s how metadata impacts
     document retrieval:'
+  id: totrans-138
   prefs: []
   type: TYPE_NORMAL
+  zh: 在向量数据库中可用元数据的情况下，你的RAG系统的检索组件可以变得更加精确和高效。以下是元数据如何影响文档检索的说明：
 - en: '**Relevance Ranking:** Metadata, such as document titles, keywords, and tags,
     can be used to rank the documents based on relevance to a user query. Documents
     with metadata matching the query can be given higher priority during retrieval.
     For example, if a user asks a question related to “machine learning,” documents
     with “machine learning” in their keywords or tags might be given priority during
     retrieval.'
+  id: totrans-139
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**相关性排序：**例如，文档标题、关键词和标签等元数据可以用来根据用户查询的相关性对文档进行排序。与查询匹配的文档在检索过程中可以给予更高的优先级。例如，如果用户提出与“机器学习”相关的问题，包含“机器学习”关键词或标签的文档在检索过程中可能会被优先考虑。'
 - en: '**Filtering:** Metadata can be used to filter out irrelevant documents early
     in the retrieval process, reducing the computational load and improving response
     times. For instance, if a user asks about “biology,” documents with metadata indicating
     they are engineering manuals can be excluded from consideration.'
+  id: totrans-140
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**过滤：**元数据可以在检索过程的早期阶段用来过滤掉不相关的文档，减少计算负担并提高响应时间。例如，如果用户询问“生物学”，具有表明它们是工程手册的元数据的文档可以被排除在考虑之外。'
 - en: '**Enhanced Query Understanding:** Metadata provides additional context for
     the user’s query, allowing the RAG model to better understand the user’s intent
     and retrieve documents that align with that intent. For example, if the metadata
     includes the publication date, the RAG model can consider the temporal context
     when retrieving documents.'
+  id: totrans-141
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**增强查询理解：**元数据为用户的查询提供了额外的上下文，使得RAG模型能够更好地理解用户的意图并检索与该意图一致的文档。例如，如果元数据包括出版日期，RAG模型可以在检索文档时考虑时间上下文。'
 - en: 3.5.3 Contextual Response Generation
+  id: totrans-142
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 3.5.3 上下文响应生成
 - en: 'Metadata can also play a crucial role in the generation component of your RAG
     system. Here’s how metadata impacts response generation:'
+  id: totrans-143
   prefs: []
   type: TYPE_NORMAL
+  zh: 元数据也可以在RAG系统的生成组件中发挥关键作用。以下是元数据如何影响响应生成的说明：
 - en: '**Context Integration:** Metadata can be incorporated into the response generation
     process to provide more contextually relevant answers. For example, including
     the publication date when answering a historical question.'
+  id: totrans-144
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**上下文整合：**元数据可以被整合到响应生成过程中，以提供更具上下文相关性的答案。例如，在回答历史问题时包括出版日期。'
 - en: '**Customization:** Metadata can enable response customization. For instance,
     the tone and style of responses can be adjusted based on the author’s information.'
+  id: totrans-145
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**定制：**元数据可以启用响应定制。例如，可以根据作者信息调整响应的语气和风格。'
 - en: '**Enhanced Summarization:** Metadata can aid in the summarization of retrieved
     documents, allowing the RAG model to provide concise and informative responses.
     For instance, if the metadata includes the document type as “research paper,”
     the RAG system can generate a summary that highlights the key findings or contributions
     of the paper.'
+  id: totrans-146
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**增强摘要功能：**元数据可以帮助检索到的文档的摘要，使得RAG模型能够提供简洁且信息丰富的响应。例如，如果元数据包括文档类型为“研究论文”，RAG系统可以生成一个强调论文关键发现或贡献的摘要。'
 - en: 3.5.4 User Experience and Trust
+  id: totrans-147
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 3.5.4 用户体验与信任
 - en: Including metadata in the RAG system not only enhances its technical capabilities
     but also improves the overall user experience. Users are more likely to trust
     and find value in a system that provides contextually relevant responses. Metadata
     can help build this trust by demonstrating that the system understands and respects
     the nuances of the user’s queries.
+  id: totrans-148
   prefs: []
   type: TYPE_NORMAL
+  zh: 在RAG系统中包含元数据不仅增强了其技术能力，还改善了整体用户体验。用户更有可能信任并发现系统提供上下文相关响应的价值。元数据可以通过展示系统理解并尊重用户查询的细微差别来帮助建立这种信任。
 - en: Overall, incorporating metadata about data in the vector database of your Chat-to-PDF
     app’s RAG system can significantly elevate its performance and user experience.
     Metadata acts as a bridge between the user’s queries and the content of PDF documents,
     facilitating more accurate retrieval and generation of responses.
+  id: totrans-149
   prefs: []
   type: TYPE_NORMAL
+  zh: 总体而言，将关于数据的元数据整合到Chat-to-PDF应用RAG系统的向量数据库中可以显著提升其性能和用户体验。元数据在用户查询与PDF文档内容之间充当桥梁，促进更准确的检索和响应生成。
 - en: As we conclude our exploration of the nuts and bolts of RAG pipelines in this
     Chapter, it’s time to move on to more complex topics. In Chapter 4, we’ll take
     a deep dive and try to address some of the retrieval and generation challenges
     that come with implementing advanced RAG systems.
+  id: totrans-150
   prefs: []
   type: TYPE_NORMAL
+  zh: 在本章结束对RAG管道的细节探索之后，是时候转向更复杂的话题了。在第4章中，我们将深入探讨并尝试解决实施高级RAG系统时伴随的一些检索和生成挑战。
 - en: We’ll discuss the optimal chunk size for efficient retrieval, consider the balance
     between context and efficiency, and introduce additional resources for evaluating
     RAG performance. Furthermore, we’ll explore retrieval chunks versus synthesis
     chunks and ways to embed references to text chunks for better understanding.
+  id: totrans-151
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们将讨论高效检索的最佳块大小，考虑上下文与效率之间的平衡，并介绍用于评估RAG性能的额外资源。此外，我们将探讨检索块与合成块的区别，以及如何嵌入对文本块的引用以更好地理解。
 - en: We’ll also investigate how to rethink retrieval methods for heterogeneous document
     corpora, delve into hybrid document retrieval, and examine the role of query rewriting
     in enhancing RAG capabilities.****
+  id: totrans-152
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们还将研究如何重新思考异构文档语料库的检索方法，深入研究混合文档检索，并检查查询重写对增强RAG能力的作用。****
