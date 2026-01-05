@@ -1,121 +1,181 @@
 - en: Answers 2.2
+  id: totrans-0
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
+  zh: 答案2.2
 - en: 原文：[https://boramorka.github.io/LLM-Book/en/CHAPTER-2/Answers%202.2/](https://boramorka.github.io/LLM-Book/en/CHAPTER-2/Answers%202.2/)
+  id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 原文：[https://boramorka.github.io/LLM-Book/en/CHAPTER-2/Answers%202.2/](https://boramorka.github.io/LLM-Book/en/CHAPTER-2/Answers%202.2/)
 - en: Theory
+  id: totrans-2
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 理论
 - en: Document loaders are LangChain components that extract data from various sources
     and formats, converting them into a unified document object (content + metadata).
     They are the basis for bringing PDFs, HTML, JSON, and more into LLM apps.
+  id: totrans-3
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 文档加载器是LangChain组件，它们从各种来源和格式中提取数据，将它们转换为统一的文档对象（内容 + 元数据）。它们是使PDF、HTML、JSON等文件进入LLM应用的基础。
 - en: Unstructured loaders target sources like YouTube, Twitter, Figma, Notion, etc.
     Structured loaders target tabular/service sources (Airbyte, Stripe, Airtable),
     enabling semantic search and QA over tables.
+  id: totrans-4
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 无结构加载器针对YouTube、Twitter、Figma、Notion等资源，而结构化加载器针对表格/服务源（Airbyte、Stripe、Airtable）等，这使它们能够实现语义搜索和表格问答。
 - en: Environment prep includes installing packages, configuring API keys (e.g., OpenAI),
     and loading environment variables from `.env`.
+  id: totrans-5
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 环境准备包括安装包、配置API密钥（例如，OpenAI）和从`.env`文件中加载环境变量。
 - en: '`PyPDFLoader` loads PDFs by path, letting you extract, clean, and tokenize
     text for downstream analysis (word frequencies, handling empty pages, etc.).'
+  id: totrans-6
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: '`PyPDFLoader`通过路径加载PDF文件，让您提取、清洗和分词文本以进行下游分析（词频、处理空白页等）。'
 - en: Cleaning and tokenization — removing noise, lowercasing, and splitting into
     words — are basic normalization steps for accurate counts and further processing.
+  id: totrans-7
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 清洗和分词——去除噪声、转换为小写和分割成单词——是基本规范化步骤，用于准确计数和进一步处理。
 - en: 'For YouTube: `GenericLoader` + `YoutubeAudioLoader` + `OpenAIWhisperParser`
     download audio and transcribe it via Whisper.'
+  id: totrans-8
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 对于YouTube：使用`GenericLoader` + `YoutubeAudioLoader` + `OpenAIWhisperParser`下载音频并通过Whisper进行转录。
 - en: Sentence tokenization enables more granular analysis. Sentiment analysis (e.g.,
     with `TextBlob`) provides polarity/subjectivity information.
+  id: totrans-9
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 句子分词允许更细致的分析。情感分析（例如，使用`TextBlob`）提供极性/主观性信息。
 - en: For web content, use `WebBaseLoader(url)` plus `BeautifulSoup` to strip markup
     and extract links/headings and other structure.
+  id: totrans-10
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 对于网页内容，使用`WebBaseLoader(url)`加上`BeautifulSoup`来去除标记并提取链接/标题和其他结构。
 - en: After cleaning, you can extract key information and build a concise summary
     based on stop‑word filtering and word frequencies.
+  id: totrans-11
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 清洗后，您可以根据停用词过滤和词频提取关键信息并构建简洁的摘要。
 - en: '`NotionDirectoryLoader` reads exported Notion data (Markdown), converts it
     to HTML for parsing, extracts structure (headings, links), and stores it in a
     DataFrame for filtering and summarizing.'
+  id: totrans-12
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: '`NotionDirectoryLoader`读取导出的Notion数据（Markdown），将其转换为HTML以进行解析，提取结构（标题、链接），并将其存储在DataFrame中以进行过滤和总结。'
 - en: 'Practical tips: optimize API calls to control cost, pre‑process right after
     loading, and consider contributing new loaders to LangChain.'
+  id: totrans-13
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 实用技巧：优化API调用以控制成本，在加载后立即进行预处理，并考虑为LangChain贡献新的加载器。
 - en: Contributing new loaders expands the ecosystem, broadens supported sources,
     and builds contributor expertise.
+  id: totrans-14
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 贡献新的加载器可以扩展生态系统，拓宽支持的来源，并建立贡献者的专业知识。
 - en: Practice
+  id: totrans-15
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 实践
 - en: '1.'
+  id: totrans-16
   prefs: []
   type: TYPE_NORMAL
+  zh: '1.'
 - en: '[PRE0]'
+  id: totrans-17
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE0]'
 - en: '2.'
+  id: totrans-18
   prefs: []
   type: TYPE_NORMAL
+  zh: '2.'
 - en: '[PRE1]'
+  id: totrans-19
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE1]'
 - en: '3.'
+  id: totrans-20
   prefs: []
   type: TYPE_NORMAL
+  zh: '3.'
 - en: '[PRE2]'
+  id: totrans-21
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE2]'
 - en: '4.'
+  id: totrans-22
   prefs: []
   type: TYPE_NORMAL
+  zh: '4.'
 - en: '[PRE3]'
+  id: totrans-23
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE3]'
 - en: '5.'
+  id: totrans-24
   prefs: []
   type: TYPE_NORMAL
+  zh: '5.'
 - en: '[PRE4]'
+  id: totrans-25
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE4]'
 - en: '6.'
+  id: totrans-26
   prefs: []
   type: TYPE_NORMAL
+  zh: '6.'
 - en: '[PRE5]'
+  id: totrans-27
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE5]'
 - en: '7.'
+  id: totrans-28
   prefs: []
   type: TYPE_NORMAL
+  zh: '7.'
 - en: '[PRE6]'
+  id: totrans-29
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE6]'

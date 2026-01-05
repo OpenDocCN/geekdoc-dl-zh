@@ -1,11 +1,15 @@
 - en: 2.2 LangChain Document Loaders
+  id: totrans-0
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
+  zh: 2.2 LangChain文档加载器
 - en: 原文：[https://boramorka.github.io/LLM-Book/en/CHAPTER-2/2.2%20LangChain%20Document%20Loaders/](https://boramorka.github.io/LLM-Book/en/CHAPTER-2/2.2%20LangChain%20Document%20Loaders/)
+  id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: '[原文链接](https://boramorka.github.io/LLM-Book/en/CHAPTER-2/2.2%20LangChain%20Document%20Loaders/)'
 - en: 'For LLM‑powered data apps and conversational interfaces, it’s critical to load
     data efficiently, normalize it, and use it across diverse sources. In the LangChain
     ecosystem, “loaders” are components that extract information from websites, databases,
@@ -17,50 +21,73 @@
     data but also strictly structured datasets. This modularity lets you build targeted
     pipelines: sometimes it’s enough to load and clean text; other times you’ll auto‑create
     embeddings, extract entities, aggregate, and summarize.'
+  id: totrans-2
   prefs: []
   type: TYPE_NORMAL
+  zh: 对于由LLM驱动的数据应用和对话式界面，高效地加载数据、规范化数据并在不同来源中使用数据至关重要。在LangChain生态系统中，“加载器”是提取信息自网站、数据库和媒体文件并将其转换为具有内容和元数据的标准文档对象的组件。支持数十种格式（PDF、HTML、JSON等）和来源——从公共的（YouTube、Twitter、Hacker
+    News）到企业工具（Figma、Notion）。还有用于表格和服务数据的加载器（Airbyte、Stripe、Airtable等），不仅支持非结构化数据的语义搜索和QA，还支持严格结构化数据集。这种模块化允许您构建目标管道：有时只需加载和清理文本就足够了；其他时候您将自动创建嵌入，提取实体，聚合和总结。
 - en: 'We start with basic environment prep: install dependencies, configure API keys,
     and read them from `.env` for safe access to external data.'
+  id: totrans-3
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们从基本环境准备开始：安装依赖项，配置API密钥，并从`.env`文件中读取它们以安全访问外部数据。
 - en: '[PRE0]'
+  id: totrans-4
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE0]'
 - en: A common scenario is working with PDFs. The example below shows how to load
     a document (e.g., a lecture transcript), clean and tokenize text, count word frequencies,
     and save a cleaned version for later analysis; we explicitly handle and log empty
     pages, and metadata is available for spot checks.
+  id: totrans-5
   prefs: []
   type: TYPE_NORMAL
+  zh: 常见场景是处理PDF文件。以下示例展示了如何加载文档（例如，讲座记录），清理和分词文本，统计词频，并将清理后的版本保存以供后续分析；我们明确处理并记录空页，并且可以提供元数据进行抽查。
 - en: '[PRE1]'
+  id: totrans-6
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE1]'
 - en: 'Video is equally important. We can fetch YouTube audio, transcribe it with
     Whisper via LangChain, and begin analysis immediately: split into sentences, assess
     sentiment (polarity and subjectivity) with `TextBlob`, and optionally add entity
     extraction, key‑phrase detection, and summarization.'
+  id: totrans-7
   prefs: []
   type: TYPE_NORMAL
+  zh: 视频同样重要。我们可以通过LangChain使用Whisper从YouTube获取音频，并立即开始分析：分割成句子，使用`TextBlob`评估情感（极性和主观性），可选地添加实体提取、关键词检测和摘要。
 - en: '[PRE2]'
+  id: totrans-8
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE2]'
 - en: 'For web content, we load a page by URL, clean the HTML, extract links and headings,
     then do a simple summary: sentence tokenization, stop‑word filtering, frequency
     analysis, and a brief digest.'
+  id: totrans-9
   prefs: []
   type: TYPE_NORMAL
+  zh: 对于网络内容，我们通过URL加载页面，清理HTML，提取链接和标题，然后进行简单的总结：句子分词，停用词过滤，频率分析，以及简要摘要。
 - en: '[PRE3]'
+  id: totrans-10
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE3]'
 - en: 'Structured Notion exports are also easy to process: load Markdown files, convert
     to HTML for convenient parsing, extract headings and links, put metadata and parsed
     content into a DataFrame, filter (e.g., by a keyword in the title), and, if present,
     compute category breakdowns.'
+  id: totrans-11
   prefs: []
   type: TYPE_NORMAL
+  zh: 结构化Notion导出也易于处理：加载Markdown文件，转换为HTML以便方便解析，提取标题和链接，将元数据和解析内容放入DataFrame中，过滤（例如，通过标题中的关键词），如果存在，计算类别细分。
 - en: '[PRE4]'
+  id: totrans-12
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE4]'
 - en: 'When working with loaders, keep an eye on external API costs (e.g., Whisper)
     and optimize calls; normalize data immediately after loading (cleaning, chunking,
     etc.); and if a source is missing — contribute your own loader to LangChain open
@@ -68,96 +95,141 @@
     and OpenAI Whisper (https://github.com/openai/whisper). This practice lays the
     foundation for more advanced processing and integration of your data into LLM
     applications.'
+  id: totrans-13
   prefs: []
   type: TYPE_NORMAL
+  zh: 在使用加载器时，请注意外部API成本（例如，Whisper）并优化调用；在加载后立即规范化数据（清理、分块等）；如果缺少来源——向LangChain开源贡献您自己的加载器。方便查阅文档以获取指导：LangChain（https://github.com/LangChain/langchain）和OpenAI
+    Whisper（https://github.com/openai/whisper）。这种做法为更高级的数据处理和集成到LLM应用奠定了基础。
 - en: Theory Questions
+  id: totrans-14
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 理论问题
 - en: What are document loaders in LangChain and what role do they play?
+  id: totrans-15
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: LangChain中的文档加载器是什么？它们扮演什么角色？
 - en: How do loaders for unstructured data differ from those for structured data?
+  id: totrans-16
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 非结构化数据的加载器与结构化数据的加载器有何不同？
 - en: How do you prepare the environment for loaders (packages, API keys, `.env`)?
+  id: totrans-17
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 如何为加载器（包、API 密钥、`.env` 文件）准备环境？
 - en: How does `PyPDFLoader` work and what does PDF pre‑processing give you?
+  id: totrans-18
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: '`PyPDFLoader` 如何工作，PDF 预处理提供了什么？'
 - en: Why clean and tokenize text when processing PDFs?
+  id: totrans-19
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 处理 PDF 时，为什么需要清理和分词文本？
 - en: How do you transcribe a YouTube video with Whisper via LangChain?
+  id: totrans-20
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 如何通过 LangChain 使用 Whisper 转录 YouTube 视频？
 - en: How do you apply sentence tokenization and sentiment analysis to a transcript?
+  id: totrans-21
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 如何将句子分词和情感分析应用于转录文本？
 - en: How do you load and process web content with `WebBaseLoader`?
+  id: totrans-22
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 如何使用 `WebBaseLoader` 加载和处理网页内容？
 - en: How do you extract and summarize page content by URL?
+  id: totrans-23
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 如何通过 URL 提取和总结页面内容？
 - en: How does `NotionDirectoryLoader` help analyze Notion exports?
+  id: totrans-24
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: '`NotionDirectoryLoader` 如何帮助分析 Notion 导出？'
 - en: What practices matter when using loaders (cost awareness, pre‑processing)?
+  id: totrans-25
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 使用加载器时，哪些实践很重要（成本意识、预处理）？
 - en: Why and how can you contribute new loaders to LangChain?
+  id: totrans-26
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 为什么以及如何向 LangChain 添加新的加载器？
 - en: Practical Tasks
+  id: totrans-27
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 实践任务
 - en: Modify the PDF analysis to ignore stop words (`nltk.stopwords`); print the top‑5
     most frequent non‑stop words.
+  id: totrans-28
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 修改 PDF 分析以忽略停用词（`nltk.stopwords`）；打印前五个最频繁的非停用词。
 - en: Write a function that transcribes a YouTube URL (Whisper) and returns the first
     100 words; include error handling.
+  id: totrans-29
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 编写一个函数，用于转录 YouTube URL（Whisper）并返回前 100 个单词；包括错误处理。
 - en: 'Create a script: load a page by URL, strip HTML tags, and print clean text
     (use BeautifulSoup).'
+  id: totrans-30
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 创建一个脚本：通过 URL 加载页面，去除 HTML 标签，并打印干净的文本（使用 BeautifulSoup）。
 - en: 'For a Notion export directory: convert Markdown to HTML, extract and print
     all links (text + href).'
+  id: totrans-31
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 对于 Notion 导出目录：将 Markdown 转换为 HTML，提取并打印所有链接（文本 + href）。
 - en: 'Extend the YouTube transcription with `TextBlob` sentiment: print polarity
     and a coarse label (positive/neutral/negative).'
+  id: totrans-32
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 使用 `TextBlob` 情感扩展 YouTube 转录：打印极性和粗略标签（正面/中性/负面）。
 - en: Build a DataFrame from Notion documents, add a “word count” column, and print
     titles of the three longest docs.
+  id: totrans-33
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 从 Notion 文档构建 DataFrame，添加“单词计数”列，并打印三个最长文档的标题。
 - en: For a given URL — load the page, extract the main text, and print a simple summary
     (first and last sentences).
+  id: totrans-34
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 对于给定的 URL - 加载页面，提取主要文本，并打印一个简单的摘要（第一句和最后一句）。

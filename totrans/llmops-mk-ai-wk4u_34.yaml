@@ -1,173 +1,261 @@
 - en: Answers 2.4
+  id: totrans-0
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
+  zh: 答案 2.4
 - en: 原文：[https://boramorka.github.io/LLM-Book/en/CHAPTER-2/Answers%202.4/](https://boramorka.github.io/LLM-Book/en/CHAPTER-2/Answers%202.4/)
+  id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 原文：[https://boramorka.github.io/LLM-Book/en/CHAPTER-2/Answers%202.4/](https://boramorka.github.io/LLM-Book/en/CHAPTER-2/Answers%202.4/)
 - en: Theory
+  id: totrans-2
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 理论
 - en: 'Purpose of embeddings: convert text into numeric vectors that preserve semantic
     meaning, enabling computers to “understand” text.'
+  id: totrans-3
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 嵌入的目的：将文本转换为保留语义意义的数值向量，使计算机能够“理解”文本。
 - en: 'Semantic similarity: reflected in similar vectors for words/sentences with
     related meaning in a high‑dimensional space.'
+  id: totrans-4
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 语义相似性：在高维空间中，具有相关意义的单词/句子具有相似的向量。
 - en: 'How embeddings are learned: trained on text corpora; word vectors depend on
     usage context (distributional semantics).'
+  id: totrans-5
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 嵌入是如何学习的：在文本语料库上训练；词向量取决于使用上下文（分布语义）。
 - en: 'Embeddings in semantic search: allow retrieving relevant documents by meaning,
     even without exact keyword matches.'
+  id: totrans-6
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 语义搜索中的嵌入：允许通过意义检索相关文档，即使没有精确的关键词匹配。
 - en: 'Matching documents and queries: a document embedding represents overall meaning;
     a query embedding captures user intent; comparing them reveals relevant matches.'
+  id: totrans-7
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 匹配文档和查询：文档嵌入代表整体意义；查询嵌入捕捉用户意图；比较它们揭示相关匹配。
 - en: 'Vector store: a database for embeddings optimized for fast nearest‑neighbor
     search.'
+  id: totrans-8
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 向量存储：一个针对快速最近邻搜索优化的嵌入数据库。
 - en: 'Choosing a store: depends on data size, persistence requirements, and purpose
     (research, prototype, production).'
+  id: totrans-9
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 选择存储：取决于数据大小、持久化需求和目的（研究、原型、生产）。
 - en: 'Chroma for prototyping: convenient for small/in‑memory scenarios (fast), but
     limited in persistence and scaling.'
+  id: totrans-10
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 染色体用于原型设计：在小/内存场景中方便（快速），但在持久化和扩展方面有限。
 - en: 'Typical pipeline: split text → generate embeddings → index in a vector store
     → handle query → generate answer.'
+  id: totrans-11
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 典型管道：分割文本 → 生成嵌入 → 在向量存储中索引 → 处理查询 → 生成答案。
 - en: 'Splitting: improves granularity; matching happens at the level of meaningful
     fragments (chunks), not entire documents.'
+  id: totrans-12
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 分割：提高粒度；匹配发生在有意义的片段（块）级别，而不是整个文档。
 - en: 'Embedding generation: transforms text into vectors suitable for computational
     comparison.'
+  id: totrans-13
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 嵌入生成：将文本转换为适合计算比较的向量。
 - en: 'Indexing in the store: enables fast retrieval of semantically similar fragments.'
+  id: totrans-14
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 在存储中索引：使快速检索语义相似的片段成为可能。
 - en: 'Query handling: create a query embedding and search for similar fragments using
     metrics (cosine similarity, Euclidean distance, etc.).'
+  id: totrans-15
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 查询处理：创建查询嵌入，并使用度量（余弦相似度、欧几里得距离等）搜索相似片段。
 - en: 'Answer generation: uses the retrieved fragments together with the original
     query to produce a coherent answer.'
+  id: totrans-16
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 答案生成：使用检索到的片段与原始查询一起生成一个连贯的答案。
 - en: 'Environment setup: install libraries, configure API keys, and set up for embeddings
     and the vector store.'
+  id: totrans-17
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 环境设置：安装库、配置API密钥，并为嵌入和向量存储设置。
 - en: 'Loading and splitting documents: critical for effective text management and
     higher‑quality retrieval.'
+  id: totrans-18
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 加载和分割文档：对有效的文本管理和高质量检索至关重要。
 - en: 'Illustrating similarity: can be shown via dot product or cosine similarity.'
+  id: totrans-19
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 说明相似性：可以通过点积或余弦相似度来展示。
 - en: 'Chroma specifics: mind the persistence directory, clearing stale data, and
     correct collection initialization.'
+  id: totrans-20
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 染色体具体细节：注意持久化目录，清除过时数据，以及正确的集合初始化。
 - en: 'Similarity search: finds the fragments most relevant to the query.'
+  id: totrans-21
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 相似性搜索：找到与查询最相关的片段。
 - en: 'Typical failures and remediation: duplicates and irrelevant results can be
     addressed via filtering and careful pipeline tuning.'
+  id: totrans-22
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 常见故障和补救措施：通过过滤和仔细的管道调整可以解决重复和不相关的结果。
 - en: Practice
+  id: totrans-23
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 练习
 - en: '1.'
+  id: totrans-24
   prefs: []
   type: TYPE_NORMAL
+  zh: '1.'
 - en: '[PRE0]'
+  id: totrans-25
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE0]'
 - en: '2.'
+  id: totrans-26
   prefs: []
   type: TYPE_NORMAL
+  zh: '2.'
 - en: '[PRE1]'
+  id: totrans-27
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE1]'
 - en: '3.'
+  id: totrans-28
   prefs: []
   type: TYPE_NORMAL
+  zh: '3.'
 - en: '[PRE2]'
+  id: totrans-29
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE2]'
 - en: '4.'
+  id: totrans-30
   prefs: []
   type: TYPE_NORMAL
+  zh: '4.'
 - en: '[PRE3]'
+  id: totrans-31
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE3]'
 - en: '5.'
+  id: totrans-32
   prefs: []
   type: TYPE_NORMAL
+  zh: '5.'
 - en: '[PRE4]'
+  id: totrans-33
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE4]'
 - en: '6.'
+  id: totrans-34
   prefs: []
   type: TYPE_NORMAL
+  zh: '6.'
 - en: '[PRE5]'
+  id: totrans-35
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE5]'
 - en: '7.'
+  id: totrans-36
   prefs: []
   type: TYPE_NORMAL
+  zh: '7.'
 - en: '[PRE6]'
+  id: totrans-37
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE6]'
 - en: '8.'
+  id: totrans-38
   prefs: []
   type: TYPE_NORMAL
+  zh: '8.'
 - en: '[PRE7]'
+  id: totrans-39
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE7]'
 - en: '9.'
+  id: totrans-40
   prefs: []
   type: TYPE_NORMAL
+  zh: '9.'
 - en: '[PRE8]'
+  id: totrans-41
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE8]'
 - en: '10.'
+  id: totrans-42
   prefs: []
   type: TYPE_NORMAL
+  zh: '10.'
 - en: '[PRE9]'
+  id: totrans-43
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE9]'

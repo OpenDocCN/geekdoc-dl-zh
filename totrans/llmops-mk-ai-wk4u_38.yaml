@@ -1,210 +1,310 @@
 - en: Answers 3.2
+  id: totrans-0
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
+  zh: 答案 3.2
 - en: 原文：[https://boramorka.github.io/LLM-Book/en/CHAPTER-3/Answers%203.2/](https://boramorka.github.io/LLM-Book/en/CHAPTER-3/Answers%203.2/)
+  id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 原文：[https://boramorka.github.io/LLM-Book/en/CHAPTER-3/Answers%203.2/](https://boramorka.github.io/LLM-Book/en/CHAPTER-3/Answers%203.2/)
 - en: Theory
+  id: totrans-2
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 理论
 - en: Kubeflow Pipelines automate ML workflows, providing reproducibility and saving
     time through efficient management of complex pipelines.
+  id: totrans-3
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: Kubeflow Pipelines自动化ML工作流程，通过高效管理复杂管道提供可重复性和节省时间。
 - en: The `dsl` module provides decorators and classes for defining components and
     pipeline structure, while the `compiler` is responsible for compiling the pipeline
     into a format executable by the Kubeflow engine.
+  id: totrans-4
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: '`dsl`模块提供用于定义组件和管道结构的装饰器和类，而`compiler`负责将管道编译成Kubeflow引擎可执行的形式。'
 - en: '`FutureWarning` messages can be selectively suppressed to improve log readability;
     at the same time, it is important to keep track of documentation changes and update
     the code accordingly.'
+  id: totrans-5
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 可以选择性地抑制`FutureWarning`消息以提高日志可读性；同时，跟踪文档更改并相应地更新代码也很重要。
 - en: Clearly defined interfaces and component reusability simplify integration, increasing
     modularity and overall system efficiency.
+  id: totrans-6
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 明确定义的接口和组件可重用性简化了集成，增加了模块化和整体系统效率。
 - en: The `@dsl.component` decorator marks a function as a pipeline component, which
     is an isolated, reusable step within the workflow.
+  id: totrans-7
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: '`@dsl.component`装饰器将一个函数标记为管道组件，它是工作流程中的一个独立、可重用的步骤。'
 - en: Invoking a component returns a `PipelineTask` object, which represents a runtime
     instance of the pipeline step and is used to pass data between components.
+  id: totrans-8
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 调用一个组件返回一个`PipelineTask`对象，它表示管道步骤的运行时实例，并用于在组件之间传递数据。
 - en: A component’s output is passed via the `.output` attribute of the `PipelineTask`
     object.
+  id: totrans-9
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 通过`PipelineTask`对象的`.output`属性传递组件的输出。
 - en: Using named arguments improves code clarity and helps prevent errors, especially
     when working with many input parameters.
+  id: totrans-10
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 使用命名参数可以提高代码清晰度并帮助防止错误，尤其是在处理许多输入参数时。
 - en: When chaining components in a pipeline, you must pass one component’s `.output`
     as the input to another to ensure a correct data flow.
+  id: totrans-11
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 在管道中链式连接组件时，你必须将一个组件的`.output`作为输入传递给另一个组件，以确保正确的数据流。
 - en: A pipeline is declared with the `@dsl.pipeline` decorator and is responsible
     for orchestrating components. Important aspects include the execution environment
     and proper handling of outputs.
+  id: totrans-12
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 使用`@dsl.pipeline`装饰器声明管道，它负责编排组件。重要方面包括执行环境和正确处理输出。
 - en: Pipeline compilation is the process of converting its Python definition into
     a YAML file, which can then be uploaded and run in the target Kubeflow environment.
+  id: totrans-13
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 管道编译是将其Python定义转换为YAML文件的过程，然后可以将其上传并在目标Kubeflow环境中运行。
 - en: Reusing ready‑made pipelines (e.g., PEFT for PaLM 2) significantly speeds up
     development and helps maintain best practices.
+  id: totrans-14
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 重复使用现成的管道（例如，PEFT for PaLM 2）可以显著加快开发速度并帮助保持最佳实践。
 - en: Model versioning is critical for MLOps, ensuring reproducibility and auditability.
     For example, you can add the date and time to the model name.
+  id: totrans-15
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 模型版本控制对于MLOps至关重要，它确保了可重复性和可审计性。例如，你可以在模型名称中添加日期和时间。
 - en: Pipeline arguments set input data and configuration for fine‑tuning, which is
     crucial for correct execution.
+  id: totrans-16
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 管道参数设置输入数据和配置，这对于正确执行至关重要。
 - en: Automation and orchestration in Kubeflow improve efficiency and scalability,
     but require careful planning and a deep understanding of components and data flow.
+  id: totrans-17
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: Kubeflow中的自动化和编排可以提高效率并实现可扩展性，但需要仔细规划和深入理解组件和数据流。
 - en: Practice
+  id: totrans-18
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 实践
 - en: 'Solutions for the tasks:'
+  id: totrans-19
   prefs: []
   type: TYPE_NORMAL
+  zh: 任务解决方案：
 - en: 1\. Setting up the Kubeflow Pipelines SDK
+  id: totrans-20
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 1. 设置Kubeflow Pipelines SDK
 - en: '[PRE0]'
+  id: totrans-21
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE0]'
 - en: This script imports `dsl` and `compiler`, and suppresses `FutureWarning` messages
     from `kfp.*` modules.
+  id: totrans-22
   prefs: []
   type: TYPE_NORMAL
+  zh: 此脚本导入`dsl`和`compiler`，并抑制来自`kfp.*`模块的`FutureWarning`消息。
 - en: 2\. Defining a simple pipeline component
+  id: totrans-23
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 2. 定义简单的管道组件
 - en: '[PRE1]'
+  id: totrans-24
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE1]'
 - en: The component function `add_numbers`, marked with the `@dsl.component` decorator,
     accepts two integers and returns their sum.
+  id: totrans-25
   prefs: []
   type: TYPE_NORMAL
+  zh: 标记有`@dsl.component`装饰器的组件函数`add_numbers`接受两个整数并返回它们的和。
 - en: 3\. Suppressing specific warnings
+  id: totrans-26
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 3. 抑制特定警告
 - en: '[PRE2]'
+  id: totrans-27
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE2]'
 - en: This script suppresses `DeprecationWarning` for all modules.
+  id: totrans-28
   prefs: []
   type: TYPE_NORMAL
+  zh: 此脚本抑制了所有模块的`DeprecationWarning`。
 - en: 4\. Linking components in a pipeline
+  id: totrans-29
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 4. 链接管道中的组件
 - en: '[PRE3]'
+  id: totrans-30
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE3]'
 - en: 'The pipeline consists of two components: `generate_number`, which generates
     a fixed number, and `double_number`, which doubles the input. The connection is
     made by passing the first component’s `.output` as the input to the second.'
+  id: totrans-31
   prefs: []
   type: TYPE_NORMAL
+  zh: 管道由两个组件组成：`generate_number`，它生成一个固定数字，和 `double_number`，它将输入加倍。通过将第一个组件的 `.output`
+    作为第二个组件的输入来建立连接。
 - en: 5\. Compiling and preparing the pipeline for execution
+  id: totrans-32
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 5. 编译和准备管道以执行
 - en: '[PRE4]'
+  id: totrans-33
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE4]'
 - en: The pipeline is compiled into the `number_doubling_pipeline.yaml` file, which
     can be uploaded and run in the Kubeflow environment.
+  id: totrans-34
   prefs: []
   type: TYPE_NORMAL
+  zh: 管道被编译成 `number_doubling_pipeline.yaml` 文件，该文件可以上传并在 Kubeflow 环境中运行。
 - en: 6\. Working with `PipelineTask` objects
+  id: totrans-35
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 6. 与 `PipelineTask` 对象一起工作
 - en: '[PRE5]'
+  id: totrans-36
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE5]'
 - en: The example shows that invoking a component returns a `PipelineTask` object,
     and its result is accessed via `task.output`. In practice, such objects are manipulated
     inside a pipeline function.
+  id: totrans-37
   prefs: []
   type: TYPE_NORMAL
+  zh: 示例显示，调用组件返回一个 `PipelineTask` 对象，其结果通过 `task.output` 访问。在实际操作中，此类对象在管道函数内部进行操作。
 - en: 7\. Handling errors in pipeline definitions
+  id: totrans-38
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 7. 处理管道定义中的错误
 - en: '[PRE6]'
+  id: totrans-39
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE6]'
 - en: 8\. Automating data preparation for model training
+  id: totrans-40
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 8. 自动化模型训练的数据准备
 - en: '[PRE7]'
+  id: totrans-41
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE7]'
 - en: 'This script demonstrates a simple data preparation process: reading data from
     a JSON file, transforming it (filtering by a condition), and saving the processed
     data to another JSON file. This type of task can be encapsulated in a Kubeflow
     Pipeline component to automate data preparation steps in ML training workflows.'
+  id: totrans-42
   prefs: []
   type: TYPE_NORMAL
+  zh: 此脚本演示了一个简单的数据准备过程：从 JSON 文件中读取数据，对其进行转换（通过条件过滤），并将处理后的数据保存到另一个 JSON 文件中。此类任务可以封装在
+    Kubeflow Pipeline 组件中，以自动化 ML 训练工作流程中的数据准备步骤。
 - en: 9\. Implementing model versioning in a pipeline
+  id: totrans-43
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 9. 在管道中实现模型版本控制
 - en: '[PRE8]'
+  id: totrans-44
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE8]'
 - en: 10\. Parameterizing and executing a Kubeflow pipeline
+  id: totrans-45
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 10. 参数化和执行 Kubeflow 管道
 - en: For the purpose of this task, assume we are working in an environment with access
     to a Kubeflow Pipeline execution API. Since execution details vary by platform
     and API version, the following script is a hypothetical example based on common
     patterns.
+  id: totrans-46
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了完成此任务，假设我们在一个可以访问 Kubeflow Pipeline 执行 API 的环境中工作。由于执行细节因平台和 API 版本而异，以下脚本是一个基于常见模式的假设示例。
 - en: '[PRE9]'
+  id: totrans-47
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE9]'
 - en: This script describes how to parameterize and submit a compiled Kubeflow pipeline
     for execution, assuming an appropriate API or SDK method is available (`submit_pipeline_job`
     in this hypothetical example). The actual submission method depends on your execution
     environment or cloud provider.
+  id: totrans-48
   prefs: []
   type: TYPE_NORMAL
+  zh: 此脚本描述了如何参数化和提交编译后的 Kubeflow 管道以进行执行，假设有适当的 API 或 SDK 方法可用（在这个假设示例中为 `submit_pipeline_job`）。实际的提交方法取决于您的执行环境或云提供商。

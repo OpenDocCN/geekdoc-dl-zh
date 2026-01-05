@@ -1,323 +1,475 @@
 - en: 2.5 Semantic Search — Advanced Strategies
+  id: totrans-0
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
+  zh: 2.5 语义搜索——高级策略
 - en: 原文：[https://boramorka.github.io/LLM-Book/en/CHAPTER-2/2.5%20Semantic%20Search%20%E2%80%94%20Advanced%20Strategies/](https://boramorka.github.io/LLM-Book/en/CHAPTER-2/2.5%20Semantic%20Search%20%E2%80%94%20Advanced%20Strategies/)
+  id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 原文：[https://boramorka.github.io/LLM-Book/en/CHAPTER-2/2.5%20Semantic%20Search%20%E2%80%94%20Advanced%20Strategies/](https://boramorka.github.io/LLM-Book/en/CHAPTER-2/2.5%20Semantic%20Search%20%E2%80%94%20Advanced%20Strategies/)
 - en: Delivering precisely relevant information from large corpora is key to smart
     systems like chatbots and question‑answering (QA). Basic semantic search is a
     solid start, but there are edge cases where its quality and result diversity fall
     short. This chapter explores advanced retrieval techniques to improve both precision
     and variety.
+  id: totrans-2
   prefs: []
   type: TYPE_NORMAL
+  zh: 从大型语料库中精确提供相关信息是智能系统（如聊天机器人和问答）的关键。基本的语义搜索是一个良好的起点，但存在一些边缘情况，其质量和结果多样性不足。本章探讨了高级检索技术以提高精确性和多样性。
 - en: Search based purely on semantic proximity doesn’t always yield the most informative
     and diverse set of results. Advanced methods add mechanisms to balance diversity
     and relevance — especially important for complex queries that require nuance.
+  id: totrans-3
   prefs: []
   type: TYPE_NORMAL
+  zh: 仅基于语义邻近度的搜索并不总是能产生最有信息和多样化的结果集。高级方法添加机制以平衡多样性和相关性——这对于需要细微差别的复杂查询尤为重要。
 - en: 'Enter Maximum Marginal Relevance (MMR). MMR balances relevance and diversity:
     it selects documents that are close to the query while being dissimilar to each
     other. This reduces redundancy and helps cover different aspects of an answer.'
+  id: totrans-4
   prefs: []
   type: TYPE_NORMAL
+  zh: 进入最大边际相关性（MMR）。MMR平衡相关性和多样性：它选择与查询接近但彼此不相似的文档。这减少了冗余并有助于覆盖答案的不同方面。
 - en: 'The procedure looks like this: first, select “candidates” by semantic similarity;
     then choose a final set that simultaneously accounts for relevance to the query
     and dissimilarity to the documents already selected. The outcome is a broader,
     more useful result set.'
+  id: totrans-5
   prefs: []
   type: TYPE_NORMAL
+  zh: 该过程看起来是这样的：首先，通过语义相似性选择“候选人”；然后选择一个最终集，该集同时考虑了与查询的相关性和与已选文档的不相似性。结果是更广泛、更有用的结果集。
 - en: Next comes Self‑Query Retrieval. This method suits queries that include both
     semantic content and metadata (e.g., “alien movies released in 1980”). It splits
     the request into a semantic component (for embedding search) and a metadata filter
     (e.g., “release year = 1980”).
+  id: totrans-6
   prefs: []
   type: TYPE_NORMAL
+  zh: 接下来是自查询检索。这种方法适用于包含语义内容和元数据（例如，“1980年发布的科幻电影”）的查询。它将请求分为语义组件（用于嵌入搜索）和元数据过滤器（例如，“发布年份
+    = 1980”）。
 - en: Finally, Contextual Compression extracts only the most relevant fragments from
     retrieved documents. This is useful when you don’t need an entire document. It
     requires an extra processing step (finding the most relevant parts) but significantly
     improves accuracy and specificity.
+  id: totrans-7
   prefs: []
   type: TYPE_NORMAL
+  zh: 最后，上下文压缩仅从检索到的文档中提取最相关的片段。当你不需要整个文档时，这很有用。它需要额外的处理步骤（找到最相关的部分），但显著提高了准确性和特异性。
 - en: 'Moving to the practical side of advanced retrieval techniques for strengthening
     semantic search: retrieving relevant documents is a critical stage in RAG (Retrieval‑Augmented
     Generation) systems such as chatbots and QA. The techniques below help handle
     edge cases in basic search and increase both diversity and specificity of results.'
+  id: totrans-8
   prefs: []
   type: TYPE_NORMAL
+  zh: 转向加强语义搜索的高级检索技术实践方面：在RAG（检索增强生成）系统（如聊天机器人和问答）中，检索相关文档是一个关键阶段。以下技术有助于处理基本搜索中的边缘情况，并增加结果集的多样性和特异性。
 - en: Retrieving relevant documents is a critical stage in RAG (Retrieval‑Augmented
     Generation) systems such as chatbots and QA. The techniques below help handle
     edge cases in basic search and increase both diversity and specificity of results.
+  id: totrans-9
   prefs: []
   type: TYPE_NORMAL
+  zh: 在RAG（检索增强生成）系统（如聊天机器人和问答）中，检索相关文档是一个关键阶段。以下技术有助于处理基本搜索中的边缘情况，并增加结果集的多样性和特异性。
 - en: Before you start, import the necessary libraries and configure access to external
     services (for example, OpenAI for embeddings).
+  id: totrans-10
   prefs: []
   type: TYPE_NORMAL
+  zh: 在开始之前，导入必要的库并配置对外部服务的访问（例如，OpenAI用于嵌入）。
 - en: '[PRE0]'
+  id: totrans-11
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE0]'
 - en: Now configure a vector store to efficiently perform meaning‑based search (using
     embeddings mapped to high‑dimensional vectors).
+  id: totrans-12
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在配置一个向量存储库，以高效执行基于意义的搜索（使用映射到高维向量的嵌入）。
 - en: '[PRE1]'
+  id: totrans-13
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE1]'
 - en: Add a small demo set to showcase similarity search and MMR.
+  id: totrans-14
   prefs: []
   type: TYPE_NORMAL
+  zh: 添加一个小型演示集以展示相似性搜索和MMR。
 - en: '[PRE2]'
+  id: totrans-15
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE2]'
 - en: 'A common issue is overly similar results. MMR balances relevance and diversity,
     reducing repetition and widening coverage. A practical MMR example:'
+  id: totrans-16
   prefs: []
   type: TYPE_NORMAL
+  zh: 一个常见问题是结果过于相似。MMR平衡相关性和多样性，减少重复并扩大覆盖范围。一个实际的MMR示例：
 - en: '[PRE3]'
+  id: totrans-17
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE3]'
 - en: 'This example shows the difference between a standard similarity search and
     MMR: the latter yields relevant but less repetitive results.'
+  id: totrans-18
   prefs: []
   type: TYPE_NORMAL
+  zh: 此示例显示了标准相似度搜索和MMR之间的差异：后者产生相关但重复性较低的结果。
 - en: Improving Accuracy with Metadata
+  id: totrans-19
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 通过元数据提高准确性
 - en: Metadata helps refine queries and filter results by attributes (source, date,
     and so on).
+  id: totrans-20
   prefs: []
   type: TYPE_NORMAL
+  zh: 元数据有助于通过属性（来源、日期等）精炼查询和过滤结果。
 - en: Metadata‑filtered search
+  id: totrans-21
   prefs:
   - PREF_H4
   type: TYPE_NORMAL
+  zh: 元数据过滤搜索
 - en: '[PRE4]'
+  id: totrans-22
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE4]'
 - en: Combining Metadata and Self‑Query Retrievers
+  id: totrans-23
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 结合元数据和自查询检索器
 - en: The Self‑Query Retriever extracts both the semantic query and the metadata filters
     from a single user phrase — no manual filter specification required.
+  id: totrans-24
   prefs: []
   type: TYPE_NORMAL
+  zh: 自查询检索器从单个用户短语中提取语义查询和元数据过滤器——无需手动指定过滤器。
 - en: Initialization and metadata description
+  id: totrans-25
   prefs:
   - PREF_H4
   type: TYPE_NORMAL
+  zh: 初始化和元数据描述
 - en: 'Before running metadata‑aware search, define the metadata attributes to use:'
+  id: totrans-26
   prefs: []
   type: TYPE_NORMAL
+  zh: 在运行元数据感知搜索之前，请定义要使用的元数据属性：
 - en: '[PRE5]'
+  id: totrans-27
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE5]'
 - en: Configure the Self‑Query Retriever
+  id: totrans-28
   prefs:
   - PREF_H4
   type: TYPE_NORMAL
+  zh: 配置自查询检索器
 - en: '[PRE6]'
+  id: totrans-29
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE6]'
 - en: Run a query with automatically inferred metadata
+  id: totrans-30
   prefs:
   - PREF_H4
   type: TYPE_NORMAL
+  zh: 使用自动推断的元数据运行查询
 - en: '[PRE7]'
+  id: totrans-31
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE7]'
 - en: Implementing Contextual Compression
+  id: totrans-32
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 实现上下文压缩
 - en: Contextual compression works by extracting the segments of a document that are
     most relevant to a given query. This method not only reduces the computational
     load on LLMs but also improves answer quality by focusing on the most pertinent
     information.
+  id: totrans-33
   prefs: []
   type: TYPE_NORMAL
+  zh: 上下文压缩通过提取与给定查询最相关的文档段落来工作。这种方法不仅减少了LLMs的计算负担，而且通过关注最相关的信息来提高答案质量。
 - en: Setting Up the Environment
+  id: totrans-34
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 设置环境
 - en: 'Before diving into contextual compression specifics, make sure your environment
     is correctly configured with the necessary libraries:'
+  id: totrans-35
   prefs: []
   type: TYPE_NORMAL
+  zh: 在深入研究上下文压缩的细节之前，请确保您的环境已正确配置了必要的库：
 - en: '[PRE8]'
+  id: totrans-36
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE8]'
 - en: Initializing the Compression Tools
+  id: totrans-37
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 初始化压缩工具
 - en: 'Next, initialize the compression mechanism with a pretrained language model
     that will identify and extract relevant parts of documents:'
+  id: totrans-38
   prefs: []
   type: TYPE_NORMAL
+  zh: 接下来，使用一个预训练的语言模型初始化压缩机制，该模型将识别并提取文档的相关部分：
 - en: '[PRE9]'
+  id: totrans-39
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE9]'
 - en: Creating the Contextual Compression Retriever
+  id: totrans-40
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 创建上下文压缩检索器
 - en: 'With the compressor ready, configure a retriever that integrates contextual
     compression into the retrieval process:'
+  id: totrans-41
   prefs: []
   type: TYPE_NORMAL
+  zh: 压缩器准备就绪后，配置一个将上下文压缩集成到检索过程中的检索器：
 - en: '[PRE10]'
+  id: totrans-42
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE10]'
 - en: 'Run a query and see how the compression‑aware retriever returns a more focused
     set of documents:'
+  id: totrans-43
   prefs: []
   type: TYPE_NORMAL
+  zh: 运行查询并查看压缩感知检索器如何返回一组更聚焦的文档：
 - en: '[PRE11]'
+  id: totrans-44
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE11]'
 - en: 'Contextual compression aims to extract the essence of documents by focusing
     on the segments most relevant to the query. Combined with MMR, it balances relevance
     and diversity to provide a broader perspective on the topic. Configure the retriever
     with compression and MMR:'
+  id: totrans-45
   prefs: []
   type: TYPE_NORMAL
+  zh: 上下文压缩旨在通过关注与查询最相关的段落来提取文档的精华。结合MMR，它平衡了相关性和多样性，为话题提供了更广阔的视角。配置具有压缩和MMR的检索器：
 - en: '[PRE12]'
+  id: totrans-46
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE12]'
 - en: This approach optimizes retrieval, ensuring results are not only relevant but
     also diverse, preventing redundancy and improving users’ understanding of the
     subject matter.
+  id: totrans-47
   prefs: []
   type: TYPE_NORMAL
+  zh: 此方法优化了检索，确保结果不仅相关，而且多样，防止冗余并提高用户对主题的理解。
 - en: 'Beyond semantic search, there are other retrieval methods. TF‑IDF (Term Frequency‑Inverse
     Document Frequency) is a statistical measure of a word’s importance in a collection:
     it accounts for term frequency in a document and rarity across the corpus; high
     values indicate good descriptors and work well for exact‑match search. SVM (Support
     Vector Machine) can be used for document classification and indirectly improve
     retrieval by filtering or ranking documents by predefined categories.'
+  id: totrans-48
   prefs: []
   type: TYPE_NORMAL
+  zh: 除了语义搜索之外，还有其他检索方法。TF-IDF（词频-逆文档频率）是衡量一个词在集合中重要性的统计度量：它考虑了文档中的词频和在语料库中的稀有度；高值表示良好的描述符，适用于精确匹配搜索。SVM（支持向量机）可用于文档分类，并通过过滤或按预定义类别对文档进行排序间接提高检索。
 - en: Useful Links
+  id: totrans-49
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 有用链接
 - en: 'LangChain Self‑Query Retriever: https://python.langchain.com/docs/modules/data_connection/retrievers/self_query'
+  id: totrans-50
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: LangChain 自查询检索器：https://python.langchain.com/docs/modules/data_connection/retrievers/self_query
 - en: 'LangChain Maximal Marginal Relevance Retriever: https://python.langchain.com/docs/modules/data_connection/retrievers/how_to/mmr'
+  id: totrans-51
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: LangChain 最大边际相关度检索器：https://python.langchain.com/docs/modules/data_connection/retrievers/how_to/mmr
 - en: 'TF‑IDF Explained: https://www.youtube.com/watch?v=BtWcKEmM0g4'
+  id: totrans-52
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: TF-IDF 解释：https://www.youtube.com/watch?v=BtWcKEmM0g4
 - en: 'SVM Explained: https://www.youtube.com/watch?v=efR1C6CvhmE'
+  id: totrans-53
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: SVM 解释：https://www.youtube.com/watch?v=efR1C6CvhmE
 - en: Theory Questions
+  id: totrans-54
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 理论问题
 - en: What advantages does Maximum Marginal Relevance (MMR) offer over standard similarity
     search for document retrieval?
+  id: totrans-55
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 最大边际相关度（MMR）相对于标准相似度搜索在文档检索中提供了哪些优势？
 - en: How do metadata improve precision and relevance in semantic search?
+  id: totrans-56
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 元数据如何提高语义搜索中的精确性和相关性？
 - en: Describe how the Self‑Query Retriever works and its key advantage.
+  id: totrans-57
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 描述Self-Query Retriever的工作原理及其关键优势。
 - en: When is it sensible to use TF‑IDF and SVM in information retrieval, and how
     do they differ from embedding‑based methods?
+  id: totrans-58
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 在信息检索中何时使用TF-IDF和SVM是合理的，它们与基于嵌入的方法有何不同？
 - en: Practical Tasks
+  id: totrans-59
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 实际任务
 - en: 'Implement MMR with different parameters: experiment with `k` and `fetch_k`,
     and analyze how they affect diversity and relevance.'
+  id: totrans-60
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 使用不同参数实现MMR：对`k`和`fetch_k`进行实验，并分析它们如何影响多样性和相关性。
 - en: 'Extend metadata: add new types (e.g., author, publication date, keywords) and
     use them for filtered searches.'
+  id: totrans-61
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 扩展元数据：添加新类型（例如，作者、出版日期、关键词）并用于过滤搜索。
 - en: 'Integrate Self‑Query Retriever: expand metadata attribute descriptions to include
     the new fields and verify it can automatically form complex, constrained queries.'
+  id: totrans-62
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 集成Self-Query Retriever：扩展元数据属性描述以包括新字段，并验证它是否可以自动形成复杂、受限的查询。
 - en: 'Compare methods: implement a simple TF‑IDF‑ or SVM‑based search over your collection
     and compare against semantic search, noting strengths and weaknesses in different
     scenarios.'
+  id: totrans-63
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 比较方法：在你的集合上实现基于TF-IDF或SVM的简单搜索，并与语义搜索进行比较，注意不同场景中的优势和劣势。
 - en: Best Practices
+  id: totrans-64
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 最佳实践
 - en: Beyond using various retrieval techniques effectively, follow best practices
     to ensure maximum performance and reliability.
+  id: totrans-65
   prefs: []
   type: TYPE_NORMAL
+  zh: 除了有效地使用各种检索技术外，遵循最佳实践以确保最大性能和可靠性。
 - en: Choosing the Right Strategy
+  id: totrans-66
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 选择正确的策略
 - en: Choosing between MMR, Self‑Query Retriever, or plain similarity search depends
     on application requirements. When you need diverse results, MMR is optimal. If
     user queries contain explicit metadata, Self‑Query Retriever simplifies the process.
     Standard similarity search fits simpler queries.
+  id: totrans-67
   prefs: []
   type: TYPE_NORMAL
+  zh: 在MMR、Self-Query Retriever或普通相似度搜索之间进行选择取决于应用需求。当你需要多样化的结果时，MMR是最优的。如果用户查询包含显式元数据，Self-Query
+    Retriever简化了过程。标准相似度搜索适合简单的查询。
 - en: Performance Optimization
+  id: totrans-68
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 性能优化
 - en: Vector‑database performance, especially at large scale, is crucial. Regular
     indexing, caching popular queries, and hardware optimization can significantly
     speed up retrieval. Distributed vector databases can also help with scaling.
+  id: totrans-69
   prefs: []
   type: TYPE_NORMAL
+  zh: 向量数据库的性能，尤其是在大规模上，至关重要。定期索引、缓存常用查询和硬件优化可以显著加快检索速度。分布式向量数据库也有助于扩展。
 - en: Metadata Management
+  id: totrans-70
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 元数据管理
 - en: Well‑structured and accurate metadata significantly improve search quality.
     Establish a thoughtful metadata schema and apply it consistently across the collection.
     Auto‑generating metadata with an LLM can help, but requires careful validation.
+  id: totrans-71
   prefs: []
   type: TYPE_NORMAL
+  zh: 结构良好且准确的元数据可以显著提高搜索质量。建立一个深思熟虑的元数据架构，并在整个集合中一致地应用它。使用LLM自动生成元数据可能会有所帮助，但需要仔细验证。
 - en: Monitoring and Iteration
+  id: totrans-72
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 监控和迭代
 - en: Retrieval systems require continuous monitoring of performance and result quality.
     Collect user feedback, analyze relevance metrics, and A/B test retrieval strategies
     to iteratively improve the system.
+  id: totrans-73
   prefs: []
   type: TYPE_NORMAL
+  zh: 检索系统需要持续监控性能和结果质量。收集用户反馈、分析相关性指标，并通过A/B测试检索策略来迭代改进系统。
 - en: Conclusion
+  id: totrans-74
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 结论
 - en: This chapter surveyed advanced retrieval techniques designed to improve semantic‑search
     systems. By addressing limitations around diversity, specificity, and relevance,
     these methods provide a path toward more intelligent and effective retrieval.
@@ -325,136 +477,193 @@
     and alternative document‑retrieval methods, developers can build systems that
     not only understand the semantic content of queries but also deliver rich, diverse,
     and targeted answers.
+  id: totrans-75
   prefs: []
   type: TYPE_NORMAL
+  zh: 本章概述了旨在改进语义搜索系统的先进检索技术。通过解决多样性、特异性和相关性的限制，这些方法为更智能和有效的检索提供了一条途径。通过实际应用MMR、自查询检索、上下文压缩和替代文档检索方法，开发者可以构建不仅理解查询的语义内容，还能提供丰富、多样和有针对性的答案的系统。
 - en: Following best practices ensures retrieval systems are both efficient and effective.
     As NLP continues to evolve, staying up‑to‑date with advances in retrieval technologies
     will be key to maintaining an edge in semantic‑search capabilities.
+  id: totrans-76
   prefs: []
   type: TYPE_NORMAL
+  zh: 遵循最佳实践确保检索系统既高效又有效。随着NLP的不断发展，跟上检索技术的前沿将是在语义搜索能力上保持优势的关键。
 - en: In sum, integrating advanced retrieval techniques into semantic‑search systems
     represents a significant step forward. With careful selection and optimization,
     developers can build solutions that substantially enhance user experience by delivering
     accurate, diverse, and contextually relevant information in response to complex
     queries.
+  id: totrans-77
   prefs: []
   type: TYPE_NORMAL
+  zh: 总之，将高级检索技术集成到语义搜索系统中是一个重要的进步。通过谨慎选择和优化，开发者可以构建出能够显著提升用户体验的解决方案，通过响应复杂查询提供准确、多样化和上下文相关的信息。
 - en: Additional Theory Questions
+  id: totrans-78
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 其他理论问题
 - en: Explain the principle of Maximum Marginal Relevance (MMR) and its role in improving
     retrieval quality.
+  id: totrans-79
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 解释最大边际相关性（MMR）的原则及其在提高检索质量中的作用。
 - en: How does self‑query retrieval handle queries that combine semantic content and
     metadata?
+  id: totrans-80
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 自查询检索如何处理结合语义内容和元数据的查询？
 - en: Explain contextual compression in document retrieval and why it matters.
+  id: totrans-81
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 解释文档检索中的上下文压缩及其重要性。
 - en: List the environment‑setup steps for advanced retrieval using the OpenAI API
     and LangChain.
+  id: totrans-82
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 列出使用 OpenAI API 和 LangChain 进行高级检索的环境设置步骤。
 - en: How does initializing a vector database enable efficient semantic similarity
     search?
+  id: totrans-83
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 初始化向量数据库如何实现高效的语义相似性搜索？
 - en: Describe how to populate and use a vector database for similarity and diversified
     (MMR) search.
+  id: totrans-84
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 描述如何填充和使用向量数据库以进行相似性和多样化（MMR）搜索。
 - en: In advanced document retrieval, what advantages does MMR bring for ensuring
     diversity?
+  id: totrans-85
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 在高级文档检索中，MMR 如何确保多样性？
 - en: How can metadata be leveraged to increase specificity in document‑retrieval
     systems?
+  id: totrans-86
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 如何利用元数据来增加文档检索系统的特定性？
 - en: Discuss the benefits and challenges of self‑query retrievers in semantic search.
+  id: totrans-87
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 讨论自查询检索在语义搜索中的优势和挑战。
 - en: What role does contextual compression play in reducing compute load and improving
     answer quality?
+  id: totrans-88
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 上下文压缩在减少计算负载和提高答案质量方面扮演什么角色？
 - en: What best practices matter most when implementing advanced retrieval in semantic‑search
     systems?
+  id: totrans-89
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 在实现语义搜索系统的高级检索时，哪些最佳实践最为重要？
 - en: Compare the effectiveness of vector‑based retrieval with TF‑IDF and SVM in document
     retrieval.
+  id: totrans-90
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 比较基于向量的检索与 TF-IDF 和 SVM 在文档检索中的有效性。
 - en: How does integrating advanced retrieval techniques improve performance and UX
     in semantic‑search systems?
+  id: totrans-91
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 集成高级检索技术如何提高语义搜索系统的性能和用户体验？
 - en: What impact might future NLP advances have on advanced retrieval for semantic
     search?
+  id: totrans-92
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 未来的 NLP 进步可能会对语义搜索的高级检索产生什么影响？
 - en: Additional Practical Tasks
+  id: totrans-93
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 其他实用任务
 - en: 'Implement a Python class `VectorDatabase` with methods:'
+  id: totrans-94
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 实现一个名为 `VectorDatabase` 的 Python 类，包含以下方法：
 - en: '`__init__(self, persist_directory: str)`: initialize the vector DB and its
     persistence directory.'
+  id: totrans-95
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: '`__init__(self, persist_directory: str)`: 初始化向量数据库及其持久化目录。'
 - en: '`add_text(self, text: str)`: embed text into a high‑dimensional vector using
     OpenAI embeddings and store it. Assume a function `openai_embedding(text: str)
     -> List[float]` returns the embedding vector.'
+  id: totrans-96
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: '`add_text(self, text: str)`: 使用 OpenAI 嵌入将文本嵌入到高维向量中并存储它。假设存在一个函数 `openai_embedding(text:
+    str) -> List[float]` 返回嵌入向量。'
 - en: '`similarity_search(self, query: str, k: int) -> List[str]`: perform similarity
     search and return the top‑`k` most similar texts. Use a simplified similarity
     function.'
+  id: totrans-97
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: '`similarity_search(self, query: str, k: int) -> List[str]`: 执行相似性搜索并返回最相似的
+    `k` 个文本。使用简化的相似性函数。'
 - en: 'Write a function `compress_document` that takes a list of strings (a document)
     and a query string, and returns a list of strings where each element is a compressed
     segment of the document relevant to the query. Assume an external utility `compress_segment(segment:
     str, query: str) -> str` that compresses individual segments for the query.'
+  id: totrans-98
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: '编写一个函数 `compress_document`，它接受一个字符串列表（文档）和一个查询字符串，并返回一个字符串列表，其中每个元素都是与查询相关的文档压缩段。假设存在一个外部实用工具
+    `compress_segment(segment: str, query: str) -> str`，该工具用于压缩单个段以匹配查询。'
 - en: 'Implement `max_marginal_relevance` that takes a list of document IDs, a query,
     and two parameters `lambda` and `k`, and returns a list of `k` IDs selected by
     the Maximum Marginal Relevance criterion. Assume similarity function `similarity(doc_id:
     str, query: str) -> float` and diversity function `diversity(doc_id1: str, doc_id2:
     str) -> float`.'
+  id: totrans-99
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: '实现 `max_marginal_relevance` 函数，它接受文档 ID 列表、查询和两个参数 `lambda` 和 `k`，并返回根据最大边际相关性标准选择的
+    `k` 个 ID 列表。假设存在相似性函数 `similarity(doc_id: str, query: str) -> float` 和多样性函数 `diversity(doc_id1:
+    str, doc_id2: str) -> float`。'
 - en: Write `initialize_vector_db` that demonstrates how to populate a vector DB with
     a list of predefined texts, then run similarity and diversified searches, printing
     both sets of results. Use the `VectorDatabase` class from task 1 as the backing
     store.
+  id: totrans-100
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 编写`initialize_vector_db`函数，演示如何使用预定义的文本列表填充向量数据库，然后运行相似性和多样化搜索，打印出两组结果。使用任务1中的`VectorDatabase`类作为后端存储。

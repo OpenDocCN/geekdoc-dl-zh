@@ -1,66 +1,92 @@
 - en: Answers 1.2
+  id: totrans-0
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
+  zh: 答案 1.2
 - en: 原文：[https://boramorka.github.io/LLM-Book/en/CHAPTER-1/Answers%201.2/](https://boramorka.github.io/LLM-Book/en/CHAPTER-1/Answers%201.2/)
+  id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 原文：[https://boramorka.github.io/LLM-Book/en/CHAPTER-1/Answers%201.2/](https://boramorka.github.io/LLM-Book/en/CHAPTER-1/Answers%201.2/)
 - en: Theory
+  id: totrans-2
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 理论
 - en: The key message components when working with GPT models are `role` and `content`.
     `role` (system/user/assistant) identifies the speaker and guides the model’s style
     or behavior; `content` holds the message text. Distinguishing roles is essential
     for a correct dialogue simulation and expected behavior.
+  id: totrans-3
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 与 GPT 模型合作时的关键信息组件是`角色`和`内容`。`角色`（系统/用户/助手）标识说话者并指导模型的风格或行为；`内容`包含消息文本。区分角色对于正确模拟对话和预期行为至关重要。
 - en: '`system` messages set instructions, context, and constraints (style, tone,
     rules). `user` messages are the user’s inputs (questions, instructions) that the
     model should answer. Clear role separation helps control the model effectively.'
+  id: totrans-4
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: '`系统`消息设定指令、上下文和约束（风格、语气、规则）。`用户`消息是模型应回答的用户输入（问题、指令）。清晰的职责分离有助于有效控制模型。'
 - en: 'Example of `system` influence: “Reply in the style of a playful poet” — the
     model will follow that style.'
+  id: totrans-5
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: '`系统`影响的例子：“以轻松诗人的风格回复”——模型将遵循该风格。'
 - en: 'Message order shapes context and influences answers: user turns are interpreted
     in light of earlier system instructions and the conversation history.'
+  id: totrans-6
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 消息顺序塑造了上下文并影响答案：用户的发言在早期系统指令和对话历史的基础上进行解读。
 - en: In the customer review classification example, the categories are “Positive”,
     “Negative”, and “Neutral”.
+  id: totrans-7
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 在客户评论分类示例中，类别是“正面”，“负面”和“中性”。
 - en: 'Classifying movie review sentiment is useful for aggregating viewer opinions.
     Possible categories: “Positive”, “Negative”, “Neutral”.'
+  id: totrans-8
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 对电影评论情感进行分类有助于汇总观众意见。可能的类别：“正面”，“负面”，“中性”。
 - en: 'Classifying news topics helps manage content and recommendations. Possible
     categories: “Politics”, “Technology”, “Sports”, “Entertainment”.'
+  id: totrans-9
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 对新闻主题进行分类有助于管理内容和推荐。可能的类别：“政治”，“科技”，“体育”，“娱乐”。
 - en: 'Classifying customer requests speeds routing and increases satisfaction. Categories:
     “Billing”, “Support”, “Sales”, “General Question”.'
+  id: totrans-10
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 对客户请求进行分类可加速路由并提高满意度。类别：“账单”，“支持”，“销售”，“一般问题”。
 - en: In classification, the `user_message` should contain the text to be labeled;
     keep it clear and concise so the model has enough context for an accurate result.
+  id: totrans-11
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 在分类中，`用户消息`应包含要标记的文本；保持其清晰简洁，以便模型有足够的上下文以获得准确的结果。
 - en: 'Classifying social‑post tone helps with moderation (flagging inappropriate
     content) and marketing (analyzing audience engagement). Example tones: “Serious”,
     “Ironic”, “Inspiring”, “Irritated”.'
+  id: totrans-12
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 对社交媒体帖子语气进行分类有助于内容管理和营销（分析观众参与度）。示例语气：“严肃”，“讽刺”，“鼓舞人心”，“恼怒”。

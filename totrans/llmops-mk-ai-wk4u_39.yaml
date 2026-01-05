@@ -1,183 +1,266 @@
 - en: Answers 3.3
+  id: totrans-0
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
+  zh: 答案 3.3
 - en: 原文：[https://boramorka.github.io/LLM-Book/en/CHAPTER-3/Answers%203.3/](https://boramorka.github.io/LLM-Book/en/CHAPTER-3/Answers%203.3/)
+  id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 原文：[https://boramorka.github.io/LLM-Book/en/CHAPTER-3/Answers%203.3/](https://boramorka.github.io/LLM-Book/en/CHAPTER-3/Answers%203.3/)
 - en: Theory
+  id: totrans-2
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 理论
 - en: Setting up the environment for a quiz generator includes importing required
     libraries, suppressing non‑essential warnings, and loading API keys (CircleCI,
     GitHub, OpenAI).
+  id: totrans-3
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 设置问答生成器环境包括导入所需的库、抑制非必要警告和加载 API 密钥（CircleCI、GitHub、OpenAI）。
 - en: 'The dataset structure should include a question template and a “quiz bank”
     organized by subjects, categories, and facts. For example: “History”, “Technology”,
     “Geography” with corresponding facts.'
+  id: totrans-4
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 数据集结构应包括问题模板和按主题、类别和事实组织的“问答库”。例如：“历史”、“技术”、“地理”以及相应的事实。
 - en: Prompt engineering guides the AI to generate content relevant to the selected
     category. The prompt template can prescribe selecting subjects from the bank and
     forming quiz questions.
+  id: totrans-5
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 提示工程指导 AI 生成与所选类别相关的内 容。提示模板可以规定从库中选择主题并形成问答问题。
 - en: LangChain’s role is to structure the prompt, choose the language model (LLM),
     and configure a parser for processing the output.
+  id: totrans-6
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: LangChain 的作用是结构化提示、选择语言模型（LLM）并为处理输出配置解析器。
 - en: The quiz generation pipeline is a composition of a structured prompt, model,
     and parser, implemented using the LangChain Expression Language.
+  id: totrans-7
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 问答生成管道是由结构化提示、模型和解析器组成的，使用 LangChain 表达式语言实现。
 - en: Functions such as `evaluate_quiz_content` are used to assess the relevance and
     correctness of generated quiz content by checking for expected keywords.
+  id: totrans-8
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 如 `evaluate_quiz_content` 这样的函数通过检查预期关键词来评估生成问答内容的相关性和正确性。
 - en: Proper refusal handling is tested via `evaluate_request_refusal`, which ensures
     the system returns the expected refusal for out‑of‑scope requests.
+  id: totrans-9
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 通过 `evaluate_request_refusal` 测试适当的拒绝处理，确保系统返回预期范围的拒绝。
 - en: The “science” test checks that generated questions contain indicators of scientific
     topics (e.g., “physics”, “chemistry”, “biology”, “astronomy”).
+  id: totrans-10
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: “科学”测试检查生成的问题是否包含科学主题的指标（例如，“物理”、“化学”、“生物学”、“天文学”）。
 - en: 'The basic components of a CircleCI config for a Python project include: version,
     orbs, jobs (build/test), Docker image, steps (checkout/tests), and workflows.'
+  id: totrans-11
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: Python 项目的 CircleCI 配置的基本组件包括：版本、 orbs、作业（构建/测试）、Docker 镜像、步骤（检出/测试）和工作流程。
 - en: Customizing the CircleCI configuration for a project involves setting the Python
     version, test commands, and adding extra steps to accurately reflect real build,
     test, and deployment processes.
+  id: totrans-12
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 为项目定制 CircleCI 配置涉及设置 Python 版本、测试命令，并添加额外步骤以准确反映实际的构建、测试和部署过程。
 - en: Practice
+  id: totrans-13
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 实践
 - en: 'Solutions to the tasks:'
+  id: totrans-14
   prefs: []
   type: TYPE_NORMAL
+  zh: 任务的解决方案：
 - en: 'Task 1: Creating a quiz dataset'
+  id: totrans-15
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 任务 1：创建问答数据集
 - en: We define a Python dictionary representing a collection of quiz items, organized
     by subjects, each with its categories and facts.
+  id: totrans-16
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们定义一个代表问答项集合的 Python 字典，按主题组织，每个主题都有其类别和事实。
 - en: '[PRE0]'
+  id: totrans-17
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE0]'
 - en: 'Task 2: Generating quiz questions using prompts'
+  id: totrans-18
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 任务 2：使用提示生成问答
 - en: This function generates quiz questions based on a given category by referencing
     relevant subjects and facts from `quiz_bank`. It demonstrates string manipulation
     and formatting in Python to construct meaningful quiz questions.
+  id: totrans-19
   prefs: []
   type: TYPE_NORMAL
+  zh: 此函数根据给定的类别生成问答问题，通过引用 `quiz_bank` 中的相关主题和事实。它展示了 Python 中的字符串操作和格式化，以构建有意义的问答问题。
 - en: '[PRE1]'
+  id: totrans-20
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE1]'
 - en: 'Task 3: Implementing LangChain‑style prompt structuring'
+  id: totrans-21
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 任务 3：实现 LangChain 风格的提示结构
 - en: To simulate structuring a quiz prompt as it might be done with LangChain, we
     can define a Python function that formats a list of quiz questions into a structured
     prompt. This structured prompt imitates detailed instructions and formatting that
     would guide an LLM in generating or processing quiz content.
+  id: totrans-22
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了模拟使用 LangChain 结构化问答提示，我们可以定义一个 Python 函数，将问答列表格式化为结构化提示。这个结构化提示模仿了详细的指令和格式，这将指导
+    LLM 生成或处理问答内容。
 - en: '[PRE2]'
+  id: totrans-23
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE2]'
 - en: This function accepts a list of quiz questions and returns a single string that
     structures them to simulate input for a quiz‑generation LLM, using the specified
     delimiter to separate questions.
+  id: totrans-24
   prefs: []
   type: TYPE_NORMAL
+  zh: 此函数接受一个问答列表，并返回一个字符串，将它们结构化以模拟问答生成 LLM 的输入，使用指定的分隔符来分隔问题。
 - en: 'Task 4: Quiz generation pipeline'
+  id: totrans-25
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 任务 4：问答生成管道
 - en: '[PRE3]'
+  id: totrans-26
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE3]'
 - en: 'This set of functions simulates a quiz generation pipeline: generating questions
     based on a category, structuring them into a prompt, selecting a model, and executing
     it to produce mock output.'
+  id: totrans-27
   prefs: []
   type: TYPE_NORMAL
+  zh: 这组函数模拟了一个测验生成管道：基于类别生成问题，将它们结构化为提示，选择模型，并执行它以生成模拟输出。
 - en: 'Task 5: Reusable quiz generation function'
+  id: totrans-28
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 任务 5：可重用测验生成函数
 - en: '[PRE4]'
+  id: totrans-29
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE4]'
 - en: These functions provide a basic simulation of the processes involved in structuring
     prompts for AI‑based quiz generation, assembling the pipeline to perform that
     generation, and creating a reusable function for generating quizzes with customizable
     parameters.
+  id: totrans-30
   prefs: []
   type: TYPE_NORMAL
+  zh: 这些函数提供了构建基于 AI 的测验生成提示的结构化过程的基本模拟，组装管道以执行该生成，并创建一个具有可定制参数的可重用函数来生成测验。
 - en: 'Task 6: Evaluating generated quiz content'
+  id: totrans-31
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 任务 6：评估生成的测验内容
 - en: This function accepts generated quiz content and a list of expected keywords
     to ensure the output aligns with expected topics or subjects. It raises an assertion
     error if none of the expected keywords are present, indicating a mismatch between
     expected and generated content.
+  id: totrans-32
   prefs: []
   type: TYPE_NORMAL
+  zh: 此函数接受生成的测验内容和预期关键词列表，以确保输出与预期主题或科目相符。如果预期关键词中没有任何一个存在，它将引发断言错误，表明预期内容和生成内容之间存在不匹配。
 - en: '[PRE5]'
+  id: totrans-33
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE5]'
 - en: 'Task 7: Handling invalid quiz requests'
+  id: totrans-34
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 任务 7：处理无效测验请求
 - en: This function simulates evaluating the system’s response to an invalid quiz
     request. It verifies whether the generated refusal matches the expected refusal
     response, confirming correct handling of requests the system cannot fulfill.
+  id: totrans-35
   prefs: []
   type: TYPE_NORMAL
+  zh: 此函数模拟评估系统对无效测验请求的响应。它验证生成的拒绝是否与预期的拒绝响应相匹配，确认系统无法满足的请求的正确处理。
 - en: '[PRE6]'
+  id: totrans-36
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE6]'
 - en: 'Task 8: Science quiz evaluation test'
+  id: totrans-37
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 任务 8：科学测验评估测试
 - en: This function demonstrates using `evaluate_quiz_content` in a specific test
     scenario—checking that a generated science quiz includes questions related to
     expected science topics. It simulates generating quiz content and then evaluates
     it for science‑oriented keywords.
+  id: totrans-38
   prefs: []
   type: TYPE_NORMAL
+  zh: 此函数演示了在特定测试场景中使用 `evaluate_quiz_content`——检查生成的科学测验是否包含与预期科学主题相关的问题。它模拟生成测验内容，然后对其科学导向的关键词进行评估。
 - en: '[PRE7]'
+  id: totrans-39
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE7]'
 - en: Taken together, these functions provide mechanisms for evaluating the relevance
     and accuracy of generated quiz content, handling invalid requests appropriately,
     and running targeted tests to ensure quiz content meets specific educational or
     thematic criteria.
+  id: totrans-40
   prefs: []
   type: TYPE_NORMAL
+  zh: 综合来看，这些函数提供了评估生成测验内容的相关性和准确性的机制，适当地处理无效请求，并运行有针对性的测试以确保测验内容符合特定的教育或主题标准。

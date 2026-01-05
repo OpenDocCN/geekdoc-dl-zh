@@ -1,142 +1,205 @@
 - en: Answers 1.5
+  id: totrans-0
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
+  zh: 答案 1.5
 - en: 原文：[https://boramorka.github.io/LLM-Book/en/CHAPTER-1/Answers%201.5/](https://boramorka.github.io/LLM-Book/en/CHAPTER-1/Answers%201.5/)
+  id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 原文：[https://boramorka.github.io/LLM-Book/en/CHAPTER-1/Answers%201.5/](https://boramorka.github.io/LLM-Book/en/CHAPTER-1/Answers%201.5/)
 - en: Theory
+  id: totrans-2
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 理论
 - en: Prompt chaining decomposes a complex task into sequential, interconnected steps
     (prompts), each solving a subtask. Unlike the “monolithic” approach, it simplifies
     and improves control.
+  id: totrans-3
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 提示连接将复杂任务分解为一系列相互关联的步骤（提示），每个步骤解决一个子任务。与“单体”方法不同，它简化并提高了控制。
 - en: 'Analogies: step‑by‑step cooking of a complex dish; modular development where
     each module contributes to the final result.'
+  id: totrans-4
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 类比：复杂菜肴的逐步烹饪；模块化开发，每个模块都对最终结果做出贡献。
 - en: Workflow management in chaining means checkpointing state after each step and
     adapting the next step to results so far.
+  id: totrans-5
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 连接中的工作流程管理意味着在每个步骤后检查状态，并根据迄今为止的结果调整下一步。
 - en: 'Resource savings: each step processes only what’s needed, reducing computation
     versus one long prompt.'
+  id: totrans-6
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 资源节省：每个步骤只处理所需的内容，与一个长提示相比减少计算。
 - en: 'Error reduction: focusing on a single subtask simplifies debugging and enables
     targeted improvements.'
+  id: totrans-7
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 错误减少：专注于单个子任务简化了调试并使针对性的改进成为可能。
 - en: Dynamic information loading matters due to context limits; chaining injects
     relevant data as needed.
+  id: totrans-8
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 由于上下文限制，动态信息加载很重要；连接根据需要注入相关数据。
 - en: 'Core steps: task decomposition, state management, prompt design, data loading/pre‑processing,
     dynamic context injection.'
+  id: totrans-9
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 核心步骤：任务分解、状态管理、提示设计、数据加载/预处理、动态上下文注入。
 - en: 'Best practices: avoid unnecessary complexity, write clear prompts, manage external
     context, aim for efficiency, and test continuously.'
+  id: totrans-10
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 最佳实践：避免不必要的复杂性，编写清晰的提示，管理外部环境，追求效率，并持续测试。
 - en: The examples use `dotenv` and `openai` for configuration and API calls.
+  id: totrans-11
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 这些示例使用 `dotenv` 和 `openai` 进行配置和API调用。
 - en: The system message defines structure and format, increasing precision and consistency.
+  id: totrans-12
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 系统消息定义结构和格式，提高精确性和一致性。
 - en: The product database stores details; lookup functions by name or category support
     effective support answers.
+  id: totrans-13
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 产品数据库存储详细信息；通过名称或类别查找函数支持有效的支持答案。
 - en: Converting JSON strings to Python objects simplifies downstream processing in
     chains.
+  id: totrans-14
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 将JSON字符串转换为Python对象简化了链中的下游处理。
 - en: Formatting a user answer from data keeps interactions informative and relevant.
+  id: totrans-15
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 从数据中格式化用户答案保持交互信息丰富且相关。
 - en: Chaining lets the system move from the initial request to troubleshooting, warranty,
     and recommendations — covering complex support scenarios.
+  id: totrans-16
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 连接操作让系统从初始请求过渡到故障排除、保修和建议，覆盖复杂支持场景。
 - en: Practice
+  id: totrans-17
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 实践
 - en: '`retrieve_model_response` function:'
+  id: totrans-18
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: '`retrieve_model_response` 函数：'
 - en: '[PRE0]'
+  id: totrans-19
   prefs:
   - PREF_IND
   type: TYPE_PRE
+  zh: '[PRE0]'
 - en: 'Extracting products/categories from a request:'
+  id: totrans-20
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 从请求中提取产品/类别：
 - en: '[PRE1]'
+  id: totrans-21
   prefs:
   - PREF_IND
   type: TYPE_PRE
+  zh: '[PRE1]'
 - en: 'Product database helpers:'
+  id: totrans-22
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 产品数据库助手：
 - en: '[PRE2]'
+  id: totrans-23
   prefs:
   - PREF_IND
   type: TYPE_PRE
+  zh: '[PRE2]'
 - en: 'JSON string to list:'
+  id: totrans-24
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: JSON字符串到列表：
 - en: '[PRE3]'
+  id: totrans-25
   prefs:
   - PREF_IND
   type: TYPE_PRE
+  zh: '[PRE3]'
 - en: 'Generate a user‑facing answer:'
+  id: totrans-26
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 生成面向用户的答案：
 - en: '[PRE4]'
+  id: totrans-27
   prefs:
   - PREF_IND
   type: TYPE_PRE
+  zh: '[PRE4]'
 - en: 'End‑to‑end support scenario: describe how the assistant handles an initial
     product inquiry, troubleshooting, a warranty question, and accessory recommendations
     using the functions above.'
+  id: totrans-28
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 端到端支持场景：描述助手如何使用上述功能处理初始产品查询、故障排除、保修问题和配件推荐。
 - en: '[PRE5]'
+  id: totrans-29
   prefs:
   - PREF_IND
   type: TYPE_PRE
+  zh: '[PRE5]'
 - en: 'This sequence demonstrates a complete, chained workflow where the assistant:
     - Extracts mentioned entities and consults a product database. - Provides step‑wise
     troubleshooting tailored to the problem. - Explains warranty coverage clearly
     and concisely. - Offers personalized accessory recommendations aligned with the
     user’s interests.'
+  id: totrans-30
   prefs:
   - PREF_IND
   type: TYPE_NORMAL
+  zh: 此序列演示了一个完整、连接的工作流程，其中助手：- 从提到的实体中提取并咨询产品数据库。- 提供针对问题的逐步故障排除。- 清晰简洁地解释保修范围。-
+    提供符合用户兴趣的个性化配件推荐。

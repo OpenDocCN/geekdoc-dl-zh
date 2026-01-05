@@ -1,129 +1,189 @@
 - en: Answers 1.1
+  id: totrans-0
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
+  zh: 答案 1.1
 - en: 原文：[https://boramorka.github.io/LLM-Book/en/CHAPTER-1/Answers%201.1/](https://boramorka.github.io/LLM-Book/en/CHAPTER-1/Answers%201.1/)
+  id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 原文：[https://boramorka.github.io/LLM-Book/en/CHAPTER-1/Answers%201.1/](https://boramorka.github.io/LLM-Book/en/CHAPTER-1/Answers%201.1/)
 - en: Theory
+  id: totrans-2
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 理论
 - en: 'Key benefits of integrating the OpenAI API: generating natural text, automating
     support, improving content creation, and expanding application functionality with
     advanced AI — boosting user engagement and operational efficiency.'
+  id: totrans-3
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 集成 OpenAI API 的关键好处：生成自然文本、自动化支持、提高内容创作以及通过高级 AI 扩展应用程序功能——提升用户参与度和运营效率。
 - en: 'Obtaining and securing the API key: register on the OpenAI platform, select
     a plan, and get your key in the dashboard. Store the key in environment variables
     or a secrets manager; never commit it to a repository — this prevents unauthorized
     access and potential losses.'
+  id: totrans-4
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 获取和保障 API 密钥：在 OpenAI 平台上注册、选择一个计划，并在仪表板上获取您的密钥。将密钥存储在环境变量或密钥管理器中；永远不要将其提交到存储库——这可以防止未经授权的访问和潜在损失。
 - en: '`temperature`: controls creativity and variability of generated text. Low values
     make responses more predictable; higher values increase diversity. Choose based
     on the task.'
+  id: totrans-5
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: '`temperature`：控制生成文本的创造性和多样性。低值使响应更可预测；高值增加多样性。根据任务选择。'
 - en: Keys should be stored outside code (env vars or secret managers) to avoid leaks
     through source code and version control systems (VCS).
+  id: totrans-6
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 密钥应存储在代码之外（环境变量或密钥管理器）以避免通过源代码和版本控制系统（VCS）泄露。
 - en: Model choice influences quality, speed, and cost. Balance model capability and
     resources to fit your app’s requirements.
+  id: totrans-7
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 模型选择影响质量、速度和成本。平衡模型能力和资源以适应您的应用程序需求。
 - en: Response metadata (e.g., token counts in `usage`) helps optimize prompts, manage
     costs, and use the API more efficiently.
+  id: totrans-8
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 响应元数据（例如，`usage`中的令牌计数）有助于优化提示、管理成本并更有效地使用 API。
 - en: An interactive interface includes dialogue history, input widgets, a send button,
     and panels to display responses. It updates in real time as answers arrive.
+  id: totrans-9
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 交互式界面包括对话历史、输入小部件、发送按钮和用于显示响应的面板。它实时更新，随着答案的到来而更新。
 - en: 'Best practices: post‑processing (style and grammar), personalization to user
     context, collecting feedback, and monitoring performance and spend.'
+  id: totrans-10
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 最佳实践：后处理（风格和语法）、个性化到用户上下文、收集反馈以及监控性能和支出。
 - en: 'Pitfalls: over‑trusting model output without checks. Use validation, a mix
     of automated and manual review, monitoring, and fine‑tuning.'
+  id: totrans-11
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 易犯错误：未经检查就过度信任模型输出。使用验证、自动和手动审查的混合、监控和微调。
 - en: 'Ethics and privacy: comply with data regulations, be transparent about AI’s
     role, implement review/correction processes, and consider social impact.'
+  id: totrans-12
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 道德和隐私：遵守数据法规、关于 AI 角色的透明度、实施审查/纠正流程，并考虑社会影响。
 - en: Practice
+  id: totrans-13
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 实践
 - en: Below is a progression of Python scripts for the OpenAI API — from a basic request
     to error handling and a CLI.
+  id: totrans-14
   prefs: []
   type: TYPE_NORMAL
+  zh: 下面是 OpenAI API 的 Python 脚本进展——从基本请求到错误处理和 CLI。
 - en: 'Task 1: Basic API request'
+  id: totrans-15
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 任务 1：基本 API 请求
 - en: '[PRE0]'
+  id: totrans-16
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE0]'
 - en: 'Task 2: Secure key handling'
+  id: totrans-17
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 任务 2：安全密钥处理
 - en: '[PRE1]'
+  id: totrans-18
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE1]'
 - en: 'Task 3: Interpreting the response'
+  id: totrans-19
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 任务 3：解释响应
 - en: '[PRE2]'
+  id: totrans-20
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE2]'
 - en: 'Task 4: Error handling'
+  id: totrans-21
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 任务 4：错误处理
 - en: '[PRE3]'
+  id: totrans-22
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE3]'
 - en: 'Task 5: CLI chat without post‑processing'
+  id: totrans-23
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 任务 5：无后处理的 CLI 聊天
 - en: '[PRE4]'
+  id: totrans-24
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE4]'
 - en: 'Task 6: Post‑processing'
+  id: totrans-25
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 任务 6：后处理
 - en: '[PRE5]'
+  id: totrans-26
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE5]'
 - en: Tasks 7–8 (ideas)
+  id: totrans-27
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 任务 7-8（想法）
 - en: Generate a post outline for a user‑provided topic and output a bulleted list.
+  id: totrans-28
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 为用户提供的主题生成后处理大纲，并输出一个项目符号列表。
 - en: Log response time and token usage for each call to a file for later analysis
     and optimization.
+  id: totrans-29
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 将每个调用对文件的响应时间和令牌使用情况记录下来，以供后续分析和优化。

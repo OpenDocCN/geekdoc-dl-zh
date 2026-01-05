@@ -1,26 +1,37 @@
 - en: 2.4 The Power of Embeddings
+  id: totrans-0
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
+  zh: 2.4 嵌入的力量
 - en: 原文：[https://boramorka.github.io/LLM-Book/en/CHAPTER-2/2.4%20The%20Power%20of%20Embeddings/](https://boramorka.github.io/LLM-Book/en/CHAPTER-2/2.4%20The%20Power%20of%20Embeddings/)
+  id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 原文：[https://boramorka.github.io/LLM-Book/en/CHAPTER-2/2.4%20The%20Power%20of%20Embeddings/](https://boramorka.github.io/LLM-Book/en/CHAPTER-2/2.4%20The%20Power%20of%20Embeddings/)
 - en: '**Requirements:** `pip install langchain langchain-community langchain-openai
     chromadb`'
+  id: totrans-2
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: '**要求：** `pip install langchain langchain-community langchain-openai chromadb`'
 - en: ''
+  id: totrans-3
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: '**Note:** LangChain imports have been updated. For latest versions, use `from
     langchain_community.vectorstores import Chroma` and `from langchain_community.document_loaders
     import PyPDFLoader` instead of the older `langchain.*` paths.'
+  id: totrans-4
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: '**注意：** LangChain的导入已更新。对于最新版本，请使用 `from langchain_community.vectorstores import
+    Chroma` 和 `from langchain_community.document_loaders import PyPDFLoader` 而不是旧的
+    `langchain.*` 路径。'
 - en: 'Embeddings are numeric representations of text: words, sentences, and documents
     are mapped to vectors in a high‑dimensional space, and semantically similar texts
     end up close together geometrically. These representations are learned from large
@@ -31,8 +42,10 @@
     cosine or another metric, and rank materials by semantic similarity — even without
     exact matches. This shifts how we analyze, store, and search: interactions become
     more meaningful and recommendations more precise.'
+  id: totrans-5
   prefs: []
   type: TYPE_NORMAL
+  zh: 嵌入是文本的数值表示：单词、句子和文档被映射到高维空间中的向量，语义相似的文本在几何上靠近。这些表示是从大型语料库中学习到的：模型将一个词与其上下文相关联并捕获语义关系，因此同义词和在相似上下文中出现的术语彼此靠近。因此，语义搜索超越了精确的“关键词”匹配：为每个文档（或块）和用户查询计算嵌入，通过余弦或其他指标比较向量邻近度，并按语义相似度对材料进行排序——即使没有精确匹配。这改变了我们分析、存储和搜索的方式：交互变得更加有意义，推荐更加精确。
 - en: On top of embeddings sit vector stores — databases optimized for vector storage
     and fast nearest‑neighbor search. They use specialized indexes and algorithms
     to answer similarity queries over large datasets and fit both research and production.
@@ -45,59 +58,89 @@
     and indexed; on a query, its embedding is computed, nearest chunks are retrieved,
     and the extracted parts plus the query are fed to an LLM to generate a coherent
     answer.
+  id: totrans-6
   prefs: []
   type: TYPE_NORMAL
+  zh: 在嵌入之上是向量存储——针对向量存储和快速最近邻搜索优化的数据库。它们使用专门的索引和算法来回答大型数据集上的相似性查询，适用于研究和生产。根据数据大小（从小型集的内存选项到大规模的分布式系统）、持久性（您是否需要耐用的磁盘存储或用于原型的临时存储）以及用例（实验室与生产）进行选择。对于快速原型设计，Chroma是一个常见的选择——一个轻量级的内存存储；对于更大和长期运行的系统，使用分布式/云向量数据库。在典型的语义搜索管道中，文档首先被分割成有意义的块，然后计算嵌入并索引；在查询时，计算其嵌入，检索最近的块，并将提取的部分加上查询输入到LLM以生成一个连贯的答案。
 - en: 'Before diving into embeddings and vector DBs, prepare the environment: imports,
     API keys, and basic config.'
+  id: totrans-7
   prefs: []
   type: TYPE_NORMAL
+  zh: 在深入研究嵌入和向量数据库之前，准备环境：导入、API密钥和基本配置。
 - en: '[PRE0]'
+  id: totrans-8
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE0]'
 - en: 'Next, load documents and split them into semantically meaningful fragments
     — this makes data easier to manage and prepares it for embedding creation. We’ll
     use a series of PDFs (with some “noise” like duplicates) for demonstration:'
+  id: totrans-9
   prefs: []
   type: TYPE_NORMAL
+  zh: 接下来，加载文档并将它们分割成具有语义意义的片段——这使数据更容易管理，并为嵌入创建做好准备。我们将使用一系列PDF文件（包含一些“噪声”如重复内容）进行演示：
 - en: '[PRE1]'
+  id: totrans-10
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE1]'
 - en: 'After loading, split documents into chunks to improve manageability and downstream
     efficiency:'
+  id: totrans-11
   prefs: []
   type: TYPE_NORMAL
+  zh: 加载后，将文档分割成块以提高可管理性和下游效率：
 - en: '[PRE2]'
+  id: totrans-12
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE2]'
 - en: 'Now compute embeddings for each chunk: turn text into vectors that reflect
     semantic meaning.'
+  id: totrans-13
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在为每个块计算嵌入：将文本转换为反映语义意义的向量。
 - en: '[PRE3]'
+  id: totrans-14
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE3]'
 - en: 'Index the vectors in a vector store to enable fast similarity search. For demos,
     Chroma — an in‑memory option — works well:'
+  id: totrans-15
   prefs: []
   type: TYPE_NORMAL
+  zh: 在向量存储中索引向量以实现快速相似性搜索。对于演示，Chroma——一个内存选项——表现良好：
 - en: '[PRE4]'
+  id: totrans-16
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE4]'
 - en: 'Now perform a similarity search — this is where embeddings + vector DBs shine:
     quickly selecting the most relevant fragments for a query.'
+  id: totrans-17
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在进行相似性搜索——这是嵌入+向量数据库大放异彩的地方：快速选择查询中最相关的片段。
 - en: '[PRE5]'
+  id: totrans-18
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE5]'
 - en: 'Finally, consider edge cases and search quality improvements. Even a useful
     baseline runs into issues: duplicates and irrelevant documents are common problems
     that degrade results.'
+  id: totrans-19
   prefs: []
   type: TYPE_NORMAL
+  zh: 最后，考虑边缘情况和搜索质量改进。即使是一个有用的基线也会遇到问题：重复和不相关的文档是常见的导致结果下降的问题。
 - en: '[PRE6]'
+  id: totrans-20
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE6]'
 - en: 'From there, you can apply strategies to mitigate such failures and retrieve
     fragments that are both relevant and sufficiently diverse. Taken together, embeddings
     and vector DBs are a powerful pairing for semantic search over large corpora:
@@ -106,141 +149,208 @@
     techniques further improves robustness and accuracy. For deeper study, see the
     OpenAI API docs on embedding generation and surveys of vector databases that compare
     technologies and usage scenarios.'
+  id: totrans-21
   prefs: []
   type: TYPE_NORMAL
+  zh: 从那里，你可以应用策略来减轻此类失败，检索到既相关又足够多样化的片段。总的来说，嵌入和向量数据库是大型语料库语义搜索的强大组合：坚实的文本准备、深思熟虑的索引和快速的最近邻查询使系统能够理解复杂的提示；分析失败并添加技术进一步提高了鲁棒性和准确性。对于更深入的研究，请参阅OpenAI
+    API文档中关于嵌入生成和比较技术和使用场景的向量数据库调查。
 - en: Theory Questions
+  id: totrans-22
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 理论问题
 - en: What is the primary goal of turning text into embeddings?
+  id: totrans-23
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 将文本转换为嵌入的主要目标是什么？
 - en: How do embeddings help measure semantic similarity of words and sentences?
+  id: totrans-24
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 嵌入如何帮助衡量单词和句子的语义相似度？
 - en: Describe how word embeddings are created and the role of context.
+  id: totrans-25
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 描述单词嵌入的创建过程和上下文的作用。
 - en: How do embeddings improve semantic search over keyword‑based approaches?
+  id: totrans-26
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 嵌入如何改进基于关键词的语义搜索？
 - en: What roles do document and query embeddings play in semantic search?
+  id: totrans-27
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 文档和查询嵌入在语义搜索中扮演什么角色？
 - en: What is a vector store, and why is it important for efficient search?
+  id: totrans-28
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 什么是向量存储，为什么它对高效搜索很重要？
 - en: What criteria matter when choosing a vector database?
+  id: totrans-29
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 选择向量数据库时，哪些标准很重要？
 - en: Why is Chroma convenient for prototypes, and what are its limitations?
+  id: totrans-30
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 为什么Chroma对原型设计很方便，以及它的局限性是什么？
 - en: Describe a semantic‑search pipeline using embeddings and a vector DB.
+  id: totrans-31
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 描述一个使用嵌入和向量数据库的语义搜索管道。
 - en: How does document splitting improve search granularity and relevance?
+  id: totrans-32
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 文档分割如何提高搜索粒度和相关性？
 - en: Why embed chunks, and how does that help retrieval?
+  id: totrans-33
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 为什么嵌入块，以及这如何帮助检索？
 - en: Why index the vector store for similarity search?
+  id: totrans-34
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 为什么需要对向量存储进行索引以进行相似性搜索？
 - en: How is a query processed, and which similarity metrics are used?
+  id: totrans-35
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 查询是如何处理的，以及使用了哪些相似性度量？
 - en: How does answer generation improve UX in semantic‑search apps?
+  id: totrans-36
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 答案生成如何改善语义搜索应用的用户体验？
 - en: What environment setup steps are needed?
+  id: totrans-37
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 需要哪些环境设置步骤？
 - en: Give an example where loading and splitting text are critical to search quality.
+  id: totrans-38
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 请举一个加载和分割文本对搜索质量至关重要的例子。
 - en: How do embeddings “transform” text, and how can you demonstrate vector similarity?
+  id: totrans-39
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 嵌入如何“转换”文本，以及如何展示向量相似性？
 - en: What should you consider when configuring Chroma?
+  id: totrans-40
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 配置Chroma时应该考虑什么？
 - en: How does similarity search find relevant fragments?
+  id: totrans-41
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 相似性搜索如何找到相关片段？
 - en: What failures are typical in semantic search, and how can you address them?
+  id: totrans-42
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 语义搜索中典型的失败有哪些，如何解决它们？
 - en: Practical Tasks
+  id: totrans-43
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 实践任务
 - en: Implement `generate_embeddings` that returns a list of “embeddings” for strings
     (e.g., simulated by string length).
+  id: totrans-44
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 实现 `generate_embeddings`，它返回字符串的“嵌入”列表（例如，通过字符串长度模拟）。
 - en: Implement `cosine_similarity` to compute cosine similarity between two vectors.
+  id: totrans-45
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 实现 `cosine_similarity` 以计算两个向量之间的余弦相似度。
 - en: Create `SimpleVectorStore` with `add_vector` and `find_most_similar` (cosine‑based).
+  id: totrans-46
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 使用 `add_vector` 和 `find_most_similar`（基于余弦）创建 `SimpleVectorStore`。
 - en: Load text from a file, split into chunks of a given size (e.g., 500 characters),
     and print them.
+  id: totrans-47
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 从文件中加载文本，将其分割成给定大小的块（例如，500个字符），并打印它们。
 - en: 'Implement `query_processing`: generate a query embedding (placeholder), find
     the nearest chunk in `SimpleVectorStore`, and print it.'
+  id: totrans-48
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 实现 `query_processing`：生成查询嵌入（占位符），在 `SimpleVectorStore` 中找到最近的块，并打印它。
 - en: 'Implement `remove_duplicates`: return a list without duplicate chunks (exact
     match or by similarity threshold).'
+  id: totrans-49
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 实现 `remove_duplicates`：返回一个不包含重复块（精确匹配或通过相似度阈值）的列表。
 - en: Initialize `SimpleVectorStore`, add placeholder embeddings, run a semantic search,
     and print top‑3 results.
+  id: totrans-50
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 初始化 `SimpleVectorStore`，添加占位符嵌入，运行语义搜索，并打印前3个结果。
 - en: 'Implement `embed_and_store_documents`: generate placeholder embeddings for
     chunks, store them in `SimpleVectorStore`, and return it.'
+  id: totrans-51
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 实现 `embed_and_store_documents`：为块生成占位符嵌入，将它们存储在 `SimpleVectorStore` 中，并返回。
 - en: 'Implement `vector_store_persistence`: demonstrate saving/loading `SimpleVectorStore`
     (serialization/deserialization).'
+  id: totrans-52
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 实现 `vector_store_persistence`：演示保存/加载 `SimpleVectorStore`（序列化/反序列化）。
 - en: 'Implement `evaluate_search_accuracy`: for queries and expected chunks, run
     search and compute match rate.'
+  id: totrans-53
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 实现 `evaluate_search_accuracy`：对于查询和预期块，运行搜索并计算匹配率。

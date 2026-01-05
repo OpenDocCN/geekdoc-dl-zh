@@ -1,11 +1,15 @@
 - en: 2.7 Chatbots with LangChain
+  id: totrans-0
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
+  zh: 2.7 使用LangChain的聊天机器人
 - en: 原文：[https://boramorka.github.io/LLM-Book/en/CHAPTER-2/2.7%20Chatbots%20with%20LangChain/](https://boramorka.github.io/LLM-Book/en/CHAPTER-2/2.7%20Chatbots%20with%20LangChain/)
+  id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 原文：[https://boramorka.github.io/LLM-Book/en/CHAPTER-2/2.7%20Chatbots%20with%20LangChain/](https://boramorka.github.io/LLM-Book/en/CHAPTER-2/2.7%20Chatbots%20with%20LangChain/)
 - en: 'This chapter is about building and optimizing conversational chatbots with
     LangChain — a toolkit that connects language models to retrieval systems for dynamic
     QA. We take a practical route: set up the environment and load documents, build
@@ -20,282 +24,428 @@
     language model, retriever, and memory, and show how buffer memory preserves the
     sequence of messages and passes it along with new questions to keep the dialogue
     natural and coherent.'
+  id: totrans-2
   prefs: []
   type: TYPE_NORMAL
+  zh: 本章介绍使用LangChain构建和优化对话聊天机器人——一个将语言模型连接到检索系统以进行动态问答的工具包。我们采取实用路线：设置环境并加载文档，构建向量存储，选择高级检索策略，并添加对话记忆，以便机器人保持上下文并自信地回答后续问题。对话机器人改变数据交互：它们跟踪并记住对话，而不是独立的回合，LangChain的模块化架构允许你逐步插入加载器（80+格式）、分块、嵌入、语义搜索、自我查询和上下文压缩。一个重要的细节是早期环境和变量设置：可观察性和仔细的关键字处理可以加快调试和操作。然后我们组装核心——对话检索链——结合语言模型、检索器和记忆，并展示如何缓冲记忆保留消息序列并将其与新问题一起传递，以保持对话的自然和连贯。
 - en: 'Start by initializing the environment and API keys to safely use cloud LLMs
     and prepare the interface:'
+  id: totrans-3
   prefs: []
   type: TYPE_NORMAL
+  zh: 首先初始化环境并API密钥，以安全地使用云LLM并准备接口：
 - en: '[PRE0]'
+  id: totrans-4
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE0]'
 - en: 'Pick a language model version and fix it for the demo:'
+  id: totrans-5
   prefs: []
   type: TYPE_NORMAL
+  zh: 选择一个语言模型版本并将其固定用于演示：
 - en: '[PRE1]'
+  id: totrans-6
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE1]'
 - en: 'Now connect embeddings and a vector store for baseline QA: load/index documents,
     retrieve relevant fragments, and prepare the model for answers. Then define a
     prompt template and assemble a RetrievalQA chain that will use your retriever
     and craft contextual answers:'
+  id: totrans-7
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在连接嵌入和向量存储以进行基线问答：加载/索引文档、检索相关片段并准备模型以生成答案。然后定义一个提示模板并组装一个将使用您的检索器并构建上下文答案的检索QA链：
 - en: '[PRE2]'
+  id: totrans-8
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE2]'
 - en: Implementing a Conversational Retrieval Chain with Memory for QA
+  id: totrans-9
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 实现具有记忆的问答对话检索链
 - en: This section targets ML engineers, data scientists, and developers building
     QA systems that understand and retain dialogue context. The focus is on integrating
     the Conversational Retrieval Chain with a memory component from LangChain.
+  id: totrans-10
   prefs: []
   type: TYPE_NORMAL
+  zh: 本节面向机器学习工程师、数据科学家和构建理解并保留对话上下文的问答系统的开发者。重点是整合来自LangChain的记忆组件到对话检索链中。
 - en: Configure memory for dialogue history
+  id: totrans-11
   prefs:
   - PREF_H4
   type: TYPE_NORMAL
+  zh: 配置对话历史记录的记忆
 - en: Use `ConversationBufferMemory` so the system remembers context. It stores message
     history and allows referring to prior turns for relevant follow‑ups.
+  id: totrans-12
   prefs: []
   type: TYPE_NORMAL
+  zh: 使用`ConversationBufferMemory`以便系统记住上下文。它存储消息历史并允许引用先前的回合以进行相关的后续操作。
 - en: '[PRE3]'
+  id: totrans-13
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE3]'
 - en: Assemble the Conversational Retrieval Chain
+  id: totrans-14
   prefs:
   - PREF_H4
   type: TYPE_NORMAL
+  zh: 组装对话检索链
 - en: Combine the language model, document retriever, and dialogue memory to answer
     questions in conversational context.
+  id: totrans-15
   prefs: []
   type: TYPE_NORMAL
+  zh: 将语言模型、文档检索器和对话记忆结合以在对话上下文中回答问题。
 - en: '[PRE4]'
+  id: totrans-16
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE4]'
 - en: Handle questions and generate answers
+  id: totrans-17
   prefs:
   - PREF_H4
   type: TYPE_NORMAL
+  zh: 处理问题和生成答案
 - en: After setup, the chain can process questions and generate answers using the
     saved conversation history for context.
+  id: totrans-18
   prefs: []
   type: TYPE_NORMAL
+  zh: 设置完成后，链可以处理问题并使用保存的对话历史作为上下文来生成答案。
 - en: '[PRE5]'
+  id: totrans-19
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE5]'
 - en: Building a Document‑Grounded QA Chatbot
+  id: totrans-20
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 构建基于文档的问答聊天机器人
 - en: This part provides an end‑to‑end guide to a chatbot that answers questions based
     on document content. It covers loading documents, splitting text, embeddings,
     and assembling a conversational retrieval chain.
+  id: totrans-21
   prefs: []
   type: TYPE_NORMAL
+  zh: 本部分提供了一种端到端的指南，介绍了一个基于文档内容回答问题的聊天机器人。它涵盖了加载文档、分割文本、嵌入和组装对话检索链。
 - en: Initial setup and imports
+  id: totrans-22
   prefs:
   - PREF_H4
   type: TYPE_NORMAL
+  zh: 初始设置和导入
 - en: Import LangChain components for embeddings, text splitting, in‑memory search,
     document loading, conversational chains, and the chat model.
+  id: totrans-23
   prefs: []
   type: TYPE_NORMAL
+  zh: 导入LangChain组件以进行嵌入、文本分割、内存搜索、文档加载、对话链和聊天模型。
 - en: '[PRE6]'
+  id: totrans-24
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE6]'
 - en: Load and process documents
+  id: totrans-25
   prefs:
   - PREF_H4
   type: TYPE_NORMAL
+  zh: 加载和处理文档
 - en: Load documents, split them into manageable chunks, generate embeddings, and
     prepare a vector store; then return a ready‑to‑use conversational retrieval chain.
+  id: totrans-26
   prefs: []
   type: TYPE_NORMAL
+  zh: 加载文档，将它们分成可管理的块，生成嵌入，并准备向量存储；然后返回一个可用于对话检索链的现成链。
 - en: '[PRE7]'
+  id: totrans-27
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE7]'
 - en: 'For convenience, add a thin wrapper used by the UI code:'
+  id: totrans-28
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了方便，添加一个由UI代码使用的薄包装器：
 - en: '[PRE8]'
+  id: totrans-29
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE8]'
 - en: 'Proceed to create a chatbot and a Panel‑based UI: import Panel (`pn`) and Param
     (`param`), then define a class that encapsulates document loading, query processing,
     and history.'
+  id: totrans-30
   prefs: []
   type: TYPE_NORMAL
+  zh: 继续创建一个聊天机器人和基于面板的用户界面：导入Panel (`pn`) 和 Param (`param`)，然后定义一个类，该类封装文档加载、查询处理和历史记录。
 - en: '[PRE9]'
+  id: totrans-31
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE9]'
 - en: Define a chatbot class that stores history, forms answers, and allows swapping
     the base document.
+  id: totrans-32
   prefs: []
   type: TYPE_NORMAL
+  zh: 定义一个聊天机器人类，该类存储历史记录，形成答案，并允许交换基本文档。
 - en: '[PRE10]'
+  id: totrans-33
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE10]'
 - en: 'Add document loading: `load_document` checks for a user file (or uses the default
     document), reloads the knowledge base, and clears history when the source changes.'
+  id: totrans-34
   prefs: []
   type: TYPE_NORMAL
+  zh: 添加文档加载：`load_document` 检查用户文件（或使用默认文档），当源文件更改时重新加载知识库并清除历史记录。
 - en: '[PRE11]'
+  id: totrans-35
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE11]'
 - en: 'Handle user turns: `process_query` sends the turn to the model, updates history
     and UI, and shows source snippets.'
+  id: totrans-36
   prefs: []
   type: TYPE_NORMAL
+  zh: 处理用户轮次：`process_query` 将轮次发送到模型，更新历史和UI，并显示源片段。
 - en: '[PRE12]'
+  id: totrans-37
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE12]'
 - en: For transparency, display the last DB query and the retrieved source documents.
+  id: totrans-38
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了透明度，显示最后的数据库查询和检索到的源文档。
 - en: '[PRE13]'
+  id: totrans-39
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE13]'
 - en: Optionally, display the current chat history for quick inspection.
+  id: totrans-40
   prefs: []
   type: TYPE_NORMAL
+  zh: 可选地，显示当前的聊天历史以快速检查。
 - en: '[PRE14]'
+  id: totrans-41
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE14]'
 - en: 'Don’t forget reset: `clear_conversation_history` clears the current dialogue
     context.'
+  id: totrans-42
   prefs: []
   type: TYPE_NORMAL
+  zh: 不要忘记重置：`clear_conversation_history` 清除当前的对话上下文。
 - en: '[PRE15]'
+  id: totrans-43
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE15]'
 - en: 'The result is a cohesive method: you set up the environment and keys, load
     documents and assemble a vector store, add advanced retrieval (self‑query, compression,
     semantic search), integrate dialogue memory, and build a Conversational Retrieval
     Chain where model, retriever, and memory work together. The examples and code
     show how the steps form a working bot; thanks to LangChain’s modularity, the result
     is easy to extend and debug.'
+  id: totrans-44
   prefs: []
   type: TYPE_NORMAL
+  zh: 结果是一个连贯的方法：你设置环境并配置密钥，加载文档并组装向量存储，添加高级检索（自查询、压缩、语义搜索），集成对话内存，并构建一个模型、检索器和内存共同工作的对话检索链。示例和代码展示了如何将步骤形成一个可工作的机器人；多亏了LangChain的模块化，结果易于扩展和调试。
 - en: Theory Questions
+  id: totrans-45
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 理论问题
 - en: What components are needed to set up a LangChain chatbot development environment?
+  id: totrans-46
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 设置LangChain聊天机器人开发环境需要哪些组件？
 - en: How does keeping dialogue history improve a chatbot’s functionality?
+  id: totrans-47
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 保持对话历史如何提高聊天机器人的功能？
 - en: How are document chunks transformed into embeddings, and why?
+  id: totrans-48
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 文档块是如何转换为嵌入的，为什么？
 - en: Why are self‑query, compression, and semantic search useful?
+  id: totrans-49
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 为什么自查询、压缩和语义搜索是有用的？
 - en: How does the Conversational Retrieval Chain combine model, retriever, and memory?
+  id: totrans-50
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 对话检索链如何结合模型、检索器和内存？
 - en: How does ConversationBufferMemory help maintain dialogue context?
+  id: totrans-51
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 对话缓冲内存如何帮助维护对话上下文？
 - en: What are the steps to configure a vector store for semantic search in LangChain?
+  id: totrans-52
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 配置LangChain中用于语义搜索的向量存储的步骤是什么？
 - en: Why manage environment variables and API keys?
+  id: totrans-53
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 为什么需要管理环境变量和API密钥？
 - en: How does the modularity of LangChain’s retrieval methods increase development
     flexibility?
+  id: totrans-54
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: LangChain的检索方法的模块化如何增加开发灵活性？
 - en: Why is choosing an appropriate LLM version important?
+  id: totrans-55
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 为什么选择合适的LLM版本很重要？
 - en: Practical Tasks
+  id: totrans-56
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 实践任务
 - en: Create and populate a vector store (`create_vector_store`) from a list of strings
     (use a stub embedding function `embed_document`).
+  id: totrans-57
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 从字符串列表创建并填充向量存储（使用存根嵌入函数`embed_document`）。
 - en: 'Implement semantic search (`perform_semantic_search`): embed a query, find
     the nearest document, return its index.'
+  id: totrans-58
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 实现语义搜索 (`perform_semantic_search`)：嵌入查询，找到最近的文档，返回其索引。
 - en: Add dialogue history to a `Chatbot` class and a `respond_to_query` method (generate
     via a stub `generate_response`).
+  id: totrans-59
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 将对话历史添加到`Chatbot`类和一个`respond_to_query`方法中（通过存根`generate_response`生成）。
 - en: Assemble a simplified Conversational Retrieval Chain with stubs (`LanguageModel`/`DocumentRetriever`/`ConversationMemory`).
+  id: totrans-60
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 组装一个使用存根（`LanguageModel`/`DocumentRetriever`/`ConversationMemory`）的简化对话检索链。
 - en: In `Chatbot`, add methods to append and reset history; incorporate history when
     generating.
+  id: totrans-61
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 在`Chatbot`中添加方法以追加和重置历史记录；在生成时包含历史记录。
 - en: 'Document QA: load a string, split it, create embeddings, build a vector store,
     run semantic search, and generate an answer (stubs allowed).'
+  id: totrans-62
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 文档问答：加载一个字符串，将其分割，创建嵌入，构建向量存储，运行语义搜索，并生成答案（允许使用存根）。
 - en: Integrate memory into the retrieval chain (use the extensions from tasks 5–6).
+  id: totrans-63
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 将内存集成到检索链中（使用任务5-6的扩展）。
 - en: 'Build a small CLI for chatting with the `Chatbot`: send queries, print answers,
     view/reset history.'
+  id: totrans-64
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 构建一个用于与`Chatbot`聊天的简单CLI：发送查询，打印答案，查看/重置历史记录。
 - en: Alternate Panel UI Variant and Dashboard
+  id: totrans-65
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 切换面板UI变体和仪表板
 - en: Below is an additional chatbot class and a ready-to-use Panel dashboard that
     mirrors the Russian version’s UI section.
+  id: totrans-66
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下是一个额外的聊天机器人类和一个可立即使用的面板仪表板，它反映了俄罗斯版本的用户界面部分。
 - en: '[PRE16]'
+  id: totrans-67
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE16]'
 - en: 'Add minimal method implementations to support the bound UI actions and panels:'
+  id: totrans-68
   prefs: []
   type: TYPE_NORMAL
+  zh: 添加最小方法实现以支持绑定的UI操作和面板：
 - en: '[PRE17]'
+  id: totrans-69
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE17]'
 - en: 'Create widgets and bind actions:'
+  id: totrans-70
   prefs: []
   type: TYPE_NORMAL
+  zh: 创建小部件并绑定操作：
 - en: '[PRE18]'
+  id: totrans-71
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE18]'
 - en: 'Assemble tabs and the dashboard:'
+  id: totrans-72
   prefs: []
   type: TYPE_NORMAL
+  zh: 组装标签和仪表板：
 - en: '[PRE19]'
+  id: totrans-73
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE19]'
 - en: This completes the UI parity with the Russian chapter while keeping the English
     text clear and idiomatic.
+  id: totrans-74
   prefs: []
   type: TYPE_NORMAL
+  zh: 这完成了与俄罗斯章节的UI一致性，同时保持了英文文本的清晰和地道。

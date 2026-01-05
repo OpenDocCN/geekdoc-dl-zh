@@ -1,108 +1,160 @@
 - en: Answers 2.5
+  id: totrans-0
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
+  zh: 答案 2.5
 - en: 原文：[https://boramorka.github.io/LLM-Book/en/CHAPTER-2/Answers%202.5/](https://boramorka.github.io/LLM-Book/en/CHAPTER-2/Answers%202.5/)
+  id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 原文：[https://boramorka.github.io/LLM-Book/en/CHAPTER-2/Answers%202.5/](https://boramorka.github.io/LLM-Book/en/CHAPTER-2/Answers%202.5/)
 - en: Theory
+  id: totrans-2
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 理论
 - en: 'Maximum Marginal Relevance (MMR): balances relevance and diversity by selecting
     documents close to the query yet dissimilar to each other.'
+  id: totrans-3
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 最大边际相关性（MMR）：通过选择接近查询但彼此不同的文档来平衡相关性和多样性。
 - en: 'Self‑Query Retrieval: splits a query into semantic content and metadata constraints
     for precise content‑plus‑attribute retrieval.'
+  id: totrans-4
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 自查询检索：将查询拆分为语义内容和元数据约束，以实现精确的内容加属性检索。
 - en: 'Contextual compression: extracts only the most relevant segments from documents,
     reducing noise and improving answer quality.'
+  id: totrans-5
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 上下文压缩：仅从文档中提取最相关的部分，减少噪声并提高答案质量。
 - en: 'Environment setup: install libraries, configure API access (for embeddings),
     and initialize a vector store — the foundation for advanced retrieval.'
+  id: totrans-6
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 环境设置：安装库、配置API访问（用于嵌入）和初始化向量存储库——这是高级检索的基础。
 - en: 'Vector stores: hold embeddings and power fast similarity search.'
+  id: totrans-7
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 向量存储：存储嵌入并支持快速相似度搜索。
 - en: 'Populating the store: add texts and run similarity search; MMR helps eliminate
     redundancy.'
+  id: totrans-8
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 填充存储库：添加文本并运行相似度搜索；MMR有助于消除冗余。
 - en: 'Boosting diversity with MMR: reduces clustering of near‑duplicates and broadens
     coverage.'
+  id: totrans-9
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 使用MMR（最大边际相关性）提升多样性：减少近重复项的聚类并扩大覆盖范围。
 - en: 'Metadata for specificity: attributes (e.g., date, type) improve precision and
     relevance.'
+  id: totrans-10
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 用于特定性的元数据：属性（例如，日期、类型）提高精度和相关性。
 - en: 'Self‑Query Retriever: automatically extracts both semantic and metadata parts
     from user input.'
+  id: totrans-11
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 自查询检索器：自动从用户输入中提取语义和元数据部分。
 - en: 'Benefits of contextual compression: saves computation and focuses on the essential.'
+  id: totrans-12
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 上下文压缩的好处：节省计算资源并关注本质。
 - en: 'Best practices: tune MMR, leverage metadata wisely, configure compression carefully,
     and prepare documents thoroughly.'
+  id: totrans-13
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 最佳实践：调整MMR，明智地利用元数据，仔细配置压缩，并彻底准备文档。
 - en: 'Combining methods: embedding‑based retrieval excels at meaning, while TF‑IDF
     or SVM can help for keyword or classification‑based scenarios.'
+  id: totrans-14
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 结合方法：基于嵌入的检索在意义上表现卓越，而TF-IDF或SVM可以帮助处理基于关键词或分类的场景。
 - en: 'Advantages of advanced techniques: improved precision, diversity, context,
     and overall UX.'
+  id: totrans-15
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 高级技术的优势：提高了精度、多样性、上下文和整体用户体验。
 - en: 'NLP outlook: continued progress will yield even smarter handling of complex
     queries.'
+  id: totrans-16
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: NLP展望：持续的进步将带来更智能地处理复杂查询的能力。
 - en: Practical Tasks
+  id: totrans-17
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 实际任务
 - en: '1.'
+  id: totrans-18
   prefs: []
   type: TYPE_NORMAL
+  zh: '1.'
 - en: '[PRE0]'
+  id: totrans-19
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE0]'
 - en: '2.'
+  id: totrans-20
   prefs: []
   type: TYPE_NORMAL
+  zh: '2.'
 - en: '[PRE1]'
+  id: totrans-21
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE1]'
 - en: '3.'
+  id: totrans-22
   prefs: []
   type: TYPE_NORMAL
+  zh: '3.'
 - en: '[PRE2]'
+  id: totrans-23
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE2]'
 - en: '4.'
+  id: totrans-24
   prefs: []
   type: TYPE_NORMAL
+  zh: '4.'
 - en: '[PRE3]'
+  id: totrans-25
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE3]'

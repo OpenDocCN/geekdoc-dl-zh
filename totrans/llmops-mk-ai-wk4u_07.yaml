@@ -1,11 +1,15 @@
 - en: '1.4 Advanced Machine Reasoning: Strategies'
+  id: totrans-0
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
+  zh: 1.4 高级机器推理：策略
 - en: 原文：[https://boramorka.github.io/LLM-Book/en/CHAPTER-1/1.4%20Advanced%20Machine%20Reasoning/](https://boramorka.github.io/LLM-Book/en/CHAPTER-1/1.4%20Advanced%20Machine%20Reasoning/)
+  id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 原文：[https://boramorka.github.io/LLM-Book/en/CHAPTER-1/1.4%20Advanced%20Machine%20Reasoning/](https://boramorka.github.io/LLM-Book/en/CHAPTER-1/1.4%20Advanced%20Machine%20Reasoning/)
 - en: 'Advanced machine reasoning brings together a set of practices that help language
     models solve complex tasks more reliably and transparently. Chain of Thought (CoT)
     encourages step‑by‑step solutions, breaking the problem into logical stages. This
@@ -15,134 +19,194 @@
     who guides you through each step rather than giving a finished answer. In customer
     support, it helps unpack complicated requests: clarify details, check assumptions,
     fix misunderstandings, and provide a correct conclusion.'
+  id: totrans-2
   prefs: []
   type: TYPE_NORMAL
+  zh: 高级机器推理汇集了一系列实践，帮助语言模型更可靠、更透明地解决复杂任务。思维链（CoT）鼓励逐步解决方案，将问题分解为逻辑阶段。这种方法提高了准确性，并使推理可审计：用户可以看到模型如何得出答案，这对于多约束任务、比较分析和计算特别有帮助。在教育中，CoT模仿导师引导你通过每个步骤，而不是给出最终答案。在客户支持中，它有助于拆解复杂请求：澄清细节、检查假设、纠正误解并提供正确结论。
 - en: In parallel with CoT, teams often use Inner Monologue, where intermediate reasoning
     is hidden and only the result (or a minimal slice of logic) is shown. This is
     appropriate when exposing internal steps could harm learning (avoiding “spoilers”),
     when sensitive information is involved, or when extra details would degrade the
     user experience.
+  id: totrans-3
   prefs: []
   type: TYPE_NORMAL
+  zh: 与CoT（思维链）并行，团队通常会使用内心独白，其中中间推理被隐藏，只展示结果（或最小逻辑片段）。当暴露内部步骤可能损害学习（避免“剧透”）、涉及敏感信息或额外细节会降低用户体验时，这种方法是合适的。
 - en: To make the examples reproducible, start by preparing the environment and API
     client.
+  id: totrans-4
   prefs: []
   type: TYPE_NORMAL
+  zh: 要使示例可重复，首先准备环境和API客户端。
 - en: '[PRE0]'
+  id: totrans-5
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE0]'
 - en: '[PRE1]'
+  id: totrans-6
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE1]'
 - en: Next, we’ll set up a wrapper for requests and move to CoT prompting, where the
     reasoning is structured into steps under a special delimiter. The system message
     describes the analysis stages, and the user input is wrapped in delimiters, simplifying
     parsing and later post‑processing.
+  id: totrans-7
   prefs: []
   type: TYPE_NORMAL
+  zh: 接下来，我们将为请求设置包装器，并转向CoT提示，其中推理被结构化为特殊分隔符下的步骤。系统消息描述分析阶段，用户输入被包装在分隔符中，简化了解析和后续处理。
 - en: '[PRE2]'
+  id: totrans-8
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE2]'
 - en: '[PRE3]'
+  id: totrans-9
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE3]'
 - en: To compare approaches, first print the full answer with intermediate CoT steps,
     then apply an Inner Monologue variant where only the final portion is shown to
     the user. If the model returns text with steps separated by `step_delimiter`,
     you can keep just the final segment — keeping the interface succinct where the
     “inner workings” aren’t needed.
+  id: totrans-10
   prefs: []
   type: TYPE_NORMAL
+  zh: 要比较方法，首先打印出包含中间CoT步骤的完整答案，然后应用只向用户展示最终部分的内心独白变体。如果模型返回由`step_delimiter`分隔的步骤文本，你可以只保留最终部分——在不需要“内部工作”的界面中保持简洁。
 - en: '[PRE4]'
+  id: totrans-11
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE4]'
 - en: 'The result is two modes of the same solution: a detailed one, with a visible
     chain of steps, and a concise one showing only the outcome. Clear prompt design
     helps in both cases; keep refining your prompts based on observed behavior. When
     UI clarity matters and extra details are undesirable, prefer Inner Monologue for
     display while still leveraging internal step‑by‑step analysis for quality control.'
+  id: totrans-12
   prefs: []
   type: TYPE_NORMAL
+  zh: 结果是同一解决方案的两种模式：一种是详细的，显示了可见的步骤链，另一种是简洁的，只显示结果。清晰的提示设计在这两种情况下都有帮助；根据观察到的行为不断改进你的提示。当UI清晰度很重要且不希望有额外细节时，优先选择内心独白进行显示，同时仍然利用内部逐步分析进行质量控制。
 - en: Theory Questions
+  id: totrans-13
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 理论问题
 - en: What is Chain of Thought (CoT) and why is it useful for multi‑step tasks?
+  id: totrans-14
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 思维链（CoT）是什么，为什么它对多步骤任务有用？
 - en: How does CoT transparency increase user trust in model answers?
+  id: totrans-15
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 思维链的透明度如何增加用户对模型答案的信任？
 - en: How does CoT help in educational scenarios?
+  id: totrans-16
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 思维链在教育场景中如何发挥作用？
 - en: How does a reasoning chain improve the quality of support chatbot answers?
+  id: totrans-17
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 推理链如何提高支持聊天机器人的答案质量？
 - en: What is Inner Monologue, and how does it differ from CoT in terms of what the
     user sees?
+  id: totrans-18
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 内心独白是什么，它与CoT在用户看到的内容方面有何不同？
 - en: Why is Inner Monologue important when dealing with sensitive information?
+  id: totrans-19
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 在处理敏感信息时，为什么内心独白很重要？
 - en: How can Inner Monologue help in learning scenarios without revealing “spoilers”?
+  id: totrans-20
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 内心独白如何在不泄露“剧透”的情况下帮助学习场景？
 - en: What steps are needed to prepare the environment for OpenAI API examples?
+  id: totrans-21
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 准备OpenAI API示例环境需要哪些步骤？
 - en: How is the `get_response_for_queries` function structured?
+  id: totrans-22
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: '`get_response_for_queries` 函数是如何结构的？'
 - en: How does CoT prompting simplify handling complex queries?
+  id: totrans-23
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: CoT提示如何简化处理复杂查询？
 - en: How does the system/user prompt structure help answer product questions?
+  id: totrans-24
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 系统或用户提示结构如何帮助回答产品问题？
 - en: Why is extracting only the final part of the answer useful when using Inner
     Monologue?
+  id: totrans-25
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 为什么在使用内心独白时，只提取答案的最后部分是有用的？
 - en: Practical Tasks
+  id: totrans-26
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 实践任务
 - en: Implement `chain_of_thought_prompting(query)`, which generates a system prompt
     with step structure and wraps the user query in a delimiter.
+  id: totrans-27
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 实现 `chain_of_thought_prompting(query)`，它生成一个具有步骤结构的系统提示，并将用户查询包裹在分隔符中。
 - en: Write `get_final_response(output, delimiter)` to extract the last part of the
     answer and handle possible errors.
+  id: totrans-28
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 编写 `get_final_response(output, delimiter)` 以提取答案的最后部分并处理可能出现的错误。
 - en: Create a script that sends two queries — one with CoT and one with Inner Monologue
     — and prints both responses.
+  id: totrans-29
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 创建一个脚本，发送两个查询——一个带有CoT，一个带有内心独白——并打印出两个响应。
 - en: Implement `validate_response_structure(resp, delimiter)` to check that the answer
     contains the required number of steps.
+  id: totrans-30
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 实现 `validate_response_structure(resp, delimiter)` 以检查答案是否包含所需数量的步骤。
 - en: Build a `QueryProcessor` class that encapsulates CoT and Inner Monologue logic
     (key loading, prompt assembly, request sending, post‑processing, and error handling).
+  id: totrans-31
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 构建一个 `QueryProcessor` 类，它封装了CoT和内心独白的逻辑（键加载、提示组装、请求发送、后处理和错误处理）。

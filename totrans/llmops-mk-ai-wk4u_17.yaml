@@ -1,11 +1,15 @@
 - en: 2.6 RAG Systems — Techniques for QA
+  id: totrans-0
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
+  zh: 2.6 RAG系统 — QA技术
 - en: 原文：[https://boramorka.github.io/LLM-Book/en/CHAPTER-2/2.6%20RAG%20%E2%80%94%20Techniques%20for%20QA/](https://boramorka.github.io/LLM-Book/en/CHAPTER-2/2.6%20RAG%20%E2%80%94%20Techniques%20for%20QA/)
+  id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 原文：[https://boramorka.github.io/LLM-Book/en/CHAPTER-2/2.6%20RAG%20%E2%80%94%20Techniques%20for%20QA/](https://boramorka.github.io/LLM-Book/en/CHAPTER-2/2.6%20RAG%20%E2%80%94%20Techniques%20for%20QA/)
 - en: 'Retrieval‑Augmented Generation (RAG) combines retrieval and generation, changing
     how we work with large corpora to build accurate QA systems and chatbots. A critical
     stage is feeding retrieved documents to the model along with the original query
@@ -17,157 +21,235 @@
     send all retrieved parts into context, but context‑window limits often lead to
     strategies like MapReduce, Refine, or Map‑Rerank — they aggregate or iteratively
     refine answers across many documents.'
+  id: totrans-2
   prefs: []
   type: TYPE_NORMAL
+  zh: Retrieval-Augmented Generation (RAG)结合了检索和生成，改变了我们处理大型语料库以构建准确QA系统和聊天机器人的方式。一个关键阶段是将检索到的文档与原始查询一起输入模型以生成答案。在检索到相关材料后，它们必须被综合成一个连贯的答案，将内容与查询的上下文相结合，并利用模型的能力。整体流程很简单：系统接受一个问题；从向量存储中检索相关片段；然后将检索到的内容与问题一起输入LLM以形成答案。默认情况下，您可以发送所有检索到的部分到上下文中，但上下文窗口限制通常导致像MapReduce、Refine或Map-Rerank这样的策略——它们在多份文档中聚合或迭代改进答案。
 - en: 'Before using an LLM for QA, ensure the environment is set up: imports, API
     keys, model versions, and so on.'
+  id: totrans-3
   prefs: []
   type: TYPE_NORMAL
+  zh: 在使用LLM进行QA之前，确保环境已设置：导入、API密钥、模型版本等。
 - en: '[PRE0]'
+  id: totrans-4
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE0]'
 - en: Next, retrieve documents relevant to the query from a vector database (VectorDB),
     where embeddings are stored.
+  id: totrans-5
   prefs: []
   type: TYPE_NORMAL
+  zh: 接下来，从存储嵌入的向量数据库（VectorDB）中检索与查询相关的文档。
 - en: '[PRE1]'
+  id: totrans-6
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE1]'
 - en: '`RetrievalQA` combines retrieval and generation: the LLM answers based on retrieved
     documents. First, initialize the language model,'
+  id: totrans-7
   prefs: []
   type: TYPE_NORMAL
+  zh: '`RetrievalQA`结合了检索和生成：LLM根据检索到的文档回答。首先，初始化语言模型，'
 - en: '[PRE2]'
+  id: totrans-8
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE2]'
 - en: then configure the RetrievalQA chain with a custom prompt,
+  id: totrans-9
   prefs: []
   type: TYPE_NORMAL
+  zh: 然后使用自定义提示配置RetrievalQA链，
 - en: '[PRE3]'
+  id: totrans-10
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE3]'
 - en: and check the answer on a simple query.
+  id: totrans-11
   prefs: []
   type: TYPE_NORMAL
+  zh: 然后在简单查询上检查答案。
 - en: '[PRE4]'
+  id: totrans-12
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE4]'
 - en: 'Next come advanced QA chain types. MapReduce and Refine help work around context‑window
     limits when handling many documents: MapReduce aggregates in parallel, while Refine
     improves the answer sequentially.'
+  id: totrans-13
   prefs: []
   type: TYPE_NORMAL
+  zh: 接下来是高级QA链类型。MapReduce和Refine在处理多份文档时有助于绕过上下文窗口限制：MapReduce并行聚合，而Refine按顺序改进答案。
 - en: '[PRE5]'
+  id: totrans-14
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE5]'
 - en: 'In practice, consider: choose between MapReduce and Refine based on the task
     (the former for fast aggregation from many sources; the latter for higher accuracy
     and iterative improvement); in distributed systems, performance depends on network
     latency and serialization; effectiveness varies with data, so experiment.'
+  id: totrans-15
   prefs: []
   type: TYPE_NORMAL
+  zh: 在实践中，考虑：根据任务选择MapReduce和Refine（前者用于从多个来源快速聚合；后者用于更高精度和迭代改进）；在分布式系统中，性能取决于网络延迟和序列化；有效性随数据而变化，因此进行实验。
 - en: 'One notable limitation of RetrievalQA is the lack of dialogue history, which
     degrades handling of follow‑up questions. Demonstration of the limitation:'
+  id: totrans-16
   prefs: []
   type: TYPE_NORMAL
+  zh: RetrievalQA的一个显著局限性是缺乏对话历史，这会降低处理后续问题的能力。局限性的演示：
 - en: '[PRE6]'
+  id: totrans-17
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE6]'
 - en: This underscores the importance of integrating conversation memory into RAG
     systems.
+  id: totrans-18
   prefs: []
   type: TYPE_NORMAL
+  zh: 这强调了将对话记忆集成到RAG系统中的重要性。
 - en: Conclusion
+  id: totrans-19
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 结论
 - en: Advanced QA techniques in RAG deliver more dynamic and accurate answers. A careful
     `RetrievalQA` implementation and handling of its limitations enable building systems
     capable of substantive dialogue with users.
+  id: totrans-20
   prefs: []
   type: TYPE_NORMAL
+  zh: RAG的高级QA技术提供更动态和准确的答案。通过仔细的`RetrievalQA`实现和处理其局限性，可以构建能够与用户进行实质性对话的系统。
 - en: Further Reading
+  id: totrans-21
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 进一步阅读
 - en: Explore the latest advances in LLMs and their impact on RAG.
+  id: totrans-22
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 探索LLMs的最新进展及其对RAG的影响。
 - en: Investigate strategies for integrating conversation memory into RAG frameworks.
+  id: totrans-23
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 研究将对话记忆集成到RAG框架中的策略。
 - en: This chapter provides a foundation for understanding and practicing advanced
     QA techniques in RAG and for further innovation in AI interactions.
+  id: totrans-24
   prefs: []
   type: TYPE_NORMAL
+  zh: 本章为理解和实践RAG的高级QA技术以及进一步创新AI交互提供了基础。
 - en: Theory Questions
+  id: totrans-25
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 理论问题
 - en: Name the three stages of QA in RAG.
+  id: totrans-26
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 在RAG中命名QA的三个阶段。
 - en: What are context‑window limits, and how do MapReduce/Refine help work around
     them?
+  id: totrans-27
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 上下文窗口限制是什么，MapReduce/Refine如何帮助绕过它们？
 - en: Why is a vector database (VectorDB) needed for retrieval in RAG?
+  id: totrans-28
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 为什么向量数据库（VectorDB）对于RAG中的检索很重要？
 - en: How does `RetrievalQA` combine retrieval and generation?
+  id: totrans-29
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: '`RetrievalQA`是如何结合检索和生成的？'
 - en: Compare the MapReduce and Refine approaches.
+  id: totrans-30
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 比较MapReduce和Refine方法。
 - en: Which practical factors matter in distributed systems (network latency, serialization)?
+  id: totrans-31
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 在分布式系统中，哪些实际因素很重要（网络延迟、序列化）？
 - en: Why is it important to experiment with both approaches?
+  id: totrans-32
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 为什么实验两种方法都很重要？
 - en: How does missing dialogue history affect handling of follow‑up questions?
+  id: totrans-33
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 缺失的对话历史如何影响后续问题的处理？
 - en: Why integrate conversation memory into RAG?
+  id: totrans-34
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 为什么要将对话记忆集成到RAG中？
 - en: What should be studied next to deepen RAG expertise?
+  id: totrans-35
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 为了深化RAG专业知识，接下来应该研究什么？
 - en: Practical Tasks
+  id: totrans-36
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 实践任务
 - en: Initialize a vector DB (Chroma + OpenAIEmbeddings) and print the number of documents
     it contains.
+  id: totrans-37
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 初始化一个向量数据库（Chroma + OpenAIEmbeddings），并打印它包含的文档数量。
 - en: Configure `RetrievalQA` with a custom prompt, specifying the model and the data
     storage directory.
+  id: totrans-38
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 使用自定义提示配置`RetrievalQA`，指定模型和数据存储目录。
 - en: Demonstrate `MapReduce` and `Refine` on a single query and print the resulting
     answers.
+  id: totrans-39
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 在单个查询上展示`MapReduce`和`Refine`，并打印出结果答案。
 - en: Simulate a follow‑up question without preserving dialogue context to show the
     `RetrievalQA` limitation.
+  id: totrans-40
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 模拟一个不保留对话上下文的后续问题，以展示`RetrievalQA`的限制。

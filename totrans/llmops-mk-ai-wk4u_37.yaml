@@ -1,114 +1,174 @@
 - en: Answers 2.7
+  id: totrans-0
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
+  zh: 答案 2.7
 - en: 原文：[https://boramorka.github.io/LLM-Book/en/CHAPTER-2/Answers%202.7/](https://boramorka.github.io/LLM-Book/en/CHAPTER-2/Answers%202.7/)
+  id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 原文：[https://boramorka.github.io/LLM-Book/en/CHAPTER-2/Answers%202.7/](https://boramorka.github.io/LLM-Book/en/CHAPTER-2/Answers%202.7/)
 - en: Theory
+  id: totrans-2
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 理论
 - en: 'Dialogue memory: provides a chatbot with context between messages, enabling
     more personalized and coherent answers.'
+  id: totrans-3
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 对话记忆：为聊天机器人提供消息之间的上下文，使答案更加个性化和连贯。
 - en: '`ConversationBufferMemory`: stores the entire conversation history so the model
     can refer to prior turns in the current dialogue.'
+  id: totrans-4
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: '`ConversationBufferMemory`：存储整个对话历史，以便模型可以参考当前对话中的先前轮次。'
 - en: 'Conversational Retrieval Chain: combines memory with retrieval from external
     sources to improve answer accuracy and relevance.'
+  id: totrans-5
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 对话检索链：结合记忆和从外部来源检索以改进答案的准确性和相关性。
 - en: 'Context‑management strategies: range from fixed buffers to dynamically expanding
     context via document retrieval; the choice depends on the task.'
+  id: totrans-6
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 环境管理策略：从固定缓冲区到通过文档检索动态扩展环境；选择取决于任务。
 - en: 'NER (Named Entity Recognition): helps track key entities in the dialogue and
     maintain discussion integrity.'
+  id: totrans-7
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 命名实体识别（NER）：有助于跟踪对话中的关键实体并保持讨论的完整性。
 - en: 'Data privacy: requires minimizing data collection, anonymizing sensitive information,
     and having transparent, lawful data‑retention policies.'
+  id: totrans-8
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 数据隐私：需要最小化数据收集，匿名化敏感信息，并拥有透明、合法的数据保留政策。
 - en: 'Topic shifts: summarization, topic‑aware memory, and selective retrieval of
     the most relevant history can help when the subject changes.'
+  id: totrans-9
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 主题转换：当主题改变时，总结、主题感知记忆和选择性地检索最相关的历史信息可以有所帮助。
 - en: 'Evaluation metrics: include user satisfaction, task success, and automated
     measures of coherence and relevance.'
+  id: totrans-10
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 评估指标：包括用户满意度、任务成功以及自动化的连贯性和相关性度量。
 - en: 'Persistent memory: useful for maintaining context across sessions, preserving
     user preferences and information about past issues and resolutions.'
+  id: totrans-11
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 持久记忆：有助于在会话之间保持上下文，保留用户偏好以及关于过去问题和解决方案的信息。
 - en: 'Practical recommendations: ensure privacy and transparency, give users control
     over memory, and continuously monitor interaction quality.'
+  id: totrans-12
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 实际建议：确保隐私和透明度，让用户控制记忆，并持续监控交互质量。
 - en: Practical Tasks
+  id: totrans-13
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 实际任务
 - en: '1.'
+  id: totrans-14
   prefs: []
   type: TYPE_NORMAL
+  zh: '1.'
 - en: '[PRE0]'
+  id: totrans-15
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE0]'
 - en: '2.'
+  id: totrans-16
   prefs: []
   type: TYPE_NORMAL
+  zh: '2.'
 - en: '[PRE1]'
+  id: totrans-17
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE1]'
 - en: '3.'
+  id: totrans-18
   prefs: []
   type: TYPE_NORMAL
+  zh: '3.'
 - en: '[PRE2]'
+  id: totrans-19
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE2]'
 - en: '4.'
+  id: totrans-20
   prefs: []
   type: TYPE_NORMAL
+  zh: '4.'
 - en: '[PRE3]'
+  id: totrans-21
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE3]'
 - en: '5.'
+  id: totrans-22
   prefs: []
   type: TYPE_NORMAL
+  zh: '5.'
 - en: '[PRE4]'
+  id: totrans-23
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE4]'
 - en: '6.'
+  id: totrans-24
   prefs: []
   type: TYPE_NORMAL
+  zh: '6.'
 - en: '[PRE5]'
+  id: totrans-25
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE5]'
 - en: '7.'
+  id: totrans-26
   prefs: []
   type: TYPE_NORMAL
+  zh: '7.'
 - en: '[PRE6]'
+  id: totrans-27
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE6]'
 - en: '8.'
+  id: totrans-28
   prefs: []
   type: TYPE_NORMAL
+  zh: '8.'
 - en: '[PRE7]'
+  id: totrans-29
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE7]'

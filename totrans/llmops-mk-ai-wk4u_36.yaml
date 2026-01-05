@@ -1,92 +1,136 @@
 - en: Answers 2.6
+  id: totrans-0
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
+  zh: 答案 2.6
 - en: 原文：[https://boramorka.github.io/LLM-Book/en/CHAPTER-2/Answers%202.6/](https://boramorka.github.io/LLM-Book/en/CHAPTER-2/Answers%202.6/)
+  id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 原文：[https://boramorka.github.io/LLM-Book/en/CHAPTER-2/Answers%202.6/](https://boramorka.github.io/LLM-Book/en/CHAPTER-2/Answers%202.6/)
 - en: Theory
+  id: totrans-2
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 理论
 - en: 'Three stages of RAG‑QA: accept the query, retrieve relevant documents, and
     generate the answer.'
+  id: totrans-3
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: RAG-QA 的三个阶段：接受查询、检索相关文档和生成答案。
 - en: 'Context window constraints: because the LLM context is limited, you cannot
     pass every fragment. MapReduce and Refine help aggregate or iteratively refine
     information across multiple documents.'
+  id: totrans-4
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 上下文窗口约束：由于 LLM 上下文有限，您不能传递每个片段。MapReduce 和 Refine 帮助聚合或迭代地跨多个文档细化信息。
 - en: 'Vector database: stores document embeddings and provides fast retrieval of
     the most relevant documents based on semantic similarity.'
+  id: totrans-5
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 向量数据库：存储文档嵌入并提供基于语义相似度的最快相关文档检索。
 - en: 'RetrievalQA chain: combines retrieval and answer generation, improving relevance
     and accuracy of results.'
+  id: totrans-6
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: RetrievalQA 链：结合检索和答案生成，提高结果的相关性和准确性。
 - en: 'MapReduce and Refine: MapReduce quickly produces a summary from many documents;
     Refine sequentially improves the answer, which is useful when precision is critical.
     Choose based on the task.'
+  id: totrans-7
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: MapReduce 和 Refine：MapReduce 从许多文档中快速生成摘要；Refine 顺序改进答案，这在精度至关重要的场合很有用。根据任务选择。
 - en: 'Distributed systems: account for network latency and serialization when operating
     in distributed setups.'
+  id: totrans-8
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 分布式系统：在分布式设置中，需考虑网络延迟和序列化。
 - en: 'Experimentation: try MapReduce and Refine; effectiveness depends heavily on
     data types and question styles.'
+  id: totrans-9
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 实验：尝试 MapReduce 和 Refine；其有效性很大程度上取决于数据类型和问题风格。
 - en: 'RetrievalQA limitation: no built‑in dialogue memory, which makes maintaining
     context across follow‑ups difficult.'
+  id: totrans-10
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: RetrievalQA 限制：没有内置的对话记忆，这使得在后续操作中维持上下文变得困难。
 - en: 'Dialogue memory: needed to incorporate previous turns and provide contextual
     answers during longer conversations.'
+  id: totrans-11
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 对话记忆：在较长的对话中，需要整合之前的回合并提供上下文答案。
 - en: 'Further study: new LLM approaches, their impact on RAG systems, and memory
     strategies in RAG chains.'
+  id: totrans-12
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 进一步研究：新的 LLM 方法、它们对 RAG 系统的影响以及 RAG 链中的记忆策略。
 - en: Practical Tasks
+  id: totrans-13
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 实践任务
 - en: '1.'
+  id: totrans-14
   prefs: []
   type: TYPE_NORMAL
+  zh: '1.'
 - en: '[PRE0]'
+  id: totrans-15
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE0]'
 - en: '2.'
+  id: totrans-16
   prefs: []
   type: TYPE_NORMAL
+  zh: '2.'
 - en: '[PRE1]'
+  id: totrans-17
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE1]'
 - en: '3.'
+  id: totrans-18
   prefs: []
   type: TYPE_NORMAL
+  zh: '3.'
 - en: '[PRE2]'
+  id: totrans-19
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE2]'
 - en: '4.'
+  id: totrans-20
   prefs: []
   type: TYPE_NORMAL
+  zh: '4.'
 - en: '[PRE3]'
+  id: totrans-21
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE3]'

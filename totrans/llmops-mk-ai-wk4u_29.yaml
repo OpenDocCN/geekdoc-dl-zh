@@ -1,123 +1,179 @@
 - en: Answers 1.4
+  id: totrans-0
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
+  zh: 答案 1.4
 - en: 原文：[https://boramorka.github.io/LLM-Book/en/CHAPTER-1/Answers%201.4/](https://boramorka.github.io/LLM-Book/en/CHAPTER-1/Answers%201.4/)
+  id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 原文：[https://boramorka.github.io/LLM-Book/en/CHAPTER-1/Answers%201.4/](https://boramorka.github.io/LLM-Book/en/CHAPTER-1/Answers%201.4/)
 - en: Theory
+  id: totrans-2
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 理论
 - en: Chain of Thought (CoT) breaks problem solving into sequential steps, improving
     accuracy and making the decision process understandable.
+  id: totrans-3
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 思维链（CoT）将问题解决分解为连续步骤，提高准确性并使决策过程可理解。
 - en: CoT transparency lets users see the model’s logic, strengthening trust.
+  id: totrans-4
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: CoT透明度让用户能够看到模型的逻辑，从而增强信任。
 - en: 'In education, CoT mimics a tutor: guiding step by step and fostering critical
     thinking.'
+  id: totrans-5
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 在教育中，CoT模仿导师：逐步引导并培养批判性思维。
 - en: In customer support, CoT helps unpack complex requests and arrive at precise
     answers step by step, reducing agent load.
+  id: totrans-6
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 在客户支持中，CoT帮助逐步拆解复杂请求并得出精确答案，从而减少代理工作量。
 - en: Inner Monologue hides intermediate reasoning and shows only the result — unlike
     CoT, where steps are visible to the user.
+  id: totrans-7
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 内心独白隐藏了中间推理过程，只显示结果——与CoT不同，CoT中步骤对用户是可见的。
 - en: For sensitive information, Inner Monologue reduces the chance of accidentally
     revealing details.
+  id: totrans-8
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 对于敏感信息，内心独白减少了意外泄露细节的可能性。
 - en: In “guided learning”, Inner Monologue provides hints without “spoiling” the
     full solution.
+  id: totrans-9
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 在“引导学习”中，内心独白提供提示而不“泄露”完整解决方案。
 - en: Environment prep includes loading the OpenAI key and importing required Python
     libraries.
+  id: totrans-10
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 环境准备包括加载OpenAI密钥和导入所需的Python库。
 - en: '`get_response_for_queries` sends prompts to the API and returns the model’s
     answer, encapsulating the interaction.'
+  id: totrans-11
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: '`get_response_for_queries` 向API发送提示并返回模型的答案，封装了交互。'
 - en: CoT prompting guides the model through steps when a direct answer is non‑obvious
     or requires complex logic.
+  id: totrans-12
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: CoT提示引导模型在直接答案不明显或需要复杂逻辑时通过步骤。
 - en: In support, the system/user prompt structure directs reasoning for detailed
     product answers.
+  id: totrans-13
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 在支持中，系统/用户提示结构指导详细产品答案的推理。
 - en: With Inner Monologue, you can extract only the final part of the answer to keep
     the interface concise and clear.
+  id: totrans-14
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 使用内心独白，您可以提取答案的最后一部分，以保持界面简洁明了。
 - en: Practice
+  id: totrans-15
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 练习
 - en: 'Task 1: CoT — Detailed product answer'
+  id: totrans-16
   prefs: []
   type: TYPE_NORMAL
+  zh: 任务1：CoT — 详细产品答案
 - en: Implement `detailed_product_info_cot(product_name, user_question)` that uses
     CoT to build a detailed, stepwise answer.
+  id: totrans-17
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 实现 `detailed_product_info_cot(product_name, user_question)` 函数，该函数使用CoT构建详细、逐步的答案。
 - en: 'Steps:'
+  id: totrans-18
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 步骤：
 - en: 'Step 1: Identify the product in question.'
+  id: totrans-19
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 第1步：识别所涉及的产品。
 - en: 'Step 2: Collect key characteristics (type, features, benefits).'
+  id: totrans-20
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 第2步：收集关键特征（类型、功能、好处）。
 - en: 'Step 3: Use the collected data to answer `user_question` clearly and logically.'
+  id: totrans-21
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 第3步：使用收集到的数据清晰、逻辑地回答 `user_question`。
 - en: 'Task 2: Inner Monologue — Concise summary'
+  id: totrans-22
   prefs: []
   type: TYPE_NORMAL
+  zh: 任务2：内心独白 — 简洁摘要
 - en: Implement `concise_product_summary_inner_monologue(product_name, user_question)`
     that uses Inner Monologue to produce a concise answer.
+  id: totrans-23
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 实现 `concise_product_summary_inner_monologue(product_name, user_question)` 函数，该函数使用内心独白来生成简洁的答案。
 - en: 'Steps:'
+  id: totrans-24
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 步骤：
 - en: 'Internal: perform the same steps as CoT, but do not expose intermediate reasoning.'
+  id: totrans-25
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 内部：执行与CoT相同的步骤，但不暴露中间推理。
 - en: 'Final: return only a brief, direct answer to `user_question`.'
+  id: totrans-26
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 最终：仅返回对 `user_question` 的简短、直接答案。
 - en: Compare the outputs of both functions and explain their appropriate use cases.
+  id: totrans-27
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 比较两个函数的输出并解释它们适当的用例。

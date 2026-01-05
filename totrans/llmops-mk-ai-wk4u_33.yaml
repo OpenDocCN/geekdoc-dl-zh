@@ -1,172 +1,252 @@
 - en: Answers 2.3
+  id: totrans-0
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
+  zh: 答案2.3
 - en: 原文：[https://boramorka.github.io/LLM-Book/en/CHAPTER-2/Answers%202.3/](https://boramorka.github.io/LLM-Book/en/CHAPTER-2/Answers%202.3/)
+  id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 原文：[https://boramorka.github.io/LLM-Book/en/CHAPTER-2/Answers%202.3/](https://boramorka.github.io/LLM-Book/en/CHAPTER-2/Answers%202.3/)
 - en: Theory
+  id: totrans-2
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 理论
 - en: The goal of splitting is to produce meaningful chunks for effective search and
     analysis.
+  id: totrans-3
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 分割的目标是生成有意义的块，以进行有效的搜索和分析。
 - en: 'Chunk size controls granularity: larger → more context; smaller → easier processing
     but risk losing cohesion.'
+  id: totrans-4
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 块大小控制粒度：较大→更多上下文；较小→更容易处理但风险丢失连贯性。
 - en: Overlap preserves context at boundaries and prevents loss of important information.
+  id: totrans-5
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 重叠在边界处保留上下文并防止丢失重要信息。
 - en: '`CharacterTextSplitter` splits by characters; `TokenTextSplitter` by tokens
     (handy for LLM limits).'
+  id: totrans-6
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: '`CharacterTextSplitter`按字符分割；`TokenTextSplitter`按标记分割（对于LLM限制很有用）。'
 - en: The recursive splitter uses a hierarchy of separators (paragraphs/sentences/words)
     to preserve semantics.
+  id: totrans-7
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 递归分割器使用分隔符的层次结构（段落/句子/单词）来保留语义。
 - en: 'Specialized splitters: `LanguageTextSplitter` for code (syntax‑aware) and `MarkdownHeaderTextSplitter`
     (heading levels, adds metadata).'
+  id: totrans-8
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 专用分割器：`LanguageTextSplitter`用于代码（语法感知）和`MarkdownHeaderTextSplitter`（标题级别，添加元数据）。
 - en: 'Environment: libraries, keys, dependencies, imports — for robust processing.'
+  id: totrans-9
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 环境：库、键、依赖项、导入——用于稳健处理。
 - en: '`RecursiveCharacterTextSplitter` preserves semantics and adapts to structure;
     tune size/overlap/depth.'
+  id: totrans-10
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: '`RecursiveCharacterTextSplitter`保留语义并适应结构；调整大小/重叠/深度。'
 - en: 'The “alphabet” demo highlights differences: even slicing vs. semantically aware
     splitting.'
+  id: totrans-11
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: “字母”演示突出了差异：切片与语义感知分割。
 - en: Characters vs. tokens depends on model limits, semantic needs, and text nature.
+  id: totrans-12
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 字符与标记取决于模型限制、语义需求和文本性质。
 - en: Splitting by Markdown headings preserves logical structure.
+  id: totrans-13
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 通过Markdown标题分割保留逻辑结构。
 - en: 'Best practices: keep meaning, tune overlap (avoid redundancy), enrich chunk
     metadata.'
+  id: totrans-14
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 最佳实践：保持意义，调整重叠（避免冗余），丰富块元数据。
 - en: Practical Tasks
+  id: totrans-15
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 实际任务
 - en: '1.'
+  id: totrans-16
   prefs: []
   type: TYPE_NORMAL
+  zh: '1.'
 - en: '[PRE0]'
+  id: totrans-17
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE0]'
 - en: '2.'
+  id: totrans-18
   prefs: []
   type: TYPE_NORMAL
+  zh: '2.'
 - en: '[PRE1]'
+  id: totrans-19
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE1]'
 - en: '3.'
+  id: totrans-20
   prefs: []
   type: TYPE_NORMAL
+  zh: '3.'
 - en: '[PRE2]'
+  id: totrans-21
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE2]'
 - en: 'Example usage:'
+  id: totrans-22
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
+  zh: 示例用法：
 - en: '[PRE3]'
+  id: totrans-23
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE3]'
 - en: 'This implementation does the following:'
+  id: totrans-24
   prefs: []
   type: TYPE_NORMAL
+  zh: 此实现执行以下操作：
 - en: During initialization, it sorts header markers by length in descending order
     so that longer (more specific) Markdown headers match first. This matters because
     Markdown header levels differ by the number of `#` characters, and we want the
     most specific header matched.
+  id: totrans-25
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 在初始化期间，它按长度降序排列标题标记，以便较长的（更具体的）Markdown标题首先匹配。这很重要，因为Markdown标题级别通过`#`字符的数量来区分，我们希望匹配最具体的标题。
 - en: It compiles a regular expression that matches any of the specified header markers
     at the start of a line.
+  id: totrans-26
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 它编译一个正则表达式，匹配行首指定的任何标题标记。
 - en: The `split_text` method iterates over each line of the input Markdown, checking
     for header matches. When it finds a header, it appropriately starts or ends a
     chunk. Each chunk includes its starting header and all subsequent lines up to
     the next header of the same or higher priority.
+  id: totrans-27
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '`split_text`方法遍历输入Markdown的每一行，检查标题匹配。当它找到一个标题时，它适当地开始或结束一个块。每个块包括其起始标题和所有后续行，直到下一个相同或更高优先级的标题。'
 - en: '4.'
+  id: totrans-28
   prefs: []
   type: TYPE_NORMAL
+  zh: '4.'
 - en: '[PRE4]'
+  id: totrans-29
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE4]'
 - en: '5. To implement `MarkdownHeaderTextSplitter` as described, we follow these
     steps:'
+  id: totrans-30
   prefs: []
   type: TYPE_NORMAL
+  zh: 5. 要实现`MarkdownHeaderTextSplitter`，我们遵循以下步骤：
 - en: 'Initialization: store header patterns with their names/levels to use during
     splitting.'
+  id: totrans-31
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 初始化：存储标题模式及其名称/级别，以便在分割时使用。
 - en: 'Text splitting: parse the input Markdown, identify headers by the given patterns,
     and split into chunks. Each chunk starts with a header and includes the following
     lines up to the next header of the same or higher priority.'
+  id: totrans-32
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 文本分割：解析输入Markdown，通过给定的模式识别标题，并将其分割成块。每个块从标题开始，包括直到下一个相同或更高优先级标题的所有后续行。
 - en: '[PRE5]'
+  id: totrans-33
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE5]'
 - en: 'Example usage:'
+  id: totrans-34
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
+  zh: 示例用法：
 - en: '[PRE6]'
+  id: totrans-35
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE6]'
 - en: 'This implementation does the following:'
+  id: totrans-36
   prefs: []
   type: TYPE_NORMAL
+  zh: 此实现执行以下操作：
 - en: During initialization, it sorts header markers by length in descending order
     so that longer (more specific) Markdown headers match first. This matters because
     Markdown header levels differ by the number of `#` characters, and we want the
     most specific header matched.
+  id: totrans-37
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 在初始化期间，它按长度降序排列标题标记，以便较长的（更具体的）Markdown标题首先匹配。这很重要，因为Markdown标题级别通过`#`字符的数量来区分，我们希望匹配最具体的标题。
 - en: It compiles a regular expression that matches any of the specified header markers
     at the start of a line.
+  id: totrans-38
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 它编译一个正则表达式，匹配行首指定的任何标题标记。
 - en: The `split_text` method iterates over each line of the input Markdown, checking
     for header matches. When it finds a header, it appropriately starts or ends a
     chunk. Each chunk includes its starting header and all subsequent lines up to
     the next header of the same or higher priority.
+  id: totrans-39
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '`split_text` 方法遍历输入 Markdown 的每一行，检查是否存在标题匹配。当找到标题时，它适当地开始或结束一个块。每个块包括其起始标题以及所有后续行，直到下一个相同或更高优先级的标题。'
