@@ -1,0 +1,301 @@
+- en: 2.7 Chatbots with LangChain
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 原文：[https://boramorka.github.io/LLM-Book/en/CHAPTER-2/2.7%20Chatbots%20with%20LangChain/](https://boramorka.github.io/LLM-Book/en/CHAPTER-2/2.7%20Chatbots%20with%20LangChain/)
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: 'This chapter is about building and optimizing conversational chatbots with
+    LangChain — a toolkit that connects language models to retrieval systems for dynamic
+    QA. We take a practical route: set up the environment and load documents, build
+    a vector store, choose advanced retrieval strategies, and add conversation memory
+    so the bot maintains context and answers follow‑ups confidently. Conversational
+    bots transform data interaction: instead of independent turns, they track and
+    remember the dialogue, and LangChain’s modular architecture lets you plug in loaders
+    (80+ formats), chunking, embeddings, semantic search, self‑query, and contextual
+    compression step by step. One important detail is early environment and variable
+    setup: observability and careful key handling speed up debugging and operations.
+    We then assemble the core — the Conversational Retrieval Chain — combining the
+    language model, retriever, and memory, and show how buffer memory preserves the
+    sequence of messages and passes it along with new questions to keep the dialogue
+    natural and coherent.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Start by initializing the environment and API keys to safely use cloud LLMs
+    and prepare the interface:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Pick a language model version and fix it for the demo:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE1]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Now connect embeddings and a vector store for baseline QA: load/index documents,
+    retrieve relevant fragments, and prepare the model for answers. Then define a
+    prompt template and assemble a RetrievalQA chain that will use your retriever
+    and craft contextual answers:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE2]'
+  prefs: []
+  type: TYPE_PRE
+- en: Implementing a Conversational Retrieval Chain with Memory for QA
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: This section targets ML engineers, data scientists, and developers building
+    QA systems that understand and retain dialogue context. The focus is on integrating
+    the Conversational Retrieval Chain with a memory component from LangChain.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Configure memory for dialogue history
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: Use `ConversationBufferMemory` so the system remembers context. It stores message
+    history and allows referring to prior turns for relevant follow‑ups.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE3]'
+  prefs: []
+  type: TYPE_PRE
+- en: Assemble the Conversational Retrieval Chain
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: Combine the language model, document retriever, and dialogue memory to answer
+    questions in conversational context.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE4]'
+  prefs: []
+  type: TYPE_PRE
+- en: Handle questions and generate answers
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: After setup, the chain can process questions and generate answers using the
+    saved conversation history for context.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE5]'
+  prefs: []
+  type: TYPE_PRE
+- en: Building a Document‑Grounded QA Chatbot
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: This part provides an end‑to‑end guide to a chatbot that answers questions based
+    on document content. It covers loading documents, splitting text, embeddings,
+    and assembling a conversational retrieval chain.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Initial setup and imports
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: Import LangChain components for embeddings, text splitting, in‑memory search,
+    document loading, conversational chains, and the chat model.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE6]'
+  prefs: []
+  type: TYPE_PRE
+- en: Load and process documents
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: Load documents, split them into manageable chunks, generate embeddings, and
+    prepare a vector store; then return a ready‑to‑use conversational retrieval chain.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE7]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'For convenience, add a thin wrapper used by the UI code:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE8]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Proceed to create a chatbot and a Panel‑based UI: import Panel (`pn`) and Param
+    (`param`), then define a class that encapsulates document loading, query processing,
+    and history.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE9]'
+  prefs: []
+  type: TYPE_PRE
+- en: Define a chatbot class that stores history, forms answers, and allows swapping
+    the base document.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE10]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Add document loading: `load_document` checks for a user file (or uses the default
+    document), reloads the knowledge base, and clears history when the source changes.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE11]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Handle user turns: `process_query` sends the turn to the model, updates history
+    and UI, and shows source snippets.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE12]'
+  prefs: []
+  type: TYPE_PRE
+- en: For transparency, display the last DB query and the retrieved source documents.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE13]'
+  prefs: []
+  type: TYPE_PRE
+- en: Optionally, display the current chat history for quick inspection.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE14]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Don’t forget reset: `clear_conversation_history` clears the current dialogue
+    context.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE15]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'The result is a cohesive method: you set up the environment and keys, load
+    documents and assemble a vector store, add advanced retrieval (self‑query, compression,
+    semantic search), integrate dialogue memory, and build a Conversational Retrieval
+    Chain where model, retriever, and memory work together. The examples and code
+    show how the steps form a working bot; thanks to LangChain’s modularity, the result
+    is easy to extend and debug.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Theory Questions
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: What components are needed to set up a LangChain chatbot development environment?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: How does keeping dialogue history improve a chatbot’s functionality?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: How are document chunks transformed into embeddings, and why?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Why are self‑query, compression, and semantic search useful?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: How does the Conversational Retrieval Chain combine model, retriever, and memory?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: How does ConversationBufferMemory help maintain dialogue context?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: What are the steps to configure a vector store for semantic search in LangChain?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Why manage environment variables and API keys?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: How does the modularity of LangChain’s retrieval methods increase development
+    flexibility?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Why is choosing an appropriate LLM version important?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Practical Tasks
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Create and populate a vector store (`create_vector_store`) from a list of strings
+    (use a stub embedding function `embed_document`).
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Implement semantic search (`perform_semantic_search`): embed a query, find
+    the nearest document, return its index.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Add dialogue history to a `Chatbot` class and a `respond_to_query` method (generate
+    via a stub `generate_response`).
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Assemble a simplified Conversational Retrieval Chain with stubs (`LanguageModel`/`DocumentRetriever`/`ConversationMemory`).
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: In `Chatbot`, add methods to append and reset history; incorporate history when
+    generating.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Document QA: load a string, split it, create embeddings, build a vector store,
+    run semantic search, and generate an answer (stubs allowed).'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Integrate memory into the retrieval chain (use the extensions from tasks 5–6).
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Build a small CLI for chatting with the `Chatbot`: send queries, print answers,
+    view/reset history.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Alternate Panel UI Variant and Dashboard
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: Below is an additional chatbot class and a ready-to-use Panel dashboard that
+    mirrors the Russian version’s UI section.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE16]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Add minimal method implementations to support the bound UI actions and panels:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE17]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Create widgets and bind actions:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE18]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Assemble tabs and the dashboard:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE19]'
+  prefs: []
+  type: TYPE_PRE
+- en: This completes the UI parity with the Russian chapter while keeping the English
+    text clear and idiomatic.
+  prefs: []
+  type: TYPE_NORMAL

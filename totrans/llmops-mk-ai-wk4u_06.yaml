@@ -1,0 +1,165 @@
+- en: 1.3 Advanced Moderation
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 原文：[https://boramorka.github.io/LLM-Book/en/CHAPTER-1/1.3%20Advanced%20Moderation/](https://boramorka.github.io/LLM-Book/en/CHAPTER-1/1.3%20Advanced%20Moderation/)
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: 'Content moderation in modern products starts with a clear understanding of
+    how and at what stage to automate pre‑publication checks. The OpenAI Moderation
+    API provides an out‑of‑the‑box mechanism for analyzing user content in real time
+    across platforms — from social networks and forums to media‑sharing services.
+    The model automatically detects and flags materials that violate community rules,
+    terms of use, or the law, and it covers the key data types: text, images, and
+    video. In practice, teams integrate the API on the backend using client libraries
+    (Python, JS, Ruby, etc.). You get the most value when moderation is built directly
+    into the publishing flow: every comment, post, or image upload first passes through
+    the Moderation API; then, depending on the result, the content is published, returned
+    to the author for edits, blocked, or escalated for manual review. Despite comprehensive
+    built‑in categories, each platform has its own standards and compliance requirements,
+    so you can tune sensitivity and focus by adding allow/deny lists and refining
+    priorities and thresholds.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'To illustrate a basic check, consider a simple text‑moderation snippet that
+    sends content to the model and prints the analysis result:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'The same approach scales to collections of items, enabling you not only to
+    flag problematic cases but also to apply human‑readable categories and downstream
+    actions — from a gentle warning to deletion and moderator escalation. Below is
+    an extended example that iterates over a set of messages, classifies violations
+    (Hate Speech, Spam, other mismatches), and prints recommendations:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE1]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Beyond classic moderation, protection against prompt injections is crucial
+    — attempts by users to override system instructions through cleverly crafted input.
+    A basic technique is isolating user data from commands with explicit delimiters:
+    this makes boundaries obvious to both humans and systems and reduces the risk
+    that user text will be interpreted as control instructions. The example shows
+    how to choose a delimiter, sanitize input (remove delimiter occurrences), and
+    construct a message to the model so that the user fragment remains data, not commands:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE2]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Delimiters are simply a rare sequence of characters that almost never occurs
+    in normal data. It’s important to: (1) pick such a token; (2) sanitize user input
+    by removing or escaping all found delimiters; and (3) explicitly search for these
+    markers when parsing messages to ensure boundaries are correctly identified. Complement
+    this with additional measures: validate the type, length, and format of incoming
+    data; follow least‑privilege for components; use allow‑lists of permitted commands
+    or templates; apply regular expressions to detect control sequences; enable monitoring
+    and logging to spot anomalies; and educate users about safe input practices.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Below is a compact, self‑contained example that combines validation, sanitization,
+    and a model call while preserving the system instruction about the response language:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE3]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Another practical technique is direct input assessment for injections: ask
+    the model to first classify the message as an attempt to override instructions
+    (answer “Y”) or safe (answer “N”), then act accordingly. This check is transparent
+    and easy to plug into existing pipelines:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE4]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'After detecting a possible injection, it helps to combine several responses:
+    notify the user about the risk and briefly explain safe‑input principles; suggest
+    rephrasing the request to preserve UX quality; in complex cases, isolate and send
+    the item to a moderator; and dynamically adjust sensitivity by trust level and
+    context. As an illustration of adapting sensitivity and response logic, here’s
+    a short session that tracks trust and uses a heuristic for risky commands:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE5]'
+  prefs: []
+  type: TYPE_PRE
+- en: In summary, these approaches offer accuracy, adaptability, and a good user experience;
+    the challenges are the effort required to build and maintain them, the evolving
+    nature of attacks, and the perpetual trade‑off between usability and security.
+    By combining the Moderation API with defenses against prompt injections, you can
+    significantly improve the safety and integrity of user‑generated content (UGC)
+    platforms. Next, study the OpenAI documentation and AI ethics and safety practices
+    to further refine your processes.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Theory Questions
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: What are the key steps for integrating the OpenAI Moderation API into a platform?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: How do you tune moderation rules to align with community standards and compliance
+    requirements?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: How can you extend moderation to images and video?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: How do delimiters help prevent prompt injections?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Why does isolating commands with delimiters improve security?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Which additional strategies (beyond delimiters) strengthen protection against
+    prompt injections?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: How can you implement direct input assessment for injections?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: What response actions should you take when an injection attempt is detected?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: What are the pros and cons of direct injection assessment?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: How does the combination of the Moderation API and defensive strategies improve
+    the safety of UGC platforms?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Practical Tasks
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Write a Python function using the OpenAI API that moderates a single text fragment
+    and returns `True` if it is flagged, otherwise `False`.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Implement `sanitize_delimiter(input_text, delimiter)` to remove the delimiter
+    from user input.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Write a `validate_input_length` function that checks the input length is within
+    acceptable bounds.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL

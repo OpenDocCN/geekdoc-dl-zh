@@ -1,0 +1,123 @@
+- en: Answers 1.4
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 原文：[https://boramorka.github.io/LLM-Book/en/CHAPTER-1/Answers%201.4/](https://boramorka.github.io/LLM-Book/en/CHAPTER-1/Answers%201.4/)
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: Theory
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Chain of Thought (CoT) breaks problem solving into sequential steps, improving
+    accuracy and making the decision process understandable.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: CoT transparency lets users see the model’s logic, strengthening trust.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'In education, CoT mimics a tutor: guiding step by step and fostering critical
+    thinking.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: In customer support, CoT helps unpack complex requests and arrive at precise
+    answers step by step, reducing agent load.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Inner Monologue hides intermediate reasoning and shows only the result — unlike
+    CoT, where steps are visible to the user.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: For sensitive information, Inner Monologue reduces the chance of accidentally
+    revealing details.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: In “guided learning”, Inner Monologue provides hints without “spoiling” the
+    full solution.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Environment prep includes loading the OpenAI key and importing required Python
+    libraries.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '`get_response_for_queries` sends prompts to the API and returns the model’s
+    answer, encapsulating the interaction.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: CoT prompting guides the model through steps when a direct answer is non‑obvious
+    or requires complex logic.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: In support, the system/user prompt structure directs reasoning for detailed
+    product answers.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: With Inner Monologue, you can extract only the final part of the answer to keep
+    the interface concise and clear.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Practice
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'Task 1: CoT — Detailed product answer'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Implement `detailed_product_info_cot(product_name, user_question)` that uses
+    CoT to build a detailed, stepwise answer.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Steps:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Step 1: Identify the product in question.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Step 2: Collect key characteristics (type, features, benefits).'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Step 3: Use the collected data to answer `user_question` clearly and logically.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Task 2: Inner Monologue — Concise summary'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Implement `concise_product_summary_inner_monologue(product_name, user_question)`
+    that uses Inner Monologue to produce a concise answer.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Steps:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Internal: perform the same steps as CoT, but do not expose intermediate reasoning.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Final: return only a brief, direct answer to `user_question`.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Compare the outputs of both functions and explain their appropriate use cases.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL

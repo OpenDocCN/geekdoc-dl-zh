@@ -1,0 +1,173 @@
+- en: Answers 2.4
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 原文：[https://boramorka.github.io/LLM-Book/en/CHAPTER-2/Answers%202.4/](https://boramorka.github.io/LLM-Book/en/CHAPTER-2/Answers%202.4/)
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: Theory
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'Purpose of embeddings: convert text into numeric vectors that preserve semantic
+    meaning, enabling computers to “understand” text.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Semantic similarity: reflected in similar vectors for words/sentences with
+    related meaning in a high‑dimensional space.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'How embeddings are learned: trained on text corpora; word vectors depend on
+    usage context (distributional semantics).'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Embeddings in semantic search: allow retrieving relevant documents by meaning,
+    even without exact keyword matches.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Matching documents and queries: a document embedding represents overall meaning;
+    a query embedding captures user intent; comparing them reveals relevant matches.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Vector store: a database for embeddings optimized for fast nearest‑neighbor
+    search.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Choosing a store: depends on data size, persistence requirements, and purpose
+    (research, prototype, production).'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Chroma for prototyping: convenient for small/in‑memory scenarios (fast), but
+    limited in persistence and scaling.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Typical pipeline: split text → generate embeddings → index in a vector store
+    → handle query → generate answer.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Splitting: improves granularity; matching happens at the level of meaningful
+    fragments (chunks), not entire documents.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Embedding generation: transforms text into vectors suitable for computational
+    comparison.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Indexing in the store: enables fast retrieval of semantically similar fragments.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Query handling: create a query embedding and search for similar fragments using
+    metrics (cosine similarity, Euclidean distance, etc.).'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Answer generation: uses the retrieved fragments together with the original
+    query to produce a coherent answer.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Environment setup: install libraries, configure API keys, and set up for embeddings
+    and the vector store.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Loading and splitting documents: critical for effective text management and
+    higher‑quality retrieval.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Illustrating similarity: can be shown via dot product or cosine similarity.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Chroma specifics: mind the persistence directory, clearing stale data, and
+    correct collection initialization.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Similarity search: finds the fragments most relevant to the query.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Typical failures and remediation: duplicates and irrelevant results can be
+    addressed via filtering and careful pipeline tuning.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Practice
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: '1.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs: []
+  type: TYPE_PRE
+- en: '2.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE1]'
+  prefs: []
+  type: TYPE_PRE
+- en: '3.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE2]'
+  prefs: []
+  type: TYPE_PRE
+- en: '4.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE3]'
+  prefs: []
+  type: TYPE_PRE
+- en: '5.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE4]'
+  prefs: []
+  type: TYPE_PRE
+- en: '6.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE5]'
+  prefs: []
+  type: TYPE_PRE
+- en: '7.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE6]'
+  prefs: []
+  type: TYPE_PRE
+- en: '8.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE7]'
+  prefs: []
+  type: TYPE_PRE
+- en: '9.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE8]'
+  prefs: []
+  type: TYPE_PRE
+- en: '10.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE9]'
+  prefs: []
+  type: TYPE_PRE

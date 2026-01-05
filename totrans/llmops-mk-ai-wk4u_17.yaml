@@ -1,0 +1,173 @@
+- en: 2.6 RAG Systems — Techniques for QA
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 原文：[https://boramorka.github.io/LLM-Book/en/CHAPTER-2/2.6%20RAG%20%E2%80%94%20Techniques%20for%20QA/](https://boramorka.github.io/LLM-Book/en/CHAPTER-2/2.6%20RAG%20%E2%80%94%20Techniques%20for%20QA/)
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: 'Retrieval‑Augmented Generation (RAG) combines retrieval and generation, changing
+    how we work with large corpora to build accurate QA systems and chatbots. A critical
+    stage is feeding retrieved documents to the model along with the original query
+    to generate an answer. After relevant materials are retrieved, they must be synthesized
+    into a coherent answer that blends the content with the query’s context and leverages
+    the model’s capabilities. The overall flow is simple: the system accepts a question;
+    retrieves relevant fragments from a vector store; then feeds the retrieved content
+    together with the question into an LLM to form an answer. By default, you can
+    send all retrieved parts into context, but context‑window limits often lead to
+    strategies like MapReduce, Refine, or Map‑Rerank — they aggregate or iteratively
+    refine answers across many documents.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Before using an LLM for QA, ensure the environment is set up: imports, API
+    keys, model versions, and so on.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs: []
+  type: TYPE_PRE
+- en: Next, retrieve documents relevant to the query from a vector database (VectorDB),
+    where embeddings are stored.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE1]'
+  prefs: []
+  type: TYPE_PRE
+- en: '`RetrievalQA` combines retrieval and generation: the LLM answers based on retrieved
+    documents. First, initialize the language model,'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE2]'
+  prefs: []
+  type: TYPE_PRE
+- en: then configure the RetrievalQA chain with a custom prompt,
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE3]'
+  prefs: []
+  type: TYPE_PRE
+- en: and check the answer on a simple query.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE4]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Next come advanced QA chain types. MapReduce and Refine help work around context‑window
+    limits when handling many documents: MapReduce aggregates in parallel, while Refine
+    improves the answer sequentially.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE5]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'In practice, consider: choose between MapReduce and Refine based on the task
+    (the former for fast aggregation from many sources; the latter for higher accuracy
+    and iterative improvement); in distributed systems, performance depends on network
+    latency and serialization; effectiveness varies with data, so experiment.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'One notable limitation of RetrievalQA is the lack of dialogue history, which
+    degrades handling of follow‑up questions. Demonstration of the limitation:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE6]'
+  prefs: []
+  type: TYPE_PRE
+- en: This underscores the importance of integrating conversation memory into RAG
+    systems.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Conclusion
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Advanced QA techniques in RAG deliver more dynamic and accurate answers. A careful
+    `RetrievalQA` implementation and handling of its limitations enable building systems
+    capable of substantive dialogue with users.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Further Reading
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Explore the latest advances in LLMs and their impact on RAG.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Investigate strategies for integrating conversation memory into RAG frameworks.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: This chapter provides a foundation for understanding and practicing advanced
+    QA techniques in RAG and for further innovation in AI interactions.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Theory Questions
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Name the three stages of QA in RAG.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: What are context‑window limits, and how do MapReduce/Refine help work around
+    them?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Why is a vector database (VectorDB) needed for retrieval in RAG?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: How does `RetrievalQA` combine retrieval and generation?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Compare the MapReduce and Refine approaches.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Which practical factors matter in distributed systems (network latency, serialization)?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Why is it important to experiment with both approaches?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: How does missing dialogue history affect handling of follow‑up questions?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Why integrate conversation memory into RAG?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: What should be studied next to deepen RAG expertise?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Practical Tasks
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Initialize a vector DB (Chroma + OpenAIEmbeddings) and print the number of documents
+    it contains.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Configure `RetrievalQA` with a custom prompt, specifying the model and the data
+    storage directory.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Demonstrate `MapReduce` and `Refine` on a single query and print the resulting
+    answers.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Simulate a follow‑up question without preserving dialogue context to show the
+    `RetrievalQA` limitation.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL

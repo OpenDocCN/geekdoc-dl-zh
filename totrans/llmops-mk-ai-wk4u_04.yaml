@@ -1,0 +1,197 @@
+- en: 1.1 Introduction
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 原文：[https://boramorka.github.io/LLM-Book/en/CHAPTER-1/1.1%20Introduction/](https://boramorka.github.io/LLM-Book/en/CHAPTER-1/1.1%20Introduction/)
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: This chapter focuses on the practical integration of the OpenAI API into your
+    services, with an emphasis on generating text responses using GPT models. We will
+    briefly walk through the path from installation and secure setup to your first
+    requests, interpreting responses, and embedding results into applications. The
+    material is aimed at ML engineers, data scientists, software developers, and adjacent
+    specialists who need to connect models to products quickly and reliably.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'OpenAI provides access to a family of language models (including Generative
+    Pre‑trained Transformer, GPT) via an API. These models understand and generate
+    human‑like text, making them a powerful tool for tasks ranging from automating
+    customer support to content generation. Start by installing the current client
+    version:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Next, you need an API key, obtained after registering at OpenAI (https://openai.com/)
+    and choosing an appropriate pricing plan. The key is unique, used to sign requests,
+    and must be kept strictly confidential: store it in environment variables and,
+    for local development, in `.env` files; in production, use a secrets manager.
+    With this minimal setup, you can send a simple text‑generation request and print
+    the answer to the console:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE1]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'To get predictable results, it is important to remember how requests are formed:
+    you choose a model, craft a prompt (a question or instruction), and set generation
+    parameters. For example, `temperature` controls creativity and randomness: the
+    higher it is, the more diverse the answers. The client library reads the API key
+    from the environment; with correct configuration, you simply assemble the message
+    list and specify the model — the SDK handles the rest.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The API response contains the generated text and useful metadata. Structurally
+    it includes a `choices` field (one or more answer variants) and `usage` (token
+    statistics) to help estimate cost and optimize requests:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE2]'
+  prefs: []
+  type: TYPE_PRE
+- en: '**Note:** The response contains `choices[].message.content` with the generated
+    text, and `usage` statistics to help estimate cost and optimize requests.'
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: 'When integrating, build in error handling: networks are unreliable, limits
+    are finite, and request parameters may be invalid. A simple `try/except` scaffold
+    helps you respond correctly to connection issues, quota exceedance, and API status
+    errors without crashing your application:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE3]'
+  prefs: []
+  type: TYPE_PRE
+- en: Alongside error handling, use `usage` metadata and other response fields to
+    monitor cost, timing, and effectiveness so you can adjust prompts, limit lengths,
+    choose cost‑efficient models, and keep spend under control.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'In applied scenarios, generation is most often embedded in conversational interfaces.
+    Below is a concise example of an interactive client built with Panel: the user
+    enters a query, the system processes it, and displays the answer. The code illustrates
+    updating the history and laying out UI elements that are easy to adapt for your
+    needs:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE4]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Tip: improve UX with an “assistant is typing…” indicator and other feedback
+    signals to make the dialogue feel alive. From there, it comes down to how you
+    use the model’s answers. In chatbots you can display the replies directly, paying
+    attention to formatting and relevance; for generating articles and reports, post‑processing
+    helps — formatting, templating, and combining multiple answers into cohesive texts;
+    for dynamic content in web apps, validate relevance and consistency and plan regular
+    updates.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'It’s good practice to add post‑processing (grammar and style checks, aligning
+    to your brand voice), personalization (respecting context, preferences, and user
+    history), feedback collection to improve prompts and parameters, and monitoring/analytics:
+    response time, engagement, token usage, and other metrics that help you optimize
+    the system responsibly. For performance, consider caching frequent queries, batching,
+    and choosing an appropriately sized model for the task and budget. Don’t blindly
+    trust model output: verify accuracy and appropriateness, and add validation and
+    filters.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: To go deeper, study the official OpenAI documentation, follow updates, and participate
+    in professional communities. This material lays a foundation for quick integration
+    and opens the door to advanced scenarios of intelligent text interactions.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Theory Questions
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: What are the main benefits of integrating the OpenAI API for ML engineers, data
+    scientists, and developers?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Describe how to obtain an OpenAI API key and explain why securing it is important.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: What is the role of `temperature`, and how does it affect generation results?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Why should API keys be stored in environment variables or secret managers rather
+    than directly in code?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Why is model choice critical for quality, speed, and cost?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: How do response metadata help optimize requests and manage token spend?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: List the steps to create a simple conversational interface and its key components.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Which integration best practices fit chatbots, content generation, and dynamic
+    content?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Name common pitfalls when working with the API and ways to prevent them.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: How can you ensure ethical standards and protect user privacy?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Practical Tasks
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Write a Python script that uses the OpenAI API to answer the question “What
+    is the future of AI?”. Limit the answer to 100 tokens.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Modify the script from Task 1 to read the API key from an environment variable
+    instead of hard‑coding it.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Extend the script from Task 2 to print, along with the answer text, the model
+    name, token counts, and the reason generation stopped.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Add error handling to the script from Task 3 (e.g., handling rate limits, invalid
+    requests, etc.) using `try/except`.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Create a simple command‑line interface (CLI) that sends prompts and streams
+    answers in real time, with error handling.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'For the CLI from Task 5, add answer post‑processing: trimming extra whitespace,
+    basic grammar correction (e.g., using `textblob`) or your own formatting.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Develop a script that, for a user‑provided topic, generates a publishing plan
+    and outputs it as a bulleted list.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: In any of the scripts, add logging of response time and token usage, storing
+    these metrics for later analysis and optimization.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL

@@ -1,0 +1,460 @@
+- en: 2.5 Semantic Search — Advanced Strategies
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 原文：[https://boramorka.github.io/LLM-Book/en/CHAPTER-2/2.5%20Semantic%20Search%20%E2%80%94%20Advanced%20Strategies/](https://boramorka.github.io/LLM-Book/en/CHAPTER-2/2.5%20Semantic%20Search%20%E2%80%94%20Advanced%20Strategies/)
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: Delivering precisely relevant information from large corpora is key to smart
+    systems like chatbots and question‑answering (QA). Basic semantic search is a
+    solid start, but there are edge cases where its quality and result diversity fall
+    short. This chapter explores advanced retrieval techniques to improve both precision
+    and variety.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Search based purely on semantic proximity doesn’t always yield the most informative
+    and diverse set of results. Advanced methods add mechanisms to balance diversity
+    and relevance — especially important for complex queries that require nuance.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Enter Maximum Marginal Relevance (MMR). MMR balances relevance and diversity:
+    it selects documents that are close to the query while being dissimilar to each
+    other. This reduces redundancy and helps cover different aspects of an answer.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The procedure looks like this: first, select “candidates” by semantic similarity;
+    then choose a final set that simultaneously accounts for relevance to the query
+    and dissimilarity to the documents already selected. The outcome is a broader,
+    more useful result set.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Next comes Self‑Query Retrieval. This method suits queries that include both
+    semantic content and metadata (e.g., “alien movies released in 1980”). It splits
+    the request into a semantic component (for embedding search) and a metadata filter
+    (e.g., “release year = 1980”).
+  prefs: []
+  type: TYPE_NORMAL
+- en: Finally, Contextual Compression extracts only the most relevant fragments from
+    retrieved documents. This is useful when you don’t need an entire document. It
+    requires an extra processing step (finding the most relevant parts) but significantly
+    improves accuracy and specificity.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Moving to the practical side of advanced retrieval techniques for strengthening
+    semantic search: retrieving relevant documents is a critical stage in RAG (Retrieval‑Augmented
+    Generation) systems such as chatbots and QA. The techniques below help handle
+    edge cases in basic search and increase both diversity and specificity of results.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Retrieving relevant documents is a critical stage in RAG (Retrieval‑Augmented
+    Generation) systems such as chatbots and QA. The techniques below help handle
+    edge cases in basic search and increase both diversity and specificity of results.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Before you start, import the necessary libraries and configure access to external
+    services (for example, OpenAI for embeddings).
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs: []
+  type: TYPE_PRE
+- en: Now configure a vector store to efficiently perform meaning‑based search (using
+    embeddings mapped to high‑dimensional vectors).
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE1]'
+  prefs: []
+  type: TYPE_PRE
+- en: Add a small demo set to showcase similarity search and MMR.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE2]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'A common issue is overly similar results. MMR balances relevance and diversity,
+    reducing repetition and widening coverage. A practical MMR example:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE3]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'This example shows the difference between a standard similarity search and
+    MMR: the latter yields relevant but less repetitive results.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Improving Accuracy with Metadata
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: Metadata helps refine queries and filter results by attributes (source, date,
+    and so on).
+  prefs: []
+  type: TYPE_NORMAL
+- en: Metadata‑filtered search
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: '[PRE4]'
+  prefs: []
+  type: TYPE_PRE
+- en: Combining Metadata and Self‑Query Retrievers
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: The Self‑Query Retriever extracts both the semantic query and the metadata filters
+    from a single user phrase — no manual filter specification required.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Initialization and metadata description
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: 'Before running metadata‑aware search, define the metadata attributes to use:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE5]'
+  prefs: []
+  type: TYPE_PRE
+- en: Configure the Self‑Query Retriever
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: '[PRE6]'
+  prefs: []
+  type: TYPE_PRE
+- en: Run a query with automatically inferred metadata
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: '[PRE7]'
+  prefs: []
+  type: TYPE_PRE
+- en: Implementing Contextual Compression
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Contextual compression works by extracting the segments of a document that are
+    most relevant to a given query. This method not only reduces the computational
+    load on LLMs but also improves answer quality by focusing on the most pertinent
+    information.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Setting Up the Environment
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: 'Before diving into contextual compression specifics, make sure your environment
+    is correctly configured with the necessary libraries:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE8]'
+  prefs: []
+  type: TYPE_PRE
+- en: Initializing the Compression Tools
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: 'Next, initialize the compression mechanism with a pretrained language model
+    that will identify and extract relevant parts of documents:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE9]'
+  prefs: []
+  type: TYPE_PRE
+- en: Creating the Contextual Compression Retriever
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: 'With the compressor ready, configure a retriever that integrates contextual
+    compression into the retrieval process:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE10]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Run a query and see how the compression‑aware retriever returns a more focused
+    set of documents:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE11]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Contextual compression aims to extract the essence of documents by focusing
+    on the segments most relevant to the query. Combined with MMR, it balances relevance
+    and diversity to provide a broader perspective on the topic. Configure the retriever
+    with compression and MMR:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE12]'
+  prefs: []
+  type: TYPE_PRE
+- en: This approach optimizes retrieval, ensuring results are not only relevant but
+    also diverse, preventing redundancy and improving users’ understanding of the
+    subject matter.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Beyond semantic search, there are other retrieval methods. TF‑IDF (Term Frequency‑Inverse
+    Document Frequency) is a statistical measure of a word’s importance in a collection:
+    it accounts for term frequency in a document and rarity across the corpus; high
+    values indicate good descriptors and work well for exact‑match search. SVM (Support
+    Vector Machine) can be used for document classification and indirectly improve
+    retrieval by filtering or ranking documents by predefined categories.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Useful Links
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'LangChain Self‑Query Retriever: https://python.langchain.com/docs/modules/data_connection/retrievers/self_query'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'LangChain Maximal Marginal Relevance Retriever: https://python.langchain.com/docs/modules/data_connection/retrievers/how_to/mmr'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'TF‑IDF Explained: https://www.youtube.com/watch?v=BtWcKEmM0g4'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'SVM Explained: https://www.youtube.com/watch?v=efR1C6CvhmE'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Theory Questions
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: What advantages does Maximum Marginal Relevance (MMR) offer over standard similarity
+    search for document retrieval?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: How do metadata improve precision and relevance in semantic search?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Describe how the Self‑Query Retriever works and its key advantage.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: When is it sensible to use TF‑IDF and SVM in information retrieval, and how
+    do they differ from embedding‑based methods?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Practical Tasks
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'Implement MMR with different parameters: experiment with `k` and `fetch_k`,
+    and analyze how they affect diversity and relevance.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Extend metadata: add new types (e.g., author, publication date, keywords) and
+    use them for filtered searches.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Integrate Self‑Query Retriever: expand metadata attribute descriptions to include
+    the new fields and verify it can automatically form complex, constrained queries.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Compare methods: implement a simple TF‑IDF‑ or SVM‑based search over your collection
+    and compare against semantic search, noting strengths and weaknesses in different
+    scenarios.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Best Practices
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Beyond using various retrieval techniques effectively, follow best practices
+    to ensure maximum performance and reliability.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Choosing the Right Strategy
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: Choosing between MMR, Self‑Query Retriever, or plain similarity search depends
+    on application requirements. When you need diverse results, MMR is optimal. If
+    user queries contain explicit metadata, Self‑Query Retriever simplifies the process.
+    Standard similarity search fits simpler queries.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Performance Optimization
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: Vector‑database performance, especially at large scale, is crucial. Regular
+    indexing, caching popular queries, and hardware optimization can significantly
+    speed up retrieval. Distributed vector databases can also help with scaling.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Metadata Management
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: Well‑structured and accurate metadata significantly improve search quality.
+    Establish a thoughtful metadata schema and apply it consistently across the collection.
+    Auto‑generating metadata with an LLM can help, but requires careful validation.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Monitoring and Iteration
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: Retrieval systems require continuous monitoring of performance and result quality.
+    Collect user feedback, analyze relevance metrics, and A/B test retrieval strategies
+    to iteratively improve the system.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Conclusion
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: This chapter surveyed advanced retrieval techniques designed to improve semantic‑search
+    systems. By addressing limitations around diversity, specificity, and relevance,
+    these methods provide a path toward more intelligent and effective retrieval.
+    Through practical application of MMR, self‑query retrieval, contextual compression,
+    and alternative document‑retrieval methods, developers can build systems that
+    not only understand the semantic content of queries but also deliver rich, diverse,
+    and targeted answers.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Following best practices ensures retrieval systems are both efficient and effective.
+    As NLP continues to evolve, staying up‑to‑date with advances in retrieval technologies
+    will be key to maintaining an edge in semantic‑search capabilities.
+  prefs: []
+  type: TYPE_NORMAL
+- en: In sum, integrating advanced retrieval techniques into semantic‑search systems
+    represents a significant step forward. With careful selection and optimization,
+    developers can build solutions that substantially enhance user experience by delivering
+    accurate, diverse, and contextually relevant information in response to complex
+    queries.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Additional Theory Questions
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Explain the principle of Maximum Marginal Relevance (MMR) and its role in improving
+    retrieval quality.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: How does self‑query retrieval handle queries that combine semantic content and
+    metadata?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Explain contextual compression in document retrieval and why it matters.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: List the environment‑setup steps for advanced retrieval using the OpenAI API
+    and LangChain.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: How does initializing a vector database enable efficient semantic similarity
+    search?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Describe how to populate and use a vector database for similarity and diversified
+    (MMR) search.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: In advanced document retrieval, what advantages does MMR bring for ensuring
+    diversity?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: How can metadata be leveraged to increase specificity in document‑retrieval
+    systems?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Discuss the benefits and challenges of self‑query retrievers in semantic search.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: What role does contextual compression play in reducing compute load and improving
+    answer quality?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: What best practices matter most when implementing advanced retrieval in semantic‑search
+    systems?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Compare the effectiveness of vector‑based retrieval with TF‑IDF and SVM in document
+    retrieval.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: How does integrating advanced retrieval techniques improve performance and UX
+    in semantic‑search systems?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: What impact might future NLP advances have on advanced retrieval for semantic
+    search?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Additional Practical Tasks
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'Implement a Python class `VectorDatabase` with methods:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '`__init__(self, persist_directory: str)`: initialize the vector DB and its
+    persistence directory.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '`add_text(self, text: str)`: embed text into a high‑dimensional vector using
+    OpenAI embeddings and store it. Assume a function `openai_embedding(text: str)
+    -> List[float]` returns the embedding vector.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '`similarity_search(self, query: str, k: int) -> List[str]`: perform similarity
+    search and return the top‑`k` most similar texts. Use a simplified similarity
+    function.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Write a function `compress_document` that takes a list of strings (a document)
+    and a query string, and returns a list of strings where each element is a compressed
+    segment of the document relevant to the query. Assume an external utility `compress_segment(segment:
+    str, query: str) -> str` that compresses individual segments for the query.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Implement `max_marginal_relevance` that takes a list of document IDs, a query,
+    and two parameters `lambda` and `k`, and returns a list of `k` IDs selected by
+    the Maximum Marginal Relevance criterion. Assume similarity function `similarity(doc_id:
+    str, query: str) -> float` and diversity function `diversity(doc_id1: str, doc_id2:
+    str) -> float`.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Write `initialize_vector_db` that demonstrates how to populate a vector DB with
+    a list of predefined texts, then run similarity and diversified searches, printing
+    both sets of results. Use the `VectorDatabase` class from task 1 as the backing
+    store.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL

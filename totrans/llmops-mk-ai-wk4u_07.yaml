@@ -1,0 +1,148 @@
+- en: '1.4 Advanced Machine Reasoning: Strategies'
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 原文：[https://boramorka.github.io/LLM-Book/en/CHAPTER-1/1.4%20Advanced%20Machine%20Reasoning/](https://boramorka.github.io/LLM-Book/en/CHAPTER-1/1.4%20Advanced%20Machine%20Reasoning/)
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: 'Advanced machine reasoning brings together a set of practices that help language
+    models solve complex tasks more reliably and transparently. Chain of Thought (CoT)
+    encourages step‑by‑step solutions, breaking the problem into logical stages. This
+    approach improves accuracy and makes the reasoning auditable: the user can see
+    how the model arrived at the answer, which is especially helpful for multi‑constraint
+    tasks, comparative analysis, and calculations. In education, CoT mimics a tutor
+    who guides you through each step rather than giving a finished answer. In customer
+    support, it helps unpack complicated requests: clarify details, check assumptions,
+    fix misunderstandings, and provide a correct conclusion.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: In parallel with CoT, teams often use Inner Monologue, where intermediate reasoning
+    is hidden and only the result (or a minimal slice of logic) is shown. This is
+    appropriate when exposing internal steps could harm learning (avoiding “spoilers”),
+    when sensitive information is involved, or when extra details would degrade the
+    user experience.
+  prefs: []
+  type: TYPE_NORMAL
+- en: To make the examples reproducible, start by preparing the environment and API
+    client.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE1]'
+  prefs: []
+  type: TYPE_PRE
+- en: Next, we’ll set up a wrapper for requests and move to CoT prompting, where the
+    reasoning is structured into steps under a special delimiter. The system message
+    describes the analysis stages, and the user input is wrapped in delimiters, simplifying
+    parsing and later post‑processing.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE2]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE3]'
+  prefs: []
+  type: TYPE_PRE
+- en: To compare approaches, first print the full answer with intermediate CoT steps,
+    then apply an Inner Monologue variant where only the final portion is shown to
+    the user. If the model returns text with steps separated by `step_delimiter`,
+    you can keep just the final segment — keeping the interface succinct where the
+    “inner workings” aren’t needed.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE4]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'The result is two modes of the same solution: a detailed one, with a visible
+    chain of steps, and a concise one showing only the outcome. Clear prompt design
+    helps in both cases; keep refining your prompts based on observed behavior. When
+    UI clarity matters and extra details are undesirable, prefer Inner Monologue for
+    display while still leveraging internal step‑by‑step analysis for quality control.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Theory Questions
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: What is Chain of Thought (CoT) and why is it useful for multi‑step tasks?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: How does CoT transparency increase user trust in model answers?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: How does CoT help in educational scenarios?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: How does a reasoning chain improve the quality of support chatbot answers?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: What is Inner Monologue, and how does it differ from CoT in terms of what the
+    user sees?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Why is Inner Monologue important when dealing with sensitive information?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: How can Inner Monologue help in learning scenarios without revealing “spoilers”?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: What steps are needed to prepare the environment for OpenAI API examples?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: How is the `get_response_for_queries` function structured?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: How does CoT prompting simplify handling complex queries?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: How does the system/user prompt structure help answer product questions?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Why is extracting only the final part of the answer useful when using Inner
+    Monologue?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Practical Tasks
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Implement `chain_of_thought_prompting(query)`, which generates a system prompt
+    with step structure and wraps the user query in a delimiter.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Write `get_final_response(output, delimiter)` to extract the last part of the
+    answer and handle possible errors.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Create a script that sends two queries — one with CoT and one with Inner Monologue
+    — and prints both responses.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Implement `validate_response_structure(resp, delimiter)` to check that the answer
+    contains the required number of steps.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Build a `QueryProcessor` class that encapsulates CoT and Inner Monologue logic
+    (key loading, prompt assembly, request sending, post‑processing, and error handling).
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL

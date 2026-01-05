@@ -1,0 +1,129 @@
+- en: Answers 1.1
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 原文：[https://boramorka.github.io/LLM-Book/en/CHAPTER-1/Answers%201.1/](https://boramorka.github.io/LLM-Book/en/CHAPTER-1/Answers%201.1/)
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: Theory
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'Key benefits of integrating the OpenAI API: generating natural text, automating
+    support, improving content creation, and expanding application functionality with
+    advanced AI — boosting user engagement and operational efficiency.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Obtaining and securing the API key: register on the OpenAI platform, select
+    a plan, and get your key in the dashboard. Store the key in environment variables
+    or a secrets manager; never commit it to a repository — this prevents unauthorized
+    access and potential losses.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '`temperature`: controls creativity and variability of generated text. Low values
+    make responses more predictable; higher values increase diversity. Choose based
+    on the task.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Keys should be stored outside code (env vars or secret managers) to avoid leaks
+    through source code and version control systems (VCS).
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Model choice influences quality, speed, and cost. Balance model capability and
+    resources to fit your app’s requirements.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Response metadata (e.g., token counts in `usage`) helps optimize prompts, manage
+    costs, and use the API more efficiently.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: An interactive interface includes dialogue history, input widgets, a send button,
+    and panels to display responses. It updates in real time as answers arrive.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Best practices: post‑processing (style and grammar), personalization to user
+    context, collecting feedback, and monitoring performance and spend.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Pitfalls: over‑trusting model output without checks. Use validation, a mix
+    of automated and manual review, monitoring, and fine‑tuning.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Ethics and privacy: comply with data regulations, be transparent about AI’s
+    role, implement review/correction processes, and consider social impact.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Practice
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Below is a progression of Python scripts for the OpenAI API — from a basic request
+    to error handling and a CLI.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Task 1: Basic API request'
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Task 2: Secure key handling'
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: '[PRE1]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Task 3: Interpreting the response'
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: '[PRE2]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Task 4: Error handling'
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: '[PRE3]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Task 5: CLI chat without post‑processing'
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: '[PRE4]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Task 6: Post‑processing'
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: '[PRE5]'
+  prefs: []
+  type: TYPE_PRE
+- en: Tasks 7–8 (ideas)
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: Generate a post outline for a user‑provided topic and output a bulleted list.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Log response time and token usage for each call to a file for later analysis
+    and optimization.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL

@@ -1,0 +1,142 @@
+- en: Answers 1.5
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 原文：[https://boramorka.github.io/LLM-Book/en/CHAPTER-1/Answers%201.5/](https://boramorka.github.io/LLM-Book/en/CHAPTER-1/Answers%201.5/)
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: Theory
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Prompt chaining decomposes a complex task into sequential, interconnected steps
+    (prompts), each solving a subtask. Unlike the “monolithic” approach, it simplifies
+    and improves control.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Analogies: step‑by‑step cooking of a complex dish; modular development where
+    each module contributes to the final result.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Workflow management in chaining means checkpointing state after each step and
+    adapting the next step to results so far.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Resource savings: each step processes only what’s needed, reducing computation
+    versus one long prompt.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Error reduction: focusing on a single subtask simplifies debugging and enables
+    targeted improvements.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Dynamic information loading matters due to context limits; chaining injects
+    relevant data as needed.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Core steps: task decomposition, state management, prompt design, data loading/pre‑processing,
+    dynamic context injection.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Best practices: avoid unnecessary complexity, write clear prompts, manage external
+    context, aim for efficiency, and test continuously.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: The examples use `dotenv` and `openai` for configuration and API calls.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: The system message defines structure and format, increasing precision and consistency.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: The product database stores details; lookup functions by name or category support
+    effective support answers.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Converting JSON strings to Python objects simplifies downstream processing in
+    chains.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Formatting a user answer from data keeps interactions informative and relevant.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Chaining lets the system move from the initial request to troubleshooting, warranty,
+    and recommendations — covering complex support scenarios.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Practice
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: '`retrieve_model_response` function:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs:
+  - PREF_IND
+  type: TYPE_PRE
+- en: 'Extracting products/categories from a request:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE1]'
+  prefs:
+  - PREF_IND
+  type: TYPE_PRE
+- en: 'Product database helpers:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE2]'
+  prefs:
+  - PREF_IND
+  type: TYPE_PRE
+- en: 'JSON string to list:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE3]'
+  prefs:
+  - PREF_IND
+  type: TYPE_PRE
+- en: 'Generate a user‑facing answer:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE4]'
+  prefs:
+  - PREF_IND
+  type: TYPE_PRE
+- en: 'End‑to‑end support scenario: describe how the assistant handles an initial
+    product inquiry, troubleshooting, a warranty question, and accessory recommendations
+    using the functions above.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE5]'
+  prefs:
+  - PREF_IND
+  type: TYPE_PRE
+- en: 'This sequence demonstrates a complete, chained workflow where the assistant:
+    - Extracts mentioned entities and consults a product database. - Provides step‑wise
+    troubleshooting tailored to the problem. - Explains warranty coverage clearly
+    and concisely. - Offers personalized accessory recommendations aligned with the
+    user’s interests.'
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL

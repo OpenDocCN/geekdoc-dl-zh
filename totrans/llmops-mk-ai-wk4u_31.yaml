@@ -1,0 +1,88 @@
+- en: Answers 1.6
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 原文：[https://boramorka.github.io/LLM-Book/en/CHAPTER-1/Answers%201.6/](https://boramorka.github.io/LLM-Book/en/CHAPTER-1/Answers%201.6/)
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: Theory
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Evaluating LLM answers is necessary to understand effectiveness, alignment with
+    goals, and areas to improve. Evaluate accuracy, relevance, and completeness.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Key metrics: accuracy, recall, F1, and user satisfaction ratings. These guide
+    product development and release decisions.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'The path to production is iterative: start with quick prototypes, find gaps,
+    gradually increase complexity and dataset coverage. Practical value matters more
+    than perfection.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: High‑stakes scenarios (medicine, law, finance) require stricter validation,
+    bias detection/mitigation, and ethical review.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Best practices: start small, iterate quickly, automate testing and quality
+    checks.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Automated tests speed up gold‑standard comparisons, surface errors, and provide
+    continuous feedback.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Choose metrics and rigor to match the application’s goals and risks; use heightened
+    rigor for high stakes.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: A full evaluation framework includes a rubric, protocols (who/what/how), and
+    gold‑standard comparison when needed.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Advanced techniques: semantic similarity (embeddings), crowd evaluation, automated
+    coherence/logic checks, and adaptive schemes tailored to the domain.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Continuous evaluation and diverse test cases increase reliability and relevance
+    across scenarios.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Practice (sketches)
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'Rubric‑based evaluation function:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs:
+  - PREF_IND
+  type: TYPE_PRE
+- en: 'Rubric template:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE1]'
+  prefs:
+  - PREF_IND
+  type: TYPE_PRE
+- en: The ideal (gold) answer serves as a comparison point for weighted scoring and
+    textual feedback.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL

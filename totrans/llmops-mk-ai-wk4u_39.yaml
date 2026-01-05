@@ -1,0 +1,183 @@
+- en: Answers 3.3
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 原文：[https://boramorka.github.io/LLM-Book/en/CHAPTER-3/Answers%203.3/](https://boramorka.github.io/LLM-Book/en/CHAPTER-3/Answers%203.3/)
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: Theory
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Setting up the environment for a quiz generator includes importing required
+    libraries, suppressing non‑essential warnings, and loading API keys (CircleCI,
+    GitHub, OpenAI).
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'The dataset structure should include a question template and a “quiz bank”
+    organized by subjects, categories, and facts. For example: “History”, “Technology”,
+    “Geography” with corresponding facts.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Prompt engineering guides the AI to generate content relevant to the selected
+    category. The prompt template can prescribe selecting subjects from the bank and
+    forming quiz questions.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: LangChain’s role is to structure the prompt, choose the language model (LLM),
+    and configure a parser for processing the output.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: The quiz generation pipeline is a composition of a structured prompt, model,
+    and parser, implemented using the LangChain Expression Language.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Functions such as `evaluate_quiz_content` are used to assess the relevance and
+    correctness of generated quiz content by checking for expected keywords.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Proper refusal handling is tested via `evaluate_request_refusal`, which ensures
+    the system returns the expected refusal for out‑of‑scope requests.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: The “science” test checks that generated questions contain indicators of scientific
+    topics (e.g., “physics”, “chemistry”, “biology”, “astronomy”).
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'The basic components of a CircleCI config for a Python project include: version,
+    orbs, jobs (build/test), Docker image, steps (checkout/tests), and workflows.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Customizing the CircleCI configuration for a project involves setting the Python
+    version, test commands, and adding extra steps to accurately reflect real build,
+    test, and deployment processes.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Practice
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'Solutions to the tasks:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Task 1: Creating a quiz dataset'
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: We define a Python dictionary representing a collection of quiz items, organized
+    by subjects, each with its categories and facts.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Task 2: Generating quiz questions using prompts'
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: This function generates quiz questions based on a given category by referencing
+    relevant subjects and facts from `quiz_bank`. It demonstrates string manipulation
+    and formatting in Python to construct meaningful quiz questions.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE1]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Task 3: Implementing LangChain‑style prompt structuring'
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: To simulate structuring a quiz prompt as it might be done with LangChain, we
+    can define a Python function that formats a list of quiz questions into a structured
+    prompt. This structured prompt imitates detailed instructions and formatting that
+    would guide an LLM in generating or processing quiz content.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE2]'
+  prefs: []
+  type: TYPE_PRE
+- en: This function accepts a list of quiz questions and returns a single string that
+    structures them to simulate input for a quiz‑generation LLM, using the specified
+    delimiter to separate questions.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Task 4: Quiz generation pipeline'
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: '[PRE3]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'This set of functions simulates a quiz generation pipeline: generating questions
+    based on a category, structuring them into a prompt, selecting a model, and executing
+    it to produce mock output.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Task 5: Reusable quiz generation function'
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: '[PRE4]'
+  prefs: []
+  type: TYPE_PRE
+- en: These functions provide a basic simulation of the processes involved in structuring
+    prompts for AI‑based quiz generation, assembling the pipeline to perform that
+    generation, and creating a reusable function for generating quizzes with customizable
+    parameters.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Task 6: Evaluating generated quiz content'
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: This function accepts generated quiz content and a list of expected keywords
+    to ensure the output aligns with expected topics or subjects. It raises an assertion
+    error if none of the expected keywords are present, indicating a mismatch between
+    expected and generated content.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE5]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Task 7: Handling invalid quiz requests'
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: This function simulates evaluating the system’s response to an invalid quiz
+    request. It verifies whether the generated refusal matches the expected refusal
+    response, confirming correct handling of requests the system cannot fulfill.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE6]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Task 8: Science quiz evaluation test'
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: This function demonstrates using `evaluate_quiz_content` in a specific test
+    scenario—checking that a generated science quiz includes questions related to
+    expected science topics. It simulates generating quiz content and then evaluates
+    it for science‑oriented keywords.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE7]'
+  prefs: []
+  type: TYPE_PRE
+- en: Taken together, these functions provide mechanisms for evaluating the relevance
+    and accuracy of generated quiz content, handling invalid requests appropriately,
+    and running targeted tests to ensure quiz content meets specific educational or
+    thematic criteria.
+  prefs: []
+  type: TYPE_NORMAL

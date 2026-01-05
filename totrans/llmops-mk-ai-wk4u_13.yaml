@@ -1,0 +1,163 @@
+- en: 2.2 LangChain Document Loaders
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 原文：[https://boramorka.github.io/LLM-Book/en/CHAPTER-2/2.2%20LangChain%20Document%20Loaders/](https://boramorka.github.io/LLM-Book/en/CHAPTER-2/2.2%20LangChain%20Document%20Loaders/)
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: 'For LLM‑powered data apps and conversational interfaces, it’s critical to load
+    data efficiently, normalize it, and use it across diverse sources. In the LangChain
+    ecosystem, “loaders” are components that extract information from websites, databases,
+    and media files and convert it into a standard document object with content and
+    metadata. Dozens of formats (PDF, HTML, JSON, etc.) and sources are supported
+    — from public ones (YouTube, Twitter, Hacker News) to enterprise tools (Figma,
+    Notion). There are also loaders for tabular and service data (Airbyte, Stripe,
+    Airtable, and more), enabling semantic search and QA not only over unstructured
+    data but also strictly structured datasets. This modularity lets you build targeted
+    pipelines: sometimes it’s enough to load and clean text; other times you’ll auto‑create
+    embeddings, extract entities, aggregate, and summarize.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'We start with basic environment prep: install dependencies, configure API keys,
+    and read them from `.env` for safe access to external data.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs: []
+  type: TYPE_PRE
+- en: A common scenario is working with PDFs. The example below shows how to load
+    a document (e.g., a lecture transcript), clean and tokenize text, count word frequencies,
+    and save a cleaned version for later analysis; we explicitly handle and log empty
+    pages, and metadata is available for spot checks.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE1]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Video is equally important. We can fetch YouTube audio, transcribe it with
+    Whisper via LangChain, and begin analysis immediately: split into sentences, assess
+    sentiment (polarity and subjectivity) with `TextBlob`, and optionally add entity
+    extraction, key‑phrase detection, and summarization.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE2]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'For web content, we load a page by URL, clean the HTML, extract links and headings,
+    then do a simple summary: sentence tokenization, stop‑word filtering, frequency
+    analysis, and a brief digest.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE3]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Structured Notion exports are also easy to process: load Markdown files, convert
+    to HTML for convenient parsing, extract headings and links, put metadata and parsed
+    content into a DataFrame, filter (e.g., by a keyword in the title), and, if present,
+    compute category breakdowns.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE4]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'When working with loaders, keep an eye on external API costs (e.g., Whisper)
+    and optimize calls; normalize data immediately after loading (cleaning, chunking,
+    etc.); and if a source is missing — contribute your own loader to LangChain open
+    source. Keep the docs handy for guidance: LangChain (https://github.com/LangChain/langchain)
+    and OpenAI Whisper (https://github.com/openai/whisper). This practice lays the
+    foundation for more advanced processing and integration of your data into LLM
+    applications.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Theory Questions
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: What are document loaders in LangChain and what role do they play?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: How do loaders for unstructured data differ from those for structured data?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: How do you prepare the environment for loaders (packages, API keys, `.env`)?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: How does `PyPDFLoader` work and what does PDF pre‑processing give you?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Why clean and tokenize text when processing PDFs?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: How do you transcribe a YouTube video with Whisper via LangChain?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: How do you apply sentence tokenization and sentiment analysis to a transcript?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: How do you load and process web content with `WebBaseLoader`?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: How do you extract and summarize page content by URL?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: How does `NotionDirectoryLoader` help analyze Notion exports?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: What practices matter when using loaders (cost awareness, pre‑processing)?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Why and how can you contribute new loaders to LangChain?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Practical Tasks
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Modify the PDF analysis to ignore stop words (`nltk.stopwords`); print the top‑5
+    most frequent non‑stop words.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Write a function that transcribes a YouTube URL (Whisper) and returns the first
+    100 words; include error handling.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Create a script: load a page by URL, strip HTML tags, and print clean text
+    (use BeautifulSoup).'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'For a Notion export directory: convert Markdown to HTML, extract and print
+    all links (text + href).'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Extend the YouTube transcription with `TextBlob` sentiment: print polarity
+    and a coarse label (positive/neutral/negative).'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Build a DataFrame from Notion documents, add a “word count” column, and print
+    titles of the three longest docs.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: For a given URL — load the page, extract the main text, and print a simple summary
+    (first and last sentences).
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL

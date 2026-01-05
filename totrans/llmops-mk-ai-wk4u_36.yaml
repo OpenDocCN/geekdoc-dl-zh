@@ -1,0 +1,92 @@
+- en: Answers 2.6
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 原文：[https://boramorka.github.io/LLM-Book/en/CHAPTER-2/Answers%202.6/](https://boramorka.github.io/LLM-Book/en/CHAPTER-2/Answers%202.6/)
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: Theory
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'Three stages of RAG‑QA: accept the query, retrieve relevant documents, and
+    generate the answer.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Context window constraints: because the LLM context is limited, you cannot
+    pass every fragment. MapReduce and Refine help aggregate or iteratively refine
+    information across multiple documents.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Vector database: stores document embeddings and provides fast retrieval of
+    the most relevant documents based on semantic similarity.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'RetrievalQA chain: combines retrieval and answer generation, improving relevance
+    and accuracy of results.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'MapReduce and Refine: MapReduce quickly produces a summary from many documents;
+    Refine sequentially improves the answer, which is useful when precision is critical.
+    Choose based on the task.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Distributed systems: account for network latency and serialization when operating
+    in distributed setups.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Experimentation: try MapReduce and Refine; effectiveness depends heavily on
+    data types and question styles.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'RetrievalQA limitation: no built‑in dialogue memory, which makes maintaining
+    context across follow‑ups difficult.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Dialogue memory: needed to incorporate previous turns and provide contextual
+    answers during longer conversations.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Further study: new LLM approaches, their impact on RAG systems, and memory
+    strategies in RAG chains.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Practical Tasks
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: '1.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs: []
+  type: TYPE_PRE
+- en: '2.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE1]'
+  prefs: []
+  type: TYPE_PRE
+- en: '3.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE2]'
+  prefs: []
+  type: TYPE_PRE
+- en: '4.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE3]'
+  prefs: []
+  type: TYPE_PRE

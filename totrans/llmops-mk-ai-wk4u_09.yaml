@@ -1,0 +1,127 @@
+- en: 1.6 Building and Evaluating LLM Applications
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 原文：[https://boramorka.github.io/LLM-Book/en/CHAPTER-1/1.6%20Building%20and%20Evaluating%20LLM%20Applications/](https://boramorka.github.io/LLM-Book/en/CHAPTER-1/1.6%20Building%20and%20Evaluating%20LLM%20Applications/)
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: Building applications powered by large language models (LLMs) requires more
+    than clean integration — it needs a systematic quality evaluation that covers
+    both objective and subjective aspects. In practice, you combine accuracy, recall,
+    and F1 (when gold answers are available) with user ratings and satisfaction metrics
+    (CSA), while also tracking operational indicators like cost and latency. This
+    blend exposes weak spots, informs release decisions, and guides targeted improvements.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The typical path to production starts with simple prompts and a small dataset
+    for quick iteration; then you broaden coverage, complicate scenarios, refine metrics
+    and quality criteria — remembering that perfection isn’t always necessary. It’s
+    often enough to consistently solve the target tasks within quality and budget
+    constraints. In high‑stakes scenarios (medicine, law enforcement, finance), stricter
+    validation becomes essential: random sampling and hold‑out tests, bias and error
+    checks, and attention to ethical and legal issues — preventing harm, ensuring
+    explainability, and enabling audit.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Good engineering style emphasizes modularity and fast iteration, automated regression
+    tests and measurements, thoughtful metric selection aligned with business goals,
+    and mandatory bias/fairness analysis with regular reviews.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'To make evaluation reproducible, use rubrics and evaluation protocols: define
+    criteria in advance — relevance to user intent and context, factual correctness,
+    completeness, and coherence/fluency — as well as the process, scales, and thresholds.
+    For subjective tasks, use multiple independent raters and automatic consistency
+    checks. Where possible, compare answers to ideal (expert) responses — a “gold
+    standard” provides an anchor for more objective judgments. Here’s a small environment
+    scaffold and call function for reproducible experiments and evaluations:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Next, formalize rubric‑based evaluation and assign weights to compute an overall
+    score with detailed feedback. Below is a template where the model produces an
+    assessment according to given criteria; the parsing is a stub and should be replaced
+    with logic suited to your model’s output format:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE1]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'When you need a gold‑standard comparison, explicitly compare the model’s answer
+    with the ideal expert answer and score high‑priority criteria (factual accuracy,
+    alignment, completeness, coherence). Here’s a skeleton that returns both an aggregate
+    score and the raw comparison text for audit:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE2]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'On top of these basics, add advanced techniques: evaluate semantic similarity
+    via embeddings and similarity metrics (not just surface overlap), bring in independent
+    reviewers for crowd evaluation, include automated checks for coherence and logic,
+    and build adaptive evaluation frameworks tailored to your domain and task types.
+    In production, continuous evaluation is crucial: track version and metric history;
+    close the loop from user feedback back to development; include diverse cases,
+    edge cases, and cultural/linguistic variation; involve experts (including blind
+    reviews to reduce bias); compare with alternative models; and employ specialized
+    “judges” to detect contradictions and factual errors. Together, rigorous methods
+    and constant iteration — plus rubrics, gold standards, expert reviews, and automated
+    checks — help you build reliable and ethical systems.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Theory Questions
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Why evaluate LLM answers, and along which dimensions?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Give examples of metrics and explain their role in development.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: What does the iterative path from development to production look like?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Why do high‑stakes scenarios require stricter rigor? Give examples.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: List best practices for bootstrapping, iteration, and automated testing.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: How do automated tests help development?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Why should metrics be tuned to the specific task?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: How do you build a rubric and evaluation protocols?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Which advanced evaluation techniques apply and why?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: How do continuous evaluation and broad test coverage improve reliability?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Practical Tasks
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Write a function that reads the API key from the environment, queries the LLM,
+    and measures runtime and tokens used.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL

@@ -1,0 +1,115 @@
+- en: Answers 1.3
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 原文：[https://boramorka.github.io/LLM-Book/en/CHAPTER-1/Answers%201.3/](https://boramorka.github.io/LLM-Book/en/CHAPTER-1/Answers%201.3/)
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: Theory
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'Integration of the OpenAI Moderation API: obtain an API key, add a client library
+    on the backend, and insert moderation into the content submission pipeline so
+    all data is analyzed before publication.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Customization: tune sensitivity, focus on specific violations, and use your
+    own allow/deny lists in line with community standards and compliance requirements.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Extending moderation: beyond text, add checks for images and video (using OpenAI
+    tools or third‑party solutions) for comprehensive protection.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Delimiters reduce prompt‑injection risk by separating user input from system
+    instructions and preserving command integrity.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Isolating commands with delimiters clearly separates executable instructions
+    from user data, preventing injection of malicious directives.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Additional measures: strict input validation, least‑privilege design, allow‑lists,
+    regular expressions, monitoring, and logging to detect anomalies.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Direct assessment: ask the model to classify input as an injection attempt
+    or not — this reduces false positives and improves response accuracy.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Response measures: notify and educate users, ask them to rephrase, isolate
+    suspicious content for human review, and dynamically adjust sensitivity.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Pros and cons of direct assessment: accuracy and adaptability versus development/maintenance
+    complexity and the need to balance security with UX.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Combining the Moderation API with anti‑injection strategies significantly improves
+    the safety and integrity of UGC platforms.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Practice (sketches)
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'Moderate a single text fragment:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs:
+  - PREF_IND
+  type: TYPE_PRE
+- en: 'Remove a delimiter from a string:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE1]'
+  prefs:
+  - PREF_IND
+  type: TYPE_PRE
+- en: 'Check input length:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE2]'
+  prefs:
+  - PREF_IND
+  type: TYPE_PRE
+- en: 'User session with simple heuristics:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE3]'
+  prefs:
+  - PREF_IND
+  type: TYPE_PRE
+- en: 'Direct assessment for injection (stub logic):'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE4]'
+  prefs:
+  - PREF_IND
+  type: TYPE_PRE
+- en: 'Example integration in a main loop:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE5]'
+  prefs:
+  - PREF_IND
+  type: TYPE_PRE

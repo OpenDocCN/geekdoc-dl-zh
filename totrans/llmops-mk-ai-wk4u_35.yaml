@@ -1,0 +1,108 @@
+- en: Answers 2.5
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 原文：[https://boramorka.github.io/LLM-Book/en/CHAPTER-2/Answers%202.5/](https://boramorka.github.io/LLM-Book/en/CHAPTER-2/Answers%202.5/)
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: Theory
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'Maximum Marginal Relevance (MMR): balances relevance and diversity by selecting
+    documents close to the query yet dissimilar to each other.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Self‑Query Retrieval: splits a query into semantic content and metadata constraints
+    for precise content‑plus‑attribute retrieval.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Contextual compression: extracts only the most relevant segments from documents,
+    reducing noise and improving answer quality.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Environment setup: install libraries, configure API access (for embeddings),
+    and initialize a vector store — the foundation for advanced retrieval.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Vector stores: hold embeddings and power fast similarity search.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Populating the store: add texts and run similarity search; MMR helps eliminate
+    redundancy.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Boosting diversity with MMR: reduces clustering of near‑duplicates and broadens
+    coverage.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Metadata for specificity: attributes (e.g., date, type) improve precision and
+    relevance.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Self‑Query Retriever: automatically extracts both semantic and metadata parts
+    from user input.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Benefits of contextual compression: saves computation and focuses on the essential.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Best practices: tune MMR, leverage metadata wisely, configure compression carefully,
+    and prepare documents thoroughly.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Combining methods: embedding‑based retrieval excels at meaning, while TF‑IDF
+    or SVM can help for keyword or classification‑based scenarios.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Advantages of advanced techniques: improved precision, diversity, context,
+    and overall UX.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'NLP outlook: continued progress will yield even smarter handling of complex
+    queries.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Practical Tasks
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: '1.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs: []
+  type: TYPE_PRE
+- en: '2.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE1]'
+  prefs: []
+  type: TYPE_PRE
+- en: '3.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE2]'
+  prefs: []
+  type: TYPE_PRE
+- en: '4.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE3]'
+  prefs: []
+  type: TYPE_PRE

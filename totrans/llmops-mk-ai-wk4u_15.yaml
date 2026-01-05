@@ -1,0 +1,246 @@
+- en: 2.4 The Power of Embeddings
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 原文：[https://boramorka.github.io/LLM-Book/en/CHAPTER-2/2.4%20The%20Power%20of%20Embeddings/](https://boramorka.github.io/LLM-Book/en/CHAPTER-2/2.4%20The%20Power%20of%20Embeddings/)
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: '**Requirements:** `pip install langchain langchain-community langchain-openai
+    chromadb`'
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: ''
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: '**Note:** LangChain imports have been updated. For latest versions, use `from
+    langchain_community.vectorstores import Chroma` and `from langchain_community.document_loaders
+    import PyPDFLoader` instead of the older `langchain.*` paths.'
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: 'Embeddings are numeric representations of text: words, sentences, and documents
+    are mapped to vectors in a high‑dimensional space, and semantically similar texts
+    end up close together geometrically. These representations are learned from large
+    corpora: the model associates a word with its context and captures semantic relations,
+    so synonyms and terms that appear in similar contexts lie nearby. As a result,
+    semantic search goes beyond exact “keyword” matching: compute an embedding for
+    each document (or chunk) and for the user query, compare vector proximity via
+    cosine or another metric, and rank materials by semantic similarity — even without
+    exact matches. This shifts how we analyze, store, and search: interactions become
+    more meaningful and recommendations more precise.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: On top of embeddings sit vector stores — databases optimized for vector storage
+    and fast nearest‑neighbor search. They use specialized indexes and algorithms
+    to answer similarity queries over large datasets and fit both research and production.
+    Choose based on data size (from in‑memory options for small sets to distributed
+    systems at scale), persistence (do you need durable disk storage or a transient
+    store for prototypes), and use case (lab vs. production). For quick prototyping,
+    Chroma is a common choice — a lightweight in‑memory store; for larger and long‑lived
+    systems, use distributed/cloud vector DBs. In a typical semantic‑search pipeline,
+    documents are first split into meaningful chunks, then embeddings are computed
+    and indexed; on a query, its embedding is computed, nearest chunks are retrieved,
+    and the extracted parts plus the query are fed to an LLM to generate a coherent
+    answer.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Before diving into embeddings and vector DBs, prepare the environment: imports,
+    API keys, and basic config.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Next, load documents and split them into semantically meaningful fragments
+    — this makes data easier to manage and prepares it for embedding creation. We’ll
+    use a series of PDFs (with some “noise” like duplicates) for demonstration:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE1]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'After loading, split documents into chunks to improve manageability and downstream
+    efficiency:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE2]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Now compute embeddings for each chunk: turn text into vectors that reflect
+    semantic meaning.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE3]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Index the vectors in a vector store to enable fast similarity search. For demos,
+    Chroma — an in‑memory option — works well:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE4]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Now perform a similarity search — this is where embeddings + vector DBs shine:
+    quickly selecting the most relevant fragments for a query.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE5]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Finally, consider edge cases and search quality improvements. Even a useful
+    baseline runs into issues: duplicates and irrelevant documents are common problems
+    that degrade results.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE6]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'From there, you can apply strategies to mitigate such failures and retrieve
+    fragments that are both relevant and sufficiently diverse. Taken together, embeddings
+    and vector DBs are a powerful pairing for semantic search over large corpora:
+    solid text preparation, thoughtful indexing, and fast nearest‑neighbor querying
+    enable systems that understand complex prompts; analyzing failures and adding
+    techniques further improves robustness and accuracy. For deeper study, see the
+    OpenAI API docs on embedding generation and surveys of vector databases that compare
+    technologies and usage scenarios.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Theory Questions
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: What is the primary goal of turning text into embeddings?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: How do embeddings help measure semantic similarity of words and sentences?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Describe how word embeddings are created and the role of context.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: How do embeddings improve semantic search over keyword‑based approaches?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: What roles do document and query embeddings play in semantic search?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: What is a vector store, and why is it important for efficient search?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: What criteria matter when choosing a vector database?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Why is Chroma convenient for prototypes, and what are its limitations?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Describe a semantic‑search pipeline using embeddings and a vector DB.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: How does document splitting improve search granularity and relevance?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Why embed chunks, and how does that help retrieval?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Why index the vector store for similarity search?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: How is a query processed, and which similarity metrics are used?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: How does answer generation improve UX in semantic‑search apps?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: What environment setup steps are needed?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Give an example where loading and splitting text are critical to search quality.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: How do embeddings “transform” text, and how can you demonstrate vector similarity?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: What should you consider when configuring Chroma?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: How does similarity search find relevant fragments?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: What failures are typical in semantic search, and how can you address them?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Practical Tasks
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Implement `generate_embeddings` that returns a list of “embeddings” for strings
+    (e.g., simulated by string length).
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Implement `cosine_similarity` to compute cosine similarity between two vectors.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Create `SimpleVectorStore` with `add_vector` and `find_most_similar` (cosine‑based).
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Load text from a file, split into chunks of a given size (e.g., 500 characters),
+    and print them.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Implement `query_processing`: generate a query embedding (placeholder), find
+    the nearest chunk in `SimpleVectorStore`, and print it.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Implement `remove_duplicates`: return a list without duplicate chunks (exact
+    match or by similarity threshold).'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Initialize `SimpleVectorStore`, add placeholder embeddings, run a semantic search,
+    and print top‑3 results.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Implement `embed_and_store_documents`: generate placeholder embeddings for
+    chunks, store them in `SimpleVectorStore`, and return it.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Implement `vector_store_persistence`: demonstrate saving/loading `SimpleVectorStore`
+    (serialization/deserialization).'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Implement `evaluate_search_accuracy`: for queries and expected chunks, run
+    search and compute match rate.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL

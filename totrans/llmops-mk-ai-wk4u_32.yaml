@@ -1,0 +1,121 @@
+- en: Answers 2.2
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 原文：[https://boramorka.github.io/LLM-Book/en/CHAPTER-2/Answers%202.2/](https://boramorka.github.io/LLM-Book/en/CHAPTER-2/Answers%202.2/)
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: Theory
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Document loaders are LangChain components that extract data from various sources
+    and formats, converting them into a unified document object (content + metadata).
+    They are the basis for bringing PDFs, HTML, JSON, and more into LLM apps.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Unstructured loaders target sources like YouTube, Twitter, Figma, Notion, etc.
+    Structured loaders target tabular/service sources (Airbyte, Stripe, Airtable),
+    enabling semantic search and QA over tables.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Environment prep includes installing packages, configuring API keys (e.g., OpenAI),
+    and loading environment variables from `.env`.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '`PyPDFLoader` loads PDFs by path, letting you extract, clean, and tokenize
+    text for downstream analysis (word frequencies, handling empty pages, etc.).'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Cleaning and tokenization — removing noise, lowercasing, and splitting into
+    words — are basic normalization steps for accurate counts and further processing.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'For YouTube: `GenericLoader` + `YoutubeAudioLoader` + `OpenAIWhisperParser`
+    download audio and transcribe it via Whisper.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Sentence tokenization enables more granular analysis. Sentiment analysis (e.g.,
+    with `TextBlob`) provides polarity/subjectivity information.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: For web content, use `WebBaseLoader(url)` plus `BeautifulSoup` to strip markup
+    and extract links/headings and other structure.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: After cleaning, you can extract key information and build a concise summary
+    based on stop‑word filtering and word frequencies.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '`NotionDirectoryLoader` reads exported Notion data (Markdown), converts it
+    to HTML for parsing, extracts structure (headings, links), and stores it in a
+    DataFrame for filtering and summarizing.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Practical tips: optimize API calls to control cost, pre‑process right after
+    loading, and consider contributing new loaders to LangChain.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Contributing new loaders expands the ecosystem, broadens supported sources,
+    and builds contributor expertise.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Practice
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: '1.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs: []
+  type: TYPE_PRE
+- en: '2.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE1]'
+  prefs: []
+  type: TYPE_PRE
+- en: '3.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE2]'
+  prefs: []
+  type: TYPE_PRE
+- en: '4.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE3]'
+  prefs: []
+  type: TYPE_PRE
+- en: '5.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE4]'
+  prefs: []
+  type: TYPE_PRE
+- en: '6.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE5]'
+  prefs: []
+  type: TYPE_PRE
+- en: '7.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE6]'
+  prefs: []
+  type: TYPE_PRE

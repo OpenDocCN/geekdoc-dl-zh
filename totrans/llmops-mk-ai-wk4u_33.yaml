@@ -1,0 +1,172 @@
+- en: Answers 2.3
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 原文：[https://boramorka.github.io/LLM-Book/en/CHAPTER-2/Answers%202.3/](https://boramorka.github.io/LLM-Book/en/CHAPTER-2/Answers%202.3/)
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: Theory
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: The goal of splitting is to produce meaningful chunks for effective search and
+    analysis.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Chunk size controls granularity: larger → more context; smaller → easier processing
+    but risk losing cohesion.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Overlap preserves context at boundaries and prevents loss of important information.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '`CharacterTextSplitter` splits by characters; `TokenTextSplitter` by tokens
+    (handy for LLM limits).'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: The recursive splitter uses a hierarchy of separators (paragraphs/sentences/words)
+    to preserve semantics.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Specialized splitters: `LanguageTextSplitter` for code (syntax‑aware) and `MarkdownHeaderTextSplitter`
+    (heading levels, adds metadata).'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Environment: libraries, keys, dependencies, imports — for robust processing.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '`RecursiveCharacterTextSplitter` preserves semantics and adapts to structure;
+    tune size/overlap/depth.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'The “alphabet” demo highlights differences: even slicing vs. semantically aware
+    splitting.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Characters vs. tokens depends on model limits, semantic needs, and text nature.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Splitting by Markdown headings preserves logical structure.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Best practices: keep meaning, tune overlap (avoid redundancy), enrich chunk
+    metadata.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Practical Tasks
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: '1.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs: []
+  type: TYPE_PRE
+- en: '2.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE1]'
+  prefs: []
+  type: TYPE_PRE
+- en: '3.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE2]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Example usage:'
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: '[PRE3]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'This implementation does the following:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: During initialization, it sorts header markers by length in descending order
+    so that longer (more specific) Markdown headers match first. This matters because
+    Markdown header levels differ by the number of `#` characters, and we want the
+    most specific header matched.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: It compiles a regular expression that matches any of the specified header markers
+    at the start of a line.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: The `split_text` method iterates over each line of the input Markdown, checking
+    for header matches. When it finds a header, it appropriately starts or ends a
+    chunk. Each chunk includes its starting header and all subsequent lines up to
+    the next header of the same or higher priority.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '4.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE4]'
+  prefs: []
+  type: TYPE_PRE
+- en: '5. To implement `MarkdownHeaderTextSplitter` as described, we follow these
+    steps:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Initialization: store header patterns with their names/levels to use during
+    splitting.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Text splitting: parse the input Markdown, identify headers by the given patterns,
+    and split into chunks. Each chunk starts with a header and includes the following
+    lines up to the next header of the same or higher priority.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE5]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Example usage:'
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: '[PRE6]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'This implementation does the following:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: During initialization, it sorts header markers by length in descending order
+    so that longer (more specific) Markdown headers match first. This matters because
+    Markdown header levels differ by the number of `#` characters, and we want the
+    most specific header matched.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: It compiles a regular expression that matches any of the specified header markers
+    at the start of a line.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: The `split_text` method iterates over each line of the input Markdown, checking
+    for header matches. When it finds a header, it appropriately starts or ends a
+    chunk. Each chunk includes its starting header and all subsequent lines up to
+    the next header of the same or higher priority.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL

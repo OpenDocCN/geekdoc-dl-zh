@@ -1,0 +1,210 @@
+- en: Answers 3.2
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 原文：[https://boramorka.github.io/LLM-Book/en/CHAPTER-3/Answers%203.2/](https://boramorka.github.io/LLM-Book/en/CHAPTER-3/Answers%203.2/)
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: Theory
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Kubeflow Pipelines automate ML workflows, providing reproducibility and saving
+    time through efficient management of complex pipelines.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: The `dsl` module provides decorators and classes for defining components and
+    pipeline structure, while the `compiler` is responsible for compiling the pipeline
+    into a format executable by the Kubeflow engine.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '`FutureWarning` messages can be selectively suppressed to improve log readability;
+    at the same time, it is important to keep track of documentation changes and update
+    the code accordingly.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Clearly defined interfaces and component reusability simplify integration, increasing
+    modularity and overall system efficiency.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: The `@dsl.component` decorator marks a function as a pipeline component, which
+    is an isolated, reusable step within the workflow.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Invoking a component returns a `PipelineTask` object, which represents a runtime
+    instance of the pipeline step and is used to pass data between components.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: A component’s output is passed via the `.output` attribute of the `PipelineTask`
+    object.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Using named arguments improves code clarity and helps prevent errors, especially
+    when working with many input parameters.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: When chaining components in a pipeline, you must pass one component’s `.output`
+    as the input to another to ensure a correct data flow.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: A pipeline is declared with the `@dsl.pipeline` decorator and is responsible
+    for orchestrating components. Important aspects include the execution environment
+    and proper handling of outputs.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Pipeline compilation is the process of converting its Python definition into
+    a YAML file, which can then be uploaded and run in the target Kubeflow environment.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Reusing ready‑made pipelines (e.g., PEFT for PaLM 2) significantly speeds up
+    development and helps maintain best practices.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Model versioning is critical for MLOps, ensuring reproducibility and auditability.
+    For example, you can add the date and time to the model name.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Pipeline arguments set input data and configuration for fine‑tuning, which is
+    crucial for correct execution.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Automation and orchestration in Kubeflow improve efficiency and scalability,
+    but require careful planning and a deep understanding of components and data flow.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Practice
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'Solutions for the tasks:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 1\. Setting up the Kubeflow Pipelines SDK
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs: []
+  type: TYPE_PRE
+- en: This script imports `dsl` and `compiler`, and suppresses `FutureWarning` messages
+    from `kfp.*` modules.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 2\. Defining a simple pipeline component
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: '[PRE1]'
+  prefs: []
+  type: TYPE_PRE
+- en: The component function `add_numbers`, marked with the `@dsl.component` decorator,
+    accepts two integers and returns their sum.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 3\. Suppressing specific warnings
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: '[PRE2]'
+  prefs: []
+  type: TYPE_PRE
+- en: This script suppresses `DeprecationWarning` for all modules.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 4\. Linking components in a pipeline
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: '[PRE3]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'The pipeline consists of two components: `generate_number`, which generates
+    a fixed number, and `double_number`, which doubles the input. The connection is
+    made by passing the first component’s `.output` as the input to the second.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 5\. Compiling and preparing the pipeline for execution
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: '[PRE4]'
+  prefs: []
+  type: TYPE_PRE
+- en: The pipeline is compiled into the `number_doubling_pipeline.yaml` file, which
+    can be uploaded and run in the Kubeflow environment.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 6\. Working with `PipelineTask` objects
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: '[PRE5]'
+  prefs: []
+  type: TYPE_PRE
+- en: The example shows that invoking a component returns a `PipelineTask` object,
+    and its result is accessed via `task.output`. In practice, such objects are manipulated
+    inside a pipeline function.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 7\. Handling errors in pipeline definitions
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: '[PRE6]'
+  prefs: []
+  type: TYPE_PRE
+- en: 8\. Automating data preparation for model training
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: '[PRE7]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'This script demonstrates a simple data preparation process: reading data from
+    a JSON file, transforming it (filtering by a condition), and saving the processed
+    data to another JSON file. This type of task can be encapsulated in a Kubeflow
+    Pipeline component to automate data preparation steps in ML training workflows.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 9\. Implementing model versioning in a pipeline
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: '[PRE8]'
+  prefs: []
+  type: TYPE_PRE
+- en: 10\. Parameterizing and executing a Kubeflow pipeline
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: For the purpose of this task, assume we are working in an environment with access
+    to a Kubeflow Pipeline execution API. Since execution details vary by platform
+    and API version, the following script is a hypothetical example based on common
+    patterns.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE9]'
+  prefs: []
+  type: TYPE_PRE
+- en: This script describes how to parameterize and submit a compiled Kubeflow pipeline
+    for execution, assuming an appropriate API or SDK method is available (`submit_pipeline_job`
+    in this hypothetical example). The actual submission method depends on your execution
+    environment or cloud provider.
+  prefs: []
+  type: TYPE_NORMAL
