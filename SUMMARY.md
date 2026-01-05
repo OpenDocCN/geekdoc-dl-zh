@@ -12,6 +12,7 @@
 +   [如何扩展你的模型](docs/hwt-sclup-yrmdl/README.md)
 +   [TensorFlow 学习指南](docs/learning-tf-zh/README.md)
 +   [LiLianWeng 博客中文翻译](docs/lilianweng/README.md)
++   [LLMOps：让人工智能为你工作](docs/llmops-mk-ai-wk4u/README.md)
 +   [llm.c 小书](docs/ltl-bk-llmc/README.md)
 +   [精通 JAX 编程](docs/ms-jax-prog/README.md)
 +   [NeptuneAI 博客中文翻译](docs/neptuneai/README.md)
