@@ -1,0 +1,319 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+  "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>2.5 Semantic Search — Advanced Strategies</title>
+<link href="../Styles/Style.css" type="text/css" rel="stylesheet"/>
+</head>
+<body>
+<h1>2.5 Semantic Search — Advanced Strategies</h1>
+<blockquote>原文：<a href="https://boramorka.github.io/LLM-Book/en/CHAPTER-2/2.5%20Semantic%20Search%20%E2%80%94%20Advanced%20Strategies/">https://boramorka.github.io/LLM-Book/en/CHAPTER-2/2.5%20Semantic%20Search%20%E2%80%94%20Advanced%20Strategies/</a></blockquote>
+                
+                  
+
+
+  
+  
+
+
+
+<p>Delivering precisely relevant information from large corpora is key to smart systems like chatbots and question‑answering (QA). Basic semantic search is a solid start, but there are edge cases where its quality and result diversity fall short. This chapter explores advanced retrieval techniques to improve both precision and variety.</p>
+<p>Search based purely on semantic proximity doesn’t always yield the most informative and diverse set of results. Advanced methods add mechanisms to balance diversity and relevance — especially important for complex queries that require nuance.</p>
+<p>Enter Maximum Marginal Relevance (MMR). MMR balances relevance and diversity: it selects documents that are close to the query while being dissimilar to each other. This reduces redundancy and helps cover different aspects of an answer.</p>
+<p>The procedure looks like this: first, select “candidates” by semantic similarity; then choose a final set that simultaneously accounts for relevance to the query and dissimilarity to the documents already selected. The outcome is a broader, more useful result set.</p>
+<p>Next comes Self‑Query Retrieval. This method suits queries that include both semantic content and metadata (e.g., “alien movies released in 1980”). It splits the request into a semantic component (for embedding search) and a metadata filter (e.g., “release year = 1980”).</p>
+<p>Finally, Contextual Compression extracts only the most relevant fragments from retrieved documents. This is useful when you don’t need an entire document. It requires an extra processing step (finding the most relevant parts) but significantly improves accuracy and specificity.</p>
+<p>Moving to the practical side of advanced retrieval techniques for strengthening semantic search: retrieving relevant documents is a critical stage in RAG (Retrieval‑Augmented Generation) systems such as chatbots and QA. The techniques below help handle edge cases in basic search and increase both diversity and specificity of results.</p>
+<p>Retrieving relevant documents is a critical stage in RAG (Retrieval‑Augmented Generation) systems such as chatbots and QA. The techniques below help handle edge cases in basic search and increase both diversity and specificity of results.</p>
+<p>Before you start, import the necessary libraries and configure access to external services (for example, OpenAI for embeddings).</p>
+<div class="highlight"><pre><span/><code><span class="c1"># Import required libraries</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">openai</span><span class="w"> </span><span class="kn">import</span> <span class="n">OpenAI</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+
+<span class="c1"># Add the project root to sys.path for relative imports</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">'../..'</span><span class="p">)</span>
+
+<span class="c1"># Load environment variables from .env for safe API key management</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dotenv</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_dotenv</span><span class="p">,</span> <span class="n">find_dotenv</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">load_dotenv</span><span class="p">(</span><span class="n">find_dotenv</span><span class="p">())</span>
+
+<span class="c1"># Initialize OpenAI using environment variables</span>
+<span class="n">client</span> <span class="o">=</span> <span class="n">OpenAI</span><span class="p">()</span>
+
+<span class="c1"># Ensure required packages are installed, including `lark` for parsing if needed</span>
+<span class="c1"># !pip install lark</span>
+</code></pre></div>
+<p>Now configure a vector store to efficiently perform meaning‑based search (using embeddings mapped to high‑dimensional vectors).</p>
+<div class="highlight"><pre><span/><code><span class="c1"># Import the Chroma vector store and OpenAI embeddings from LangChain</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain.vectorstores</span><span class="w"> </span><span class="kn">import</span> <span class="n">Chroma</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_openai</span><span class="w"> </span><span class="kn">import</span> <span class="n">OpenAIEmbeddings</span>
+
+<span class="c1"># Directory for the vector database to persist its data</span>
+<span class="n">persist_directory</span> <span class="o">=</span> <span class="s1">'vector_db/chroma/'</span>
+
+<span class="c1"># Initialize the embedding function using an OpenAI model</span>
+<span class="n">embedding_function</span> <span class="o">=</span> <span class="n">OpenAIEmbeddings</span><span class="p">()</span>
+
+<span class="c1"># Create a Chroma vector database with persistence and the embedding function</span>
+<span class="n">vector_database</span> <span class="o">=</span> <span class="n">Chroma</span><span class="p">(</span>
+    <span class="n">persist_directory</span><span class="o">=</span><span class="n">persist_directory</span><span class="p">,</span>
+    <span class="n">embedding_function</span><span class="o">=</span><span class="n">embedding_function</span>
+<span class="p">)</span>
+
+<span class="c1"># Print the current record count to verify readiness</span>
+<span class="c1"># Note: Using internal API for demo purposes. For production, use len() or other supported methods.</span>
+<span class="nb">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">vector_database</span><span class="o">.</span><span class="n">get</span><span class="p">()[</span><span class="s1">'ids'</span><span class="p">]))</span>  <span class="c1"># Alternative to deprecated _collection.count()</span>
+</code></pre></div>
+<p>Add a small demo set to showcase similarity search and MMR.</p>
+<div class="highlight"><pre><span/><code><span class="c1"># A small set of texts to populate the database</span>
+<span class="n">texts</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">"The Death Cap mushroom has a notable large fruiting body, often found above ground."</span><span class="p">,</span>
+    <span class="s2">"Among mushrooms, the Death Cap stands out for its large fruiting body, sometimes appearing in all-white."</span><span class="p">,</span>
+    <span class="s2">"The Death Cap, known for its toxicity, is one of the most dangerous mushrooms."</span><span class="p">,</span>
+<span class="p">]</span>
+
+<span class="c1"># Create a tiny demonstration vector database from the texts</span>
+<span class="n">demo_vector_database</span> <span class="o">=</span> <span class="n">Chroma</span><span class="o">.</span><span class="n">from_texts</span><span class="p">(</span><span class="n">texts</span><span class="p">,</span> <span class="n">embedding_function</span><span class="o">=</span><span class="n">embedding_function</span><span class="p">)</span>
+
+<span class="c1"># A sample query for the demo vector database</span>
+<span class="n">query_text</span> <span class="o">=</span> <span class="s2">"Discuss mushrooms characterized by their significant white fruiting bodies"</span>
+
+<span class="c1"># Similarity search: top‑2 most relevant</span>
+<span class="n">similar_texts</span> <span class="o">=</span> <span class="n">demo_vector_database</span><span class="o">.</span><span class="n">similarity_search</span><span class="p">(</span><span class="n">query_text</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Similarity search results:"</span><span class="p">,</span> <span class="n">similar_texts</span><span class="p">)</span>
+
+<span class="c1"># MMR search: diverse yet relevant (fetch extra candidates)</span>
+<span class="n">diverse_texts</span> <span class="o">=</span> <span class="n">demo_vector_database</span><span class="o">.</span><span class="n">max_marginal_relevance_search</span><span class="p">(</span><span class="n">query_text</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">fetch_k</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Diverse search (MMR) results:"</span><span class="p">,</span> <span class="n">diverse_texts</span><span class="p">)</span>
+</code></pre></div>
+<p>A common issue is overly similar results. MMR balances relevance and diversity, reducing repetition and widening coverage. A practical MMR example:</p>
+<div class="highlight"><pre><span/><code><span class="c1"># An information‑seeking query</span>
+<span class="n">query_for_information</span> <span class="o">=</span> <span class="s2">"what insights are available on data analysis tools?"</span>
+
+<span class="c1"># Standard similarity search: top‑3 relevant documents</span>
+<span class="n">top_similar_documents</span> <span class="o">=</span> <span class="n">vector_database</span><span class="o">.</span><span class="n">similarity_search</span><span class="p">(</span><span class="n">query_for_information</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+
+<span class="c1"># Show the beginning of the first two documents for comparison</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">top_similar_documents</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">page_content</span><span class="p">[:</span><span class="mi">100</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">top_similar_documents</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">page_content</span><span class="p">[:</span><span class="mi">100</span><span class="p">])</span>
+
+<span class="c1"># Note potential overlap. Introduce diversity with MMR.</span>
+<span class="n">diverse_documents</span> <span class="o">=</span> <span class="n">vector_database</span><span class="o">.</span><span class="n">max_marginal_relevance_search</span><span class="p">(</span><span class="n">query_for_information</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+
+<span class="c1"># Show the beginning of the first two diverse documents to observe differences</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">diverse_documents</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">page_content</span><span class="p">[:</span><span class="mi">100</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">diverse_documents</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">page_content</span><span class="p">[:</span><span class="mi">100</span><span class="p">])</span>
+</code></pre></div>
+<p>This example shows the difference between a standard similarity search and MMR: the latter yields relevant but less repetitive results.</p>
+<h3 id="improving-accuracy-with-metadata">Improving Accuracy with Metadata</h3>
+<p>Metadata helps refine queries and filter results by attributes (source, date, and so on).</p>
+<h4 id="metadatafiltered-search">Metadata‑filtered search</h4>
+<div class="highlight"><pre><span/><code><span class="c1"># A query scoped to a specific context</span>
+<span class="n">specific_query</span> <span class="o">=</span> <span class="s2">"what discussions were there about regression analysis in the third lecture?"</span>
+
+<span class="c1"># Similarity search with a metadata filter to target a specific lecture</span>
+<span class="n">targeted_documents</span> <span class="o">=</span> <span class="n">vector_database</span><span class="o">.</span><span class="n">similarity_search</span><span class="p">(</span>
+    <span class="n">specific_query</span><span class="p">,</span>
+    <span class="n">k</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+    <span class="nb">filter</span><span class="o">=</span><span class="p">{</span><span class="s2">"source"</span><span class="p">:</span> <span class="s2">"documents/cs229_lectures/MachineLearning-Lecture03.pdf"</span><span class="p">}</span>
+<span class="p">)</span>
+
+<span class="c1"># Inspect metadata to highlight the specificity of the search</span>
+<span class="k">for</span> <span class="n">document</span> <span class="ow">in</span> <span class="n">targeted_documents</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">document</span><span class="o">.</span><span class="n">metadata</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="combining-metadata-and-selfquery-retrievers">Combining Metadata and Self‑Query Retrievers</h3>
+<p>The Self‑Query Retriever extracts both the semantic query and the metadata filters from a single user phrase — no manual filter specification required.</p>
+<h4 id="initialization-and-metadata-description">Initialization and metadata description</h4>
+<p>Before running metadata‑aware search, define the metadata attributes to use:</p>
+<div class="highlight"><pre><span/><code><span class="c1"># Import required modules from LangChain</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_openai</span><span class="w"> </span><span class="kn">import</span> <span class="n">OpenAI</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain.retrievers.self_query.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">SelfQueryRetriever</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain.chains.query_constructor.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">AttributeInfo</span>
+
+<span class="c1"># Define the metadata attributes with detailed descriptions</span>
+<span class="n">metadata_attributes</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">AttributeInfo</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">"source"</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">"Specifies the source document path."</span><span class="p">,</span>
+        <span class="nb">type</span><span class="o">=</span><span class="s2">"string"</span><span class="p">,</span>
+    <span class="p">),</span>
+    <span class="n">AttributeInfo</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">"page"</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">"Page number within the lecture document."</span><span class="p">,</span>
+        <span class="nb">type</span><span class="o">=</span><span class="s2">"integer"</span><span class="p">,</span>
+    <span class="p">),</span>
+<span class="p">]</span>
+
+<span class="c1"># Note: switching to the OpenAI model gpt‑4o‑mini, as the previous default is deprecated</span>
+<span class="n">document_content_description</span> <span class="o">=</span> <span class="s2">"Detailed lecture notes"</span>
+<span class="n">language_model</span> <span class="o">=</span> <span class="n">OpenAI</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s1">'gpt-4o-mini'</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+</code></pre></div>
+<h4 id="configure-the-selfquery-retriever">Configure the Self‑Query Retriever</h4>
+<div class="highlight"><pre><span/><code><span class="c1"># Initialize the Self‑Query Retriever with the LLM, vector DB, and metadata attributes</span>
+<span class="n">self_query_retriever</span> <span class="o">=</span> <span class="n">SelfQueryRetriever</span><span class="o">.</span><span class="n">from_llm</span><span class="p">(</span>
+    <span class="n">language_model</span><span class="p">,</span>
+    <span class="n">vector_database</span><span class="p">,</span>
+    <span class="n">document_content_description</span><span class="p">,</span>
+    <span class="n">metadata_attributes</span><span class="p">,</span>
+    <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">)</span>
+</code></pre></div>
+<h4 id="run-a-query-with-automatically-inferred-metadata">Run a query with automatically inferred metadata</h4>
+<div class="highlight"><pre><span/><code><span class="c1"># A query that encodes context directly in the question</span>
+<span class="n">specific_query</span> <span class="o">=</span> <span class="s2">"what insights are provided on regression analysis in the third lecture?"</span>
+
+<span class="c1"># Note: the first run may emit a deprecation warning for `predict_and_parse`; you can ignore it.</span>
+<span class="c1"># Retrieve documents relevant to the specific query using inferred metadata</span>
+<span class="n">relevant_documents</span> <span class="o">=</span> <span class="n">self_query_retriever</span><span class="o">.</span><span class="n">get_relevant_documents</span><span class="p">(</span><span class="n">specific_query</span><span class="p">)</span>
+
+<span class="c1"># Display metadata to demonstrate specificity</span>
+<span class="k">for</span> <span class="n">document</span> <span class="ow">in</span> <span class="n">relevant_documents</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">document</span><span class="o">.</span><span class="n">metadata</span><span class="p">)</span>
+</code></pre></div>
+<h2 id="implementing-contextual-compression">Implementing Contextual Compression</h2>
+<p>Contextual compression works by extracting the segments of a document that are most relevant to a given query. This method not only reduces the computational load on LLMs but also improves answer quality by focusing on the most pertinent information.</p>
+<h3 id="setting-up-the-environment">Setting Up the Environment</h3>
+<p>Before diving into contextual compression specifics, make sure your environment is correctly configured with the necessary libraries:</p>
+<div class="highlight"><pre><span/><code><span class="c1"># Import classes for contextual compression and document retrieval</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain.retrievers</span><span class="w"> </span><span class="kn">import</span> <span class="n">ContextualCompressionRetriever</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain.retrievers.document_compressors</span><span class="w"> </span><span class="kn">import</span> <span class="n">LLMChainExtractor</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_openai</span><span class="w"> </span><span class="kn">import</span> <span class="n">OpenAI</span>
+</code></pre></div>
+<h3 id="initializing-the-compression-tools">Initializing the Compression Tools</h3>
+<p>Next, initialize the compression mechanism with a pretrained language model that will identify and extract relevant parts of documents:</p>
+<div class="highlight"><pre><span/><code><span class="c1"># Initialize the language model with deterministic settings</span>
+<span class="n">language_model</span> <span class="o">=</span> <span class="n">OpenAI</span><span class="p">(</span><span class="n">temperature</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="s2">"gpt-4o-mini"</span><span class="p">)</span>
+
+<span class="c1"># Create a compressor that uses the LLM to extract relevant segments</span>
+<span class="n">document_compressor</span> <span class="o">=</span> <span class="n">LLMChainExtractor</span><span class="o">.</span><span class="n">from_llm</span><span class="p">(</span><span class="n">language_model</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="creating-the-contextual-compression-retriever">Creating the Contextual Compression Retriever</h3>
+<p>With the compressor ready, configure a retriever that integrates contextual compression into the retrieval process:</p>
+<div class="highlight"><pre><span/><code><span class="c1"># Combine the document compressor with the vector DB retriever</span>
+<span class="n">compression_retriever</span> <span class="o">=</span> <span class="n">ContextualCompressionRetriever</span><span class="p">(</span>
+    <span class="n">base_compressor</span><span class="o">=</span><span class="n">document_compressor</span><span class="p">,</span>
+    <span class="n">base_retriever</span><span class="o">=</span><span class="n">vector_database</span><span class="o">.</span><span class="n">as_retriever</span><span class="p">()</span>
+<span class="p">)</span>
+</code></pre></div>
+<p>Run a query and see how the compression‑aware retriever returns a more focused set of documents:</p>
+<div class="highlight"><pre><span/><code><span class="c1"># Define a query to look for relevant document segments</span>
+<span class="n">query_text</span> <span class="o">=</span> <span class="s2">"what insights are offered on data analysis tools?"</span>
+
+<span class="c1"># Retrieve documents relevant to the query, automatically compressed for relevance</span>
+<span class="n">compressed_documents</span> <span class="o">=</span> <span class="n">compression_retriever</span><span class="o">.</span><span class="n">get_relevant_documents</span><span class="p">(</span><span class="n">query_text</span><span class="p">)</span>
+
+<span class="c1"># Helper to pretty‑print compressed document contents</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">pretty_print_documents</span><span class="p">(</span><span class="n">documents</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="se">\n</span><span class="si">{</span><span class="s1">'-'</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">100</span><span class="si">}</span><span class="se">\n</span><span class="s2">"</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="sa">f</span><span class="s2">"Document </span><span class="si">{</span><span class="n">index</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2">:</span><span class="se">\n\n</span><span class="s2">"</span> <span class="o">+</span> <span class="n">doc</span><span class="o">.</span><span class="n">page_content</span> <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">doc</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">documents</span><span class="p">)]))</span>
+
+<span class="c1"># Display the compressed documents</span>
+<span class="n">pretty_print_documents</span><span class="p">(</span><span class="n">compressed_documents</span><span class="p">)</span>
+</code></pre></div>
+<p>Contextual compression aims to extract the essence of documents by focusing on the segments most relevant to the query. Combined with MMR, it balances relevance and diversity to provide a broader perspective on the topic. Configure the retriever with compression and MMR:</p>
+<div class="highlight"><pre><span/><code><span class="c1"># Initialize a retriever that uses both contextual compression and MMR</span>
+<span class="n">compression_based_retriever</span> <span class="o">=</span> <span class="n">ContextualCompressionRetriever</span><span class="p">(</span>
+    <span class="n">base_compressor</span><span class="o">=</span><span class="n">document_compressor</span><span class="p">,</span>
+    <span class="n">base_retriever</span><span class="o">=</span><span class="n">vector_database</span><span class="o">.</span><span class="n">as_retriever</span><span class="p">(</span><span class="n">search_type</span><span class="o">=</span><span class="s2">"mmr"</span><span class="p">)</span>
+<span class="p">)</span>
+
+<span class="c1"># A query to test the combined approach</span>
+<span class="n">query_for_insights</span> <span class="o">=</span> <span class="s2">"what insights are available on statistical analysis methods?"</span>
+
+<span class="c1"># Retrieve compressed documents using the compression‑aware retriever</span>
+<span class="n">compressed_documents</span> <span class="o">=</span> <span class="n">compression_based_retriever</span><span class="o">.</span><span class="n">get_relevant_documents</span><span class="p">(</span><span class="n">query_for_insights</span><span class="p">)</span>
+
+<span class="c1"># Pretty‑print the compressed documents</span>
+<span class="n">pretty_print_documents</span><span class="p">(</span><span class="n">compressed_documents</span><span class="p">)</span>
+</code></pre></div>
+<p>This approach optimizes retrieval, ensuring results are not only relevant but also diverse, preventing redundancy and improving users’ understanding of the subject matter.</p>
+<p>Beyond semantic search, there are other retrieval methods. TF‑IDF (Term Frequency‑Inverse Document Frequency) is a statistical measure of a word’s importance in a collection: it accounts for term frequency in a document and rarity across the corpus; high values indicate good descriptors and work well for exact‑match search. SVM (Support Vector Machine) can be used for document classification and indirectly improve retrieval by filtering or ranking documents by predefined categories.</p>
+<h2 id="useful-links">Useful Links</h2>
+<ul>
+<li>LangChain Self‑Query Retriever: https://python.langchain.com/docs/modules/data_connection/retrievers/self_query</li>
+<li>LangChain Maximal Marginal Relevance Retriever: https://python.langchain.com/docs/modules/data_connection/retrievers/how_to/mmr</li>
+<li>TF‑IDF Explained: https://www.youtube.com/watch?v=BtWcKEmM0g4</li>
+<li>SVM Explained: https://www.youtube.com/watch?v=efR1C6CvhmE</li>
+</ul>
+<h2 id="theory-questions">Theory Questions</h2>
+<ol>
+<li>What advantages does Maximum Marginal Relevance (MMR) offer over standard similarity search for document retrieval?</li>
+<li>How do metadata improve precision and relevance in semantic search?</li>
+<li>Describe how the Self‑Query Retriever works and its key advantage.</li>
+<li>When is it sensible to use TF‑IDF and SVM in information retrieval, and how do they differ from embedding‑based methods?</li>
+</ol>
+<h2 id="practical-tasks">Practical Tasks</h2>
+<ol>
+<li>Implement MMR with different parameters: experiment with <code>k</code> and <code>fetch_k</code>, and analyze how they affect diversity and relevance.</li>
+<li>Extend metadata: add new types (e.g., author, publication date, keywords) and use them for filtered searches.</li>
+<li>Integrate Self‑Query Retriever: expand metadata attribute descriptions to include the new fields and verify it can automatically form complex, constrained queries.</li>
+<li>Compare methods: implement a simple TF‑IDF‑ or SVM‑based search over your collection and compare against semantic search, noting strengths and weaknesses in different scenarios.</li>
+</ol>
+<h2 id="best-practices">Best Practices</h2>
+<p>Beyond using various retrieval techniques effectively, follow best practices to ensure maximum performance and reliability.</p>
+<h3 id="choosing-the-right-strategy">Choosing the Right Strategy</h3>
+<p>Choosing between MMR, Self‑Query Retriever, or plain similarity search depends on application requirements. When you need diverse results, MMR is optimal. If user queries contain explicit metadata, Self‑Query Retriever simplifies the process. Standard similarity search fits simpler queries.</p>
+<h3 id="performance-optimization">Performance Optimization</h3>
+<p>Vector‑database performance, especially at large scale, is crucial. Regular indexing, caching popular queries, and hardware optimization can significantly speed up retrieval. Distributed vector databases can also help with scaling.</p>
+<h3 id="metadata-management">Metadata Management</h3>
+<p>Well‑structured and accurate metadata significantly improve search quality. Establish a thoughtful metadata schema and apply it consistently across the collection. Auto‑generating metadata with an LLM can help, but requires careful validation.</p>
+<h3 id="monitoring-and-iteration">Monitoring and Iteration</h3>
+<p>Retrieval systems require continuous monitoring of performance and result quality. Collect user feedback, analyze relevance metrics, and A/B test retrieval strategies to iteratively improve the system.</p>
+<h2 id="conclusion">Conclusion</h2>
+<p>This chapter surveyed advanced retrieval techniques designed to improve semantic‑search systems. By addressing limitations around diversity, specificity, and relevance, these methods provide a path toward more intelligent and effective retrieval. Through practical application of MMR, self‑query retrieval, contextual compression, and alternative document‑retrieval methods, developers can build systems that not only understand the semantic content of queries but also deliver rich, diverse, and targeted answers.</p>
+<p>Following best practices ensures retrieval systems are both efficient and effective. As NLP continues to evolve, staying up‑to‑date with advances in retrieval technologies will be key to maintaining an edge in semantic‑search capabilities.</p>
+<p>In sum, integrating advanced retrieval techniques into semantic‑search systems represents a significant step forward. With careful selection and optimization, developers can build solutions that substantially enhance user experience by delivering accurate, diverse, and contextually relevant information in response to complex queries.</p>
+<h2 id="additional-theory-questions">Additional Theory Questions</h2>
+<ol>
+<li>Explain the principle of Maximum Marginal Relevance (MMR) and its role in improving retrieval quality.</li>
+<li>How does self‑query retrieval handle queries that combine semantic content and metadata?</li>
+<li>Explain contextual compression in document retrieval and why it matters.</li>
+<li>List the environment‑setup steps for advanced retrieval using the OpenAI API and LangChain.</li>
+<li>How does initializing a vector database enable efficient semantic similarity search?</li>
+<li>Describe how to populate and use a vector database for similarity and diversified (MMR) search.</li>
+<li>In advanced document retrieval, what advantages does MMR bring for ensuring diversity?</li>
+<li>How can metadata be leveraged to increase specificity in document‑retrieval systems?</li>
+<li>Discuss the benefits and challenges of self‑query retrievers in semantic search.</li>
+<li>What role does contextual compression play in reducing compute load and improving answer quality?</li>
+<li>What best practices matter most when implementing advanced retrieval in semantic‑search systems?</li>
+<li>Compare the effectiveness of vector‑based retrieval with TF‑IDF and SVM in document retrieval.</li>
+<li>How does integrating advanced retrieval techniques improve performance and UX in semantic‑search systems?</li>
+<li>What impact might future NLP advances have on advanced retrieval for semantic search?</li>
+</ol>
+<h2 id="additional-practical-tasks">Additional Practical Tasks</h2>
+<ol>
+<li>Implement a Python class <code>VectorDatabase</code> with methods:</li>
+<li><code>__init__(self, persist_directory: str)</code>: initialize the vector DB and its persistence directory.</li>
+<li><code>add_text(self, text: str)</code>: embed text into a high‑dimensional vector using OpenAI embeddings and store it. Assume a function <code>openai_embedding(text: str) -&gt; List[float]</code> returns the embedding vector.</li>
+<li>
+<p><code>similarity_search(self, query: str, k: int) -&gt; List[str]</code>: perform similarity search and return the top‑<code>k</code> most similar texts. Use a simplified similarity function.</p>
+</li>
+<li>
+<p>Write a function <code>compress_document</code> that takes a list of strings (a document) and a query string, and returns a list of strings where each element is a compressed segment of the document relevant to the query. Assume an external utility <code>compress_segment(segment: str, query: str) -&gt; str</code> that compresses individual segments for the query.</p>
+</li>
+<li>
+<p>Implement <code>max_marginal_relevance</code> that takes a list of document IDs, a query, and two parameters <code>lambda</code> and <code>k</code>, and returns a list of <code>k</code> IDs selected by the Maximum Marginal Relevance criterion. Assume similarity function <code>similarity(doc_id: str, query: str) -&gt; float</code> and diversity function <code>diversity(doc_id1: str, doc_id2: str) -&gt; float</code>.</p>
+</li>
+<li>
+<p>Write <code>initialize_vector_db</code> that demonstrates how to populate a vector DB with a list of predefined texts, then run similarity and diversified searches, printing both sets of results. Use the <code>VectorDatabase</code> class from task 1 as the backing store.</p>
+</li>
+</ol>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+                  
+</body>
+</html>

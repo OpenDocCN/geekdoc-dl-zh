@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+  "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Answers 2.3</title>
+<link href="../Styles/Style.css" type="text/css" rel="stylesheet"/>
+</head>
+<body>
+<h1>Answers 2.3</h1>
+<blockquote>原文：<a href="https://boramorka.github.io/LLM-Book/en/CHAPTER-2/Answers%202.3/">https://boramorka.github.io/LLM-Book/en/CHAPTER-2/Answers%202.3/</a></blockquote>
+                
+                  
+
+
+  
+  
+
+
+
+<h2 id="theory">Theory</h2>
+<ol>
+<li>The goal of splitting is to produce meaningful chunks for effective search and analysis.</li>
+<li>Chunk size controls granularity: larger → more context; smaller → easier processing but risk losing cohesion.</li>
+<li>Overlap preserves context at boundaries and prevents loss of important information.</li>
+<li><code>CharacterTextSplitter</code> splits by characters; <code>TokenTextSplitter</code> by tokens (handy for LLM limits).</li>
+<li>The recursive splitter uses a hierarchy of separators (paragraphs/sentences/words) to preserve semantics.</li>
+<li>Specialized splitters: <code>LanguageTextSplitter</code> for code (syntax‑aware) and <code>MarkdownHeaderTextSplitter</code> (heading levels, adds metadata).</li>
+<li>Environment: libraries, keys, dependencies, imports — for robust processing.</li>
+<li><code>RecursiveCharacterTextSplitter</code> preserves semantics and adapts to structure; tune size/overlap/depth.</li>
+<li>The “alphabet” demo highlights differences: even slicing vs. semantically aware splitting.</li>
+<li>Characters vs. tokens depends on model limits, semantic needs, and text nature.</li>
+<li>Splitting by Markdown headings preserves logical structure.</li>
+<li>Best practices: keep meaning, tune overlap (avoid redundancy), enrich chunk metadata.</li>
+</ol>
+<h2 id="practical-tasks">Practical Tasks</h2>
+<p>1.
+</p><div class="highlight"><pre><span/><code><span class="k">def</span><span class="w"> </span><span class="nf">split_by_char</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">chunk_size</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Split text into chunks of a fixed size.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">    - text (str): The text to split.</span>
+<span class="sd">    - chunk_size (int): The size of each chunk.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">    - list[str]: List of string chunks.</span>
+<span class="sd">    """</span>
+    <span class="n">chunks</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">start_index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">text</span><span class="p">),</span> <span class="n">chunk_size</span><span class="p">):</span>
+        <span class="n">chunks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">text</span><span class="p">[</span><span class="n">start_index</span><span class="p">:</span><span class="n">start_index</span> <span class="o">+</span> <span class="n">chunk_size</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">chunks</span>
+
+<span class="c1"># Example usage</span>
+<span class="n">text</span> <span class="o">=</span> <span class="s2">"This is a sample text for demonstration purposes."</span>
+<span class="n">chunk_size</span> <span class="o">=</span> <span class="mi">10</span>
+
+<span class="n">chunks</span> <span class="o">=</span> <span class="n">split_by_char</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">chunk_size</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">chunks</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Chunk </span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">chunk</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</code></pre></div>
+<p>2.
+</p><div class="highlight"><pre><span/><code><span class="k">def</span><span class="w"> </span><span class="nf">split_by_char</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">chunk_size</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Split text into chunks of a fixed size.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">    - text (str): The text to split.</span>
+<span class="sd">    - chunk_size (int): The size of each chunk.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">    - list: List of text chunks.</span>
+<span class="sd">    """</span>
+    <span class="n">chunks</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># Initialize an empty list to store chunks</span>
+    <span class="k">for</span> <span class="n">start_index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">text</span><span class="p">),</span> <span class="n">chunk_size</span><span class="p">):</span>
+        <span class="c1"># Append a chunk (substring) starting at start_index</span>
+        <span class="n">chunks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">text</span><span class="p">[</span><span class="n">start_index</span><span class="p">:</span><span class="n">start_index</span> <span class="o">+</span> <span class="n">chunk_size</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">chunks</span>
+
+<span class="c1"># Example usage</span>
+<span class="n">text</span> <span class="o">=</span> <span class="s2">"This is a sample text for demonstration purposes."</span>
+<span class="n">chunk_size</span> <span class="o">=</span> <span class="mi">10</span>
+
+<span class="n">chunks</span> <span class="o">=</span> <span class="n">split_by_char</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">chunk_size</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">chunks</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Chunk </span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">chunk</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</code></pre></div>
+<p>3.
+</p><div class="highlight"><pre><span/><code><span class="k">class</span><span class="w"> </span><span class="nc">TokenTextSplitter</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">chunk_size</span><span class="p">,</span> <span class="n">chunk_overlap</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">chunk_size</span> <span class="o">=</span> <span class="n">chunk_size</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">chunk_overlap</span> <span class="o">=</span> <span class="n">chunk_overlap</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">split_text</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">):</span>
+        <span class="n">tokens</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>  <span class="c1"># Split text into tokens by spaces</span>
+        <span class="n">chunks</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">start_index</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="k">while</span> <span class="n">start_index</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">tokens</span><span class="p">):</span>
+            <span class="c1"># Ensure end_index does not exceed total tokens length</span>
+            <span class="n">end_index</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">start_index</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">chunk_size</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">tokens</span><span class="p">))</span>
+            <span class="n">chunk</span> <span class="o">=</span> <span class="s1">' '</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tokens</span><span class="p">[</span><span class="n">start_index</span><span class="p">:</span><span class="n">end_index</span><span class="p">])</span>
+            <span class="n">chunks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">chunk</span><span class="p">)</span>
+            <span class="c1"># Update start_index accounting for overlap</span>
+            <span class="n">start_index</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">chunk_size</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">chunk_overlap</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">chunk_overlap</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">chunk_size</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">"Warning: `chunk_overlap` should be less than `chunk_size` to avoid overlap issues."</span><span class="p">)</span>
+                <span class="k">break</span>
+
+        <span class="k">return</span> <span class="n">chunks</span>
+</code></pre></div>
+<h1 id="example-usage">Example usage:</h1>
+<div class="highlight"><pre><span/><code><span class="n">headers_to_split_on</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">(</span><span class="s2">"#"</span><span class="p">,</span> <span class="s2">"Header 1"</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">"##"</span><span class="p">,</span> <span class="s2">"Header 2"</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">"###"</span><span class="p">,</span> <span class="s2">"Header 3"</span><span class="p">),</span>
+<span class="p">]</span>
+
+<span class="n">splitter</span> <span class="o">=</span> <span class="n">MarkdownHeaderTextSplitter</span><span class="p">(</span><span class="n">headers_to_split_on</span><span class="p">)</span>
+<span class="n">markdown_text</span> <span class="o">=</span> <span class="s2">"""</span>
+<span class="s2"># Header 1</span>
+<span class="s2">This is some text under header 1.</span>
+<span class="s2">## Header 2</span>
+<span class="s2">This is some text under header 2.</span>
+<span class="s2">### Header 3</span>
+<span class="s2">This is some text under header 3.</span>
+<span class="s2">"""</span>
+
+<span class="n">chunks</span> <span class="o">=</span> <span class="n">splitter</span><span class="o">.</span><span class="n">split_text</span><span class="p">(</span><span class="n">markdown_text</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">chunks</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Chunk </span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">:</span>
+<span class="p">{</span><span class="n">chunk</span><span class="p">}</span>
+<span class="o">---</span><span class="s2">")</span>
+</code></pre></div>
+<p>This implementation does the following:</p>
+<ul>
+<li>During initialization, it sorts header markers by length in descending order so that longer (more specific) Markdown headers match first. This matters because Markdown header levels differ by the number of <code>#</code> characters, and we want the most specific header matched.</li>
+<li>It compiles a regular expression that matches any of the specified header markers at the start of a line.</li>
+<li>The <code>split_text</code> method iterates over each line of the input Markdown, checking for header matches. When it finds a header, it appropriately starts or ends a chunk. Each chunk includes its starting header and all subsequent lines up to the next header of the same or higher priority.</li>
+</ul>
+<p>4.
+</p><div class="highlight"><pre><span/><code><span class="k">def</span><span class="w"> </span><span class="nf">recursive_split</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">max_chunk_size</span><span class="p">,</span> <span class="n">separators</span><span class="p">):</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">separators</span><span class="p">:</span>  <span class="c1"># Base case: no separators left</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">text</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">text</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">max_chunk_size</span><span class="p">:</span>  <span class="c1"># Already within size</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">text</span><span class="p">]</span>
+
+    <span class="c1"># Try to split with the first separator</span>
+    <span class="n">separator</span> <span class="o">=</span> <span class="n">separators</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">parts</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">separator</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">parts</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>  <span class="c1"># Separator not found, try next</span>
+        <span class="k">return</span> <span class="n">recursive_split</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">max_chunk_size</span><span class="p">,</span> <span class="n">separators</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
+
+    <span class="n">chunks</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">current_chunk</span> <span class="o">=</span> <span class="s2">""</span>
+    <span class="k">for</span> <span class="n">part</span> <span class="ow">in</span> <span class="n">parts</span><span class="p">:</span>
+        <span class="c1"># If adding the part would exceed the limit and we already have content, store current and start new</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">current_chunk</span> <span class="o">+</span> <span class="n">part</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">max_chunk_size</span> <span class="ow">and</span> <span class="n">current_chunk</span><span class="p">:</span>
+            <span class="n">chunks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">current_chunk</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
+            <span class="n">current_chunk</span> <span class="o">=</span> <span class="n">part</span> <span class="o">+</span> <span class="n">separator</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">current_chunk</span> <span class="o">+=</span> <span class="n">part</span> <span class="o">+</span> <span class="n">separator</span>
+
+    <span class="c1"># Recurse on the remaining text to ensure size constraints</span>
+    <span class="k">if</span> <span class="n">current_chunk</span><span class="o">.</span><span class="n">strip</span><span class="p">():</span>
+        <span class="n">chunks</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">recursive_split</span><span class="p">(</span><span class="n">current_chunk</span><span class="o">.</span><span class="n">strip</span><span class="p">(),</span> <span class="n">max_chunk_size</span><span class="p">,</span> <span class="n">separators</span><span class="p">))</span>
+
+    <span class="c1"># Flatten nested lists from recursion</span>
+    <span class="n">flat_chunks</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="n">chunks</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">chunk</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="n">flat_chunks</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">chunk</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">flat_chunks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">chunk</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">flat_chunks</span>
+</code></pre></div>
+<p>5.
+To implement <code>MarkdownHeaderTextSplitter</code> as described, we follow these steps:</p>
+<ol>
+<li>Initialization: store header patterns with their names/levels to use during splitting.</li>
+<li>Text splitting: parse the input Markdown, identify headers by the given patterns, and split into chunks. Each chunk starts with a header and includes the following lines up to the next header of the same or higher priority.</li>
+</ol>
+<div class="highlight"><pre><span/><code><span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">MarkdownHeaderTextSplitter</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">headers_to_split_on</span><span class="p">):</span>
+        <span class="c1"># Sort headers by marker length (longer first) for correct matching</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">headers_to_split_on</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">headers_to_split_on</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">header_regex</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_generate_header_regex</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_generate_header_regex</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># Build a regex matching any of the specified header markers</span>
+        <span class="n">header_patterns</span> <span class="o">=</span> <span class="p">[</span><span class="n">re</span><span class="o">.</span><span class="n">escape</span><span class="p">(</span><span class="n">header</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="k">for</span> <span class="n">header</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">headers_to_split_on</span><span class="p">]</span>
+        <span class="n">combined_pattern</span> <span class="o">=</span> <span class="s1">'|'</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">header_patterns</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">'('</span> <span class="o">+</span> <span class="n">combined_pattern</span> <span class="o">+</span> <span class="sa">r</span><span class="s1">')\s*(.*)'</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">split_text</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">markdown_text</span><span class="p">):</span>
+        <span class="n">chunks</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">current_chunk</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">lines</span> <span class="o">=</span> <span class="n">markdown_text</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">'</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">:</span>
+            <span class="c1"># Check if the line starts with one of the header markers</span>
+            <span class="n">match</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">header_regex</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">match</span><span class="p">:</span>
+                <span class="c1"># If we already collected lines, store the previous chunk</span>
+                <span class="k">if</span> <span class="n">current_chunk</span><span class="p">:</span>
+                    <span class="n">chunks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">'</span><span class="se">\n</span><span class="s1">'</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">current_chunk</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
+                    <span class="n">current_chunk</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="n">current_chunk</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">current_chunk</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+
+        <span class="c1"># Append the last collected chunk if present</span>
+        <span class="k">if</span> <span class="n">current_chunk</span><span class="p">:</span>
+            <span class="n">chunks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">'</span><span class="se">\n</span><span class="s1">'</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">current_chunk</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
+
+        <span class="k">return</span> <span class="n">chunks</span>
+</code></pre></div>
+<h1 id="example-usage_1">Example usage:</h1>
+<div class="highlight"><pre><span/><code><span class="n">headers_to_split_on</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">(</span><span class="s2">"#"</span><span class="p">,</span> <span class="s2">"Header 1"</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">"##"</span><span class="p">,</span> <span class="s2">"Header 2"</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">"###"</span><span class="p">,</span> <span class="s2">"Header 3"</span><span class="p">),</span>
+<span class="p">]</span>
+
+<span class="n">splitter</span> <span class="o">=</span> <span class="n">MarkdownHeaderTextSplitter</span><span class="p">(</span><span class="n">headers_to_split_on</span><span class="p">)</span>
+<span class="n">markdown_text</span> <span class="o">=</span> <span class="s2">"""</span>
+<span class="s2"># Header 1</span>
+<span class="s2">This is some text under header 1.</span>
+<span class="s2">## Header 2</span>
+<span class="s2">This is some text under header 2.</span>
+<span class="s2">### Header 3</span>
+<span class="s2">This is some text under header 3.</span>
+<span class="s2">"""</span>
+
+<span class="n">chunks</span> <span class="o">=</span> <span class="n">splitter</span><span class="o">.</span><span class="n">split_text</span><span class="p">(</span><span class="n">markdown_text</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">chunks</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Chunk </span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">:</span>
+<span class="p">{</span><span class="n">chunk</span><span class="p">}</span>
+<span class="o">---</span><span class="s2">")</span>
+</code></pre></div>
+<p>This implementation does the following:</p>
+<ul>
+<li>During initialization, it sorts header markers by length in descending order so that longer (more specific) Markdown headers match first. This matters because Markdown header levels differ by the number of <code>#</code> characters, and we want the most specific header matched.</li>
+<li>It compiles a regular expression that matches any of the specified header markers at the start of a line.</li>
+<li>The <code>split_text</code> method iterates over each line of the input Markdown, checking for header matches. When it finds a header, it appropriately starts or ends a chunk. Each chunk includes its starting header and all subsequent lines up to the next header of the same or higher priority.</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+                  
+</body>
+</html>

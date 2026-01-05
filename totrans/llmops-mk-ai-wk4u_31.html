@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+  "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Answers 1.6</title>
+<link href="../Styles/Style.css" type="text/css" rel="stylesheet"/>
+</head>
+<body>
+<h1>Answers 1.6</h1>
+<blockquote>原文：<a href="https://boramorka.github.io/LLM-Book/en/CHAPTER-1/Answers%201.6/">https://boramorka.github.io/LLM-Book/en/CHAPTER-1/Answers%201.6/</a></blockquote>
+                
+                  
+
+
+  
+  
+
+
+
+<h2 id="theory">Theory</h2>
+<ol>
+<li>Evaluating LLM answers is necessary to understand effectiveness, alignment with goals, and areas to improve. Evaluate accuracy, relevance, and completeness.</li>
+<li>Key metrics: accuracy, recall, F1, and user satisfaction ratings. These guide product development and release decisions.</li>
+<li>The path to production is iterative: start with quick prototypes, find gaps, gradually increase complexity and dataset coverage. Practical value matters more than perfection.</li>
+<li>High‑stakes scenarios (medicine, law, finance) require stricter validation, bias detection/mitigation, and ethical review.</li>
+<li>Best practices: start small, iterate quickly, automate testing and quality checks.</li>
+<li>Automated tests speed up gold‑standard comparisons, surface errors, and provide continuous feedback.</li>
+<li>Choose metrics and rigor to match the application’s goals and risks; use heightened rigor for high stakes.</li>
+<li>A full evaluation framework includes a rubric, protocols (who/what/how), and gold‑standard comparison when needed.</li>
+<li>Advanced techniques: semantic similarity (embeddings), crowd evaluation, automated coherence/logic checks, and adaptive schemes tailored to the domain.</li>
+<li>Continuous evaluation and diverse test cases increase reliability and relevance across scenarios.</li>
+</ol>
+<h2 id="practice-sketches">Practice (sketches)</h2>
+<ol>
+<li>
+<p>Rubric‑based evaluation function:
+    </p><div class="highlight"><pre><span/><code><span class="k">def</span><span class="w"> </span><span class="nf">evaluate_response</span><span class="p">(</span><span class="n">response</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">rubric</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+    <span class="n">results</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">total_weight</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">rubric</span><span class="p">[</span><span class="n">c</span><span class="p">][</span><span class="s1">'weight'</span><span class="p">]</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">rubric</span><span class="p">)</span>
+    <span class="n">total_score</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">criteria</span><span class="p">,</span> <span class="n">details</span> <span class="ow">in</span> <span class="n">rubric</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">score</span> <span class="o">=</span> <span class="n">details</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'weight'</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>  <span class="c1"># stub — replace with real logic</span>
+        <span class="n">feedback</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"Stub feedback for </span><span class="si">{</span><span class="n">criteria</span><span class="si">}</span><span class="s2">."</span>
+        <span class="n">results</span><span class="p">[</span><span class="n">criteria</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'score'</span><span class="p">:</span> <span class="n">score</span><span class="p">,</span> <span class="s1">'feedback'</span><span class="p">:</span> <span class="n">feedback</span><span class="p">}</span>
+        <span class="n">total_score</span> <span class="o">+=</span> <span class="n">score</span> <span class="o">*</span> <span class="n">details</span><span class="p">[</span><span class="s1">'weight'</span><span class="p">]</span>
+    <span class="n">results</span><span class="p">[</span><span class="s1">'overall'</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">'weighted_average_score'</span><span class="p">:</span> <span class="n">total_score</span> <span class="o">/</span> <span class="n">total_weight</span><span class="p">,</span>
+        <span class="s1">'feedback'</span><span class="p">:</span> <span class="s1">'Overall feedback based on the rubric.'</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">results</span>
+</code></pre></div>
+</li>
+<li>
+<p>Rubric template:
+    </p><div class="highlight"><pre><span/><code><span class="n">rubric</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">'accuracy'</span><span class="p">:</span> <span class="p">{</span><span class="s1">'weight'</span><span class="p">:</span> <span class="mi">3</span><span class="p">},</span>
+    <span class="s1">'relevance'</span><span class="p">:</span> <span class="p">{</span><span class="s1">'weight'</span><span class="p">:</span> <span class="mi">2</span><span class="p">},</span>
+    <span class="s1">'completeness'</span><span class="p">:</span> <span class="p">{</span><span class="s1">'weight'</span><span class="p">:</span> <span class="mi">3</span><span class="p">},</span>
+    <span class="s1">'coherence'</span><span class="p">:</span> <span class="p">{</span><span class="s1">'weight'</span><span class="p">:</span> <span class="mi">2</span><span class="p">},</span>
+<span class="p">}</span>
+</code></pre></div>
+</li>
+<li>
+<p>The ideal (gold) answer serves as a comparison point for weighted scoring and textual feedback.</p>
+</li>
+</ol>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+                  
+</body>
+</html>

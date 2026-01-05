@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+  "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>1.1 Introduction</title>
+<link href="../Styles/Style.css" type="text/css" rel="stylesheet"/>
+</head>
+<body>
+<h1>1.1 Introduction</h1>
+<blockquote>原文：<a href="https://boramorka.github.io/LLM-Book/en/CHAPTER-1/1.1%20Introduction/">https://boramorka.github.io/LLM-Book/en/CHAPTER-1/1.1%20Introduction/</a></blockquote>
+                
+                  
+
+
+  
+  
+
+
+
+<p>This chapter focuses on the practical integration of the OpenAI API into your services, with an emphasis on generating text responses using GPT models. We will briefly walk through the path from installation and secure setup to your first requests, interpreting responses, and embedding results into applications. The material is aimed at ML engineers, data scientists, software developers, and adjacent specialists who need to connect models to products quickly and reliably.</p>
+<p>OpenAI provides access to a family of language models (including Generative Pre‑trained Transformer, GPT) via an API. These models understand and generate human‑like text, making them a powerful tool for tasks ranging from automating customer support to content generation. Start by installing the current client version:</p>
+<div class="highlight"><pre><span/><code>pip install --upgrade openai
+</code></pre></div>
+<p>Next, you need an API key, obtained after registering at OpenAI (https://openai.com/) and choosing an appropriate pricing plan. The key is unique, used to sign requests, and must be kept strictly confidential: store it in environment variables and, for local development, in <code>.env</code> files; in production, use a secrets manager. With this minimal setup, you can send a simple text‑generation request and print the answer to the console:</p>
+<div class="highlight"><pre><span/><code><span class="kn">from</span><span class="w"> </span><span class="nn">openai</span><span class="w"> </span><span class="kn">import</span> <span class="n">OpenAI</span>
+
+<span class="n">client</span> <span class="o">=</span> <span class="n">OpenAI</span><span class="p">()</span>
+
+<span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">chat</span><span class="o">.</span><span class="n">completions</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+    <span class="n">model</span><span class="o">=</span><span class="s2">"gpt-4o-mini"</span><span class="p">,</span>
+    <span class="n">messages</span><span class="o">=</span><span class="p">[{</span><span class="s2">"role"</span><span class="p">:</span> <span class="s2">"user"</span><span class="p">,</span> <span class="s2">"content"</span><span class="p">:</span> <span class="s2">"What is artificial intelligence?"</span><span class="p">}],</span>
+    <span class="n">max_tokens</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">choices</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">message</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+</code></pre></div>
+<p>To get predictable results, it is important to remember how requests are formed: you choose a model, craft a prompt (a question or instruction), and set generation parameters. For example, <code>temperature</code> controls creativity and randomness: the higher it is, the more diverse the answers. The client library reads the API key from the environment; with correct configuration, you simply assemble the message list and specify the model — the SDK handles the rest.</p>
+<p>The API response contains the generated text and useful metadata. Structurally it includes a <code>choices</code> field (one or more answer variants) and <code>usage</code> (token statistics) to help estimate cost and optimize requests:</p>
+<div class="highlight"><pre><span/><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"chatcmpl-XYZ123"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"object"</span><span class="p">:</span><span class="w"> </span><span class="s2">"chat.completion"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"created"</span><span class="p">:</span><span class="w"> </span><span class="mi">1613679373</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"model"</span><span class="p">:</span><span class="w"> </span><span class="s2">"gpt-4o-mini"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"choices"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">"index"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"message"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">"role"</span><span class="p">:</span><span class="w"> </span><span class="s2">"assistant"</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">"content"</span><span class="p">:</span><span class="w"> </span><span class="s2">"The generated text response to your prompt."</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="nt">"logprobs"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"finish_reason"</span><span class="p">:</span><span class="w"> </span><span class="s2">"stop"</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">],</span>
+<span class="w">  </span><span class="nt">"usage"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"prompt_tokens"</span><span class="p">:</span><span class="w"> </span><span class="mi">15</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"completion_tokens"</span><span class="p">:</span><span class="w"> </span><span class="mi">25</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"total_tokens"</span><span class="p">:</span><span class="w"> </span><span class="mi">40</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<blockquote>
+<p><strong>Note:</strong> The response contains <code>choices[].message.content</code> with the generated text, and <code>usage</code> statistics to help estimate cost and optimize requests.</p>
+</blockquote>
+<p>When integrating, build in error handling: networks are unreliable, limits are finite, and request parameters may be invalid. A simple <code>try/except</code> scaffold helps you respond correctly to connection issues, quota exceedance, and API status errors without crashing your application:</p>
+<div class="highlight"><pre><span/><code><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">openai</span><span class="w"> </span><span class="kn">import</span> <span class="n">OpenAI</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">openai</span><span class="w"> </span><span class="kn">import</span> <span class="n">APIConnectionError</span><span class="p">,</span> <span class="n">RateLimitError</span><span class="p">,</span> <span class="n">APIStatusError</span>
+
+<span class="c1"># The client reads OPENAI_API_KEY from the environment by default</span>
+<span class="n">client</span> <span class="o">=</span> <span class="n">OpenAI</span><span class="p">(</span><span class="n">api_key</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">"OPENAI_API_KEY"</span><span class="p">))</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">chat</span><span class="o">.</span><span class="n">completions</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+        <span class="n">model</span><span class="o">=</span><span class="s2">"gpt-4o-mini"</span><span class="p">,</span>
+        <span class="n">messages</span><span class="o">=</span><span class="p">[{</span><span class="s2">"role"</span><span class="p">:</span> <span class="s2">"user"</span><span class="p">,</span> <span class="s2">"content"</span><span class="p">:</span> <span class="s2">"This is a test prompt"</span><span class="p">}],</span>
+        <span class="n">max_tokens</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">choices</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">message</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+<span class="k">except</span> <span class="n">RateLimitError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Rate limit exceeded: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="k">except</span> <span class="n">APIConnectionError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Connection error: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="k">except</span> <span class="n">APIStatusError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"API returned an error: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Other error: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</code></pre></div>
+<p>Alongside error handling, use <code>usage</code> metadata and other response fields to monitor cost, timing, and effectiveness so you can adjust prompts, limit lengths, choose cost‑efficient models, and keep spend under control.</p>
+<p>In applied scenarios, generation is most often embedded in conversational interfaces. Below is a concise example of an interactive client built with Panel: the user enters a query, the system processes it, and displays the answer. The code illustrates updating the history and laying out UI elements that are easy to adapt for your needs:</p>
+<div class="highlight"><pre><span/><code><span class="kn">import</span><span class="w"> </span><span class="nn">panel</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pn</span>  <span class="c1"># For building the GUI</span>
+
+<span class="c1"># Conversation history and UI elements</span>
+<span class="n">conversation_history</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">input_widget</span> <span class="o">=</span> <span class="n">pn</span><span class="o">.</span><span class="n">widgets</span><span class="o">.</span><span class="n">TextInput</span><span class="p">(</span><span class="n">placeholder</span><span class="o">=</span><span class="s1">'Enter your query...'</span><span class="p">)</span>
+<span class="n">submit_button</span> <span class="o">=</span> <span class="n">pn</span><span class="o">.</span><span class="n">widgets</span><span class="o">.</span><span class="n">Button</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"Send"</span><span class="p">)</span>
+<span class="n">panels</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">update_conversation</span><span class="p">(</span><span class="n">event</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Handles user input, calls the request processing function, and updates the conversation output.</span>
+<span class="sd">    """</span>
+    <span class="n">user_query</span> <span class="o">=</span> <span class="n">input_widget</span><span class="o">.</span><span class="n">value</span>
+    <span class="k">if</span> <span class="n">user_query</span><span class="p">:</span>  <span class="c1"># Ensure the string is not empty</span>
+        <span class="n">response</span><span class="p">,</span> <span class="n">conversation_history</span> <span class="o">=</span> <span class="n">process_user_query</span><span class="p">(</span><span class="n">user_query</span><span class="p">,</span> <span class="n">conversation_history</span><span class="p">)</span>
+        <span class="n">panels</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pn</span><span class="o">.</span><span class="n">Row</span><span class="p">(</span><span class="s1">'User:'</span><span class="p">,</span> <span class="n">pn</span><span class="o">.</span><span class="n">pane</span><span class="o">.</span><span class="n">Markdown</span><span class="p">(</span><span class="n">user_query</span><span class="p">)))</span>
+        <span class="n">panels</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pn</span><span class="o">.</span><span class="n">Row</span><span class="p">(</span><span class="s1">'Assistant:'</span><span class="p">,</span> <span class="n">pn</span><span class="o">.</span><span class="n">pane</span><span class="o">.</span><span class="n">Markdown</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">background</span><span class="o">=</span><span class="s1">'#F6F6F6'</span><span class="p">)))</span>
+        <span class="n">input_widget</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="s1">''</span>  <span class="c1"># Clear the input field</span>
+
+<span class="c1"># Bind the handler to the button</span>
+<span class="n">submit_button</span><span class="o">.</span><span class="n">on_click</span><span class="p">(</span><span class="n">update_conversation</span><span class="p">)</span>
+
+<span class="c1"># Interface layout</span>
+<span class="n">conversation_interface</span> <span class="o">=</span> <span class="n">pn</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span>
+    <span class="n">input_widget</span><span class="p">,</span>
+    <span class="n">submit_button</span><span class="p">,</span>
+    <span class="n">pn</span><span class="o">.</span><span class="n">panel</span><span class="p">(</span><span class="n">update_conversation</span><span class="p">,</span> <span class="n">loading_indicator</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+<span class="p">)</span>
+
+<span class="c1"># Display the interface</span>
+<span class="n">conversation_interface</span><span class="o">.</span><span class="n">servable</span><span class="p">()</span>
+</code></pre></div>
+<p>Tip: improve UX with an “assistant is typing…” indicator and other feedback signals to make the dialogue feel alive. From there, it comes down to how you use the model’s answers. In chatbots you can display the replies directly, paying attention to formatting and relevance; for generating articles and reports, post‑processing helps — formatting, templating, and combining multiple answers into cohesive texts; for dynamic content in web apps, validate relevance and consistency and plan regular updates.</p>
+<p>It’s good practice to add post‑processing (grammar and style checks, aligning to your brand voice), personalization (respecting context, preferences, and user history), feedback collection to improve prompts and parameters, and monitoring/analytics: response time, engagement, token usage, and other metrics that help you optimize the system responsibly. For performance, consider caching frequent queries, batching, and choosing an appropriately sized model for the task and budget. Don’t blindly trust model output: verify accuracy and appropriateness, and add validation and filters.</p>
+<p>To go deeper, study the official OpenAI documentation, follow updates, and participate in professional communities. This material lays a foundation for quick integration and opens the door to advanced scenarios of intelligent text interactions.</p>
+<h2 id="theory-questions">Theory Questions</h2>
+<ol>
+<li>What are the main benefits of integrating the OpenAI API for ML engineers, data scientists, and developers?</li>
+<li>Describe how to obtain an OpenAI API key and explain why securing it is important.</li>
+<li>What is the role of <code>temperature</code>, and how does it affect generation results?</li>
+<li>Why should API keys be stored in environment variables or secret managers rather than directly in code?</li>
+<li>Why is model choice critical for quality, speed, and cost?</li>
+<li>How do response metadata help optimize requests and manage token spend?</li>
+<li>List the steps to create a simple conversational interface and its key components.</li>
+<li>Which integration best practices fit chatbots, content generation, and dynamic content?</li>
+<li>Name common pitfalls when working with the API and ways to prevent them.</li>
+<li>How can you ensure ethical standards and protect user privacy?</li>
+</ol>
+<h2 id="practical-tasks">Practical Tasks</h2>
+<ol>
+<li>Write a Python script that uses the OpenAI API to answer the question “What is the future of AI?”. Limit the answer to 100 tokens.</li>
+<li>Modify the script from Task 1 to read the API key from an environment variable instead of hard‑coding it.</li>
+<li>Extend the script from Task 2 to print, along with the answer text, the model name, token counts, and the reason generation stopped.</li>
+<li>Add error handling to the script from Task 3 (e.g., handling rate limits, invalid requests, etc.) using <code>try/except</code>.</li>
+<li>Create a simple command‑line interface (CLI) that sends prompts and streams answers in real time, with error handling.</li>
+<li>For the CLI from Task 5, add answer post‑processing: trimming extra whitespace, basic grammar correction (e.g., using <code>textblob</code>) or your own formatting.</li>
+<li>Develop a script that, for a user‑provided topic, generates a publishing plan and outputs it as a bulleted list.</li>
+<li>In any of the scripts, add logging of response time and token usage, storing these metrics for later analysis and optimization.</li>
+</ol>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+                  
+</body>
+</html>

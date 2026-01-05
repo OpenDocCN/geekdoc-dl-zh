@@ -1,0 +1,358 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+  "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Answers 2.7</title>
+<link href="../Styles/Style.css" type="text/css" rel="stylesheet"/>
+</head>
+<body>
+<h1>Answers 2.7</h1>
+<blockquote>原文：<a href="https://boramorka.github.io/LLM-Book/en/CHAPTER-2/Answers%202.7/">https://boramorka.github.io/LLM-Book/en/CHAPTER-2/Answers%202.7/</a></blockquote>
+                
+                  
+
+
+  
+  
+
+
+
+<h2 id="theory">Theory</h2>
+<ol>
+<li>Dialogue memory: provides a chatbot with context between messages, enabling more personalized and coherent answers.</li>
+<li><code>ConversationBufferMemory</code>: stores the entire conversation history so the model can refer to prior turns in the current dialogue.</li>
+<li>Conversational Retrieval Chain: combines memory with retrieval from external sources to improve answer accuracy and relevance.</li>
+<li>Context‑management strategies: range from fixed buffers to dynamically expanding context via document retrieval; the choice depends on the task.</li>
+<li>NER (Named Entity Recognition): helps track key entities in the dialogue and maintain discussion integrity.</li>
+<li>Data privacy: requires minimizing data collection, anonymizing sensitive information, and having transparent, lawful data‑retention policies.</li>
+<li>Topic shifts: summarization, topic‑aware memory, and selective retrieval of the most relevant history can help when the subject changes.</li>
+<li>Evaluation metrics: include user satisfaction, task success, and automated measures of coherence and relevance.</li>
+<li>Persistent memory: useful for maintaining context across sessions, preserving user preferences and information about past issues and resolutions.</li>
+<li>Practical recommendations: ensure privacy and transparency, give users control over memory, and continuously monitor interaction quality.</li>
+</ol>
+<h2 id="practical-tasks">Practical Tasks</h2>
+<p>1.
+</p><div class="highlight"><pre><span/><code><span class="k">def</span><span class="w"> </span><span class="nf">embed_document</span><span class="p">(</span><span class="n">document_text</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Stub function that generates a document embedding.</span>
+<span class="sd">    In a real scenario, this should convert the input document text into a numeric vector representation.</span>
+<span class="sd">    """</span>
+    <span class="c1"># Simulated embedding for demonstration (simple hash based on text length/content)</span>
+    <span class="k">return</span> <span class="p">[</span><span class="nb">hash</span><span class="p">(</span><span class="n">document_text</span><span class="p">)</span> <span class="o">%</span> <span class="mi">100</span><span class="p">]</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">create_vector_store</span><span class="p">(</span><span class="n">documents</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Convert a list of documents into embeddings and store them in a simple in‑memory structure.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        documents (list of str): List of document texts to embed.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        list: List of generated embeddings representing the input documents.</span>
+<span class="sd">    """</span>
+    <span class="n">vector_store</span> <span class="o">=</span> <span class="p">[</span><span class="n">embed_document</span><span class="p">(</span><span class="n">doc</span><span class="p">)</span> <span class="k">for</span> <span class="n">doc</span> <span class="ow">in</span> <span class="n">documents</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">vector_store</span>
+
+<span class="c1"># Example usage of embed_document and create_vector_store:</span>
+<span class="n">documents</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">"Document 1 text content here."</span><span class="p">,</span>
+    <span class="s2">"Document 2 text content, possibly different."</span><span class="p">,</span>
+    <span class="s2">"Another document, the third one."</span>
+<span class="p">]</span>
+<span class="n">vector_store</span> <span class="o">=</span> <span class="n">create_vector_store</span><span class="p">(</span><span class="n">documents</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Vector store:"</span><span class="p">,</span> <span class="n">vector_store</span><span class="p">)</span>
+</code></pre></div>
+<p>2.
+</p><div class="highlight"><pre><span/><code><span class="k">def</span><span class="w"> </span><span class="nf">calculate_similarity</span><span class="p">(</span><span class="n">query_embedding</span><span class="p">,</span> <span class="n">document_embedding</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Stub function to compute similarity between two embeddings.</span>
+<span class="sd">    In practice, use metrics like cosine similarity or Euclidean distance.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        query_embedding (list): Embedding of the search query.</span>
+<span class="sd">        document_embedding (list): Embedding of a document.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        float: Simulated similarity score between query and document.</span>
+<span class="sd">    """</span>
+    <span class="c1"># Simplified similarity for demonstration</span>
+    <span class="k">return</span> <span class="o">-</span><span class="nb">abs</span><span class="p">(</span><span class="n">query_embedding</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">document_embedding</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">perform_semantic_search</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">vector_store</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Perform semantic search to find the document most similar to the query within the vector store.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        query (str): User’s search query.</span>
+<span class="sd">        vector_store (list): In‑memory structure containing document embeddings.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        int: Index of the most similar document in `vector_store`.</span>
+<span class="sd">    """</span>
+    <span class="n">query_embedding</span> <span class="o">=</span> <span class="n">embed_document</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
+    <span class="n">similarity_scores</span> <span class="o">=</span> <span class="p">[</span><span class="n">calculate_similarity</span><span class="p">(</span><span class="n">query_embedding</span><span class="p">,</span> <span class="n">doc_embedding</span><span class="p">)</span> <span class="k">for</span> <span class="n">doc_embedding</span> <span class="ow">in</span> <span class="n">vector_store</span><span class="p">]</span>
+    <span class="c1"># Get the index of the document with the highest similarity score</span>
+    <span class="n">most_similar_index</span> <span class="o">=</span> <span class="n">similarity_scores</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">similarity_scores</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">most_similar_index</span>
+
+<span class="c1"># Example usage of calculate_similarity and perform_semantic_search:</span>
+<span class="n">query</span> <span class="o">=</span> <span class="s2">"Document content that resembles document 1 more than others."</span>
+<span class="n">most_similar_doc_index</span> <span class="o">=</span> <span class="n">perform_semantic_search</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">vector_store</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Most similar document index:"</span><span class="p">,</span> <span class="n">most_similar_doc_index</span><span class="p">)</span>
+</code></pre></div>
+<p>3.
+</p><div class="highlight"><pre><span/><code><span class="k">class</span><span class="w"> </span><span class="nc">Chatbot</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># Store chat history as a list of (query, response) tuples</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">history</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">generate_response</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        Stub function simulating answer generation based on the current user query</span>
+<span class="sd">        and the provided context (chat history).</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            query (str): Current user query.</span>
+<span class="sd">            context (list of tuples): List of (query, response) pairs representing chat history.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str: Simulated chatbot response.</span>
+<span class="sd">        """</span>
+        <span class="c1"># For simplicity, produce a templated response that references history length</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">"Response to '</span><span class="si">{</span><span class="n">query</span><span class="si">}</span><span class="s2">' (with </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">context</span><span class="p">)</span><span class="si">}</span><span class="s2"> past interactions)."</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">respond_to_query</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        Accept a user query, generate a response using current chat history,</span>
+<span class="sd">        and update history with the new (query, response) pair.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            query (str): User query.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str: Generated chatbot response.</span>
+<span class="sd">        """</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">generate_response</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">history</span><span class="p">)</span>
+        <span class="c1"># Update history with the latest interaction</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">history</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">query</span><span class="p">,</span> <span class="n">response</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">response</span>
+
+<span class="c1"># Example usage of Chatbot:</span>
+<span class="n">chatbot</span> <span class="o">=</span> <span class="n">Chatbot</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">chatbot</span><span class="o">.</span><span class="n">respond_to_query</span><span class="p">(</span><span class="s2">"Hello, how are you?"</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">chatbot</span><span class="o">.</span><span class="n">respond_to_query</span><span class="p">(</span><span class="s2">"What is the weather like today?"</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">chatbot</span><span class="o">.</span><span class="n">respond_to_query</span><span class="p">(</span><span class="s2">"Thank you!"</span><span class="p">))</span>
+</code></pre></div>
+<p>4.
+</p><div class="highlight"><pre><span/><code><span class="k">class</span><span class="w"> </span><span class="nc">LanguageModel</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_text</span><span class="p">):</span>
+        <span class="c1"># Stub of the language model `predict` method; a real implementation would</span>
+        <span class="c1"># call an actual LLM to generate the response.</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">"Mock response for: </span><span class="si">{</span><span class="n">input_text</span><span class="si">}</span><span class="s2">"</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">DocumentRetriever</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">retrieve</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">):</span>
+        <span class="c1"># Stub of `retrieve` for fetching documents; a real implementation</span>
+        <span class="c1"># would search and return relevant documents by query.</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">"Mock document related to: </span><span class="si">{</span><span class="n">query</span><span class="si">}</span><span class="s2">"</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">ConversationMemory</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># Initialize an empty list to store conversation history</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">memory</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_to_memory</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="n">response</span><span class="p">):</span>
+        <span class="c1"># Add a new (query, response) entry to memory</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">memory</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">query</span><span class="p">,</span> <span class="n">response</span><span class="p">))</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">reset_memory</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># Clear the entire memory history</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">memory</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_memory</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># Return the current memory history</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">memory</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">setup_conversational_retrieval_chain</span><span class="p">():</span>
+    <span class="c1"># Initialize individual components for the retrieval chain:</span>
+    <span class="c1"># language model, document retriever, and conversation memory.</span>
+    <span class="n">language_model</span> <span class="o">=</span> <span class="n">LanguageModel</span><span class="p">()</span>
+    <span class="n">document_retriever</span> <span class="o">=</span> <span class="n">DocumentRetriever</span><span class="p">()</span>
+    <span class="n">conversation_memory</span> <span class="o">=</span> <span class="n">ConversationMemory</span><span class="p">()</span>
+
+    <span class="c1"># For demonstration, return a dict representing initialized components.</span>
+    <span class="c1"># A real implementation would integrate them into a working system.</span>
+    <span class="n">retrieval_chain</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">"language_model"</span><span class="p">:</span> <span class="n">language_model</span><span class="p">,</span>
+        <span class="s2">"document_retriever"</span><span class="p">:</span> <span class="n">document_retriever</span><span class="p">,</span>
+        <span class="s2">"conversation_memory"</span><span class="p">:</span> <span class="n">conversation_memory</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">retrieval_chain</span>
+
+<span class="c1"># Example usage of setup_conversational_retrieval_chain:</span>
+<span class="n">retrieval_chain</span> <span class="o">=</span> <span class="n">setup_conversational_retrieval_chain</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">retrieval_chain</span><span class="p">)</span>
+</code></pre></div>
+<p>5.
+</p><div class="highlight"><pre><span/><code><span class="k">class</span><span class="w"> </span><span class="nc">EnhancedChatbot</span><span class="p">(</span><span class="n">Chatbot</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="c1"># Initialize ConversationMemory (from the previous task) to manage chat history</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">conversation_memory</span> <span class="o">=</span> <span class="n">ConversationMemory</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_to_history</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="n">response</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        Add a new (user query, chatbot response) entry to the conversation history</span>
+<span class="sd">        using ConversationMemory.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            query (str): User query.</span>
+<span class="sd">            response (str): Chatbot response.</span>
+<span class="sd">        """</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">conversation_memory</span><span class="o">.</span><span class="n">add_to_memory</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">response</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">reset_history</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        Reset the entire conversation history, clearing all past interactions.</span>
+<span class="sd">        """</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">conversation_memory</span><span class="o">.</span><span class="n">reset_memory</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">respond_to_query</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        Override Chatbot.respond_to_query to include enhanced conversation‑memory handling.</span>
+<span class="sd">        """</span>
+        <span class="c1"># Generate a response using the base behavior and the current memory</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">generate_response</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">conversation_memory</span><span class="o">.</span><span class="n">get_memory</span><span class="p">())</span>
+        <span class="c1"># Update memory with the latest turn</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_to_history</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">response</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">response</span>
+
+<span class="c1"># Example usage of EnhancedChatbot:</span>
+<span class="n">enhanced_chatbot</span> <span class="o">=</span> <span class="n">EnhancedChatbot</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">enhanced_chatbot</span><span class="o">.</span><span class="n">respond_to_query</span><span class="p">(</span><span class="s2">"Hello, how are you?"</span><span class="p">))</span>
+<span class="n">enhanced_chatbot</span><span class="o">.</span><span class="n">reset_history</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">enhanced_chatbot</span><span class="o">.</span><span class="n">respond_to_query</span><span class="p">(</span><span class="s2">"Starting a new conversation."</span><span class="p">))</span>
+</code></pre></div>
+<p>6.
+</p><div class="highlight"><pre><span/><code><span class="k">def</span><span class="w"> </span><span class="nf">embed_document</span><span class="p">(</span><span class="n">document_text</span><span class="p">):</span>
+    <span class="c1"># Stub for simulating a document text embedding. In a real system,</span>
+    <span class="c1"># this would use an actual embedding model (e.g., OpenAI Embeddings).</span>
+    <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span><span class="nb">ord</span><span class="p">(</span><span class="n">char</span><span class="p">)</span> <span class="k">for</span> <span class="n">char</span> <span class="ow">in</span> <span class="n">document_text</span><span class="p">)</span> <span class="o">%</span> <span class="mi">100</span>  <span class="c1"># Simple hash for demo</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">split_document_into_chunks</span><span class="p">(</span><span class="n">document</span><span class="p">,</span> <span class="n">chunk_size</span><span class="o">=</span><span class="mi">100</span><span class="p">):</span>
+    <span class="c1"># Split the input document text into manageable chunks of a given size</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">document</span><span class="p">[</span><span class="n">i</span><span class="p">:</span><span class="n">i</span><span class="o">+</span><span class="n">chunk_size</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">document</span><span class="p">),</span> <span class="n">chunk_size</span><span class="p">)]</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">perform_semantic_search</span><span class="p">(</span><span class="n">query_embedding</span><span class="p">,</span> <span class="n">vector_store</span><span class="p">):</span>
+    <span class="c1"># Find the most relevant document chunk in the vector store</span>
+    <span class="c1"># based on embedding similarity. This is a placeholder search.</span>
+    <span class="n">similarities</span> <span class="o">=</span> <span class="p">[</span><span class="nb">abs</span><span class="p">(</span><span class="n">query_embedding</span> <span class="o">-</span> <span class="n">chunk_embedding</span><span class="p">)</span> <span class="k">for</span> <span class="n">chunk_embedding</span> <span class="ow">in</span> <span class="n">vector_store</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">similarities</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">similarities</span><span class="p">))</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">generate_answer_from_chunk</span><span class="p">(</span><span class="n">chunk</span><span class="p">):</span>
+    <span class="c1"># Stub for simulating answer generation from a chosen document chunk.</span>
+    <span class="c1"># A real system would use an LLM to formulate the answer.</span>
+    <span class="k">return</span> <span class="sa">f</span><span class="s2">"Based on your question, a relevant piece of information is: </span><span class="se">\"</span><span class="si">{</span><span class="n">chunk</span><span class="p">[:</span><span class="mi">50</span><span class="p">]</span><span class="si">}</span><span class="s2">...</span><span class="se">\"</span><span class="s2">"</span>
+
+<span class="c1"># Main logic of a simple document‑grounded Q&amp;A system</span>
+<span class="n">document</span> <span class="o">=</span> <span class="s2">"This is a long document. "</span> <span class="o">*</span> <span class="mi">100</span>  <span class="c1"># Simulated long document</span>
+<span class="n">chunks</span> <span class="o">=</span> <span class="n">split_document_into_chunks</span><span class="p">(</span><span class="n">document</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+<span class="n">vector_store</span> <span class="o">=</span> <span class="p">[</span><span class="n">embed_document</span><span class="p">(</span><span class="n">chunk</span><span class="p">)</span> <span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="n">chunks</span><span class="p">]</span>
+
+<span class="c1"># Simulate a user question and its embedding</span>
+<span class="n">user_question</span> <span class="o">=</span> <span class="s2">"What is this document about?"</span>
+<span class="n">question_embedding</span> <span class="o">=</span> <span class="n">embed_document</span><span class="p">(</span><span class="n">user_question</span><span class="p">)</span>
+
+<span class="c1"># Find the most relevant document chunk to answer from</span>
+<span class="n">relevant_chunk_index</span> <span class="o">=</span> <span class="n">perform_semantic_search</span><span class="p">(</span><span class="n">question_embedding</span><span class="p">,</span> <span class="n">vector_store</span><span class="p">)</span>
+<span class="n">relevant_chunk</span> <span class="o">=</span> <span class="n">chunks</span><span class="p">[</span><span class="n">relevant_chunk_index</span><span class="p">]</span>
+
+<span class="c1"># Generate the answer based on the selected chunk</span>
+<span class="n">answer</span> <span class="o">=</span> <span class="n">generate_answer_from_chunk</span><span class="p">(</span><span class="n">relevant_chunk</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">answer</span><span class="p">)</span>
+</code></pre></div>
+<p>7.
+</p><div class="highlight"><pre><span/><code><span class="k">def</span><span class="w"> </span><span class="nf">integrate_memory_with_retrieval_chain</span><span class="p">(</span><span class="n">retrieval_chain</span><span class="p">,</span> <span class="n">user_query</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Integrate a conversational retrieval chain with a memory system to maintain context</span>
+<span class="sd">    during the dialogue.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        retrieval_chain (dict): Mock retrieval chain containing the language model,</span>
+<span class="sd">                                document retriever, and conversation memory.</span>
+<span class="sd">        user_query (str): Current user query to process.</span>
+<span class="sd">    """</span>
+    <span class="c1"># Pull components from the provided retrieval chain</span>
+    <span class="n">conversation_memory</span> <span class="o">=</span> <span class="n">retrieval_chain</span><span class="p">[</span><span class="s2">"conversation_memory"</span><span class="p">]</span>
+    <span class="n">language_model</span> <span class="o">=</span> <span class="n">retrieval_chain</span><span class="p">[</span><span class="s2">"language_model"</span><span class="p">]</span>
+    <span class="n">document_retriever</span> <span class="o">=</span> <span class="n">retrieval_chain</span><span class="p">[</span><span class="s2">"document_retriever"</span><span class="p">]</span>
+
+    <span class="c1"># Simulate using the retriever to fetch relevant information</span>
+    <span class="n">relevant_info</span> <span class="o">=</span> <span class="n">document_retriever</span><span class="o">.</span><span class="n">retrieve</span><span class="p">(</span><span class="n">user_query</span><span class="p">)</span>
+
+    <span class="c1"># Get current history to use as context</span>
+    <span class="n">context</span> <span class="o">=</span> <span class="n">conversation_memory</span><span class="o">.</span><span class="n">get_memory</span><span class="p">()</span>
+
+    <span class="c1"># Simulate response generation with the language model using the query,</span>
+    <span class="c1"># context, and retrieved info</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="n">language_model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span>
+        <span class="sa">f</span><span class="s2">"Query: </span><span class="si">{</span><span class="n">user_query</span><span class="si">}</span><span class="s2">, Context: </span><span class="si">{</span><span class="n">context</span><span class="si">}</span><span class="s2">, Relevant Info: </span><span class="si">{</span><span class="n">relevant_info</span><span class="si">}</span><span class="s2">"</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Update memory with the new turn</span>
+    <span class="n">conversation_memory</span><span class="o">.</span><span class="n">add_to_memory</span><span class="p">(</span><span class="n">user_query</span><span class="p">,</span> <span class="n">response</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">response</span>
+
+<span class="c1"># Use the retrieval chain from task 4 with a dummy query to demonstrate</span>
+<span class="n">dummy_query</span> <span class="o">=</span> <span class="s2">"Tell me more about this document."</span>
+<span class="n">response</span> <span class="o">=</span> <span class="n">integrate_memory_with_retrieval_chain</span><span class="p">(</span><span class="n">retrieval_chain</span><span class="p">,</span> <span class="n">dummy_query</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Generated response:"</span><span class="p">,</span> <span class="n">response</span><span class="p">)</span>
+</code></pre></div>
+<p>8.
+</p><div class="highlight"><pre><span/><code><span class="k">def</span><span class="w"> </span><span class="nf">chatbot_cli</span><span class="p">():</span>
+    <span class="c1"># Initialize EnhancedChatbot (extended chatbot from previous tasks with memory support)</span>
+    <span class="n">enhanced_chatbot</span> <span class="o">=</span> <span class="n">EnhancedChatbot</span><span class="p">()</span>
+
+    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Options: ask [question], view history, reset history, exit"</span><span class="p">)</span>
+        <span class="n">user_input</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">"What would you like to do? "</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">user_input</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"ask "</span><span class="p">):</span>
+            <span class="n">question</span> <span class="o">=</span> <span class="n">user_input</span><span class="p">[</span><span class="mi">4</span><span class="p">:]</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="n">enhanced_chatbot</span><span class="o">.</span><span class="n">respond_to_query</span><span class="p">(</span><span class="n">question</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">"Chatbot:"</span><span class="p">,</span> <span class="n">response</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">user_input</span> <span class="o">==</span> <span class="s2">"view history"</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">q</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">enhanced_chatbot</span><span class="o">.</span><span class="n">conversation_memory</span><span class="o">.</span><span class="n">get_memory</span><span class="p">(),</span> <span class="mi">1</span><span class="p">):</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">. Q: </span><span class="si">{</span><span class="n">q</span><span class="si">}</span><span class="s2"> A: </span><span class="si">{</span><span class="n">a</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">user_input</span> <span class="o">==</span> <span class="s2">"reset history"</span><span class="p">:</span>
+            <span class="n">enhanced_chatbot</span><span class="o">.</span><span class="n">reset_history</span><span class="p">()</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">"Conversation history reset."</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">user_input</span> <span class="o">==</span> <span class="s2">"exit"</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">"Exiting chatbot. Goodbye!"</span><span class="p">)</span>
+            <span class="k">break</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">"Invalid option. Please try again."</span><span class="p">)</span>
+
+<span class="c1"># To launch the chatbot CLI, uncomment the line below.</span>
+<span class="c1"># (Commented to avoid auto‑execution in non‑interactive environments.)</span>
+<span class="c1"># chatbot_cli()</span>
+</code></pre></div>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+                  
+</body>
+</html>

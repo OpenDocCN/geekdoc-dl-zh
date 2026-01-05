@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+  "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Answers 1.4</title>
+<link href="../Styles/Style.css" type="text/css" rel="stylesheet"/>
+</head>
+<body>
+<h1>Answers 1.4</h1>
+<blockquote>原文：<a href="https://boramorka.github.io/LLM-Book/en/CHAPTER-1/Answers%201.4/">https://boramorka.github.io/LLM-Book/en/CHAPTER-1/Answers%201.4/</a></blockquote>
+                
+                  
+
+
+  
+  
+
+
+
+<h2 id="theory">Theory</h2>
+<ol>
+<li>Chain of Thought (CoT) breaks problem solving into sequential steps, improving accuracy and making the decision process understandable.</li>
+<li>CoT transparency lets users see the model’s logic, strengthening trust.</li>
+<li>In education, CoT mimics a tutor: guiding step by step and fostering critical thinking.</li>
+<li>In customer support, CoT helps unpack complex requests and arrive at precise answers step by step, reducing agent load.</li>
+<li>Inner Monologue hides intermediate reasoning and shows only the result — unlike CoT, where steps are visible to the user.</li>
+<li>For sensitive information, Inner Monologue reduces the chance of accidentally revealing details.</li>
+<li>In “guided learning”, Inner Monologue provides hints without “spoiling” the full solution.</li>
+<li>Environment prep includes loading the OpenAI key and importing required Python libraries.</li>
+<li><code>get_response_for_queries</code> sends prompts to the API and returns the model’s answer, encapsulating the interaction.</li>
+<li>CoT prompting guides the model through steps when a direct answer is non‑obvious or requires complex logic.</li>
+<li>In support, the system/user prompt structure directs reasoning for detailed product answers.</li>
+<li>With Inner Monologue, you can extract only the final part of the answer to keep the interface concise and clear.</li>
+</ol>
+<h2 id="practice">Practice</h2>
+<p>Task 1: CoT — Detailed product answer</p>
+<ol>
+<li>Implement <code>detailed_product_info_cot(product_name, user_question)</code> that uses CoT to build a detailed, stepwise answer.</li>
+<li>Steps:</li>
+<li>Step 1: Identify the product in question.</li>
+<li>Step 2: Collect key characteristics (type, features, benefits).</li>
+<li>Step 3: Use the collected data to answer <code>user_question</code> clearly and logically.</li>
+</ol>
+<p>Task 2: Inner Monologue — Concise summary</p>
+<ol>
+<li>Implement <code>concise_product_summary_inner_monologue(product_name, user_question)</code> that uses Inner Monologue to produce a concise answer.</li>
+<li>Steps:</li>
+<li>Internal: perform the same steps as CoT, but do not expose intermediate reasoning.</li>
+<li>Final: return only a brief, direct answer to <code>user_question</code>.</li>
+<li>Compare the outputs of both functions and explain their appropriate use cases.</li>
+</ol>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+                  
+</body>
+</html>

@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+  "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>2.2 LangChain Document Loaders</title>
+<link href="../Styles/Style.css" type="text/css" rel="stylesheet"/>
+</head>
+<body>
+<h1>2.2 LangChain Document Loaders</h1>
+<blockquote>原文：<a href="https://boramorka.github.io/LLM-Book/en/CHAPTER-2/2.2%20LangChain%20Document%20Loaders/">https://boramorka.github.io/LLM-Book/en/CHAPTER-2/2.2%20LangChain%20Document%20Loaders/</a></blockquote>
+                
+                  
+
+
+  
+  
+
+
+
+<p>For LLM‑powered data apps and conversational interfaces, it’s critical to load data efficiently, normalize it, and use it across diverse sources. In the LangChain ecosystem, “loaders” are components that extract information from websites, databases, and media files and convert it into a standard document object with content and metadata. Dozens of formats (PDF, HTML, JSON, etc.) and sources are supported — from public ones (YouTube, Twitter, Hacker News) to enterprise tools (Figma, Notion). There are also loaders for tabular and service data (Airbyte, Stripe, Airtable, and more), enabling semantic search and QA not only over unstructured data but also strictly structured datasets. This modularity lets you build targeted pipelines: sometimes it’s enough to load and clean text; other times you’ll auto‑create embeddings, extract entities, aggregate, and summarize.</p>
+<p>We start with basic environment prep: install dependencies, configure API keys, and read them from <code>.env</code> for safe access to external data.</p>
+<div class="highlight"><pre><span/><code><span class="c1"># Install required packages (they may already be present in your environment)</span>
+<span class="c1"># !pip install langchain dotenv</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dotenv</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_dotenv</span><span class="p">,</span> <span class="n">find_dotenv</span>
+
+<span class="c1"># Load environment variables from .env</span>
+<span class="n">load_dotenv</span><span class="p">(</span><span class="n">find_dotenv</span><span class="p">())</span>
+
+<span class="c1"># Fetch the OpenAI API key from the environment</span>
+<span class="n">openai_api_key</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">'OPENAI_API_KEY'</span><span class="p">]</span>
+</code></pre></div>
+<p>A common scenario is working with PDFs. The example below shows how to load a document (e.g., a lecture transcript), clean and tokenize text, count word frequencies, and save a cleaned version for later analysis; we explicitly handle and log empty pages, and metadata is available for spot checks.</p>
+<div class="highlight"><pre><span/><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain.document_loaders</span><span class="w"> </span><span class="kn">import</span> <span class="n">PyPDFLoader</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">Counter</span>
+
+<span class="c1"># Initialize PDF loader with the path to your PDF document</span>
+<span class="c1"># Replace with your own file path or use a URL-based loader for remote PDFs</span>
+<span class="n">pdf_loader</span> <span class="o">=</span> <span class="n">PyPDFLoader</span><span class="p">(</span><span class="s2">"path/to/your/document.pdf"</span><span class="p">)</span>  <span class="c1"># Example: "lecture.pdf"</span>
+
+<span class="c1"># Load the document pages</span>
+<span class="n">document_pages</span> <span class="o">=</span> <span class="n">pdf_loader</span><span class="o">.</span><span class="n">load</span><span class="p">()</span>
+
+<span class="c1"># Clean and tokenize</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">clean_and_tokenize</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
+    <span class="c1"># Remove non‑alphabetic characters and split into words</span>
+    <span class="n">words</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="sa">r</span><span class="s1">'\b[a-z]+\b'</span><span class="p">,</span> <span class="n">text</span><span class="o">.</span><span class="n">lower</span><span class="p">())</span>
+    <span class="k">return</span> <span class="n">words</span>
+
+<span class="n">word_frequencies</span> <span class="o">=</span> <span class="n">Counter</span><span class="p">()</span>
+
+<span class="k">for</span> <span class="n">page</span> <span class="ow">in</span> <span class="n">document_pages</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">page</span><span class="o">.</span><span class="n">page_content</span><span class="o">.</span><span class="n">strip</span><span class="p">():</span>
+        <span class="n">words</span> <span class="o">=</span> <span class="n">clean_and_tokenize</span><span class="p">(</span><span class="n">page</span><span class="o">.</span><span class="n">page_content</span><span class="p">)</span>
+        <span class="n">word_frequencies</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">words</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Empty page found at index </span><span class="si">{</span><span class="n">document_pages</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">page</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Most frequent words:"</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">word</span><span class="p">,</span> <span class="n">freq</span> <span class="ow">in</span> <span class="n">word_frequencies</span><span class="o">.</span><span class="n">most_common</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">word</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">freq</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+
+<span class="c1"># Inspect metadata of the first page</span>
+<span class="n">first_page_metadata</span> <span class="o">=</span> <span class="n">document_pages</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">metadata</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">First page metadata:"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">first_page_metadata</span><span class="p">)</span>
+
+<span class="c1"># Optionally save cleaned text to a file</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">"cleaned_lecture_series_lecture01.txt"</span><span class="p">,</span> <span class="s2">"w"</span><span class="p">)</span> <span class="k">as</span> <span class="n">text_file</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">page</span> <span class="ow">in</span> <span class="n">document_pages</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">page</span><span class="o">.</span><span class="n">page_content</span><span class="o">.</span><span class="n">strip</span><span class="p">():</span>
+            <span class="n">cleaned_text</span> <span class="o">=</span> <span class="s1">' '</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">clean_and_tokenize</span><span class="p">(</span><span class="n">page</span><span class="o">.</span><span class="n">page_content</span><span class="p">))</span>
+            <span class="n">text_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">cleaned_text</span> <span class="o">+</span> <span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="p">)</span>
+</code></pre></div>
+<p>Video is equally important. We can fetch YouTube audio, transcribe it with Whisper via LangChain, and begin analysis immediately: split into sentences, assess sentiment (polarity and subjectivity) with <code>TextBlob</code>, and optionally add entity extraction, key‑phrase detection, and summarization.</p>
+<div class="highlight"><pre><span/><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain.document_loaders.generic</span><span class="w"> </span><span class="kn">import</span> <span class="n">GenericLoader</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain.document_loaders.parsers</span><span class="w"> </span><span class="kn">import</span> <span class="n">OpenAIWhisperParser</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain.document_loaders.blob_loaders.youtube_audio</span><span class="w"> </span><span class="kn">import</span> <span class="n">YoutubeAudioLoader</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">nltk.tokenize</span><span class="w"> </span><span class="kn">import</span> <span class="n">sent_tokenize</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">textblob</span><span class="w"> </span><span class="kn">import</span> <span class="n">TextBlob</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">nltk</span>
+<span class="n">nltk</span><span class="o">.</span><span class="n">download</span><span class="p">(</span><span class="s1">'punkt'</span><span class="p">)</span>
+
+<span class="n">video_url</span> <span class="o">=</span> <span class="s2">"https://www.youtube.com/watch?v=example_video_id"</span>
+<span class="n">audio_save_directory</span> <span class="o">=</span> <span class="s2">"docs/youtube/"</span>
+<span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">audio_save_directory</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="n">youtube_loader</span> <span class="o">=</span> <span class="n">GenericLoader</span><span class="p">(</span>
+    <span class="n">YoutubeAudioLoader</span><span class="p">([</span><span class="n">video_url</span><span class="p">],</span> <span class="n">audio_save_directory</span><span class="p">),</span>
+    <span class="n">OpenAIWhisperParser</span><span class="p">()</span>
+<span class="p">)</span>
+
+<span class="n">youtube_documents</span> <span class="o">=</span> <span class="n">youtube_loader</span><span class="o">.</span><span class="n">load</span><span class="p">()</span>
+
+<span class="n">transcribed_text</span> <span class="o">=</span> <span class="n">youtube_documents</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">page_content</span><span class="p">[:</span><span class="mi">500</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">transcribed_text</span><span class="p">)</span>
+
+<span class="n">sentences</span> <span class="o">=</span> <span class="n">sent_tokenize</span><span class="p">(</span><span class="n">transcribed_text</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">First 5 sentences:"</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">sentence</span> <span class="ow">in</span> <span class="n">sentences</span><span class="p">[:</span><span class="mi">5</span><span class="p">]:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">sentence</span><span class="p">)</span>
+
+<span class="n">sentiment</span> <span class="o">=</span> <span class="n">TextBlob</span><span class="p">(</span><span class="n">transcribed_text</span><span class="p">)</span><span class="o">.</span><span class="n">sentiment</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Sentiment:"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Polarity: </span><span class="si">{</span><span class="n">sentiment</span><span class="o">.</span><span class="n">polarity</span><span class="si">}</span><span class="s2">, Subjectivity: </span><span class="si">{</span><span class="n">sentiment</span><span class="o">.</span><span class="n">subjectivity</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+
+<span class="c1"># Polarity: float in [-1.0, 1.0] (negative to positive)</span>
+<span class="c1"># Subjectivity: float in [0.0, 1.0] (objective to subjective)</span>
+</code></pre></div>
+<p>For web content, we load a page by URL, clean the HTML, extract links and headings, then do a simple summary: sentence tokenization, stop‑word filtering, frequency analysis, and a brief digest.</p>
+<div class="highlight"><pre><span/><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain.document_loaders</span><span class="w"> </span><span class="kn">import</span> <span class="n">WebBaseLoader</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">bs4</span><span class="w"> </span><span class="kn">import</span> <span class="n">BeautifulSoup</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">nltk.tokenize</span><span class="w"> </span><span class="kn">import</span> <span class="n">sent_tokenize</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">nltk.corpus</span><span class="w"> </span><span class="kn">import</span> <span class="n">stopwords</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">nltk.probability</span><span class="w"> </span><span class="kn">import</span> <span class="n">FreqDist</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">nltk</span><span class="w"> </span><span class="kn">import</span> <span class="n">download</span>
+<span class="n">download</span><span class="p">(</span><span class="s1">'punkt'</span><span class="p">)</span>
+<span class="n">download</span><span class="p">(</span><span class="s1">'stopwords'</span><span class="p">)</span>
+
+<span class="n">web_loader</span> <span class="o">=</span> <span class="n">WebBaseLoader</span><span class="p">(</span><span class="s2">"https://example.com/path/to/document"</span><span class="p">)</span>
+<span class="n">web_documents</span> <span class="o">=</span> <span class="n">web_loader</span><span class="o">.</span><span class="n">load</span><span class="p">()</span>
+
+<span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">web_documents</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">page_content</span><span class="p">,</span> <span class="s1">'html.parser'</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">script_or_style</span> <span class="ow">in</span> <span class="n">soup</span><span class="p">([</span><span class="s2">"script"</span><span class="p">,</span> <span class="s2">"style"</span><span class="p">]):</span>
+    <span class="n">script_or_style</span><span class="o">.</span><span class="n">decompose</span><span class="p">()</span>
+
+<span class="n">clean_text</span> <span class="o">=</span> <span class="s1">' '</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">soup</span><span class="o">.</span><span class="n">stripped_strings</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">clean_text</span><span class="p">[:</span><span class="mi">500</span><span class="p">])</span>
+
+<span class="n">links</span> <span class="o">=</span> <span class="p">[(</span><span class="n">a</span><span class="o">.</span><span class="n">text</span><span class="p">,</span> <span class="n">a</span><span class="p">[</span><span class="s1">'href'</span><span class="p">])</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">soup</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s1">'a'</span><span class="p">,</span> <span class="n">href</span><span class="o">=</span><span class="kc">True</span><span class="p">)]</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Extracted links:"</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">text</span><span class="p">,</span> <span class="n">href</span> <span class="ow">in</span> <span class="n">links</span><span class="p">[:</span><span class="mi">5</span><span class="p">]:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">text</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">href</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+
+<span class="n">headings</span> <span class="o">=</span> <span class="p">[</span><span class="n">h1</span><span class="o">.</span><span class="n">text</span> <span class="k">for</span> <span class="n">h1</span> <span class="ow">in</span> <span class="n">soup</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s1">'h1'</span><span class="p">)]</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Headings found:"</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">heading</span> <span class="ow">in</span> <span class="n">headings</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">heading</span><span class="p">)</span>
+
+<span class="n">sentences</span> <span class="o">=</span> <span class="n">sent_tokenize</span><span class="p">(</span><span class="n">clean_text</span><span class="p">)</span>
+<span class="n">stop_words</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">stopwords</span><span class="o">.</span><span class="n">words</span><span class="p">(</span><span class="s2">"english"</span><span class="p">))</span>
+<span class="n">filtered_sentences</span> <span class="o">=</span> <span class="p">[</span><span class="s1">' '</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">w</span> <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">s</span><span class="o">.</span><span class="n">split</span><span class="p">()</span> <span class="k">if</span> <span class="n">w</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">stop_words</span><span class="p">])</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">sentences</span><span class="p">]</span>
+
+<span class="n">word_freq</span> <span class="o">=</span> <span class="n">FreqDist</span><span class="p">(</span><span class="n">w</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">filtered_sentences</span> <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">s</span><span class="o">.</span><span class="n">split</span><span class="p">())</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Most frequent words:"</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">word</span><span class="p">,</span> <span class="n">frequency</span> <span class="ow">in</span> <span class="n">word_freq</span><span class="o">.</span><span class="n">most_common</span><span class="p">(</span><span class="mi">5</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">word</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">frequency</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Content summary:"</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">sentence</span> <span class="ow">in</span> <span class="n">sentences</span><span class="p">[:</span><span class="mi">5</span><span class="p">]:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">sentence</span><span class="p">)</span>
+</code></pre></div>
+<p>Structured Notion exports are also easy to process: load Markdown files, convert to HTML for convenient parsing, extract headings and links, put metadata and parsed content into a DataFrame, filter (e.g., by a keyword in the title), and, if present, compute category breakdowns.</p>
+<div class="highlight"><pre><span/><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain.document_loaders</span><span class="w"> </span><span class="kn">import</span> <span class="n">NotionDirectoryLoader</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">markdown</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">bs4</span><span class="w"> </span><span class="kn">import</span> <span class="n">BeautifulSoup</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+
+<span class="n">notion_directory</span> <span class="o">=</span> <span class="s2">"docs/Notion_DB"</span>
+<span class="n">notion_loader</span> <span class="o">=</span> <span class="n">NotionDirectoryLoader</span><span class="p">(</span><span class="n">notion_directory</span><span class="p">)</span>
+<span class="n">notion_documents</span> <span class="o">=</span> <span class="n">notion_loader</span><span class="o">.</span><span class="n">load</span><span class="p">()</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">notion_documents</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">page_content</span><span class="p">[:</span><span class="mi">200</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">notion_documents</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">metadata</span><span class="p">)</span>
+
+<span class="n">html_content</span> <span class="o">=</span> <span class="p">[</span><span class="n">markdown</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="n">doc</span><span class="o">.</span><span class="n">page_content</span><span class="p">)</span> <span class="k">for</span> <span class="n">doc</span> <span class="ow">in</span> <span class="n">notion_documents</span><span class="p">]</span>
+
+<span class="n">parsed_data</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">content</span> <span class="ow">in</span> <span class="n">html_content</span><span class="p">:</span>
+    <span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">content</span><span class="p">,</span> <span class="s1">'html.parser'</span><span class="p">)</span>
+    <span class="n">headings</span> <span class="o">=</span> <span class="p">[</span><span class="n">heading</span><span class="o">.</span><span class="n">text</span> <span class="k">for</span> <span class="n">heading</span> <span class="ow">in</span> <span class="n">soup</span><span class="o">.</span><span class="n">find_all</span><span class="p">([</span><span class="s1">'h1'</span><span class="p">,</span> <span class="s1">'h2'</span><span class="p">,</span> <span class="s1">'h3'</span><span class="p">,</span> <span class="s1">'h4'</span><span class="p">,</span> <span class="s1">'h5'</span><span class="p">,</span> <span class="s1">'h6'</span><span class="p">])]</span>
+    <span class="n">links</span> <span class="o">=</span> <span class="p">[(</span><span class="n">a</span><span class="o">.</span><span class="n">text</span><span class="p">,</span> <span class="n">a</span><span class="p">[</span><span class="s1">'href'</span><span class="p">])</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">soup</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s1">'a'</span><span class="p">,</span> <span class="n">href</span><span class="o">=</span><span class="kc">True</span><span class="p">)]</span>
+    <span class="n">parsed_data</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s1">'headings'</span><span class="p">:</span> <span class="n">headings</span><span class="p">,</span> <span class="s1">'links'</span><span class="p">:</span> <span class="n">links</span><span class="p">})</span>
+
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+    <span class="s1">'metadata'</span><span class="p">:</span> <span class="p">[</span><span class="n">doc</span><span class="o">.</span><span class="n">metadata</span> <span class="k">for</span> <span class="n">doc</span> <span class="ow">in</span> <span class="n">notion_documents</span><span class="p">],</span>
+    <span class="s1">'parsed_content'</span><span class="p">:</span> <span class="n">parsed_data</span>
+<span class="p">})</span>
+
+<span class="n">keyword</span> <span class="o">=</span> <span class="s1">'Project'</span>
+<span class="n">filtered_docs</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s1">'metadata'</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">keyword</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="n">x</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'title'</span><span class="p">,</span> <span class="s1">''</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">())]</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Documents with the keyword in the title:"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">filtered_docs</span><span class="p">)</span>
+
+<span class="c1"># Example category summary (if categories exist in metadata)</span>
+<span class="k">if</span> <span class="s1">'category'</span> <span class="ow">in</span> <span class="n">df</span><span class="p">[</span><span class="s1">'metadata'</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+    <span class="n">category_counts</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">'metadata'</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="s1">'category'</span><span class="p">])</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Documents by category:"</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">category_counts</span><span class="p">)</span>
+</code></pre></div>
+<p>When working with loaders, keep an eye on external API costs (e.g., Whisper) and optimize calls; normalize data immediately after loading (cleaning, chunking, etc.); and if a source is missing — contribute your own loader to LangChain open source. Keep the docs handy for guidance: LangChain (https://github.com/LangChain/langchain) and OpenAI Whisper (https://github.com/openai/whisper). This practice lays the foundation for more advanced processing and integration of your data into LLM applications.</p>
+<h2 id="theory-questions">Theory Questions</h2>
+<ol>
+<li>What are document loaders in LangChain and what role do they play?</li>
+<li>How do loaders for unstructured data differ from those for structured data?</li>
+<li>How do you prepare the environment for loaders (packages, API keys, <code>.env</code>)?</li>
+<li>How does <code>PyPDFLoader</code> work and what does PDF pre‑processing give you?</li>
+<li>Why clean and tokenize text when processing PDFs?</li>
+<li>How do you transcribe a YouTube video with Whisper via LangChain?</li>
+<li>How do you apply sentence tokenization and sentiment analysis to a transcript?</li>
+<li>How do you load and process web content with <code>WebBaseLoader</code>?</li>
+<li>How do you extract and summarize page content by URL?</li>
+<li>How does <code>NotionDirectoryLoader</code> help analyze Notion exports?</li>
+<li>What practices matter when using loaders (cost awareness, pre‑processing)?</li>
+<li>Why and how can you contribute new loaders to LangChain?</li>
+</ol>
+<h2 id="practical-tasks">Practical Tasks</h2>
+<ol>
+<li>Modify the PDF analysis to ignore stop words (<code>nltk.stopwords</code>); print the top‑5 most frequent non‑stop words.</li>
+<li>Write a function that transcribes a YouTube URL (Whisper) and returns the first 100 words; include error handling.</li>
+<li>Create a script: load a page by URL, strip HTML tags, and print clean text (use BeautifulSoup).</li>
+<li>For a Notion export directory: convert Markdown to HTML, extract and print all links (text + href).</li>
+<li>Extend the YouTube transcription with <code>TextBlob</code> sentiment: print polarity and a coarse label (positive/neutral/negative).</li>
+<li>Build a DataFrame from Notion documents, add a “word count” column, and print titles of the three longest docs.</li>
+<li>For a given URL — load the page, extract the main text, and print a simple summary (first and last sentences).</li>
+</ol>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+                  
+</body>
+</html>
