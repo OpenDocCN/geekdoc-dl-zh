@@ -4,6 +4,7 @@
 +   [COT 专栏中文翻译](docs/cot-col/README.md)
 +   [DataCamp 博客中文翻译](docs/datacamp/README.md)
 +   [JAX & Flax 深度学习教程](docs/dl-jax-flax/README.md)
++   [R torch 深度学习和科学计算](docs/dl-scicmp-rtch/README.md)
 +   [DLology 博客中文翻译](docs/dlology/README.md)
 +   [EZYang 博客翻译](docs/ezyang/README.md)
 +   [与 TensorFlow 的初次接触](docs/first_contact_with_tensorFlow/README.md)
