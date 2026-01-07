@@ -1,0 +1,533 @@
+- en: 20  Tabular data
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 原文：[https://skeydan.github.io/Deep-Learning-and-Scientific-Computing-with-R-torch/tabular_data.html](https://skeydan.github.io/Deep-Learning-and-Scientific-Computing-with-R-torch/tabular_data.html)
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: 'So far, we’ve been working with images exclusively. With images, pixel values
+    are arranged in a grid; or several grids, actually, in case there are several
+    channels. However many there may be, all values are of the same type: integers
+    between `0` and `255`, for example, or (when normalized) floats in the interval
+    from `0` to `1`. With tabular (a.k.a.: spreadsheet) data, however, you could have
+    a mix of numbers, (single) characters, and (single- or multi-token) text.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'As we discussed, way back when talking about tensor creation, `torch` cannot
+    work with non-numerical data. In consequence, characters and text will have to
+    be pre-processed and encoded numerically. For single characters, or individual
+    strings, this poses few difficulties: just convert the R character vectors to
+    factors, and then, the factors to integers. Pre-processing for regular text, however,
+    is a much more involved topic, one we can’t go into here.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Now, assume that we’re presented with an all-numeric data frame. (Maybe it’s
+    been all-numeric from the outset; maybe we’ve followed the above-mentioned “integerization-via-factors”
+    recipe to make it so.) Still, what these numbers mean may differ between features.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 20.1 Types of numerical data, by example
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: A classic distinction is that between interval, ordinal, and categorical data.
+    Assume that for three individuals, we’re told that, for some feature, their respective
+    scores are `2`, `1`, and `3`. What are we to make of this?
+  prefs: []
+  type: TYPE_NORMAL
+- en: First, the numbers could just be encoding “artifacts”. That would be the case
+    if, say, `1` stood for *apple*, `2` for *orange*, and `3`, for *pineapple*. Then,
+    we’d have categorical data.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Second, the numbers could represent grades, `1` denoting the best, `2` the second-best,
+    `3` the one thereafter … and so on. In this case, there is a ranking, or an ordering,
+    between values. We have no reason to assume, though, that the distance between
+    `1` and `2` is the same as that between `2` and `3`. These are ordinal data.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Finally, maybe those distances *are* the same. Now, we’re dealing with interval
+    data.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Put in this way, the distinction may seem trivial. However, with real-world
+    datasets, it is not always easy to know what type of data you’re dealing with.
+  prefs: []
+  type: TYPE_NORMAL
+- en: To illustrate, we now inspect the popular *heart disease* dataset, available
+    on the [UCI Machine Learning Repository](https://archive.ics.uci.edu/ml/index.php).
+    It is this dataset we are going to build a classifier for, in this chapter.
+  prefs: []
+  type: TYPE_NORMAL
+- en: In what follows, the aspiration is not to be completely sure we’re “getting
+    it right”; instead, it’s about showing how to approach the task in a conscientious
+    (if I may say so) way.
+  prefs: []
+  type: TYPE_NORMAL
+- en: We start by loading the dataset. Here `heart_disease` is the target, and missing
+    values are indicated by a question mark.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*As you see, I’ve annotated the features with information given by the dataset
+    creators.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Based on this information, as well as the actual values in the dataset, the
+    following look like interval data to me:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '`age`,'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '`resting_blood_pressure`,'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '`chol`,'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '`max_heart_rate`, and'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '`old_peak` .'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'At the other end of the dimension, some features are clearly conceived as binary
+    here: namely, the predictors `sex`, `fasting_blood_sugar`, and `ex_induced_angina`,
+    as well as the target, `heart_disease`. Predictors that are binary, with values
+    either zero or one, are usually treated as numerical. No information is lost that
+    way. An alternative would be to represent them by length-two vectors: either `[0,
+    1]` (when the given value is `0`) or `[1, 0]` (when the given value is `1`). This
+    is called *one-hot encoding*, “one-hot” referring to just a single position in
+    the vector being non-zero (namely, the one corresponding to the category in question).
+    Normally, this is only done when there are more than two categories, and we’ll
+    get back to this technique when we implement the `dataset()` for this problem.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: We now have just `pain_type`, `rest_ecg`, `slope`, `ca`, and `thal` remaining.
+    Of those, `pain_type` , `rest_ecg,` and `thal` look categorical, or maybe ordinal,
+    to some degree. Normally in machine learning, ordinal data are treated as categorical,
+    and unless the number of different categories is high, this should not result
+    in significant loss of information.
+  prefs: []
+  type: TYPE_NORMAL
+- en: What about `slope`? To a machine learning person, the naming alone seems to
+    suggest a continuous feature; and values as nicely ordered as 1, 2, 3 might make
+    you think that the variable must be at least ordinal. However, a quick web search
+    already turns up a different, and much more complicated, reality.[¹](#fn1) We’ll
+    thus definitely want to treat this variable as categorical. (If this were a real-world
+    task, we should try consulting a domain expert, to find out whether there’s a
+    better solution.)
+  prefs: []
+  type: TYPE_NORMAL
+- en: Finally, for `ca`, we – or me, actually – don’t know the implication of how
+    many major blood vessels (zero to four) got *colored by fluoroscopy*. (Again,
+    if you have access to a domain expert, make use of the opportunity and ask them.)
+    The safest way is to not assume an equal distance between measurements, but treat
+    this feature as merely ordinal, and thus, categorical.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Now that we’ve discussed what to do, we can implement our data provider: `heart_dataset()`.*  *##
+    20.2 A `torch` `dataset` for tabular data'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Beyond adequate feature representation, there is one additional thing to take
+    care of. The dataset contains unknown values, which we coded as `NA`:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE1]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE2]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Fortunately, these occur in two columns only: `thal` and `ca`.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE3]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE4]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE5]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE6]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Seeing how we’re totally clueless as to what caused these missing values, and
+    considering that – conveniently – both features in question are categorical and
+    of low cardinality, it seems easiest to just have those `NA`s represented by an
+    additional factor value.
+  prefs: []
+  type: TYPE_NORMAL
+- en: That decided, we can implement `heart_dataset()`. Numerical features will be
+    scaled, a measure that should always be taken when they’re of different orders
+    of magnitude. This will significantly speed up training.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'As to the categorical features, one thing we *could* do is one-hot encode them.
+    For example:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE7]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE8]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: With one-hot encoding, we guarantee that each feature value differs from all
+    others exactly to the same degree. However, we can do better. We can use a technique
+    called *embedding* to represent these feature values in a space where they are
+    *not* all equally distinct from one another.
+  prefs: []
+  type: TYPE_NORMAL
+- en: We’ll see how that works when we build the model, but now, we need to make sure
+    the prerequisites are satisfied. Namely, `torch`’s embedding modules expect their
+    input to be integers, not one-hot encoded vectors (or anything else). So what
+    we’ll do is convert the categorical features to factors, and from there, to integers.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Putting it all together, we arrive at the following `dataset()` definition:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE9]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*Let’s see if the output it produces matches our expectations.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE10]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE11]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: It does.
+  prefs: []
+  type: TYPE_NORMAL
+- en: This is a small dataset, so we’ll forego creation of separate test and validation
+    sets.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE12]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*We’re ready to move on to the model. But first, let’s talk about *embeddings*.*******  ***##
+    20.3 Embeddings in deep learning: The idea'
+  prefs: []
+  type: TYPE_NORMAL
+- en: The main idea behind embeddings, the way this term is used in deep learning,
+    is to go beyond the default “all are equally distinct from each other” representation
+    of categorical values.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'As in one-hot encoding, scalars get mapped to vectors. But this time, there’s
+    no restriction as to how many slots may be non-empty, or as to the values they
+    may take. For example, integers 1, 2, and 3 could get mapped to the following
+    tensors:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE13]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*Now, we can use `nnf_cosine_similarity()` to find out how close to each other
+    these vectors are. Working, for convenience, in two dimensions, say we have two
+    parallel vectors, pointing in the same direction. The angle between them is zero,
+    and its cosine is one:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE14]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE15]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Thus, a value of one indicates maximal similarity. In contrast, now take them
+    to still be parallel, but pointing in opposite directions. The angle is one-hundred-eighty
+    degrees, and the cosine is minus one:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE16]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE17]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'These vectors are maximally dissimilar. In-between, we have angles around ninety
+    degrees, with vectors being (approximately) orthogonal; or “independent”, in common
+    parlance. With an angle of exactly ninety degrees, the cosine is zero:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE18]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE19]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Things work analogously in higher dimensions. So, we can determine which of
+    the above vectors `one`, `two`, and `three` are closest to each other:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE20]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE21]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Looking at how those were defined, these values make sense.*****  ***## 20.4
+    Embeddings in deep learning: Implementation'
+  prefs: []
+  type: TYPE_NORMAL
+- en: By now you probably agree that embeddings are useful. But how do we get them?
+  prefs: []
+  type: TYPE_NORMAL
+- en: Conveniently, these vectors are learned as part of model training. *Embedding
+    modules* are modules that take integer inputs and learn to map them to vectors.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'When creating such a module, you specify how many different integers there
+    are (`num_embeddings`), and how long you want the learned vectors to be (`embedding_dim`).
+    Together, these parameters tell the module how its weight matrix should look.
+    The weight matrix is nothing but a look-up table (a mutable one, though!) that
+    maps integers to corresponding vectors:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE22]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE23]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'At module creation, these mappings are initialized randomly. Still, we can
+    test that the code does what we want by calling the module on some feature – `slope`,
+    say:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE24]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE25]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Now, you could say that we glossed over, with a certain nonchalance, the question
+    of how these mappings are optimized. Technically, this works like for any module:
+    by means of backpropagation. *But there is an implication:* It follows that the
+    overall model, and even more importantly, the given *task*, will determine how
+    “good” those learned mappings are.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'And yet, there is something even more important: the *data*.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Sure, that goes without saying, you may think. But when embeddings are used,
+    the learned mappings are sometimes presented as an additional outcome, a surplus
+    benefit, of sorts. For example, the model itself might be a classifier, predicting
+    whether people are going to default on a loan or not. Now assume that there is
+    an input feature – ethnicity, say – that is processed using embeddings. Once the
+    model’s been trained, the acquired representation is extracted. In turn, that
+    representation will reflect all problems – biases, injustices, distortions – that
+    are present in the training dataset.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Below, I will show how to obtain and plot such a representation. To a domain
+    expert, this representation may or may not seem adequate; in any case, no harm
+    is likely to be caused *in this example*. However, when working on real-world
+    tasks, we always have to be aware of possible harms, and rigorously analyse any
+    biases and assumptions inherent in the training workflow.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Getting back to the implementation, here is the embedding module we use for
+    our task. Actually, there is no *single* embedding module; there is one for each
+    categorical feature. The wrapper, `embedding_module()`, keeps them all in an `nn_module_list()`,
+    and when called, iterates over them and concatenates their outputs:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE26]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*This wrapper – let’s call it “embedder” – will be one of the modules that
+    make up the top-level model.***  ***## 20.5 Model and model training'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The top-level module’s logic is straightforward. For the categorical part of
+    its input, it delegates to the embedder, and to the embeddings obtained it appends
+    the numerical part. The resulting tensor is then passed through a sequence of
+    linear modules:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE27]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*Looking at the final output, you see that these are raw scores, not probabilities.
+    With a binary target, this means we’ll make use of `nn_bce_with_logits_loss()`
+    to train the model.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Now, we still need some housekeeping and configuration:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE28]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*Note here the requested embedding dimension(s), `embedding_dim`.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Usual best practice would choose lower values, corresponding, roughly, to half
+    a feature’s cardinality. For example, if there were thirty different values for
+    some category, we might go with a vector length of about fifteen. And definitely,
+    this is what I’d do if I *had* thirty values. But in this example, cardinalities
+    are much lower: two, three, four, or five. (And that’s already with `NA` taken
+    as an additional factor value.) Halving those numbers would hardly leave any representational
+    capacity. So here, I went the opposite way: give the model a significantly bigger
+    space to play with. (Beyond seven, the chosen value, I didn’t see further training
+    improvements.)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: All preparatory work done, we can train the model. Normally, at this point we’d
+    run the learning rate finder. Here, the dataset really is too small for that to
+    make sense, at least without substantially tweaking the learning rate finder’s
+    default settings. Also, with a dataset as tiny as this, experimentation takes
+    very little time; and a few quick experiments are what the learning rate chosen
+    is based on.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE29]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE30]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE31]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*![Top row: Curves displaying how classification accuracy develops over the
+    training period, for both training and validation sets. Both rise in similar ways,
+    the one for validation being less noisy. Bottom row: Corresponding curves representing
+    the loss. Both fall in similar ways, the one for validation being a lot more smooth.](../Images/6076db8f886cf53379c58ea3472b9b11.png)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Figure 20.1: Losses and accuracies (training and validation, resp.) for binary
+    heart disease classification.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: As you see ([fig. 20.1](#fig-tabular-heart-disease-fit)), model training went
+    smoothly, and yielded good accuracy.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Before we leave the topic of tabular data, here’s how to extract, post-process,
+    and visualize the learned representations.****  ***## 20.6 Embedding-generated
+    representations by example
+  prefs: []
+  type: TYPE_NORMAL
+- en: Here, example-wise, is the weight matrix for `slope`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE32]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE33]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'For visualization, we’d like to reduce the number of dimensions from seven
+    to two. We can accomplish that by running PCA – Principal Components Analysis
+    – using R’s native `prcomp()`:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE34]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE35]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'This printout reflects two pieces of information: the standard deviations of
+    the principal components (also available as `pca$sdev`), and the matrix of variable
+    loadings (also available as `pca$rotation`).'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The former reflect how important the resulting components are; we use them
+    to decide if reduction to two components seems permissible. Here’s how much variance
+    is explained by the three components each:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE36]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE37]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: From that output, leaving out the third component is more than permissible.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The matrix of variable loadings, on the other hand, tells us how big a role
+    each variable (here: each slot in the learned embeddings) plays in determining
+    the “meaning” of a component. Here, a visualization is more helpful than the raw
+    numbers ([fig. 20.2](#fig-tabular-heart-disease-biplot)):'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE38]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*![A square figure, with seven arrows emanating from the center. Three of them
+    point point in similar directions, and two others do, as well.](../Images/c6ed6acd2629b75d70a55d6fe465ff75.png)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Figure 20.2: `heart_disease$slope`: PCA of embedding weights, biplot visualizing
+    factor loadings.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: This plot could be taken as indicating that – from a purely representational
+    standpoint, i.e., not taking into account training performance – an embedding
+    dimensionality of four would have been sufficient.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Finally, how about the main thing we’re after: a representation of slope categories
+    in two-dimensional space?'
+  prefs: []
+  type: TYPE_NORMAL
+- en: This information is provided by `pca$x`. It tells us how the original input
+    categories relate to the principal components.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE39]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE40]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Leaving out the third component, the distribution of categories in (two-dimensional)
+    space is easily visualized ([fig. 20.3](#fig-tabular-heart-disease-pca)):'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE41]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*![A square image, with three spread-out-in-space data points labeled ''up'',
+    ''down'', and ''flat''.](../Images/9396f02e59861b8d7a249fc93d2b8f70.png)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Figure 20.3: `heart_disease$slope`: PCA of embedding weights, locating the
+    original input values in two-dimensional space.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Whether this representation makes sense, I’ll leave to the experts to judge.
+    My goal here was to demonstrate the technique, so you can employ it when it *does*
+    yield some insight. Even when not, embedding modules do contribute substantially
+    to training success for categorical-feature or mixed-feature data.******  ****
+    * *
+  prefs: []
+  type: TYPE_NORMAL
+- en: See, e.g., [https://en.my-ekg.com/how-read-ekg/st-segment.html](https://en.my-ekg.com/how-read-ekg/st-segment.html),
+    or [https://ecg.utah.edu/lesson/10](https://ecg.utah.edu/lesson/10), or [Wikipedia](https://en.wikipedia.org/wiki/ST_segment).[↩︎](#fnref1)****************
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL

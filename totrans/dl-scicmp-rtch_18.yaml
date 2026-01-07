@@ -1,0 +1,240 @@
+- en: 13  Loading data
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 原文：[https://skeydan.github.io/Deep-Learning-and-Scientific-Computing-with-R-torch/data.html](https://skeydan.github.io/Deep-Learning-and-Scientific-Computing-with-R-torch/data.html)
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: Our toy example, which we’ll see a third (and last) version of in the next chapter,
+    had the model train on a tiny set of data – small enough to pass all observations
+    to the model in one go. What if that wasn’t the case? Say we had 10,000 items
+    instead, and every item was an RGB image of size 256 x 256 pixels. Even on very
+    powerful hardware, we could not possibly train a model on the complete data all
+    at once.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'For that reason, deep-learning frameworks like `torch` include an input pipeline
+    that lets you pass data to the model in *batches* – that is, subsets of observations.
+    Involved in this process are two classes: `dataset()` and `dataloader()`. Before
+    we look at how to construct instances of these, let’s characterize them by what
+    they’re *for*.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 13.1 Data vs. `dataset()` vs. `dataloader()` – what’s the difference?
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'In this book, “dataset” (variable-width font, no parentheses), or just “the
+    data”, usually refers to things like R matrices, `data.frame`s, and what’s contained
+    therein. A `dataset()` (fixed-width font, parentheses), however, is a `torch`
+    object that knows how to do one thing: *deliver to the caller a* *single item.*
+    That item, usually, will be a list, consisting of one input and one target tensor.
+    (It could be anything, though – whatever makes sense for the task. For example,
+    it could be a single tensor, if input and target are the same. Or more than two
+    tensors, in case different inputs should be passed to different modules.)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: As long as it fulfills the above-stated contract, a `dataset()` is free to do
+    whatever needs to be done. It could, for example, download data from the internet,
+    store them in some temporary location, do some pre-processing, and when asked,
+    return bite-sized chunks of data in just the shape expected by a certain class
+    of models. No matter what it does in the background, all its caller cares about
+    is that it return a single item. Its caller, that’s the `dataloader()`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'A `dataloader()`’s role is to feed input to the model in *batches*. One immediate
+    reason is computer memory: Most `dataset()`s will be far too large to pass them
+    to the model in one go. But there are additional benefits to batching. Since gradients
+    are computed (and model weights updated) once per *batch*, there is an inherent
+    stochasticity to the process, a stochasticity that helps with model training.
+    We’ll talk more about that in an upcoming chapter.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 13.2 Using `dataset()`s
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: '`dataset()`s come in all flavors, from ready-to-use – and brought to you by
+    some package, `torchvision` or `torchdatasets`, say, or any package that chooses
+    to provide access to data in `torch`-ready form – to fully customized (made by
+    you, that is). Creating `dataset()`s is straightforward, since they are R6 objects,
+    and there’s just three methods to be implemented. These methods are:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '`initialize(...)`. Parameters to `initialize()` are passed when a `dataset()`
+    is instantiated. Possibilities include, but are not limited to, references to
+    R `data.frame`s, filesystem paths, download URLs, and any configurations and parameterizations
+    expected by the `dataset()`.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '`.getitem(i)`. This is the method responsible for fulfilling the contract.
+    Whatever it returns counts as a single item. The parameter, `i`, is an index that,
+    in many cases, will be used to determine the starting position in the underlying
+    data structure (a `data.frame` of file system paths, for example). However, the
+    `dataset()` is not *obliged* to actually make use of that parameter. With extremely
+    huge `dataset()`s, for example, or given serious class imbalance, it could instead
+    decide to return items based on *sampling*.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '`.length()`. This, usually, is a one-liner, its only purpose being to inform
+    about the number of available items in a `dataset()`.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Here is a blueprint for creating a `dataset()`:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*That said, let’s compare three ways of obtaining a `dataset()` to work with,
+    from tailor-made to maximally effortless.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 13.2.1 A self-built `dataset()`
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: Let’s say we wanted to build a classifier based on the popular `iris` alternative,
+    `palmerpenguins`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE1]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE2]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'In predicting `species`, we want to make use of just a subset of columns: `bill_length_mm`,
+    `bill_depth_mm`, `flipper_length_mm`, and `body_mass_g`. We build a `dataset()`
+    that returns exactly what is needed:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE3]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*Once we’ve instantiated a `penguins_dataset()`, we should immediately perform
+    some checks. First, does it have the expected length?'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE4]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE5]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'And second, do individual elements have the expected shape and data type? Conveniently,
+    we can access `dataset()` items like tensor values, through indexing:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE6]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE7]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'This also works for items “further down” in the `dataset()` – it has to: When
+    indexing into a `dataset()`, what happens in the background is a call to `.getitem(i)`,
+    passing along the desired position `i`.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Truth be told, in this case we didn’t really have to build our own `dataset()`.
+    With so little pre-processing to be done, there is an alternative: `tensor_dataset()`.****  ***###
+    13.2.2 `tensor_dataset()`'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'When you already have a tensor around, or something that’s readily converted
+    to one, you can make use of a built-in `dataset()` generator: `tensor_dataset()`.
+    This function can be passed any number of tensors; each batch item then is a list
+    of tensor values:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE8]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE9]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'In our `penguins` scenario, we end up with two lines of code:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE10]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*Admittedly though, we have not made use of all the dataset’s columns. The
+    more pre-processing you need a `dataset()` to do, the more likely you are to want
+    to code your own.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Thirdly and finally, here is the most effortless possible way.**  **### 13.2.3
+    `torchvision::mnist_dataset()`
+  prefs: []
+  type: TYPE_NORMAL
+- en: When you’re working with packages in the `torch` ecosystem, chances are that
+    they already include some `dataset()`s, be it for demonstration purposes or for
+    the sake of the data themselves. `torchvision`, for example, packages a number
+    of classic image datasets – among those, that archetype of archetypes, MNIST.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Since we’re going to talk about image processing in a later chapter, I won’t
+    comment on the arguments to `mnist_dataset()` here; we do, however, include a
+    quick check that the data delivered conform to what we’d expect:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE11]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE12]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: At this point, that is all we need to know about `dataset()`s – we’ll encounter
+    plenty of them in the course of this book. Now, we move on from the one to the
+    many.*******  ***## 13.3 Using `dataloader()`s
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Continuing to work with the newly created MNIST `dataset()`, we instantiate
+    a `dataloader()` for it. The `dataloader()` will deliver pairs of images and labels
+    in batches: thirty-two at a time. In every epoch, it will return them in different
+    order (`shuffle = TRUE`):'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE13]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*Just like `dataset()`s, `dataloader()`s can be queried about their length:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE14]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE15]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: This time, though, the returned value is not the number of items; it is the
+    number of batches.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'To loop over batches, we first obtain an iterator, an object that knows how
+    to traverse the elements in this `dataloader()`. Calling `dataloader_next()`,
+    we can then access successive batches, one by one:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE16]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE17]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: If you compare the batch shape of `x` – the image part – with the shape of an
+    individual image (as inspected above), you see that now, there is an additional
+    dimension in front, reflecting the number of images in a batch.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The next step is passing the batches to a model. This – in fact, this as well
+    as the complete, end-to-end deep-learning workflow – is what the next chapter
+    is about.******
+  prefs: []
+  type: TYPE_NORMAL

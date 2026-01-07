@@ -1,0 +1,237 @@
+- en: 7  Modules
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 原文：[https://skeydan.github.io/Deep-Learning-and-Scientific-Computing-with-R-torch/modules.html](https://skeydan.github.io/Deep-Learning-and-Scientific-Computing-with-R-torch/modules.html)
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: 'In the last chapter, we built a neural network for a regression task. There
+    were two distinct types of operations: linear and non-linear.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'In the non-linear category, we had ReLU activation, expressed as a straightforward
+    function call: `nnf_relu()`. Activation functions are *functions*: Given input
+    \(\mathbf{x}\), they return output \(\mathbf{y}\) every time. In other words,
+    they are deterministic. It’s different with the linear part, though.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: The linear part in the regression network was implemented as multiplication
+    by a matrix – the weight matrix – and addition of a vector (the bias vector).
+    With operations like that, results inevitably depend on the actual values stored
+    in the respective tensors. Put differently, the operation is *stateful*.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Whenever there is state involved, it helps to encapsulate it in an object, freeing
+    the user from manual management. This is what `torch`’s *modules* do.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Note that term, *modules*. In `torch`, a module can be of any complexity, ranging
+    from basic *layers* – like the `nn_linear()` we are going to introduce in a minute
+    – to complete *models* consisting of many such layers. Code-wise, there is no
+    difference between “layers” and “models”. This is why in some texts, you’ll see
+    “module” used throughout. In this book, I’ll mostly stay with the common terminology
+    of layers and models, as it maps more closely to how things appear conceptually.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Back to the *why* of modules. In addition to encapsulation, there is another
+    reason for providing layer objects: Not all often-used layers are as light-weight
+    as `nn_linear()` is. We’ll quickly mention a few others at the end of the next
+    section, reserving a complete introduction to later chapters of this book.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 7.1 Built-in `nn_module()`s
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'In `torch`, a linear layer is created using `nn_linear()`. `nn_linear()` expects
+    (at least) two arguments: `in_features` and `out_features`. Let’s say your input
+    data has fifty observations with five features each; that is, it is of size 50
+    x 5\. You want to build a hidden layer with sixteen units. Then `in_features`
+    is 5, and `out_features` is 16\. (The same 5 and 16 would constitute the number
+    of rows/columns in the weight matrix if you built one yourself.)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*Once created, the module readily informs you about its parameters:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE1]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE2]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Encapsulation doesn’t keep us from inspecting the weight and bias tensors:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE3]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE4]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE5]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE6]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: At this point, I need to ask for your indulgence. You’ve probably noticed that
+    `torch` reports the weight matrix as being of size 16 x 5, not 5 x 16, like we
+    said you’d create it when coding from scratch. This is due to an implementation
+    detail inherited from the underlying C++ implementation, `libtorch`. For performance
+    reasons, `libtorch`’s linear module stores the weight and bias tensors in *transposed*
+    form. On the R side, all we can do is explicitly point you to it and thereby,
+    hopefully, alleviate the confusion.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Let’s go on. To apply this module to input data, just “call” it like a function:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE7]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE8]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'So that’s the forward pass. How about gradient computation? Previously, when
+    creating a tensor we wanted to figure as a “source” in gradient computation, we
+    had to let `torch` know explicitly, passing `requires_grad = TRUE`. No such thing
+    is required for built-in `nn_module()`s. We can immediately check that `output`
+    knows what to do on `backward()`:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE9]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE10]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'To be sure though, let’s calculate some “dummy” loss based on `output`, and
+    call `backward()`. We see that now, the linear module’s `weight` tensor has its
+    `grad` field populated:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE11]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE12]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Thus, once you work with `nn_module`s, `torch` automatically assumes that you’ll
+    want gradients computed.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '`nn_linear()`, straightforward though it may be, is an essential building block
+    encountered in most every model architecture. Others include:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '`nn_conv1d()`, `nn_conv2d(), and nn_conv3d()`, the so-called *convolutional*
+    layers that apply filters to input data of varying dimensionality,'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '`nn_lstm()` and `nn_gru()` , the *recurrent* layers that carry through a state,'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '`nn_embedding()` that is used to embed categorical data in high-dimensional
+    space,'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: and more.*******  ***## 7.2 Building up a model
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: The built-in `nn_module()`s give us *layers*, in usual speak. How do we combine
+    those into *models*? Using the “factory function” `nn_module()`, we can define
+    models of arbitrary complexity. But we may not always need to go that way.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '7.2.1 Models as sequences of layers: `nn_sequential()`index{`nn_sequential()`}'
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: 'If all our model should do is propagate straight through the layers, we can
+    use `nn_sequential()` to build it. Models consisting of all linear layers are
+    known as *Multi-Layer Perceptrons*index{Multi-Layer Perceptron (MLP)} (MLPs).
+    Here is one:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE13]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*Take a close look at the layers involved. We’ve already seen `nnf_relu()`,
+    the *function* that implements ReLU activation. (The `f` in `nnf_` stands for
+    functional.) Below, `nn_relu`, like `nn_linear()`, is a module, that is, an object.
+    This is because `nn_sequential()` expects all its arguments to be modules.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Just like the built-in modules, you can apply this model to data by just *calling*
+    it:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE14]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE15]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: The single call triggered a complete forward pass through the network. Analogously,
+    calling `backward()` will back-propagate through all the layers.
+  prefs: []
+  type: TYPE_NORMAL
+- en: What if you need the model to chain execution steps in a non-sequential way?**  **###
+    7.2.2 Models with custom logic
+  prefs: []
+  type: TYPE_NORMAL
+- en: As already hinted at, this is where you use `nn_module()`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '`nn_module()` creates constructors for custom-made R6 objects. Below, `my_linear()`
+    is such a constructor. When called, it will return a linear module similar to
+    the built-in `nn_linear()`.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Two methods should be implemented in defining a constructor: `initialize()`
+    and `forward()`. `initialize()` creates the module object’s fields, that is, the
+    objects or values it “owns” and can access from inside any of its methods. `forward()`
+    defines what should happen when the module is called on the input:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE16]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*Note the use of `nn_parameter()`. `nn_parameter()` makes sure that the passed-in
+    tensor is registered as a module *parameter*, and thus, is subject to backpropagation
+    by default.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'To instantiate the newly-defined module, call its constructor:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE17]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE18]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Granted, in this example, there really is no *custom logic* we needed to define
+    our own module for. But here, you have a template applicable to any use case.
+    Later, we’ll see definitions of `initialize()` and `forward()` that are more complex,
+    and we’ll encounter additional methods defined on modules. But the basic mechanism
+    will remain the same.
+  prefs: []
+  type: TYPE_NORMAL
+- en: At this point, you may feel like you’d like to rewrite last chapter’s neural
+    network using modules. Feel free to do so! Or maybe wait until, in the next chapter,
+    we’ll have learned about *optimizer*s, and built-in loss functions. Once we’re
+    done, we’ll return to our two examples, function minimization and the regression
+    network. Then, we’ll be removing all do-it-yourself pieces rendered superfluous
+    by `torch`.*******
+  prefs: []
+  type: TYPE_NORMAL

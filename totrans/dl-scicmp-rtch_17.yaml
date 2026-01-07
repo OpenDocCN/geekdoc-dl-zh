@@ -1,0 +1,60 @@
+- en: 12  Overview
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 原文：[https://skeydan.github.io/Deep-Learning-and-Scientific-Computing-with-R-torch/dl_overview.html](https://skeydan.github.io/Deep-Learning-and-Scientific-Computing-with-R-torch/dl_overview.html)
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: 'This part of the book is completely dedicated to applications of deep learning.
+    There will be two categories of things to dive into: topics workflow-related,
+    and topics related to domain adaptation.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Regarding workflow, we’ll see how to:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: prepare the input data in a form the model can work with;
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: effectively and efficiently train a model, monitoring progress and adjusting
+    hyper-parameters on the fly;
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: save and load models;
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: making models generalize beyond the training data;
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: speed up training;
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: and more.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Secondly – beyond an efficient workflow – the task in question matters. Compositions
+    of linear layers, of the type we used to learn `torch` in the first part, will
+    not suffice when our goal is to model images or time series. Successful use of
+    deep learning means tailoring model architecture to the domain in question. To
+    that end, we start from concrete tasks, and present applicable architectures directly
+    by example.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Concretely, the plan is the following. The upcoming two chapters will introduce
+    you to workflow-related techniques that are indispensable in practice. You’ll
+    encounter another package, `luz`, that endows `torch` with an important layer
+    of abstraction, and significantly streamlines the workflow. Once you know how
+    to use it, we’re all set to look at a first application: image classification.
+    To improve on our initial results, we then back up and explore two more advanced
+    workflow-related topics: how to improve generalization, and how to speed up training.
+    Equipped with that knowledge, we first return to images, before extending our
+    domain-related skills to tabular data, time series, and audio.'
+  prefs: []
+  type: TYPE_NORMAL

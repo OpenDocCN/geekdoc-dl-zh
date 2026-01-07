@@ -1,0 +1,147 @@
+- en: 5  Function minimization with autograd
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 原文：[https://skeydan.github.io/Deep-Learning-and-Scientific-Computing-with-R-torch/optim_1.html](https://skeydan.github.io/Deep-Learning-and-Scientific-Computing-with-R-torch/optim_1.html)
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: 'In the last two chapters, we’ve learned about tensors and automatic differentiation.
+    In the upcoming two, we take a break from studying `torch` mechanics and, instead,
+    find out what we’re able to do with what we already have. Using nothing but tensors,
+    and supported by nothing but *autograd*, we can already do two things:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: minimize a function (i.e., perform numerical optimization), and
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: build and train a neural network.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: In this chapter, we start with minimization, and leave the network to the next
+    one.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 5.1 An optimization classic
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'In optimization research, the *Rosenbrock function* is a classic. It is a function
+    of two variables; its minimum is at `(1,1)`. If you take a look at its contours,
+    you see that the minimum lies inside a stretched-out, narrow valley ([fig. 5.1](#fig-optim-1-rosenbrock)):'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Contour plot of a function in two variables, where the small function values
+    lie inside a stretched-out, narrow valley.](../Images/8b421d397f8209f540c9229aea5161dc.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Figure 5.1: Rosenbrock function.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Here is the function definition. `a` and `b` are parameters that can be freely
+    chosen; the values we use here are a frequent choice.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*## 5.2 Minimization from scratch'
+  prefs: []
+  type: TYPE_NORMAL
+- en: The scenario is the following. We start at some given point `(x1,x2)`, and set
+    out to find the location where the Rosenbrock function has its minimum.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'We follow the strategy outlined in the previous chapter: compute the function’s
+    gradient at our current position, and use it to go the opposite way. We don’t
+    know how far to go; if we take too big a big step we may easily overshoot. (If
+    you look back at the contour plot, you see that if you were standing at one of
+    the steep cliffs east or west of the minimum, this could happen very fast.)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Thus, it is best to proceed iteratively, taking moderate steps and re-evaluating
+    the gradient every time.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'In a nutshell, the optimization procedure then looks somewhat like this:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE1]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*As written, this code snippet demonstrates our intentions, but it’s not quite
+    correct (yet). It is also missing a few prerequisites: Neither the tensor `x`
+    nor the variables `lr` and `num_iterations` have been defined. Let’s make sure
+    we have those ready first. `lr`, for learning rate, is the fraction of the gradient
+    to subtract on every step, and `num_iterations` is the number of steps to take.
+    Both are a matter of experimentation.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE2]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*`x` is the parameter to optimize, that is, it is the function input that hopefully,
+    at the end of the process, will yield the minimum possible function value. This
+    makes it the tensor *with respect to which* we want to compute the function value’s
+    derivative. And that, in turn, means we need to create it with `requires_grad
+    = TRUE`:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE3]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*The starting point, `(-1,1)`, here has been chosen arbitrarily.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Now, all that remains to be done is apply a small fix to the optimization loop.
+    With *autograd* enabled on `x`, `torch` will record all operations performed on
+    that tensor, meaning that whenever we call `backward()`, it will compute all required
+    derivatives. However, when we subtract a fraction of the gradient, this is not
+    something we want a derivative to be calculated for! We need to tell `torch` not
+    to record this action, and that we can do by wrapping it in `with_no_grad()`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: There’s one other thing we have to tell it. By default, `torch` accumulates
+    the gradients stored in `grad` fields. We need to zero them out for every new
+    calculation, using `grad$zero_()`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Taking into account these considerations, the parameter update should look
+    like this:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE4]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*Here is the complete code, enhanced with logging statements that make it easier
+    to see what is going on.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE5]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE6]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: After thousand iterations, we have reached a function value lower than 0.0001\.
+    What is the corresponding `(x1,x2)`-position?
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE7]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE8]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: This is rather close to the true minimum of `(1,1)`. If you feel like, play
+    around a little, and try to find out what kind of difference the learning rate
+    makes. For example, try 0.001 and 0.1, respectively.
+  prefs: []
+  type: TYPE_NORMAL
+- en: In the next chapter, we will build a neural network from scratch. There, the
+    function we minimize will be a *loss function*, namely, the mean squared error
+    arising from a regression problem.*******
+  prefs: []
+  type: TYPE_NORMAL

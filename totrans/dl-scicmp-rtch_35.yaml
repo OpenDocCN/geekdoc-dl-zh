@@ -1,0 +1,752 @@
+- en: 28  Wavelets
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 原文：[https://skeydan.github.io/Deep-Learning-and-Scientific-Computing-with-R-torch/wavelets.html](https://skeydan.github.io/Deep-Learning-and-Scientific-Computing-with-R-torch/wavelets.html)
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: We conclude the book with a practical application of *wavelet analysis* using
+    `torch`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: With the Fourier Transform, it was all about understanding the concepts, so
+    we can use `torch_fft_ftt()` with confidence. This time, there is no ready-to-use
+    function around; but we’ll see that computing the Wavelet Transform ourselves
+    is not that hard. (And yes, `torch_fft_ftt()` will figure prominently, here, too.)
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'What are wavelets? Like the Fourier basis, they’re functions; but they don’t
+    extend infinitely. Instead, they are localized in time: Away from the center,
+    they quickly decay to zero. In addition to a *location* parameter, they also have
+    a *scale*: At different scales, they appear squished or stretched. Squished, they
+    will do better at detecting high frequencies; the converse applies when they’re
+    stretched out in time.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: The basic operation involved in the Wavelet Transform is convolution – have
+    the (flipped) wavelet slide over the data, computing a sequence of dot products.
+    This way, the wavelet is basically looking for *similarity*.
+  prefs: []
+  type: TYPE_NORMAL
+- en: As to the wavelet functions themselves, there are many of them. In a practical
+    application, we’d want to experiment and pick the one that works best for the
+    given data. Compared to the DFT and spectrograms, more experimentation tends to
+    be involved in wavelet analysis.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The topic of wavelets is very different from that of Fourier transforms in other
+    respects, as well. Notably, there is a lot less standardization in terminology,
+    use of symbols, and actual practices. For these reasons, I will refrain from giving
+    a systematic, general introduction, the way I did in the DFT chapter. Instead,
+    I’m going to heavily lean on one specific exposition, the one in Arnt Vistnes’
+    very nice book on waves ([Vistnes 2018](references.html#ref-waves)). In other
+    words, both terminology and examples will reflect the choices made in that book.
+  prefs: []
+  type: TYPE_NORMAL
+- en: One choice Vistnes made was to favor depth over breadth, and to focus on a single
+    wavelet.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 28.1 Introducing the Morlet wavelet
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'The Morlet, also known as Gabor[¹](#fn1), wavelet is defined like so:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: \[ \Psi_{\omega_{a},K,t_{k}}(t_n) = (e^{-i \omega_{a} (t_n - t_k)} - e^{-K^2})
+    \ e^{- \omega_a^2 (t_n - t_k )^2 /(2K )^2} \tag{28.1}\]
+  prefs: []
+  type: TYPE_NORMAL
+- en: This formulation pertains to discretized data, the kinds of data we work with
+    in practice. Thus, \(t_k\) and \(t_n\) designate points in time, or equivalently,
+    individual time-series samples.
+  prefs: []
+  type: TYPE_NORMAL
+- en: This equation looks daunting at first, but we can “tame” it a bit by analyzing
+    its structure, and pointing to the main actors. For concreteness, though, we first
+    look at an example wavelet.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'We start by implementing [Equation 28.1](#eq-wavelets-1):'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*Comparing code and mathematical formulation, we notice a difference. The function
+    itself takes one argument, \(t_n\); its realization, four (`omega`, `K`, `t_k`,
+    and `t`). This is because the `torch` code is vectorized: On the one hand, `omega`,
+    `K`, and `t_k`, which, in [Equation 28.1](#eq-wavelets-1), correspond to \(\omega_{a}\),
+    \(K\), and \(t_k\) , are scalars. (In the equation, they’re assumed to be fixed.)
+    `t`, on the other hand, is a vector; it will hold the measurement times of the
+    series to be analyzed.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'We pick example values for `omega`, `K`, and `t_k`, as well as a range of times
+    to evaluate the wavelet on, and plot its values ([fig. 28.1](#fig-wav-morlet-example)):'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE1]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*![Two sine curves, shifted by pi/2, in a Gaussian envelope.](../Images/c1711eaeb29896102b9fce2d2e3c5bad.png)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Figure 28.1: A Morlet wavelet.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'What we see here is a complex sine curve – note the real and imaginary parts,
+    separated by a phase shift of \(\pi/2\) – that decays on both sides of the center.
+    Looking back at [Equation 28.1](#eq-wavelets-1), we can identify the factors responsible
+    for both features. The first term in the equation, \(e^{-i \omega_{a} (t_n - t_k)}\),
+    generates the oscillation; the third, \(e^{- \omega_a^2 (t_n - t_k )^2 /(2K )^2}\),
+    causes the exponential decay away from the center. (In case you’re wondering about
+    the second term, \(e^{-K^2}\): For given \(K\), it is just a constant.)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The third term actually is a Gaussian, with location parameter \(t_k\) and
+    scale \(K\). We’ll talk about \(K\) in great detail soon, but what’s with \(t_k\)?
+    \(t_k\) is the center of the wavelet; for the Morlet wavelet, this is also the
+    location of maximum amplitude. As distance from the center increases, values quickly
+    approach zero. This is what is meant by wavelets being localized: They are “active”
+    only on a short range of time.**  **## 28.2 The roles of \(K\) and \(\omega_a\)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Now, we already said that \(K\) is the scale of the Gaussian; it thus determines
+    how far the curve spreads out in time. But there is also \(\omega_a\). Looking
+    back at the Gaussian term, it, too, will impact the spread.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'First though, what is \(\omega_a\)? The subscript \(a\) stands for “analysis”;
+    thus, \(\omega_a\) denotes a single frequency being probed. At this point, a quick
+    aside on workflow – this will become much clearer later, when we actually run
+    the Wavelet Transform):'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '* * *'
+  prefs: []
+  type: TYPE_NORMAL
+- en: A single transform, resulting in spectrogram-like, three-dimensional output,
+    operates on a set of analysis frequencies (\(\omega_a\)), and covers the whole
+    time range (\(t_n\)).
+  prefs: []
+  type: TYPE_NORMAL
+- en: That covering is achieved by having the wavelet slide over the input, its position
+    at each step being identified by its center, \(t_k\).
+  prefs: []
+  type: TYPE_NORMAL
+- en: What’s missing from this characterization is \(K\). That’s because you run a
+    separate wavelet analysis for each \(K\) of interest.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '* * *'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Now, let’s first inspect visually the respective impacts of \(\omega_a\) and
+    \(K\) ([fig. 28.2](#fig-wav-K-omega)).
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE2]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*![A 3x3 arrangement of sine waves, squished or spread out in time.](../Images/9313428f0eb8770213a36257ed3a5aec.png)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Figure 28.2: Morlet wavelet: Effects of varying scale and analysis frequency.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: In the left column, we keep \(\omega_a\) constant, and vary \(K\). On the right,
+    \(\omega_a\) changes, and \(K\) stays the same.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Firstly, we observe that the higher \(K\), the more the curve gets spread out.
+    In a wavelet analysis, this means that more points in time will contribute to
+    the transform’s output, resulting in high precision as to frequency content, but
+    loss of resolution in time. (We’ll return to this – central – trade-off soon.)
+  prefs: []
+  type: TYPE_NORMAL
+- en: As to \(\omega_a\), its impact is twofold. On the one hand, in the Gaussian
+    term, it counteracts – *exactly*, even – the scale parameter, \(K\). On the other,
+    it determines the frequency, or equivalently, the period, of the wave. To see
+    this, take a look at the right column. Corresponding to the different frequencies,
+    we have, in the interval between 4 and 6, four, six, or eight peaks, respectively.
+  prefs: []
+  type: TYPE_NORMAL
+- en: This double role of \(\omega_a\) is the reason why, all-in-all, it *does* make
+    a difference whether we shrink \(K\), keeping \(\omega_a\) constant, or increase
+    \(\omega_a\), holding \(K\) fixed.
+  prefs: []
+  type: TYPE_NORMAL
+- en: This state of things sounds complicated, but is less problematic than it might
+    seem. In practice, understanding the role of \(K\) is important, since we need
+    to pick sensible \(K\) values to try. As to the \(\omega_a\), on the other hand,
+    there will be a multitude of them, corresponding to the range of frequencies we
+    analyze.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'So we can understand the impact of \(K\) in more detail, we need to take a
+    first look at the Wavelet Transform.*  *## 28.3 Wavelet Transform: A straightforward
+    implementation'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'While overall, the topic of wavelets is more multifaceted, and thus, may seem
+    more enigmatic than Fourier analysis, the transform itself is easier to grasp.
+    It is a sequence of local convolutions between wavelet and signal. Here is the
+    formula for specific scale parameter \(K\), analysis frequency \(\omega_a\), and
+    wavelet location \(t_k\):'
+  prefs: []
+  type: TYPE_NORMAL
+- en: \[ W_{K, \omega_a, t_k} = \sum_n x_n \Psi_{\omega_{a},K,t_{k}}^*(t_n) \]
+  prefs: []
+  type: TYPE_NORMAL
+- en: This is just a dot product, computed between signal and complex-conjugated wavelet.
+    (Here complex conjugation flips the wavelet in time, making this *convolution*,
+    not correlation – a fact that matters a lot, as you’ll see soon.)
+  prefs: []
+  type: TYPE_NORMAL
+- en: Correspondingly, straightforward implementation results in a sequence of dot
+    products, each corresponding to a different alignment of wavelet and signal. Below,
+    in `wavelet_transform()`, arguments `omega` and `K` are scalars, while `x`, the
+    signal, is a vector. The result is the wavelet-transformed signal, for some specific
+    `K` and `omega` of interest.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE3]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*To test this, we generate a simple sine wave that has a frequency of 100 Hertz
+    in its first part, and double that in the second ([fig. 28.3](#fig-wav-signal-short)).'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE4]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*![A sine wave that oscillates a lot faster in its second part.](../Images/3e4742dd1af28daef87a7e8b9de4d766.png)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Figure 28.3: An example signal, consisting of a low-frequency and a high-frequency
+    half.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Now, we run the Wavelet Transform on this signal, for an analysis frequency
+    of 100 Hertz, and with a `K` parameter of 2, found through quick experimentation
+    ([fig. 28.4](#fig-wav-signal-short-transform)):'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE5]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*![A square wave that starts high, then drops to zero.](../Images/99f153a98f98228474f5883cf01f081a.png)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Figure 28.4: Wavelet Transform of the above two-part signal. Analysis frequency
+    is 100 Hertz.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: The transform correctly picks out the part of the signal that matches the analysis
+    frequency. If you feel like, you might want to double-check what happens for an
+    analysis frequency of 200 Hertz.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Now, in reality we will want to run this analysis not for a single frequency,
+    but a range of frequencies we’re interested in. And we will want to try different
+    scales `K`. Now, if you executed the code above, you might be worried that this
+    could take a *lot* of time.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Well, it by necessity takes longer to compute than its Fourier analogue, the
+    spectrogram. For one, that’s because with spectrograms, the analysis is “just”
+    two-dimensional, the axes being time and frequency. With wavelets there are, in
+    addition, different scales to be explored. And secondly, spectrograms operate
+    on whole windows (with configurable overlap); a wavelet, on the other hand, slides
+    over the signal in unit steps.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Still, the situation is not as grave as it sounds. The Wavelet Transform being
+    a *convolution*, we can implement it in the Fourier domain instead. We’ll do that
+    very soon, but first, as promised, let’s revisit the topic of varying `K`.***  ***##
+    28.4 Resolution in time versus in frequency
+  prefs: []
+  type: TYPE_NORMAL
+- en: We already saw that the higher `K`, the more spread-out the wavelet. We can
+    use our first, maximally straightforward, example, to investigate one immediate
+    consequence. What, for example, happens for `K` set to twenty ([fig. 28.5](#fig-wav-signal-short-transform-largeK))?
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE6]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*![A sine wave that peaks in the first half of samples, and is mostly zero
+    in the second.](../Images/80e145e39c05128e6a3ae0eb4e718f55.png)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Figure 28.5: Wavelet Transform of the above two-part signal, with `K` set to
+    twenty instead of two.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: The Wavelet Transform still picks out the correct region of the signal – but
+    now, instead of a rectangle-like result, we get a significantly smoothed version
+    that does not sharply separate the two regions.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Notably, the first 0.05 seconds, too, show considerable smoothing. The larger
+    a wavelet, the more element-wise products will be lost at the end and the beginning.
+    This is because transforms are computed aligning the wavelet at all signal positions,
+    from the very first to the last. Concretely, when we compute the dot product at
+    location `t_k = 1`, just a single sample of the signal is considered.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Apart from possibly introducing unreliability at the boundaries, how does wavelet
+    scale affect the analysis? Well, since we’re *correlating* (*convolving*, technically;
+    but in this case, the effect, in the end, is the same) the wavelet with the signal,
+    point-wise similarity is what matters. Concretely, assume the signal is a pure
+    sine wave, the wavelet we’re using is a windowed sinusoid like the Morlet, and
+    that we’ve found an optimal `K` that nicely captures the signal’s frequency. Then
+    any other `K`, be it larger or smaller, will result in less point-wise overlap.
+  prefs: []
+  type: TYPE_NORMAL
+- en: This leads to a question we can’t get around.*  *## 28.5 How is this different
+    from a spectrogram?
+  prefs: []
+  type: TYPE_NORMAL
+- en: Chances are you have been mentally comparing what we’re doing here not with
+    the Fourier Transform per se, but with its windowed progeny, the spectrogram.
+    Both methods tell us how frequency composition varies over time. Both involve
+    trade-offs between resolution in frequency and in time. How, then, are they different?
+  prefs: []
+  type: TYPE_NORMAL
+- en: Let’s start with the way spectrograms are normally computed. Usually, the choice
+    of window size is the same for all frequency ranges. Then, resolution of high
+    frequencies will be better than that of lower ones, since more periods fit into
+    one analysis window.
+  prefs: []
+  type: TYPE_NORMAL
+- en: To counteract this, it would be possible to choose different window sizes for
+    different ranges of frequencies. But then, how do you make those choices? It is
+    a lot more convenient to, in wavelet analysis, experiment with different `K`,
+    all the more since with growing experience, those explorations will resemble to
+    trial-and-error endeavors less and less.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 28.6 Performing the Wavelet Transform in the Fourier domain
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'Soon, we will run the Wavelet Transform on a longer signal. Thus, it is time
+    to speed up computation. We already said that here, we benefit from time-domain
+    convolution being equivalent to multiplication in the Fourier domain. The overall
+    process then is this: First, compute the DFT of both signal and wavelet; second,
+    multiply the results; third, inverse-transform back to the time domain.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'With the Morlet wavelet, we don’t even have to run the FFT: Its Fourier-domain
+    representation can be stated in closed form. We’ll just make use of that formulation
+    from the outset.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: To see how this works, we first manually step through the process. In the following
+    section, we’ll package things up for quick execution.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Here, first, is the signal. It again is composed of two different frequencies,
+    100 Hertz and 200 Hertz. But this time, we repeat the alternation several times,
+    and map those frequencies to different amplitudes. The latter may seem like an
+    innocent change, but there is an important consequence: We have to adapt our cosine-generating
+    code to keep track of the phase. If we don’t do this, the signal will be distorted
+    at the transition points.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE7]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*Here is the signal ([fig. 28.6](#fig-wav-signal-long)):'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE8]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*![A sine wave that alternates between different frequencies and amplitudes.](../Images/43b8b9377f31208f94a902c99fcb2ac1.png)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Figure 28.6: A signal, consisting of alternating, different-amplitude low-frequency
+    and high-frequency halves.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The DFT of the signal is quickly computed:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE9]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*The Fourier-domain representation of the wavelet, on the other hand, is given
+    by:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE10]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*Comparing this statement of the wavelet to the time-domain one, we see that
+    – as expected – instead of parameters `t` and `t_k` it now takes `omega` and `omega_a`.
+    The latter, `omega_a`, is the analysis frequency, the one we’re probing for, a
+    scalar; the former, `omega`, the range of frequencies that appear in the DFT of
+    the signal.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'In instantiating the wavelet, there is one thing we need to pay special attention
+    to. In FFT-think, the frequencies are bins; their number is determined by the
+    length of the signal (a length that, for its part, directly depends on sampling
+    frequency). Our wavelet, on the other hand, works with frequencies in Hertz (nicely,
+    from a user’s perspective; since this unit is meaningful to us). What this means
+    is that to `morlet_fourier`, as `omega_a` we need to pass not the value in Hertz,
+    but the corresponding FFT bin. Conversion is done relating the number of bins,
+    `dim(x)[1]`, to the sampling frequency of the signal, `fs`:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE11]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*We instantiate the wavelet, perform the Fourier-domain multiplication, and
+    inverse-transform the result:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE12]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*And this is the result ([fig. 28.7](#fig-wav-example-long-transform)):'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE13]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*![An alternating square wave.](../Images/e21d56060b4ac862367957e8c361a9f8.png)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Figure 28.7: Wavelet Transform of the above alternating-frequency signal. Analysis
+    frequency is 100 Hertz.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: All 100-Hertz-regions are identified flawlessly. Also, looking at the y-axis,
+    we see that the amplitude is correct.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Putting together wavelet instantiation and the steps involved in the analysis,
+    we have the following. (Note how to `wavelet_transform_fourier`, we now, conveniently,
+    pass in the frequency value in Hertz.)
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE14]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*Let’s use this to probe for the second frequency used, 200 Hertz ([fig. 28.8](#fig-wav-example-long-transform2)).'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE15]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*![An alternating square wave.](../Images/25ba40802be36a7559c3ba4873167c7e.png)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Figure 28.8: Wavelet Transform of the above alternating-frequency signal. Analysis
+    frequency is 200 Hertz.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Again, we find that matching regions, as well as the amplitude, are correctly
+    identified.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'We’ve already made significant progress. We’re ready for the final step: automating
+    analysis over a range of frequencies of interest. This will result in a three-dimensional
+    representation, the wavelet diagram.*********  ***## 28.7 Creating the wavelet
+    diagram'
+  prefs: []
+  type: TYPE_NORMAL
+- en: In the Fourier Transform, the number of coefficients we obtain depends on signal
+    length, and effectively reduces to half the sampling frequency. With its wavelet
+    analogue, since anyway we’re doing a loop over frequencies, we might as well decide
+    which frequencies to analyze.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Firstly, the range of frequencies of interest can be determined running the
+    DFT. The next question, then, is about granularity. Here, I’ll be following the
+    recommendation given in Vistnes’ book, which is based on the relation between
+    current frequency value and wavelet scale, `K`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Iteration over frequencies is then implemented as a loop:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE16]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*Calling `wavelet_grid()` will give us the analysis frequencies used, together
+    with the respective outputs from the Wavelet Transform.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Next, we create a utility function that visualizes the result. By default, `plot_wavelet_diagram()`
+    displays the magnitude of the wavelet-transformed series; it can, however, plot
+    the squared magnitudes, too, as well as their square root, a method much recommended
+    by Vistnes whose effectiveness we will soon have opportunity to witness.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The function deserves a few further comments.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Firstly, same as we did with the analysis frequencies, we down-sample the signal
+    itself, avoiding to suggest a resolution that is not actually present. The formula,
+    again, is taken from Vistnes’ book.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Then, we use interpolation to obtain a new time-frequency grid. This step may
+    even be necessary if we keep the original grid, since when distances between grid
+    points are very small, R’s `image()` may refuse to accept axes as evenly spaced.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Finally, note how frequencies are arranged on a log scale. This leads to much
+    more useful visualizations.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE17]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*Now, let’s see a few wavelet diagrams. We are going to compare choices in
+    two categories. The first concerns *what* is displayed: magnitude, magnitude squared,
+    or the square root. Since options are finite, in practice you could always try
+    them all. The second, however, is essential: It is about `K`, the scale of the
+    Morlet wavelet.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Though, in theory, the range of possible `K`s is infinite, as soon as we start
+    to enlarge or shrink `K` we see the respective effects very quickly. And in a
+    publication you can, of course, provide diagrams for a few different `K`. (Maybe
+    you even *should*; the information conveyed might be complementary.)
+  prefs: []
+  type: TYPE_NORMAL
+- en: We start with a fixed `K` of 12, and stay with the default display (which is
+    magnitude; see [fig. 28.9](#fig-wav-example-long-diag1)). As to the range of frequencies
+    to be analysed, it directly follows from our having generated the data ourselves.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE18]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*![A periodic square wave drawn in thick strokes.](../Images/f06f61690045e6a59f5c59cb8fe6fdce.png)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Figure 28.9: Wavelet diagram of the above alternating-frequency signal for
+    K = 12\. Displaying magnitude as per default.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Now compare this with how it looks for squared magnitudes ([fig. 28.10](#fig-wav-example-long-diag2)).
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE19]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*![A periodic alternation of two thick-ish dashed lines.](../Images/c080ef43711c687276f750808e4d1945.png)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Figure 28.10: Wavelet diagram of the above alternating-frequency signal for
+    K = 12\. Displaying magnitude squared.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'As well as square roots ([fig. 28.11](#fig-wav-example-long-diag3)):'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE20]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*![A periodic square wave drawn in thick, bulky strokes.](../Images/0a49c3e11efe3296426afbd66e72225d.png)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Figure 28.11: Wavelet diagram of the above alternating-frequency signal for
+    K = 12\. Displaying the square root of the magnitude.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: In this case it is clear which display mode works best. But that’s just because
+    we’ve created a *very* regular signal.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Now, let’s see what happens for smaller `K`: 6, say. We only plot magnitude
+    squared ([fig. 28.12](#fig-wav-example-long-diag4)).'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE21]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*![A periodic alternation of two thick dashed lines.](../Images/3ca25b934572274acf14cd889bae8f97.png)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Figure 28.12: Wavelet diagram of the above alternating-frequency signal for
+    K = 6.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: While frequency resolution clearly got worse, there is no complementary improvement
+    in how time is handled. Again, this is no surprise, the signal being what it is.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'What about the other direction? For `K = 24` we have ([fig. 28.13](#fig-wav-example-long-diag5)):'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE22]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*![A periodic, overlapping alternation of two not-too-thick dashed lines.](../Images/f728f680dc806c63521759db44fc4284.png)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Figure 28.13: Wavelet diagram of the above alternating-frequency signal for
+    K = 24.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: At this scale, we do see a decline in time resolution. Evidently, our initial
+    choice of 12 was better. Just for curiosity’s sake, though, let’s see what would
+    happen for yet bigger `K` ([fig. 28.14](#fig-wav-example-long-diag6)).
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE23]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*![A dashed line, in the upper area of the image, and a solid line further
+    down, that exhibits holes of sorts in the places where the dashed line appears.](../Images/4af4cd5388436413b7e6c0909463f8e8.png)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Figure 28.14: Wavelet diagram of the above alternating-frequency signal for
+    K = 48.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: The result speaks for itself.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Finally – now that we have available re-usable pieces of code, and acquired
+    some first intuition on how time-frequency trade-off works for wavelets – we conclude
+    with a real-world example.********  ***## 28.8 A real-world example: Chaffinch’s
+    song'
+  prefs: []
+  type: TYPE_NORMAL
+- en: For the case study, I’ve chosen what, to me, was the most impressive wavelet
+    analysis shown in Vistnes’ book. It’s a sample of a chaffinch’s singing, and it’s
+    available on Vistnes’ website.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE24]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*We use `torchaudio` to load the file, and convert from stereo to mono using
+    `tuneR`’s appropriately named `mono()`. (For the kind of analysis we’re doing,
+    there is no point in keeping two channels around.)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE25]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE26]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: For analysis, we don’t need the complete sequence. Helpfully, Vistnes also published
+    a recommendation as to which range of samples to analyze.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE27]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE28]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: See [fig. 28.15](#fig-wav-chaffinch) for a time-domain view. (Don’t miss out
+    on the occasion to actually *listen* to it, on your laptop.)
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE29]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*![A sequence of several bursts, varying in height and thickness.](../Images/e8c6153a4332b63c0a8a44d0a2d7ba82.png)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Figure 28.15: Chaffinch’s song.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Now, we need to determine a reasonable range of analysis frequencies. To that
+    end, we run the FFT:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE30]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*On the x-axis, we plot frequencies, not sample numbers, and for better visibility,
+    we zoom in a bit ([fig. 28.16](#fig-wav-chaffinch-fft)).'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE31]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*![A sequence of spikes, skewed to the left.](../Images/01dc6f1a6e241e0ee3730c38f73932ee.png)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Figure 28.16: Chaffinch’s song, Fourier spectrum (excerpt).'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Based on this distribution, we can safely restrict the range of analysis frequencies
+    to between, approximately, 1800 and 8500 Hertz. (This is also the range recommended
+    by Vistnes.)
+  prefs: []
+  type: TYPE_NORMAL
+- en: First, though, let’s anchor expectations by creating a spectrogram for this
+    signal. Suitable values for FFT size and window size were found experimentally.
+    And though, in spectrograms, you don’t see this done often, I found that displaying
+    square roots of coefficient magnitudes yielded the most informative output.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE32]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE33]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Like we do with wavelet diagrams, we plot frequencies on a log scale ([fig. 28.17](#fig-wav-chaffinch-spectrogram)).
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE34]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*![A two-dimensional heat map, indicating high values, strongly varying in
+    time, around log frequency 3.5 Hz.](../Images/565dac528265308492f874f45edeacc2.png)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Figure 28.17: Chaffinch’s song, spectrogram.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The spectrogram already shows a distinctive pattern. Let’s see what can be
+    done with wavelet analysis. Having experimented with a few different `K`, I agree
+    with Vistnes that `K = 48` makes for an excellent choice ([fig. 28.18](#fig-wav-chaffinch-waveletdiag)):'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE35]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*![A two-dimensional heat map, of high resolution, that strongly emphasizes
+    how patterns vary in time.](../Images/0725c98f3ccfa04c64410feaf0d92163.png)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Figure 28.18: Chaffinch’s song, wavelet diagram.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: The gain in resolution, on both the time and the frequency axis, is utterly
+    impressive.
+  prefs: []
+  type: TYPE_NORMAL
+- en: With this example, that hopefully has been an inspiring one, I conclude this
+    chapter, and the book. I wish you all the best in your future endeavours with
+    `torch`!
+  prefs: []
+  type: TYPE_NORMAL
+- en: Vistnes, Arnt Inge. 2018\. *Physics of Oscillations and Waves. With Use of Matlab
+    and Python*. Springer.********* **** * *
+  prefs: []
+  type: TYPE_NORMAL
+- en: After Dennis Gabor, who came up with the idea of using Gaussian-windowed complex
+    exponentials for time-frequency decomposition, and Jean Morlet, who elaborated
+    on and formalized the resulting transform.[↩︎](#fnref1)****************
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL

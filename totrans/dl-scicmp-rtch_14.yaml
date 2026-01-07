@@ -1,0 +1,83 @@
+- en: 11  Modularizing the neural network
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 原文：[https://skeydan.github.io/Deep-Learning-and-Scientific-Computing-with-R-torch/network_2.html](https://skeydan.github.io/Deep-Learning-and-Scientific-Computing-with-R-torch/network_2.html)
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: 'Let’s recall the network we built a few chapters ago. Its purpose was regression,
+    but its method was not *linear*. Instead, an activation function (ReLU, for “rectified
+    linear unit”) introduced a nonlinearity, located between the single hidden layer
+    and the output layer. The “layers”, in this original implementation, were just
+    tensors: weights and biases. You won’t be surprised to hear that these will be
+    replaced by *modules*.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'How will the training process change? Conceptually, we can distinguish four
+    phases: the forward pass, loss computation, backpropagation of gradients, and
+    weight updating. Let’s think about where our new tools will fit in:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: The forward pass, instead of calling functions on tensors, will call the model.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: In computing the loss, we now make use of `torch`’s `nnf_mse_loss()`.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Backpropagation of gradients is, in fact, the only operation that remains unchanged.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Weight updating is taken care of by the optimizer.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Once we’ve made those changes, the code will be more modular, and a lot more
+    readable.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 11.1 Data
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: As a prerequisite, we generate the data, same as last time.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*## 11.2 Network'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'With two linear layers connected via ReLU activation, the easiest choice is
+    a sequential module, very similar to the one we saw in the introduction to modules:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE1]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*## 11.3 Training'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Here is the updated training process. We use the Adam optimizer, a popular choice.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE2]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE3]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: In addition to shortening and streamlining the code, our changes have made a
+    big difference performance-wise.*  *## 11.4 What’s to come
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'You now know a lot about how `torch` works, and how to use it to minimize a
+    cost function in various settings: for example, to train a neural network. But
+    for real-world applications, there is a lot more `torch` has to offer. The next
+    – and most voluminous – part of the book focuses on deep learning.***'
+  prefs: []
+  type: TYPE_NORMAL

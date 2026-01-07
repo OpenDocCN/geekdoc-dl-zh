@@ -1,0 +1,424 @@
+- en: 14  Training with luz
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 原文：[https://skeydan.github.io/Deep-Learning-and-Scientific-Computing-with-R-torch/training_with_luz.html](https://skeydan.github.io/Deep-Learning-and-Scientific-Computing-with-R-torch/training_with_luz.html)
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: At this point in the book, you know how to train a neural network. Truth be
+    told, though, there’s some cognitive effort involved in having to remember the
+    right execution order of steps like `optimizer$zero_grad()`, `loss$backward()`,
+    and `optimizer$step()`. Also, in more complex scenarios than our running example,
+    the list of things to actively remember gets longer.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'One thing we haven’t talked about yet, for example, is how to handle the usual
+    three stages of machine learning: training, validation, and testing. Another is
+    the question of data flow between *devices* (CPU and GPU, if you have one). Both
+    topics necessitate additional code to be introduced to the training loop. Writing
+    this code can be tedious, and creates a potential for mistakes.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'You can see exactly what I’m referring to in the appendix at the end of this
+    chapter. But now, I want to focus on the remedy: a high-level, easy-to-use, concise
+    way of organizing and instrumenting the training process, contributed by a package
+    built on top of `torch`: `luz`.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 14.1 Que haya luz - Que haja luz - Let there be light
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: A *torch* already brings some light, but sometimes in life, there is no *too
+    bright*. `luz` was designed to make deep learning with `torch` as effortless as
+    possible, while at the same time allowing for easy customization. In this chapter,
+    we focus on the overall process; examples of customization will appear in later
+    chapters.
+  prefs: []
+  type: TYPE_NORMAL
+- en: For ease of comparison, we take our running example, and add a third version,
+    now using `luz`. First, we “just” directly port the example; then, we adapt it
+    to a more realistic scenario. In that scenario, we
+  prefs: []
+  type: TYPE_NORMAL
+- en: make use of separate training, validation, and test sets;
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: have `luz` compute *metrics* during training/validation;
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: illustrate the use of *callbacks* to perform custom actions or dynamically change
+    hyper-parameters during training; and
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: explain what is going on with the aforementioned *devices*.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 14.2 Porting the toy example
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 14.2.1 Data
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: '`luz` does not just substantially transform the code required to train a neural
+    network; it also adds flexibility on the data side of things. In addition to a
+    reference to a `dataloader()`, its `fit()` method accepts `dataset()`s, tensors,
+    and even R objects, as we’ll be able to verify soon.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: We start by generating an R matrix and a vector, as before. This time though,
+    we also wrap them in a `tensor_dataset()`, and instantiate a `dataloader()`. Instead
+    of just 100, we now generate 1000 observations.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*### 14.2.2 Model'
+  prefs: []
+  type: TYPE_NORMAL
+- en: To use `luz`, no changes are needed to the model definition. Note, though, that
+    we just *define* the model architecture; we never actually *instantiate* a model
+    object ourselves.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE1]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*### 14.2.3 Training'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'To train the model, we don’t write loops anymore. `luz` replaces the familiar
+    *iterative* style by a *declarative* one: You tell `luz` what you want to happen,
+    and like a docile sorcerer’s apprentice, it sets in motion the machinery.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Concretely, instruction happens in two – required – calls.
+  prefs: []
+  type: TYPE_NORMAL
+- en: In `setup()`, you specify the loss function and the optimizer to use.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: In `fit()`, you pass reference(s) to the training (and optionally, validation)
+    data, as well as the number of epochs to train for.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'If the model is configurable – meaning, it accepts arguments to `initialize()`
+    – a third method comes into play: `set_hparams()`, to be called in-between the
+    other two. (That’s `hparams` for hyper-parameters.) Using this mechanism, you
+    can easily experiment with, for example, different layer sizes, or other factors
+    suspected to affect performance.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE2]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*Running this code, you should see output approximately like this:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE3]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Above, what we passed to `fit()` was the `dataloader()`. Let’s check that referencing
+    the `dataset()` would have been just as fine:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE4]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*Or even, `torch` tensors:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE5]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*And finally, R objects, which can be convenient when we aren’t already working
+    with tensors.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE6]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*In the following sections, we’ll always be working with `dataloader()`s; but
+    in some cases those “shortcuts” may come in handy.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Next, we extend the toy example, illustrating how to address more complex requirements.******  ***##
+    14.3 A more realistic scenario
+  prefs: []
+  type: TYPE_NORMAL
+- en: 14.3.1 Integrating training, validation, and test
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: In deep learning, training and validation phases are interleaved. Every epoch
+    of training is followed by an epoch of validation. Importantly, the data used
+    in both phases have to be strictly disjoint.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'In each training phase, gradients are computed and weights are changed; during
+    validation, none of that happens. Why have a validation set, then? If, for each
+    epoch, we compute task-relevant metrics for both partitions, we can see if we
+    are *overfitting* to the training data: that is, drawing conclusions based on
+    training sample specifics not descriptive of the overall population we want to
+    model. All we have to do is two things: instruct `luz` to compute a suitable metric,
+    and pass it an additional `dataloader` pointing to the validation data.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The former is done in `setup()`, and for a regression task, common choices
+    are mean squared or mean absolute error (MSE or MAE, resp.). As we’re already
+    using MSE as our loss, let’s choose MAE for a metric:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE7]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*The validation `dataloader` is passed in `fit()` – but to be able to reference
+    it, we need to construct it first! So now (anticipating we’ll want to have a test
+    set, too), we split up the original 1000 observations into three partitions, creating
+    a `dataset` and a `dataloader` for each of them.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE8]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*Now, we are ready to start the enhanced workflow:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE9]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE10]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Even though both training and validation sets come from the exact same distribution,
+    we do see a bit of overfitting. This is a topic we’ll talk about more in the next
+    chapter.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Once training has finished, the `fitted` object above holds a history of epoch-wise
+    metrics, as well as references to a number of important objects involved in the
+    training process. Among the latter is the fitted model itself – which enables
+    an easy way to obtain predictions on the test set:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE11]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE12]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'We also want to evaluate performance on the test set:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE13]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE14]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'This workflow of: training and validation in lock-step, then checking and extracting
+    predictions on the test set is something we’ll encounter times and again in this
+    book.*****  ***### 14.3.2 Using callbacks to “hook” into the training process'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'At this point, you may feel that what we’ve gained in code efficiency, we may
+    have lost in flexibility. Coding the training loop yourself, you can arrange for
+    all kinds of things to happen: save model weights, adjust the learning rate …
+    whatever you need.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'In reality, no flexibility is lost. Instead, `luz` offers a standardized way
+    to achieve the same goals: callbacks. Callbacks are objects that can execute arbitrary
+    R code, at any of the following points in time:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: when the overall training process starts or ends (`on_fit_begin()` / `on_fit_end()`);
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: when an epoch (comprising training and validation) starts or ends (`on_epoch_begin()`
+    / `on_epoch_end()`);
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: when during an epoch, the training (validation, resp.) phase starts or ends
+    (`on_train_begin()` / `on_train_end()`; `on_valid_begin()` / `on_valid_end()`);
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: when during training (validation, resp.), a new batch is either about to be
+    or has been processed (`on_train_batch_begin()` / `on_train_batch_end()`; `on_valid_batch_begin()`
+    / `on_valid_batch_end()`);
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: and even at specific landmarks inside the “innermost” training / validation
+    logic, such as “after loss computation”, “after `backward()`” or “after `step()`”.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'While you can implement any logic you wish using callbacks (and we’ll see how
+    to do this in a later chapter), `luz` already comes equipped with a very useful
+    set. For example:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '`luz_callback_model_checkpoint()` saves model weights after every epoch (or
+    just in case of improvements, if so instructed).'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '`luz_callback_lr_scheduler()` activates one of `torch`’s *learning rate schedulers*.
+    Different scheduler objects exist, each following their own logic in dynamically
+    updating the learning rate.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '`luz_callback_early_stopping()` terminates training once model performance
+    stops to improve. What exactly “stops to improve” should mean is configurable
+    by the user.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Callbacks are passed to the `fit()` method in a list. For example, augmenting
+    our most recent workflow:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE15]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*With this configuration, weights will be saved, but only if validation loss
+    decreases. Training will halt if there is no improvement (again, in validation
+    loss) for ten epochs. With both callbacks, you can pick any other metric to base
+    the decision on, and the metric in question may also refer to the training set.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Here, we see early stopping happening after 111 epochs:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE16]*  *### 14.3.3 How `luz` helps with devices'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Finally, let’s quickly mention how `luz` helps with device placement. Devices,
+    in a usual environment, are the CPU and perhaps, if available, a GPU. For training,
+    data and model weights need to be located on the same device. This can introduce
+    complexities, and – at the very least – necessitates additional code to keep all
+    pieces in sync.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'With `luz`, related actions happen transparently to the user. Let’s take the
+    prediction step from above:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE17]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*In case this code was executed on a machine that has a GPU, `luz` will have
+    detected that, and the model’s weight tensors will already have been moved there.
+    Now, for the above call to `predict()`, what happened “under the hood” was the
+    following:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '`luz` put the model in evaluation mode, making sure that weights are not updated.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '`luz` moved the test data to the GPU, batch by batch, and obtained model predictions.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: These predictions were then moved back to the CPU, in anticipation of the caller
+    wanting to process them further with R. (Conversion functions like `as.numeric()`,
+    `as.matrix()` etc. can only act on CPU-resident tensors.)
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: In the below appendix, you find a complete walk-through of how to implement
+    the train-validate-test workflow by hand. You’ll likely find this a lot more complex
+    than what we did above – and it does not even bring into play metrics, or any
+    of the functionality afforded by `luz` callbacks.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'In the next chapter, we discuss essential ingredients of modern deep learning
+    we haven’t yet touched upon; and following that, we look at specific architectures
+    destined to specifically handle different tasks and domains.*****  ***## 14.4
+    Appendix: A train-validate-test workflow implemented by hand'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'For clarity, we repeat here the two things that do *not* depend on whether
+    you’re using `luz` or not: `dataloader()` preparation and model definition.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE18]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*Recall that with `luz`, now all that separates you from watching how training
+    and validation losses evolve is a snippet like this:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE19]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*Without `luz`, however, things to be taken care of fall into three distinct
+    categories.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: First, instantiate the network, and, if CUDA is installed, move its weights
+    to the GPU.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE20]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*Second, create an optimizer.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE21]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*And third, the biggest chunk: In each epoch, iterate over training batches
+    as well as validation batches, performing backpropagation when working on the
+    former, while just passively reporting losses when processing the latter.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: For clarity, we pack training logic and validation logic each into their own
+    functions. `train_batch()` and `valid_batch()` will be called from inside loops
+    over the respective batches. Those loops, in turn, will be executed for every
+    epoch.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'While `train_batch()` and `valid_batch()`, per se, trigger the usual actions
+    in the usual order, note the device placement calls: For the model to be able
+    to take in the data, they have to live on the same device. Then, for mean-squared-error
+    computation to be possible, the target tensors need to live there as well.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE22]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*The loop over epochs contains two lines that deserve special attention: `model$train()`
+    and `model$eval()`. The former instructs `torch` to put the model in training
+    mode; the latter does the opposite. With the simple model we’re using here, it
+    wouldn’t be a problem if you forgot those calls; however, when later we’ll be
+    using regularization layers like `nn_dropout()` and `nn_batch_norm2d()`, calling
+    these methods in the correct places is essential. This is because these layers
+    behave differently during evaluation and training.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE23]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*This completes our walk-through of manual training, and should have made more
+    concrete my assertion that using `luz` significantly reduces the potential for
+    casual (e.g., copy-paste) errors.************'
+  prefs: []
+  type: TYPE_NORMAL

@@ -1,0 +1,320 @@
+- en: 6  A neural network from scratch
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 原文：[https://skeydan.github.io/Deep-Learning-and-Scientific-Computing-with-R-torch/network_1.html](https://skeydan.github.io/Deep-Learning-and-Scientific-Computing-with-R-torch/network_1.html)
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: In this chapter, we are going to solve a regression task. But wait – not the
+    `lm` way. We’ll be building a real neural network, making use of tensors only
+    (`autograd`-enabled ones, it goes without saying). Of course, this is not how
+    you’ll be using `torch`, later; but this does not make it a useless endeavor.
+    On the contrary. Having seen the raw mechanics, you’ll be able to appreciate even
+    more the hard work that `torch` saves you. What’s more, understanding the basics
+    will be an efficient antidote against the surprisingly common temptation to think
+    of deep learning as some kind of “magic”. It’s all just matrix computations; one
+    has to learn how to orchestrate them though.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Let’s start with what we need for a network that can perform regression.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 6.1 Idea
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: In a nutshell, a network is a *function* from inputs to outputs. A suitable
+    function, thus, is what we’re looking for.
+  prefs: []
+  type: TYPE_NORMAL
+- en: To find it, let’s first think of regression as *linear* regression. What linear
+    regression does is multiply and add. For each independent variable, there is a
+    *coefficient* that multiplies it. On top of that, there is a so-called *bias*
+    term that gets added at the end. (In two dimensions, regression coefficient and
+    bias correspond to slope and x-intercept of the regression line.)
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Thinking about it, multiplication and addition are things we can do with tensors
+    – one could even say they are made for exactly that. Let’s take an example where
+    the input data consist of a hundred observations, with three features each. For
+    example:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE1]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: To store the per-feature coefficients that should multiply `x`, we need a column
+    vector of length 3, the number of features. Alternatively, preparing for a modification
+    we’re going to make very soon, this can be a matrix whose columns are of length
+    three, that is, a matrix with three rows. How many columns should it have? Let’s
+    say we want to predict a single output feature. In that case, the matrix should
+    be of size 3 x 1.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Here comes a suitable candidate, initialized randomly. Note how the tensor is
+    created with `requires_grad = TRUE`, as it represents a parameter we’ll want the
+    network to *learn*.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE2]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*The bias tensor then has to be of size 1 x 1:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE3]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*Now, we can get a “prediction” by multiplying the data with the weight matrix
+    `w` and adding the bias `b`:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE4]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE5]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'In math notation, what we’ve done here is implement the function:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: \[ f(\mathbf{X}) = \mathbf{X}\mathbf{W} + \mathbf{b} \]
+  prefs: []
+  type: TYPE_NORMAL
+- en: How does this relate to neural networks?****  ***## 6.2 Layers
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Circling back to neural-network terminology, what we’ve done here is prototype
+    the action of a network that has a *single* *layer*: the output layer. However,
+    a single-layer network is hardly the type you’d be interested in building – why
+    would you, when you could simply do linear regression instead? In fact, one of
+    the defining features of neural networks is their ability to chain an unlimited
+    (in theory) number of layers. Of these, all but the output layer may be referred
+    to as “hidden” layers, although from the point of view of someone who uses a deep
+    learning framework such as `torch`, they are not that *hidden* after all.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Let’s say we want our network to have one hidden layer. Its size, meaning,
+    the number of *units* it has, will be an important factor in determining the network’s
+    power. This number is reflected in the weight matrix we create: A layer with eight
+    units will need a weight matrix with eight columns.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE6]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*Each unit has its own value for bias, too.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE7]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*Just like we saw before, the hidden layer will multiply the input it receives
+    by the weights and add the bias. That is, it applies the function \(f\) displayed
+    above. Then, another function is applied. This function receives its input from
+    the hidden layer and produces the final output. In a nutshell, what is happening
+    here is function composition: Calling the second function \(g\), the overall transformation
+    is \(g(f(\mathbf{X})\), or \(g \circ f\).'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'For \(g\) to yield an output analogous to the single-layer architecture above,
+    its weight matrix has to take the eight-column hidden layer to a single column.
+    That is, `w2` looks like this:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE8]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*The bias, `b2`, is a single value, like `b1`:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE9]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*Of course, there is no reason to stop at *one* hidden layer, and once we’ve
+    built up the complete apparatus, please feel invited to experiment with the code.
+    But first, we need to add in a few other types of components. For one, with our
+    most recent architecture, what we’re doing is chain, or compose, functions – which
+    is good. But all these functions are doing is add and multiply, implying that
+    they are linear. The power of neural networks, however, is usually associated
+    with *nonlinearity*. Why?****  ***## 6.3 Activation functions'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Imagine, for a moment, that we had a network with three layers, and all each
+    layer did was multiply its input by its weight matrix. (Having a bias term doesn’t
+    really change anything. But it makes the example more complex, so we’re “abstracting
+    it out”.)
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'This gives us a chain of matrix multiplications: \(f(\mathbf{X}) = ((\mathbf{X}
+    \mathbf{W}_1)\mathbf{W}_2)\mathbf{W}_3\). Now, this can be rearranged so that
+    all the weight matrices are multiplied together before application to \(\mathbf{X}\):
+    \(f(\mathbf{X}) = \mathbf{X} (\mathbf{W}_1\mathbf{W}_2\mathbf{W}_3)\). Thus, this
+    three-layer network can be simplified to a single-layer one, where \(f(\mathbf{X})
+    = \mathbf{X} \mathbf{W}_4\). And now, we have lost all advantages associated with
+    deep neural networks.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: This is where activation functions, sometimes called “nonlinearities”, come
+    in. They introduce non-linear operations that cannot be modeled by matrix multiplication.
+    Historically, the prototypical activation function has been the *sigmoid*, and
+    it’s still extremely important today. Its constitutive action is to squish its
+    input between zero and one, yielding a value that can be interpreted as a probability.
+    But in regression, this is not usually what we want, and neither would it be for
+    most hidden layers.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Instead, the most-used activation function inside a network is the so-called
+    *ReLU*, or Rectified Linear Unit. This is a long name for something rather straightforward:
+    All negative values are set to zero. In `torch`, this can be accomplished using
+    the `relu()` function:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE10]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE11]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Why would this be nonlinear? One criterion for a linear function is that when
+    you have two inputs, it doesn’t matter if you first add them and then, apply the
+    transformation, or if you start by applying the transformation independently to
+    both inputs and then, go ahead and add them. But with ReLU, this does not work:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE12]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE13]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE14]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE15]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: The results are not the same.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Wrapping up so far, we’ve talked about how to code layers and activation functions.
+    There is just one further concept to discuss before we can build the complete
+    network. This is the loss function.***  ***## 6.4 Loss functions
+  prefs: []
+  type: TYPE_NORMAL
+- en: Put abstractly, the loss is a measure of how far away we are from our goal.
+    When minimizing a function, like we did in the previous chapter, this is the difference
+    between the current function value and the smallest value it can take. With neural
+    networks, we are free to choose a suitable loss function as we like, provided
+    it matches our task. For regression-type tasks, this often will be mean squared
+    error (MSE), although it doesn’t have to be. For example, there could be reasons
+    to use mean absolute error instead.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'In `torch`, computation of mean squared error is a one-liner:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE16]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE17]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: As soon as we have the loss, we’ll be able to update the weights, subtracting
+    a fraction of its gradient. We’ve already seen how to do this in the last chapter,
+    and will see it again shortly.
+  prefs: []
+  type: TYPE_NORMAL
+- en: We now take the pieces discussed and put them together.*  *## 6.5 Implementation
+  prefs: []
+  type: TYPE_NORMAL
+- en: We split this into three parts. This way, when later we refactor individual
+    components to make use of higher-level `torch` functionality, it will be easier
+    to see the areas where encapsulation and modularization are occurring.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 6.5.1 Generate random data
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: Our example data consist of one hundred observations. The input, `x`, has three
+    features; the target, `y`, just one. `y` is generated from `x`, but with some
+    noise added.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE18]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*Next, the network.*  *### 6.5.2 Build the network'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The network has two layers: a hidden layer and the output layer. This means
+    that we need two weight matrices and two bias tensors. For no special reason,
+    the hidden layer here has thirty-two units:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE19]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*With their current values – results of random initialization – those weights
+    and biases won’t be of much use. Time to train the network.*  *### 6.5.3 Train
+    the network'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Training the network means passing the input through its layers, calculating
+    the loss, and adjusting the parameters (weights and biases) in a way that predictions
+    improve. These activities we keep repeating until performance seems sufficient
+    (which, in real-life applications, would have to be defined very carefully). Technically,
+    each repeated application of these steps is called an *epoch*.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Just like with function minimization, deciding on a suitable learning rate (the
+    fraction of the gradient to subtract) needs some experimentation.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Looking at the below training loop, you see that, logically, it consists of
+    four parts:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: do a forward pass, yielding the network’s predictions (if you dislike the one-liner,
+    feel free to split it up);
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: compute the loss (this, too, being a one-liner – we merely added some logging);
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: have *autograd* calculate the gradient of the loss with respect to the parameters;
+    and
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: update the parameters accordingly (again, taking care to wrap the whole action
+    in `with_no_grad()`, and zeroing the `grad` fields on every iteration).
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[PRE20]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE21]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: The loss decreases quickly at first, and then, not so rapidly anymore. But this
+    example was not created to exhibit magnificent performance; the idea was to show
+    how few lines of code are needed to build a “real” neural network.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Now, the layers, the loss, the parameter updates – all that is still pretty
+    “raw”: It’s (literally) *just tensors*. For such a small network this works fine,
+    but it would get cumbersome pretty fast for more complex designs. The following
+    two chapters, thus, will show how to abstract away weights and biases into neural
+    network *modules*, swap self-made loss functions with built-in ones, and get rid
+    of the verbose parameter update routine.*************'
+  prefs: []
+  type: TYPE_NORMAL

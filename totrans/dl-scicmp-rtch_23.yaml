@@ -1,0 +1,212 @@
+- en: '18  Image classification, take two: Improving performance'
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 原文：[https://skeydan.github.io/Deep-Learning-and-Scientific-Computing-with-R-torch/image_classification_2.html](https://skeydan.github.io/Deep-Learning-and-Scientific-Computing-with-R-torch/image_classification_2.html)
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: 'In the last two chapters, we saw how changes to data input, network architecture,
+    and training modalities can result in improved results, “improvement” having two
+    principal denotations: better generalization to the test set, and faster training
+    progress.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Now, we’ll apply a few of those techniques to the image classification task
+    we started our journey into real-world deep learning with: Tiny Imagenet. In terms
+    of counteracting overfitting, we’ll introduce data augmentation, dropout layers,
+    and early stopping. To speed up training, we make use of the learning rate finder,
+    add batchnorm layers, and integrate a pre-trained network. We won’t add-and-remove
+    these techniques one at a time, that is, we won’t assess their effects in isolation.
+    While this is something you might want to do yourself, here we want to avoid the
+    impression that there is some fixed ranking – this is best, that is second … –
+    , *independently of dataset and task*.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Instead, what we do is:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Always use data augmentation. There is hardly ever a case where you’d *not*
+    want to use it – unless, of course, you are already using a different data augmentation
+    technique.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Always run with early stopping enabled. This will not just prevent overfitting,
+    but also, save time.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Always make use of the learning rate finder, together with a one-cycle learning
+    rate schedule.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: For our first setup, we take the convnet from three chapters ago, and add dropout
+    layers.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: In scenario number two, we replace dropout by batch normalization. (Everything
+    else stays the same.)
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Third, we replace the model completely, by one chaining a pre-trained feature
+    classifier (ResNet) and a small sequential model.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 18.1 Data input (common for all)
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: All three runs use the same data input pipeline. Compared with our first go
+    at telling apart the two hundred classes in Tiny Imagenet, two things are new.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'First, we now apply data augmentation to the training set: rotations and translations,
+    to be precise.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Second, input tensors are normalized, channel-wise, to a set of given means
+    and standard deviations. This really is required for the third run (using ResNet)
+    only; we just do to our images what was done in training ResNet. (The same goes
+    for most of the pre-trained models trained on ImageNet.) There really is no problem,
+    though, in doing the same for runs one and two; so normalization is part of the
+    common pre-processing pipeline.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*Next, we compare three different configurations.*  *## 18.2 Run 1: Dropout'
+  prefs: []
+  type: TYPE_NORMAL
+- en: In run one, we take the convnet we were using, and add dropout layers.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE1]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*Next, we run the learning rate finder ([fig. 18.1](#fig-images2-lr-finder-dropout)).'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE2]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*![A curve that, from left to right, stays flat for a long time (until about
+    x=0.01), then oscillates between low and higher values, and finally (at about
+    x=0.05) starts to rise very sharply.](../Images/4a988e517473fbe4eabb35fec7dac73b.png)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Figure 18.1: Learning rate finder, run on Tiny Imagenet. Convnet with dropout
+    layers.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: We already know that discerning between two hundred classes is a task that takes
+    time; it’s thus not surprising to see a flat-ish loss curve during most of learning
+    rate increase. We can conclude, though, that we had better not exceed a learning
+    rate of 0.01.
+  prefs: []
+  type: TYPE_NORMAL
+- en: As in all further configurations, we now train with the one-cycle learning rate
+    scheduler, and early stopping enabled.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE3]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*For me, training stopped after thirty-five epochs, at a validation accuracy
+    of 0.4, and a training accuracy that was just slightly higher: 0.44.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE4]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Comparing with the initial approach, where after fifty epochs, we were left
+    with accuracies of 0.22 for validation, and 0.92 for training, we see an impressive
+    reduction in overfitting. Of course, we cannot really say anything about the respective
+    merits of dropout and data augmentation here. If you’re curious, please go ahead
+    and find out!***  ***## 18.3 Run 2: Batch normalization'
+  prefs: []
+  type: TYPE_NORMAL
+- en: In configuration number two, dropout is replaced by batch normalization.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE5]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*Again, we run the learning rate finder ([fig. 18.2](#fig-images2-lr-finder-batchnorm)):'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE6]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*![A curve that, from left to right, first descends in a smooth, accelerating
+    curve (until about x=0.001), stays flat for a while, and then (shortly before
+    x=0.001), begins to rise in a sharp, but still smooth, curve.](../Images/421e5f2f3d3777e42ee6e4565b4cf949.png)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Figure 18.2: Learning rate finder, run on Tiny Imagenet. Convnet with batchnorm
+    layers.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: This looks surprisingly different! Of course, this is in part due to the scale
+    on the loss axis; the loss does not explode as much, and thus, we get better resolution
+    in the early and middle stages. The loss not exploding is an interesting finding
+    in itself; the conclusion for us to draw from this plot is to be a bit more careful
+    with the learning rate. This time, we’ll choose 0.001 for the maximum.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE7]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*Compared with scenario one, I saw slightly more overfitting with batchnorm.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE8]***  ***## 18.4 Run 3: Transfer learning'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Finally, the setup including transfer learning. A pre-trained ResNet is used
+    for feature extraction, and a small sequential model takes care of classification.
+    During training, all of ResNets weights are left untouched.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE9]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*As always, we run the learning rate finder ([fig. 18.3](#fig-images2-lr-finder-resnet)).'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE10]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*![A curve that, from left to right, first stays flat (until about x=0.01),
+    then begins to rise very sharply, while at the same time showing high variability.](../Images/5302967a65ea3a1846403411ee0307e1.png)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Figure 18.3: Learning rate finder, run on Tiny Imagenet. Convnet with transfer
+    learning (ResNet).'
+  prefs: []
+  type: TYPE_NORMAL
+- en: A maximal rate of 0.01 looks like it could be on the edge, but I decided to
+    give it a try.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE11]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*For me, this configuration resulted in early stopping after nine epochs already,
+    and yielded the best results by far: Final accuracy on the validation set was
+    0.48\. Interestingly, in this setup, accuracy ended up *worse* for training than
+    for validation.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE12]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'In the next chapter, we stay with the domain – images – but vary the task:
+    We move on from classification to segmentation.**********'
+  prefs: []
+  type: TYPE_NORMAL

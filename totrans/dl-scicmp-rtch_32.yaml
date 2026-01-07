@@ -1,0 +1,638 @@
+- en: '25  Matrix computations: Convolution'
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 原文：[https://skeydan.github.io/Deep-Learning-and-Scientific-Computing-with-R-torch/matrix_computations_convolution.html](https://skeydan.github.io/Deep-Learning-and-Scientific-Computing-with-R-torch/matrix_computations_convolution.html)
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: 'In deep learning, we talk about convolutions, convolutional layers, and convolutional
+    neural networks. However, as explained in the chapter on image processing, the
+    thing we’re referring to when doing so really is something different: cross-correlation.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Formally, the difference is minor: A sign is flipped. Semantically, these are
+    not the same at all. As we saw, cross-correlation lets us spot similarities: It
+    serves as a *feature detector*. Convolution is harder to characterize in an abstract
+    way. Whole books could be written on the eminent role it plays in signal processing,
+    as well as on its mathematical significance. Here, we have to leave aside the
+    deeper underpinnings. Instead, we hope to gain some insight into its operation
+    - firstly, by thinking through and picturing the steps involved, and secondly,
+    by implementing it in code. As in the previous chapter, the focus is on understanding,
+    and creating a basis for further explorations, should you be so inclined.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 25.1 Why convolution?
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: In signal processing, *filters* are used to modify a signal in some desired
+    way – for example, to cut off the high frequencies. Imagine you have the Fourier-transformed
+    representation of a time series; meaning, a set of frequencies with associated
+    magnitudes and phases. You’d like to set all frequencies higher than some threshold
+    to zero. The easiest way is to multiply the set of frequencies by a sequence of
+    ones and zeroes. If you do that, filtering is happening in the frequency domain,
+    and often, that’s by far the most convenient way.
+  prefs: []
+  type: TYPE_NORMAL
+- en: What, though, if the same result should be achieved in the time domain – that
+    is, working with the raw time series? In that case, you’d have to find the time-domain
+    representation of the filter (achieved by the *Inverse Fourier Transform*). This
+    representation would then have to be *convolved* with the time series. Put differently,
+    convolution in the time domain corresponds to multiplication in the frequency
+    domain. This basic fact gets made use of all the time.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Now, let’s try to understand better what convolution does, and how it is implemented.
+    We begin with a single dimension, and then, explore a bit of what happens in the
+    two-dimensional case.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 25.2 Convolution in one dimension
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: We start by creating a simple signal, `x`, and a simple filter, `h`. That choice
+    of variable names is not a whim; in signal processing, \(h\) is the usual symbol
+    denoting the *impulse response*, a term we’ll get to very soon.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*Now – given that we *do* have `torch_conv1d()` available – why don’t we call
+    it and see what happens? The way convolution is defined, output length equals
+    input length plus filter length, minus one. Using `torch_conv1d()`, to obtain
+    length-six output, given a filter of length three, we need to pad it by two on
+    both sides.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: In the following code, don’t let the calls to `view()` distract you – they’re
+    present only due to `torch` expecting three-dimensional input, with dimensions
+    one and two relating to batch item and channel, as usual.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE1]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE2]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: But wait, you’ll be thinking – didn’t we say that what `torch_conv1d()` computes
+    is cross-correlation, not convolution? Well, R has `convolve()` – let’s double-check:[¹](#fn1)
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE3]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE4]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The result is the same. However, looking into the documentation for `convolve()`,
+    we see:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Note that the usual definition of convolution of two sequences `x` and `y` is
+    given by `convolve(x, rev(y), type = "o")`.
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: 'Evidently, we need to reverse the order of items in the filter:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE5]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE6]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Indeed, the result is different now. Let’s do the same with `torch_conv1d()`:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE7]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE8]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Again, the outcome is the same between `torch` and R. So: That laconic phrase,
+    found in the “Details” section of `convolve()`’s documentation, captures the complete
+    difference between cross-correlation and convolution: In convolution, the second
+    argument is reversed. Or *flipped*, in signal-processing speak. (“Flipped”, indeed,
+    happens to be a far better term, since it generalizes to higher dimensions.)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Technically, the difference is tiny – just a change in sign. But mathematically,
+    it is essential – in the sense that it directly derives from what a filter *is*,
+    and what it *does*. We’ll be able to get some insight into this soon.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The operation underlying convolution can be pictured in two ways.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 25.2.1 Two ways to think about convolution
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: For one, we can look at a single output value and determine how it comes about.
+    That is, we ask which input elements contribute to its value, and how those are
+    being combined. This may be called the “output view”, and it’s one we’re already
+    familiar with from cross-correlation.
+  prefs: []
+  type: TYPE_NORMAL
+- en: As to cross-correlation, we described it like this. A filter “slides” over an
+    image, and at each image location (pixel), we sum up the products of surrounding
+    input pixels with the corresponding “overlayed” filter values. Put differently,
+    each output pixel results from computing the *dot product* between matched input
+    and filter values.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The second way of looking at things is from the point of view of the input
+    (named, accordingly, the “input view”). It asks: In what way does each input value
+    contribute to the output? This view takes some more getting-used-to than the first;
+    but maybe that’s just a matter of socialization – the manner in which the topic
+    is usually presented in a neural-networks context. In any case, the input view
+    is highly instructive, in that it allows us to learn about the mathematical *meaning*
+    of convolution.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: We’re going to look at both, starting with more familiar one, the output view.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 25.2.1.1 Output view
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: In the output view, we start by padding the input signal on both sides, just
+    like we did when calling `torch_conv2d()` with `padding = 2`. As required, we
+    flip the impulse response, turning it into `1, 0, -1`. Then, we picture the “sliding”.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Below, you find this visualized in tabular form ([tbl. 25.1](#tbl-convolution-output)).
+    The bottom row holds the result, obtained from summing up the individual products
+    at each position.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Table 25.1: Convolution: Output view.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '| Signal | Flipped IR |  |  |  |  |  |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- | --- | --- | --- | --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| `0` | `1` |  |  |  |  |  |'
+  prefs: []
+  type: TYPE_TB
+- en: '| `0` | `0` | `1` |  |  |  |  |'
+  prefs: []
+  type: TYPE_TB
+- en: '| `1` | `-1` | `0` | `1` |  |  |  |'
+  prefs: []
+  type: TYPE_TB
+- en: '| `2` |  | `-1` | `0` | `1` |  |  |'
+  prefs: []
+  type: TYPE_TB
+- en: '| `3` |  |  | `-1` | `0` | `1` |  |'
+  prefs: []
+  type: TYPE_TB
+- en: '| `4` |  |  |  | `-1` | `0` | `1` |'
+  prefs: []
+  type: TYPE_TB
+- en: '| `0` |  |  |  |  | `-1` | `0` |'
+  prefs: []
+  type: TYPE_TB
+- en: '| `0` |  |  |  |  |  | `-1` |'
+  prefs: []
+  type: TYPE_TB
+- en: '| **Result** | `-1` | `-2` | `-2` | `-2` | `3` | `4` |'
+  prefs: []
+  type: TYPE_TB
+- en: After all we’ve said on the topic, this depiction should offer few surprises.
+    On to the input view.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 25.2.1.2 Input view
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: 'The essential thing about the input view is the way we conceptualize the input
+    signal: Each individual element is seen as a – *scaled* and *shifted – impulse*.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The *impulse* is given by the *unit sample* (or: impulse) function, delta (\(\delta\)).
+    This function is zero everywhere, except at zero, where its value is one:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: \[ \delta [n]={\begin{cases}1\ \ \ if \ n=0\\0\ \ \ if \ n \ne 0\end{cases}}
+    \]
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'This is like a Kronecker delta, \(\delta_{ij}\)[²](#fn2), with one of the indices
+    being fixed at 0:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: \[ \delta [n]= \delta _{n0}= \delta _{0n} \]
+  prefs: []
+  type: TYPE_NORMAL
+- en: Thus, equipped with only that function, \(\delta[n]\) – with \(n\) representing
+    discrete time, say – we can represent exactly one signal value, the one at time
+    \(n = 0\)[³](#fn3), and its only possible value is `1`. Now we add to this the
+    operations *scale* and *shift*.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'By scaling, we can produce any value at \(n = 0\); for example: \(x_0 = 0 *
+    \delta [n]\).'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: By shifting, we can affect values at other points in time. For example, time
+    \(n = 3\) can be addressed as \(\delta [n - 3]= \delta _{n3}\), since \(n - 3
+    = 0\).
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Combining both, we can represent any value at any point in time. For example:
+    \(x_5 = 1.11 * \delta [n - 5]\).'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'So far, we’ve talked just about the signal. What about the filter? Just like
+    the impulse is essential in characterizing a signal, a filter is completely described
+    by its *impulse response*[⁴](#fn4). The impulse response, by definition, is what
+    comes out when the input is an impulse (that is, happens at time \(n = 0\)). In
+    notation analogous to that used for the signal, with \(h\) denoting the impulse
+    response, we have:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: \[ h[n] = h[n- 0] \equiv h(\delta[n- 0]) \]
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'In our example, that would be the sequence `-1, 0, 1`. But just like the signal
+    needs to be represented at additional times, not just at \(0\), the filter has
+    to be applicable to other positions, as well. To that purpose, again, a shift
+    operation is employed, and it is formalized in an analogous way: For instance,
+    \(h[n - 1]\) means the filter is applied to time \(1\), the time when \(n - 1\)
+    equals zero. These shifts correspond to what we informally refer to as “sliding”.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Now, all that remains to be done is combine the pieces. At time \(n = 0\),
+    we take the un-shifted impulse response, and *scale* it by the amplitude of the
+    signal. In our example, that value was \(1\). Thus: \(1 * h[n - 0] = 1 * [-1,
+    0, 1] = [-1, 0, 1]\). For the other times, we shift the impulse response to the
+    input position in question, and multiply. Finally, once we’ve obtained all contributions
+    from all input positions, we add them up, thus obtaining the convolved output.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The following table aims to illustrate that ([tbl. 25.2](#tbl-convolution-input)):'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Table 25.2: Convolution: Input view.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '| Signal | Impulse response | Product |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| `1` | `h[n - 0]` | `-1 0 1 0 0 0` |'
+  prefs: []
+  type: TYPE_TB
+- en: '| `2` | `h[n - 1]` | `0 -2 0 2 0 0` |'
+  prefs: []
+  type: TYPE_TB
+- en: '| `3` | `h[n - 2]` | `0 0 -3 0 3 0` |'
+  prefs: []
+  type: TYPE_TB
+- en: '| `4` | `h[n - 3]` | `0 0 0 -4 0 4` |'
+  prefs: []
+  type: TYPE_TB
+- en: '| **Sum** |  | `-1 -2 -2 -2 3 4` |'
+  prefs: []
+  type: TYPE_TB
+- en: 'Personally, while I do find the output view easier to grasp, I feel I can derive
+    more insight from the input view. In particular, it answers the – unavoidable
+    – question: So *why* do we flip the impulse response?'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'It turns out that, far from being due to whatever mysterious forces, the minus
+    sign is merely a mechanical outcome of the *way signals are represented*: The
+    signal measured at time \(n = 2\) is denoted by \(\delta [n - 2]\) (two minus
+    two yielding zero); and the filter applied to that signal, accordingly, as \(h[n
+    -2]\).'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 25.2.2 Implementation
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: 'From the way I’ve described the output view, you may well think there’s not
+    much to say about how to code this. It looks straightforward: Loop over the input
+    vector, and compute the dot product at every prospective output position. But
+    that would mean calculating many vector products, the more, the longer the input
+    sequence.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Fortunately, there is a better way. Single-dimension (linear) convolution is
+    computed by means of Toeplitz matrices, matrices that have some number of constant
+    diagonals, and values of zero everywhere else. Once the filter has been formulated
+    as a Toeplitz matrix, there is just a single multiplication to be carried out:
+    that of the Toeplitz matrix and the input. And even though the matrix will need
+    to have as many columns as the input has values (otherwise we couldn’t do the
+    multiplication), computational cost is small due to the matrix’s being “nearly
+    empty”.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Here is such a Toeplitz matrix, constructed for our running example:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE9]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE10]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Let’s check that multiplication with our example input yields the expected
+    result:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE11]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE12]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: It does. Now, let’s move on to two dimensions. Conceptually, there is no difference,
+    but actual computation (both “by hand” and using matrices) gets a lot more involved.
+    Thus, we’ll content ourselves with presenting a (generalizeable) part of the manual
+    calculation, and, in the computational part, don’t aim at elucidating every single
+    detail.*******  ***## 25.3 Convolution in two dimensions
+  prefs: []
+  type: TYPE_NORMAL
+- en: To show how, conceptually, one-dimensional and two-dimensional convolution are
+    analogous, we assume the output view.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 25.3.1 How it works (output view)
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: 'This time, the example input is two-dimensional. It could look like this:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: \[ \begin{bmatrix} 1 & 4 & 1\\ 2 & 5 & 3\\ \end{bmatrix} \]
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The same goes for the filter. Here is a possible one:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: \[ \begin{bmatrix} 1 & 1\\ 1 & -1\\ \end{bmatrix} \]
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'We take the output view, the one where the filter “slides” over the input.
+    But, to keep things readable, let me just pick a single output value (“pixel”)
+    for demonstration. If the input is of size `m1 x n1`, and the filter, `m2 x n2`,
+    the output will have size `(m1 + m2 - 1) x (n1 + n2 - 1)`; thus, it will be `3
+    x 4` in our case. I’ll pick the value at position `(0, 1)` – counting rows from
+    the bottom, as is usual in image processing:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: \[ \begin{bmatrix} . & . & . & .\\ . & . & . & .\\ . & y_{01} & . & .\\ \end{bmatrix}
+    \]
+  prefs: []
+  type: TYPE_NORMAL
+- en: Here is the input, displayed in a table that will allow us to picture elements
+    at non-existing (negative) positions.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '| Position (x/y) | -1 | 0 | 1 | 2 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- | --- | --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| **1** |  | 1 | 4 | 1 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| **0** |  | 2 | 5 | 3 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| **-1** |  |  |  |  |'
+  prefs: []
+  type: TYPE_TB
+- en: 'And here, the filter, with values arranged correspondingly:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '| Position (x/y) | -1 | 0 | 1 | 2 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- | --- | --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| **1** |  | 1 | 1 |  |'
+  prefs: []
+  type: TYPE_TB
+- en: '| **0** |  | 1 | -1 |  |'
+  prefs: []
+  type: TYPE_TB
+- en: '| **-1** |  |  |  |  |'
+  prefs: []
+  type: TYPE_TB
+- en: As in the one-dimensional case, the first thing to be done is flip the filter.
+    Flipping here means rotation by hundred-eighty degrees.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '| Position (x/y) | -1 | 0 | 1 | 2 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- | --- | --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| **1** |  |  |  |  |'
+  prefs: []
+  type: TYPE_TB
+- en: '| **0** | -1 | 1 |  |  |'
+  prefs: []
+  type: TYPE_TB
+- en: '| **-1** | 1 | 1 |  |  |'
+  prefs: []
+  type: TYPE_TB
+- en: Next, the filter is shifted to the desired output position. What we want to
+    do is shift to the right by one, leaving unaffected vertical position.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '| Position (x/y) | -1 | 0 | 1 | 2 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- | --- | --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| **1** |  |  |  |  |'
+  prefs: []
+  type: TYPE_TB
+- en: '| **0** |  | -1 | 1 |  |'
+  prefs: []
+  type: TYPE_TB
+- en: '| **-1** |  | 1 | 1 |  |'
+  prefs: []
+  type: TYPE_TB
+- en: 'Now we are all set to compute the output value at position `(0, 1)`. It’s the
+    dot product of all overlapping image and filter values:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '| Position (x/y) | -1 | 0 | 1 | 2 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- | --- | --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| **1** |  |  |  |  |'
+  prefs: []
+  type: TYPE_TB
+- en: '| **0** |  | -1*2=-2 | 1*5=5 |  |'
+  prefs: []
+  type: TYPE_TB
+- en: '| **-1** |  |  |  |  |'
+  prefs: []
+  type: TYPE_TB
+- en: The final result, then, is `-2 + 5 = 3`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: \[ \begin{bmatrix} . & . & . & .\\ . & . & . & .\\ . & 3 & . & .\\ \end{bmatrix}
+    \]
+  prefs: []
+  type: TYPE_NORMAL
+- en: All values still missing can be computed in an analogous way. But we’ll skip
+    that exercise, and take a look at how an actual computation would proceed.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 25.3.2 Implementation
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: The way two-dimensional convolution is actually implemented in code again involves
+    Toeplitz matrices. Like I already said, we won’t go into why exactly every step
+    takes the *exact form* it takes – the intent here is to show a working example,
+    an example you could build on, if you wanted, for your own explorations.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '25.3.2.1 Step one: Prepare filter matrix'
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: We start by padding the filter to the output size, `3 x 4`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE13]'
+  prefs: []
+  type: TYPE_PRE
+- en: We then create a Toeplitz matrix for every row in the filter, starting at the
+    bottom.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE14]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'In code, we have:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE15]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*Next, these three matrices are assembled so as to form a *doubly-blocked Toeplitz*
+    *matrix*. Like so:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE16]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'One way of coding this is to (twice) use `torch_block_diag()` to build up the
+    two non-zero blocks, and concatenate them:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE17]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE18]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The final matrix has two non-zero “bands”, separated by two all-zero diagonals.
+    This is the final form of the filter needed for matrix multiplication.**  **####
+    25.3.2.2 Step two: Prepare input'
+  prefs: []
+  type: TYPE_NORMAL
+- en: To be multiplicable with this `12 x 6` matrix, the input needs to be flattened
+    into a vector. Again, we proceed row-by-row, starting from the bottom here as
+    well.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE19]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE20]*  *#### 25.3.2.3 Step three: Multiply'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'By now, convolution has morphed into straightforward matrix multiplication:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE21]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE22]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'All that remains to be done is reshape the output into the correct two-dimensional
+    structure. Building up the rows in order (again, bottom-first) we obtain:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: \[ \begin{bmatrix} 1 & 5 & 5 & 1\\ 3 & 10 & 5 & 2\\ 2 & 3 & -2 & -3\\ \end{bmatrix}
+    \]
+  prefs: []
+  type: TYPE_NORMAL
+- en: Looking at element `(0, 1)`, we see that the computation confirms our manual
+    calculation.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Herewith, we conclude the topic of matrix computations with `torch`. But, as
+    we move on to our next topic, the Fourier transform, we won’t actually stray that
+    far away. Remember how, above, we said that time-domain convolution corresponds
+    to frequency-domain multiplication?
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'This correspondence is often used to speed up computation: The input data are
+    Fourier-transformed, the result is multiplied by the filter, and the filtered
+    frequency-domain representation is transformed back again. Just have a look at
+    the documentation for R’s `convolve()`. It directly starts out stating:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Use the Fast Fourier Transform to compute the several kinds of convolutions
+    of two sequences.
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: On to the Fourier Transform, then!****  **** * *
+  prefs: []
+  type: TYPE_NORMAL
+- en: The argument `type = "open"` is passed to request linear, not circular, convolution.[↩︎](#fnref1)
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: The Kronecker delta, \(\delta_{ij}\), evaluates to one if \(i\) equals \(j\),
+    and to zero, otherwise.[↩︎](#fnref2)
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: I’m using \(n\), instead of \(t\), to index into different positions, because
+    the signal – like any digitized one – only “exists” at discrete points in time
+    (or space). In some contexts, this reads a bit awkward, but it at least is consistent.[↩︎](#fnref3)
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Like everywhere in the chapter, when I talk of filters, I think of linear time-invariant
+    systems only. The restriction to time-invariant systems is immanent in the convolution
+    operation.[↩︎](#fnref4)******
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL

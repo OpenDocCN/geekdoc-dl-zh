@@ -1,0 +1,581 @@
+- en: 19  Image segmentation
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 原文：[https://skeydan.github.io/Deep-Learning-and-Scientific-Computing-with-R-torch/image_segmentation.html](https://skeydan.github.io/Deep-Learning-and-Scientific-Computing-with-R-torch/image_segmentation.html)
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: 19.1 Segmentation vs. classification
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'Both classification and segmentation are about labeling – but both don’t label
+    the same thing. In classification, it’s complete images that are categorized;
+    in segmentation, it’s individual pixels. For each and every pixel, we ask: Which
+    object, or what kind of object, is this pixel part of? No longer are we just interested
+    in saying “this is a cat”; this time, we need to know where exactly that cat is.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Note the qualifier: exactly. That’s what constitutes the difference to *object
+    detection*, where the class instances found are surrounded by a so-called bounding
+    box. The type of localization hint provided by such boxes (rectangles, basically)
+    is not sufficient for many tasks in, say, health care, biology, or the earth sciences.
+    For example, in segmenting cell tissue, we need to see the actual boundaries between
+    clusters of cell types, not their straightened versions.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Object detection is not something we discuss in this book; but we’ve built up
+    quite some experience with classification. Compared to classification, then, what
+    changes?
+  prefs: []
+  type: TYPE_NORMAL
+- en: Remember how, in the initial chapter on image classification, we talked about
+    translation invariance and translation equivariance. If an operator is translation-invariant,
+    it will return the same measurement when applied to location \(x\) and to \(x=x+n\).
+    If, on the other hand, it is translation-equivariant, it will return a measurement
+    adapted to the new location. In classification, the difference did not really
+    matter. Now though, in segmentation, we want to avoid transformations that are
+    not shift-equivariant. We can’t afford to lose location-related information anymore.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Technically, this means that no layer type should be used that abstracts over
+    location. However, we just saw how successful the typical convolutional architecture
+    is at learning about images. We certainly want to to re-use as much of that architecture
+    as we can.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'We will avoid pooling layers, since those destroy information about location.
+    But how, then, are we going to build up a hierarchy of features? For that hierarchy
+    to emerge, it would seem like *some form* of spatial downsizing *has to* occur
+    – no matter how we make it happen. And for sure, that representational hierarchy
+    is something we can’t sacrifice: Whatever the downstream task, the features are
+    required for the model to develop an “understanding” of sorts about what is displayed
+    in the image. But: If we need to label every single pixel, the network must output
+    an image exactly equal, in resolution, to the input! These are conflicting goals
+    – can they be combined?'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 19.2 U-Net, a “classic” in image segmentation
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'The general U-Net architecture, first described in Ronneberger, Fischer, and
+    Brox ([2015](references.html#ref-RonnebergerFB15)), has been used for countless
+    tasks involving image segmentation, as a sub-module of numerous composite models
+    as well as in various standalone forms. To explain the name “U-Net”, there is
+    no better way than to reproduce a figure from the paper ([fig. 19.1](#fig-segmentation-unet)):'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![A neural network whose layers are arranged in blocks that form a U-shape.
+    Arrows indicate how processing first descends the left leg of the U, then ascends
+    via the right leg. In addition, at all levels, there are arrows pointing from
+    the left to the right leg.](../Images/865a29cec927ac0faf8a48f17df622e3.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Figure 19.1: U-Net architecture from Ronneberger, Fischer, and Brox ([2015](references.html#ref-RonnebergerFB15)),
+    reproduced with the principal author’s permission.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The left “leg” of the U shows a sequence of steps implementing a successive
+    decrease in spatial resolution, accompanied by an increase in number of filters.
+    The right leg illustrates the opposite mechanism: While number of filters goes
+    down, spatial size increases right until we reach the original resolution of the
+    input. (This is achieved via *upsampling*, a technique we’ll talk about below.)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: In consequence, we do in fact build up a feature hierarchy, and at the same
+    time, we are able to classify individual pixels. But the upsampling process should
+    result in significant loss of spatial information – are we really to expect sensible
+    results?
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Well, probably not, were it not for the mechanism, also displayed in the above
+    schematic, of channeling lower-level feature maps through the system. This is
+    the constitutive U-Net idea: In the “down” sequence, when creating higher-level
+    feature maps, we don’t throw away the lower-level ones; instead we keep them,
+    to be eventually fed back into the “up” sequence. In the “up” sequence, once some
+    small-resolution input has been upsampled, the matching-in-size features from
+    the “down” process are appended. This means that each “up” step works on an ensemble
+    of feature maps: ones kept while downsizing, *and* ones incorporating higher-level
+    information.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: The fact that U-Net-based architectures are so pervasively used speaks to the
+    power of this idea.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 19.3 U-Net – a `torch` implementation
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Our `torch` implementation follows the general U-Net idea. As always in this
+    book, kernel sizes, number of filters, as well as hyper-parameters should be seen
+    as subject to experimentation.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The implementation is modular, emphasizing the fact that we can distinguish
+    two phases, an encoding and a decoding phase. Unlike in many other encoder-decoder
+    architectures, these are coupled: Since the decoder needs to incorporate “messages”
+    from the encoder, namely, the conserved feature maps, it will have to know about
+    their sizes.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 19.3.1 Encoder
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: In the last chapter, we’ve seen how using a pre-trained feature extractor speeds
+    up training. Now that we need to keep feature maps on our way “down”, can we still
+    apply this technique? We can, and we’ll see how to do it shortly. First, let’s
+    talk about the pre-trained model we’ll be using.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'MobileNet v2 (Sandler et al. ([2018](references.html#ref-abs-1801-04381)))
+    features a convolutional architecture optimized for mobile use. We won’t go into
+    details here, but there is one thing we’d like to check: Does it lose translation
+    equivariance; for example, by using local pooling? Let’s poke around a bit to
+    find out.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE1]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Immediately, we see that `model_mobilenet_v2()` is a wrapping a sequence of
+    two modules: a container called `features` (the feature detector, evidently),
+    and another called `classifier` (again, with a telling name). It’s the former
+    we’re interested in.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE2]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE3]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Thus MobileNet is mostly made up of a bunch of “inverted residual” blocks.
+    What do these consist of? Some further poking around tells us:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE4]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE5]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'If we want to be paranoid, we still need to check the first of these modules:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE6]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE7]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'It seems like there really is no pooling applied. The question then is, how
+    would one obtain – and keep around – feature maps from different stages? Here
+    is how the encoder does it:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE8]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*The encoder splits up MobileNet v2’s feature extraction blocks into several
+    stages, and applies one stage after the other. Respective results are saved in
+    a list.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'We can construct an example, and inspect the sizes of the feature maps obtained.
+    For three-channel input of resolution 224 x 224 pixels, we see:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE9]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE10]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Next, we look at the decoder, which is a bit more complex.******  ***### 19.3.2
+    Decoder
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The decoder is made up of configurable blocks. A block receives two input tensors:
+    one that is the result of applying the previous decoder block, and one that holds
+    the feature map produced in the matching encoder stage. In the forward pass, first
+    the former is upsampled, and passed through a nonlinearity. The intermediate result
+    is then prepended to the second argument, the channeled-through feature map. On
+    the resultant tensor, a convolution is applied, followed by another nonlinearity.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE11]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*We now look closer at how upsampling is achieved. Technically, what is applied
+    is a so-called transposed convolution – hence the name of the layer, `nn_conv_transpose2d()`.(If
+    you’re wondering about the `transpose`: Quite literally, the kernel *is* the transpose
+    of a corresponding one that performs downsampling.) However, it’s more intuitive
+    to picture the operation like this: First zeroes are inserted between individual
+    tensor values, and then, a convolution with `strides` greater than `1` is applied.
+    See [fig. 19.2](#fig-segmentation-conv-arithmetic-transposed) for a visualization.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Transposed convolution. A 5 x 5 image is obtained from a 3 x 3 one by inserting
+    zeros. This image is then padded by one pixel at all edges. Then, a 3 x 3 filter
+    slides over the image, resulting in a 5 x 5 output.](../Images/fca9b9d363fb1cc5b7f381b5ff2520ac.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Figure 19.2: Transposed convolution. Copyright Dumoulin and Visin ([2016](references.html#ref-2016arXiv160307285D)),
+    reproduced under [MIT license](https://github.com/vdumoulin/conv_arithmetic/blob/master/LICENSE).'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Even though we won’t go into technical details, we can do a quick check that
+    really, convolution and transposed convolution affect resolution in opposite ways.
+  prefs: []
+  type: TYPE_NORMAL
+- en: We start from a 1 x 1 “image”, and apply a 3 x 3 filter with a `stride` of 2\.
+    Together with padding, this results in an output tensor of size 3 x 3.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE12]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE13]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'If we take that output, and now apply a transposed convolution, with the same
+    kernel size, strides, and padding as the above convolution, we are back to the
+    original resolution of 5 x 5:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE14]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE15]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: After that quick check, back to the decoder block. What is the outcome of its
+    very first application?
+  prefs: []
+  type: TYPE_NORMAL
+- en: Above, we saw that at the “bottom of the U”, we will have a tensor of size 7
+    x 7, with 320 channels. This tensor will be upsampled, and concatenated with feature
+    maps from the previous “down” stage. At that stage, there had been 96 channels.
+    That makes two thirds of the information needed to instantiate a decoder block
+    (`in_channels` and `skip_channels`). The missing third, `out_channels`, really
+    is up to us. Here we choose 256.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'We can thus instantiate a decoder block:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE16]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*To do a forward pass, the block needs to be passed two tensors: the maximally-processed
+    features, and their immediate precursors. Let’s check that our understanding is
+    correct:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE17]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE18]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Let me remark in passing that the purpose of exercises like this is not just
+    to explain some concrete architecture. They’re also supposed to illustrate how
+    with `torch`, instead of having to rely on some overall idea of what a piece of
+    code will probably do, you can usually find a way to *know*.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Now that we’ve talked at length about the decoder blocks, we can quickly characterize
+    their “manager” of sorts, the decoder module. It “merely” instantiates and runs
+    through the blocks.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE19]*****  ***### 19.3.3 The “U”'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Before we take the last step and look at the top-level module, let’s see how
+    the U-shape comes about in our case. Here ([tbl. 19.1](#tbl-segmentation-u)) is
+    a table, displaying “image” sizes at every step of the “down” and “up” passes,
+    as well as the actors responsible for shape manipulations:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Table 19.1: Tensor sizes at various stages of the encoding and decoding chains.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '| **Encoder steps** |  | **Decoder steps** |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| ***Input***: `224 x 224` (channels: 3) |  | ***Output***: `224 x 224` (channels:
+    16) |'
+  prefs: []
+  type: TYPE_TB
+- en: '|  |  |  |'
+  prefs: []
+  type: TYPE_TB
+- en: '| \(\Downarrow\) *convolve (MobileNet)* |  | *upsample* \(\Uparrow\) |'
+  prefs: []
+  type: TYPE_TB
+- en: '|  |  |  |'
+  prefs: []
+  type: TYPE_TB
+- en: '| `112 x 112` (channels: 16) | *append* \(\Rightarrow\) | `112 x 112` (channels:
+    32) |'
+  prefs: []
+  type: TYPE_TB
+- en: '|  |  |  |'
+  prefs: []
+  type: TYPE_TB
+- en: '| \(\Downarrow\) *convolve (MobileNet)* |  | *upsample* \(\Uparrow\) |'
+  prefs: []
+  type: TYPE_TB
+- en: '|  |  |  |'
+  prefs: []
+  type: TYPE_TB
+- en: '| `56 x 56` (channels: 24) | *append* \(\Rightarrow\) | `56 x 56` (channels:
+    64) |'
+  prefs: []
+  type: TYPE_TB
+- en: '|  |  |  |'
+  prefs: []
+  type: TYPE_TB
+- en: '| \(\Downarrow\) *convolve (MobileNet)* |  | *upsample* \(\Uparrow\) |'
+  prefs: []
+  type: TYPE_TB
+- en: '|  |  |  |'
+  prefs: []
+  type: TYPE_TB
+- en: '| `28 x 28` (channels: 32) | *append* \(\Rightarrow\) | `28 x 28` (channels:
+    128) |'
+  prefs: []
+  type: TYPE_TB
+- en: '|  |  |  |'
+  prefs: []
+  type: TYPE_TB
+- en: '| \(\Downarrow\) *convolve (MobileNet)* |  | *upsample* \(\Uparrow\) |'
+  prefs: []
+  type: TYPE_TB
+- en: '|  |  |  |'
+  prefs: []
+  type: TYPE_TB
+- en: '| `14 x 14` (channels: 96) | *append* \(\Rightarrow\) | `14 x 14` (channels:
+    256) |'
+  prefs: []
+  type: TYPE_TB
+- en: '|  |  |  |'
+  prefs: []
+  type: TYPE_TB
+- en: '| \(\Downarrow\) *convolve (MobileNet)* |  | *upsample* \(\Uparrow\) |'
+  prefs: []
+  type: TYPE_TB
+- en: '|  |  |  |'
+  prefs: []
+  type: TYPE_TB
+- en: '| `7 x 7` (channels: 320) | *use as input* \(\Rightarrow\) | `7 x 7` (channels:
+    320) |'
+  prefs: []
+  type: TYPE_TB
+- en: Did you notice that the final output has sixteen channels? In the end, we want
+    to use the *channels* dimension for class scores; so really, we’ll need to have
+    as many channels as there are different “pixel classes”. This, of course, is task-dependent,
+    so it makes sense to have a dedicated module take care of it. The top-level module
+    will then be a composition of the “U” part and a final, score-generating layer.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 19.3.4 Top-level module
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: 'In our task, there will be three pixel classes. The score-producing submodule
+    can then just be a final convolution, producing three channels:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE20]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*Now that I’ve already mentioned that there’ll be three pixel classes to tell
+    apart, it’s time for full disclosure: What, then, is the task we’ll use this model
+    on?*******  ***## 19.4 Dogs and cats'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'This time, we need an image dataset that has each individual pixel tagged.
+    One of those, the [Oxford Pet Dataset](https://www.robots.ox.ac.uk/~vgg/data/pets/),
+    is an ensemble of cats and dogs. As provided by `torchdatasets`, it comes with
+    three types of target data to choose from: the overall class (cat or dog), the
+    individual breed (there are thirty-seven of them), and a pixel-level segmentation
+    with three categories: foreground, boundary, and background. The default is exactly
+    the type of target we need: the segmentation map.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE21]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*Images come in different sizes. As in the previous chapter, we want all of
+    them to share the same resolution; one that also fulfills the requirements of
+    MobileNet v2\. The masks will need to be resized in the same way. So far, then,
+    this looks like a case for the `transform =` and `target_transform =` arguments
+    we encountered in the last chapter. But if we also want to apply data augmentation,
+    things get more complex.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Imagine we make use of random flipping. An input image will be flipped – or
+    not – according to some probability. But if the image is flipped, the mask better
+    had be, as well! Input and target transformations are not independent, in this
+    case.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'A solution is to create a wrapper around `oxford_pet_dataset()` that lets us
+    “hook into” the `.getitem()` method, like so:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE22]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*With this wrapper, all we have to do is create a custom function that decides
+    what augmentation to apply once per input-target *pair*, and manually calls the
+    respective transformation functions.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Here, we flip every second image (on average). And if we do, we flip the mask
+    as well.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE23]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*Since we’re at it, let me mention types of augmentation that should be helpful
+    with slightly different formulations of the task. Why don’t we try (small-ish)
+    random rotations, or translations, or both?'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Like this:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE24]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*As-is, that piece of code does not work. This is because a rotation will introduce
+    black pixels, or – technically speaking – zeroes in the tensor. Before, possible
+    target classes went from `1` to `3`. Now there’s an additional class, `0`. As
+    a consequence, loss computation will expect the model output to have four, not
+    three, slots in the second dimension – and fail.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: There are several possible workarounds. First, we could take the risk and assume
+    that in nearly all cases, this will affect only background pixels. Under that
+    assumption, we can just set all values that have turned to `0` to `2`, the background
+    class.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Another thing we can do is upsize the image, trigger the rotation, and downsize
+    again:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE25]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*In this specific case, there still is a problem, though. In my experiments,
+    training performance got a lot worse. This could be because we have “boundary”
+    class. The whole *râison d’être* of a boundary is to be sharp; the downside of
+    sharp boundaries is their not dealing well with resizings.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: However, in the real world, segmentation requirements will vary widely. Maybe
+    you have just two classes, foreground and background. Maybe there are many. Experimenting
+    with rotations (and translations, that also will introduce black pixels) cannot
+    hurt.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Back on the main track, we can now make use of the dataset wrapper, `pet_dataset()`,
+    to instantiate the training and validation sets:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE26]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*We create the data loaders, and run the learning rate finder ([fig. 19.3](#fig-segmentation-lr-finder)):'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE27]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*![A curve that, from left to right, first stays flat (until after x=0.01),
+    then begins to rise very sharply.](../Images/d623c008fec2f6bad5dfbbb9676f7b6f.png)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Figure 19.3: Learning rate finder, run on the Oxford Pet Dataset.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: From this plot, we conclude that a maximum learning rate of 0.01, at least when
+    run with a one-cycle strategy, should work fine.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE28]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE29]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: This looks like decent improvement; but – as always – we want to see what the
+    model actually says. To that end, we generate segmentation masks for the first
+    eight observations in the validation set, and plot them overlayed on the images.
+    (We probably don’t need to also display the ground truth, humans being rather
+    familiar with cats and dogs.)
+  prefs: []
+  type: TYPE_NORMAL
+- en: A convenient way to plot an image and superimpose a mask is provided by the
+    `raster` package.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE30]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*Pixel intensities have to be between zero and one, which is why in the dataset
+    wrapper, we have made it so normalization can be switched off. To plot the actual
+    images, we just instantiate a clone of `valid_ds` that leaves the pixel values
+    unchanged. (The predictions, on the other hand, will still have to be obtained
+    from the original validation set.)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE31]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*Finally, the predictions are generated, and overlaid over the images one-by-one
+    ([fig. 19.4](#fig-segmentation-segmentation)):'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE32]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*![Eight images of cats and dogs, with green boundaries indicating which pixels
+    the network thinks belong to the animal in question. With minor exceptions, the
+    boundaries are correct.](../Images/c1db721cb18a82b735f92d84dbf8868e.png)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Figure 19.4: Cats and dogs: Sample images and predicted segmentation masks.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: This looks pretty reasonable!
+  prefs: []
+  type: TYPE_NORMAL
+- en: Now, it’s time we let images be, and look at different application domains.
+    In the next chapter, we explore deep learning on tabular data.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Dumoulin, Vincent, and Francesco Visin. 2016\. “A guide to convolution arithmetic
+    for deep learning.” *arXiv e-Prints*, March, arXiv:1603.07285\. [https://arxiv.org/abs/1603.07285](https://arxiv.org/abs/1603.07285).Ronneberger,
+    Olaf, Philipp Fischer, and Thomas Brox. 2015\. “U-Net: Convolutional Networks
+    for Biomedical Image Segmentation.” *CoRR* abs/1505.04597\. [http://arxiv.org/abs/1505.04597](http://arxiv.org/abs/1505.04597).Sandler,
+    Mark, Andrew G. Howard, Menglong Zhu, Andrey Zhmoginov, and Liang-Chieh Chen.
+    2018\. “Inverted Residuals and Linear Bottlenecks: Mobile Networks for Classification,
+    Detection and Segmentation.” *CoRR* abs/1801.04381\. [http://arxiv.org/abs/1801.04381](http://arxiv.org/abs/1801.04381).**************'
+  prefs: []
+  type: TYPE_NORMAL

@@ -1,0 +1,1121 @@
+- en: 3  Tensors
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 原文：[https://skeydan.github.io/Deep-Learning-and-Scientific-Computing-with-R-torch/tensors.html](https://skeydan.github.io/Deep-Learning-and-Scientific-Computing-with-R-torch/tensors.html)
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: 3.1 What’s in a tensor?
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: To do anything useful with `torch`, you need to know about tensors. Not tensors
+    in the math/physics sense. In deep learning frameworks such as TensorFlow and
+    (Py-)Torch, *tensors* are “just” multi-dimensional arrays optimized for fast computation
+    – not on the CPU only but also, on specialized devices such as GPUs and TPUs.
+  prefs: []
+  type: TYPE_NORMAL
+- en: In fact, a `torch` `tensor` is like an R `array`, in that it can be of arbitrary
+    dimensionality. But unlike `array`, it is designed for fast and scalable execution
+    of mathematical calculations, and you can move it to the GPU. (It also has an
+    extra capability of enormous practical impact – automatic differentiation – but
+    we reserve that for the next chapter.)
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Technically, a `tensor` feels a lot like an R6 object, in that you can access
+    its fields and methods using `$`-syntax. Let’s create one and print it:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE1]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'This is a tensor that holds just a single value, 1\. It “lives” on the CPU,
+    and its type is `Float` . Now take a look at the 1 in braces, `{1}`. This is *not*
+    yet another indication of the tensor’s value. It indicates the tensor shape, or
+    put differently: the space it lives in and the extent of its dimensions. Here,
+    we have a one-dimensional tensor, that is, a vector. Just as in base R, vectors
+    can consist of a single element only. (Remember that base R does not differentiate
+    between `1` and `c(1)`).'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'We can use the aforementioned `$`-syntax to individually ascertain these properties,
+    accessing the respective fields in the object one-by-one:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE2]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE3]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE4]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE5]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE6]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE7]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'We can also directly change some of these properties, making use of the tensor
+    object’s `$to()` method:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE8]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE9]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE10]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE11]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'How about changing the shape? This is a topic deserving of treatment of its
+    own, but as a first warm-up, let’s play around a bit. Without changing its value,
+    we can turn this one-dimensional “vector tensor” into a two-dimensional “matrix
+    tensor”:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE12]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE13]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Conceptually, this is analogous to how in R, we can have a one-element vector
+    as well as a one-element matrix:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE14]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE15]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Now that we have an idea what a tensor is, let’s think about ways to create
+    some.********  ***## 3.2 Creating tensors
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'We’ve already seen one way to create a tensor: calling `torch_tensor()` and
+    passing in an R value. This way generalizes to multi-dimensional objects; we’ll
+    see a few examples soon.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: However, that procedure can get unwieldy when we have to pass in lots of different
+    values. Luckily, there is an alternative approach that applies whenever values
+    should be identical throughout, or follow an apparent pattern. We’ll illustrate
+    this technique as well in this section.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 3.2.1 Tensors from values
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: 'Above, we passed in a one-element vector to `torch_tensor()`; we can pass in
+    longer vectors just the same way:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE16]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE17]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: When given an R value (or a sequence of values), `torch` determines a suitable
+    data type itself. Here, the assumption is that an integer type is desired, and
+    `torch` chooses the highest-precision type available (`torch_long()` is synonymous
+    to `torch_int64()`).
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'If we want a floating-point tensor instead, we can use `$to()` on the newly
+    created instance (as we saw above). Alternatively, we can just let `torch_tensor()`
+    know right away:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE18]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE19]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Analogously, the default device is the CPU; but we can also create a tensor
+    that, right from the outset, is located on the GPU:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE20]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE21]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Now, so far all we’ve been creating is vectors; what about matrices, that is,
+    two-dimensional tensors?
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'We can pass in an R matrix just the same way:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE22]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE23]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Look at the result. The numbers 1 to 9 appear column after column, just as
+    in the R matrix we created it from. This may, or may not, be the intended outcome.
+    If it’s not, just pass `byrow = TRUE` to the call to `matrix()`:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE24]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE25]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'What about higher-dimensional data? Following the same principle, we can pass
+    in an array:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE26]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE27]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Again, the result follows R’s array population logic. If that’s not what you
+    want, it is probably easier to build up the tensor programmatically.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Before you start to panic, though, think about how rarely you’ll need to do
+    this. In practice, you’ll mostly be creating tensors from an R dataset. We’ll
+    take a close look at that in the last subsection, “Tensors from datasets”. Before
+    though, it is instructive to spend a little time inspecting that last output.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Here, pictorially, is the object we created ([fig. 3.1](#fig-tensors-dimensions)).
+    Let’s call the axis that extends to the right `x`, the one that goes into the
+    page, `y`, and the one that points up, `z`. Then the tensor extends 4, 3, and
+    2 units, respectively, in the x, y, and z directions.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![A cube that extends 4, 3, and 2 units, respectively, in the x, y, and z directions.](../Images/ed43848c8ef6217f9dace3c692bb525c.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Figure 3.1: A 4x3x2 tensor.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The array we passed to `torch_tensor()` prints like this:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE28]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE29]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Compare that with how the tensor prints, above. `Array` and `tensor` slice the
+    object in different ways. The tensor slices its values into `3x2` rectangles,
+    extending up and to the back, one for each of the four `x`-values. The array,
+    on the other hand, splits them up by `z`-value, resulting in two big `4x3` slices
+    that go up and to the right.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Alternatively, we could say that the tensor starts thinking from the left/the
+    “outside”; the array, from the right/the “inside”.*******  ***### 3.2.2 Tensors
+    from specifications
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'There are two broad conditions when `torch`’s bulk creation functions will
+    come in handy: For one, when you don’t care about individual tensor values, but
+    only about their distribution. Secondly, if they follow some conventional pattern.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'When we use bulk creation functions, instead of individual *values* we specify
+    the *shape* they should have. Here, for example, we instantiate a 3x3 tensor,
+    populated with standard-normally distributed values:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE30]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE31]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'And here is the equivalent for values that are uniformly distributed between
+    zero and one:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE32]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE33]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Often, we require tensors of all ones, or all zeroes:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE34]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE35]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE36]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE37]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Many more of these bulk creation functions exist. To wrap up, let’s see how
+    to create some matrix types that are common in linear algebra. Here’s an identity
+    matrix:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE38]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE39]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'And here, a diagonal matrix:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE40]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE41]******  ***### 3.2.3 Tensors from datasets'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Now we look at how to create tensors from R datasets. Depending on the dataset
+    itself, this process can feel “automatic” or require some thought and action.
+  prefs: []
+  type: TYPE_NORMAL
+- en: First, let’s try `JohnsonJohnson` that comes with base R. It is a time series
+    of quarterly earnings per Johnson & Johnson share.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE42]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE43]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Can we just pass this to `torch_tensor()` and magically get what we want?
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE44]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE45]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Looks like we can! The values are arranged exactly the way we want them; quarter
+    after quarter.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Magic? Not really. `torch` can only work with what it is given; and here, what
+    it is given is actually a vector of `double`s arranged in quarterly order. The
+    data just print the way they do because they are of class `ts`:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE46]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE47]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: So this went well. Let’s try another one. Who is not kept up at night, pondering
+    trunk thickness of orange trees?
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE48]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE49]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE50]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE51]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Which type is *not handled* here? It seems obvious that the “culprit” must
+    be `Tree`, an ordered-factor column. Let’s first check if `torch` can handle factors:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE52]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE53]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'So this worked fine. Then what else could it be? The problem here is the containing
+    structure, the `data.frame`. We need to call `as.matrix()` on it first. Due to
+    the presence of the factor, though, this will result in a matrix of all strings,
+    which is not what we want. Therefore, we first extract the underlying levels (integers)
+    from the factor, and then convert the `data.frame` to a matrix:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE54]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE55]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Let’s try the same thing with another `data.frame`, `okc` from `modeldata`:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE56]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE57]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'We have two integer columns, which is fine, and one factor column, which we
+    know how to handle. But what about the `character` and `date` columns? Trying
+    to create a tensor from the `date` column individually, we see:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE58]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE59]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: This didn’t throw an error, but what does it mean? These are the actual values
+    stored in an R `Date`, namely, the number of days since January 1, 1970\. Technically,
+    thus, we have a working conversion – whether the result makes sense pragmatically
+    is a question of how you’re going to use it. Put differently, you’ll probably
+    want to further process these data before using them in a computation, and how
+    you do this will depend on the context.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Next, let’s see about `location`, one of the columns of type `character`. What
+    happens if we just pass it to `torch` as-is?
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE60]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE61]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'In fact, there are no tensors in `torch` that store strings. We have to apply
+    some scheme that converts them to a numeric type first. In cases like the present
+    one, where every observation contains a single entity (as opposed to, say, a sentence
+    or a paragraph), the easiest way of doing this from R is to first convert to `factor`,
+    then to `numeric`, and then, to `tensor`:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE62]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE63]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: True, this works well technically. It *does*, however, reduce information. For
+    example, the first and third locations are “south san francisco” and “san francisco”,
+    respectively. Once converted to factors, these are just as distant, semantically,
+    as are “san francisco” and any other location. Again, whether this is of relevance
+    depends on the specifics of the data, as well as your goal. If you think it does
+    matter, you have a range of options, including, for example, grouping observations
+    by some criterion, or converting to latitude/longitude. These considerations are
+    by no means `torch`-specific; we just mention them here because they affect the
+    “data ingestion workflow” to `torch`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Finally, no excursion into the world of real-life data science is complete
+    without a consideration of `NA`s. Let’s see:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE64]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE65]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'R’s `NA` gets converted to `NaN`. Can you work with that? Some `torch` function
+    can. For example, `torch_nanquantile()` just ignores the `NaN`s:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE66]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE67]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: However, if you’re going to train a neural network, for example, you’ll need
+    to think about how to meaningfully replace these missing values first. But that’s
+    a topic for a later time.*******************  ***## 3.3 Operations on tensors
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'We can perform all the usual mathematical operations on tensors.: add, subtract,
+    divide … These operations are available as functions (starting with `torch_`)
+    as well as as methods on objects (invoked with `$`-syntax). For example, the following
+    are equivalent:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE68]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE69]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'In both cases, a new object is created; neither `t1` nor `t2` are modified.
+    There exists an alternate method that modifies its object in-place:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE70]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE71]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE72]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE73]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'In fact, the same pattern applies for other operations: Whenever you see an
+    underscore appended, the object is modified in-place.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Naturally, in a scientific-computing setting, matrix operations are of special
+    interest. Let’s start with the dot product of two one-dimensional structures,
+    i.e., vectors.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE74]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE75]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Were you thinking this shouldn’t work? Should we have needed to transpose (`torch_t()`)
+    one of the tensors? In fact, this also works:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE76]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE77]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The reason the first call worked, too, is that `torch` does not distinguish
+    between row vectors and column vectors. In consequence, if we multiply a vector
+    with a matrix, using `torch_matmul()`, we don’t need to worry about the vector’s
+    orientation either:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE78]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE79]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The same function, `torch_matmul()`, would be used to multiply two matrices.
+    Note how this is different from what `torch_multiply()` does, namely, scalar-multiply
+    its arguments:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE80]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE81]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Many more tensor operations exist, some of which you’ll meet over the course
+    of this journey. But there is one group that deserves special mention.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 3.3.1 Summary operations
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: 'If you have an R matrix and are about to compute a sum, this could, normally,
+    mean one of three things: the global sum, row sums, or column sums. Let’s see
+    all three of them at work (using `apply()` for a reason):'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE82]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE83]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: And now, the `torch` equivalents. We start with the overall sum.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE84]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE85]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'It gets more interesting for the row and column sums. The `dim` argument tells
+    `torch` which dimension(s) to sum over. Passing in `dim = 1`, we see:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE86]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE87]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Unexpectedly, these are the column sums! Before drawing conclusions, let’s
+    check what happens with `dim = 2`:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE88]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE89]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Now, we have sums over rows. Did we misunderstand something about how `torch`
+    orders dimensions? No, it’s not that. In `torch`, when we’re in two dimensions,
+    we think rows first, columns second. (And as you’ll see in a minute, we start
+    indexing with 1, just as in R in general.)
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Instead, the conceptual difference is specific to aggregating, or “grouping”,
+    operations. In R, *grouping*, in fact, nicely characterizes what we have in mind:
+    We group by row (dimension 1) for row summaries, by column (dimension 2) for column
+    summaries. In `torch`, the thinking is different: We *collapse* the columns (dimension
+    2) to compute row summaries, the rows (dimension 1) for column summaries.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The same thinking applies in higher dimensions. Assume, for example, that we
+    been recording time series data for four individuals. There are two features,
+    and both of them have been measured at three times. If we were planning to train
+    a recurrent neural network (much more on that later), we would arrange the measurements
+    like so:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Dimension 1: Runs over individuals.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Dimension 2: Runs over points in time.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Dimension 3: Runs over features.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'The tensor then would look like this:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE90]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE91]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'To obtain feature averages, independently of subject and time, we would collapse
+    dimensions 1 and 2:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE92]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE93]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'If, on the other hand, we wanted feature averages, but individually per person,
+    we’d do:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE94]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE95]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Here, the single feature “collapsed” is the time step.**************  ***##
+    3.4 Accessing parts of a tensor
+  prefs: []
+  type: TYPE_NORMAL
+- en: Often, when working with tensors, some computational step is meant to operate
+    on just part of its input tensor. When that part is a single entity (value, row,
+    column …), we commonly refer to this as *indexing*; when it’s a range of such
+    entities, it is called *slicing*.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 3.4.1 “Think R”
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: Both indexing and slicing work essentially as in R. There are a few syntactic
+    extensions, and I’ll present these in the subsequent section. But overall you
+    should find the behavior intuitive.
+  prefs: []
+  type: TYPE_NORMAL
+- en: This is because just as in R, indexing in `torch` is one-based. And just as
+    in R, singleton dimensions are dropped.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'In the below example, we ask for the first column of a two-dimensional tensor;
+    the result is one-dimensional, i.e., a vector:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE96]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE97]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'If we specify `drop = FALSE,` though, dimensionality is preserved:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE98]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE99]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'When slicing, there are no singleton dimensions – and thus, no additional considerations
+    to be taken into account:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE100]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE101]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: In sum, thus, indexing and slicing work very much like in R. Now, let’s look
+    at the aforementioned extensions that further enhance usability.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 3.4.1.1 Beyond R
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: 'One of these extensions concerns accessing the last element in a tensor. Conveniently,
+    in `torch`, we can use `-1` to accomplish that:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE102]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE103]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Note how in R, negative indices have a quite different effect, causing elements
+    at respective positions to be removed.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Another useful feature extends slicing syntax to allow for a step pattern,
+    to be specified after a second colon. Here, we request values from every second
+    column between columns one and eight:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE104]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE105]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Finally, sometimes the same code should be able to work with tensors of different
+    dimensionalities. In this case, we can use `..` to collectively designate any
+    existing dimensions not explicitly referenced.
+  prefs: []
+  type: TYPE_NORMAL
+- en: For example, say we want to index into the first dimension of whatever tensor
+    is passed, be it a matrix, an array, or some higher-dimensional structure. The
+    following
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE106]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*will work for all:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE107]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE108]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'If we wanted to index into the last dimension instead, we’d write `t[.., 1]`.
+    We can even combine both:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE109]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE110]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Now, a topic just as important as indexing and slicing is reshaping of tensors.********  ***##
+    3.5 Reshaping tensors
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Say you have a tensor with twenty-four elements. What is its shape? It could
+    be any of the following:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: a vector of length 24
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: a matrix of shape 24 x 1, or 12 x 2, or 6 x 4, or …
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: a three-dimensional array of size 24 x 1 x 1, or 12 x 2 x 1, or …
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: and so on (in fact, it could even have shape 24 x 1 x 1 x 1 x 1)
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'We can modify a tensor’s shape, without juggling around its values, using the
+    `view()` method. Here is the initial tensor, a vector of length 24:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE111]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE112]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Here is that same vector, reshaped to a wide matrix:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE113]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE114]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'So we have a new tensor, `t2`, but interestingly (and importantly, performance-wise),
+    `torch` did not have to allocate any new storage for its values. This we can verify
+    for ourselves. Both tensors store their data in the same location:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE115]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE116]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Let’s talk a bit about how this is possible.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 3.5.1 Zero-copy reshaping vs. reshaping with copy
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: Whenever we ask `torch` to perform an operation that changes the shape of a
+    tensor, it tries to fulfill the request without allocating new storage for the
+    tensor’s contents. This is possible because the same data – the same bytes, ultimately
+    – can be read in different ways. All that is needed is storage for the *metadata*.
+  prefs: []
+  type: TYPE_NORMAL
+- en: How does `torch` do it? Let’s see a concrete example. We start with a 3 x 5
+    matrix.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE117]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE118]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Tensors have a `stride()` method that tracks, *for every dimension*, how many
+    elements have to be traversed to arrive at its next element. For the above tensor
+    `t`, to go to the next row, we have to skip over five elements, while to go to
+    the next column, we need to skip just one:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE119]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE120]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Now we reshape the tensor so it has five rows and three columns instead. Remember,
+    the data themselves do not change.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE121]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE122]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'This time, to arrive at the next row, we just skip three elements instead of
+    five. To get to the next column, we still just “jump over” a single element only:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE123]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE124]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Now you may be thinking, what if the order of the elements also has to change?
+    For example, in matrix transposition. Is that still doable with the metadata-only
+    approach?
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE125]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE126]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'In fact, it must be, as both the original tensor and its transpose point to
+    the same place in memory:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE127]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE128]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'And it makes sense: This will work if we know that to arrive at the next row,
+    we just skip a single element, while to arrive at the next column, that’s five
+    to skip over now. Let’s verify:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE129]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE130]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Exactly.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Whenever possible, `torch` will try to handle shape-changing operations in this
+    way.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Another such *zero-copy* operation (and one we’ll see a lot) is `squeeze()`,
+    together with its antagonist, `unsqueeze()`. The latter adds a singleton dimension
+    at the requested position, the former removes it. For example:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE131]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE132]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Here we added a singleton dimension in front. Alternatively, we could have used
+    `t$unsqueeze(2)` to add it at the end.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Now, will that zero-copy technique ever fail? Here is an example where it does:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE133]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE134]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'When two operations that change the stride are executed in sequence, the second
+    is pretty likely to fail. There is a way to exactly determine whether it will
+    fail or not; but the easiest way is to just use a different method instead of
+    `view()`: `reshape()`. The latter will “automagically” work metadata-only if that
+    is possible, but make a copy if not:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE135]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE136]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: As expected, both tensors are now stored in different locations.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Finally, we are going to end this long chapter with a feature that may seem
+    overwhelming at first, but is of tremendous importance performance-wise. Like
+    with so many things, it takes time to get accustomed to, but rest assured: You’ll
+    encounter it again and again, in this book and in many projects using `torch`.
+    It is called *broadcasting*.*************  ***## 3.6 Broadcasting'
+  prefs: []
+  type: TYPE_NORMAL
+- en: We often have to perform operations on tensors with shapes that don’t match
+    exactly.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Of course, we wouldn’t probably try to add, say, a length-two vector to a length-five
+    vector. But there are things we *may* want to do: for example, multiply every
+    element by a scalar. This works:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE137]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE138]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'That was probably a bit underwhelming. We’re used to that; from R. But the
+    following does not work in R. The intention here would be to add the same vector
+    to every row in a matrix:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE139]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE140]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Neither does it help if we make `m2` a vector.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE141]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE142]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Syntactically this worked, but semantics-wise this is not what we intended.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Now, we try both of the above with `torch`. First, again, the scenario where
+    both tensors are two-dimensional (even though, conceptually, one of them is a
+    row vector):'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE143]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[1] 3 5'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[1] 1 5'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE144]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'And now, with the thing to be added a one-dimensional tensor:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE145]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE146]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: In `torch`, both ways worked as intended. Let’s see why.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Above, I’ve printed the tensor shapes for a reason. To a tensor of shape 3
+    x 5, we were able to add both a tensor of shape 3 and a tensor of shape 1 x 5\.
+    Together, these illustrate how broadcasting works. In a nutshell, this is what
+    happens:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: The 1 x 5 tensor, when used as an addend, is virtually expanded, that is, treated
+    as if it contained the same row three times. This kind of expansion can only be
+    performed if the non-matching dimension is a singleton, and if it is located on
+    the left.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'The same thing happens to the shape-3 tensor, but there is one additional step
+    that takes place first: A leading dimension of size 1 is – virtually – appended
+    on the left. This puts us in exactly the same state we were in in (1), and we
+    continue from there.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Importantly, no physical expansions take place.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Let’s systematize these rules.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 3.6.1 Broadcasting rules
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: The rules are the following. The first, unspectactular though it may look, is
+    the basis for everything else.
+  prefs: []
+  type: TYPE_NORMAL
+- en: We align tensor shapes, *starting from the right*.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Say we have two tensors, one of size 3 x 7 x 1, the other of size 1 x 5\. Here
+    they are, right-aligned:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE147]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*Starting from the right*, the sizes along aligned axes either have to match
+    exactly, or one of them has to be equal to 1\. In the latter case, the singleton-dimension
+    tensor is *broadcast* to the non-singleton one.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: In the above example, broadcasting happens twice – once for each tensor. This
+    (virtually) yields
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE148]'
+  prefs: []
+  type: TYPE_PRE
+- en: If, on the left, one of the tensors has an additional axis (or more than one),
+    the other is virtually expanded to have a dimension of size 1 in that place, in
+    which case broadcasting will occur as stated in (2).
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: In our example, this happens to the second tensor. First, there is a virtual
+    expansion
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE149]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'and then, broadcasting takes place:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE150]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'In this example, we see that broadcasting can act on both tensors at the same
+    time. The thing to keep in mind, though, is that we always start looking from
+    the right. For example, no broadcasting in the world could make *this* work:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE151]'
+  prefs: []
+  type: TYPE_PRE
+- en: '** * *'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Now, that was one of the longest, and least applied-seeming, perhaps, chapters
+    in the book. But feeling comfortable with tensors is, I dare say, a precondition
+    for being fluent in `torch`. The same goes for the topic covered in the next chapter,
+    automatic differentiation. But the difference is, there `torch` does *all* the
+    heavy lifting for us. We just need to understand what it’s doing.*********************
+  prefs: []
+  type: TYPE_NORMAL

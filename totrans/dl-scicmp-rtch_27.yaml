@@ -1,0 +1,640 @@
+- en: 22  Audio classification
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 原文：[https://skeydan.github.io/Deep-Learning-and-Scientific-Computing-with-R-torch/audio_classification.html](https://skeydan.github.io/Deep-Learning-and-Scientific-Computing-with-R-torch/audio_classification.html)
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: In our final chapter on deep learning, we look at the fascinating topic of audio
+    signals. And here, part of my goal is to convince you (if you aren’t convinced
+    yet) of the utmost importance of *domain knowledge*. Let me explain.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Far too often, machine learning is seen as a magical device that, when employed
+    in a technically correct way, will yield great results, however little the model
+    developer (or user) may know about the domain in question. In previous chapters,
+    we’ve already seen that this is not true, not even in the case of seemingly “simple”
+    datasets. Essentially, we saw that pre-processing matters – *always* – and that
+    to adequately pre-process data, we need to know what they’re supposed to represent.
+    However, techniques of incorporating domain knowledge into the machine learning
+    workflow can go a *lot* further. This is a topic that, definitely, deserves a
+    book of its own. But this chapter hopes to offer something like a glimpse ahead:
+    With audio signals, we will encounter a technique that, beyond being of great
+    appeal in itself, has the strength of generalizing to a wide range of applications
+    that deal with comparable data.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Let’s start by characterizing the task.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 22.1 Classifying speech data
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: The speech command dataset (Warden ([2018](references.html#ref-abs-1804-03209)))
+    comes with `torchaudio`, a package that does for auditory data what `torchvision`
+    does for images and video. As of this writing, there are two versions; the one
+    provided by `torchaudio` is number one. In that version, the dataset holds recordings
+    of thirty different, one- or two-syllable words, uttered by different speakers;
+    there are about 65,000 audio files overall. The task is to predict, from the audio
+    recording, which word was spoken.
+  prefs: []
+  type: TYPE_NORMAL
+- en: To see what is involved, we download and inspect the data.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE1]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Picking a sample at random, we see that the information we’ll need is contained
+    in four properties: `waveform`, `sample_rate`, `label_index`, and `label`.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: The first, `waveform`, will be our predictor.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE2]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE3]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Individual tensor values are centered at zero, and range between -1 and 1\.
+    There are 16,000 of them, reflecting the fact that the recording lasted for one
+    second, and was registered at (or has been converted to, by the dataset creators)
+    a rate of 16,000 samples per second. The latter information is stored in `sample$sample_rate`:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE4]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE5]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: All recordings have been sampled at the same rate. Their length almost always
+    equals one second; the – very – few ones that are minimally longer we can safely
+    truncate.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Finally, the target is stored, in integer form, in `sample$label_index`, with
+    the corresponding word available from `sample$label`:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE6]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE7]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: How does this audio signal “look” ([fig. 22.1](#fig-audio-bird-waveform))?
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE8]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*![A sound wave, displaying amplitude over time.](../Images/d6dc91d4b932e592d5c45a1edaf69f1f.png)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Figure 22.1: The spoken word “bird”, in time-domain representation.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: What we see is a sequence of amplitudes, reflecting the sound wave produced
+    by someone saying “bird”. Put differently, we have here a time series of “loudness
+    values”. Even for experts, guessing *which* word resulted in those amplitudes
+    is an impossible task. This is where domain knowledge is relevant. The expert
+    may not be able to make much of the signal *in this representation*; but they
+    may know a way to more meaningfully represent it.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'At this point, you may be thinking: Right; but just because the task is impossible
+    for human beings it need not be impossible for a machine! After all, a neural
+    network and a person process information very differently. Maybe an RNN, trained
+    on these waves, can learn to correctly map them to a set of words!'
+  prefs: []
+  type: TYPE_NORMAL
+- en: That could indeed be – you may want to try – but it turns out there is a better
+    way, one that both appeals to our, human, desire for understanding *and* uses
+    deep learning in a most beneficient way.
+  prefs: []
+  type: TYPE_NORMAL
+- en: This better way is owed to a mathematical fact that – for me, at least – never
+    ceases to inspire awe and wonder.*****  ***## 22.2 Two equivalent representations
+  prefs: []
+  type: TYPE_NORMAL
+- en: Imagine that instead of as a sequence of amplitudes over time, the above wave
+    were represented in a way that had no information about time at all. Next, imagine
+    we took that representation and tried to recover the original signal. For that
+    to be possible, the new representation would somehow have to contain “just as
+    much” information as the wave we started from. That “just as much” is obtained
+    by the *Fourier Transform*, and it consists of the magnitudes and phase shifts
+    of the different *frequencies* that make up the signal. In part three, we’ll play
+    around quite a bit with the Fourier Transform, so here I’ll keep the introduction
+    brief. Instead, I’ll focus on the elegant symbiosis that will result, once we’ve
+    arrived at the final pre-processing step. But we’re not quite there yet.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'To start, how does the Fourier-transformed version of the “bird” sound wave
+    look? We obtain it by calling `torch_fft_fft()` (where `fft` stands for Fast Fourier
+    Transform):'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE9]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE10]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The length of this tensor is the same; however, its values are not in chronological
+    order. Instead, they represent the *Fourier coefficients*, corresponding to the
+    frequencies contained in the signal. The higher their magnitude, the more they
+    contribute to the signal ([fig. 22.2](#fig-audio-bird-dft)):'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE11]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*![A curve showing magnitude for Fourier bins from 0 to 8000\. Above 4000,
+    nearly all are zero.](../Images/6ebb5280db84bb2633dc40f36f7bc4d8.png)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Figure 22.2: The spoken word “bird”, in frequency-domain representation.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: From this, alternate, representation, we could go back to the original sound
+    wave by taking the frequencies present in the signal, weighting them according
+    to their coefficients, and adding them up. (That opposite direction is called
+    the *Inverse Fourier Transform*, and available in `torch` as `torch_fft_ifft()`.)
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'This, in itself, is incredibly fascinating; but how does it help us with our
+    task of classifying audio signals? Were we to work with the sound waves themselves,
+    we’d feed them into an RNN. With frequencies, there is no recurrence relation;
+    so RNNs are not an option. We could use a feed-forward neural network, then. But
+    there is reason to expect this to work particularly well.**  **## 22.3 Combining
+    representations: The spectrogram'
+  prefs: []
+  type: TYPE_NORMAL
+- en: In fact, what really would help us is a synthesis of both representations; some
+    sort of “have your cake and eat it, too”. What if we could divide the signal into
+    small chunks, and run the Fourier Transform on each of them? As you may have guessed
+    from this leadup, this indeed is something we can do; and the representation it
+    creates is called the *spectrogram*.
+  prefs: []
+  type: TYPE_NORMAL
+- en: With a spectrogram, we still keep some time-domain information – some, since
+    there is an unavoidable loss in granularity. On the other hand, for each of the
+    time segments, we learn about their spectral composition. There’s an important
+    point to be made, though. The resolutions we get in *time* versus in *frequency*,
+    respectively, are inversely related. If we split up the signals into many chunks
+    (called “windows”), the frequency representation per window will not be very fine-grained.
+    Conversely, if we want to get better resolution in the frequency domain, we have
+    to choose longer windows, thus losing information about how spectral composition
+    varies over time. It seems, then, that all we can do is eat *half* a cake, and
+    take pleasure in the sight of the other half.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Well, all said so far is correct; but as you’ll see, this is far less of a problem
+    than it may seem now.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Before we unveil the mystery, though, let’s create and inspect such a spectrogram
+    for our example signal. In the following code snippet, the size of the – overlapping
+    – windows is chosen so as to allow for reasonable granularity in both the time
+    and the frequency domain. We’re left with sixty-three windows, and, for each window,
+    obtain two hundred fifty-seven coefficients:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE12]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE13]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'We can display the spectrogram visually ([fig. 22.3](#fig-audio-spectrogram)):'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE14]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*![A three-dimensional plot where the x-axis represents time, the y-axis, frequency,
+    and color, magnitude.](../Images/cfc023ec379d938c7cfcad942f73a47a.png)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Figure 22.3: The spoken word “bird”: Spectrogram.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: We know that we’ve lost some resolution, in both time and frequency. By displaying
+    the square root of the coefficients’ magnitudes, though – and thus, enhancing
+    sensitivity – we were still able to obtain a reasonable result. (With the `Light
+    grays` color scheme, brighter shades indicate higher-valued coefficients; darker
+    ones, the opposite.)
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Finally, let’s get back to the crucial question. If this representation is,
+    by necessity, a compromise – why, then, would we want to employ it? This is where
+    we take the deep learning perspective. The spectrogram is a two-dimensional representation:
+    an image. With images, we have access to a rich reservoir of techniques and architectures
+    – among all areas deep learning has been successful in, image recognition still
+    stands out. Soon, you’ll see that for this task, fancy architectures are not even
+    needed; a straightforward convnet will do a very good job.**  **## 22.4 Training
+    a model for audio classification'
+  prefs: []
+  type: TYPE_NORMAL
+- en: The plan is as follows. We’ll end-to-end train a baseline model, which already
+    will be performing very well. Nevertheless, we’ll try out two ideas, to see if
+    we can improve on that baseline. Should it turn out not to be the case, we’ll
+    still have learned about some important techniques.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '22.4.1 Baseline setup: Training a convnet on spectrograms'
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: We start by creating a `torch::dataset()` that, starting from the original `speechcommand_dataset()`,
+    computes a spectrogram for every sample.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE15]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*As always, we immediately check if all is well:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE16]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE17]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Next, we split up the data, and instantiate the `dataset()` and `dataloader()`
+    objects.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE18]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE19]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Like I said, the model is a straightforward convnet, with dropout and batch
+    normalization.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE20]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*What is a good learning rate to train this model ([fig. 22.4](#fig-audio-lr-finder-baseline))?'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE21]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*![A noisy  curve that, from left to right, first declines very slowly (until
+    shortly before x=0.01), then rises.](../Images/e1b41e447aaed8738aac68120a9ce6cf.png)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Figure 22.4: Learning rate finder, run on the baseline model.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Based on the plot, I decided to use 0.01 as a maximal learning rate.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE22]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*![Top row: Curves displaying how classification accuracy develops over the
+    training period, for both training and validation sets. Both first rise steeply,
+    then slow down and flatten. Bottom row: Corresponding curves representing the
+    loss. Both first descend quickly, then continue falling very slowly, then flatten.](../Images/86aff85208a0de81e31d027e0de6a29f.png)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Figure 22.5: Fitting the baseline model.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Model training stopped after thirty-two epochs ([fig. 22.5](#fig-audio-fit-baseline)).
+    Here is an excerpt from the logs:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE23]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'With thirty classes, an accuracy of about eighty-nine percent seems decent.
+    We double-check on the test set:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE24]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE25]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: An interesting question is which words get confused most often. (Of course,
+    even more interesting is how error probabilities are related to features of the
+    spectrograms – but this we have to leave to the *true* domain experts.)
+  prefs: []
+  type: TYPE_NORMAL
+- en: A nice way of displaying the confusion matrix is to create an alluvial plot
+    ([fig. 22.6](#fig-audio-alluvial-baseline)). We see the predictions, on the left,
+    “flow into” the target slots. (Target-prediction pairs less frequent than a thousandth
+    of test set cardinality are hidden.)
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE26]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*![On the left and the right sides, the thirty words that make up this dataset.
+    In the middle, arrows showing which word a given one was mapped to in classification.](../Images/c5dc6880fc6c192aee6c6cc02ff0478a.png)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Figure 22.6: Alluvial plot, illustrating which categories were confused most
+    often.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'That’s it for the baseline approach. Let’s see if we can do still better.********  ***###
+    22.4.2 Variation one: Use a Mel-scale spectrogram instead'
+  prefs: []
+  type: TYPE_NORMAL
+- en: In classical speech recognition, people did not necessarily limit pre-processing
+    to the Fourier Transform and spectrograms. Various other steps used to – or could
+    – follow, some of which seem obsolete once neural networks are being used. There
+    is at least one technique, though, where it’s hard to devine a priori whether
+    it will help or not.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Due to the way our hearing system is built, we human beings don’t perceive differences
+    equally accurately across the frequency range. For example, while the distances
+    between 440 Hz and 480 Hz on the one hand, and 8000 Hz and 8040 Hz on the other,
+    are the same mathematically, the latter will be much harder to perceive. (This
+    is no different with other modes of perception – to tell the difference between
+    one kilogram and two kilograms is easy, while doing the same for fourteen versus
+    fifteen kilograms is less so.
+  prefs: []
+  type: TYPE_NORMAL
+- en: To accommodate this physiological precondition, one sometimes converts the Fourier
+    coefficients to the so-called *Mel scale*. Various formulae exist that do this;
+    in one or the other way, they always include taking the logarithm. But in practice,
+    what usually is done is to create overlapping filters that aggregate sets of Fourier
+    coefficients into a new representation, the Mel coefficients. In the low-frequency
+    range, the filters are narrow, and subsume only very few Fourier coefficients.
+    Then, they successively become wider, until, in the very-high frequency range,
+    a wide range of Fourier coefficients get to contribute to a single Mel value.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'We can make this more concrete using a `torch` helper function, `functional_create_fb_matrix()`
+    . What this function does is create a conversion matrix from Fourier- to Mel space:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: c
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE27]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE28]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'In our application, we’ll use Mel spectrograms with one hundred twenty-eight
+    coefficients; given that we’re training a convnet, we wouldn’t want to shrink
+    spatial resolution too much. But visualization is more helpful when done with
+    fewer filters – which is why, above, I’ve told `torch` to generate sixteen filters
+    only. Here they are ([fig. 22.7](#fig-audio-mel-filterbank)):'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE29]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*![A two-dimensional plot of Fourier coefficients and the Mel coefficients
+    they contribute to. The higher the Mel coefficient, the more Fourier coefficients
+    contribute to it.](../Images/9a2d02977e26ba4fdec23e0091cbd556.png)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Figure 22.7: Mel filter bank with sixteen filters, as applied to 257 Fourier
+    coefficients.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: From this plot, it should make sense how Mel-scale transformation is designed
+    to compensate for lower perceptual resolution in higher-frequency ranges.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Of course, in order to work with Mel spectrograms, you won’t need to generate
+    filter banks yourself. For training, we’ll just replace `transform_spectrogram()`
+    by `transform_mel_spectrogram()`. But sometimes, playing around with helper functions
+    can significantly aid understanding. For example, using another low-levellish
+    utility – `functional_mel_scale()` – we can take a set of Fourier coefficients,
+    convert them to Mel scale, and compare.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Here, I’m taking the spectrogram for sample 2000 - our “bird” – and pick a
+    time window of interest. I then use `functional_mel_scale()` to obtain the respective
+    Mel-scale representation, and plot ([fig. 22.8](#fig-audio-mel-spectrogram)) the
+    magnitudes of both sets of coefficients against each other (showing just the first
+    half of the Fourier coefficients):'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE30]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*![Compared to Fourier coefficient magnitudes, Mel coefficient magnitudes appear
+    shifted to the right.](../Images/6365ace6b2c9d0dd06d325a981fc91d9.png)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Figure 22.8: Fourier and Mel coefficients, compared on one window of the “bird”
+    spectrogram.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Finally, before getting back to the task, let’s quickly verify that calling
+    `functional_mel_scale()` is equivalent to constructing a filter bank manually
+    and multiplying the resulting matrix with the Fourier coefficients. To do so,
+    we now create a 257 x 128 matrix, and apply it to the spectrogram window we extracted
+    above. The results should be equal (apart from small numerical errors):'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE31]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE32]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Now that we have an idea of how Mel-scale transformation works, and possibly
+    a gut feeling as to whether this will help training or not: Let’s actually find
+    out. Necessary modifications are minimal; only the argument list to `spectrogram_dataset()`
+    is concerned:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE33]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*Model as well as training code stay the same. Learning rate finder output
+    also looked rather similar ([fig. 22.9](#fig-audio-lr-finder-mel)):'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![A noisy  curve that, from left to right, first declines very slowly (until
+    shortly before x=0.01), then rises.](../Images/62fc2dd29c833d35dec08ae98abee6aa.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Figure 22.9: Learning rate finder, run on the Mel-transform-enriched model.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Using the same learning rate as previously, I saw training end after nineteen
+    epochs ([fig. 22.10](#fig-audio-fit-mel)).
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Top row: Curves displaying how classification accuracy develops over the
+    training period, for both training and validation sets. Both first rise steeply,
+    then slow down and flatten. Bottom row: Corresponding curves representing the
+    loss. Both first descend quickly, then continue falling very slowly, then flatten.](../Images/e2d0b560e356a476b1acb276a3fd32af.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Figure 22.10: Fitting the Mel-transform-enriched model.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Final validation accuracy was at about 0.86, minimally lower than for the baseline
+    model.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE34]'
+  prefs: []
+  type: TYPE_PRE
+- en: So in this task, no improvement was seen through Mel transformation. But what
+    matters is for us to be aware of this option, such that in other projects, we
+    may give this technique a try.
+  prefs: []
+  type: TYPE_NORMAL
+- en: For completeness, here’s double-checking against the test set.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE35]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE36]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: No surprise here, either. Interestingly though, this time the confusion matrix
+    looks rather different, thus hinting at a change in inner workings ([fig. 22.11](#fig-audio-alluvial-mel)).
+    (To be sure, though, we’d have to run each version several times.)
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![On the left and the right sides, the thirty words that make up this dataset.
+    In the middle, arrows showing which word a given one was mapped to in classification.](../Images/7f8e659996a76f64cf434b9d449b81b2.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Figure 22.11: Alluvial plot for the Mel-transform-enriched setup'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Leaving further exploration to the experts, we proceed to the final alternative.******  ***###
+    22.4.3 Variation two: Complex-valued spectograms'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'When introducing spectrograms, I focused on their two-dimensional structure:
+    The Fourier Transform is performed independently for a set of (overlapping) windows,
+    leaving us with a grid where time slices and Fourier coefficients are arranged
+    in rows and columns. This grid, we found, can be treated as an image of sorts.
+    What I didn’t expand on were the actual values contained in that grid. Fourier
+    coefficients are complex-valued, and thus, if left alone would need to be plotted
+    in two-dimensional space – and then, the spectrogram, in turn, would have to be
+    three-dimensional. In practice, for display (and other) purposes, one often works
+    with the magnitudes of the coefficients instead, or the squares of those magnitudes.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Maybe you’ve noticed that `transform_spectrogram()` takes an argument, `power`,
+    which I haven’t commented on yet. This argument lets you specify whether you’d
+    like squared magnitudes `(power = 2`, the default), absolute values (`power =
+    1`), any other positive value (such as `0.5`, the one we used when displaying
+    a concrete example) – or both real and imaginary parts of the coefficients (`power
+    = NULL`). So far, we’ve always gone with the default. But we might well wonder
+    whether a neural network could profit from the additional information contained
+    in the “whole” complex number. After all, when reducing to magnitudes we lose
+    the phase shifts for the individual coefficients, which could well contain usable
+    information. In any case, it’s worth a try!
+  prefs: []
+  type: TYPE_NORMAL
+- en: On the technical side, necessary modifications (again) are minimal. The call
+    to `spectrogram_dataset()` now makes use of the `power` argument. Specifying `power
+    = NULL`, we explicitly request both real and imaginary parts of the Fourier coefficients.
+    The idea is to pass them to the model’s initial `nn_conv2d()` as two separate
+    *channels*.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE37]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE38]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Correspondingly, the first convolutional module now is set up to work on two-channel
+    inputs.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE39]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*Here is what I saw when running the learning rate finder ([fig. 22.12](#fig-audio-lr-finder-complex)):'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![A noisy  curve that, from left to right, first declines very slowly (until
+    shortly before x=0.01), then rises.](../Images/29b79c7dffd8b854eb98c073e1768ec6.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Figure 22.12: Learning rate finder, run on the complex-spectrogram model.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: This time, training went on for forty epochs.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Top row: Curves displaying how classification accuracy develops over the
+    training period, for both training and validation sets. Both first rise steeply,
+    then slow down and flatten. Bottom row: Corresponding curves representing the
+    loss. Both first descend quickly, then continue falling very slowly, then flatten.](../Images/250db51d1e879cd373e7db8834e04e3d.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Figure 22.13: Fitting the complex-spectrogram model.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Visually, the loss and accuracy curves for the validation set look smoother
+    than in both other cases ([fig. 22.13](#fig-audio-fit-complex)). Checking accuracies,
+    we see:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE40]'
+  prefs: []
+  type: TYPE_PRE
+- en: With an accuracy of ~0.94, we now have a clear improvement.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'We can confirm this on the test set:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE41]'
+  prefs: []
+  type: TYPE_PRE
+- en: '*[PRE42]'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Finally, the confusion matrix now looks like a cleaned-up version of the baseline
+    run ([fig. 22.14](#fig-audio-alluvial-complex)).
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![On the left and the right sides, the thirty words that make up this dataset.
+    In the middle, arrows showing which word a given one was mapped to in classification.
+    Clearly different from the ones before in that there are much fewer mis-classifications.](../Images/9a682b8531fe9fb59d39fad8bb1393e8.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Figure 22.14: Alluvial plot for the complex-spectrogram setup.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: We can safely say that taking into account phase information has significantly
+    improved performance.
+  prefs: []
+  type: TYPE_NORMAL
+- en: With this, we’re ending our tour of deep learning applications. But as regards
+    the magnificent Fourier Transform, we’ll be going into a lot more detail soon!
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Warden, Pete. 2018\. “Speech Commands: A Dataset for Limited-Vocabulary Speech
+    Recognition.” *CoRR* abs/1804.03209\. [http://arxiv.org/abs/1804.03209](http://arxiv.org/abs/1804.03209).****************'
+  prefs: []
+  type: TYPE_NORMAL
