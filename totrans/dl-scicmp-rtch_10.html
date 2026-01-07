@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+  "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>7  Modules</title>
+<link href="../Styles/Style.css" type="text/css" rel="stylesheet"/>
+</head>
+<body>
+<h1>7  Modules</h1>
+<blockquote>原文：<a href="https://skeydan.github.io/Deep-Learning-and-Scientific-Computing-with-R-torch/modules.html">https://skeydan.github.io/Deep-Learning-and-Scientific-Computing-with-R-torch/modules.html</a></blockquote>
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<p>In the last chapter, we built a neural network for a regression task. There were two distinct types of operations: linear and non-linear.</p>
+<p>In the non-linear category, we had ReLU activation, expressed as a straightforward function call: <code>nnf_relu()</code>. Activation functions are <em>functions</em>: Given input <span class="math inline">\(\mathbf{x}\)</span>, they return output <span class="math inline">\(\mathbf{y}\)</span> every time. In other words, they are deterministic. It’s different with the linear part, though.</p>
+<p>The linear part in the regression network was implemented as multiplication by a matrix – the weight matrix – and addition of a vector (the bias vector). With operations like that, results inevitably depend on the actual values stored in the respective tensors. Put differently, the operation is <em>stateful</em>.</p>
+<p>Whenever there is state involved, it helps to encapsulate it in an object, freeing the user from manual management. This is what <code>torch</code>’s <em>modules</em> do.</p>
+<p>Note that term, <em>modules</em>. In <code>torch</code>, a module can be of any complexity, ranging from basic <em>layers</em> – like the <code>nn_linear()</code> we are going to introduce in a minute – to complete <em>models</em> consisting of many such layers. Code-wise, there is no difference between “layers” and “models”. This is why in some texts, you’ll see “module” used throughout. In this book, I’ll mostly stay with the common terminology of layers and models, as it maps more closely to how things appear conceptually.</p>
+<p>Back to the <em>why</em> of modules. In addition to encapsulation, there is another reason for providing layer objects: Not all often-used layers are as light-weight as <code>nn_linear()</code> is. We’ll quickly mention a few others at the end of the next section, reserving a complete introduction to later chapters of this book.</p>
+<section id="built-in-nn_modules" class="level2" data-number="7.1">
+<h2 data-number="7.1" class="anchored" data-anchor-id="built-in-nn_modules"><span class="header-section-number">7.1</span> Built-in <code>nn_module()</code>s</h2>
+<p>In <code>torch</code>, a linear layer is created using <code>nn_linear()</code>. <code>nn_linear()</code> expects (at least) two arguments: <code>in_features</code> and <code>out_features</code>. Let’s say your input data has fifty observations with five features each; that is, it is of size 50 x 5. You want to build a hidden layer with sixteen units. Then <code>in_features</code> is 5, and <code>out_features</code> is 16. (The same 5 and 16 would constitute the number of rows/columns in the weight matrix if you built one yourself.)</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"/><span class="fu">library</span>(torch)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"/>l <span class="ot">&lt;-</span> <span class="fu">nn_linear</span>(<span class="at">in_features =</span> <span class="dv">5</span>, <span class="at">out_features =</span> <span class="dv">16</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"/></button></pre></div>
+</div>
+<p>Once created, the module readily informs you about its parameters:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"/>l</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"/></button></pre></div>
+</div>
+<pre><code>An `nn_module` containing 96 parameters.
+Parameters
+ weight: Float [1:16, 1:5]
+ bias: Float [1:16]</code></pre>
+<p>Encapsulation doesn’t keep us from inspecting the weight and bias tensors:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"/>l<span class="sc">$</span>weight</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"/></button></pre></div>
+</div>
+<pre><code>torch_tensor
+-0.2079 -0.1920  0.2926  0.0036 -0.0897
+ 0.3658  0.0076 -0.0671  0.3981 -0.4215
+ 0.2568  0.3648 -0.0374 -0.2778 -0.1662
+ 0.4444  0.3851 -0.1225  0.1678 -0.3443
+-0.3998  0.0207 -0.0767  0.4323  0.1653
+ 0.3997  0.0647 -0.2823 -0.1639 -0.0225
+ 0.0479  0.0207 -0.3426 -0.1567  0.2830
+ 0.0925 -0.4324  0.0448 -0.0039  0.1531
+-0.2924 -0.0009 -0.1841  0.2028  0.1586
+-0.3064 -0.4006 -0.0553 -0.0067  0.2575
+-0.0472  0.1238 -0.3583  0.4426 -0.0269
+-0.0275 -0.0295 -0.2687  0.2236  0.3787
+-0.2617 -0.2221  0.1503 -0.0627  0.1094
+ 0.0122  0.2041  0.4466  0.4112  0.4168
+-0.4362 -0.3390  0.3679 -0.3045  0.1358
+ 0.2979  0.0023  0.0695 -0.1906 -0.1526
+[ CPUFloatType{16,5} ]</code></pre>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"/>l<span class="sc">$</span>bias</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"/></button></pre></div>
+</div>
+<pre><code>torch_tensor
+-0.2314
+ 0.2942
+ 0.0567
+-0.1728
+-0.3220
+-0.1553
+-0.4149
+-0.2103
+-0.1769
+ 0.4219
+-0.3368
+ 0.0689
+ 0.3625
+-0.1391
+-0.1411
+-0.2014
+[ CPUFloatType{16} ]</code></pre>
+<p>At this point, I need to ask for your indulgence. You’ve probably noticed that <code>torch</code> reports the weight matrix as being of size 16 x 5, not 5 x 16, like we said you’d create it when coding from scratch. This is due to an implementation detail inherited from the underlying C++ implementation, <code>libtorch</code>. For performance reasons, <code>libtorch</code>’s linear module stores the weight and bias tensors in <em>transposed</em> form. On the R side, all we can do is explicitly point you to it and thereby, hopefully, alleviate the confusion.</p>
+<p>Let’s go on. To apply this module to input data, just “call” it like a function:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"/>x <span class="ot">&lt;-</span> <span class="fu">torch_randn</span>(<span class="dv">50</span>, <span class="dv">5</span>)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"/>output <span class="ot">&lt;-</span> <span class="fu">l</span>(x)</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"/>output<span class="sc">$</span><span class="fu">size</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"/></button></pre></div>
+</div>
+<pre><code>[1] 50 16</code></pre>
+<p>So that’s the forward pass. How about gradient computation? Previously, when creating a tensor we wanted to figure as a “source” in gradient computation, we had to let <code>torch</code> know explicitly, passing <code>requires_grad = TRUE</code>. No such thing is required for built-in <code>nn_module()</code>s. We can immediately check that <code>output</code> knows what to do on <code>backward()</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"/>output<span class="sc">$</span>grad_fn</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"/></button></pre></div>
+</div>
+<pre><code>AddmmBackward0</code></pre>
+<p>To be sure though, let’s calculate some “dummy” loss based on <code>output</code>, and call <code>backward()</code>. We see that now, the linear module’s <code>weight</code> tensor has its <code>grad</code> field populated:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"/>loss <span class="ot">&lt;-</span> output<span class="sc">$</span><span class="fu">mean</span>()</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"/>loss<span class="sc">$</span><span class="fu">backward</span>()</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"/>l<span class="sc">$</span>weight<span class="sc">$</span>grad</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"/></button></pre></div>
+</div>
+<pre><code>torch_tensor
+0.01 *
+-0.3064  2.4118 -0.6095  0.3419 -1.6131
+ -0.3064  2.4118 -0.6095  0.3419 -1.6131
+ -0.3064  2.4118 -0.6095  0.3419 -1.6131
+ -0.3064  2.4118 -0.6095  0.3419 -1.6131
+ -0.3064  2.4118 -0.6095  0.3419 -1.6131
+ -0.3064  2.4118 -0.6095  0.3419 -1.6131
+ -0.3064  2.4118 -0.6095  0.3419 -1.6131
+ -0.3064  2.4118 -0.6095  0.3419 -1.6131
+ -0.3064  2.4118 -0.6095  0.3419 -1.6131
+ -0.3064  2.4118 -0.6095  0.3419 -1.6131
+ -0.3064  2.4118 -0.6095  0.3419 -1.6131
+ -0.3064  2.4118 -0.6095  0.3419 -1.6131
+ -0.3064  2.4118 -0.6095  0.3419 -1.6131
+ -0.3064  2.4118 -0.6095  0.3419 -1.6131
+ -0.3064  2.4118 -0.6095  0.3419 -1.6131
+ -0.3064  2.4118 -0.6095  0.3419 -1.6131
+[ CPUFloatType{16,5} ]</code></pre>
+<p>Thus, once you work with <code>nn_module</code>s, <code>torch</code> automatically assumes that you’ll want gradients computed.</p>
+<p><code>nn_linear()</code>, straightforward though it may be, is an essential building block encountered in most every model architecture. Others include:</p>
+<ul>
+<li><p><code>nn_conv1d()</code>, <code>nn_conv2d(), and nn_conv3d()</code>, the so-called <em>convolutional</em> layers that apply filters to input data of varying dimensionality,</p></li>
+<li><p><code>nn_lstm()</code> and <code>nn_gru()</code> , the <em>recurrent</em> layers that carry through a state,</p></li>
+<li><p><code>nn_embedding()</code> that is used to embed categorical data in high-dimensional space,</p></li>
+<li><p>and more.</p></li>
+</ul>
+</section>
+<section id="building-up-a-model" class="level2" data-number="7.2">
+<h2 data-number="7.2" class="anchored" data-anchor-id="building-up-a-model"><span class="header-section-number">7.2</span> Building up a model</h2>
+<p>The built-in <code>nn_module()</code>s give us <em>layers</em>, in usual speak. How do we combine those into <em>models</em>? Using the “factory function” <code>nn_module()</code>, we can define models of arbitrary complexity. But we may not always need to go that way.</p>
+<section id="models-as-sequences-of-layers-nn_sequentialindexnn_sequential" class="level3" data-number="7.2.1">
+<h3 data-number="7.2.1" class="anchored" data-anchor-id="models-as-sequences-of-layers-nn_sequentialindexnn_sequential"><span class="header-section-number">7.2.1</span> Models as sequences of layers: <code>nn_sequential()</code>index{<code>nn_sequential()</code>}</h3>
+<p>If all our model should do is propagate straight through the layers, we can use <code>nn_sequential()</code> to build it. Models consisting of all linear layers are known as <em>Multi-Layer Perceptrons</em>index{Multi-Layer Perceptron (MLP)} (MLPs). Here is one:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"/>mlp <span class="ot">&lt;-</span> <span class="fu">nn_sequential</span>(</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"/>  <span class="fu">nn_linear</span>(<span class="dv">10</span>, <span class="dv">32</span>),</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"/>  <span class="fu">nn_relu</span>(),</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"/>  <span class="fu">nn_linear</span>(<span class="dv">32</span>, <span class="dv">64</span>),</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"/>  <span class="fu">nn_relu</span>(),</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"/>  <span class="fu">nn_linear</span>(<span class="dv">64</span>, <span class="dv">1</span>)</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"/>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"/></button></pre></div>
+</div>
+<p>Take a close look at the layers involved. We’ve already seen <code>nnf_relu()</code>, the <em>function</em> that implements ReLU activation. (The <code>f</code> in <code>nnf_</code> stands for functional.) Below, <code>nn_relu</code>, like <code>nn_linear()</code>, is a module, that is, an object. This is because <code>nn_sequential()</code> expects all its arguments to be modules.</p>
+<p>Just like the built-in modules, you can apply this model to data by just <em>calling</em> it:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"/><span class="fu">mlp</span>(<span class="fu">torch_randn</span>(<span class="dv">5</span>, <span class="dv">10</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"/></button></pre></div>
+</div>
+<pre><code>torch_tensor
+0.01 *
+-7.8097
+ -9.0363
+ -38.3282
+  5.3959
+ -16.4837
+[ CPUFloatType{5,1} ][ grad_fn = &lt;AddmmBackward0&gt; ]</code></pre>
+<p>The single call triggered a complete forward pass through the network. Analogously, calling <code>backward()</code> will back-propagate through all the layers.</p>
+<p>What if you need the model to chain execution steps in a non-sequential way?</p>
+</section>
+<section id="models-with-custom-logic" class="level3" data-number="7.2.2">
+<h3 data-number="7.2.2" class="anchored" data-anchor-id="models-with-custom-logic"><span class="header-section-number">7.2.2</span> Models with custom logic</h3>
+<p>As already hinted at, this is where you use <code>nn_module()</code>.</p>
+<p><code>nn_module()</code> creates constructors for custom-made R6 objects. Below, <code>my_linear()</code> is such a constructor. When called, it will return a linear module similar to the built-in <code>nn_linear()</code>.</p>
+<p>Two methods should be implemented in defining a constructor: <code>initialize()</code> and <code>forward()</code>. <code>initialize()</code> creates the module object’s fields, that is, the objects or values it “owns” and can access from inside any of its methods. <code>forward()</code> defines what should happen when the module is called on the input:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"/>my_linear <span class="ot">&lt;-</span> <span class="fu">nn_module</span>(</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"/>  <span class="at">initialize =</span> <span class="cf">function</span>(in_features, out_features) {</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"/>    self<span class="sc">$</span>w <span class="ot">&lt;-</span> <span class="fu">nn_parameter</span>(<span class="fu">torch_randn</span>(</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"/>      in_features, out_features</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"/>    ))</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"/>    self<span class="sc">$</span>b <span class="ot">&lt;-</span> <span class="fu">nn_parameter</span>(<span class="fu">torch_zeros</span>(out_features))</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"/>  },</span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"/>  <span class="at">forward =</span> <span class="cf">function</span>(input) {</span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"/>    input<span class="sc">$</span><span class="fu">mm</span>(self<span class="sc">$</span>w) <span class="sc">+</span> self<span class="sc">$</span>b</span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"/>  }</span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"/>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"/></button></pre></div>
+</div>
+<p>Note the use of <code>nn_parameter()</code>. <code>nn_parameter()</code> makes sure that the passed-in tensor is registered as a module <em>parameter</em>, and thus, is subject to backpropagation by default.</p>
+<p>To instantiate the newly-defined module, call its constructor:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"/>l <span class="ot">&lt;-</span> <span class="fu">my_linear</span>(<span class="dv">7</span>, <span class="dv">1</span>)</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"/>l</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"/></button></pre></div>
+</div>
+<pre><code>An `nn_module` containing 8 parameters.
+
+Parameters ────────────────────────────────────────────────────────────────────────────────────────────
+● w: Float [1:7, 1:1]
+● b: Float [1:1]</code></pre>
+<p>Granted, in this example, there really is no <em>custom logic</em> we needed to define our own module for. But here, you have a template applicable to any use case. Later, we’ll see definitions of <code>initialize()</code> and <code>forward()</code> that are more complex, and we’ll encounter additional methods defined on modules. But the basic mechanism will remain the same.</p>
+<p>At this point, you may feel like you’d like to rewrite last chapter’s neural network using modules. Feel free to do so! Or maybe wait until, in the next chapter, we’ll have learned about <em>optimizer</em>s, and built-in loss functions. Once we’re done, we’ll return to our two examples, function minimization and the regression network. Then, we’ll be removing all do-it-yourself pieces rendered superfluous by <code>torch</code>.</p>
+
+
+</section>
+</section>
+
+    
+</body>
+</html>

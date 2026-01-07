@@ -1,0 +1,333 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+  "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>9  Loss functions</title>
+<link href="../Styles/Style.css" type="text/css" rel="stylesheet"/>
+</head>
+<body>
+<h1>9  Loss functions</h1>
+<blockquote>原文：<a href="https://skeydan.github.io/Deep-Learning-and-Scientific-Computing-with-R-torch/loss_functions.html">https://skeydan.github.io/Deep-Learning-and-Scientific-Computing-with-R-torch/loss_functions.html</a></blockquote>
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<p>The concept of a loss function is essential to machine learning. At any iteration, the current loss value indicates how far the estimate is from the target. It is then used to update the parameters in a direction that will decrease the loss.</p>
+<p>In our applied example, we already have made use of a loss function: mean squared error, computed manually as</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"/><span class="fu">library</span>(torch)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"/></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"/>loss <span class="ot">&lt;-</span> (y_pred <span class="sc">-</span> y)<span class="sc">$</span><span class="fu">pow</span>(<span class="dv">2</span>)<span class="sc">$</span><span class="fu">sum</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"/></button></pre></div>
+</div>
+<p>As you might expect, here is another area where this kind of manual effort is not needed.</p>
+<p>In this final conceptual chapter before we re-factor our running examples, we want to talk about two things: First, how to make use of <code>torch</code>’s built-in loss functions. And second, what function to choose.</p>
+<section id="torch-loss-functions" class="level2" data-number="9.1">
+<h2 data-number="9.1" class="anchored" data-anchor-id="torch-loss-functions"><span class="header-section-number">9.1</span> <code>torch</code> loss functions</h2>
+<p>In <code>torch</code>, loss functions start with <code>nn_</code> or <code>nnf_</code>.</p>
+<p>Using <code>nnf_</code>, you directly <em>call a function</em>. Correspondingly, its arguments (estimate and target) both are tensors. For example, here is <code>nnf_mse_loss()</code>, the built-in analog to what we coded manually:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"/><span class="fu">nnf_mse_loss</span>(<span class="fu">torch_ones</span>(<span class="dv">2</span>, <span class="dv">2</span>), <span class="fu">torch_zeros</span>(<span class="dv">2</span>, <span class="dv">2</span>) <span class="sc">+</span> <span class="fl">0.1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"/></button></pre></div>
+</div>
+<pre><code>torch_tensor
+0.81
+[ CPUFloatType{} ]</code></pre>
+<p>With <code>nn_</code>, in contrast, you create an object:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"/>l <span class="ot">&lt;-</span> <span class="fu">nn_mse_loss</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"/></button></pre></div>
+</div>
+<p>This object can then be called on tensors to yield the desired loss:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"/><span class="fu">l</span>(<span class="fu">torch_ones</span>(<span class="dv">2</span>, <span class="dv">2</span>),<span class="fu">torch_zeros</span>(<span class="dv">2</span>, <span class="dv">2</span>) <span class="sc">+</span> <span class="fl">0.1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"/></button></pre></div>
+</div>
+<pre><code>torch_tensor
+0.81
+[ CPUFloatType{} ]</code></pre>
+<p>Whether to choose object or function is mainly a matter of preference and context. In larger models, you may end up combining several loss functions, and then, creating loss objects can result in more modular, and more maintainable code. In this book, I’ll mainly use the first way, unless there are compelling reasons to do otherwise.</p>
+<p>On to the second question.</p>
+</section>
+<section id="what-loss-function-should-i-choose" class="level2" data-number="9.2">
+<h2 data-number="9.2" class="anchored" data-anchor-id="what-loss-function-should-i-choose"><span class="header-section-number">9.2</span> What loss function should I choose?</h2>
+<p>In deep learning, or machine learning overall, most applications aim to do one (or both) of two things: predict a numerical value, or estimate a probability. The regression task of our running example does the former; real-world applications might forecast temperatures, infer employee churn, or predict sales. In the second group, the prototypical task is <em>classification</em>. To categorize, say, an image according to its most salient content, we really compute the respective probabilities. Then, when the probability for “dog” is 0.7, while that for “cat” is 0.3, we say it’s a dog.</p>
+<section id="maximum-likelihood" class="level3" data-number="9.2.1">
+<h3 data-number="9.2.1" class="anchored" data-anchor-id="maximum-likelihood"><span class="header-section-number">9.2.1</span> Maximum likelihood</h3>
+<p>In both classification and regression, the mostly used loss functions are built on the <em>maximum likelihood</em> principle. Maximum likelihood means: We want to choose model parameters in a way that the <em>data</em>, the things we have observed or could have observed, are maximally likely. This principle is not “just” fundamental, it is also intuitively appealing. Imagine a simple example.</p>
+<p>Say we have the values 7.1, 22.14, and 11.3, and we know that the underlying process follows a normal distribution. Then it is much more likely that these data have been generated by a distribution with mean 14 and standard deviation 7 than by one with mean 20 and standard deviation 1.</p>
+</section>
+<section id="regression" class="level3" data-number="9.2.2">
+<h3 data-number="9.2.2" class="anchored" data-anchor-id="regression"><span class="header-section-number">9.2.2</span> Regression</h3>
+<p>In regression (that implicitly assumes the target distribution to be normal<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>), to maximize likelihood, we just keep using mean squared error – the loss we’ve been computing all along. Maximum likelihood estimators have all kinds of desirable statistical properties. However, in concrete applications, there may be reasons to use different ones.</p>
+<p>For example, say a dataset has outliers where, for some reason, prediction and target are found to be deviating substantially. Mean squared error will allocate high importance to these outliers. In such cases, possible alternatives are mean absolute error (<code>nnf_l1_loss()</code>) and smooth L1 loss (<code>nn_smooth_l1_loss()</code>). The latter is a mixture type that, by default, computes the absolute (L1) error, but switches to squared (L2) error whenever the absolute errors get very small.</p>
+</section>
+<section id="classification" class="level3" data-number="9.2.3">
+<h3 data-number="9.2.3" class="anchored" data-anchor-id="classification"><span class="header-section-number">9.2.3</span> Classification</h3>
+<p>In classification, we are comparing two <em>distributions</em>. The estimate is a probability by design, and the target can be viewed as one, too. In that light, maximum likelihood estimation is equivalent to minimizing the Kullback-Leibler divergence (KL divergence).</p>
+<p>KL divergence is a measure of how two distributions differ. It depends on two things: the likelihood of the data, as determined by some data-generating process, and the likelihood of the data under the model. In the machine learning scenario, however, we are concerned only with the latter. In that case, the criterion to be minimized reduces to the <em>cross-entropy</em> between the two distributions. And cross-entropy loss is exactly what is commonly used in classification tasks.</p>
+<p>In <code>torch</code>, there are several variants of loss functions that calculate cross-entropy. With this topic, it’s nice to have a quick reference around; so here is a quick lookup table (<a href="#tbl-loss-funcs-features">tbl. <span>9.1</span></a> abbreviates the – rather long-ish – function names; see <a href="#tbl-loss-abbrevs">tbl. <span>9.2</span></a> for the mapping):</p>
+<div id="tbl-loss-funcs-features" class="anchored">
+<table class="table">
+<caption>Table 9.1: Loss functions, by type of data they work on (binary vs. multi-class) and expected input (raw scores, probabilities, or log probabilities).</caption>
+<colgroup>
+<col style="width: 11%"/>
+<col style="width: 14%"/>
+<col style="width: 18%"/>
+<col style="width: 17%"/>
+<col style="width: 21%"/>
+<col style="width: 15%"/>
+</colgroup>
+<tbody>
+<tr class="odd">
+<td/>
+<td><strong>Data</strong></td>
+<td/>
+<td><strong>Input</strong></td>
+<td/>
+<td/>
+</tr>
+<tr class="even">
+<td/>
+<td>binary</td>
+<td>multi-class</td>
+<td>raw scores</td>
+<td>probabilities</td>
+<td>log probs</td>
+</tr>
+<tr class="odd">
+<td><em>BCeL</em></td>
+<td>Y</td>
+<td/>
+<td>Y</td>
+<td/>
+<td/>
+</tr>
+<tr class="even">
+<td><em>Ce</em></td>
+<td/>
+<td>Y</td>
+<td>Y</td>
+<td/>
+<td/>
+</tr>
+<tr class="odd">
+<td><em>BCe</em></td>
+<td>Y</td>
+<td/>
+<td/>
+<td>Y</td>
+<td/>
+</tr>
+<tr class="even">
+<td><em>Nll</em></td>
+<td/>
+<td>Y</td>
+<td/>
+<td/>
+<td>Y</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="tbl-loss-abbrevs" class="anchored">
+<table class="table">
+<caption>Table 9.2: Abbreviations used to refer to <code>torch</code> loss functions.</caption>
+<tbody>
+<tr class="odd">
+<td><em>BCeL</em></td>
+<td><code>nnf_binary_cross_entropy_with_logits()</code></td>
+</tr>
+<tr class="even">
+<td><em>Ce</em></td>
+<td><code>nnf_cross_entropy()</code></td>
+</tr>
+<tr class="odd">
+<td><em>BCe</em></td>
+<td><code>nnf_binary_cross_entropy()</code></td>
+</tr>
+<tr class="even">
+<td><em>Nll</em></td>
+<td><code>nnf_nll_loss()</code></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>To pick the function applicable to your use case, there are two things to consider.</p>
+<p>First, are there just two possible classes (“dog vs. cat”, “person present / person absent”, etc.), or are there several?</p>
+<p>And second, what is the type of the estimated values? Are they raw scores (in theory, any value between plus and minus infinity)? Are they probabilities (values between 0 and 1)? Or (finally) are they log probabilities, that is, probabilities to which a logarithm has been applied? (In the final case, all values should be either negative or equal to zero.)</p>
+<section id="binary-data" class="level4" data-number="9.2.3.1">
+<h4 data-number="9.2.3.1" class="anchored" data-anchor-id="binary-data"><span class="header-section-number">9.2.3.1</span> Binary data</h4>
+<p>Starting with binary data, our example classification vector is a sequence of zeros and ones. When thinking in terms of probabilities, it is most intuitive to imagine the ones standing for presence, the zeros for absence of one of the classes in question – cat or no cat, say.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"/>target <span class="ot">&lt;-</span> <span class="fu">torch_tensor</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"/></button></pre></div>
+</div>
+<p>The raw scores could be anything. For example:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"/>unnormalized_estimate <span class="ot">&lt;-</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"/>  <span class="fu">torch_tensor</span>(<span class="fu">c</span>(<span class="dv">3</span>, <span class="fl">2.7</span>, <span class="sc">-</span><span class="fl">1.2</span>, <span class="fl">7.7</span>, <span class="fl">1.9</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"/></button></pre></div>
+</div>
+<p>To turn these into probabilities, all we need to do is pass them to <code>nnf_sigmoid()</code>. <code>nnf_sigmoid()</code> squishes its argument to values between zero and one:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"/>probability_estimate <span class="ot">&lt;-</span> <span class="fu">nnf_sigmoid</span>(unnormalized_estimate)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"/>probability_estimate</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"/></button></pre></div>
+</div>
+<pre><code>torch_tensor
+ 0.9526
+ 0.9370
+ 0.2315
+ 0.9995
+ 0.8699
+[ CPUFloatType{5} ]</code></pre>
+<p>From the above table, we see that given <code>unnormalized_estimate</code> and <code>probability_estimate</code>, we can use both as inputs to a loss function – but we have to choose the appropriate one. Provided we do that, the output has to be the same in both cases.</p>
+<p>Let’s see (raw scores first):</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"/><span class="fu">nnf_binary_cross_entropy_with_logits</span>(</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"/>  unnormalized_estimate, target</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"/>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"/></button></pre></div>
+</div>
+<pre><code>torch_tensor
+0.643351
+[ CPUFloatType{} ]</code></pre>
+<p>And now, probabilities:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"/><span class="fu">nnf_binary_cross_entropy</span>(probability_estimate, target)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"/></button></pre></div>
+</div>
+<pre><code>torch_tensor
+0.643351
+[ CPUFloatType{} ]</code></pre>
+<p>That worked as expected. What does this mean in practice? It means that when we build a model for binary classification, and the final layer computes an un-normalized score, we don’t need to attach a sigmoid layer to obtain probabilities. We can just call <code>nnf_binary_cross_entropy_with_logits()</code> when training the network. In fact, doing so is the preferred way, also due to reasons of numerical stability.</p>
+</section>
+<section id="multi-class-data" class="level4" data-number="9.2.3.2">
+<h4 data-number="9.2.3.2" class="anchored" data-anchor-id="multi-class-data"><span class="header-section-number">9.2.3.2</span> Multi-class data</h4>
+<p>Moving on to multi-class data, the most intuitive framing now really is in terms of (several) <em>classes</em>, not presence or absence of a single class. Think of classes as class indices (maybe indexing into some look-up table). Being indices, technically, classes start at 1:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"/>target <span class="ot">&lt;-</span> <span class="fu">torch_tensor</span>(<span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">1</span>, <span class="dv">3</span>, <span class="dv">1</span>, <span class="dv">3</span>), <span class="at">dtype =</span> <span class="fu">torch_long</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"/></button></pre></div>
+</div>
+<p>In the multi-class scenario, raw scores are a two-dimensional tensor. Each row contains the scores for one observation, and each column corresponds to one of the classes. Here’s how the raw estimates could look:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"/>unnormalized_estimate <span class="ot">&lt;-</span> <span class="fu">torch_tensor</span>(</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"/>  <span class="fu">rbind</span>(<span class="fu">c</span>(<span class="fl">1.2</span>, <span class="fl">7.7</span>, <span class="sc">-</span><span class="dv">1</span>),</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"/>    <span class="fu">c</span>(<span class="fl">1.2</span>, <span class="sc">-</span><span class="fl">2.1</span>, <span class="sc">-</span><span class="dv">1</span>),</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"/>    <span class="fu">c</span>(<span class="fl">0.2</span>, <span class="sc">-</span><span class="fl">0.7</span>, <span class="fl">2.5</span>),</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"/>    <span class="fu">c</span>(<span class="dv">0</span>, <span class="sc">-</span><span class="fl">0.3</span>, <span class="sc">-</span><span class="dv">1</span>),</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"/>    <span class="fu">c</span>(<span class="fl">1.2</span>, <span class="fl">0.1</span>, <span class="fl">3.2</span>)</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"/>  )</span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"/>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"/></button></pre></div>
+</div>
+<p>As per the above table, given this estimate, we should be calling <code>nnf_cross_entropy()</code> (and we will, when below we compare results).</p>
+<p>So that’s the first option, and it works exactly as with binary data. For the second, there is an additional step.</p>
+<p>First, we again turn raw scores into probabilities, using <code>nnf_softmax()</code>. For most practical purposes, <code>nnf_softmax()</code> can be seen as the multi-class equivalent of <code>nnf_sigmoid()</code>. Strictly though, their effects are not the same. In a nutshell, <code>nnf_sigmoid()</code> treats low-score and high-score values equivalently, while <code>nnf_softmax()</code> exacerbates the distances between the top score and the remaining ones (“winner takes all”).</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"/>probability_estimate <span class="ot">&lt;-</span> <span class="fu">nnf_softmax</span>(unnormalized_estimate,</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"/>  <span class="at">dim =</span> <span class="dv">2</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"/>)</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"/>probability_estimate</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"/></button></pre></div>
+</div>
+<pre><code>torch_tensor
+ 0.0015  0.9983  0.0002
+ 0.8713  0.0321  0.0965
+ 0.0879  0.0357  0.8764
+ 0.4742  0.3513  0.1745
+ 0.1147  0.0382  0.8472
+[ CPUFloatType{5,3} ]</code></pre>
+<p>The second step, the one that was not required in the binary case, consists in transforming the probabilities to log probabilities. In our example, this could be accomplished by calling <code>torch_log()</code> on the <code>probability_estimate</code> we just computed. Alternatively, both steps together are taken care of by <code>nnf_log_softmax()</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"/>logprob_estimate <span class="ot">&lt;-</span> <span class="fu">nnf_log_softmax</span>(unnormalized_estimate,</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"/>  <span class="at">dim =</span> <span class="dv">2</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"/>)</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"/>logprob_estimate</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"/></button></pre></div>
+</div>
+<pre><code>torch_tensor
+-6.5017 -0.0017 -8.7017
+-0.1377 -3.4377 -2.3377
+-2.4319 -3.3319 -0.1319
+-0.7461 -1.0461 -1.7461
+-2.1658 -3.2658 -0.1658
+[ CPUFloatType{5,3} ]</code></pre>
+<p>Now that we have estimates in both possible forms, we can again compare results from applicable loss functions. First, <code>nnf_cross_entropy()</code> on the raw scores:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"/><span class="fu">nnf_cross_entropy</span>(unnormalized_estimate, target)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"/></button></pre></div>
+</div>
+<pre><code>torch_tensor
+0.23665
+[ CPUFloatType{} ]</code></pre>
+<p>And second, <code>nnf_nll_loss()</code> on the log probabilities:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"/><span class="fu">nnf_nll_loss</span>(logprob_estimate, target)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"/></button></pre></div>
+</div>
+<pre><code>torch_tensor
+0.23665
+[ CPUFloatType{} ]</code></pre>
+<p>Application-wise, what was said for the binary case applies here as well: In a multi-class classification network, there is no need to have a softmax layer at the end.</p>
+<p>Before we end this chapter, let’s address a question that might have come to mind. Is not binary classification a sub-type of the multi-class setup? Should we not, in that case, arrive at the same result, whatever the method chosen?</p>
+</section>
+<section id="check-binary-data-multi-class-method" class="level4" data-number="9.2.3.3">
+<h4 data-number="9.2.3.3" class="anchored" data-anchor-id="check-binary-data-multi-class-method"><span class="header-section-number">9.2.3.3</span> Check: Binary data, multi-class method</h4>
+<p>Let’s see. We re-use the binary-classification scenario employed above. Here it is again:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"/>target <span class="ot">&lt;-</span> <span class="fu">torch_tensor</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">1</span>))</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"/></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"/>unnormalized_estimate <span class="ot">&lt;-</span> </span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"/>  <span class="fu">torch_tensor</span>(<span class="fu">c</span>(<span class="dv">3</span>, <span class="fl">2.7</span>, <span class="sc">-</span><span class="fl">1.2</span>, <span class="fl">7.7</span>, <span class="fl">1.9</span>))</span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"/></span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"/>probability_estimate <span class="ot">&lt;-</span> <span class="fu">nnf_sigmoid</span>(unnormalized_estimate)</span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"/></span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"/><span class="fu">nnf_binary_cross_entropy</span>(probability_estimate, target)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"/></button></pre></div>
+</div>
+<pre><code>torch_tensor
+0.64335
+[ CPUFloatType{} ]</code></pre>
+<p>We hope to get the same value doing things the multi-class way. We already have the probabilities (namely, <code>probability_estimate</code>); we just need to put them into the “observation by class” format expected by <code>nnf_nll_loss()</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"/><span class="co"># logits</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"/>multiclass_probability <span class="ot">&lt;-</span> <span class="fu">torch_tensor</span>(<span class="fu">rbind</span>(</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"/>  <span class="fu">c</span>(<span class="dv">1</span> <span class="sc">-</span> <span class="fl">0.9526</span>, <span class="fl">0.9526</span>),</span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"/>  <span class="fu">c</span>(<span class="dv">1</span> <span class="sc">-</span> <span class="fl">0.9370</span>, <span class="fl">0.9370</span>),</span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"/>  <span class="fu">c</span>(<span class="dv">1</span> <span class="sc">-</span> <span class="fl">0.2315</span>, <span class="fl">0.2315</span>),</span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"/>  <span class="fu">c</span>(<span class="dv">1</span> <span class="sc">-</span> <span class="fl">0.9995</span>, <span class="fl">0.9995</span>),</span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"/>  <span class="fu">c</span>(<span class="dv">1</span> <span class="sc">-</span> <span class="fl">0.8699</span>, <span class="fl">0.8699</span>)</span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"/>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"/></button></pre></div>
+</div>
+<p>Now, we still want to apply the logarithm. And there is one other thing to be taken care of: In the binary setup, classes were coded as probabilities (either 0 or 1); now, we’re dealing with indices. This means we add 1 to the <code>target</code> tensor:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"/>target <span class="ot">&lt;-</span> target <span class="sc">+</span> <span class="dv">1</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"/></button></pre></div>
+</div>
+<p>Finally, we can call <code>nnf_nll_loss()</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"/><span class="fu">nnf_nll_loss</span>(</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"/>  <span class="fu">torch_log</span>(multiclass_probability),</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"/>  target<span class="sc">$</span><span class="fu">to</span>(<span class="at">dtype =</span> <span class="fu">torch_long</span>())</span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"/>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"/></button></pre></div>
+</div>
+<pre><code>torch_tensor
+0.643275
+[ CPUFloatType{} ]</code></pre>
+<p>There we go. The results are indeed the same.</p>
+
+
+</section>
+</section>
+</section>
+<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<hr/>
+<ol>
+<li id="fn1"><p>For cases where that assumption seems unlikely, distribution-adequate loss functions are provided (e.g., Poisson negative log likelihood, available as <code>nnf_poisson_nll_loss()</code> .<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
+
+    
+</body>
+</html>

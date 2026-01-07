@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+  "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>12  Overview</title>
+<link href="../Styles/Style.css" type="text/css" rel="stylesheet"/>
+</head>
+<body>
+<h1>12  Overview</h1>
+<blockquote>原文：<a href="https://skeydan.github.io/Deep-Learning-and-Scientific-Computing-with-R-torch/dl_overview.html">https://skeydan.github.io/Deep-Learning-and-Scientific-Computing-with-R-torch/dl_overview.html</a></blockquote>
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<p>This part of the book is completely dedicated to applications of deep learning. There will be two categories of things to dive into: topics workflow-related, and topics related to domain adaptation.</p>
+<p>Regarding workflow, we’ll see how to:</p>
+<ul>
+<li>prepare the input data in a form the model can work with;</li>
+<li>effectively and efficiently train a model, monitoring progress and adjusting hyper-parameters on the fly;</li>
+<li>save and load models;</li>
+<li>making models generalize beyond the training data;</li>
+<li>speed up training;</li>
+<li>and more.</li>
+</ul>
+<p>Secondly – beyond an efficient workflow – the task in question matters. Compositions of linear layers, of the type we used to learn <code>torch</code> in the first part, will not suffice when our goal is to model images or time series. Successful use of deep learning means tailoring model architecture to the domain in question. To that end, we start from concrete tasks, and present applicable architectures directly by example.</p>
+<p>Concretely, the plan is the following. The upcoming two chapters will introduce you to workflow-related techniques that are indispensable in practice. You’ll encounter another package, <code>luz</code>, that endows <code>torch</code> with an important layer of abstraction, and significantly streamlines the workflow. Once you know how to use it, we’re all set to look at a first application: image classification. To improve on our initial results, we then back up and explore two more advanced workflow-related topics: how to improve generalization, and how to speed up training. Equipped with that knowledge, we first return to images, before extending our domain-related skills to tabular data, time series, and audio.</p>
+
+
+
+    
+</body>
+</html>

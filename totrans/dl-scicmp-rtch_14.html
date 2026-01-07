@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+  "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>11  Modularizing the neural network</title>
+<link href="../Styles/Style.css" type="text/css" rel="stylesheet"/>
+</head>
+<body>
+<h1>11  Modularizing the neural network</h1>
+<blockquote>原文：<a href="https://skeydan.github.io/Deep-Learning-and-Scientific-Computing-with-R-torch/network_2.html">https://skeydan.github.io/Deep-Learning-and-Scientific-Computing-with-R-torch/network_2.html</a></blockquote>
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<p>Let’s recall the network we built a few chapters ago. Its purpose was regression, but its method was not <em>linear</em>. Instead, an activation function (ReLU, for “rectified linear unit”) introduced a nonlinearity, located between the single hidden layer and the output layer. The “layers”, in this original implementation, were just tensors: weights and biases. You won’t be surprised to hear that these will be replaced by <em>modules</em>.</p>
+<p>How will the training process change? Conceptually, we can distinguish four phases: the forward pass, loss computation, backpropagation of gradients, and weight updating. Let’s think about where our new tools will fit in:</p>
+<ul>
+<li><p>The forward pass, instead of calling functions on tensors, will call the model.</p></li>
+<li><p>In computing the loss, we now make use of <code>torch</code>’s <code>nnf_mse_loss()</code>.</p></li>
+<li><p>Backpropagation of gradients is, in fact, the only operation that remains unchanged.</p></li>
+<li><p>Weight updating is taken care of by the optimizer.</p></li>
+</ul>
+<p>Once we’ve made those changes, the code will be more modular, and a lot more readable.</p>
+<section id="data" class="level2" data-number="11.1">
+<h2 data-number="11.1" class="anchored" data-anchor-id="data"><span class="header-section-number">11.1</span> Data</h2>
+<p>As a prerequisite, we generate the data, same as last time.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"/><span class="co"># input dimensionality (number of input features)</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"/>d_in <span class="ot">&lt;-</span> <span class="dv">3</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"/><span class="co"># number of observations in training set</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"/>n <span class="ot">&lt;-</span> <span class="dv">100</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"/></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"/>x <span class="ot">&lt;-</span> <span class="fu">torch_randn</span>(n, d_in)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"/>coefs <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">0.2</span>, <span class="sc">-</span><span class="fl">1.3</span>, <span class="sc">-</span><span class="fl">0.5</span>)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"/>y <span class="ot">&lt;-</span> x<span class="sc">$</span><span class="fu">matmul</span>(coefs)<span class="sc">$</span><span class="fu">unsqueeze</span>(<span class="dv">2</span>) <span class="sc">+</span> <span class="fu">torch_randn</span>(n, <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"/></button></pre></div>
+</div>
+</section>
+<section id="network" class="level2" data-number="11.2">
+<h2 data-number="11.2" class="anchored" data-anchor-id="network"><span class="header-section-number">11.2</span> Network</h2>
+<p>With two linear layers connected via ReLU activation, the easiest choice is a sequential module, very similar to the one we saw in the introduction to modules:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"/><span class="co"># dimensionality of hidden layer</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"/>d_hidden <span class="ot">&lt;-</span> <span class="dv">32</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"/><span class="co"># output dimensionality (number of predicted features)</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"/>d_out <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"/></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"/>net <span class="ot">&lt;-</span> <span class="fu">nn_sequential</span>(</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"/>  <span class="fu">nn_linear</span>(d_in, d_hidden),</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"/>  <span class="fu">nn_relu</span>(),</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"/>  <span class="fu">nn_linear</span>(d_hidden, d_out)</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"/>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"/></button></pre></div>
+</div>
+</section>
+<section id="training" class="level2" data-number="11.3">
+<h2 data-number="11.3" class="anchored" data-anchor-id="training"><span class="header-section-number">11.3</span> Training</h2>
+<p>Here is the updated training process. We use the Adam optimizer, a popular choice.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"/>opt <span class="ot">&lt;-</span> <span class="fu">optim_adam</span>(net<span class="sc">$</span>parameters)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"/></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"/><span class="do">### training loop --------------------------------------</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"/></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"/><span class="cf">for</span> (t <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">200</span>) {</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"/>  </span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"/>  <span class="do">### -------- Forward pass --------</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"/>  y_pred <span class="ot">&lt;-</span> <span class="fu">net</span>(x)</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"/>  </span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"/>  <span class="do">### -------- Compute loss -------- </span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"/>  loss <span class="ot">&lt;-</span> <span class="fu">nnf_mse_loss</span>(y_pred, y)</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"/>  <span class="cf">if</span> (t <span class="sc">%%</span> <span class="dv">10</span> <span class="sc">==</span> <span class="dv">0</span>)</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"/>    <span class="fu">cat</span>(<span class="st">"Epoch: "</span>, t, <span class="st">"   Loss: "</span>, loss<span class="sc">$</span><span class="fu">item</span>(), <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"/>  </span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"/>  <span class="do">### -------- Backpropagation --------</span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"/>  opt<span class="sc">$</span><span class="fu">zero_grad</span>()</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"/>  loss<span class="sc">$</span><span class="fu">backward</span>()</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"/>  </span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"/>  <span class="do">### -------- Update weights -------- </span></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"/>  opt<span class="sc">$</span><span class="fu">step</span>()</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"/></span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"/>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"/></button></pre></div>
+</div>
+<pre><code>Epoch:  10    Loss:  2.549933 
+Epoch:  20    Loss:  2.422556 
+Epoch:  30    Loss:  2.298053 
+Epoch:  40    Loss:  2.173909 
+Epoch:  50    Loss:  2.0489 
+Epoch:  60    Loss:  1.924003 
+Epoch:  70    Loss:  1.800404 
+Epoch:  80    Loss:  1.678221 
+Epoch:  90    Loss:  1.56143 
+Epoch:  100    Loss:  1.453637 
+Epoch:  110    Loss:  1.355832 
+Epoch:  120    Loss:  1.269234 
+Epoch:  130    Loss:  1.195116 
+Epoch:  140    Loss:  1.134008 
+Epoch:  150    Loss:  1.085828 
+Epoch:  160    Loss:  1.048921 
+Epoch:  170    Loss:  1.021384 
+Epoch:  180    Loss:  1.0011 
+Epoch:  190    Loss:  0.9857832 
+Epoch:  200    Loss:  0.973796 </code></pre>
+<p>In addition to shortening and streamlining the code, our changes have made a big difference performance-wise.</p>
+</section>
+<section id="whats-to-come" class="level2" data-number="11.4">
+<h2 data-number="11.4" class="anchored" data-anchor-id="whats-to-come"><span class="header-section-number">11.4</span> What’s to come</h2>
+<p>You now know a lot about how <code>torch</code> works, and how to use it to minimize a cost function in various settings: for example, to train a neural network. But for real-world applications, there is a lot more <code>torch</code> has to offer. The next – and most voluminous – part of the book focuses on deep learning.</p>
+
+
+</section>
+
+    
+</body>
+</html>

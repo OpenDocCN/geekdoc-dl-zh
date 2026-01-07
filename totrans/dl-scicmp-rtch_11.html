@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+  "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>8  Optimizers</title>
+<link href="../Styles/Style.css" type="text/css" rel="stylesheet"/>
+</head>
+<body>
+<h1>8  Optimizers</h1>
+<blockquote>原文：<a href="https://skeydan.github.io/Deep-Learning-and-Scientific-Computing-with-R-torch/optimizers.html">https://skeydan.github.io/Deep-Learning-and-Scientific-Computing-with-R-torch/optimizers.html</a></blockquote>
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<p>By now, we’ve gone into quite some detail on tensors, automatic differentiation, and modules. In this chapter, we look into the final major concept present in core <code>torch</code>: <em>optimizers</em>. Where modules encapsulate layer and model logic, optimizers do the same for optimization strategies.</p>
+<p>Let’s start by pondering why having optimizer objects is so useful.</p>
+<section id="why-optimizers" class="level2" data-number="8.1">
+<h2 data-number="8.1" class="anchored" data-anchor-id="why-optimizers"><span class="header-section-number">8.1</span> Why optimizers?</h2>
+<p>To this question, there are two main types of answer. First, the technical one.</p>
+<p>If you look back at how we coded our first neural network, you’ll see that we proceeded like this:</p>
+<ul>
+<li><p>compute predictions (forward pass),</p></li>
+<li><p>calculate the loss,</p></li>
+<li><p>have <em>autograd</em> compute partial derivatives (calling <code>loss$backward()</code>), and</p></li>
+<li><p>update the parameters, subtracting from each some fraction of the gradient.</p></li>
+</ul>
+<p>Here is how that last part looked:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"/><span class="fu">library</span>(torch)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"/></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"/><span class="co"># compute gradient of loss w.r.t. all tensors with</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"/><span class="co"># requires_grad = TRUE</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"/>loss<span class="sc">$</span><span class="fu">backward</span>()</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"/>  </span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"/><span class="do">### -------- Update weights -------- </span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"/>  </span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"/><span class="co"># Wrap in with_no_grad() because this is a part we don't </span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"/><span class="co"># want to record for automatic gradient computation</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"/><span class="fu">with_no_grad</span>({</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"/>  w1 <span class="ot">&lt;-</span> w1<span class="sc">$</span><span class="fu">sub_</span>(learning_rate <span class="sc">*</span> w1<span class="sc">$</span>grad)</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"/>  w2 <span class="ot">&lt;-</span> w2<span class="sc">$</span><span class="fu">sub_</span>(learning_rate <span class="sc">*</span> w2<span class="sc">$</span>grad)</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"/>  b1 <span class="ot">&lt;-</span> b1<span class="sc">$</span><span class="fu">sub_</span>(learning_rate <span class="sc">*</span> b1<span class="sc">$</span>grad)</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"/>  b2 <span class="ot">&lt;-</span> b2<span class="sc">$</span><span class="fu">sub_</span>(learning_rate <span class="sc">*</span> b2<span class="sc">$</span>grad)  </span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"/>     </span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"/>  <span class="co"># Zero gradients after every pass, as they'd accumulate</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"/>  <span class="co"># otherwise</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"/>  w1<span class="sc">$</span>grad<span class="sc">$</span><span class="fu">zero_</span>()</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"/>  w2<span class="sc">$</span>grad<span class="sc">$</span><span class="fu">zero_</span>()</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"/>  b1<span class="sc">$</span>grad<span class="sc">$</span><span class="fu">zero_</span>()</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"/>  b2<span class="sc">$</span>grad<span class="sc">$</span><span class="fu">zero_</span>()  </span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"/>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"/></button></pre></div>
+</div>
+<p>Now this was a small network – imagine having to code such logic for architectures with tens or hundreds of layers! Surely this can’t be what developers of a deep learning framework want their users to do. Accordingly, weight updates are taken care of by specialized objects – the optimizers in question.</p>
+<p>Thus, the technical type of answer concerns usability and convenience. But more is involved. With the above approach, there’s hardly a way to find a good learning rate other than by trial and error. And most probably, there is not even an optimal learning rate that would be constant over the whole training process. Fortunately, a rich tradition of research has turned up at set of proven update strategies. These strategies commonly involve a <em>state</em> kept between operations. This is another reason why, just like modules, optimizers are objects in <code>torch</code>.</p>
+<p>Before we look deeper at these strategies, let’s see how we’d replace the above manual weight-updating process with a version that uses an optimizer.</p>
+</section>
+<section id="using-built-in-torch-optimizers" class="level2" data-number="8.2">
+<h2 data-number="8.2" class="anchored" data-anchor-id="using-built-in-torch-optimizers"><span class="header-section-number">8.2</span> Using built-in <code>torch</code> optimizers</h2>
+<p>An optimizer needs to know what it’s supposed to optimize. In the context of a neural network model, this will be the network’s parameters. With no real difference between “model modules” and “layer modules”, however, we can demonstrate how it works using a single built-in module such as <code>nn_linear()</code>.</p>
+<p>Here we instantiate a gradient descent optimizer designed to work on some linear module’s parameters:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"/>l <span class="ot">&lt;-</span> <span class="fu">nn_linear</span>(<span class="dv">10</span>, <span class="dv">2</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"/></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"/>opt <span class="ot">&lt;-</span> <span class="fu">optim_sgd</span>(l<span class="sc">$</span>parameters, <span class="at">lr =</span> <span class="fl">0.1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"/></button></pre></div>
+</div>
+<p>In addition to the always-required reference to what tensors should be optimized, <code>optim_sgd()</code> has just a single non-optional parameter: <code>lr</code>, the learning rate.</p>
+<p>Once we have an optimizer object, parameter updates are triggered by calling its <code>step()</code> method. One thing remains unchanged, though. We still need to make sure gradients are not accumulated over training iterations. This means we still call <code>zero_grad()</code> – but this time, on the optimizer object.</p>
+<p>This is the complete code replacing the above manual procedure:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"/><span class="co"># compute gradient of loss w.r.t. all tensors with</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"/><span class="co"># requires_grad = TRUE</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"/><span class="co"># no change here</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"/>loss<span class="sc">$</span><span class="fu">backward</span>()</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"/></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"/><span class="co"># Still need to zero out gradients before the backward pass,</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"/><span class="co"># only this time, on the optimizer object</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"/>optimizer<span class="sc">$</span><span class="fu">zero_grad</span>()</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"/></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"/><span class="co"># use the optimizer to update model parameters</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"/>optimizer<span class="sc">$</span><span class="fu">step</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"/></button></pre></div>
+</div>
+<p>I’m sure you’ll agree that usability-wise, this is an enormous improvement. Now, let’s get back to our original question – why optimizers? – and talk more about the second, strategic part of the answer.</p>
+</section>
+<section id="parameter-update-strategies" class="level2" data-number="8.3">
+<h2 data-number="8.3" class="anchored" data-anchor-id="parameter-update-strategies"><span class="header-section-number">8.3</span> Parameter update strategies</h2>
+<p>Searching for a good learning rate by trial and error is costly. And the learning rate isn’t even the only thing we’re uncertain about. All it does is specify how big of a step to take. However, that’s not the only unresolved question.</p>
+<p>So far, we’ve always assumed that the direction of steepest descent, as given by the gradient, is the best way to go. This is not always the case, though. So we are left with uncertainties regarding both magnitude and direction of parameter updates.</p>
+<p>Fortunately, over the last decade, there has been significant progress in research related to weight updating in neural networks. Here, we take a look at major considerations involved, and situate in context some of the most popular optimizers provided by <code>torch</code>.</p>
+<p>The baseline to compare against is <em>gradient descent</em>, or <em>steepest descent</em>, the algorithm we’ve been using in our manual implementations of function minimization and neural-network training. Let’s quickly recall the guiding principle behind it.</p>
+<section id="gradient-descent-a.k.a.-steepest-descent-a.k.a.-stochastic-gradient-descent-sgd" class="level3" data-number="8.3.1">
+<h3 data-number="8.3.1" class="anchored" data-anchor-id="gradient-descent-a.k.a.-steepest-descent-a.k.a.-stochastic-gradient-descent-sgd"><span class="header-section-number">8.3.1</span> Gradient descent (a.k.a. steepest descent, a.k.a. stochastic gradient descent (SGD))</h3>
+<p>The gradient – the vector of partial derivatives, one for each input feature – indicates the direction in which a function increases most. Going in the opposite direction means we descend the fastest way possible. Or does it?</p>
+<p>Unfortunately, it is not that simple. It depends on the landscape that surrounds us, or put more technically, the contours of the function we want to minimize. To illustrate, compare two situations.</p>
+<p>The first is the one we encountered when first learning about automatic differentiation. The example there was a quadratic function in two dimensions. We didn’t make a great deal out of it at the time, but an important point about this specific function was that the slope was the same in both dimensions. Under such conditions, steepest descent is optimal.</p>
+<p>Let’s verify that. The function was : <span class="math inline">\(f(x_1, x_2) = 0.2 {x_1}^2 + 0.2 {x_2}^2 - 5\)</span>, and its gradient, <span class="math inline">\(\begin{bmatrix}0.4\\0.4 \end{bmatrix}\)</span>. Now say we’re at point <span class="math inline">\((x1, x2) = (6,6)\)</span>. For each coordinate, we subtract 0.4 times its current value. Or rather, that would be if we had to use a learning rate of 1. But we don’t have to. If we pick a learning rate of 2.5, we can arrive at the minimum in a single step: <span class="math inline">\((x_1, x_2) = (6 - 2.5*0.4*6, 6 - 2.5*0.4*6) = (0,0)\)</span>. See below for an illustration of what happens in each case (<a href="#fig-optimizers-steepest-descent-symmetric">fig. <span>8.1</span></a>).</p>
+<div id="fig-optimizers-steepest-descent-symmetric" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="../Images/8df3fcf790608246148e809dccd6e1d4.png" class="quarto-discovered-preview-image img-fluid figure-img" alt="An isotropic paraboloid (one that has the same curvature in all dimensions), and two optimization paths. Both use the steepest-descent algorithm, but differ in learning rate. One needs many steps to arrive at the function's minimum, while the other gets there in a single step." data-original-src="https://skeydan.github.io/Deep-Learning-and-Scientific-Computing-with-R-torch/images/optimizers-steepest-descent-symmetric.png"/></p>
+<p/><figcaption class="figure-caption">Figure 8.1: Steepest descent on an isotropic paraboloid, using different learning rates.</figcaption><p/>
+</figure>
+</div>
+<p>In a nutshell, thus, with a isotropic function like this – the variance being the same in both directions – it is “just” a matter of getting the learning rate right.</p>
+<p>Now compare this to what happens if slopes in both directions are decidedly distinct.</p>
+<p>This time, the coefficient for <span class="math inline">\(x_2\)</span> is ten times as big as that for <span class="math inline">\(x_1\)</span>: We have <span class="math inline">\(f(x_1, x_2) = 0.2 {x_1}^2 + 2 {x_2}^2 - 5\)</span>. This means that as we progress in the <span class="math inline">\(x_2\)</span> direction, the function value increases sharply, while in the <span class="math inline">\(x_1\)</span> direction, it rises much more slowly. Thus, during gradient descent, we make far greater progress in one direction than the other.</p>
+<p>Again, we investigate what happens for different learning rates. Below, we contrast three different settings. With the lowest learning rate, the process eventually reaches the minimum, but a lot more slowly than in the symmetric case. With a learning rate just slightly higher, descent gets lost in endless zig-zagging, oscillating between positive and negative values of the more influential variable, <span class="math inline">\(x_2\)</span>. Finally, a learning rate that, again, is just minimally higher, has a catastrophic effect: The function value explodes, zig-zagging up right to infinity (<a href="#fig-optimizers-steepest-descent-elliptic">fig. <span>8.2</span></a>).</p>
+<div id="fig-optimizers-steepest-descent-elliptic" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="../Images/b4b4555acd330394888aa760b5884719.png" class="img-fluid figure-img" alt="A non-isotropic paraboloid, stretched-out widely along the x-axis, but with y-values centered sharply around y = 0. Displayed are three optimization paths, all using steepest descent, but varying in learning rate. One of them reaches the minimum after a high number of steps; the second zig-zags along the y-axis, making just minimal progress along the x-axis; the third zig-zags off to infinity." data-original-src="https://skeydan.github.io/Deep-Learning-and-Scientific-Computing-with-R-torch/images/optimizers-steepest-descent-elliptic.png"/></p>
+<p/><figcaption class="figure-caption">Figure 8.2: Steepest descent on a non-isotropic paraboloid, using (minimally!) different learning rates.</figcaption><p/>
+</figure>
+</div>
+<p>This should be pretty convincing – even with a pretty conventional function of just two variables, steepest descent is far from being a panacea! And in deep learning, loss functions will be a <em>lot</em> less well-behaved. This is where the need for more sophisticated algorithms arises: Enter – again – optimizers.</p>
+</section>
+<section id="things-that-matter" class="level3" data-number="8.3.2">
+<h3 data-number="8.3.2" class="anchored" data-anchor-id="things-that-matter"><span class="header-section-number">8.3.2</span> Things that matter</h3>
+<p>Viewed conceptually, major modifications to steepest descent can be categorized by the considerations that drive them, or equivalently, by the problems they’re trying to solve. Here, we focus on three such considerations.</p>
+<p>First, instead of starting in a completely new direction every time we re-compute the gradient, we might want to keep a bit of the old direction – keep momentum, to use the technical term. This should help avoiding the inefficient zig-zagging seen in the example above.</p>
+<p>Second, looking back at just that example of minimizing a non-symmetric function … Why, really, should we be constrained to using the same learning rate for all variables? When it’s evident that all variables don’t vary to the same degree, why don’t we update them in individually appropriate ways?</p>
+<p>Third – and this is a fix for problems that only arise once you’ve taken actions to reduce the learning rate for overly-impactful features – you also want to make sure that learning still progresses, that parameters still get updated.</p>
+<p>These considerations are nicely illustrated by a few classics among the optimization algorithms.</p>
+</section>
+<section id="staying-on-track-gradient-descent-with-momentum" class="level3" data-number="8.3.3">
+<h3 data-number="8.3.3" class="anchored" data-anchor-id="staying-on-track-gradient-descent-with-momentum"><span class="header-section-number">8.3.3</span> Staying on track: Gradient descent with momentum</h3>
+<p>In gradient descent with momentum, we don’t <em>directly</em> use the gradient to update the weights. Instead, you can picture weight updates as particles moving on a trajectory: They want to keep going in whatever direction they’re going – keep their <em>momentum</em>, in physics speak – but get continually deflected by collisions. These “collisions” are friendly nudges to, please, keep into account the gradient at the <em>now current</em> position. These dynamics result in a two-step update logic.</p>
+<p>In the below formulas, the choice of symbols reflects the physical analogy. <span class="math inline">\(\mathbf{x}\)</span> is the position, “where we’re at” in parameter space – or more simply, the current values of the parameters. Time evolution is captured by superscripts, with <span class="math inline">\(\mathbf{y}^{(k)}\)</span> representing the state of variable <span class="math inline">\(\mathbf{y}\)</span> at the current time, <span class="math inline">\(k\)</span>. The instantaneous velocity at time <span class="math inline">\(k\)</span> is just what is measured by the gradient, <span class="math inline">\(\mathbf{g}^{(k)}\)</span>. But in updating position, we won’t directly make use of it. Instead, at each iteration, the update velocity is a combination of old velocity – weighted by <em>momentum</em> parameter <span class="math inline">\(m\)</span> – and the freshly-computed gradient (weighted by the learning rate). Step one of the two-step logic captures this strategy:</p>
+<p><span id="eq-optimizers-1"><span class="math display">\[
+\mathbf{v}^{(k+1)} = m \ \mathbf{v}^{(k)} + lr \ \mathbf{g}^{(k)}
+\tag{8.1}\]</span></span></p>
+<p>The second step then is the update of <span class="math inline">\(\mathbf{x}\)</span> due to this “compromise” velocity <span class="math inline">\(\mathbf{v}\)</span>.</p>
+<p><span id="eq-optimizers-2"><span class="math display">\[
+\mathbf{x}^{(k+1)} = \mathbf{x}^{(k)} - \mathbf{v}^{(k+1)}
+\tag{8.2}\]</span></span></p>
+<p>Besides the physics analogy, there is another one you may find useful, one that makes use of a concept prominent in time series analysis. If we choose <span class="math inline">\(m\)</span> and <span class="math inline">\(lr\)</span> such that they add up to 1, the result is an <em>exponentially weighted moving average</em>. (While this conceptualization, I think, helps understanding, in practice there is no necessity to have <span class="math inline">\(m\)</span> and <span class="math inline">\(lr\)</span> summing to 1, though).</p>
+<p>Now, let’s return to the non-isotropic paraboloid, and compare SGD with and without momentum. For the latter (bright curve), I’m using a combination of <span class="math inline">\(lr = 0.5\)</span> and <span class="math inline">\(mu = 0.1\)</span>. For SGD – dark curve – the learning rate is the “good one” from the figure above.Definitely, SGD with momentum requires far fewer steps to reach the minimum (<a href="#fig-optimizers-momentum">fig. <span>8.3</span></a>).</p>
+<div id="fig-optimizers-momentum" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="../Images/571c495451db4d462923b73dd9edfe5e.png" class="img-fluid figure-img" alt="A non-isotropic paraboloid, stretched-out widely along the x-axis, but with y-values centered sharply around y = 0. Displayed are two optimization paths, one using steepest descent, one using gradient descent with momentum. With steepest descent, many steps are needed to arrive at the minimum, while gradient descent with momentum needs far fewer steps." data-original-src="https://skeydan.github.io/Deep-Learning-and-Scientific-Computing-with-R-torch/images/optimizers-momentum.png"/></p>
+<p/><figcaption class="figure-caption">Figure 8.3: SGD with momentum (white), compared with vanilla SGD (gray).</figcaption><p/>
+</figure>
+</div>
+</section>
+<section id="adagrad" class="level3" data-number="8.3.4">
+<h3 data-number="8.3.4" class="anchored" data-anchor-id="adagrad"><span class="header-section-number">8.3.4</span> Adagrad</h3>
+<p>Can we do better yet? Now, we know that in our running example, it is really the fact that one feature changes much faster than the other that slows down optimization. Having separate learning rates per parameter thus clearly seems like a thing we want. In fact, most of the optimizers popular in deep learning have per-parameter learning rates. But how would you actually determine those?</p>
+<p>This is where different algorithms differ. Adagrad, for example, divides each parameter update by the cumulative sum of its partial derivatives (squared, to be precise), where “cumulative” means we’re keeping track of them since the very first iteration. If we call that “accumulator variable” <span class="math inline">\(s\)</span>, refer to the parameter in question by <span class="math inline">\(i\)</span>, and count iterations using <span class="math inline">\(k\)</span>, this gives us the following formula for keeping <span class="math inline">\(s\)</span> updated:</p>
+<p><span id="eq-optimizers-3"><span class="math display">\[
+s_i^{(k)} = \sum_{j=1}^k (g_i^{(j)})^2
+\tag{8.3}\]</span></span></p>
+<p>(By the way, feel free to skip over the formulas if you don’t like them. I’m doing my best to communicate what they do in words, so you shouldn’t miss out on essential information.)</p>
+<p>Now, the update rule for each parameter subtracts a portion of the gradient, as did vanilla steepest descent – but this time, that portion is determined not just by the (global) learning rate, but also, by the aforementioned cumulative sum of squared partials. The bigger that sum – that is, the bigger the gradients have been during training – the smaller the adjustment:<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></p>
+<p><span id="eq-optimizers-4"><span class="math display">\[
+x_i^{(k+1)} = x_i^{(k)} - \frac{lr}{\epsilon + \sqrt{s_i^{(k)}}}\ g_i^{(k)}\\
+\tag{8.4}\]</span></span></p>
+<p>The net effect of this strategy is that, if a parameter has consistently high gradients, its influence is played down. Parameters with, habitually, tiny gradients, on the other hand, can be sure to receive a lot of attention once that changes.</p>
+<p>With this algorithm, the global learning rate, <span class="math inline">\(lr\)</span>, is of lesser importance. In our running example, it turns out that for best results, we can (and should) use a very high learning rate: 3.7! Here (<a href="#fig-optimizers-adagrad">fig. <span>8.4</span></a>) is the result, again comparing with vanilla gradient descent (gray curve):</p>
+<div id="fig-optimizers-adagrad" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="../Images/66256a040d1c5525d5af95e80bd05c08.png" class="img-fluid figure-img" alt="A non-isotropic paraboloid, stretched-out widely along the x-axis, but with y-values centered sharply around y = 0. Displayed are two optimization paths, one using steepest descent, one using the Adagrad algorithm. With steepest descent, many steps are needed to arrive at the minimum, while Adagrad needs just four steps." data-original-src="https://skeydan.github.io/Deep-Learning-and-Scientific-Computing-with-R-torch/images/optimizers-adagrad.png"/></p>
+<p/><figcaption class="figure-caption">Figure 8.4: Adagrad (white), compared with vanilla SGD (gray).</figcaption><p/>
+</figure>
+</div>
+<p>In our example, thus, Adagrad performs excellently. But in training a neural network, we tend to run <em>a lot</em> of iterations. Then, with the way gradients are accumulated, the effective learning rate decreases more and more, and a dead end is reached.</p>
+<p>Are there other ways to have individual, per-parameter learning rates?</p>
+</section>
+<section id="rmsprop" class="level3" data-number="8.3.5">
+<h3 data-number="8.3.5" class="anchored" data-anchor-id="rmsprop"><span class="header-section-number">8.3.5</span> RMSProp</h3>
+<p>RMSProp replaces the cumulative-gradient strategy found in Adagrad with a weighted-average one. At each point, the “bookkeeping”, per-parameter variable <span class="math inline">\(s_i\)</span> is a weighted average of its previous value and the previous (squared) gradient:</p>
+<p><span id="eq-optimizers-5"><span class="math display">\[
+s_i^{(k+1)} = \gamma \ s_i^{(k)} + (1-\gamma) \ (g_i^{(k)})^2
+\tag{8.5}\]</span></span></p>
+<p>The update then looks as with Adagrad:</p>
+<p><span id="eq-optimizers-6"><span class="math display">\[
+x_i^{(k+1)} = x_i^{(k)} - \frac{lr}{\epsilon + \sqrt{s_i^{(k)}}}\ g_i^{(k)}\\
+\tag{8.6}\]</span></span></p>
+<p>In this way, each parameter update gets weighted appropriately, without learning slowing down overall.</p>
+<p>Here is the result, again compared against the SGD baseline (<a href="#fig-optimizers-rmsprop">fig. <span>8.5</span></a>):</p>
+<div id="fig-optimizers-rmsprop" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="../Images/697c2ccee44eabdca7e378423bdb9f73.png" class="img-fluid figure-img" alt="A non-isotropic paraboloid, stretched-out widely along the x-axis, but with y-values centered sharply around y = 0. Displayed are two optimization paths, one using steepest descent, one using RMSProp. With steepest descent, many steps are needed to arrive at the minimum, while RMSProp needs just four steps." data-original-src="https://skeydan.github.io/Deep-Learning-and-Scientific-Computing-with-R-torch/images/optimizers-rmsprop.png"/></p>
+<p/><figcaption class="figure-caption">Figure 8.5: RMSProp (white), compared with vanilla SGD (gray).</figcaption><p/>
+</figure>
+</div>
+<p>As of today, RMSProp is one of the most-often used optimizers in deep learning, with probably just Adam - to be introduced next – being more popular.</p>
+</section>
+<section id="adam" class="level3" data-number="8.3.6">
+<h3 data-number="8.3.6" class="anchored" data-anchor-id="adam"><span class="header-section-number">8.3.6</span> Adam</h3>
+<p>Adam combines two concepts we’ve already seen: momentum – to keep “on track” – and parameter-dependent updates, to avoid excessive dependence on fast-changing parameters. The logic is like this.<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a></p>
+<p>For one, just like in SGD with momentum, we keep an exponentially weighted average of gradients. Here the weighting coefficient, <span class="math inline">\(\gamma_v\)</span>, is usually set to 0.9.</p>
+<p><span id="eq-optimizers-7"><span class="math display">\[
+v_i^{(k+1)} = \gamma_v \ v_i^{(k)} + (1-\gamma_v) \ g_i^{(k)}
+\tag{8.7}\]</span></span></p>
+<p>Also, like in RMSProp, there is an exponentially weighted average of squared gradients, with weighting coefficient <span class="math inline">\(\gamma_s\)</span> usually set to 0.999.</p>
+<p><span id="eq-optimizers-8"><span class="math display">\[
+s_i^{(k+1)} = \gamma_s \ s_i^{(k)} + (1-\gamma_s) \ (g_i^{(k)})^2
+\tag{8.8}\]</span></span></p>
+<p>The parameter updates now make use of that information in the following way. The velocity determines the direction of the update, while both velocity and magnitude of gradients (together with the learning rate, <span class="math inline">\(lr\)</span>) determine its size:</p>
+<p><span id="eq-optimizers-9"><span class="math display">\[
+x_i^{(k+1)} = x_i^{(k)} - \frac{lr \
+v_i^{(k+1)}}{\epsilon + \sqrt{s_i^{(k+1)}}}\ \\
+\tag{8.9}\]</span></span></p>
+<p>Let’s conclude this chapter by testing Adam on our running example (<a href="#fig-optimizers-adam">fig. <span>8.6</span></a>).</p>
+<div id="fig-optimizers-adam" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="../Images/777fc4ea0dd94694b306fc6a69d3b52e.png" class="img-fluid figure-img" alt="A non-isotropic paraboloid, stretched-out widely along the x-axis, but with y-values centered sharply around y = 0. Displayed are two optimization paths, one using steepest descent, one using Adam. With steepest descent, many steps are needed to arrive at the minimum, while Adam needs four steps only." data-original-src="https://skeydan.github.io/Deep-Learning-and-Scientific-Computing-with-R-torch/images/optimizers-adam.png"/></p>
+<p/><figcaption class="figure-caption">Figure 8.6: Adam (white), compared with vanilla SGD (gray).</figcaption><p/>
+</figure>
+</div>
+<p>Next, we head on to loss functions, the last building block to look at before we re-factor the regression network and function minimization examples to benefit from <code>torch</code> modules and optimizers.</p>
+
+
+</section>
+</section>
+<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<hr/>
+<ol>
+<li id="fn1"><p>Here <span class="math inline">\(\epsilon\)</span> is just a tiny value added to avoid division by zero.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>Actual implementations usually contain an additional step, but there is no need to go into details here.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
+
+    
+</body>
+</html>
