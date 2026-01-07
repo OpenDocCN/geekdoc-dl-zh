@@ -1,16 +1,22 @@
 - en: 22  Audio classification
+  id: totrans-0
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
+  zh: 22 音频分类
 - en: 原文：[https://skeydan.github.io/Deep-Learning-and-Scientific-Computing-with-R-torch/audio_classification.html](https://skeydan.github.io/Deep-Learning-and-Scientific-Computing-with-R-torch/audio_classification.html)
+  id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 原文：[https://skeydan.github.io/Deep-Learning-and-Scientific-Computing-with-R-torch/audio_classification.html](https://skeydan.github.io/Deep-Learning-and-Scientific-Computing-with-R-torch/audio_classification.html)
 - en: In our final chapter on deep learning, we look at the fascinating topic of audio
     signals. And here, part of my goal is to convince you (if you aren’t convinced
     yet) of the utmost importance of *domain knowledge*. Let me explain.
+  id: totrans-2
   prefs: []
   type: TYPE_NORMAL
+  zh: 在我们关于深度学习的最后一章中，我们将探讨音频信号的迷人主题。在这里，我的部分目标是要说服你（如果你还没有被说服），*领域知识*的重要性无与伦比。让我来解释。
 - en: 'Far too often, machine learning is seen as a magical device that, when employed
     in a technically correct way, will yield great results, however little the model
     developer (or user) may know about the domain in question. In previous chapters,
@@ -23,15 +29,21 @@
     With audio signals, we will encounter a technique that, beyond being of great
     appeal in itself, has the strength of generalizing to a wide range of applications
     that deal with comparable data.'
+  id: totrans-3
   prefs: []
   type: TYPE_NORMAL
+  zh: 过去，机器学习常常被看作是一种神奇的设备，只要以技术正确的方式使用，就能产生巨大的效果，尽管模型开发者（或用户）对相关领域的了解可能很少。在前面的章节中，我们已经看到这并不正确，甚至在看似“简单”的数据集的情况下也是如此。本质上，我们看到了预处理的重要性——*总是*——以及为了充分预处理数据，我们需要知道它们应该代表什么。然而，将领域知识融入机器学习工作流程的技术可以走得更远。这是一个绝对值得一本自己书籍的主题。但本章希望提供一种前瞻性的东西：在音频信号中，我们将遇到一种技术，它本身就有很大的吸引力，并且具有推广到处理类似数据的广泛应用的强大能力。
 - en: Let’s start by characterizing the task.
+  id: totrans-4
   prefs: []
   type: TYPE_NORMAL
+  zh: 让我们先来描述一下这个任务。
 - en: 22.1 Classifying speech data
+  id: totrans-5
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 22.1 语音数据分类
 - en: The speech command dataset (Warden ([2018](references.html#ref-abs-1804-03209)))
     comes with `torchaudio`, a package that does for auditory data what `torchvision`
     does for images and video. As of this writing, there are two versions; the one
@@ -39,92 +51,141 @@
     of thirty different, one- or two-syllable words, uttered by different speakers;
     there are about 65,000 audio files overall. The task is to predict, from the audio
     recording, which word was spoken.
+  id: totrans-6
   prefs: []
   type: TYPE_NORMAL
+  zh: 语音命令数据集（Warden ([2018](references.html#ref-abs-1804-03209)））附带 `torchaudio`，这是一个包，它为音频数据做了
+    `torchvision` 为图像和视频所做的工作。截至本文写作时，有两个版本；由 `torchaudio` 提供的是第一个版本。在那个版本中，数据集包含了不同说话者说出的三十个不同、一或两个音节的单词的录音；总共有大约
+    65,000 个音频文件。任务是预测音频录音中的单词。
 - en: To see what is involved, we download and inspect the data.
+  id: totrans-7
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了了解涉及的内容，我们下载并检查数据。
 - en: '[PRE0]'
+  id: totrans-8
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE0]'
 - en: '*[PRE1]'
+  id: totrans-9
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE1]'
 - en: 'Picking a sample at random, we see that the information we’ll need is contained
     in four properties: `waveform`, `sample_rate`, `label_index`, and `label`.'
+  id: totrans-10
   prefs: []
   type: TYPE_NORMAL
+  zh: 随机选择一个样本，我们看到我们需要的信息包含在四个属性中：`波形`、`sample_rate`、`label_index` 和 `label`。
 - en: The first, `waveform`, will be our predictor.
+  id: totrans-11
   prefs: []
   type: TYPE_NORMAL
+  zh: 第一个，`波形`，将作为我们的预测器。
 - en: '[PRE2]'
+  id: totrans-12
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE2]'
 - en: '*[PRE3]'
+  id: totrans-13
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE3]'
 - en: 'Individual tensor values are centered at zero, and range between -1 and 1\.
     There are 16,000 of them, reflecting the fact that the recording lasted for one
     second, and was registered at (or has been converted to, by the dataset creators)
     a rate of 16,000 samples per second. The latter information is stored in `sample$sample_rate`:'
+  id: totrans-14
   prefs: []
   type: TYPE_NORMAL
+  zh: 单个张量值以零为中心，范围在 -1 和 1 之间。共有 16,000 个这样的值，反映了录音持续了一秒钟，并且以每秒 16,000 个样本的速率（或由数据集创建者转换）进行记录。后者信息存储在
+    `sample$sample_rate` 中：
 - en: '[PRE4]'
+  id: totrans-15
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE4]'
 - en: '*[PRE5]'
+  id: totrans-16
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE5]'
 - en: All recordings have been sampled at the same rate. Their length almost always
     equals one second; the – very – few ones that are minimally longer we can safely
     truncate.
+  id: totrans-17
   prefs: []
   type: TYPE_NORMAL
+  zh: 所有录音都以相同的速率进行采样。它们的长度几乎总是等于一秒钟；极少数稍微长一点的，我们可以安全地截断。
 - en: 'Finally, the target is stored, in integer form, in `sample$label_index`, with
     the corresponding word available from `sample$label`:'
+  id: totrans-18
   prefs: []
   type: TYPE_NORMAL
+  zh: 最后，目标以整数形式存储在 `sample$label_index` 中，相应的单词可以从 `sample$label` 中获取：
 - en: '[PRE6]'
+  id: totrans-19
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE6]'
 - en: '*[PRE7]'
+  id: totrans-20
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE7]'
 - en: How does this audio signal “look” ([fig. 22.1](#fig-audio-bird-waveform))?
+  id: totrans-21
   prefs: []
   type: TYPE_NORMAL
+  zh: 这个音频信号“看起来”如何？（[图 22.1](#fig-audio-bird-waveform)）
 - en: '[PRE8]'
+  id: totrans-22
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE8]'
 - en: '*![A sound wave, displaying amplitude over time.](../Images/d6dc91d4b932e592d5c45a1edaf69f1f.png)'
+  id: totrans-23
   prefs: []
   type: TYPE_NORMAL
+  zh: '*![一个显示随时间变化的振幅的声波图](../Images/d6dc91d4b932e592d5c45a1edaf69f1f.png)'
 - en: 'Figure 22.1: The spoken word “bird”, in time-domain representation.'
+  id: totrans-24
   prefs: []
   type: TYPE_NORMAL
+  zh: 图22.1：语音“鸟”在时域表示。
 - en: What we see is a sequence of amplitudes, reflecting the sound wave produced
     by someone saying “bird”. Put differently, we have here a time series of “loudness
     values”. Even for experts, guessing *which* word resulted in those amplitudes
     is an impossible task. This is where domain knowledge is relevant. The expert
     may not be able to make much of the signal *in this representation*; but they
     may know a way to more meaningfully represent it.
+  id: totrans-25
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们看到的是一个幅度序列，反映了某人说出“鸟”这个单词时产生的声波。换句话说，我们这里有一个“响度值”的时间序列。即使是专家，猜测*哪个*单词导致了这些幅度也是一个不可能的任务。这就是领域知识相关的地方。专家可能无法从这种表示中获取太多信号；但他们可能知道一种更有效地表示它的方法。
 - en: 'At this point, you may be thinking: Right; but just because the task is impossible
     for human beings it need not be impossible for a machine! After all, a neural
     network and a person process information very differently. Maybe an RNN, trained
     on these waves, can learn to correctly map them to a set of words!'
+  id: totrans-26
   prefs: []
   type: TYPE_NORMAL
+  zh: 到目前为止，你可能正在想：好吧；但仅仅因为这项任务对人类来说是不可能的，并不意味着对机器也是不可能的！毕竟，神经网络和人类处理信息的方式非常不同。也许一个经过这些波训练的RNN可以学会正确地将它们映射到一组单词上！
 - en: That could indeed be – you may want to try – but it turns out there is a better
     way, one that both appeals to our, human, desire for understanding *and* uses
     deep learning in a most beneficient way.
+  id: totrans-27
   prefs: []
   type: TYPE_NORMAL
+  zh: 这确实可能——你可能想尝试——但结果证明，有一种更好的方法，这种方法既满足了我们对理解的需求，又以最有效的方式使用了深度学习。
 - en: This better way is owed to a mathematical fact that – for me, at least – never
     ceases to inspire awe and wonder.*****  ***## 22.2 Two equivalent representations
+  id: totrans-28
   prefs: []
   type: TYPE_NORMAL
+  zh: 这种更好的方法归功于一个数学事实——至少对我来说——它永远不会停止激发敬畏和惊奇。*****  ***## 22.2 两种等效表示
 - en: Imagine that instead of as a sequence of amplitudes over time, the above wave
     were represented in a way that had no information about time at all. Next, imagine
     we took that representation and tried to recover the original signal. For that
@@ -135,56 +196,79 @@
     around quite a bit with the Fourier Transform, so here I’ll keep the introduction
     brief. Instead, I’ll focus on the elegant symbiosis that will result, once we’ve
     arrived at the final pre-processing step. But we’re not quite there yet.
+  id: totrans-29
   prefs: []
   type: TYPE_NORMAL
+  zh: 想象一下，如果上述波不是作为随时间变化的幅度序列来表示，而是以完全没有时间信息的方式来表示。接下来，想象我们尝试从那种表示中恢复原始信号。为了做到这一点，新的表示必须以某种方式包含“同样多的”信息，就像我们开始的波一样。这种“同样多的”信息是通过*傅里叶变换*获得的，它由组成信号的各个*频率*的幅度和相位偏移组成。在第三部分，我们将对傅里叶变换进行大量的操作，所以在这里我会保持介绍简短。相反，我将专注于一旦我们到达最终的预处理步骤，将会产生的优雅的共生关系。但我们还没有到达那里。
 - en: 'To start, how does the Fourier-transformed version of the “bird” sound wave
     look? We obtain it by calling `torch_fft_fft()` (where `fft` stands for Fast Fourier
     Transform):'
+  id: totrans-30
   prefs: []
   type: TYPE_NORMAL
+  zh: 首先，傅里叶变换后的“鸟”声波看起来是什么样子？我们通过调用`torch_fft_fft()`（其中`fft`代表快速傅里叶变换）来获得它：
 - en: '[PRE9]'
+  id: totrans-31
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE9]'
 - en: '*[PRE10]'
+  id: totrans-32
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE10]'
 - en: 'The length of this tensor is the same; however, its values are not in chronological
     order. Instead, they represent the *Fourier coefficients*, corresponding to the
     frequencies contained in the signal. The higher their magnitude, the more they
     contribute to the signal ([fig. 22.2](#fig-audio-bird-dft)):'
+  id: totrans-33
   prefs: []
   type: TYPE_NORMAL
+  zh: 这个张量的长度是相同的；然而，它的值不是按时间顺序排列的。相反，它们代表的是*傅里叶系数*，对应于信号中包含的频率。它们的幅度越高，对信号的贡献就越大（[图22.2](#fig-audio-bird-dft)）：
 - en: '[PRE11]'
+  id: totrans-34
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE11]'
 - en: '*![A curve showing magnitude for Fourier bins from 0 to 8000\. Above 4000,
     nearly all are zero.](../Images/6ebb5280db84bb2633dc40f36f7bc4d8.png)'
+  id: totrans-35
   prefs: []
   type: TYPE_NORMAL
+  zh: '*![一个显示从0到8000的傅里叶分箱的幅度曲线。在4000以上，几乎都是零。](../Images/6ebb5280db84bb2633dc40f36f7bc4d8.png)'
 - en: 'Figure 22.2: The spoken word “bird”, in frequency-domain representation.'
+  id: totrans-36
   prefs: []
   type: TYPE_NORMAL
+  zh: 图22.2：语音“鸟”在频域表示。
 - en: From this, alternate, representation, we could go back to the original sound
     wave by taking the frequencies present in the signal, weighting them according
     to their coefficients, and adding them up. (That opposite direction is called
     the *Inverse Fourier Transform*, and available in `torch` as `torch_fft_ifft()`.)
+  id: totrans-37
   prefs: []
   type: TYPE_NORMAL
+  zh: 从这个表示方法出发，我们可以通过取信号中存在的频率，根据它们的系数进行加权，并将它们相加，回到原始的声波。（这种相反的方向被称为**逆傅里叶变换**，在`torch`中可用`torch_fft_ifft()`实现。）
 - en: 'This, in itself, is incredibly fascinating; but how does it help us with our
     task of classifying audio signals? Were we to work with the sound waves themselves,
     we’d feed them into an RNN. With frequencies, there is no recurrence relation;
     so RNNs are not an option. We could use a feed-forward neural network, then. But
     there is reason to expect this to work particularly well.**  **## 22.3 Combining
     representations: The spectrogram'
+  id: totrans-38
   prefs: []
   type: TYPE_NORMAL
+  zh: 这本身非常令人着迷；但它如何帮助我们完成音频信号的分类任务呢？如果我们直接处理声波本身，我们会将它们输入到RNN中。对于频率来说，没有递归关系；所以RNN不是一个选择。然后我们可以使用前馈神经网络。但有一个理由预期这会特别有效。**22.3
+    结合表示：声谱图**
 - en: In fact, what really would help us is a synthesis of both representations; some
     sort of “have your cake and eat it, too”. What if we could divide the signal into
     small chunks, and run the Fourier Transform on each of them? As you may have guessed
     from this leadup, this indeed is something we can do; and the representation it
     creates is called the *spectrogram*.
+  id: totrans-39
   prefs: []
   type: TYPE_NORMAL
+  zh: 事实上，真正能帮助我们的是这两种表示方法的综合；某种“既要鱼又要熊掌”的方法。如果我们能将信号分成小块，并对每一块进行傅里叶变换，会怎么样呢？正如你可能从前面的引导中猜到的，这确实是我们能做的事情；它所创建的表示方法被称为**声谱图**。
 - en: With a spectrogram, we still keep some time-domain information – some, since
     there is an unavoidable loss in granularity. On the other hand, for each of the
     time segments, we learn about their spectral composition. There’s an important
@@ -195,45 +279,65 @@
     to choose longer windows, thus losing information about how spectral composition
     varies over time. It seems, then, that all we can do is eat *half* a cake, and
     take pleasure in the sight of the other half.
+  id: totrans-40
   prefs: []
   type: TYPE_NORMAL
+  zh: 使用声谱图，我们仍然保留一些时域信息——一些，因为不可避免地会有粒度损失。另一方面，对于每个时间段，我们了解它们的频谱组成。不过，有一个重要的问题需要指出。我们在**时间**和**频率**上得到的分辨率是成反比的。如果我们把信号分成很多块（称为“窗口”），每个窗口的频率表示将不会非常细粒度。相反，如果我们想在频率域中获得更好的分辨率，我们必须选择更长的窗口，从而失去关于频谱组成随时间变化的信息。因此，我们似乎只能吃**一半**的蛋糕，并享受另一半的景象。
 - en: Well, all said so far is correct; but as you’ll see, this is far less of a problem
     than it may seem now.
+  id: totrans-41
   prefs: []
   type: TYPE_NORMAL
+  zh: 好吧，到目前为止所说的都是正确的；但正如你将看到的，这远没有现在看起来那么成问题。
 - en: 'Before we unveil the mystery, though, let’s create and inspect such a spectrogram
     for our example signal. In the following code snippet, the size of the – overlapping
     – windows is chosen so as to allow for reasonable granularity in both the time
     and the frequency domain. We’re left with sixty-three windows, and, for each window,
     obtain two hundred fifty-seven coefficients:'
+  id: totrans-42
   prefs: []
   type: TYPE_NORMAL
+  zh: 在揭示这个秘密之前，让我们为我们的示例信号创建并检查这样一个声谱图。在下面的代码片段中，重叠窗口的大小被选择，以便在时间和频率域中都有合理的粒度。我们剩下六十三个窗口，并且对于每个窗口，我们获得二百五十七个系数：
 - en: '[PRE12]'
+  id: totrans-43
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE12]'
 - en: '*[PRE13]'
+  id: totrans-44
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE13]'
 - en: 'We can display the spectrogram visually ([fig. 22.3](#fig-audio-spectrogram)):'
+  id: totrans-45
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以直观地显示声谱图（[图22.3](#fig-audio-spectrogram)）：
 - en: '[PRE14]'
+  id: totrans-46
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE14]'
 - en: '*![A three-dimensional plot where the x-axis represents time, the y-axis, frequency,
     and color, magnitude.](../Images/cfc023ec379d938c7cfcad942f73a47a.png)'
+  id: totrans-47
   prefs: []
   type: TYPE_NORMAL
+  zh: '*![一个三维图，其中x轴代表时间，y轴代表频率，颜色代表幅度。](../Images/cfc023ec379d938c7cfcad942f73a47a.png)'
 - en: 'Figure 22.3: The spoken word “bird”: Spectrogram.'
+  id: totrans-48
   prefs: []
   type: TYPE_NORMAL
+  zh: 图22.3：语音“bird”的声谱图。
 - en: We know that we’ve lost some resolution, in both time and frequency. By displaying
     the square root of the coefficients’ magnitudes, though – and thus, enhancing
     sensitivity – we were still able to obtain a reasonable result. (With the `Light
     grays` color scheme, brighter shades indicate higher-valued coefficients; darker
     ones, the opposite.)
+  id: totrans-49
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们知道我们在时间和频率上丢失了一些分辨率。通过显示系数幅度的平方根——从而增强灵敏度——我们仍然能够获得一个合理的结果。（使用 `浅灰色` 色彩方案，较亮的色调表示较高值的系数；较暗的色调则相反。）
 - en: 'Finally, let’s get back to the crucial question. If this representation is,
     by necessity, a compromise – why, then, would we want to employ it? This is where
     we take the deep learning perspective. The spectrogram is a two-dimensional representation:
@@ -242,129 +346,196 @@
     stands out. Soon, you’ll see that for this task, fancy architectures are not even
     needed; a straightforward convnet will do a very good job.**  **## 22.4 Training
     a model for audio classification'
+  id: totrans-50
   prefs: []
   type: TYPE_NORMAL
+  zh: 最后，让我们回到关键问题。如果这种表示形式不可避免地是一种妥协——那么，为什么我们还想采用它呢？这就是我们采取深度学习视角的地方。频谱图是一种二维表示：一个图像。对于图像，我们有丰富的技术和架构资源——在深度学习取得成功的所有领域，图像识别仍然突出。很快，你就会看到，对于这个任务，复杂的架构甚至都不是必需的；一个简单的卷积神经网络就能做得很好。**  **##
+    22.4 训练音频分类模型
 - en: The plan is as follows. We’ll end-to-end train a baseline model, which already
     will be performing very well. Nevertheless, we’ll try out two ideas, to see if
     we can improve on that baseline. Should it turn out not to be the case, we’ll
     still have learned about some important techniques.
+  id: totrans-51
   prefs: []
   type: TYPE_NORMAL
+  zh: 计划如下。我们将从头到尾训练一个基线模型，这个模型本身已经表现出色。尽管如此，我们仍将尝试两种想法，看看是否可以改进这个基线。如果结果证明并非如此，我们仍然会学到一些重要的技术。
 - en: '22.4.1 Baseline setup: Training a convnet on spectrograms'
+  id: totrans-52
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 22.4.1 基线设置：在频谱图上训练卷积神经网络
 - en: We start by creating a `torch::dataset()` that, starting from the original `speechcommand_dataset()`,
     computes a spectrogram for every sample.
+  id: totrans-53
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们首先创建一个 `torch::dataset()`，它从原始的 `speechcommand_dataset()` 开始，为每个样本计算频谱图。
 - en: '[PRE15]'
+  id: totrans-54
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE15]'
 - en: '*As always, we immediately check if all is well:'
+  id: totrans-55
   prefs: []
   type: TYPE_NORMAL
+  zh: '*像往常一样，我们立即检查是否一切正常：'
 - en: '[PRE16]'
+  id: totrans-56
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE16]'
 - en: '*[PRE17]'
+  id: totrans-57
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE17]'
 - en: Next, we split up the data, and instantiate the `dataset()` and `dataloader()`
     objects.
+  id: totrans-58
   prefs: []
   type: TYPE_NORMAL
+  zh: 接下来，我们将数据拆分，并实例化 `dataset()` 和 `dataloader()` 对象。
 - en: '[PRE18]'
+  id: totrans-59
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE18]'
 - en: '*[PRE19]'
+  id: totrans-60
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE19]'
 - en: Like I said, the model is a straightforward convnet, with dropout and batch
     normalization.
+  id: totrans-61
   prefs: []
   type: TYPE_NORMAL
+  zh: 正如我说的，这个模型是一个简单的卷积神经网络，带有 dropout 和批量归一化。
 - en: '[PRE20]'
+  id: totrans-62
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE20]'
 - en: '*What is a good learning rate to train this model ([fig. 22.4](#fig-audio-lr-finder-baseline))?'
+  id: totrans-63
   prefs: []
   type: TYPE_NORMAL
+  zh: '*训练这个模型一个好的学习率是多少 ([图 22.4](#fig-audio-lr-finder-baseline))？'
 - en: '[PRE21]'
+  id: totrans-64
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE21]'
 - en: '*![A noisy  curve that, from left to right, first declines very slowly (until
     shortly before x=0.01), then rises.](../Images/e1b41e447aaed8738aac68120a9ce6cf.png)'
+  id: totrans-65
   prefs: []
   type: TYPE_NORMAL
+  zh: '*![一个从左到右先缓慢下降（直到x=0.01之前），然后上升的噪声曲线](../Images/e1b41e447aaed8738aac68120a9ce6cf.png)'
 - en: 'Figure 22.4: Learning rate finder, run on the baseline model.'
+  id: totrans-66
   prefs: []
   type: TYPE_NORMAL
+  zh: 图 22.4：基线模型上的学习率查找器。
 - en: Based on the plot, I decided to use 0.01 as a maximal learning rate.
+  id: totrans-67
   prefs: []
   type: TYPE_NORMAL
+  zh: 根据图表，我决定使用 0.01 作为最大学习率。
 - en: '[PRE22]'
+  id: totrans-68
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE22]'
 - en: '*![Top row: Curves displaying how classification accuracy develops over the
     training period, for both training and validation sets. Both first rise steeply,
     then slow down and flatten. Bottom row: Corresponding curves representing the
     loss. Both first descend quickly, then continue falling very slowly, then flatten.](../Images/86aff85208a0de81e31d027e0de6a29f.png)'
+  id: totrans-69
   prefs: []
   type: TYPE_NORMAL
+  zh: '*![顶部行：显示训练期间训练集和验证集的分类精度如何发展的曲线。两者最初急剧上升，然后放缓并趋于平稳。底部行：对应的损失曲线。两者最初快速下降，然后继续缓慢下降，然后趋于平稳。](../Images/86aff85208a0de81e31d027e0de6a29f.png)'
 - en: 'Figure 22.5: Fitting the baseline model.'
+  id: totrans-70
   prefs: []
   type: TYPE_NORMAL
+  zh: 图 22.5：基线模型的拟合。
 - en: 'Model training stopped after thirty-two epochs ([fig. 22.5](#fig-audio-fit-baseline)).
     Here is an excerpt from the logs:'
+  id: totrans-71
   prefs: []
   type: TYPE_NORMAL
+  zh: 模型训练在三十二次迭代后停止 ([图 22.5](#fig-audio-fit-baseline))。以下是日志的摘录：
 - en: '[PRE23]'
+  id: totrans-72
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE23]'
 - en: 'With thirty classes, an accuracy of about eighty-nine percent seems decent.
     We double-check on the test set:'
+  id: totrans-73
   prefs: []
   type: TYPE_NORMAL
+  zh: 在三十个类别中，大约八十九 percent 的准确率似乎还不错。我们在测试集上再次确认：
 - en: '[PRE24]'
+  id: totrans-74
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE24]'
 - en: '*[PRE25]'
+  id: totrans-75
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE25]'
 - en: An interesting question is which words get confused most often. (Of course,
     even more interesting is how error probabilities are related to features of the
     spectrograms – but this we have to leave to the *true* domain experts.)
+  id: totrans-76
   prefs: []
   type: TYPE_NORMAL
+  zh: 一个有趣的问题是哪些单词最容易被混淆。（当然，更有趣的是错误概率与频谱图特征的关系——但这一点我们只能留给真正的领域专家。）
 - en: A nice way of displaying the confusion matrix is to create an alluvial plot
     ([fig. 22.6](#fig-audio-alluvial-baseline)). We see the predictions, on the left,
     “flow into” the target slots. (Target-prediction pairs less frequent than a thousandth
     of test set cardinality are hidden.)
+  id: totrans-77
   prefs: []
   type: TYPE_NORMAL
+  zh: 显示混淆矩阵的一个好方法是创建累积图（[图 22.6](#fig-audio-alluvial-baseline)）。我们看到预测结果在左侧，“流入”目标槽位。（测试集基数小于千分之一的目标-预测对被隐藏。）
 - en: '[PRE26]'
+  id: totrans-78
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE26]'
 - en: '*![On the left and the right sides, the thirty words that make up this dataset.
     In the middle, arrows showing which word a given one was mapped to in classification.](../Images/c5dc6880fc6c192aee6c6cc02ff0478a.png)'
+  id: totrans-79
   prefs: []
   type: TYPE_NORMAL
+  zh: '*![在左侧和右侧，构成此数据集的三十个单词。中间，箭头显示给定单词在分类中映射到的单词](../Images/c5dc6880fc6c192aee6c6cc02ff0478a.png)'
 - en: 'Figure 22.6: Alluvial plot, illustrating which categories were confused most
     often.'
+  id: totrans-80
   prefs: []
   type: TYPE_NORMAL
+  zh: 图 22.6：累积图，说明哪些类别最常被混淆。
 - en: 'That’s it for the baseline approach. Let’s see if we can do still better.********  ***###
     22.4.2 Variation one: Use a Mel-scale spectrogram instead'
+  id: totrans-81
   prefs: []
   type: TYPE_NORMAL
+  zh: 基线方法就到这里。让我们看看我们是否还能做得更好。********  ***### 22.4.2 变化一：使用梅尔尺度频谱图
 - en: In classical speech recognition, people did not necessarily limit pre-processing
     to the Fourier Transform and spectrograms. Various other steps used to – or could
     – follow, some of which seem obsolete once neural networks are being used. There
     is at least one technique, though, where it’s hard to devine a priori whether
     it will help or not.
+  id: totrans-82
   prefs: []
   type: TYPE_NORMAL
+  zh: 在经典语音识别中，人们并不一定将预处理限制在傅里叶变换和频谱图上。曾经使用或可能使用的其他步骤，其中一些在神经网络被使用后似乎已经过时。尽管如此，至少有一种技术，很难事先判断它是否有帮助。
 - en: Due to the way our hearing system is built, we human beings don’t perceive differences
     equally accurately across the frequency range. For example, while the distances
     between 440 Hz and 480 Hz on the one hand, and 8000 Hz and 8040 Hz on the other,
@@ -372,8 +543,11 @@
     is no different with other modes of perception – to tell the difference between
     one kilogram and two kilograms is easy, while doing the same for fourteen versus
     fifteen kilograms is less so.
+  id: totrans-83
   prefs: []
   type: TYPE_NORMAL
+  zh: 由于我们的听觉系统构建方式，人类在频率范围内感知差异的准确性并不相同。例如，一方面，440 Hz 和 480 Hz 之间的距离，另一方面，8000 Hz
+    和 8040 Hz 之间的距离在数学上是相同的，但后者将更难以感知。（这一点与其他感知模式没有不同——区分一公斤和两公斤很容易，而区分十四公斤和十五公斤则相对困难。
 - en: To accommodate this physiological precondition, one sometimes converts the Fourier
     coefficients to the so-called *Mel scale*. Various formulae exist that do this;
     in one or the other way, they always include taking the logarithm. But in practice,
@@ -382,153 +556,229 @@
     range, the filters are narrow, and subsume only very few Fourier coefficients.
     Then, they successively become wider, until, in the very-high frequency range,
     a wide range of Fourier coefficients get to contribute to a single Mel value.
+  id: totrans-84
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了适应这种生理先决条件，有时会将傅里叶系数转换为所谓的 *梅尔尺度*。存在各种公式来完成这项工作；以这种方式或那种方式，它们总是包括取对数。但在实践中，通常的做法是创建重叠的滤波器，将傅里叶系数的集合聚合到一个新的表示形式，即梅尔系数。在低频范围内，滤波器较窄，只包含非常少的傅里叶系数。然后，它们依次变宽，直到在非常高频范围内，广泛的傅里叶系数会贡献到一个单一的梅尔值。
 - en: 'We can make this more concrete using a `torch` helper function, `functional_create_fb_matrix()`
     . What this function does is create a conversion matrix from Fourier- to Mel space:'
+  id: totrans-85
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以使用 `torch` 辅助函数 `functional_create_fb_matrix()` 来使这一点更加具体。这个函数的作用是从傅里叶空间到梅尔空间的转换矩阵：
 - en: c
+  id: totrans-86
   prefs: []
   type: TYPE_NORMAL
+  zh: c
 - en: '[PRE27]'
+  id: totrans-87
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE27]'
 - en: '*[PRE28]'
+  id: totrans-88
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE28]'
 - en: 'In our application, we’ll use Mel spectrograms with one hundred twenty-eight
     coefficients; given that we’re training a convnet, we wouldn’t want to shrink
     spatial resolution too much. But visualization is more helpful when done with
     fewer filters – which is why, above, I’ve told `torch` to generate sixteen filters
     only. Here they are ([fig. 22.7](#fig-audio-mel-filterbank)):'
+  id: totrans-89
   prefs: []
   type: TYPE_NORMAL
+  zh: 在我们的应用中，我们将使用具有一百二十八系数的梅尔频谱图；鉴于我们正在训练卷积神经网络，我们不想过多地降低空间分辨率。但使用较少的滤波器进行可视化更有帮助——这就是为什么上面我告诉
+    `torch` 只生成十六个滤波器。这里它们是（[图 22.7](#fig-audio-mel-filterbank)）：
 - en: '[PRE29]'
+  id: totrans-90
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE29]'
 - en: '*![A two-dimensional plot of Fourier coefficients and the Mel coefficients
     they contribute to. The higher the Mel coefficient, the more Fourier coefficients
     contribute to it.](../Images/9a2d02977e26ba4fdec23e0091cbd556.png)'
+  id: totrans-91
   prefs: []
   type: TYPE_NORMAL
+  zh: '*![二维图展示了傅里叶系数及其贡献的梅尔系数。梅尔系数越高，傅里叶系数对其的贡献就越大。](../Images/9a2d02977e26ba4fdec23e0091cbd556.png)'
 - en: 'Figure 22.7: Mel filter bank with sixteen filters, as applied to 257 Fourier
     coefficients.'
+  id: totrans-92
   prefs: []
   type: TYPE_NORMAL
+  zh: 图 22.7：梅尔滤波器组，包含十六个滤波器，应用于 257 个傅里叶系数。
 - en: From this plot, it should make sense how Mel-scale transformation is designed
     to compensate for lower perceptual resolution in higher-frequency ranges.
+  id: totrans-93
   prefs: []
   type: TYPE_NORMAL
+  zh: 从这张图中，应该可以理解梅尔尺度变换是如何设计用来补偿高频范围内较低的感知分辨率的。
 - en: Of course, in order to work with Mel spectrograms, you won’t need to generate
     filter banks yourself. For training, we’ll just replace `transform_spectrogram()`
     by `transform_mel_spectrogram()`. But sometimes, playing around with helper functions
     can significantly aid understanding. For example, using another low-levellish
     utility – `functional_mel_scale()` – we can take a set of Fourier coefficients,
     convert them to Mel scale, and compare.
+  id: totrans-94
   prefs: []
   type: TYPE_NORMAL
+  zh: 当然，为了使用梅尔频谱图，你不需要自己生成滤波器组。对于训练，我们只需将 `transform_spectrogram()` 替换为 `transform_mel_spectrogram()`。但有时，玩弄辅助函数可以显著帮助理解。例如，使用另一个低级实用工具——`functional_mel_scale()`——我们可以将一组傅里叶系数转换为梅尔尺度，并进行比较。
 - en: 'Here, I’m taking the spectrogram for sample 2000 - our “bird” – and pick a
     time window of interest. I then use `functional_mel_scale()` to obtain the respective
     Mel-scale representation, and plot ([fig. 22.8](#fig-audio-mel-spectrogram)) the
     magnitudes of both sets of coefficients against each other (showing just the first
     half of the Fourier coefficients):'
+  id: totrans-95
   prefs: []
   type: TYPE_NORMAL
+  zh: 这里，我选取了样本 2000 的频谱图——我们的“鸟”——并选择了一个感兴趣的时间窗口。然后我使用 `functional_mel_scale()` 获取相应的梅尔尺度表示，并将这两组系数的幅度相互对比（仅显示傅里叶系数的前一半）([图
+    22.8](#fig-audio-mel-spectrogram))：
 - en: '[PRE30]'
+  id: totrans-96
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE30]'
 - en: '*![Compared to Fourier coefficient magnitudes, Mel coefficient magnitudes appear
     shifted to the right.](../Images/6365ace6b2c9d0dd06d325a981fc91d9.png)'
+  id: totrans-97
   prefs: []
   type: TYPE_NORMAL
+  zh: '*![与傅里叶系数的幅度相比，梅尔系数的幅度看起来向右偏移。](../Images/6365ace6b2c9d0dd06d325a981fc91d9.png)'
 - en: 'Figure 22.8: Fourier and Mel coefficients, compared on one window of the “bird”
     spectrogram.'
+  id: totrans-98
   prefs: []
   type: TYPE_NORMAL
+  zh: 图 22.8：在“鸟”频谱图的一个窗口上比较傅里叶和梅尔系数。
 - en: 'Finally, before getting back to the task, let’s quickly verify that calling
     `functional_mel_scale()` is equivalent to constructing a filter bank manually
     and multiplying the resulting matrix with the Fourier coefficients. To do so,
     we now create a 257 x 128 matrix, and apply it to the spectrogram window we extracted
     above. The results should be equal (apart from small numerical errors):'
+  id: totrans-99
   prefs: []
   type: TYPE_NORMAL
+  zh: 最后，在回到任务之前，让我们快速验证调用 `functional_mel_scale()` 是否等同于手动构建滤波器组并将结果矩阵与傅里叶系数相乘。为此，我们现在创建一个
+    257 x 128 的矩阵，并将其应用于我们上面提取的频谱图窗口。结果应该相等（除了小的数值误差）：
 - en: '[PRE31]'
+  id: totrans-100
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE31]'
 - en: '*[PRE32]'
+  id: totrans-101
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE32]'
 - en: 'Now that we have an idea of how Mel-scale transformation works, and possibly
     a gut feeling as to whether this will help training or not: Let’s actually find
     out. Necessary modifications are minimal; only the argument list to `spectrogram_dataset()`
     is concerned:'
+  id: totrans-102
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在我们已经了解了梅尔尺度变换的工作原理，并且可能对它是否有助于训练有一个直观的感觉：让我们实际找出答案。必要的修改很少；只涉及 `spectrogram_dataset()`
+    的参数列表：
 - en: '[PRE33]'
+  id: totrans-103
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE33]'
 - en: '*Model as well as training code stay the same. Learning rate finder output
     also looked rather similar ([fig. 22.9](#fig-audio-lr-finder-mel)):'
+  id: totrans-104
   prefs: []
   type: TYPE_NORMAL
+  zh: '*模型以及训练代码保持不变。学习率查找器的输出也看起来相当相似 ([图 22.9](#fig-audio-lr-finder-mel))：'
 - en: '![A noisy  curve that, from left to right, first declines very slowly (until
     shortly before x=0.01), then rises.](../Images/62fc2dd29c833d35dec08ae98abee6aa.png)'
+  id: totrans-105
   prefs: []
   type: TYPE_IMG
+  zh: '![一条有噪声的曲线，从左到右，首先下降非常缓慢（直到 x=0.01 短暂之前），然后上升。](../Images/62fc2dd29c833d35dec08ae98abee6aa.png)'
 - en: 'Figure 22.9: Learning rate finder, run on the Mel-transform-enriched model.'
+  id: totrans-106
   prefs: []
   type: TYPE_NORMAL
+  zh: 图 22.9：在梅尔变换增强的模型上运行的学习率查找器。
 - en: Using the same learning rate as previously, I saw training end after nineteen
     epochs ([fig. 22.10](#fig-audio-fit-mel)).
+  id: totrans-107
   prefs: []
   type: TYPE_NORMAL
+  zh: 使用与之前相同的学习率，我看到了训练在十九个周期后结束 ([图 22.10](#fig-audio-fit-mel))。
 - en: '![Top row: Curves displaying how classification accuracy develops over the
     training period, for both training and validation sets. Both first rise steeply,
     then slow down and flatten. Bottom row: Corresponding curves representing the
     loss. Both first descend quickly, then continue falling very slowly, then flatten.](../Images/e2d0b560e356a476b1acb276a3fd32af.png)'
+  id: totrans-108
   prefs: []
   type: TYPE_IMG
+  zh: '![顶部行：显示训练期间分类准确率发展的曲线，对于训练集和验证集。两者最初急剧上升，然后放缓并变平。底部行：对应的损失曲线。两者最初快速下降，然后继续缓慢下降，然后变平。](../Images/e2d0b560e356a476b1acb276a3fd32af.png)'
 - en: 'Figure 22.10: Fitting the Mel-transform-enriched model.'
+  id: totrans-109
   prefs: []
   type: TYPE_NORMAL
+  zh: 图22.10：拟合Mel变换增强模型。
 - en: Final validation accuracy was at about 0.86, minimally lower than for the baseline
     model.
+  id: totrans-110
   prefs: []
   type: TYPE_NORMAL
+  zh: 最终验证准确率约为0.86，略低于基线模型。
 - en: '[PRE34]'
+  id: totrans-111
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE34]'
 - en: So in this task, no improvement was seen through Mel transformation. But what
     matters is for us to be aware of this option, such that in other projects, we
     may give this technique a try.
+  id: totrans-112
   prefs: []
   type: TYPE_NORMAL
+  zh: 因此，在这个任务中，没有看到通过Mel变换带来的改进。但重要的是，我们要意识到这个选项，这样在其他项目中，我们可能会尝试这个技术。
 - en: For completeness, here’s double-checking against the test set.
+  id: totrans-113
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了完整性，这里再次对测试集进行核对。
 - en: '[PRE35]'
+  id: totrans-114
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE35]'
 - en: '*[PRE36]'
+  id: totrans-115
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE36]'
 - en: No surprise here, either. Interestingly though, this time the confusion matrix
     looks rather different, thus hinting at a change in inner workings ([fig. 22.11](#fig-audio-alluvial-mel)).
     (To be sure, though, we’d have to run each version several times.)
+  id: totrans-116
   prefs: []
   type: TYPE_NORMAL
+  zh: 没有惊喜。有趣的是，这次混淆矩阵看起来相当不同，这暗示了内部工作的变化([图22.11](#fig-audio-alluvial-mel))。（当然，为了确保这一点，我们可能需要运行每个版本几次。）
 - en: '![On the left and the right sides, the thirty words that make up this dataset.
     In the middle, arrows showing which word a given one was mapped to in classification.](../Images/7f8e659996a76f64cf434b9d449b81b2.png)'
+  id: totrans-117
   prefs: []
   type: TYPE_IMG
+  zh: '![在左侧和右侧，构成此数据集的三十个单词。中间，箭头显示给定单词在分类中映射到的单词。](../Images/7f8e659996a76f64cf434b9d449b81b2.png)'
 - en: 'Figure 22.11: Alluvial plot for the Mel-transform-enriched setup'
+  id: totrans-118
   prefs: []
   type: TYPE_NORMAL
+  zh: 图22.11：Mel变换增强设置的冲积图
 - en: 'Leaving further exploration to the experts, we proceed to the final alternative.******  ***###
     22.4.3 Variation two: Complex-valued spectograms'
+  id: totrans-119
   prefs: []
   type: TYPE_NORMAL
+  zh: 将进一步的探索留给专家，我们继续到最后一个替代方案。******  ***### 22.4.3 变体二：复值频谱图
 - en: 'When introducing spectrograms, I focused on their two-dimensional structure:
     The Fourier Transform is performed independently for a set of (overlapping) windows,
     leaving us with a grid where time slices and Fourier coefficients are arranged
@@ -538,8 +788,10 @@
     in two-dimensional space – and then, the spectrogram, in turn, would have to be
     three-dimensional. In practice, for display (and other) purposes, one often works
     with the magnitudes of the coefficients instead, or the squares of those magnitudes.'
+  id: totrans-120
   prefs: []
   type: TYPE_NORMAL
+  zh: 在引入频谱图时，我专注于它们的二维结构：对一组（重叠的）窗口独立执行傅里叶变换，留下一个网格，其中时间切片和傅里叶系数按行和列排列。我们发现，这个网格可以被看作是一种图像。我没有详细说明的是那个网格中实际包含的值。傅里叶系数是复值的，因此，如果单独考虑，就需要在二维空间中绘制——然后，频谱图反过来就需要是三维的。在实践中，为了显示（和其他）目的，人们经常使用系数的幅度，或者这些幅度的平方。
 - en: Maybe you’ve noticed that `transform_spectrogram()` takes an argument, `power`,
     which I haven’t commented on yet. This argument lets you specify whether you’d
     like squared magnitudes `(power = 2`, the default), absolute values (`power =
@@ -550,91 +802,141 @@
     in the “whole” complex number. After all, when reducing to magnitudes we lose
     the phase shifts for the individual coefficients, which could well contain usable
     information. In any case, it’s worth a try!
+  id: totrans-121
   prefs: []
   type: TYPE_NORMAL
+  zh: 也许你已经注意到`transform_spectrogram()`函数接受一个参数`power`，我还没有对其进行注释。这个参数允许你指定你是否希望使用平方幅度`(power
+    = 2`，默认值)，绝对值(`power = 1`)，任何其他正数值（例如`0.5`，我们在显示具体示例时使用的值）——或者系数的实部和虚部(`power
+    = NULL`)。到目前为止，我们一直使用默认值。但我们完全可能想知道神经网络是否能从包含在“整个”复数中的额外信息中受益。毕竟，当我们减少到幅度时，我们失去了单个系数的相位变化，这些变化可能包含可用的信息。无论如何，值得一试！
 - en: On the technical side, necessary modifications (again) are minimal. The call
     to `spectrogram_dataset()` now makes use of the `power` argument. Specifying `power
     = NULL`, we explicitly request both real and imaginary parts of the Fourier coefficients.
     The idea is to pass them to the model’s initial `nn_conv2d()` as two separate
     *channels*.
+  id: totrans-122
   prefs: []
   type: TYPE_NORMAL
+  zh: 在技术方面，必要的修改（再次）是最小的。调用`spectrogram_dataset()`现在使用了`power`参数。指定`power = NULL`，我们明确请求傅里叶系数的实部和虚部。想法是将它们作为两个单独的*通道*传递给模型的初始`nn_conv2d()`。
 - en: '[PRE37]'
+  id: totrans-123
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE37]'
 - en: '*[PRE38]'
+  id: totrans-124
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE38]'
 - en: Correspondingly, the first convolutional module now is set up to work on two-channel
     inputs.
+  id: totrans-125
   prefs: []
   type: TYPE_NORMAL
+  zh: 相应地，第一个卷积模块现在被设置为处理双通道输入。
 - en: '[PRE39]'
+  id: totrans-126
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE39]'
 - en: '*Here is what I saw when running the learning rate finder ([fig. 22.12](#fig-audio-lr-finder-complex)):'
+  id: totrans-127
   prefs: []
   type: TYPE_NORMAL
+  zh: '*这是我在运行学习率查找器时看到的情况（[图22.12](#fig-audio-lr-finder-complex)）：'
 - en: '![A noisy  curve that, from left to right, first declines very slowly (until
     shortly before x=0.01), then rises.](../Images/29b79c7dffd8b854eb98c073e1768ec6.png)'
+  id: totrans-128
   prefs: []
   type: TYPE_IMG
+  zh: '![一个从左到右逐渐下降然后上升的噪声曲线。](../Images/29b79c7dffd8b854eb98c073e1768ec6.png)'
 - en: 'Figure 22.12: Learning rate finder, run on the complex-spectrogram model.'
+  id: totrans-129
   prefs: []
   type: TYPE_NORMAL
+  zh: 图22.12：在复频谱模型上运行的学习率查找器。
 - en: This time, training went on for forty epochs.
+  id: totrans-130
   prefs: []
   type: TYPE_NORMAL
+  zh: 这次，训练进行了四十个epoch。
 - en: '![Top row: Curves displaying how classification accuracy develops over the
     training period, for both training and validation sets. Both first rise steeply,
     then slow down and flatten. Bottom row: Corresponding curves representing the
     loss. Both first descend quickly, then continue falling very slowly, then flatten.](../Images/250db51d1e879cd373e7db8834e04e3d.png)'
+  id: totrans-131
   prefs: []
   type: TYPE_IMG
+  zh: '![顶部行：显示训练期间训练集和验证集分类准确率发展的曲线。两者最初急剧上升，然后放缓并趋于平稳。底部行：对应表示损失的曲线。两者最初快速下降，然后继续缓慢下降，然后趋于平稳。](../Images/250db51d1e879cd373e7db8834e04e3d.png)'
 - en: 'Figure 22.13: Fitting the complex-spectrogram model.'
+  id: totrans-132
   prefs: []
   type: TYPE_NORMAL
+  zh: 图22.13：拟合复频谱模型。
 - en: 'Visually, the loss and accuracy curves for the validation set look smoother
     than in both other cases ([fig. 22.13](#fig-audio-fit-complex)). Checking accuracies,
     we see:'
+  id: totrans-133
   prefs: []
   type: TYPE_NORMAL
+  zh: 从视觉上看，验证集的损失和准确率曲线比其他两种情况都要平滑（[图22.13](#fig-audio-fit-complex)）。检查准确率，我们发现：
 - en: '[PRE40]'
+  id: totrans-134
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE40]'
 - en: With an accuracy of ~0.94, we now have a clear improvement.
+  id: totrans-135
   prefs: []
   type: TYPE_NORMAL
+  zh: 准确率达到~0.94，我们现在有了明显的改进。
 - en: 'We can confirm this on the test set:'
+  id: totrans-136
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以在测试集上确认这一点：
 - en: '[PRE41]'
+  id: totrans-137
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE41]'
 - en: '*[PRE42]'
+  id: totrans-138
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE42]'
 - en: Finally, the confusion matrix now looks like a cleaned-up version of the baseline
     run ([fig. 22.14](#fig-audio-alluvial-complex)).
+  id: totrans-139
   prefs: []
   type: TYPE_NORMAL
+  zh: 最后，混淆矩阵现在看起来像是基线运行的清理版本（[图22.14](#fig-audio-alluvial-complex)）。
 - en: '![On the left and the right sides, the thirty words that make up this dataset.
     In the middle, arrows showing which word a given one was mapped to in classification.
     Clearly different from the ones before in that there are much fewer mis-classifications.](../Images/9a682b8531fe9fb59d39fad8bb1393e8.png)'
+  id: totrans-140
   prefs: []
   type: TYPE_IMG
+  zh: '![在左侧和右侧，组成这个数据集的三十个单词。中间，箭头显示给定单词在分类中被映射到的单词。显然与之前的不同，因为错误分类的单词要少得多。](../Images/9a682b8531fe9fb59d39fad8bb1393e8.png)'
 - en: 'Figure 22.14: Alluvial plot for the complex-spectrogram setup.'
+  id: totrans-141
   prefs: []
   type: TYPE_NORMAL
+  zh: 图22.14：复频谱设置的侵蚀图。
 - en: We can safely say that taking into account phase information has significantly
     improved performance.
+  id: totrans-142
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以安全地说，考虑到相位信息显著提高了性能。
 - en: With this, we’re ending our tour of deep learning applications. But as regards
     the magnificent Fourier Transform, we’ll be going into a lot more detail soon!
+  id: totrans-143
   prefs: []
   type: TYPE_NORMAL
+  zh: 通过这种方式，我们结束了深度学习应用的巡礼。但关于神奇的傅里叶变换，我们很快会深入探讨！
 - en: 'Warden, Pete. 2018\. “Speech Commands: A Dataset for Limited-Vocabulary Speech
     Recognition.” *CoRR* abs/1804.03209\. [http://arxiv.org/abs/1804.03209](http://arxiv.org/abs/1804.03209).****************'
+  id: totrans-144
   prefs: []
   type: TYPE_NORMAL
+  zh: Warden, Pete. 2018. “语音命令：一个用于有限词汇语音识别的数据集。” *CoRR* abs/1804.03209. [http://arxiv.org/abs/1804.03209](http://arxiv.org/abs/1804.03209).****************

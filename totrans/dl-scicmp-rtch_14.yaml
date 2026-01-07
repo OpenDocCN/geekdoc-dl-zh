@@ -1,83 +1,125 @@
 - en: 11  Modularizing the neural network
+  id: totrans-0
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
+  zh: 11  神经网络模块化
 - en: 原文：[https://skeydan.github.io/Deep-Learning-and-Scientific-Computing-with-R-torch/network_2.html](https://skeydan.github.io/Deep-Learning-and-Scientific-Computing-with-R-torch/network_2.html)
+  id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 原文：[https://skeydan.github.io/Deep-Learning-and-Scientific-Computing-with-R-torch/network_2.html](https://skeydan.github.io/Deep-Learning-and-Scientific-Computing-with-R-torch/network_2.html)
 - en: 'Let’s recall the network we built a few chapters ago. Its purpose was regression,
     but its method was not *linear*. Instead, an activation function (ReLU, for “rectified
     linear unit”) introduced a nonlinearity, located between the single hidden layer
     and the output layer. The “layers”, in this original implementation, were just
     tensors: weights and biases. You won’t be surprised to hear that these will be
     replaced by *modules*.'
+  id: totrans-2
   prefs: []
   type: TYPE_NORMAL
+  zh: 让我们回顾一下我们在前几章中构建的网络。它的目的是回归，但其方法不是线性的。相反，一个激活函数（ReLU，代表“修正线性单元”）引入了非线性，位于单个隐藏层和输出层之间。在这个原始实现中，“层”只是张量：权重和偏差。你不会对它们将被替换为*模块*感到惊讶。
 - en: 'How will the training process change? Conceptually, we can distinguish four
     phases: the forward pass, loss computation, backpropagation of gradients, and
     weight updating. Let’s think about where our new tools will fit in:'
+  id: totrans-3
   prefs: []
   type: TYPE_NORMAL
+  zh: 训练过程将如何变化？从概念上讲，我们可以区分四个阶段：前向传播、损失计算、梯度反向传播和权重更新。让我们思考我们的新工具将如何融入其中：
 - en: The forward pass, instead of calling functions on tensors, will call the model.
+  id: totrans-4
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 前向传播，不是在张量上调用函数，而是调用模型。
 - en: In computing the loss, we now make use of `torch`’s `nnf_mse_loss()`.
+  id: totrans-5
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 在计算损失时，我们现在使用 `torch` 的 `nnf_mse_loss()`。
 - en: Backpropagation of gradients is, in fact, the only operation that remains unchanged.
+  id: totrans-6
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 梯度反向传播实际上是不变的唯一操作。
 - en: Weight updating is taken care of by the optimizer.
+  id: totrans-7
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 权重更新由优化器负责处理。
 - en: Once we’ve made those changes, the code will be more modular, and a lot more
     readable.
+  id: totrans-8
   prefs: []
   type: TYPE_NORMAL
+  zh: 一旦我们做出这些更改，代码将更加模块化，并且可读性大大提高。
 - en: 11.1 Data
+  id: totrans-9
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 11.1 数据
 - en: As a prerequisite, we generate the data, same as last time.
+  id: totrans-10
   prefs: []
   type: TYPE_NORMAL
+  zh: 作为先决条件，我们生成数据，与上次相同。
 - en: '[PRE0]'
+  id: totrans-11
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE0]'
 - en: '*## 11.2 Network'
+  id: totrans-12
   prefs: []
   type: TYPE_NORMAL
+  zh: '*## 11.2 网络'
 - en: 'With two linear layers connected via ReLU activation, the easiest choice is
     a sequential module, very similar to the one we saw in the introduction to modules:'
+  id: totrans-13
   prefs: []
   type: TYPE_NORMAL
+  zh: 通过两个通过 ReLU 激活函数连接的线性层，最简单的选择是一个顺序模块，这与我们在模块介绍中看到的是非常相似的：
 - en: '[PRE1]'
+  id: totrans-14
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE1]'
 - en: '*## 11.3 Training'
+  id: totrans-15
   prefs: []
   type: TYPE_NORMAL
+  zh: '*## 11.3 训练'
 - en: Here is the updated training process. We use the Adam optimizer, a popular choice.
+  id: totrans-16
   prefs: []
   type: TYPE_NORMAL
+  zh: 这里是更新的训练过程。我们使用 Adam 优化器，这是一个流行的选择。
 - en: '[PRE2]'
+  id: totrans-17
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE2]'
 - en: '*[PRE3]'
+  id: totrans-18
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE3]'
 - en: In addition to shortening and streamlining the code, our changes have made a
     big difference performance-wise.*  *## 11.4 What’s to come
+  id: totrans-19
   prefs: []
   type: TYPE_NORMAL
+  zh: 除了缩短和简化代码外，我们的更改在性能上也有很大的提升。*  *## 11.4 未来展望
 - en: 'You now know a lot about how `torch` works, and how to use it to minimize a
     cost function in various settings: for example, to train a neural network. But
     for real-world applications, there is a lot more `torch` has to offer. The next
     – and most voluminous – part of the book focuses on deep learning.***'
+  id: totrans-20
   prefs: []
   type: TYPE_NORMAL
+  zh: 你现在对 `torch` 的工作原理以及如何在不同设置中使用它来最小化成本函数有了很多了解：例如，用于训练神经网络。但针对实际应用，`torch` 还有很多其他功能。本书的下一部分，也是内容最丰富的一部分，将专注于深度学习。***

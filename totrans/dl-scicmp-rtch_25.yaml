@@ -1,105 +1,149 @@
 - en: 20  Tabular data
+  id: totrans-0
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
+  zh: 20  表格数据
 - en: 原文：[https://skeydan.github.io/Deep-Learning-and-Scientific-Computing-with-R-torch/tabular_data.html](https://skeydan.github.io/Deep-Learning-and-Scientific-Computing-with-R-torch/tabular_data.html)
+  id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: '[原文链接](https://skeydan.github.io/Deep-Learning-and-Scientific-Computing-with-R-torch/tabular_data.html)'
 - en: 'So far, we’ve been working with images exclusively. With images, pixel values
     are arranged in a grid; or several grids, actually, in case there are several
     channels. However many there may be, all values are of the same type: integers
     between `0` and `255`, for example, or (when normalized) floats in the interval
     from `0` to `1`. With tabular (a.k.a.: spreadsheet) data, however, you could have
     a mix of numbers, (single) characters, and (single- or multi-token) text.'
+  id: totrans-2
   prefs: []
   type: TYPE_NORMAL
+  zh: 到目前为止，我们一直在专门处理图像。对于图像，像素值排列在网格中；或者实际上有多个网格，如果有多个通道的话。无论有多少，所有值都是同一类型的：例如，`0`到`255`之间的整数，或者（当归一化时）在`0`到`1`区间内的浮点数。然而，在表格数据（也称为：电子表格）中，你可能会遇到数字、（单个）字符和（单个或多个标记）文本的混合。
 - en: 'As we discussed, way back when talking about tensor creation, `torch` cannot
     work with non-numerical data. In consequence, characters and text will have to
     be pre-processed and encoded numerically. For single characters, or individual
     strings, this poses few difficulties: just convert the R character vectors to
     factors, and then, the factors to integers. Pre-processing for regular text, however,
     is a much more involved topic, one we can’t go into here.'
+  id: totrans-3
   prefs: []
   type: TYPE_NORMAL
+  zh: 正如我们之前讨论的，在谈论张量创建时，`torch`无法处理非数值数据。因此，字符和文本必须先进行预处理并编码成数值。对于单个字符或单个字符串，这并不会带来太多困难：只需将R字符向量转换为因子，然后，将因子转换为整数。然而，对于常规文本的预处理则是一个更加复杂的话题，我们在这里无法深入探讨。
 - en: Now, assume that we’re presented with an all-numeric data frame. (Maybe it’s
     been all-numeric from the outset; maybe we’ve followed the above-mentioned “integerization-via-factors”
     recipe to make it so.) Still, what these numbers mean may differ between features.
+  id: totrans-4
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在，假设我们展示的是一个全数值数据框。（也许它一开始就是全数值的；也许我们已经遵循了上述提到的“通过因子进行整数值化”的配方来做到这一点。）尽管如此，这些数字的含义可能在不同特征之间是不同的。
 - en: 20.1 Types of numerical data, by example
+  id: totrans-5
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 20.1 通过示例了解数值数据的类型
 - en: A classic distinction is that between interval, ordinal, and categorical data.
     Assume that for three individuals, we’re told that, for some feature, their respective
     scores are `2`, `1`, and `3`. What are we to make of this?
+  id: totrans-6
   prefs: []
   type: TYPE_NORMAL
+  zh: 经典的区分在于区间数据、有序数据和分类数据。假设对于三个人，我们被告知在某个特征上，他们各自的得分是`2`、`1`和`3`。我们该如何理解这些数据呢？
 - en: First, the numbers could just be encoding “artifacts”. That would be the case
     if, say, `1` stood for *apple*, `2` for *orange*, and `3`, for *pineapple*. Then,
     we’d have categorical data.
+  id: totrans-7
   prefs: []
   type: TYPE_NORMAL
+  zh: 首先，这些数字可能只是编码“痕迹”。例如，如果`1`代表*苹果*，`2`代表*橙子*，`3`代表*菠萝*，那么这就是分类数据。
 - en: Second, the numbers could represent grades, `1` denoting the best, `2` the second-best,
     `3` the one thereafter … and so on. In this case, there is a ranking, or an ordering,
     between values. We have no reason to assume, though, that the distance between
     `1` and `2` is the same as that between `2` and `3`. These are ordinal data.
+  id: totrans-8
   prefs: []
   type: TYPE_NORMAL
+  zh: 其次，这些数字可能代表成绩，`1`表示最佳，`2`表示次佳，`3`表示之后的一个……以此类推。在这种情况下，值之间存在排名或排序。然而，我们没有理由假设`1`和`2`之间的距离与`2`和`3`之间的距离相同。这些都是有序数据。
 - en: Finally, maybe those distances *are* the same. Now, we’re dealing with interval
     data.
+  id: totrans-9
   prefs: []
   type: TYPE_NORMAL
+  zh: 最后，也许这些距离*确实是*相同的。现在，我们正在处理区间数据。
 - en: Put in this way, the distinction may seem trivial. However, with real-world
     datasets, it is not always easy to know what type of data you’re dealing with.
+  id: totrans-10
   prefs: []
   type: TYPE_NORMAL
+  zh: 以这种方式表达，这种区分可能看起来微不足道。然而，在现实世界的数据集中，了解你正在处理的数据类型并不总是容易的。
 - en: To illustrate, we now inspect the popular *heart disease* dataset, available
     on the [UCI Machine Learning Repository](https://archive.ics.uci.edu/ml/index.php).
     It is this dataset we are going to build a classifier for, in this chapter.
+  id: totrans-11
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了说明，我们现在检查流行的*心脏病*数据集，该数据集可在[UCI机器学习仓库](https://archive.ics.uci.edu/ml/index.php)找到。在本章中，我们将使用这个数据集构建一个分类器。
 - en: In what follows, the aspiration is not to be completely sure we’re “getting
     it right”; instead, it’s about showing how to approach the task in a conscientious
     (if I may say so) way.
+  id: totrans-12
   prefs: []
   type: TYPE_NORMAL
+  zh: 在接下来的内容中，我们的目标不是完全确信我们“理解正确”；相反，它是关于展示如何以一种负责任的方式（如果我可以这么说）来处理任务。
 - en: We start by loading the dataset. Here `heart_disease` is the target, and missing
     values are indicated by a question mark.
+  id: totrans-13
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们首先加载数据集。在这里，`heart_disease`是目标，缺失值用问号表示。
 - en: '[PRE0]'
+  id: totrans-14
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE0]'
 - en: '*As you see, I’ve annotated the features with information given by the dataset
     creators.'
+  id: totrans-15
   prefs: []
   type: TYPE_NORMAL
+  zh: '*正如你所见，我已经用数据集创建者提供的信息标注了这些特征。'
 - en: 'Based on this information, as well as the actual values in the dataset, the
     following look like interval data to me:'
+  id: totrans-16
   prefs: []
   type: TYPE_NORMAL
+  zh: 根据这些信息以及数据集中的实际值，以下看起来像是区间数据：
 - en: '`age`,'
+  id: totrans-17
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '`age`,'
 - en: '`resting_blood_pressure`,'
+  id: totrans-18
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '`resting_blood_pressure`,'
 - en: '`chol`,'
+  id: totrans-19
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '`chol`,'
 - en: '`max_heart_rate`, and'
+  id: totrans-20
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '`max_heart_rate`, 以及'
 - en: '`old_peak` .'
+  id: totrans-21
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '`old_peak` .'
 - en: 'At the other end of the dimension, some features are clearly conceived as binary
     here: namely, the predictors `sex`, `fasting_blood_sugar`, and `ex_induced_angina`,
     as well as the target, `heart_disease`. Predictors that are binary, with values
@@ -110,15 +154,23 @@
     the vector being non-zero (namely, the one corresponding to the category in question).
     Normally, this is only done when there are more than two categories, and we’ll
     get back to this technique when we implement the `dataset()` for this problem.'
+  id: totrans-22
   prefs: []
   type: TYPE_NORMAL
+  zh: 在维度的另一端，一些特征显然被构思为二元的：即预测变量 `sex`、`fasting_blood_sugar`、`ex_induced_angina`
+    以及目标变量 `heart_disease`。二元的预测变量，其值要么为零要么为一，通常被视为数值型。这样不会丢失任何信息。另一种表示方法是使用长度为二的向量：当给定值为
+    `0` 时为 `[0, 1]`，当给定值为 `1` 时为 `[1, 0]`。这被称为**独热编码**，“独热”指的是向量中只有一个位置是非零的（即对应于所讨论类别的位置）。通常，这只有在有超过两个类别时才会这样做，我们将在实现此问题的
+    `dataset()` 时再回到这个技术。
 - en: We now have just `pain_type`, `rest_ecg`, `slope`, `ca`, and `thal` remaining.
     Of those, `pain_type` , `rest_ecg,` and `thal` look categorical, or maybe ordinal,
     to some degree. Normally in machine learning, ordinal data are treated as categorical,
     and unless the number of different categories is high, this should not result
     in significant loss of information.
+  id: totrans-23
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在我们只剩下 `pain_type`、`rest_ecg`、`slope`、`ca` 和 `thal`。其中，`pain_type`、`rest_ecg`
+    和 `thal` 在某种程度上看起来是分类的，或者可能是有序的。在机器学习中，通常将有序数据视为分类数据，除非不同类别的数量很高，否则这不会导致信息损失显著。
 - en: What about `slope`? To a machine learning person, the naming alone seems to
     suggest a continuous feature; and values as nicely ordered as 1, 2, 3 might make
     you think that the variable must be at least ordinal. However, a quick web search
@@ -126,209 +178,318 @@
     thus definitely want to treat this variable as categorical. (If this were a real-world
     task, we should try consulting a domain expert, to find out whether there’s a
     better solution.)
+  id: totrans-24
   prefs: []
   type: TYPE_NORMAL
+  zh: 那么 `slope` 呢？对于一个机器学习的人来说，仅仅从命名上似乎就暗示这是一个连续的特征；而像 1、2、3 这样有序排列的值可能会让你认为这个变量至少是有序的。然而，快速的网络搜索已经揭示了一个不同且更为复杂的现实。[¹](#fn1)
+    因此，我们肯定会想将这个变量作为分类变量处理。（如果这是一个现实世界的任务，我们应该尝试咨询领域专家，以找到更好的解决方案。）
 - en: Finally, for `ca`, we – or me, actually – don’t know the implication of how
     many major blood vessels (zero to four) got *colored by fluoroscopy*. (Again,
     if you have access to a domain expert, make use of the opportunity and ask them.)
     The safest way is to not assume an equal distance between measurements, but treat
     this feature as merely ordinal, and thus, categorical.
+  id: totrans-25
   prefs: []
   type: TYPE_NORMAL
+  zh: 最后，对于 `ca`，我们——或者更准确地说，我——并不清楚有多少主要血管（从零到四条）被**荧光透视**染上了颜色。 (再次强调，如果你能接触到领域专家，请利用这个机会向他们咨询。)
+    最安全的方法是不要假设测量值之间的距离相等，而是将这个特征视为仅仅有序的，因此，是分类的。
 - en: 'Now that we’ve discussed what to do, we can implement our data provider: `heart_dataset()`.*  *##
     20.2 A `torch` `dataset` for tabular data'
+  id: totrans-26
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在我们已经讨论了该怎么做，我们可以实现我们的数据提供者：`heart_dataset()`。
 - en: 'Beyond adequate feature representation, there is one additional thing to take
     care of. The dataset contains unknown values, which we coded as `NA`:'
+  id: totrans-27
   prefs: []
   type: TYPE_NORMAL
+  zh: 除了足够的特征表示之外，还有一件事需要特别注意。数据集中包含未知值，我们将其编码为 `NA`：
 - en: '[PRE1]'
+  id: totrans-28
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE1]'
 - en: '*[PRE2]'
+  id: totrans-29
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE2]'
 - en: 'Fortunately, these occur in two columns only: `thal` and `ca`.'
+  id: totrans-30
   prefs: []
   type: TYPE_NORMAL
+  zh: 幸运的是，这些数据只出现在两列中：`thal` 和 `ca`.
 - en: '[PRE3]'
+  id: totrans-31
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE3]'
 - en: '*[PRE4]'
+  id: totrans-32
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE4]'
 - en: '[PRE5]'
+  id: totrans-33
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE5]'
 - en: '*[PRE6]'
+  id: totrans-34
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE6]'
 - en: Seeing how we’re totally clueless as to what caused these missing values, and
     considering that – conveniently – both features in question are categorical and
     of low cardinality, it seems easiest to just have those `NA`s represented by an
     additional factor value.
+  id: totrans-35
   prefs: []
   type: TYPE_NORMAL
+  zh: 由于我们对这些缺失值的原因一无所知，并且考虑到——方便的是——这两个特征都是分类的且基数较低，因此，最简单的方法就是用额外的因子值来表示那些 `NA`。
 - en: That decided, we can implement `heart_dataset()`. Numerical features will be
     scaled, a measure that should always be taken when they’re of different orders
     of magnitude. This will significantly speed up training.
+  id: totrans-36
   prefs: []
   type: TYPE_NORMAL
+  zh: 决定之后，我们可以实现`heart_dataset()`。数值特征将被缩放，这是一个在它们具有不同数量级时应该始终采取的措施。这将显著加快训练速度。
 - en: 'As to the categorical features, one thing we *could* do is one-hot encode them.
     For example:'
+  id: totrans-37
   prefs: []
   type: TYPE_NORMAL
+  zh: 关于分类特征，我们可以做的一件事是使用一热编码。例如：
 - en: '[PRE7]'
+  id: totrans-38
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE7]'
 - en: '*[PRE8]'
+  id: totrans-39
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE8]'
 - en: With one-hot encoding, we guarantee that each feature value differs from all
     others exactly to the same degree. However, we can do better. We can use a technique
     called *embedding* to represent these feature values in a space where they are
     *not* all equally distinct from one another.
+  id: totrans-40
   prefs: []
   type: TYPE_NORMAL
+  zh: 在一热编码中，我们保证每个特征值与其他所有特征值完全不同。然而，我们可以做得更好。我们可以使用一种称为*嵌入*的技术，在它们之间不是完全相同程度不同的空间中表示这些特征值。
 - en: We’ll see how that works when we build the model, but now, we need to make sure
     the prerequisites are satisfied. Namely, `torch`’s embedding modules expect their
     input to be integers, not one-hot encoded vectors (or anything else). So what
     we’ll do is convert the categorical features to factors, and from there, to integers.
+  id: totrans-41
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们将在构建模型时看到它是如何工作的，但现在，我们需要确保满足先决条件。具体来说，`torch`的嵌入模块期望它们的输入是整数，而不是一热编码的向量（或其他任何东西）。因此，我们将把分类特征转换为因子，然后转换为整数。
 - en: 'Putting it all together, we arrive at the following `dataset()` definition:'
+  id: totrans-42
   prefs: []
   type: TYPE_NORMAL
+  zh: 将所有这些放在一起，我们得到了以下`dataset()`定义：
 - en: '[PRE9]'
+  id: totrans-43
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE9]'
 - en: '*Let’s see if the output it produces matches our expectations.'
+  id: totrans-44
   prefs: []
   type: TYPE_NORMAL
+  zh: '*让我们看看它产生的输出是否符合我们的预期。'
 - en: '[PRE10]'
+  id: totrans-45
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE10]'
 - en: '*[PRE11]'
+  id: totrans-46
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE11]'
 - en: It does.
+  id: totrans-47
   prefs: []
   type: TYPE_NORMAL
+  zh: 它确实如此。
 - en: This is a small dataset, so we’ll forego creation of separate test and validation
     sets.
+  id: totrans-48
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是一个小数据集，所以我们不会创建单独的测试和验证集。
 - en: '[PRE12]'
+  id: totrans-49
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE12]'
 - en: '*We’re ready to move on to the model. But first, let’s talk about *embeddings*.*******  ***##
     20.3 Embeddings in deep learning: The idea'
+  id: totrans-50
   prefs: []
   type: TYPE_NORMAL
+  zh: '*我们已经准备好进入模型。但在那之前，让我们先谈谈*嵌入*。*******  ***## 20.3 深度学习中的嵌入：理念'
 - en: The main idea behind embeddings, the way this term is used in deep learning,
     is to go beyond the default “all are equally distinct from each other” representation
     of categorical values.
+  id: totrans-51
   prefs: []
   type: TYPE_NORMAL
+  zh: 嵌入背后的主要思想，在深度学习中使用这个术语的方式，是超越默认的“所有值彼此完全不同”的分类值表示。
 - en: 'As in one-hot encoding, scalars get mapped to vectors. But this time, there’s
     no restriction as to how many slots may be non-empty, or as to the values they
     may take. For example, integers 1, 2, and 3 could get mapped to the following
     tensors:'
+  id: totrans-52
   prefs: []
   type: TYPE_NORMAL
+  zh: 就像在一热编码中，标量被映射到向量中。但这次，没有限制非空槽位的数量，或者它们可能取的值。例如，整数1、2和3可以被映射到以下张量：
 - en: '[PRE13]'
+  id: totrans-53
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE13]'
 - en: '*Now, we can use `nnf_cosine_similarity()` to find out how close to each other
     these vectors are. Working, for convenience, in two dimensions, say we have two
     parallel vectors, pointing in the same direction. The angle between them is zero,
     and its cosine is one:'
+  id: totrans-54
   prefs: []
   type: TYPE_NORMAL
+  zh: '*现在，我们可以使用`nnf_cosine_similarity()`来找出这些向量彼此有多接近。为了方便起见，在二维空间中工作，比如说我们有两个平行向量，指向同一方向。它们之间的角度为零，余弦值为一：'
 - en: '[PRE14]'
+  id: totrans-55
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE14]'
 - en: '*[PRE15]'
+  id: totrans-56
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE15]'
 - en: 'Thus, a value of one indicates maximal similarity. In contrast, now take them
     to still be parallel, but pointing in opposite directions. The angle is one-hundred-eighty
     degrees, and the cosine is minus one:'
+  id: totrans-57
   prefs: []
   type: TYPE_NORMAL
+  zh: 因此，值为1表示最大相似性。相比之下，现在假设它们仍然是平行的，但指向相反方向。角度是一百八十度，余弦值为负一：
 - en: '[PRE16]'
+  id: totrans-58
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE16]'
 - en: '*[PRE17]'
+  id: totrans-59
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE17]'
 - en: 'These vectors are maximally dissimilar. In-between, we have angles around ninety
     degrees, with vectors being (approximately) orthogonal; or “independent”, in common
     parlance. With an angle of exactly ninety degrees, the cosine is zero:'
+  id: totrans-60
   prefs: []
   type: TYPE_NORMAL
+  zh: 这些向量之间差异最大。在中间，我们有大约九十度的角度，向量是（大约）正交的；或者用通俗的话说，“独立”。当角度正好是九十度时，余弦值为零：
 - en: '[PRE18]'
+  id: totrans-61
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE18]'
 - en: '*[PRE19]'
+  id: totrans-62
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE19]'
 - en: 'Things work analogously in higher dimensions. So, we can determine which of
     the above vectors `one`, `two`, and `three` are closest to each other:'
+  id: totrans-63
   prefs: []
   type: TYPE_NORMAL
+  zh: 在更高维度中，情况类似。因此，我们可以确定上述向量`one`、`two`和`three`中哪两个彼此最接近：
 - en: '[PRE20]'
+  id: totrans-64
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE20]'
 - en: '*[PRE21]'
+  id: totrans-65
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE21]'
 - en: 'Looking at how those were defined, these values make sense.*****  ***## 20.4
     Embeddings in deep learning: Implementation'
+  id: totrans-66
   prefs: []
   type: TYPE_NORMAL
+  zh: 看看这些是如何定义的，这些值是有意义的。*****  ***## 20.4 深度学习中的嵌入：实现
 - en: By now you probably agree that embeddings are useful. But how do we get them?
+  id: totrans-67
   prefs: []
   type: TYPE_NORMAL
+  zh: 到现在为止，你可能同意嵌入是有用的。但我们如何获得它们？
 - en: Conveniently, these vectors are learned as part of model training. *Embedding
     modules* are modules that take integer inputs and learn to map them to vectors.
+  id: totrans-68
   prefs: []
   type: TYPE_NORMAL
+  zh: 便利的是，这些向量作为模型训练的一部分被学习。*嵌入模块*是接受整数输入并学习将它们映射到向量的模块。
 - en: 'When creating such a module, you specify how many different integers there
     are (`num_embeddings`), and how long you want the learned vectors to be (`embedding_dim`).
     Together, these parameters tell the module how its weight matrix should look.
     The weight matrix is nothing but a look-up table (a mutable one, though!) that
     maps integers to corresponding vectors:'
+  id: totrans-69
   prefs: []
   type: TYPE_NORMAL
+  zh: 在创建这样的模块时，你指定有多少不同的整数（`num_embeddings`），以及你希望学习到的向量有多长（`embedding_dim`）。这些参数共同告诉模块其权重矩阵应该如何看起来。权重矩阵不过是一个查找表（虽然是可以修改的！）它将整数映射到相应的向量：
 - en: '[PRE22]'
+  id: totrans-70
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE22]'
 - en: '*[PRE23]'
+  id: totrans-71
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE23]'
 - en: 'At module creation, these mappings are initialized randomly. Still, we can
     test that the code does what we want by calling the module on some feature – `slope`,
     say:'
+  id: totrans-72
   prefs: []
   type: TYPE_NORMAL
+  zh: 在模块创建时，这些映射是随机初始化的。尽管如此，我们可以通过在某个特征上调用模块——比如`slope`——来测试代码是否按预期工作。
 - en: '[PRE24]'
+  id: totrans-73
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE24]'
 - en: '*[PRE25]'
+  id: totrans-74
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE25]'
 - en: 'Now, you could say that we glossed over, with a certain nonchalance, the question
     of how these mappings are optimized. Technically, this works like for any module:
     by means of backpropagation. *But there is an implication:* It follows that the
     overall model, and even more importantly, the given *task*, will determine how
     “good” those learned mappings are.'
+  id: totrans-75
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在，你可能会说，我们以一种某种漫不经心的态度，略过了这些映射是如何优化的这个问题。技术上，这就像任何模块一样工作：通过反向传播。*但是有一个含义：*
+    这意味着整体模型，更重要的是，给定的*任务*将决定这些学习到的映射“好”的程度。
 - en: 'And yet, there is something even more important: the *data*.'
+  id: totrans-76
   prefs: []
   type: TYPE_NORMAL
+  zh: 然而，还有一件更重要的事情：*数据*。
 - en: Sure, that goes without saying, you may think. But when embeddings are used,
     the learned mappings are sometimes presented as an additional outcome, a surplus
     benefit, of sorts. For example, the model itself might be a classifier, predicting
@@ -337,51 +498,73 @@
     model’s been trained, the acquired representation is extracted. In turn, that
     representation will reflect all problems – biases, injustices, distortions – that
     are present in the training dataset.
+  id: totrans-77
   prefs: []
   type: TYPE_NORMAL
+  zh: 当然，这不用说，你可能认为。但是当使用嵌入时，学习到的映射有时会被呈现为一种额外的结果，一种额外的利益。例如，模型本身可能是一个分类器，预测人们是否会违约。现在假设有一个输入特征——比如种族——它使用嵌入进行处理。一旦模型被训练，获得的表现就会提取出来。反过来，这种表现将反映训练数据集中存在的所有问题——偏见、不公正、扭曲等。
 - en: Below, I will show how to obtain and plot such a representation. To a domain
     expert, this representation may or may not seem adequate; in any case, no harm
     is likely to be caused *in this example*. However, when working on real-world
     tasks, we always have to be aware of possible harms, and rigorously analyse any
     biases and assumptions inherent in the training workflow.
+  id: totrans-78
   prefs: []
   type: TYPE_NORMAL
+  zh: 下面，我将展示如何获得和绘制这样的表示。对于一个领域专家来说，这种表示可能或可能不足以令人满意；无论如何，在这个例子中不太可能造成伤害。然而，在处理现实世界任务时，我们总是必须意识到可能造成的伤害，并严格分析训练工作流程中固有的任何偏见和假设。
 - en: 'Getting back to the implementation, here is the embedding module we use for
     our task. Actually, there is no *single* embedding module; there is one for each
     categorical feature. The wrapper, `embedding_module()`, keeps them all in an `nn_module_list()`,
     and when called, iterates over them and concatenates their outputs:'
+  id: totrans-79
   prefs: []
   type: TYPE_NORMAL
+  zh: 回到实现上，这是我们用于任务的嵌入模块。实际上，没有*单个*嵌入模块；每个分类特征都有一个。包装器`embedding_module()`将它们都保存在`nn_module_list()`中，并在调用时遍历它们并连接它们的输出：
 - en: '[PRE26]'
+  id: totrans-80
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE26]'
 - en: '*This wrapper – let’s call it “embedder” – will be one of the modules that
     make up the top-level model.***  ***## 20.5 Model and model training'
+  id: totrans-81
   prefs: []
   type: TYPE_NORMAL
+  zh: '*这个包装器——让我们称它为“嵌入器”——将是构成顶级模型的一个模块。***'
 - en: 'The top-level module’s logic is straightforward. For the categorical part of
     its input, it delegates to the embedder, and to the embeddings obtained it appends
     the numerical part. The resulting tensor is then passed through a sequence of
     linear modules:'
+  id: totrans-82
   prefs: []
   type: TYPE_NORMAL
+  zh: 顶级模块的逻辑很简单。对于其输入的分类部分，它委托给嵌入器，并将获得的嵌入附加到数值部分。然后，得到的张量通过一系列线性模块传递：
 - en: '[PRE27]'
+  id: totrans-83
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE27]'
 - en: '*Looking at the final output, you see that these are raw scores, not probabilities.
     With a binary target, this means we’ll make use of `nn_bce_with_logits_loss()`
     to train the model.'
+  id: totrans-84
   prefs: []
   type: TYPE_NORMAL
+  zh: '*查看最终输出，你会发现这些是原始分数，而不是概率。对于二元目标，这意味着我们将使用`nn_bce_with_logits_loss()`来训练模型。'
 - en: 'Now, we still need some housekeeping and configuration:'
+  id: totrans-85
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在，我们仍然需要进行一些维护和配置：
 - en: '[PRE28]'
+  id: totrans-86
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE28]'
 - en: '*Note here the requested embedding dimension(s), `embedding_dim`.'
+  id: totrans-87
   prefs: []
   type: TYPE_NORMAL
+  zh: '*注意这里请求的嵌入维度（`embedding_dim`）。'
 - en: 'Usual best practice would choose lower values, corresponding, roughly, to half
     a feature’s cardinality. For example, if there were thirty different values for
     some category, we might go with a vector length of about fifteen. And definitely,
@@ -391,143 +574,214 @@
     capacity. So here, I went the opposite way: give the model a significantly bigger
     space to play with. (Beyond seven, the chosen value, I didn’t see further training
     improvements.)'
+  id: totrans-88
   prefs: []
   type: TYPE_NORMAL
+  zh: 通常的最佳实践会选择较低的值，这大致相当于特征基数的一半。例如，如果某个类别的值有三十个不同，我们可能会选择大约十五个长度的向量。当然，如果我有三十个值，我肯定会这么做。但在这个例子中，基数要低得多：两个、三个、四个或五个。（这已经将`NA`视为一个额外的因素值。）将这些数字减半几乎不会留下任何表示能力。因此，在这里，我采取了相反的做法：给模型一个更大的空间来操作。（超过七个，即选择的价值，我没有看到进一步的训练改进。）
 - en: All preparatory work done, we can train the model. Normally, at this point we’d
     run the learning rate finder. Here, the dataset really is too small for that to
     make sense, at least without substantially tweaking the learning rate finder’s
     default settings. Also, with a dataset as tiny as this, experimentation takes
     very little time; and a few quick experiments are what the learning rate chosen
     is based on.
+  id: totrans-89
   prefs: []
   type: TYPE_NORMAL
+  zh: 所有的准备工作都完成了，我们可以训练模型。通常，在这个时候我们会运行学习率查找器。在这里，数据集真的太小了，以至于这样做没有意义，至少在没有大幅调整学习率查找器的默认设置的情况下。此外，对于如此小的数据集，实验花费的时间非常少；而选择的学习率是基于几次快速实验的。
 - en: '[PRE29]'
+  id: totrans-90
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE29]'
 - en: '*[PRE30]'
+  id: totrans-91
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE30]'
 - en: '[PRE31]'
+  id: totrans-92
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE31]'
 - en: '*![Top row: Curves displaying how classification accuracy develops over the
     training period, for both training and validation sets. Both rise in similar ways,
     the one for validation being less noisy. Bottom row: Corresponding curves representing
     the loss. Both fall in similar ways, the one for validation being a lot more smooth.](../Images/6076db8f886cf53379c58ea3472b9b11.png)'
+  id: totrans-93
   prefs: []
   type: TYPE_NORMAL
+  zh: '*![顶部行：显示在训练期间分类精度如何发展的曲线，对于训练集和验证集。两者以类似的方式上升，验证集的噪声更少。底部行：对应损失曲线。两者以类似的方式下降，验证集的曲线要平滑得多。](../Images/6076db8f886cf53379c58ea3472b9b11.png)'
 - en: 'Figure 20.1: Losses and accuracies (training and validation, resp.) for binary
     heart disease classification.'
+  id: totrans-94
   prefs: []
   type: TYPE_NORMAL
+  zh: 图20.1：二进制心脏病分类的损失和精度（分别对应训练和验证）。
 - en: As you see ([fig. 20.1](#fig-tabular-heart-disease-fit)), model training went
     smoothly, and yielded good accuracy.
+  id: totrans-95
   prefs: []
   type: TYPE_NORMAL
+  zh: 如您所见（[图20.1](#fig-tabular-heart-disease-fit)），模型训练进展顺利，并产生了良好的精度。
 - en: Before we leave the topic of tabular data, here’s how to extract, post-process,
     and visualize the learned representations.****  ***## 20.6 Embedding-generated
     representations by example
+  id: totrans-96
   prefs: []
   type: TYPE_NORMAL
+  zh: 在我们离开表格数据的话题之前，这里是如何提取、后处理和可视化学习表示的。****  ***## 20.6 通过示例生成的嵌入表示
 - en: Here, example-wise, is the weight matrix for `slope`.
+  id: totrans-97
   prefs: []
   type: TYPE_NORMAL
+  zh: 这里，以示例方式，是`slope`的权重矩阵。
 - en: '[PRE32]'
+  id: totrans-98
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE32]'
 - en: '*[PRE33]'
+  id: totrans-99
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE33]'
 - en: 'For visualization, we’d like to reduce the number of dimensions from seven
     to two. We can accomplish that by running PCA – Principal Components Analysis
     – using R’s native `prcomp()`:'
+  id: totrans-100
   prefs: []
   type: TYPE_NORMAL
+  zh: 对于可视化，我们希望将七个维度减少到两个。我们可以通过运行PCA（主成分分析）来实现这一点，使用R的内置`prcomp()`函数：
 - en: '[PRE34]'
+  id: totrans-101
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE34]'
 - en: '*[PRE35]'
+  id: totrans-102
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE35]'
 - en: 'This printout reflects two pieces of information: the standard deviations of
     the principal components (also available as `pca$sdev`), and the matrix of variable
     loadings (also available as `pca$rotation`).'
+  id: totrans-103
   prefs: []
   type: TYPE_NORMAL
+  zh: 这个打印输出反映了两条信息：主成分的标准差（也作为`pca$sdev`可用），以及变量加载矩阵（也作为`pca$rotation`可用）。
 - en: 'The former reflect how important the resulting components are; we use them
     to decide if reduction to two components seems permissible. Here’s how much variance
     is explained by the three components each:'
+  id: totrans-104
   prefs: []
   type: TYPE_NORMAL
+  zh: 前者反映了结果组件的重要性；我们使用它们来决定是否将组件减少到两个是允许的。以下是每个组件解释的方差量：
 - en: '[PRE36]'
+  id: totrans-105
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE36]'
 - en: '*[PRE37]'
+  id: totrans-106
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE37]'
 - en: From that output, leaving out the third component is more than permissible.
+  id: totrans-107
   prefs: []
   type: TYPE_NORMAL
+  zh: 从那个输出中，省略第三个组件是完全可以接受的。
 - en: 'The matrix of variable loadings, on the other hand, tells us how big a role
     each variable (here: each slot in the learned embeddings) plays in determining
     the “meaning” of a component. Here, a visualization is more helpful than the raw
     numbers ([fig. 20.2](#fig-tabular-heart-disease-biplot)):'
+  id: totrans-108
   prefs: []
   type: TYPE_NORMAL
+  zh: 变量加载矩阵另一方面告诉我们每个变量（在这里：学习嵌入中的每个槽位）在确定“意义”方面扮演着多大的角色。在这里，可视化比原始数字更有帮助（[图20.2](#fig-tabular-heart-disease-biplot)）：
 - en: '[PRE38]'
+  id: totrans-109
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE38]'
 - en: '*![A square figure, with seven arrows emanating from the center. Three of them
     point point in similar directions, and two others do, as well.](../Images/c6ed6acd2629b75d70a55d6fe465ff75.png)'
+  id: totrans-110
   prefs: []
   type: TYPE_NORMAL
+  zh: '*![一个正方形图形，中心发出七个箭头。其中三个箭头指向相似的方向，另外两个也是如此。](../Images/c6ed6acd2629b75d70a55d6fe465ff75.png)'
 - en: 'Figure 20.2: `heart_disease$slope`: PCA of embedding weights, biplot visualizing
     factor loadings.'
+  id: totrans-111
   prefs: []
   type: TYPE_NORMAL
+  zh: 图20.2：`heart_disease$slope`：嵌入权重的PCA，双图可视化因子载荷。
 - en: This plot could be taken as indicating that – from a purely representational
     standpoint, i.e., not taking into account training performance – an embedding
     dimensionality of four would have been sufficient.
+  id: totrans-112
   prefs: []
   type: TYPE_NORMAL
+  zh: 这个图可以理解为，从纯粹的表现力角度来看，即不考虑训练性能，四个嵌入维度就足够了。
 - en: 'Finally, how about the main thing we’re after: a representation of slope categories
     in two-dimensional space?'
+  id: totrans-113
   prefs: []
   type: TYPE_NORMAL
+  zh: 最后，我们追求的主要目标是什么：在二维空间中表示斜率类别？
 - en: This information is provided by `pca$x`. It tells us how the original input
     categories relate to the principal components.
+  id: totrans-114
   prefs: []
   type: TYPE_NORMAL
+  zh: 这个信息由`pca$x`提供。它告诉我们原始输入类别如何与主成分相关。
 - en: '[PRE39]'
+  id: totrans-115
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE39]'
 - en: '*[PRE40]'
+  id: totrans-116
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE40]'
 - en: 'Leaving out the third component, the distribution of categories in (two-dimensional)
     space is easily visualized ([fig. 20.3](#fig-tabular-heart-disease-pca)):'
+  id: totrans-117
   prefs: []
   type: TYPE_NORMAL
+  zh: 忽略第三个分量，类别在（二维）空间中的分布可以轻松可视化（[图20.3](#fig-tabular-heart-disease-pca)）：
 - en: '[PRE41]'
+  id: totrans-118
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE41]'
 - en: '*![A square image, with three spread-out-in-space data points labeled ''up'',
     ''down'', and ''flat''.](../Images/9396f02e59861b8d7a249fc93d2b8f70.png)'
+  id: totrans-119
   prefs: []
   type: TYPE_NORMAL
+  zh: '*![一个正方形图像，有三个在空间中分散的数据点，分别标记为''up''（向上）、''down''（向下）和''flat''（平坦）。](../Images/9396f02e59861b8d7a249fc93d2b8f70.png)'
 - en: 'Figure 20.3: `heart_disease$slope`: PCA of embedding weights, locating the
     original input values in two-dimensional space.'
+  id: totrans-120
   prefs: []
   type: TYPE_NORMAL
+  zh: 图20.3：`heart_disease$slope`：嵌入权重的PCA，定位原始输入值在二维空间中的位置。
 - en: Whether this representation makes sense, I’ll leave to the experts to judge.
     My goal here was to demonstrate the technique, so you can employ it when it *does*
     yield some insight. Even when not, embedding modules do contribute substantially
     to training success for categorical-feature or mixed-feature data.******  ****
     * *
+  id: totrans-121
   prefs: []
   type: TYPE_NORMAL
+  zh: 这种表示是否合理，我将留给专家来判断。我的目标在这里是展示这项技术，以便你可以在它*确实*提供一些见解时使用它。即使不这样做，嵌入模块对于分类特征或混合特征数据在训练成功中也做出了重大贡献。******  ****
+    * *
 - en: See, e.g., [https://en.my-ekg.com/how-read-ekg/st-segment.html](https://en.my-ekg.com/how-read-ekg/st-segment.html),
     or [https://ecg.utah.edu/lesson/10](https://ecg.utah.edu/lesson/10), or [Wikipedia](https://en.wikipedia.org/wiki/ST_segment).[↩︎](#fnref1)****************
+  id: totrans-122
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 例如，参见[https://en.my-ekg.com/how-read-ekg/st-segment.html](https://en.my-ekg.com/how-read-ekg/st-segment.html)、[https://ecg.utah.edu/lesson/10](https://ecg.utah.edu/lesson/10)或[Wikipedia](https://en.wikipedia.org/wiki/ST_segment)。[↩︎](#fnref1)****************

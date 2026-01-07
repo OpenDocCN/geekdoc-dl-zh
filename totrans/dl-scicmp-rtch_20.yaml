@@ -1,42 +1,56 @@
 - en: 15  A first go at image classification
+  id: totrans-0
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
+  zh: 15  图像分类的第一步
 - en: 原文：[https://skeydan.github.io/Deep-Learning-and-Scientific-Computing-with-R-torch/image_classification_1.html](https://skeydan.github.io/Deep-Learning-and-Scientific-Computing-with-R-torch/image_classification_1.html)
+  id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 原文：[https://skeydan.github.io/Deep-Learning-and-Scientific-Computing-with-R-torch/image_classification_1.html](https://skeydan.github.io/Deep-Learning-and-Scientific-Computing-with-R-torch/image_classification_1.html)
 - en: 15.1 What does it take to classify an image?
+  id: totrans-2
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 15.1 分类图像需要什么？
 - en: 'Think about how we, as human beings, can say “that’s a cat”, or: “this is a
     dog”. No conscious processing is required. (Usually, that is.)'
+  id: totrans-3
   prefs: []
   type: TYPE_NORMAL
+  zh: 想想我们作为人类，如何说出“那是一只猫”，或者：“这是一条狗”。通常情况下，不需要任何有意识的处理。（通常是这样的。）
 - en: 'Why? The neuroscience, and cognitive psychology, involved are definitely out
     of scope for this book; but on a high level, we can assume that there are at least
     two prerequisites: First, that our visual system be able to build up complex representations
     out of lower-level ones, and second, that we have a set of concepts available
     we can map those high-level representations to. Presumably, then, an algorithm
     expected to do the same thing needs to be endowed with these same capabilities.'
+  id: totrans-4
   prefs: []
   type: TYPE_NORMAL
+  zh: 为什么？涉及到的神经科学和认知心理学超出了本书的范围；但从高层次来看，我们可以假设至少有两个先决条件：首先，我们的视觉系统能够从较低级的特征中构建复杂的表示，其次，我们有一套概念可以映射到这些高级表示。因此，一个预期执行相同任务的算法需要具备这些相同的特性。
 - en: 'In the context of this chapter, dedicated to image classification, the second
     prerequisite is satisfied gratuitously. Classification being a variant of supervised
     machine learning, the concepts are given by means of the targets. The first, however,
     is all-important. We can again distinguish two components: the capability to detect
     low-level features, and that to successively compose them into higher-level ones.'
+  id: totrans-5
   prefs: []
   type: TYPE_NORMAL
+  zh: 在本章的背景下，专注于图像分类，第二个先决条件是自动满足的。分类作为一种监督机器学习的变体，其概念是通过目标来给出的。然而，第一个先决条件至关重要。我们再次可以区分两个组成部分：检测低级特征的能力，以及将它们连续组合成更高级特征的能力。
 - en: 'Take a simple example. What would be required to identify a rectangle? A rectangle
     consists of edges: straight-ish borders of sort where something in the visual
     impression (color, for example) changes. To start with, then, the algorithm would
     have to be able to identify a single edge. That “edge extractor”, as we might
     call it, is going to mark all four edges in the image. In this case, no further
     composition of features is needed; we can directly infer the concept.'
+  id: totrans-6
   prefs: []
   type: TYPE_NORMAL
+  zh: 以一个简单的例子来说明。要识别一个矩形需要什么？矩形由边缘组成：视觉印象（例如颜色）发生变化的直边。因此，首先，算法必须能够识别单个边缘。我们可能称之为“边缘提取器”，它将在图像中标记所有四个边缘。在这种情况下，不需要进一步的特征组合；我们可以直接推断出概念。
 - en: 'On the other hand, assume the image were showing a house built of bricks. Then,
     there would be many rectangles, together forming a wall of the house; another
     rectangle, the door; and a few further ones, the windows. Maybe there’d be a different
@@ -45,61 +59,81 @@
     detector”, a “roof detector” … and so on. Evidently, these detectors can’t all
     be programmed up front. They’ll have to be emergent properties of the algorithm:
     the neural network, in our case.'
+  id: totrans-7
   prefs: []
   type: TYPE_NORMAL
+  zh: 另一方面，假设图像显示的是由砖块建造的房子。那么，就会有多个矩形，共同构成房子的墙壁；另一个矩形是门；还有几个更进一步的矩形，是窗户。可能还会有不同排列的边缘，比如三角形形状的屋顶。这意味着，仅仅边缘检测器是不够的：我们还需要“矩形检测器”、“三角形检测器”、“墙壁检测器”、“屋顶检测器”……等等。显然，这些检测器不能预先全部编程。它们将是算法的涌现属性：在我们的情况下，是神经网络。
 - en: 15.2 Neural networks for feature detection and feature emergence
+  id: totrans-8
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 15.2 用于特征检测和特征出现的神经网络
 - en: The way we’ve spelled out the requirements, a neural network for image classification
     needs to (1) be able to detect features, and (2) build up a hierarchy of such.
     Networks being networks, we can safely assume that (1) will be taken care of by
     a specialized layer (module), while (2) will be made possible by chaining several
     layers.
+  id: totrans-9
   prefs: []
   type: TYPE_NORMAL
+  zh: 根据我们提出的要求，用于图像分类的神经网络需要（1）能够检测特征，并且（2）构建这样的特征层次。既然是网络，我们可以安全地假设（1）将由专门的层（模块）处理，而（2）将通过连接几个层来实现。
 - en: 15.2.1 Detecting low-level features with cross-correlation
+  id: totrans-10
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 15.2.1 使用交叉相关检测低级特征
 - en: This chapter is about “convolutional” neural networks; the specialized module
     in question is the “convolutional” one. Why, then, am I talking about cross-correlation?
     It’s because what neural-network people refer to as *convolution*, technically
     is *cross-correlation*. (Don’t worry – I’ll be making the distinction just here,
     in the conceptual introduction; afterwards I’ll be saying “convolution”, just
     like everyone else.)
+  id: totrans-11
   prefs: []
   type: TYPE_NORMAL
+  zh: 本章是关于“卷积”神经网络；所讨论的专用模块是“卷积”模块。那么，我为什么要谈论交叉相关呢？这是因为神经网络人士所说的`*convolution*`在技术上实际上是`*cross-correlation*`。（别担心——我将在概念介绍中区分这一点；之后我会像其他人一样说“卷积”。）
 - en: 'So why am I insisting? It is for two reasons. First, this book actually *has*
     a chapter on convolution – the “real one”; it figures in part three right between
     matrix operations and the Discrete Fourier Transform. Second, while in a formal
     sense the difference may be small, semantically as well as in terms of mathematical
     status, convolution and cross-correlation are decidedly distinct. In broad strokes:'
+  id: totrans-12
   prefs: []
   type: TYPE_NORMAL
+  zh: 那我为什么坚持这一点呢？有两个原因。首先，这本书实际上确实有一个关于卷积的章节——“真正的卷积”；它出现在第三部分，位于矩阵运算和离散傅里叶变换之间。其次，虽然在形式上差异可能很小，但在语义上以及在数学地位上，卷积和交叉相关是明显不同的。大致来说：
 - en: 'Convolution may well be the most fundamental operation in all of signal processing,
     fundamental in the way addition and multiplication are. It can act as a *filter*,
     a signal-space transformation intended to achieve a desired result. For example,
     a moving average filter can be programmed as a convolution. So can, however, something
     quite the opposite: a filter that emphasizes differences. (An edge enhancer would
     be an example of the latter.)'
+  id: totrans-13
   prefs: []
   type: TYPE_NORMAL
+  zh: 卷积可能是所有信号处理中最基本的操作，其基础性就像加法和乘法一样。它可以作为一个`*filter*`，一种信号空间变换，旨在达到期望的结果。例如，移动平均滤波器可以编程为卷积。然而，也可以是相反的东西：强调差异的过滤器。（边缘增强器就是后者的一个例子。）
 - en: 'Cross-correlation, in contrast, is more specialized. It *finds* things, or
     put differently: It spots similarities. This is what is needed in image recognition.
     To demonstrate how it works, we start in a single dimension.'
+  id: totrans-14
   prefs: []
   type: TYPE_NORMAL
+  zh: 相比之下，交叉相关更专业。它`*finds*`事物，或者换句话说：它发现了相似性。这就是图像识别中需要的东西。为了展示它是如何工作的，我们从单维开始。
 - en: 15.2.1.1 Cross-correlation in one dimension
+  id: totrans-15
   prefs:
   - PREF_H4
   type: TYPE_NORMAL
+  zh: 15.2.1.1 一维交叉相关
 - en: 'Assume we have a signal – a univariate time series – that looks like this:
     `0,1,1,1,-1,0,-1,-1,1,1,1,-1`. We want to find locations where a *one* occurs
     three times in a row. To that end, we make use of a filter that, too, has three
     ones in a row: `1,1,1`.'
+  id: totrans-16
   prefs: []
   type: TYPE_NORMAL
+  zh: 假设我们有一个信号——一个一元时间序列——看起来像这样：`0,1,1,1,-1,0,-1,-1,1,1,1,-1`。我们想要找到连续出现三个`*one*`的位置。为此，我们使用了一个同样有三个连续`*one*`的过滤器：`1,1,1`。
 - en: 'That filter, also called a *kernel*, is going to slide over the input sequence,
     producing an output value at every location. To be precise: The output value in
     question will be mapped to the *input value co-located with the kernel’s central
@@ -107,37 +141,54 @@
     has no way of being mapped to the center of the kernel? In order for this to work,
     the input sequence is padded with zeroes: one in front, and one at the end. The
     new signal looks like this: `0,0,1,1,1,-1,0,-1,-1,1,1,1,-1,0` .'
+  id: totrans-17
   prefs: []
   type: TYPE_NORMAL
+  zh: 那个过滤器，也称为`*kernel*`，将在输入序列上滑动，在每个位置产生一个输出值。更准确地说：相关的输出值将被映射到与核中心值`*co-located*`的输入值。那么，我们如何为第一个输入值获得输出呢？这个输入值无法映射到核的中心？为了使这起作用，输入序列被填充了零：一个在前面，一个在后面。新的信号看起来像这样：`0,0,1,1,1,-1,0,-1,-1,1,1,1,-1,0`。
 - en: 'Now, we have the kernel sliding over the signal. Like so:'
+  id: totrans-18
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在，我们将核在信号上滑动。就像这样：
 - en: '[PRE0]'
+  id: totrans-19
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE0]'
 - en: And so on.
+  id: totrans-20
   prefs: []
   type: TYPE_NORMAL
+  zh: 等等。
 - en: 'At every position, products are computed between the mapped input and kernel
     values, and then, those products are added up, to yield the output value at the
     central position. For example, this is what gets computed at the very first matching:
     `0*1 + 0*1 + 1*1 = 1`. Appending the outputs, we get a new sequence: `1,2,3,1,0,-2,-2,-1,1,3,1,0`
     .'
+  id: totrans-21
   prefs: []
   type: TYPE_NORMAL
+  zh: 在每个位置，计算映射输入和核值之间的乘积，然后，将这些乘积相加，以得到中心位置的输出值。例如，这就是在非常第一次匹配时计算的内容：`0*1 + 0*1
+    + 1*1 = 1`。将输出追加，我们得到一个新的序列：`1,2,3,1,0,-2,-2,-1,1,3,1,0`。
 - en: How does this help in finding three consecutive ones? Well, a three can only
     result when the kernel has found such a location. Thus, with that choice of kernel,
     we take every occurrence of `3` in the output as the center of the target sequence
     we’re looking for.
+  id: totrans-22
   prefs: []
   type: TYPE_NORMAL
+  zh: 这如何帮助我们找到三个连续的1？好吧，只有当核找到这样的位置时，才能得到3。因此，使用这种核的选择，我们将输出中的每个`3`视为我们正在寻找的目标序列的中心。
 - en: 15.2.1.2 Cross-correlation in two dimensions
+  id: totrans-23
   prefs:
   - PREF_H4
   type: TYPE_NORMAL
+  zh: 15.2.1.2 二维交叉相关
 - en: This chapter is about images; how does that logic carry over to two dimensions?
+  id: totrans-24
   prefs: []
   type: TYPE_NORMAL
+  zh: 本章是关于图像的；这种逻辑如何扩展到二维？
 - en: Everything works just the same; it’s just that now, the input signal extends
     over two dimensions, and the kernel is two-dimensional, as well. Again, the input
     is padded; with a kernel of size 3 x 3, for example, one row is added on top and
@@ -145,78 +196,115 @@
     over the image, row by row and column by column. At each point it computes an
     aggregate that is the sum of point-wise products. Mathematically, that’s a *dot
     product*.
+  id: totrans-25
   prefs: []
   type: TYPE_NORMAL
+  zh: 一切都和以前一样；只是现在，输入信号扩展到两个维度，核也是二维的。再次强调，输入被填充；例如，对于3x3大小的核，顶部和底部各添加一行，左右各添加一列。再次强调，核在图像上逐行逐列滑动。在每一个点上，它计算一个总和，即点积。从数学上来说，这就是*点积*。
 - en: 'To get a feel for how this works, we look at a bare-bones example: a white
     square on black background ([fig. 15.1](#fig-images-square)).'
+  id: totrans-26
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了了解这是如何工作的，我们来看一个简单的例子：一个白色正方形在黑色背景上（[图15.1](#fig-images-square)）。
 - en: '![A white square on a black background.](../Images/0db9a3df0097604af8cb022dffb77f73.png)'
+  id: totrans-27
   prefs: []
   type: TYPE_IMG
+  zh: '![一个白色正方形在黑色背景上。](../Images/0db9a3df0097604af8cb022dffb77f73.png)'
 - en: 'Figure 15.1: White square on black background.'
+  id: totrans-28
   prefs: []
   type: TYPE_NORMAL
+  zh: 图15.1：黑色背景上的白色正方形。
 - en: Nicely, the open-source graphics program Gimp has a feature that allows one
     to experiment with custom filters (“Filters” -> “Custom” -> “Convolution matrix”).
     We can construct kernels and directly examine their effects.
+  id: totrans-29
   prefs: []
   type: TYPE_NORMAL
+  zh: 开源图形程序Gimp有一个功能，允许用户尝试自定义过滤器（“过滤器”->“自定义”->“卷积矩阵”）。我们可以构建核并直接观察它们的效果。
 - en: 'Say we want to find the left edge of the square. We are looking for locations
     where the color changes, horizontally, from black to white. This can be achieved
     with a 3x3 kernel that looks like this ([fig. 15.2](#fig-images-square-left)):'
+  id: totrans-30
   prefs: []
   type: TYPE_NORMAL
+  zh: 假设我们要找到正方形的左边缘。我们正在寻找颜色在水平方向上从黑色变为白色的位置。这可以通过一个看起来像这样的3x3核来实现（[图15.2](#fig-images-square-left)）：
 - en: '[PRE1]'
+  id: totrans-31
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE1]'
 - en: This kernel is *similar* to the edge type we’re interested in in that it has,
     in the second row, a horizontal transition from -1 to 1.
+  id: totrans-32
   prefs: []
   type: TYPE_NORMAL
+  zh: 这个核与我们所感兴趣的边缘类型相似，因为它在第二行中有一个从-1到1的水平过渡。
 - en: Analogously, kernels can be constructed that extract the right ([fig. 15.3](#fig-images-square-right)),
     top ([fig. 15.4](#fig-images-square-top)), and bottom ([fig. 15.5](#fig-images-square-bottom))
     edges.
+  id: totrans-33
   prefs: []
   type: TYPE_NORMAL
+  zh: 类似地，可以构建提取右侧（[图15.3](#fig-images-square-right)）、顶部（[图15.4](#fig-images-square-top)）和底部（[图15.5](#fig-images-square-bottom)）边缘的核。
 - en: '![A gimp convolution matrix of size 5x5\. Individual values read: Row 1: all
     zero. Row 2: all zero. Row 3: 0, -1, 1, 0, 0\. Row 4: all zero. Row 5: all zero.](../Images/24690e5d0bf93372de2b72db897b85e3.png)'
+  id: totrans-34
   prefs: []
   type: TYPE_IMG
+  zh: '![一个5x5大小的Gimp卷积矩阵。各个值读取如下：行1：全部为零。行2：全部为零。行3：0, -1, 1, 0, 0。行4：全部为零。行5：全部为零。](../Images/24690e5d0bf93372de2b72db897b85e3.png)'
 - en: 'Figure 15.2: Gimp convolution matrix that detects the left edge.'
+  id: totrans-35
   prefs: []
   type: TYPE_NORMAL
+  zh: 图15.2：检测左侧边缘的Gimp卷积矩阵。
 - en: '![A gimp convolution matrix of size 5x5\. Individual values read: Row 1: all
     zero. Row 2: all zero. Row 3: 0, 1, -1, 0, 0\. Row 4: all zero. Row 5: all zero.](../Images/486797b6a5735ff1d48e130db0aecf7f.png)'
+  id: totrans-36
   prefs: []
   type: TYPE_IMG
+  zh: '![一个5x5大小的Gimp卷积矩阵。各个值读取如下：行1：全部为零。行2：全部为零。行3：0, 1, -1, 0, 0。行4：全部为零。行5：全部为零。](../Images/486797b6a5735ff1d48e130db0aecf7f.png)'
 - en: 'Figure 15.3: Gimp convolution matrix that detects the right edge.'
+  id: totrans-37
   prefs: []
   type: TYPE_NORMAL
+  zh: 图15.3：检测右侧边缘的Gimp卷积矩阵。
 - en: '![A gimp convolution matrix of size 5x5\. Individual values read: Row 1: all
     zero. Row 2: 0, 0, -1, 0, 0\. Row 3: 0, 0, 1, 0, 0\. Row 4: all zero. Row 5: all
     zero.](../Images/b108777c311fe57da1bba8f1ed7dae69.png)'
+  id: totrans-38
   prefs: []
   type: TYPE_IMG
+  zh: '![一个5x5大小的Gimp卷积矩阵。各个值读取如下：行1：全部为零。行2：0, 0, -1, 0, 0。行3：0, 0, 1, 0, 0。行4：全部为零。行5：全部为零。](../Images/b108777c311fe57da1bba8f1ed7dae69.png)'
 - en: 'Figure 15.4: Gimp convolution matrix that detects the top edge.'
+  id: totrans-39
   prefs: []
   type: TYPE_NORMAL
+  zh: 图15.4：检测顶部边缘的Gimp卷积矩阵。
 - en: '![A gimp convolution matrix of size 5x5\. Individual values read: Row 1: all
     zero. Row 2: all zero. Row 3: 0, 0, 1, 0, 0\. Row 4: 0, 0, -1, 0, 0\. Row 5: all
     zero.](../Images/1aaead9892da0d97fd4af40274088837.png)'
+  id: totrans-40
   prefs: []
   type: TYPE_IMG
+  zh: '![一个5x5大小的Gimp卷积矩阵。各个值读取如下：行1：全部为零。行2：全部为零。行3：0, 0, 1, 0, 0。行4：0, 0, -1, 0,
+    0。行5：全部为零。](../Images/1aaead9892da0d97fd4af40274088837.png)'
 - en: 'Figure 15.5: Gimp convolution matrix that detects the bottom edge.'
+  id: totrans-41
   prefs: []
   type: TYPE_NORMAL
+  zh: 图15.5：Gimp卷积矩阵，用于检测底部边缘。
 - en: To understand this numerically, we can simulate a tiny image ([fig. 15.6](#fig-images-cross-correlation),
     left). The numbers represent a grayscale image with values ranging from 0 to 255\.
     To its right, we have the kernel; this is the one we used to detect the left edge.
     As a result of having that kernel slide over the image, we obtain the “image”
     on the right. `0` being the lowest possible value, negative pixels end up black,
     and we obtain a white edge on black background, just like we saw with Gimp.
+  id: totrans-42
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了从数值上理解这一点，我们可以模拟一个微小的图像([图15.6](#fig-images-cross-correlation)，左侧)。这些数字代表一个灰度图像，其值范围从0到255。在其右侧，我们有核；这是我们用来检测左侧边缘的核。由于该核在图像上滑动，我们获得了右侧的“图像”。由于`0`是可能的最小值，负像素最终变为黑色，我们在黑色背景上获得了一个白色边缘，就像我们在Gimp中看到的那样。
 - en: '![Convolution by example. On the left, the white square on black background,
     with black pixels mapped to value 0 and white pixels, to 255\. In the middle,
     the 3 x 3 kernel that detects a left edge, with the central row holding values
@@ -224,33 +312,47 @@
     and 2 as well as 7 and 8 are all zero; same with columns 1, 2, 4, 5, 6, and 8\.
     Column 3 reads: 0, 0, 1, 1, 1, 1, 0, 0\. Column 7 reads: 0, 0, -255, -255, -255,
     -255, 0, 0.](../Images/4f274c3d23f7b82571a2cb366c667e73.png)'
+  id: totrans-43
   prefs: []
   type: TYPE_IMG
+  zh: '![通过示例进行卷积。左侧，黑色背景上的白色方块，黑色像素映射到值0，白色像素映射到255。中间，3 x 3的核用于检测左侧边缘，中间行包含值-1,
+    1, 0，而其他两行都是0。右侧，结果。第1行和第2行以及第7行和第8行都是0；同样，第1列、第2列、第4列、第5列、第6列和第8列也是如此。第3列读作：0,
+    0, 1, 1, 1, 1, 0, 0。第7列读作：0, 0, -255, -255, -255, -255, 0, 0。](../Images/4f274c3d23f7b82571a2cb366c667e73.png)'
 - en: 'Figure 15.6: Input image, filter, and result as pixel values. Negative pixel
     values being impossible, -255 will end up as 0.'
+  id: totrans-44
   prefs: []
   type: TYPE_NORMAL
+  zh: 图15.6：输入图像、滤波器和像素值的结果。由于像素值不可能是负数，-255将最终变为0。
 - en: Now, we’ve talked a lot about constructing kernels. Neural networks are all
     about *learning* feature detectors, not having them programmed up-front. Naturally,
     then, learning a filter means having a layer type whose weights embody this logic.
+  id: totrans-45
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在，我们已经讨论了很多关于构建核的内容。神经网络都是关于*学习*特征检测器，而不是预先编程。因此，学习一个滤波器意味着有一个层类型，其权重体现了这种逻辑。
 - en: 15.2.1.3 Convolutional layers in `torch`
+  id: totrans-46
   prefs:
   - PREF_H4
   type: TYPE_NORMAL
+  zh: 15.2.1.3 `torch`中的卷积层
 - en: 'So far, the only layer type we’ve seen that learns weights is `nn_linear()`.
     `nn_linear()` performs an affine operation: It takes an input tensor, matrix-multiplies
     it by its weight matrix \(\mathbf{W}\), and adds the bias vector \(\mathbf{b}\).
     While there is just a single bias per layer, independently of the number of neurons
     it has, this is not the case for the weights: There is a unique connection between
     each feature in the input tensor and each of the layer’s neurons.'
+  id: totrans-47
   prefs: []
   type: TYPE_NORMAL
+  zh: 到目前为止，我们看到的唯一一种学习权重的层类型是`nn_linear()`。`nn_linear()`执行仿射操作：它接受一个输入张量，将其与其权重矩阵\(\mathbf{W}\)进行矩阵乘法，并加上偏置向量\(\mathbf{b}\)。虽然每个层只有一个偏置，与其包含的神经元数量无关，但对于权重来说并非如此：输入张量中的每个特征与层的每个神经元之间都有一个独特的连接。
 - en: This is not true for `nn_conv2d()`, `torch`’s (two-dimensional) convolution[¹](#fn1)
     layer.
+  id: totrans-48
   prefs: []
   type: TYPE_NORMAL
+  zh: 这对于`nn_conv2d()`，`torch`（二维）卷积层[¹](#fn1)并不成立。
 - en: 'Back to how convolutional layers differ from linear ones. We’ve already seen
     what the layer’s effect is supposed to be: A *kernel* should slide over its input,
     generating an output value at each location. Now the kernel, for a convolutional
@@ -258,11 +360,15 @@
     that weights are re-used every time it shifts its position. Thus, the number of
     weights is determined by the size of the kernel, not the size of the input. As
     a consequence, a convolutional layer is way more economical than a linear one.'
+  id: totrans-49
   prefs: []
   type: TYPE_NORMAL
+  zh: 回到卷积层与线性层不同的地方。我们已经看到了层的预期效果：*核*应该在它的输入上滑动，在每个位置生成一个输出值。现在，对于卷积层，核正是其权重矩阵。核在输入图像上滑动意味着每次它移动位置时都会重用权重。因此，权重的数量由核的大小决定，而不是输入的大小。因此，卷积层比线性层要经济得多。
 - en: Another way to express this is the following.
+  id: totrans-50
   prefs: []
   type: TYPE_NORMAL
+  zh: 另一种表达方式如下。
 - en: 'Conceptually, we are looking for the same thing, wherever it appears in the
     image. Take the most standard of standard image classification benchmarks, MNIST.
     It is about classifying images of the Arabic numerals 0-9\. Say we want to learn
@@ -272,8 +378,10 @@
     do is say “that’s a 2”, we’re good to use an algorithm that is *translation-invariant*:
     It outputs the same thing independently of any shifts that may have occurred.
     For classification, that’s just fine: A 2 is a 2 is a 2.'
+  id: totrans-51
   prefs: []
   type: TYPE_NORMAL
+  zh: 从概念上讲，我们希望在任何图像中出现的地方找到相同的东西。以最标准的标准图像分类基准MNIST为例。它关于对阿拉伯数字0-9的图像进行分类。比如说我们想要学习2的形状。2可能位于图像的中央，或者它可能被移到左边（比如说）。算法应该能够识别它无论在哪里。额外的要求取决于任务。如果我们只需要能够说“那是2”，我们可以使用一个**平移不变**的算法：它独立于可能发生的任何位移输出相同的结果。对于分类来说，这完全没问题：2就是2就是2。
 - en: 'Another important task, though, is image segmentation (something we’ll look
     at in an upcoming chapter). In segmentation, we want to mark all pixels in an
     image according to whether they are part of some object or not. Think tumor cells,
@@ -282,33 +390,43 @@
     a shift has occurred, the target is still detected, but at a new location. And
     thinking about the convolution algorithm, translation-equivariant is exactly what
     it is.'
+  id: totrans-52
   prefs: []
   type: TYPE_NORMAL
+  zh: 然而，另一个重要的任务是图像分割（我们将在下一章中探讨）。在分割中，我们希望根据像素是否属于某个对象来标记图像中的所有像素。例如，考虑肿瘤细胞。2仍然是2，但我们确实需要知道它在图像中的位置。现在要使用的算法必须是**平移等变**的：如果发生了位移，目标仍然被检测到，但位置发生了变化。考虑到卷积算法，平移等变正是它所要求的。
 - en: So now, we have an idea how `torch` lets us detect individual features in an
     image. This gives us the first in our list of desiderates. The second is about
     combining feature detectors, that is, building up a hierarchy, in order to discern
     more and more specialized types of objects. This means that from a single layer,
     we move on to a network of layers.
+  id: totrans-53
   prefs: []
   type: TYPE_NORMAL
+  zh: 因此，我们现在有了如何使用`torch`在图像中检测单个特征的想法。这给了我们愿望清单中的第一条。第二条是关于组合特征检测器，即建立层次结构，以便区分越来越多地专门化的对象类型。这意味着从单个层开始，我们转向一个层网络。
 - en: 15.2.2 Build up feature hierarchies
+  id: totrans-54
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 15.2.2 构建特征层次结构
 - en: 'A prototypical convolutional neural network for image classification will chain
     blocks composed of three types of layers: convolutional ones (`nn_conv1d()`, `nn_conv2d()`,
     or `nn_conv3d()`, depending on the dimension we’re in), activation layers (e.g.,
     `nn_relu()`), and pooling layers (e.g., `nn_maxpool1d()`, `nn_maxpool2d()`, `nn_maxpool3d()`).'
+  id: totrans-55
   prefs: []
   type: TYPE_NORMAL
+  zh: 对于图像分类，一个典型的卷积神经网络将链接着由三种类型的层组成的块：卷积层（`nn_conv1d()`、`nn_conv2d()`或`nn_conv3d()`，取决于我们所在的维度），激活层（例如，`nn_relu()`）和池化层（例如，`nn_maxpool1d()`、`nn_maxpool2d()`、`nn_maxpool3d()`）。
 - en: 'The only type we haven’t talked about yet are the pooling layers. Just like
     activation layers, these don’t have any parameters; what they do is aggregate
     neighboring tensor values. The size of the region to summarize is specified in
     the layer constructor’s parameters. Various types of aggregation are available:
     `nn_maxpool<n>d()` picks the highest value, while `nn_avg_pool<n>d()` computes
     the average.'
+  id: totrans-56
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们还没有讨论过的唯一类型是池化层。就像激活层一样，这些层没有参数；它们所做的是聚合邻近的张量值。要总结的区域大小由层构造函数的参数指定。有各种类型的聚合方式可用：`nn_maxpool<n>d()`选择最高值，而`nn_avg_pool<n>d()`计算平均值。
 - en: Why would one want to perform these kinds of aggregation? Practically speaking,
     one *has to* if one wants to arrive at a per-image (as opposed to per-pixel) output.
     But we can’t just choose *any* way of aggregating spatially-arranged values. Picture,
@@ -318,27 +436,37 @@
     For classification, as opposed to segmentation, we want translation *invariance*
     – not just *equivariance*, the property we just said convolution has. And translation-invariant
     is just what layers like `nn_maxpool2d()`, `nn_avgpool2d()`, etc. are.
+  id: totrans-57
   prefs: []
   type: TYPE_NORMAL
+  zh: 为什么人们想要执行这些类型的聚合？从实际的角度来看，如果想要得到每个图像的输出（而不是每个像素的输出），就必须这样做。但我们不能随意选择任何空间排列值的聚合方式。例如，想象一下，一个平均值，其中图像块的内部像素比外部像素的权重更高。那么，块中某个对象的位置就会有所不同。但对于分类来说，这种情况不应该发生。与分割不同，对于分类，我们想要平移*不变性*——不仅仅是*等变性*，这是我们刚才说的卷积所具有的性质。而平移不变性正是像`nn_maxpool2d()`、`nn_avgpool2d()`等层所具有的。
 - en: 15.2.2.1 A prototypical convnet
+  id: totrans-58
   prefs:
   - PREF_H4
   type: TYPE_NORMAL
+  zh: 15.2.2.1 典型卷积网络
 - en: 'A template for a convolutional network, called “convnet” from now on, could
     thus look as below. To preempt any possible confusion: Even though, above, I was
     talking about three types of *layers*, there really is just one type in the code:
     the convolutional one. For brevity, both ReLU activation and max pooling are realized
     as functions instead.'
+  id: totrans-59
   prefs: []
   type: TYPE_NORMAL
+  zh: 一个卷积网络的模板，从现在起称为“convnet”，可能看起来如下。为了预防任何可能的混淆：尽管在上面，我提到了三种类型的*层*，但实际上代码中只有一种类型：卷积层。为了简洁，ReLU激活和最大池化都实现了作为函数。
 - en: Here is a possible template. It is not intended as a recommendation (as to number
     of filters, kernel size, or other hyperparameters, for example) – just to illustrate
     the mechanics. More detailed comments follow.
+  id: totrans-60
   prefs: []
   type: TYPE_NORMAL
+  zh: 这里是一个可能的模板。这并不是作为一个建议（例如，关于滤波器数量、核大小或其他超参数）——只是为了说明机制。更详细的注释如下。
 - en: '[PRE2]'
+  id: totrans-61
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE2]'
 - en: '*To understand what is going on, we need to know how images are represented
     in `torch`. By itself, an image is represented as a three-dimensional tensor,
     with one dimension indexing into available channels (package luz)} (one for gray-scale
@@ -346,48 +474,72 @@
     and the other two, corresponding to the two spatial axes, height (rows) and width
     (columns). In deep learning, we work with batches; thus, there is an additional
     dimension – the very first one – that refers to batch number.'
+  id: totrans-62
   prefs: []
   type: TYPE_NORMAL
+  zh: '*为了理解正在发生的事情，我们需要知道图像在`torch`中的表示方式。本身，一个图像被表示为一个三维张量，其中一个维度索引到可用的通道（包luz）（一个用于灰度图像，三个用于RGB，可能还有更多用于不同类型的成像输出），其他两个维度对应于两个空间轴，高度（行）和宽度（列）。在深度学习中，我们处理批次；因此，还有一个额外的维度——第一个维度——它指的是批次编号。'
 - en: 'Let’s look at an example image that may be used with the above template:'
+  id: totrans-63
   prefs: []
   type: TYPE_NORMAL
+  zh: 让我们看看一个可能用于上述模板的示例图像：
 - en: '[PRE3]'
+  id: totrans-64
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE3]'
 - en: '*What we have here is an image, or more precisely, a batch containing a single
     image, that has a single channel, and is of size 64 x 64.'
+  id: totrans-65
   prefs: []
   type: TYPE_NORMAL
+  zh: '*我们这里有一个图像，或者更准确地说，一个包含单个图像的批次，该图像只有一个通道，大小为64 x 64。'
 - en: 'That said, the above template assumes the following:'
+  id: totrans-66
   prefs: []
   type: TYPE_NORMAL
+  zh: 话虽如此，上面的模板假设以下内容：
 - en: The input image has one channel. That’s why the first argument to `nn_conv2d()`
     is `1` when we construct the first of the conv layers. (No assumptions are made,
     on the other hand, about the size of the input image.)
+  id: totrans-67
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 输入图像有一个通道。这就是为什么当我们构建第一个卷积层时，`nn_conv2d()`的第一个参数是`1`。 （另一方面，没有对输入图像的大小做出假设。）
 - en: We want to distinguish between three different target classes. This means that
     the output layer, a linear module, needs to have three output channels.
+  id: totrans-68
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 我们想要区分三个不同的目标类别。这意味着输出层，一个线性模块，需要有三个输出通道。
 - en: 'To test the code, we can call the un-trained model on our example image:'
+  id: totrans-69
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了测试代码，我们可以将未训练的模型调用到我们的示例图像上：
 - en: '[PRE4]'
+  id: totrans-70
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE4]'
 - en: '*[PRE5]'
+  id: totrans-71
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE5]'
 - en: 'One final note about that template. When you were reading the code above, one
     line that might have stood out is the following:'
+  id: totrans-72
   prefs: []
   type: TYPE_NORMAL
+  zh: 关于该模板的最后一项注意。当你阅读上面的代码时，可能有一行会显得突出：
 - en: '[PRE6]'
+  id: totrans-73
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE6]'
 - en: '*How did that 2304, the number of input connections to `nn_linear()`, come
     about? It is the result of (1) a number of operations that each reduce spatial
     resolution, plus (2) a flattening operation that removes all dimensional information
@@ -398,37 +550,52 @@
     all subsequent actions in `forward()`, and call the modified model. Naturally,
     this should not replace understanding, but it’s a great way not to lose one’s
     nerves when encountering shape errors.'
+  id: totrans-74
   prefs: []
   type: TYPE_NORMAL
+  zh: '*那个2304，即 `nn_linear()` 的输入连接数是如何得来的？这是由于（1）一系列减少空间分辨率的操作，加上（2）一个移除除批量维度之外所有维度信息的展平操作的结果。一旦我们讨论了相关层的参数，这就会更加有意义。但有一件事需要提前说明：*如果这听起来像是魔法，有一个简单的方法可以让魔法消失。*
+    也就是说，一个简单的方法来了解网络中任何阶段的张量形状，就是注释 `forward()` 中后续的所有操作，并调用修改后的模型。当然，这不应该取代理解，但这是一个在遇到形状错误时避免失去耐心的好方法。'
 - en: Now, about layer arguments.****  ***#### 15.2.2.2 Arguments to `nn_conv2d()`
+  id: totrans-75
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在，关于层参数。****  ***#### 15.2.2.2 `nn_conv2d()` 的参数
 - en: 'Above, we passed three arguments to `nn_conv2d()`: `in_channels`, `out_channels`,
     and `kernel_size`. This is not an exhaustive list of parameters, though. The remaining
     ones all have default values, but it is important to know about their existence.
     We’re going to elaborate on three of them, all of whom you’re likely to play with
     applying the template to some concrete task. All of them affect output size. So
     do two of the three mandatory arguments, `out_channels` and `kernel_size`:'
+  id: totrans-76
   prefs: []
   type: TYPE_NORMAL
+  zh: 在上面，我们向 `nn_conv2d()` 函数传递了三个参数：`in_channels`、`out_channels` 和 `kernel_size`。但这并不是参数的完整列表。剩余的参数都有默认值，但了解它们的存在是很重要的。我们将详细说明其中的三个，这些参数在你将模板应用于具体任务时可能会用到。它们都会影响输出大小。其中两个强制参数
+    `out_channels` 和 `kernel_size` 也是如此：
 - en: '`out_channels` refers to the number of kernels (often called *filters*, in
     this context) learned. Its value affects the second of the four dimensions of
     the output tensor; it does not affect spatial resolution, though. Learning more
     filters adds capacity to the network, as it increases the number of weights.'
+  id: totrans-77
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '`out_channels` 指的是学习到的核（在这个上下文中通常称为 *filters*）的数量。它的值会影响输出张量的四个维度中的第二个；但它不会影响空间分辨率。学习更多的核会增加网络的容量，因为它增加了权重的数量。'
 - en: '`kernel_size`, on the other hand, *does* alter spatial resolution – unless
     its value is 1, in which case the kernel never exceeds image boundaries. Like
     `out_channels`, it is a candidate for experimentation. In general, though, it
     is advisable to keep kernel size rather small, and chain a larger number of convolutional
     layers, instead of enlarging kernel size in a “shallow” network.'
+  id: totrans-78
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 另一方面，`kernel_size` *确实* 会改变空间分辨率——除非其值为1，在这种情况下，核永远不会超出图像边界。像 `out_channels`
+    一样，它也是实验的候选者。不过，一般来说，建议保持核的大小较小，并串联更多的卷积层，而不是在“浅层”网络中增大核的大小。
 - en: Now for the three non-mandatory arguments to explore.
+  id: totrans-79
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在来探索三个非强制参数。
 - en: '`padding` is something we’ve encountered before. Any kernel that extends over
     more than a single pixel will move outside the valid region when sliding over
     an image; the more, the bigger the kernel. General options are to (1) either pad
@@ -440,103 +607,148 @@
     the kernel size. Compare [fig. 15.7](#fig-images-conv-arithmetic-padding), reproduced
     from a nice compilation by Dumoulin and Visin ([2016](references.html#ref-2016arXiv160307285D)),
     to see the effect of padding.'
+  id: totrans-80
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: '`padding` 是我们之前遇到过的东西。任何超过单个像素的核在滑动到图像上时都会移动到有效区域之外；核越大，这种情况就越明显。一般的选择是（1）要么对图像进行填充（例如使用零），要么（2）只在可能的情况下计算点积。在后一种情况下，空间分辨率会降低。这本身可能不是问题；就像许多事情一样，这是一个实验的问题。默认情况下，`torch`
+    不对图像进行填充；然而，通过传递大于 `0` 的 `padding` 值，你可以确保无论核的大小如何，空间分辨率都得到保留。比较 [图15.7](#fig-images-conv-arithmetic-padding)，它来自Dumoulin和Visin的出色汇编（[2016](references.html#ref-2016arXiv160307285D)），以了解填充的影响。'
 - en: '`stride` refers to the way a kernel moves over the image. With a `stride` greater
     than `1`, it takes “leaps” of sorts – see [fig. 15.8](#fig-images-conv-arithmetic-strides).
     This results in fewer “snapshots” being taken. As a result, spatial resolution
     decreases.'
+  id: totrans-81
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: '`stride`指的是核在图像上移动的方式。当`stride`大于`1`时，它以某种“跳跃”的方式移动 – 见[图15.8](#fig-images-conv-arithmetic-strides)。这导致拍摄的“快照”更少。因此，空间分辨率降低。'
 - en: A setting of `dilation` greater than `1,` too, results in fewer snapshots, but
     for a different reason. Now, it’s not that the kernel moves faster. Instead, the
     pixels it is applied to are not adjacent anymore. They’re spread out – how much,
     depends on the argument’s value. See [fig. 15.9](#fig-images-conv-arithmetic-dilation).
+  id: totrans-82
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 当`dilation`的设置大于`1`时，也会导致拍摄的快照更少，但原因不同。现在，并不是核移动得更快。相反，它所应用的像素不再相邻。它们被分散开 –
+    分散的程度取决于参数的值。见[图15.9](#fig-images-conv-arithmetic-dilation)。
 - en: '![Comparing convolution with and without padding. A 3 x 3 filter slides over
     a 4 x 4 image. Top row: The resulting image is of size 2 x 2\. Kernel never transcends
     the image. Bottom row: Padding by two on all sides. On the image''s edges, kernel
     is aligned such that it stands out by two pixels.](../Images/a292641a592b37b02d1e47b120fa2746.png)'
+  id: totrans-83
   prefs: []
   type: TYPE_IMG
+  zh: '![比较带填充和不带填充的卷积。一个3 x 3的滤波器在4 x 4的图像上滑动。顶部行：生成的图像大小为2 x 2。核从未超出图像。底部行：所有边都填充两个像素。在图像的边缘，核对齐使得它突出两个像素。](../Images/a292641a592b37b02d1e47b120fa2746.png)'
 - en: 'Figure 15.7: Convolution, and the effect of padding. Copyright Dumoulin and
     Visin ([2016](references.html#ref-2016arXiv160307285D)), reproduced under [MIT
     license](https://github.com/vdumoulin/conv_arithmetic/blob/master/LICENSE).'
+  id: totrans-84
   prefs: []
   type: TYPE_NORMAL
+  zh: 图15.7：卷积和填充效果。版权所有杜莫林和维辛 ([2016](references.html#ref-2016arXiv160307285D))，在[MIT许可证](https://github.com/vdumoulin/conv_arithmetic/blob/master/LICENSE)下复制。
 - en: '![Convolution done with a strides setting of 2 x 2\. A 3 x 3 filter slides
     over a 5 x 5 image. At each step, it jumps over one pixel, both when sliding horizontally
     and when sliding vertically.](../Images/a125240559412784b0889ea110c995bb.png)'
+  id: totrans-85
   prefs: []
   type: TYPE_IMG
+  zh: '![以2 x 2的步长设置完成的卷积。一个3 x 3的滤波器在5 x 5的图像上滑动。在每一步，它水平滑动和垂直滑动时都跳过一个像素。](../Images/a125240559412784b0889ea110c995bb.png)'
 - en: 'Figure 15.8: Convolution, and the effect of `strides`. Copyright Dumoulin and
     Visin ([2016](references.html#ref-2016arXiv160307285D)), reproduced under [MIT
     license](https://github.com/vdumoulin/conv_arithmetic/blob/master/LICENSE).'
+  id: totrans-86
   prefs: []
   type: TYPE_NORMAL
+  zh: 图15.8：卷积和步长的影响。版权所有杜莫林和维辛 ([2016](references.html#ref-2016arXiv160307285D))，在[MIT许可证](https://github.com/vdumoulin/conv_arithmetic/blob/master/LICENSE)下复制。
 - en: '![Convolution done with a dilation factor of 2\. A 3 x 3 filter slides over
     a 7 x 7 image. The filter is mapped in a way that there are 1-pixel holes in the
     image that are not covered by the filter.](../Images/700502d107fb250f4ed018b9b4cbcca8.png)'
+  id: totrans-87
   prefs: []
   type: TYPE_IMG
+  zh: '![使用2倍膨胀因子完成的卷积。一个3 x 3的滤波器在7 x 7的图像上滑动。滤波器以某种方式映射，使得图像中有1像素的空洞没有被滤波器覆盖。](../Images/700502d107fb250f4ed018b9b4cbcca8.png)'
 - en: 'Figure 15.9: Convolution, and the effect of `dilation`. Copyright Dumoulin
     and Visin ([2016](references.html#ref-2016arXiv160307285D)), reproduced under
     [MIT license](https://github.com/vdumoulin/conv_arithmetic/blob/master/LICENSE).'
+  id: totrans-88
   prefs: []
   type: TYPE_NORMAL
+  zh: 图15.9：卷积和`dilation`的影响。版权所有杜莫林和维辛 ([2016](references.html#ref-2016arXiv160307285D))，在[MIT许可证](https://github.com/vdumoulin/conv_arithmetic/blob/master/LICENSE)下复制。
 - en: For non-mandatory arguments `padding`, `stride`, and `dilation`, [tbl. 15.1](#tbl-images-convargs)
     has a summary of defaults and effects.
+  id: totrans-89
   prefs: []
   type: TYPE_NORMAL
+  zh: 对于非强制性的参数`padding`、`stride`和`dilation`，[表15.1](#tbl-images-convargs)总结了默认值和效果。
 - en: 'Table 15.1: Arguments to `nn_conv_2d()` you may want to experiment with – default
     values and non-default actions.'
+  id: totrans-90
   prefs: []
   type: TYPE_NORMAL
+  zh: 表15.1：你可能想要实验的`nn_conv_2d()`函数的参数 – 默认值和非默认操作。
 - en: '| Argument | Default | Action (if non-default) |'
+  id: totrans-91
   prefs: []
   type: TYPE_TB
+  zh: '| 参数 | 默认值 | 操作（如果非默认） |'
 - en: '| --- | --- | --- |'
+  id: totrans-92
   prefs: []
   type: TYPE_TB
+  zh: '| --- | --- | --- |'
 - en: '| `padding` | 0 | virtual rows/columns added around the image |'
+  id: totrans-93
   prefs: []
   type: TYPE_TB
+  zh: '| `padding` | 0 | 在图像周围添加虚拟的行/列 |'
 - en: '| `stride` | 1 | kernel moves across image at bigger step size (“jumps” over
     pixels) |'
+  id: totrans-94
   prefs: []
   type: TYPE_TB
+  zh: '| `stride` | 1 | 核在图像上以更大的步长移动（“跳过”像素） |'
 - en: '| `dilation` | 1 | kernel is applied to spread-out image pixels (“holes” in
     kernel) |'
+  id: totrans-95
   prefs: []
   type: TYPE_TB
+  zh: '| `dilation` | 1 | 核应用于扩展图像像素（核中的“空洞”） |'
 - en: 15.2.2.3 Arguments to pooling layers
+  id: totrans-96
   prefs:
   - PREF_H4
   type: TYPE_NORMAL
+  zh: 15.2.2.3 池化层的参数
 - en: 'Pooling layers compute aggregates over neighboring pixels. The number of pixels
     of aggregate over in every dimension is specified in the layer constructor’s first
     argument (alternatively, the corresponding function’s second argument). Slightly
     misleadingly, that argument is called `kernel_size`, although there are no weights
     involved: For example, in the above template, we were unconditionally taking the
     maximum pixel value over regions of size 2 x 2.'
+  id: totrans-97
   prefs: []
   type: TYPE_NORMAL
+  zh: 池化层计算相邻像素的聚合。每个维度上聚合的像素数由层构造函数的第一个参数指定（或者相应函数的第二个参数）。稍微有些误导的是，这个参数被称为`kernel_size`，尽管其中不涉及权重：例如，在上面的模板中，我们无条件地取2
+    x 2大小区域内的最大像素值。
 - en: In analogy to convolution layers, pooling layers also accept arguments `padding`
     and `stride`. However, they are seldom used.
+  id: totrans-98
   prefs: []
   type: TYPE_NORMAL
+  zh: 与卷积层类似，池化层也接受`padding`和`stride`参数。然而，它们很少被使用。
 - en: 15.2.2.4 Zooming out
+  id: totrans-99
   prefs:
   - PREF_H4
   type: TYPE_NORMAL
+  zh: 15.2.2.4 缩放视图
 - en: We’ve talked a lot about layers and their arguments. Let’s zoom out and think
     back about the general template, and what it is supposed to achieve.
+  id: totrans-100
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们已经讨论了很多关于层及其参数的内容。现在让我们退一步，回顾一下通用模板，以及它试图实现的目标。
 - en: We are chaining blocks that, each, perform a convolution, apply a non-linearity,
     and spatially aggregate the result. Each block’s weights act as feature detectors,
     and every block but the first receives as input something that already is the
@@ -545,22 +757,31 @@
     of features is built. Early layers detect edges and textures, later ones, patterns
     of various complexity, and the final ones, objects and parts of objects (see [fig. 15.10](#fig-images-feature-visualization),
     a beautiful visualization reproduced from Olah, Mordvintsev, and Schubert ([2017](references.html#ref-olah2017feature))).
+  id: totrans-101
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们正在链式连接执行卷积、应用非线性函数和空间聚合结果的块。每个块的权重充当特征检测器，除了第一个块之外，每个块都接收已经应用了一个或多个特征检测器的结果作为输入。发生神奇的事情，也是卷积网络成功的原因，是通过链式连接层，构建了一个*特征层次结构*。早期层检测边缘和纹理，后面的层检测各种复杂性的模式，最后的层检测物体及其部分（参见[图15.10](#fig-images-feature-visualization)，这是从Olah、Mordvintsev和Schubert（[2017](references.html#ref-olah2017feature)）复制的美丽可视化）。
 - en: '![What layers at different levels of the hierarchy respond to, by example.
     From left to right: Various species of edges, textures, patterns, parts, objects.](../Images/247756be94429a1ce93c43b74e97d2f2.png)'
+  id: totrans-102
   prefs: []
   type: TYPE_IMG
+  zh: '![不同层次中各层响应的内容示例。从左到右：各种边缘、纹理、图案、部分、物体。](../Images/247756be94429a1ce93c43b74e97d2f2.png)'
 - en: 'Figure 15.10: Feature visualization on a subset of layers of GoogleNet. Figure
     from Olah, Mordvintsev, and Schubert ([2017](references.html#ref-olah2017feature)),
     reproduced under [Creative Commons Attribution CC-BY 4.0](https://creativecommons.org/licenses/by/4.0/)
     without modification.'
+  id: totrans-103
   prefs: []
   type: TYPE_NORMAL
+  zh: 图15.10：GoogleNet部分层的特征可视化。图来自Olah、Mordvintsev和Schubert（[2017](references.html#ref-olah2017feature)），在[Creative
+    Commons Attribution CC-BY 4.0](https://creativecommons.org/licenses/by/4.0/)许可下未经修改复制。
 - en: We now know enough about coding convnets and how they work to explore a real
     example.***  ***## 15.3 Classification on Tiny Imagenet
+  id: totrans-104
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们现在对编码卷积网络及其工作原理有了足够的了解，可以探索一个真实示例。***  ***## 15.3 在Tiny Imagenet上的分类
 - en: Before we start coding, let me anchor your expectations. In this chapter, we
     design and train a basic convnet from scratch. As to data pre-processing, we do
     what is needed, not more. In the next two chapters, we’ll learn about common techniques
@@ -569,27 +790,37 @@
     those techniques to the present task. Therefore, what we’re doing here is build
     a baseline, to be used in comparison with more sophisticated approaches. This
     is “just” a beginning.
+  id: totrans-105
   prefs: []
   type: TYPE_NORMAL
+  zh: 在我们开始编码之前，让我先设定一下你的期望。在本章中，我们将从头开始设计和训练一个基本的卷积网络。至于数据预处理，我们只做必要的，不做多余。在接下来的两章中，我们将学习用于提高模型训练质量及速度的常见技术。一旦我们覆盖了这些内容，我们就会继续本章的结尾，并将其中的一些技术应用于当前任务。因此，我们在这里所做的只是建立一个基线，用于与更复杂的方法进行比较。这只是一个开始。
 - en: 15.3.1 Data pre-processing
+  id: totrans-106
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 15.3.1 数据预处理
 - en: 'In addition to `torch` and `luz`, we load a third package from the `torch`
     ecosystem: `torchvision`. `torchvision` provides operations on images, as well
     as a set of pre-trained models and common benchmark datasets.'
+  id: totrans-107
   prefs: []
   type: TYPE_NORMAL
+  zh: 除了`torch`和`luz`，我们还从`torch`生态系统中加载了第三个包：`torchvision`。`torchvision`提供了图像操作，以及一组预训练模型和常见的基准数据集。
 - en: '[PRE7]'
+  id: totrans-108
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE7]'
 - en: '*The dataset we use is “Tiny Imagenet”. Tiny Imagenet is a subset of [ImageNet](https://image-net.org/index.php),
     a gigantic collection of more than fourteen million images, initially made popular
     through the “ImageNet Large Scale Visual Recognition Challenge” that was run between
     2012 and 2017\. In the challenge, the most popular task was multi-class classification,
     with one thousand different classes to choose from.'
+  id: totrans-109
   prefs: []
   type: TYPE_NORMAL
+  zh: '*我们使用的数据集是“Tiny Imagenet”。Tiny Imagenet是[ImageNet](https://image-net.org/index.php)的一个子集，一个包含超过一千万张图片的巨大集合，最初通过2012年至2017年举办的“ImageNet大规模视觉识别挑战赛”而广受欢迎。在挑战赛中，最受欢迎的任务是多类别分类，有1000个不同的类别可供选择。'
 - en: One thousand classes is a lot; and with images typically being processed at
     a resolution of 256 x 256, training a model takes a lot of time, even on luxurious
     hardware. For that reason, a more manageable version was created as part of a
@@ -598,145 +829,219 @@
     has two hundred classes, with five hundred training images per class. Two hundred
     classes, that’s still a lot! (Most introductory examples will do “cats vs. dogs”,
     or some other binary problem.) Thus, it’s not an easy task.
+  id: totrans-110
   prefs: []
   type: TYPE_NORMAL
+  zh: 一千个类别很多；而且图像通常以256 x 256的分辨率进行处理，即使在豪华硬件上训练模型也需要很长时间。因此，作为斯坦福大学流行深度学习图像课程[卷积神经网络用于视觉识别（CS231n）](http://cs231n.stanford.edu/)的一部分，创建了一个更易于管理的版本。浓缩的数据集有二百个类别，每个类别有五百个训练图像。二百个类别仍然很多！（大多数入门示例都会做“猫对狗”，或其他一些二元问题。）因此，这不是一个简单的任务。
 - en: We start by downloading the data.
+  id: totrans-111
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们首先开始下载数据。
 - en: '[PRE8]'
+  id: totrans-112
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE8]'
 - en: '*Notice how `tiny_imagenet_dataset()` takes an argument called `transform`.
     This is used to specify operations to be performed as part of the input pipeline.
     Here, not much is happening: We just convert images to something we can work with,
     tensors. However, very soon we’ll see this argument used to specify sequences
     of transformations such as resizing, cropping, rotation, and more.'
+  id: totrans-113
   prefs: []
   type: TYPE_NORMAL
+  zh: '*注意`tiny_imagenet_dataset()`函数接受一个名为`transform`的参数。这个参数用于指定作为输入管道一部分要执行的操作。在这里，并没有发生太多事情：我们只是将图像转换为可以工作的张量。然而，很快我们就会看到这个参数被用来指定一系列变换，如调整大小、裁剪、旋转等。'
 - en: What remains to be done is create the data loaders.
+  id: totrans-114
   prefs: []
   type: TYPE_NORMAL
+  zh: 剩下的工作是要创建数据加载器。
 - en: '[PRE9]'
+  id: totrans-115
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE9]'
 - en: '*Images are RGB, and of size 64 x 64:'
+  id: totrans-116
   prefs: []
   type: TYPE_NORMAL
+  zh: '*图像是RGB格式，大小为64 x 64：'
 - en: '[PRE10]'
+  id: totrans-117
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE10]'
 - en: '*[PRE11]'
+  id: totrans-118
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE11]'
 - en: 'Classes are integers between 1 to 200:'
+  id: totrans-119
   prefs: []
   type: TYPE_NORMAL
+  zh: 类别是介于1到200之间的整数：
 - en: '[PRE12]'
+  id: totrans-120
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE12]'
 - en: '*[PRE13]'
+  id: totrans-121
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE13]'
 - en: Now we define a convnet, and train it with `luz`.*****  ***### 15.3.2 Image
     classification from scratch
+  id: totrans-122
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在我们定义一个卷积神经网络，并用`luz`对其进行训练。*****  ***### 15.3.2 从零开始进行图像分类
 - en: Here is a prototypical convnet, modeled after our template, but more powerful.
+  id: totrans-123
   prefs: []
   type: TYPE_NORMAL
+  zh: 这里是一个典型的卷积神经网络，基于我们的模板，但更强大。
 - en: 'In addition to what we’ve seen already, the code illustrates a way of modularizing
     the code, arranging layers into three groups:'
+  id: totrans-124
   prefs: []
   type: TYPE_NORMAL
+  zh: 除了我们已经看到的，代码还展示了如何模块化代码，将层组织成三个组：
 - en: a (large) feature detector that, as a whole, is shift-equivariant;
+  id: totrans-125
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 一个（大型的）特征检测器，作为一个整体，是平移等变的；
 - en: a shift-invariant pooling layer (`nn_adaptive_avg_pool2d()`) that allows us
     to specify a desired output resolution; and
+  id: totrans-126
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 一个平移不变池化层(`nn_adaptive_avg_pool2d()`)，允许我们指定所需的输出分辨率；以及
 - en: 'a feed-forward neural network that takes the computed features and uses them
     to produce final scores: two hundred values, corresponding to two hundred classes,
     for each item in the batch.'
+  id: totrans-127
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 一个前馈神经网络，它接受计算出的特征并使用它们来生成最终得分：对于批次中的每个项目，有二百个值，对应二百个类别。
 - en: '[PRE14]'
+  id: totrans-128
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE14]'
 - en: '*Now, we train the network. The classifier outputs raw logits, not probabilities;
     this means we need to make use of `nn_cross_entropy_loss()`. We train for fifty
     epochs:'
+  id: totrans-129
   prefs: []
   type: TYPE_NORMAL
+  zh: '*现在，我们开始训练网络。分类器输出的是原始的对数几率，而不是概率；这意味着我们需要使用`nn_cross_entropy_loss()`。我们训练了五十个epoch：'
 - en: '[PRE15]'
+  id: totrans-130
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE15]'
 - en: '*After fifty epochs, this resulted in accuracy values of 0.92 and 0.22, on
     the training and test sets, respectively. This is quite a difference! On the training
     set, this model is near-perfect; on the test set, it only gets up to every fourth
     image correct.'
+  id: totrans-131
   prefs: []
   type: TYPE_NORMAL
+  zh: '*经过五十个epoch后，训练集和测试集上的准确率分别为0.92和0.22。这是一个相当大的差异！在训练集上，这个模型几乎是完美的；在测试集上，它只能正确识别到每第四张图像。'
 - en: '[PRE16]'
+  id: totrans-132
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE16]'
 - en: With two hundred options to choose from, “every fourth” does not even seem so
     bad; however, looking at the enormous difference between both metrics, something
     is not quite right. The model has severely *overfitted* to the training set –
     memorized the training samples, in other words. Overfitting is not specific to
     deep learning; it is the nemesis of all of machine learning. We’ll consecrate
     the whole next chapter to this topic.
+  id: totrans-133
   prefs: []
   type: TYPE_NORMAL
+  zh: 在两百个选项中选择，“每四个”似乎并不那么糟糕；然而，当我们看到两个指标之间巨大的差异时，似乎有些不对劲。模型严重地**过拟合**了训练集——换句话说，就是记住了训练样本。过拟合不仅限于深度学习；它是所有机器学习的宿敌。我们将在下一章专门讨论这个话题。
 - en: 'Before we end, though, let’s see how we would use `luz` to obtain predictions:'
+  id: totrans-134
   prefs: []
   type: TYPE_NORMAL
+  zh: 在结束之前，让我们看看如何使用`luz`来获取预测结果：
 - en: '[PRE17]'
+  id: totrans-135
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE17]'
 - en: '*`predict()` directly returns what is output by the model: two hundred non-normalized
     scores for each item. That’s because the model’s last layer is a linear module,
     with no activation applied. (Remember how the loss function, `nn_cross_entropy_loss()`,
     applies a *softmax* operation before calculating cross-entropy.)'
+  id: totrans-136
   prefs: []
   type: TYPE_NORMAL
+  zh: '*`predict()`直接返回模型输出的内容：每个项目的两百个非归一化分数。这是因为模型的最后一层是一个线性模块，没有应用激活函数。（还记得损失函数`nn_cross_entropy_loss()`在计算交叉熵之前应用了*softmax*操作吗？）'
 - en: 'Now, we could certainly call `nnf_softmax()` ourselves, converting outputs
     from `predict()` to probabilities:'
+  id: totrans-137
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在，我们当然可以自己调用`nnf_softmax()`，将`predict()`的输出转换为概率：
 - en: '[PRE18]'
+  id: totrans-138
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE18]'
 - en: '*However, if we’re just interested in determining the most likely class, we
     can as well skip the normalization step, and directly pick the highest value for
     each batch item:'
+  id: totrans-139
   prefs: []
   type: TYPE_NORMAL
+  zh: '*然而，如果我们只是想确定最可能的类别，我们也可以跳过归一化步骤，直接为每个批次的每个项目选择最高值：'
 - en: '[PRE19]'
+  id: totrans-140
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE19]'
 - en: '*[PRE20]'
+  id: totrans-141
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE20]'
 - en: We could now go on to compare predictions with actual classes, looking for inspiration
     on what could be done better. But at this stage, there is still a *lot* that can
     be done better! We will return to this application in due time, but first, we
     need to learn about overfitting, and ways to speed up model training.
+  id: totrans-142
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们现在可以继续比较预测结果与实际类别，寻找可以做得更好的灵感。但在这个阶段，还有很多地方可以改进！我们将在适当的时候回到这个应用，但首先，我们需要了解过拟合以及加快模型训练的方法。
 - en: Dumoulin, Vincent, and Francesco Visin. 2016\. “A guide to convolution arithmetic
     for deep learning.” *arXiv e-Prints*, March, arXiv:1603.07285\. [https://arxiv.org/abs/1603.07285](https://arxiv.org/abs/1603.07285).Olah,
     Chris, Alexander Mordvintsev, and Ludwig Schubert. 2017\. “Feature Visualization.”
     *Distill*. [https://doi.org/10.23915/distill.00007](https://doi.org/10.23915/distill.00007).********
     **** * *
+  id: totrans-143
   prefs: []
   type: TYPE_NORMAL
+  zh: Dumoulin, Vincent, and Francesco Visin. 2016\. “A guide to convolution arithmetic
+    for deep learning.” *arXiv e-Prints*, March, arXiv:1603.07285\. [https://arxiv.org/abs/1603.07285](https://arxiv.org/abs/1603.07285).Olah,
+    Chris, Alexander Mordvintsev, and Ludwig Schubert. 2017\. “Feature Visualization.”
+    *Distill*. [https://doi.org/10.23915/distill.00007](https://doi.org/10.23915/distill.00007).********
+    **** * *
 - en: Like I said above, I’ll be using the established term “convolution” from now
     on. Actually – given that weights are *learned –* it does not matter that much
     anyway.[↩︎](#fnref1)******
+  id: totrans-144
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 就像我上面说的，从现在起，我将使用已建立的术语“卷积”。实际上——鉴于权重是*学习得到的*——这并不那么重要。[↩︎](#fnref1)******

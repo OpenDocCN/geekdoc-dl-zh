@@ -1,170 +1,252 @@
 - en: 14  Training with luz
+  id: totrans-0
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
+  zh: 14  使用 luz 进行训练
 - en: 原文：[https://skeydan.github.io/Deep-Learning-and-Scientific-Computing-with-R-torch/training_with_luz.html](https://skeydan.github.io/Deep-Learning-and-Scientific-Computing-with-R-torch/training_with_luz.html)
+  id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 原文：[https://skeydan.github.io/Deep-Learning-and-Scientific-Computing-with-R-torch/training_with_luz.html](https://skeydan.github.io/Deep-Learning-and-Scientific-Computing-with-R-torch/training_with_luz.html)
 - en: At this point in the book, you know how to train a neural network. Truth be
     told, though, there’s some cognitive effort involved in having to remember the
     right execution order of steps like `optimizer$zero_grad()`, `loss$backward()`,
     and `optimizer$step()`. Also, in more complex scenarios than our running example,
     the list of things to actively remember gets longer.
+  id: totrans-2
   prefs: []
   type: TYPE_NORMAL
+  zh: 到本书的这一部分，你已经知道如何训练神经网络。说实话，但确实需要一些认知努力来记住像 `optimizer$zero_grad()`、`loss$backward()`
+    和 `optimizer$step()` 这样的步骤的正确执行顺序。此外，在比我们运行示例更复杂的场景中，需要主动记住的事情列表会更长。
 - en: 'One thing we haven’t talked about yet, for example, is how to handle the usual
     three stages of machine learning: training, validation, and testing. Another is
     the question of data flow between *devices* (CPU and GPU, if you have one). Both
     topics necessitate additional code to be introduced to the training loop. Writing
     this code can be tedious, and creates a potential for mistakes.'
+  id: totrans-3
   prefs: []
   type: TYPE_NORMAL
+  zh: 例如，我们还没有讨论过如何处理机器学习的通常三个阶段：训练、验证和测试。另一个问题是数据在 *设备*（CPU 和 GPU，如果你有的话）之间的流动问题。这两个主题都需要在训练循环中引入额外的代码。编写此代码可能是乏味的，并可能导致错误。
 - en: 'You can see exactly what I’m referring to in the appendix at the end of this
     chapter. But now, I want to focus on the remedy: a high-level, easy-to-use, concise
     way of organizing and instrumenting the training process, contributed by a package
     built on top of `torch`: `luz`.'
+  id: totrans-4
   prefs: []
   type: TYPE_NORMAL
+  zh: 你可以在本章末尾的附录中看到我确切指的是什么。但现在，我想专注于补救措施：一种高级、易于使用、简洁的方式来组织和仪表化训练过程，这是由建立在 `torch`
+    之上的包 `luz` 贡献的。
 - en: 14.1 Que haya luz - Que haja luz - Let there be light
+  id: totrans-5
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 14.1 光之存在 - 光之存在 - 让有光
 - en: A *torch* already brings some light, but sometimes in life, there is no *too
     bright*. `luz` was designed to make deep learning with `torch` as effortless as
     possible, while at the same time allowing for easy customization. In this chapter,
     we focus on the overall process; examples of customization will appear in later
     chapters.
+  id: totrans-6
   prefs: []
   type: TYPE_NORMAL
+  zh: 一个 *torch* 已经带来了一些光明，但有时在生活中，没有 *太亮* 的东西。`luz` 被设计成使使用 `torch` 进行深度学习尽可能轻松，同时允许轻松定制。在本章中，我们关注整体过程；定制的示例将在后续章节中呈现。
 - en: For ease of comparison, we take our running example, and add a third version,
     now using `luz`. First, we “just” directly port the example; then, we adapt it
     to a more realistic scenario. In that scenario, we
+  id: totrans-7
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了便于比较，我们采用我们的运行示例，并添加第三个版本，现在使用 `luz`。首先，“只是”直接移植示例；然后，我们将其适应到一个更现实的场景中。在那个场景中，我们
 - en: make use of separate training, validation, and test sets;
+  id: totrans-8
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 使用单独的训练、验证和测试集；
 - en: have `luz` compute *metrics* during training/validation;
+  id: totrans-9
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 让 `luz` 在训练/验证期间计算 *metrics*；
 - en: illustrate the use of *callbacks* to perform custom actions or dynamically change
     hyper-parameters during training; and
+  id: totrans-10
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 展示如何使用 *回调* 在训练期间执行自定义操作或动态更改超参数；
 - en: explain what is going on with the aforementioned *devices*.
+  id: totrans-11
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 解释上述 *设备* 发生了什么。
 - en: 14.2 Porting the toy example
+  id: totrans-12
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 14.2 将玩具示例移植
 - en: 14.2.1 Data
+  id: totrans-13
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 14.2.1 数据
 - en: '`luz` does not just substantially transform the code required to train a neural
     network; it also adds flexibility on the data side of things. In addition to a
     reference to a `dataloader()`, its `fit()` method accepts `dataset()`s, tensors,
     and even R objects, as we’ll be able to verify soon.'
+  id: totrans-14
   prefs: []
   type: TYPE_NORMAL
+  zh: '`luz` 不仅实质性地转换了训练神经网络所需的代码；它还在数据方面增加了灵活性。除了对 `dataloader()` 的引用外，其 `fit()`
+    方法还接受 `dataset()`、张量，甚至 R 对象，我们很快就能验证这一点。'
 - en: We start by generating an R matrix and a vector, as before. This time though,
     we also wrap them in a `tensor_dataset()`, and instantiate a `dataloader()`. Instead
     of just 100, we now generate 1000 observations.
+  id: totrans-15
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们首先生成一个 R 矩阵和一个向量，就像之前一样。不过，这次我们还将它们包装在 `tensor_dataset()` 中，并实例化一个 `dataloader()`。现在我们生成的不是
+    100 个，而是 1000 个观测值。
 - en: '[PRE0]'
+  id: totrans-16
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE0]'
 - en: '*### 14.2.2 Model'
+  id: totrans-17
   prefs: []
   type: TYPE_NORMAL
+  zh: '*### 14.2.2 模型*'
 - en: To use `luz`, no changes are needed to the model definition. Note, though, that
     we just *define* the model architecture; we never actually *instantiate* a model
     object ourselves.
+  id: totrans-18
   prefs: []
   type: TYPE_NORMAL
+  zh: 要使用 `luz`，不需要对模型定义进行任何更改。注意，尽管如此，我们只是 *定义* 模型架构；我们从未自己实际 *实例化* 模型对象。
 - en: '[PRE1]'
+  id: totrans-19
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE1]'
 - en: '*### 14.2.3 Training'
+  id: totrans-20
   prefs: []
   type: TYPE_NORMAL
+  zh: '*### 14.2.3 训练*'
 - en: 'To train the model, we don’t write loops anymore. `luz` replaces the familiar
     *iterative* style by a *declarative* one: You tell `luz` what you want to happen,
     and like a docile sorcerer’s apprentice, it sets in motion the machinery.'
+  id: totrans-21
   prefs: []
   type: TYPE_NORMAL
+  zh: 要训练模型，我们不再编写循环。`luz`用一种*声明式*风格取代了熟悉的*迭代*风格：你告诉`luz`你想要发生什么，就像一个温顺的魔法学徒一样，它会启动机器。
 - en: Concretely, instruction happens in two – required – calls.
+  id: totrans-22
   prefs: []
   type: TYPE_NORMAL
+  zh: 具体来说，指令发生在两个 - 必要的 - 调用中。
 - en: In `setup()`, you specify the loss function and the optimizer to use.
+  id: totrans-23
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 在`setup()`中，你指定要使用的损失函数和优化器。
 - en: In `fit()`, you pass reference(s) to the training (and optionally, validation)
     data, as well as the number of epochs to train for.
+  id: totrans-24
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 在`fit()`中，你传递训练（和可选的验证）数据的引用，以及要训练的周期数。
 - en: 'If the model is configurable – meaning, it accepts arguments to `initialize()`
     – a third method comes into play: `set_hparams()`, to be called in-between the
     other two. (That’s `hparams` for hyper-parameters.) Using this mechanism, you
     can easily experiment with, for example, different layer sizes, or other factors
     suspected to affect performance.'
+  id: totrans-25
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果模型是可配置的 - 意味着，它接受传递给`initialize()`的参数 - 那么第三个方法就派上用场了：`set_hparams()`，在另外两个方法之间调用。（这是`hparams`，代表超参数。）使用这个机制，你可以轻松地尝试不同的层大小，或其他可能影响性能的因素。
 - en: '[PRE2]'
+  id: totrans-26
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE2]'
 - en: '*Running this code, you should see output approximately like this:'
+  id: totrans-27
   prefs: []
   type: TYPE_NORMAL
+  zh: '*运行此代码，你应该看到大约如下输出：'
 - en: '[PRE3]'
+  id: totrans-28
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE3]'
 - en: 'Above, what we passed to `fit()` was the `dataloader()`. Let’s check that referencing
     the `dataset()` would have been just as fine:'
+  id: totrans-29
   prefs: []
   type: TYPE_NORMAL
+  zh: 在上面，我们传递给`fit()`的是`dataloader()`。让我们检查引用`dataset()`是否同样可行：
 - en: '[PRE4]'
+  id: totrans-30
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE4]'
 - en: '*Or even, `torch` tensors:'
+  id: totrans-31
   prefs: []
   type: TYPE_NORMAL
+  zh: '*甚至，`torch`张量：'
 - en: '[PRE5]'
+  id: totrans-32
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE5]'
 - en: '*And finally, R objects, which can be convenient when we aren’t already working
     with tensors.'
+  id: totrans-33
   prefs: []
   type: TYPE_NORMAL
+  zh: '*最后，R对象，当我们在不处理张量时可能很有用。'
 - en: '[PRE6]'
+  id: totrans-34
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE6]'
 - en: '*In the following sections, we’ll always be working with `dataloader()`s; but
     in some cases those “shortcuts” may come in handy.'
+  id: totrans-35
   prefs: []
   type: TYPE_NORMAL
+  zh: '*在接下来的章节中，我们始终会使用`dataloader()`；但在某些情况下，这些“快捷方式”可能很有用。'
 - en: Next, we extend the toy example, illustrating how to address more complex requirements.******  ***##
     14.3 A more realistic scenario
+  id: totrans-36
   prefs: []
   type: TYPE_NORMAL
+  zh: 接下来，我们扩展玩具示例，说明如何解决更复杂的要求。******  ***## 14.3 更现实的场景
 - en: 14.3.1 Integrating training, validation, and test
+  id: totrans-37
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 14.3.1 集成训练、验证和测试
 - en: In deep learning, training and validation phases are interleaved. Every epoch
     of training is followed by an epoch of validation. Importantly, the data used
     in both phases have to be strictly disjoint.
+  id: totrans-38
   prefs: []
   type: TYPE_NORMAL
+  zh: 在深度学习中，训练和验证阶段是交替进行的。每个训练周期之后都跟着一个验证周期。重要的是，两个阶段中使用的数据必须严格不重叠。
 - en: 'In each training phase, gradients are computed and weights are changed; during
     validation, none of that happens. Why have a validation set, then? If, for each
     epoch, we compute task-relevant metrics for both partitions, we can see if we
@@ -172,239 +254,349 @@
     training sample specifics not descriptive of the overall population we want to
     model. All we have to do is two things: instruct `luz` to compute a suitable metric,
     and pass it an additional `dataloader` pointing to the validation data.'
+  id: totrans-39
   prefs: []
   type: TYPE_NORMAL
+  zh: 在每个训练阶段，都会计算梯度并改变权重；在验证期间，不会发生这些。那么为什么要有一个验证集呢？如果我们对每个周期，都为两个部分计算与任务相关的度量标准，我们就可以看到我们是否对训练数据*过拟合*：也就是说，基于描述我们想要建模的总体人群的具体样本的结论。我们只需要做两件事：指示`luz`计算一个合适的度量标准，并传递一个指向验证数据的额外`dataloader`。
 - en: 'The former is done in `setup()`, and for a regression task, common choices
     are mean squared or mean absolute error (MSE or MAE, resp.). As we’re already
     using MSE as our loss, let’s choose MAE for a metric:'
+  id: totrans-40
   prefs: []
   type: TYPE_NORMAL
+  zh: 前者是在`setup()`中完成的，对于回归任务，常见的选项是均方误差或平均绝对误差（MSE或MAE）。既然我们已经在使用MSE作为我们的损失，那么让我们选择MAE作为度量标准：
 - en: '[PRE7]'
+  id: totrans-41
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE7]'
 - en: '*The validation `dataloader` is passed in `fit()` – but to be able to reference
     it, we need to construct it first! So now (anticipating we’ll want to have a test
     set, too), we split up the original 1000 observations into three partitions, creating
     a `dataset` and a `dataloader` for each of them.'
+  id: totrans-42
   prefs: []
   type: TYPE_NORMAL
+  zh: '*验证`dataloader`是在`fit()`中传递的 - 但为了能够引用它，我们首先需要构建它！所以现在（预计我们还需要测试集），我们将原始的1000个观测值分成三个部分，为每个部分创建一个`dataset`和`dataloader`。'
 - en: '[PRE8]'
+  id: totrans-43
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE8]'
 - en: '*Now, we are ready to start the enhanced workflow:'
+  id: totrans-44
   prefs: []
   type: TYPE_NORMAL
+  zh: '*现在，我们已经准备好开始增强的工作流程：'
 - en: '[PRE9]'
+  id: totrans-45
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE9]'
 - en: '*[PRE10]'
+  id: totrans-46
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE10]'
 - en: Even though both training and validation sets come from the exact same distribution,
     we do see a bit of overfitting. This is a topic we’ll talk about more in the next
     chapter.
+  id: totrans-47
   prefs: []
   type: TYPE_NORMAL
+  zh: 尽管训练集和验证集来自完全相同的分布，但我们确实看到了一点过拟合。这是我们将在下一章中更多讨论的话题。
 - en: 'Once training has finished, the `fitted` object above holds a history of epoch-wise
     metrics, as well as references to a number of important objects involved in the
     training process. Among the latter is the fitted model itself – which enables
     an easy way to obtain predictions on the test set:'
+  id: totrans-48
   prefs: []
   type: TYPE_NORMAL
+  zh: 一旦训练完成，上面的 `fitted` 对象将包含epoch级别的指标历史，以及涉及训练过程中的许多重要对象的引用。其中后者包括拟合的模型本身——这为在测试集上获得预测提供了一个简单的方法：
 - en: '[PRE11]'
+  id: totrans-49
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE11]'
 - en: '*[PRE12]'
+  id: totrans-50
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE12]'
 - en: 'We also want to evaluate performance on the test set:'
+  id: totrans-51
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们还希望评估测试集上的性能：
 - en: '[PRE13]'
+  id: totrans-52
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE13]'
 - en: '*[PRE14]'
+  id: totrans-53
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE14]'
 - en: 'This workflow of: training and validation in lock-step, then checking and extracting
     predictions on the test set is something we’ll encounter times and again in this
     book.*****  ***### 14.3.2 Using callbacks to “hook” into the training process'
+  id: totrans-54
   prefs: []
   type: TYPE_NORMAL
+  zh: 这种工作流程：同步进行训练和验证，然后检查并提取测试集上的预测，是我们在这本书中会多次遇到的事情。*****  ***### 14.3.2 使用回调“挂钩”到训练过程
 - en: 'At this point, you may feel that what we’ve gained in code efficiency, we may
     have lost in flexibility. Coding the training loop yourself, you can arrange for
     all kinds of things to happen: save model weights, adjust the learning rate …
     whatever you need.'
+  id: totrans-55
   prefs: []
   type: TYPE_NORMAL
+  zh: 在这个阶段，你可能觉得我们在代码效率上取得的成果，可能以灵活性为代价。自己编写训练循环，你可以安排各种事情发生：保存模型权重、调整学习率……无论你需要什么。
 - en: 'In reality, no flexibility is lost. Instead, `luz` offers a standardized way
     to achieve the same goals: callbacks. Callbacks are objects that can execute arbitrary
     R code, at any of the following points in time:'
+  id: totrans-56
   prefs: []
   type: TYPE_NORMAL
+  zh: 实际上，没有失去任何灵活性。相反，`luz` 提供了一种标准化的方式来实现相同的目标：回调。回调是可以在以下时间点执行任意R代码的对象：
 - en: when the overall training process starts or ends (`on_fit_begin()` / `on_fit_end()`);
+  id: totrans-57
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 当整体训练过程开始或结束时（`on_fit_begin()` / `on_fit_end()`）；
 - en: when an epoch (comprising training and validation) starts or ends (`on_epoch_begin()`
     / `on_epoch_end()`);
+  id: totrans-58
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 当一个epoch（包括训练和验证）开始或结束时（`on_epoch_begin()` / `on_epoch_end()`）；
 - en: when during an epoch, the training (validation, resp.) phase starts or ends
     (`on_train_begin()` / `on_train_end()`; `on_valid_begin()` / `on_valid_end()`);
+  id: totrans-59
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 当在一个epoch期间，训练（验证，相应地）阶段开始或结束时（`on_train_begin()` / `on_train_end()`；`on_valid_begin()`
+    / `on_valid_end()`）；
 - en: when during training (validation, resp.), a new batch is either about to be
     or has been processed (`on_train_batch_begin()` / `on_train_batch_end()`; `on_valid_batch_begin()`
     / `on_valid_batch_end()`);
+  id: totrans-60
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 当在训练（验证，相应地）期间，一个新批次即将被处理或已经被处理时（`on_train_batch_begin()` / `on_train_batch_end()`；`on_valid_batch_begin()`
+    / `on_valid_batch_end()`）；
 - en: and even at specific landmarks inside the “innermost” training / validation
     logic, such as “after loss computation”, “after `backward()`” or “after `step()`”.
+  id: totrans-61
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 甚至在“最内层”训练/验证逻辑中的特定里程碑，例如“损失计算后”、“`backward()` 后”或“`step()` 后”。
 - en: 'While you can implement any logic you wish using callbacks (and we’ll see how
     to do this in a later chapter), `luz` already comes equipped with a very useful
     set. For example:'
+  id: totrans-62
   prefs: []
   type: TYPE_NORMAL
+  zh: 虽然你可以使用回调实现任何你想要的逻辑（我们将在后面的章节中看到如何做到这一点），但 `luz` 已经配备了一个非常有用的集合。例如：
 - en: '`luz_callback_model_checkpoint()` saves model weights after every epoch (or
     just in case of improvements, if so instructed).'
+  id: totrans-63
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '`luz_callback_model_checkpoint()` 在每个epoch后（或根据指示仅在改进的情况下）保存模型权重。'
 - en: '`luz_callback_lr_scheduler()` activates one of `torch`’s *learning rate schedulers*.
     Different scheduler objects exist, each following their own logic in dynamically
     updating the learning rate.'
+  id: totrans-64
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '`luz_callback_lr_scheduler()` 激活 `torch` 的一个 *学习率调度器*。存在不同的调度器对象，每个对象都遵循自己的逻辑，在动态更新学习率。'
 - en: '`luz_callback_early_stopping()` terminates training once model performance
     stops to improve. What exactly “stops to improve” should mean is configurable
     by the user.'
+  id: totrans-65
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '`luz_callback_early_stopping()` 一旦模型性能停止改进，就会终止训练。究竟“停止改进”意味着什么，用户可以配置。'
 - en: 'Callbacks are passed to the `fit()` method in a list. For example, augmenting
     our most recent workflow:'
+  id: totrans-66
   prefs: []
   type: TYPE_NORMAL
+  zh: 回调作为列表传递给 `fit()` 方法。例如，增强我们最近的流程：
 - en: '[PRE15]'
+  id: totrans-67
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE15]'
 - en: '*With this configuration, weights will be saved, but only if validation loss
     decreases. Training will halt if there is no improvement (again, in validation
     loss) for ten epochs. With both callbacks, you can pick any other metric to base
     the decision on, and the metric in question may also refer to the training set.'
+  id: totrans-68
   prefs: []
   type: TYPE_NORMAL
+  zh: '*使用这种配置，权重将被保存，但仅当验证损失下降时。如果十次epoch内没有改进（再次，在验证损失上），训练将停止。使用这两个回调，你可以选择任何其他指标作为决策依据，相关的指标也可能指的是训练集。'
 - en: 'Here, we see early stopping happening after 111 epochs:'
+  id: totrans-69
   prefs: []
   type: TYPE_NORMAL
+  zh: 这里，我们看到在111个epoch后发生了早期停止：
 - en: '[PRE16]*  *### 14.3.3 How `luz` helps with devices'
+  id: totrans-70
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE16]*  *### 14.3.3 `luz` 如何帮助设备'
 - en: Finally, let’s quickly mention how `luz` helps with device placement. Devices,
     in a usual environment, are the CPU and perhaps, if available, a GPU. For training,
     data and model weights need to be located on the same device. This can introduce
     complexities, and – at the very least – necessitates additional code to keep all
     pieces in sync.
+  id: totrans-71
   prefs: []
   type: TYPE_NORMAL
+  zh: 最后，让我们简要提及`luz`如何帮助进行设备放置。在通常的环境中，设备是CPU，也许如果可用，还有GPU。对于训练，数据和模型权重需要位于同一设备上。这可能会引入复杂性，并且至少需要额外的代码来保持所有组件同步。
 - en: 'With `luz`, related actions happen transparently to the user. Let’s take the
     prediction step from above:'
+  id: totrans-72
   prefs: []
   type: TYPE_NORMAL
+  zh: 使用`luz`，相关动作对用户来说是透明的。让我们以上面的预测步骤为例：
 - en: '[PRE17]'
+  id: totrans-73
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE17]'
 - en: '*In case this code was executed on a machine that has a GPU, `luz` will have
     detected that, and the model’s weight tensors will already have been moved there.
     Now, for the above call to `predict()`, what happened “under the hood” was the
     following:'
+  id: totrans-74
   prefs: []
   type: TYPE_NORMAL
+  zh: '*如果这段代码是在具有GPU的机器上执行的，`luz`将检测到这一点，并且模型的权重张量已经移动到那里。现在，对于上面的`predict()`调用，“幕后”发生的情况如下：'
 - en: '`luz` put the model in evaluation mode, making sure that weights are not updated.'
+  id: totrans-75
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '`luz`将模型置于评估模式，确保权重不会被更新。'
 - en: '`luz` moved the test data to the GPU, batch by batch, and obtained model predictions.'
+  id: totrans-76
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '`luz`将测试数据逐批次移动到GPU上，并获取模型预测。'
 - en: These predictions were then moved back to the CPU, in anticipation of the caller
     wanting to process them further with R. (Conversion functions like `as.numeric()`,
     `as.matrix()` etc. can only act on CPU-resident tensors.)
+  id: totrans-77
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 这些预测随后被移回CPU，以便调用者可以使用R进一步处理它们。（如`as.numeric()`、`as.matrix()`等转换函数只能作用于CPU上的张量。）
 - en: In the below appendix, you find a complete walk-through of how to implement
     the train-validate-test workflow by hand. You’ll likely find this a lot more complex
     than what we did above – and it does not even bring into play metrics, or any
     of the functionality afforded by `luz` callbacks.
+  id: totrans-78
   prefs: []
   type: TYPE_NORMAL
+  zh: 在下面的附录中，您可以找到如何手动实现训练-验证-测试工作流程的完整指南。您可能会发现这比我们上面所做的方法要复杂得多——而且它甚至没有涉及到指标，或者`luz`回调提供的任何功能。
 - en: 'In the next chapter, we discuss essential ingredients of modern deep learning
     we haven’t yet touched upon; and following that, we look at specific architectures
     destined to specifically handle different tasks and domains.*****  ***## 14.4
     Appendix: A train-validate-test workflow implemented by hand'
+  id: totrans-79
   prefs: []
   type: TYPE_NORMAL
+  zh: 在下一章中，我们将讨论现代深度学习的基本要素，这些要素我们尚未涉及；随后，我们将探讨专门用于处理不同任务和领域的特定架构。*****  ***
 - en: 'For clarity, we repeat here the two things that do *not* depend on whether
     you’re using `luz` or not: `dataloader()` preparation and model definition.'
+  id: totrans-80
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了清晰起见，我们在此重复两件不依赖于您是否使用`luz`的事情：`dataloader()`准备和模型定义。
 - en: '[PRE18]'
+  id: totrans-81
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE18]'
 - en: '*Recall that with `luz`, now all that separates you from watching how training
     and validation losses evolve is a snippet like this:'
+  id: totrans-82
   prefs: []
   type: TYPE_NORMAL
+  zh: '*回想一下，使用`luz`后，您与观察训练和验证损失演变的唯一区别就是一个这样的片段：'
 - en: '[PRE19]'
+  id: totrans-83
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE19]'
 - en: '*Without `luz`, however, things to be taken care of fall into three distinct
     categories.'
+  id: totrans-84
   prefs: []
   type: TYPE_NORMAL
+  zh: '*然而，没有`luz`，需要注意的事情可以分为三个不同的类别。'
 - en: First, instantiate the network, and, if CUDA is installed, move its weights
     to the GPU.
+  id: totrans-85
   prefs: []
   type: TYPE_NORMAL
+  zh: 首先，实例化网络，如果已安装CUDA，则将其权重移动到GPU上。
 - en: '[PRE20]'
+  id: totrans-86
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE20]'
 - en: '*Second, create an optimizer.'
+  id: totrans-87
   prefs: []
   type: TYPE_NORMAL
+  zh: '*其次，创建一个优化器。'
 - en: '[PRE21]'
+  id: totrans-88
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE21]'
 - en: '*And third, the biggest chunk: In each epoch, iterate over training batches
     as well as validation batches, performing backpropagation when working on the
     former, while just passively reporting losses when processing the latter.'
+  id: totrans-89
   prefs: []
   type: TYPE_NORMAL
+  zh: '*第三，最大的部分：在每个epoch中，迭代训练批次以及验证批次，当处理前者时执行反向传播，而当处理后者时只是被动地报告损失。'
 - en: For clarity, we pack training logic and validation logic each into their own
     functions. `train_batch()` and `valid_batch()` will be called from inside loops
     over the respective batches. Those loops, in turn, will be executed for every
     epoch.
+  id: totrans-90
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了清晰起见，我们将训练逻辑和验证逻辑各自封装到它们自己的函数中。`train_batch()`和`valid_batch()`将从遍历相应批次的循环内部调用。这些循环反过来将为每个epoch执行。
 - en: 'While `train_batch()` and `valid_batch()`, per se, trigger the usual actions
     in the usual order, note the device placement calls: For the model to be able
     to take in the data, they have to live on the same device. Then, for mean-squared-error
     computation to be possible, the target tensors need to live there as well.'
+  id: totrans-91
   prefs: []
   type: TYPE_NORMAL
+  zh: 虽然`train_batch()`和`valid_batch()`本身会触发通常的按顺序执行的动作，但请注意设备放置调用：为了模型能够接收数据，它们必须位于同一设备上。然后，为了进行均方误差计算，目标张量也需要位于那里。
 - en: '[PRE22]'
+  id: totrans-92
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE22]'
 - en: '*The loop over epochs contains two lines that deserve special attention: `model$train()`
     and `model$eval()`. The former instructs `torch` to put the model in training
     mode; the latter does the opposite. With the simple model we’re using here, it
@@ -412,13 +604,19 @@
     using regularization layers like `nn_dropout()` and `nn_batch_norm2d()`, calling
     these methods in the correct places is essential. This is because these layers
     behave differently during evaluation and training.'
+  id: totrans-93
   prefs: []
   type: TYPE_NORMAL
+  zh: '*在遍历epoch的循环中，有两行值得特别注意：`model$train()`和`model$eval()`。前者指示`torch`将模型置于训练模式；后者则相反。在我们这里使用的简单模型中，如果你忘记了这些调用，可能不会有什么问题；然而，当我们稍后使用正则化层如`nn_dropout()`和`nn_batch_norm2d()`时，正确调用这些方法至关重要。这是因为这些层在评估和训练期间的行为不同。'
 - en: '[PRE23]'
+  id: totrans-94
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE23]'
 - en: '*This completes our walk-through of manual training, and should have made more
     concrete my assertion that using `luz` significantly reduces the potential for
     casual (e.g., copy-paste) errors.************'
+  id: totrans-95
   prefs: []
   type: TYPE_NORMAL
+  zh: '*这完成了我们对手动训练的概述，并且应该使我的断言更加具体，即使用`luz`可以显著减少偶然（例如，复制粘贴）错误的可能性。************'

@@ -1,16 +1,22 @@
 - en: '24  Matrix computations: Least-squares problems'
+  id: totrans-0
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
+  zh: 24  矩阵计算：最小二乘问题
 - en: 原文：[https://skeydan.github.io/Deep-Learning-and-Scientific-Computing-with-R-torch/matrix_computations_leastsquares.html](https://skeydan.github.io/Deep-Learning-and-Scientific-Computing-with-R-torch/matrix_computations_leastsquares.html)
+  id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 原文：[https://skeydan.github.io/Deep-Learning-and-Scientific-Computing-with-R-torch/matrix_computations_leastsquares.html](https://skeydan.github.io/Deep-Learning-and-Scientific-Computing-with-R-torch/matrix_computations_leastsquares.html)
 - en: In this chapter and the next, we’ll explore what `torch` lets us do with matrices.
     Here, we take a look at various ways to solve least-squares problems. The intention
     is two-fold.
+  id: totrans-2
   prefs: []
   type: TYPE_NORMAL
+  zh: 在本章和下一章中，我们将探讨 `torch` 允许我们用矩阵做什么。在这里，我们将查看解决最小二乘问题的各种方法。目的是双重的。
 - en: Firstly, this subject often gets pretty technical, or rather, *computational*,
     very fast. Depending on your background (and goals), this may just be what you
     want; you either know well, or do not care about so much, the underlying concepts.
@@ -20,169 +26,227 @@
     in this chapter, I’ll try to present things in a way that the main ideas don’t
     get obscured by “computer-sciencey” details (details that are easily found in
     a number of excellent books, anyway).
+  id: totrans-3
   prefs: []
   type: TYPE_NORMAL
+  zh: 首先，这个主题通常很快就会变得相当技术性，或者说，*计算* 非常快。根据你的背景（和目标），这可能是你想要的；你要么非常了解，要么不太关心底层概念。但对于一些人来说，纯技术性的展示，那种不也停留在
+    *概念* 上，即主题背后的抽象思想，可能无法传达其魅力，无法传达它可能产生的智力吸引力。这就是为什么在本章中，我将尝试以一种方式来呈现事物，这样主要思想就不会被“计算机科学”细节所掩盖（这些细节在任何一本优秀的书中都很容易找到）。
 - en: 24.1 Five ways to do least squares
+  id: totrans-4
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 24.1 五种求解最小二乘法的方式
 - en: 'How do you compute linear least-squares regression? In R, using `lm()`; in
     `torch`, there is `linalg_lstsq()`. Where R, sometimes, hides complexity from
     the user, high-performance computation frameworks like `torch` tend to ask a bit
     more up-front effort, be it careful reading of documentation, or playing around
     some, or both. For example, here is the central piece of documentation for `linalg_lstsq()`,
     elaborating on the `driver` parameter to the function:'
+  id: totrans-5
   prefs: []
   type: TYPE_NORMAL
+  zh: 你如何计算线性最小二乘回归？在 R 中，使用 `lm()` 函数；在 `torch` 中，有 `linalg_lstsq()` 函数。R 有时会对用户隐藏复杂性，而高性能计算框架如
+    `torch` 则倾向于要求用户 upfront 做更多的努力，无论是仔细阅读文档，还是尝试一些，或者两者都要。例如，以下是 `linalg_lstsq()`
+    函数的核心文档，详细说明了函数的 `driver` 参数：
 - en: '`driver` chooses the LAPACK/MAGMA function that will be used.'
+  id: totrans-6
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: '`driver` 选择将使用的 LAPACK/MAGMA 函数。'
 - en: ''
+  id: totrans-7
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: For CPU inputs the valid values are ‘gels’, ‘gelsy’, ‘gelsd, ’gelss’.
+  id: totrans-8
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 对于 CPU 输入，有效的值是 ‘gels’，‘gelsy’，‘gelsd’，‘gelss’。
 - en: ''
+  id: totrans-9
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: For CUDA input, the only valid driver is ‘gels’, which assumes that A is full-rank.
+  id: totrans-10
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 对于 CUDA 输入，唯一有效的驱动程序是 ‘gels’，它假设 A 是满秩的。
 - en: ''
+  id: totrans-11
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: 'To choose the best driver on CPU consider:'
+  id: totrans-12
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 要在 CPU 上选择最佳驱动程序，请考虑：
 - en: ''
+  id: totrans-13
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: 'If A is well-conditioned (its condition number is not too large), or you do
     not mind some precision loss:'
+  id: totrans-14
   prefs:
   - PREF_BQ
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 如果 A 是良态的（其条件数不是太大），或者你不在乎一些精度损失：
 - en: 'For a general matrix: ‘gelsy’ (QR with pivoting) (default)'
+  id: totrans-15
   prefs:
   - PREF_BQ
   - PREF_IND
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 对于一般矩阵：‘gelsy’（带置换的 QR）（默认）
 - en: ''
+  id: totrans-16
   prefs:
   - PREF_BQ
   - PREF_IND
   - PREF_IND
   type: TYPE_NORMAL
 - en: ''
+  id: totrans-17
   prefs:
   - PREF_BQ
   - PREF_IND
   - PREF_IND
   type: TYPE_NORMAL
 - en: 'If A is full-rank: ‘gels’ (QR)'
+  id: totrans-18
   prefs:
   - PREF_BQ
   - PREF_IND
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 如果 A 是满秩的：‘gels’（QR）
 - en: ''
+  id: totrans-19
   prefs:
   - PREF_BQ
   - PREF_IND
   - PREF_IND
   type: TYPE_NORMAL
 - en: ''
+  id: totrans-20
   prefs:
   - PREF_BQ
   - PREF_IND
   - PREF_IND
   type: TYPE_NORMAL
 - en: 'If A is not well-conditioned:'
+  id: totrans-21
   prefs:
   - PREF_BQ
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 如果 A 不是良态的：
 - en: ‘gelsd’ (tridiagonal reduction and SVD)
+  id: totrans-22
   prefs:
   - PREF_BQ
   - PREF_IND
   - PREF_UL
   type: TYPE_NORMAL
+  zh: ‘gelsd’（三对角化并 SVD）
 - en: ''
+  id: totrans-23
   prefs:
   - PREF_BQ
   - PREF_IND
   - PREF_IND
   type: TYPE_NORMAL
 - en: ''
+  id: totrans-24
   prefs:
   - PREF_BQ
   - PREF_IND
   - PREF_IND
   type: TYPE_NORMAL
 - en: 'But if you run into memory issues: ‘gelss’ (full SVD).'
+  id: totrans-25
   prefs:
   - PREF_BQ
   - PREF_IND
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 但如果你遇到内存问题：‘gelss’（满 SVD）。
 - en: Whether you’ll need to know this will depend on the problem you’re solving.
     But if you do, it certainly will help to have an idea what is being talked about
     there, if only in a high-level way.
+  id: totrans-26
   prefs: []
   type: TYPE_NORMAL
+  zh: 你是否需要了解这一点将取决于你正在解决的问题。但如果你需要，了解那里在谈论的内容无疑会很有帮助，即使只是从高层次上了解。
 - en: 'In our example problem below, we’re going to be lucky. All drivers will return
     the same result – but only once we’ll have applied a “trick”, of sorts. Still,
     we’ll go on and dig deeper into the various methods used by `linalg_lstsq()`,
     as well as a few others of common use. Concretely, we’ll solve least squares:'
+  id: totrans-27
   prefs: []
   type: TYPE_NORMAL
+  zh: 在我们下面的示例问题中，我们会很幸运。所有驱动程序都将返回相同的结果——但只有在我们应用了一种“技巧”之后。尽管如此，我们仍将继续深入研究 `linalg_lstsq()`
+    以及其他一些常用方法所使用的各种方法。具体来说，我们将解决最小二乘问题：
 - en: By means of the so-called *normal equations*, the most direct way, in the sense
     that it immediately results from a mathematical statement of the problem.
+  id: totrans-28
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 通过所谓的 *正则方程*，这是最直接的方法，从问题的数学陈述中立即得出。
 - en: Again, starting from the normal equations, but making use of *Cholesky factorization*
     in solving them.
+  id: totrans-29
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 再次，从正则方程开始，但利用 *Cholesky 分解* 来解决它们。
 - en: Yet again, taking the normal equations for a point of departure, but proceeding
     by means of *LU* decomposition.
+  id: totrans-30
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 再次，以正则方程为出发点，但通过*LU*分解进行。
 - en: Fourth, employing another type of factorization – *QR* – that, together with
     the final one, accounts for the vast majority of decompositions applied “in the
     real world”. With QR decomposition, the solution algorithm does not start from
     the normal equations.
+  id: totrans-31
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 第四，采用另一种类型的分解——*QR*分解——它与最终的分解一起，解释了“现实世界”中应用的大多数分解。使用QR分解，求解算法不是从正则方程开始的。
 - en: And fifth and finally, making use of *Singular Value Decomposition* (SVD). Here,
     too, the normal equations are not needed.
+  id: totrans-32
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 第五点也是最后一点，利用*奇异值分解*（SVD）。在这里，正则方程也不需要。
 - en: All methods will first be applied to a real-world dataset, and then, be tested
     on a benchmark problem well known for its lack of stability.
+  id: totrans-33
   prefs: []
   type: TYPE_NORMAL
+  zh: 所有方法首先将应用于真实世界的数据集，然后，在以其缺乏稳定性而闻名的基准问题上进行测试。
 - en: 24.2 Regression for weather prediction
+  id: totrans-34
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 24.2 天气预测的回归
 - en: The dataset we’ll use is available from the [UCI Machine Learning Repository](http://archive.ics.uci.edu/ml/machine-learning-dAtAbases/00514/Bias_correction_ucl.csv).
     The way we’ll use it does not quite match the original purpose of collection;
     instead of forecasting temperature with machine learning, the original study (Cho
@@ -190,14 +254,20 @@
     of forecasts obtained from a numerical weather prediction model. But never mind
     – our focus here is on matrix methods, and the dataset lends itself very well
     to the kinds of explorations we’re going to do.
+  id: totrans-35
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们将使用的数据集可以从[UCI机器学习仓库](http://archive.ics.uci.edu/ml/machine-learning-dAtAbases/00514/Bias_correction_ucl.csv)获取。我们使用它的方式并不完全符合收集的原始目的；我们不是用机器学习预测温度，而是原始研究（Cho等人（[2020](references.html#ref-2019EA000740)））真正关于从数值天气预报模型获得的预测的偏差校正。但没关系——我们在这里的关注点是矩阵方法，这个数据集非常适合我们将要进行的探索。
 - en: '[PRE0]'
+  id: totrans-36
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE0]'
 - en: '*[PRE1]'
+  id: totrans-37
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE1]'
 - en: The way we’re framing the task, basically everything in the dataset serves (or
     would serve, if we kept it – more on that below) as a predictor. As target, we’ll
     use `Next_Tmax`, the maximal temperature reached on the subsequent day. This means
@@ -207,78 +277,119 @@
     of actual temperature (`Present_Tmax`, `Present_Tmin`), model forecasts of various
     variables (`LDAPS_*`), and auxiliary information (`lat`, `lon`, and `` `Solar
     radiation` ``, among others).
+  id: totrans-38
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们构建任务的方式，基本上数据集中的每一项都作为（或者如果保留它——下面会更多讨论）预测因子。作为目标，我们将使用`Next_Tmax`，即后续一天达到的最高温度。这意味着我们需要从预测因子集中移除`Next_Tmin`，因为它会成为一个过于强大的线索。我们也会对`station`（天气站ID）和`Date`（日期）做同样的事情。这使我们剩下二十一個预测因子，包括实际温度的测量（`Present_Tmax`，`Present_Tmin`）、各种变量的模型预测（`LDAPS_*`）以及辅助信息（`lat`，`lon`和`Solar
+    radiation`等）。
 - en: '[PRE2]'
+  id: totrans-39
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE2]'
 - en: '*Note how, above, I’ve added a line to *standardize* the predictors. This is
     the “trick” I was alluding to above. We’ll talk about why we’re doing this soon.'
+  id: totrans-40
   prefs: []
   type: TYPE_NORMAL
+  zh: '*注意，在上面，我添加了一行来*标准化*预测因子。这就是我上面提到的“技巧”。我们很快就会讨论为什么我们要这样做。'
 - en: 'For `torch`, we split up the data into two tensors: a matrix `A`, containing
     all predictors, and a vector `b` that holds the target.'
+  id: totrans-41
   prefs: []
   type: TYPE_NORMAL
+  zh: 对于`torch`，我们将数据分成两个张量：一个包含所有预测因子的矩阵`A`，以及一个包含目标值的向量`b`。
 - en: '[PRE3]'
+  id: totrans-42
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE3]'
 - en: '*[PRE4]'
+  id: totrans-43
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE4]'
 - en: Now, first let’s determine the expected output.
+  id: totrans-44
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在，首先让我们确定预期的输出。
 - en: '24.2.1 Least squares (I): Setting expectations with `lm()`'
+  id: totrans-45
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 24.2.1 最小二乘法（I）：使用`lm()`设置期望
 - en: If there’s a least squares implementation we “believe in”, it surely must be
     `lm()`.
+  id: totrans-46
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果有一个我们“相信”的最小二乘实现，那肯定就是`lm()`。
 - en: '[PRE5]'
+  id: totrans-47
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE5]'
 - en: '*[PRE6]'
+  id: totrans-48
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE6]'
 - en: 'With an explained variance of 78%, the forecast is working pretty well. This
     is the baseline we want to check all other methods against. To that purpose, we’ll
     store respective predictions and prediction errors (the latter being operationalized
     as root mean squared error, RMSE). For now, we just have entries for `lm()`:'
+  id: totrans-49
   prefs: []
   type: TYPE_NORMAL
+  zh: 解释方差为78%，预测效果相当不错。这是我们想要检查所有其他方法的基线。为此，我们将存储相应的预测和预测误差（后者被操作化为均方根误差，RMSE）。目前，我们只有`lm()`的条目：
 - en: '[PRE7]'
+  id: totrans-50
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE7]'
 - en: '*[PRE8]**  **### 24.2.2 Least squares (II): Using `linalg_lstsq()`'
+  id: totrans-51
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE8]**  **### 24.2.2 最小二乘法（II）：使用`linalg_lstsq()`'
 - en: 'Now, for a moment let’s assume this was not about exploring different approaches,
     but getting a quick result. In `torch`, we have `linalg_lstsq()`, a function dedicated
     specifically to solving least-squares problems. (This is the function whose documentation
     I was citing, above.) Just like we did with `lm()`, we’d probably just go ahead
     and call it, making use of the default settings:'
+  id: totrans-52
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在，让我们暂时假设这并不是在探索不同的方法，而是要快速得到结果。在`torch`中，我们有`linalg_lstsq()`，这是一个专门用于解决最小二乘问题的函数。（这就是我在上面引用的文档中提到的函数。）就像我们使用`lm()`一样，我们可能会直接调用它，并使用默认设置：
 - en: '[PRE9]'
+  id: totrans-53
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE9]'
 - en: '*[PRE10]'
+  id: totrans-54
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE10]'
 - en: 'Predictions resemble those of `lm()` very closely – so closely, in fact, that
     we may guess those tiny differences are just due to numerical errors surfacing
     from deep down the respective call stacks. RMSE, thus, should be equal as well:'
+  id: totrans-55
   prefs: []
   type: TYPE_NORMAL
+  zh: 预测结果与`lm()`非常相似——事实上，如此相似，以至于我们可能会猜测那些微小的差异只是由于从各自的调用堆栈中出现的数值误差。因此，RMSE也应该相等：
 - en: '[PRE11]'
+  id: totrans-56
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE11]'
 - en: '*[PRE12]'
+  id: totrans-57
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE12]'
 - en: 'It is; and this is a satisfying outcome. However, it only really came about
     due to that “trick”: normalization. Of course, when I say “trick”, I don’t really
     mean it. Standardizing the data is a common operation, and especially with neural
@@ -286,272 +397,406 @@
     like to make is this: Frameworks for high-performance computation, like `torch`,
     will often presuppose more domain knowledge, or more up-front analysis, on the
     part of the user.'
+  id: totrans-58
   prefs: []
   type: TYPE_NORMAL
+  zh: 是的；这是一个令人满意的结果。然而，这主要是因为那个“技巧”：归一化。当然，当我说“技巧”时，我并不是真的这么认为。标准化数据是一个常见的操作，尤其是在神经网络中，它通常会被例行使用，以加快训练速度。我想说的是：高性能计算框架，如`torch`，通常会假设用户有更多的领域知识，或者更多的前期分析。
 - en: 'I’ll explain.**  **### 24.2.3 Interlude: What if we hadn’t standardized the
     data?'
+  id: totrans-59
   prefs: []
   type: TYPE_NORMAL
+  zh: 我会解释。**  **### 24.2.3 间奏：如果我们没有标准化数据会怎样？
 - en: 'For quick comparison, let’s create an alternate matrix of predictors: *not*
     normalizing the data, this time.'
+  id: totrans-60
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了快速比较，让我们创建一个替代的预测矩阵：这次**不**对数据进行归一化。
 - en: '[PRE13]'
+  id: totrans-61
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE13]'
 - en: '*To set our expectations, we again call `lm()`:'
+  id: totrans-62
   prefs: []
   type: TYPE_NORMAL
+  zh: '*为了设定我们的预期，我们再次调用`lm()`：'
 - en: '[PRE14]'
+  id: totrans-63
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE14]'
 - en: '*[PRE15]'
+  id: totrans-64
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE15]'
 - en: Now, we call `linalg_lstsq()`, using the default arguments just like we did
     before.
+  id: totrans-65
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在，我们调用`linalg_lstsq()`，使用与之前相同的默认参数。
 - en: '[PRE16]'
+  id: totrans-66
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE16]'
 - en: '*[PRE17]'
+  id: totrans-67
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE17]'
 - en: Wow – what happened here? Thinking back of that piece of documentation I’ve
     cited, maybe the default arguments aren’t working out that well, this time. Let’s
     find out why.
+  id: totrans-68
   prefs: []
   type: TYPE_NORMAL
+  zh: 哇——这里发生了什么？回想一下我引用的那段文档，也许默认参数这次并不奏效。让我们找出原因。
 - en: 24.2.3.1 Investigating “the issue”
+  id: totrans-69
   prefs:
   - PREF_H4
   type: TYPE_NORMAL
+  zh: 24.2.3.1 调查“问题”
 - en: 'To efficiently solve a linear least-squares problem, `torch` calls into LAPACK,
     a set of Fortran routines designed to efficiently and scaleably address the tasks
     most frequently found in linear algebra: solving linear systems of equations,
     computing eigenvectors and eigenvalues, and determining singular values.'
+  id: totrans-70
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了有效地解决线性最小二乘问题，`torch`调用LAPACK，这是一组Fortran例程，旨在高效且可扩展地处理线性代数中最常见的任务：求解线性方程组、计算特征向量和特征值，以及确定奇异值。
 - en: The allowed `driver`s in `linalg_lstsq()` correspond to different LAPACK procedures[¹](#fn1),
     and these procedures all apply different algorithms in order to solve the problem
     – analogously to what’ll we do ourselves, below.
+  id: totrans-71
   prefs: []
   type: TYPE_NORMAL
+  zh: '`linalg_lstsq()`中允许的`driver`对应于不同的LAPACK过程[¹](#fn1)，这些过程都应用不同的算法来解决该问题——类似于我们下面将要做的。'
 - en: Thus, in investigating what is going on, step one is to determine which method
     gets used and why; analyse (if possible) why the result is unsatisfying; determine
     the LAPACK routine we’d like to be using instead, and check what happens if indeed
     we do. (Of course, given the little effort involved, we’d probably give all methods
     a try.)
+  id: totrans-72
   prefs: []
   type: TYPE_NORMAL
+  zh: 因此，在调查发生了什么时，第一步是确定使用了哪种方法以及为什么；分析（如果可能的话）为什么结果不尽如人意；确定我们想要使用的LAPACK例程，并检查如果我们真的这样做会发生什么。（当然，考虑到所涉及的少量努力，我们可能会尝试所有方法。）
 - en: The main concept involved here is the *rank* of a matrix.
+  id: totrans-73
   prefs: []
   type: TYPE_NORMAL
+  zh: 这里涉及的主要概念是矩阵的**秩**。
 - en: '24.2.3.2 Concepts (I): Rank of a matrix'
+  id: totrans-74
   prefs:
   - PREF_H4
   type: TYPE_NORMAL
+  zh: 24.2.3.2 概念（I）：矩阵的秩
 - en: '*“But wait!”* you may be thinking – from the above-cited piece of documentation,
     it seems like the first thing we should check is not rank, but *condition number*:
     whether the matrix is “well-conditioned”. Yes, the condition number certainly
     is important, and we’ll get back to it very soon. However, there is something
     even more fundamental at work here, something that does not really “jump to the
     eye”.'
+  id: totrans-75
   prefs: []
   type: TYPE_NORMAL
+  zh: '*“等等！”* 你可能正在想——从上述引用的文档片段来看，我们首先应该检查的不是秩，而是 *条件数*：矩阵是否“良好条件”。是的，条件数确实很重要，我们很快就会回到这一点。然而，这里还有更基本的东西在起作用，这并不真的“跃入眼帘”。'
 - en: 'The central piece of information is found in that LAPACK piece of documentation
     we’re being referred to by `linalg_lstsq()`. Between the four routines GELS, GELSY,
     GELSD, and GELSS, differences are not restricted to implementation. The *goal*
     of optimization differs, as well. The rationale is the following. Throughout,
     let’s assume we’re working with a matrix that has more rows than columns (more
     observations than features, in the most-frequent case):'
+  id: totrans-76
   prefs: []
   type: TYPE_NORMAL
+  zh: 关键信息位于我们通过 `linalg_lstsq()` 被引用的 LAPACK 文档片段中。在 GELS、GELSY、GELSD 和 GELSS 这四个例程之间，差异不仅限于实现。优化的
+    *目标* 也不同。其理由如下。在整个过程中，让我们假设我们正在处理一个行数多于列数的矩阵（在最常见的案例中，观察值多于特征值）：
 - en: If the matrix is full-rank – meaning, its columns are linearly independent –
     there is no “perfect” solution. The problem is over-determined. All we can do
     is find the best possible approximation. This is done by minimizing the prediction
     error – we’ll come back to that when discussing the normal equations. Minimize
     prediction error is what the GELS routine does, and it is GELS we should use when
     we have a full-rank matrix of predictors.
+  id: totrans-77
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 如果矩阵是满秩的——这意味着其列是线性无关的——则不存在“完美”的解。问题是超定的。我们能做的只是找到最佳可能的近似。这是通过最小化预测误差来实现的——我们将在讨论正规方程时回到这一点。最小化预测误差是
+    GELS 例程所做的事情，当我们有一个满秩的预测矩阵时，我们应该使用 GELS。
 - en: 'If the matrix is not full-rank, the problem is under-determined; there is an
     infinite number of solutions. All the remaining routines – GELSY, GELSD, and GELSS
     – are suited to this situation. While they do proceed differently, they all pursue
     the same strategy, different from the one followed by GELS: In addition to the
     prediction error, they *also* minimize the vector of coefficients. This is called
     finding a minimum-norm least-squares solution.'
+  id: totrans-78
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 如果矩阵不是满秩的，问题是不确定的；存在无限多个解。所有剩余的例程——GELSY、GELSD 和 GELSS——都适用于这种情况。虽然它们采取不同的步骤，但它们都追求与
+    GELS 不同的策略：除了预测误差之外，它们还 *也* 最小化系数向量。这被称为寻找最小范数的最小二乘解。
 - en: In sum, GELS (for full-rank matrices) and the three of GELSY, GELSD, and GELSS
     (for when the matrix is rank-deficient) intentionally follow different optimization
     criteria.
+  id: totrans-79
   prefs: []
   type: TYPE_NORMAL
+  zh: 总结来说，GELS（用于满秩矩阵）和 GELSY、GELSD、GELSS 的三个例程（用于矩阵秩不足的情况）有意遵循不同的优化标准。
 - en: Now, as per the documentation for `linalg_lstsq()`, when no `driver` is passed
     explicitly, it is GELSY that gets called. That should be fine if our matrix is
     rank-deficient – but is it?
+  id: totrans-80
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在，根据 `linalg_lstsq()` 的文档，当没有明确传递 `driver` 时，会调用 GELSY。如果我们的矩阵是秩不足的，这应该没问题——但是，它是吗？
 - en: '[PRE18]'
+  id: totrans-81
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE18]'
 - en: '*[PRE19]'
+  id: totrans-82
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE19]'
 - en: The matrix has twenty-one columns; so if its rank is twenty-one, then it is
     full-rank for sure. We definitely want to be calling the GELS routine.*  *####
     24.2.3.3 Calling `linalg_lstsq()` the right way
+  id: totrans-83
   prefs: []
   type: TYPE_NORMAL
+  zh: 矩阵有二十一个列；所以如果其秩是二十一个，那么它肯定是一个满秩矩阵。我们肯定希望调用 GELS 例程。*  *#### 24.2.3.3 正确调用 `linalg_lstsq()`
 - en: 'Now that we know what to pass for `driver`, here is the modified call:'
+  id: totrans-84
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在我们知道了应该为 `driver` 传递什么，这里是修改后的调用：
 - en: '[PRE20]'
+  id: totrans-85
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE20]'
 - en: '*[PRE21]'
+  id: totrans-86
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE21]'
 - en: 'Now, the respective RMSE values are very close. You’ll be wondering, though:
     Why didn’t we have to specify the Fortran routine when working with the *standardized*
     matrix?*  *#### 24.2.3.4 Why did standardization help?'
+  id: totrans-87
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在，相应的 RMSE 值非常接近。不过，你可能想知道：为什么在处理 *标准化* 矩阵时，我们没有必要指定 Fortran 例程？*  *#### 24.2.3.4
+    为什么标准化有帮助？
 - en: 'For our matrix, what standardization did was reduce significantly the range
     spanned by the singular values. With `A`, the standardized matrix, the largest
     singular value is about ten times as large as the smallest one:'
+  id: totrans-88
   prefs: []
   type: TYPE_NORMAL
+  zh: 对于我们的矩阵，标准化所做的就是显著减少了奇异值所跨越的范围。对于 `A`，标准化矩阵，最大的奇异值大约是最小的十倍：
 - en: '[PRE22]'
+  id: totrans-89
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE22]'
 - en: '*[PRE23]'
+  id: totrans-90
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE23]'
 - en: 'While with `A_alt`, it is a million times as large:'
+  id: totrans-91
   prefs: []
   type: TYPE_NORMAL
+  zh: 而与 `A_alt` 相比，它要大上百万倍：
 - en: '[PRE24]'
+  id: totrans-92
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE24]'
 - en: '*[PRE25]'
+  id: totrans-93
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE25]'
 - en: 'Why is this important? It’s here that we finally get back to the *condition
     number*.**  **#### 24.2.3.5 Concepts (II): Condition number'
+  id: totrans-94
   prefs: []
   type: TYPE_NORMAL
+  zh: 这为什么重要？正是在这里，我们最终回到了 *条件数*。**  **#### 24.2.3.5 概念（II）：条件数
 - en: The higher the so-called *condition number* of a matrix, the more likely we
     are to run into problems of numerical stability when computing with it. In torch,
     `linalg_cond()` is used to obtain the condition number. Let’s compare the condition
     numbers for `A` and `A_alt`, respectively.
+  id: totrans-95
   prefs: []
   type: TYPE_NORMAL
+  zh: 一个矩阵的所谓 *条件数* 越高，我们在使用它进行计算时遇到数值稳定性问题的可能性就越大。在 torch 中，使用 `linalg_cond()` 来获取条件数。让我们比较
+    `A` 和 `A_alt` 的条件数。
 - en: '[PRE26]'
+  id: totrans-96
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE26]'
 - en: '*[PRE27]'
+  id: totrans-97
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE27]'
 - en: That is quite a difference! How does it arise?
+  id: totrans-98
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是一种相当大的差异！它是如何产生的？
 - en: 'The condition number is defined as the matrix norm of `A`, divided by the norm
     of its inverse. Different kinds of norm may be used; the default is the 2-norm.
     In this case, condition number can be computed from the matrix’s singular values:
     Namely, the 2-norm of `A` equals the largest singular value, while that of its
     inverse is given by the smallest one.'
+  id: totrans-99
   prefs: []
   type: TYPE_NORMAL
+  zh: 条件数定义为矩阵 `A` 的矩阵范数除以其逆的范数。可以使用不同的范数；默认是 2-范数。在这种情况下，条件数可以从矩阵的奇异值中计算出来：即 `A`
+    的 2-范数等于最大的奇异值，而其逆的范数由最小的奇异值给出。
 - en: 'We can verify this ourselves, using `linalg_svdvals()` as before:'
+  id: totrans-100
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以使用 `linalg_svdvals()` 来验证这一点，就像之前一样：
 - en: '[PRE28]'
+  id: totrans-101
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE28]'
 - en: '*[PRE29]'
+  id: totrans-102
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE29]'
 - en: To reiterate, this is a substantial difference. Incidentally, do you remember
     that in the case of `A_alt`, RMSE was a tiny bit worse for `linalg_lstsq()` than
     for `lm()`, even when using the appropriate routine, GELS? Given that both essentially
     use the same algorithm (QR factorization, to be introduced very soon) this may
     very well have been due to numerical errors, arising from the high condition number
     of `A_alt`.
+  id: totrans-103
   prefs: []
   type: TYPE_NORMAL
+  zh: 再次强调，这是一个实质性的差异。顺便问一下，你还记得在 `A_alt` 的情况下，即使使用适当的程序 GELS，`linalg_lstsq()` 的 RMSE
+    比使用 `lm()` 稍微差一点吗？鉴于两者基本上使用相同的算法（QR 分解，很快就会介绍），这很可能是因为 `A_alt` 的高条件数导致的数值误差。
 - en: 'By now, I may have convinced you that with `torch`’s `linalg` component, it
     helps to know a bit about how the most-in-use least-squares algorithms work. Let’s
     get acquainted.*********  ***### 24.2.4 Least squares (III): The normal equations'
+  id: totrans-104
   prefs: []
   type: TYPE_NORMAL
+  zh: 到目前为止，我可能已经说服你，使用 `torch` 的 `linalg` 组件，了解最常用的最小二乘算法的工作原理是有帮助的。让我们熟悉一下。*********  ***###
+    24.2.4 最小二乘法（III）：正则方程
 - en: We start by stating the goal. Given a matrix, \(\mathbf{A}\), that holds features
     in its columns and observations in its rows, and a vector of observed outcomes,
     \(\mathbf{b}\), we want to find regression coefficients, one for each feature,
     that allow to approximate \(\mathbf{b}\) as well as possible. Call the vector
     of regression coefficients \(\mathbf{x}\). To obtain it, we need to solve a simultaneous
     system of equations, that in matrix notation appears as
+  id: totrans-105
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们首先明确目标。给定一个矩阵 \(\mathbf{A}\)，其列包含特征，行包含观测值，以及一个观测结果的向量 \(\mathbf{b}\)，我们希望找到回归系数，每个特征一个，以便尽可能好地近似
+    \(\mathbf{b}\)。将回归系数的向量称为 \(\mathbf{x}\)。为了获得它，我们需要解一个联立方程组，在矩阵表示法中，它看起来像
 - en: \[ \mathbf{Ax} = \mathbf{b} \]
+  id: totrans-106
   prefs: []
   type: TYPE_NORMAL
+  zh: \[ \mathbf{Ax} = \mathbf{b} \]
 - en: If \(\mathbf{b}\) were a square, invertible matrix, the solution could directly
     be computed as \(\mathbf{x} = \mathbf{A}^{-1}\mathbf{b}\). This will hardly ever
     be possible, though; we’ll (hopefully) always have more observations than predictors.
     Another approach is needed. It directly starts from the problem statement.
+  id: totrans-107
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果 \(\mathbf{b}\) 是一个可逆的方阵，那么解可以直接计算为 \(\mathbf{x} = \mathbf{A}^{-1}\mathbf{b}\)。这几乎是不可能的；我们（希望）总是有比预测因子更多的观测值。另一种方法是直接从问题陈述开始。
 - en: When we use the columns of \(\mathbf{A}\) to approximate \(\mathbf{b}\), that
     approximation necessarily is in the column space of \(\mathbf{A}\). \(\mathbf{b}\),
     on the other hand, normally won’t be. We want those two to be as close as possible;
     in other words, we want to minimize the distance between them. Choosing the 2-norm
     for the distance, this yields the objective
+  id: totrans-108
   prefs: []
   type: TYPE_NORMAL
+  zh: 当我们使用 \(\mathbf{A}\) 的列来近似 \(\mathbf{b}\) 时，这种近似必然是在 \(\mathbf{A}\) 的列空间中。另一方面，\(\mathbf{b}\)
+    通常不会。我们希望这两个尽可能接近；换句话说，我们希望最小化它们之间的距离。选择 2-范数作为距离，这产生了目标
 - en: \[ minimize \ ||\mathbf{Ax}-\mathbf{b}||^2 \]
+  id: totrans-109
   prefs: []
   type: TYPE_NORMAL
+  zh: \[ minimize \ ||\mathbf{Ax}-\mathbf{b}||^2 \]
 - en: 'This distance is the (squared) length of the vector of prediction errors. That
     vector necessarily is orthogonal to \(\mathbf{A}\) itself. That is, when we multiply
     it with \(\mathbf{A}\), we get the zero vector:'
+  id: totrans-110
   prefs: []
   type: TYPE_NORMAL
+  zh: 这个距离是预测误差向量的（平方）长度。这个向量必然与\(\mathbf{A}\)本身正交。也就是说，当我们用\(\mathbf{A}\)乘以它时，我们得到零向量：
 - en: \[ \mathbf{A}^T(\mathbf{Ax} - \mathbf{b}) = \mathbf{0} \]
+  id: totrans-111
   prefs: []
   type: TYPE_NORMAL
+  zh: \[ \mathbf{A}^T(\mathbf{Ax} - \mathbf{b}) = \mathbf{0} \]
 - en: 'A rearrangement of this equation yields the so-called *normal equations*:'
+  id: totrans-112
   prefs: []
   type: TYPE_NORMAL
+  zh: 对这个方程的重新排列得到所谓的*正则方程*：
 - en: \[ \mathbf{A}^T \mathbf{A} \mathbf{x} = \mathbf{A}^T \mathbf{b} \]
+  id: totrans-113
   prefs: []
   type: TYPE_NORMAL
+  zh: \[ \mathbf{A}^T \mathbf{A} \mathbf{x} = \mathbf{A}^T \mathbf{b} \]
 - en: 'These may be solved for \(\mathbf{x}\), computing the inverse of \(\mathbf{A}^T\mathbf{A}\):'
+  id: totrans-114
   prefs: []
   type: TYPE_NORMAL
+  zh: 这些可以解出\(\mathbf{x}\)，计算\(\mathbf{A}^T\mathbf{A}\)的逆：
 - en: \[ \mathbf{x} = (\mathbf{A}^T \mathbf{A})^{-1} \mathbf{A}^T \mathbf{b} \]
+  id: totrans-115
   prefs: []
   type: TYPE_NORMAL
+  zh: \[ \mathbf{x} = (\mathbf{A}^T \mathbf{A})^{-1} \mathbf{A}^T \mathbf{b} \]
 - en: \(\mathbf{A}^T\mathbf{A}\) is a square matrix. It still might not be invertible,
     in which case the so-called pseudoinverse would be computed instead. In our case,
     this will not be needed; we already know \(\mathbf{A}\) has full rank, and so
     does \(\mathbf{A}^T\mathbf{A}\).
+  id: totrans-116
   prefs: []
   type: TYPE_NORMAL
+  zh: \(\mathbf{A}^T\mathbf{A}\)是一个方阵。它仍然可能不可逆，在这种情况下，将计算所谓的伪逆。在我们的情况下，这将是必要的；我们已知\(\mathbf{A}\)具有满秩，同样\(\mathbf{A}^T\mathbf{A}\)也是。
 - en: Thus, from the normal equations we have derived a recipe for computing \(\mathbf{b}\).
     Let’s put it to use, and compare with what we got from `lm()` and `linalg_lstsq()`.
+  id: totrans-117
   prefs: []
   type: TYPE_NORMAL
+  zh: 因此，我们从正则方程中推导出计算\(\mathbf{b}\)的配方。让我们将其付诸实践，并与我们从`lm()`和`linalg_lstsq()`中得到的结果进行比较。
 - en: '[PRE30]'
+  id: totrans-118
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE30]'
 - en: '*[PRE31]'
+  id: totrans-119
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE31]'
 - en: 'Having confirmed that the direct way works, we may allow ourselves some sophistication.
     Four different matrix factorizations will make their appearance: Cholesky, LU,
     QR, and Singular Value Decomposition. The goal, in every case, is to avoid the
@@ -564,234 +809,356 @@
     will be performed on \(\mathbf{A}^T\mathbf{A}\), while the latter two (QR and
     SVD) operate on \(\mathbf{A}\) directly. With them, there never is a need to compute
     \(\mathbf{A}^T\mathbf{A}\).*  *### 24.2.5 Least squares (IV): Cholesky decomposition'
+  id: totrans-120
   prefs: []
   type: TYPE_NORMAL
+  zh: 确认直接方法可行后，我们可以允许自己一些复杂性。四种不同的矩阵分解将出现：Cholesky、LU、QR和奇异值分解。在每种情况下，目标都是避免计算（伪）逆。这是所有方法共有的。然而，它们不仅在矩阵分解的方式上有所不同，而且在分解的矩阵上也有所不同。这与各种方法施加的约束有关。粗略地说，它们列出的顺序反映了预条件的下降斜率，或者换句话说，是一般性的上升斜率。由于涉及的约束，前两种（Cholesky以及LU分解）将在\(\mathbf{A}^T\mathbf{A}\)上执行，而后两种（QR和SVD）直接在\(\mathbf{A}\)上操作。使用它们，永远不需要计算\(\mathbf{A}^T\mathbf{A}\)。*  *###
+    24.2.5 最小二乘法（IV）：Cholesky分解
 - en: In Cholesky decomposition, a matrix is factored into two triangular matrices
     of the same size, with one being the transpose of the other. This commonly is
     written either
+  id: totrans-121
   prefs: []
   type: TYPE_NORMAL
+  zh: 在Cholesky分解中，一个矩阵被分解成两个相同大小的三角矩阵，其中一个矩阵是另一个矩阵的转置。这通常可以写成
 - en: \[ \mathbf{A} = \mathbf{L} \mathbf{L}^T \] or
+  id: totrans-122
   prefs: []
   type: TYPE_NORMAL
+  zh: \[ \mathbf{A} = \mathbf{L} \mathbf{L}^T \] 或者
 - en: \[ \mathbf{A} = \mathbf{R}^T\mathbf{R} \]
+  id: totrans-123
   prefs: []
   type: TYPE_NORMAL
+  zh: \[ \mathbf{A} = \mathbf{R}^T\mathbf{R} \]
 - en: Here symbols \(\mathbf{L}\) and \(\mathbf{R}\) denote lower-triangular and upper-triangular
     matrices, respectively.
+  id: totrans-124
   prefs: []
   type: TYPE_NORMAL
+  zh: 这里符号\(\mathbf{L}\)和\(\mathbf{R}\)分别表示下三角矩阵和上三角矩阵。
 - en: For Cholesky decomposition to be possible, a matrix has to be both symmetric
     and positive definite. These are pretty strong conditions, ones that will not
     often be fulfilled in practice. In our case, \(\mathbf{A}\) is not symmetric;
     this immediately implies we have to operate on \(\mathbf{A}^T\mathbf{A}\) instead.
     And since \(\mathbf{A}\) already is positive definite, we know that \(\mathbf{A}^T\mathbf{A}\)
     is, as well.
+  id: totrans-125
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了进行Cholesky分解，一个矩阵必须既是对称的又是正定的。这些条件相当严格，在实践中通常不会经常满足。在我们的情况下，\(\mathbf{A}\)不是对称的；这立即意味着我们必须在\(\mathbf{A}^T\mathbf{A}\)上操作。由于\(\mathbf{A}\)已经是正定的，我们知道\(\mathbf{A}^T\mathbf{A}\)也是。
 - en: In `torch`, we obtain the Cholesky decomposition of a matrix using `linalg_cholesky()`.
     By default, this call will return \(\mathbf{L}\), a lower-triangular matrix.
+  id: totrans-126
   prefs: []
   type: TYPE_NORMAL
+  zh: 在`torch`中，我们使用`linalg_cholesky()`函数来获取矩阵的Cholesky分解。默认情况下，这个调用将返回\(\mathbf{L}\)，一个下三角矩阵。
 - en: '[PRE32]'
+  id: totrans-127
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE32]'
 - en: '*Let’s check that we can reconstruct \(\mathbf{A}\) from \(\mathbf{L}\):'
+  id: totrans-128
   prefs: []
   type: TYPE_NORMAL
+  zh: '*让我们检查一下我们是否可以从 \(\mathbf{L}\) 中重建 \(\mathbf{A}\)：'
 - en: '[PRE33]'
+  id: totrans-129
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE33]'
 - en: '*[PRE34]'
+  id: totrans-130
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE34]'
 - en: Here, I’ve computed the Frobenius norm of the difference between the original
     matrix and its reconstruction. The Frobenius norm individually sums up all matrix
     entries, and returns the square root. In theory, we’d like to see zero here; but
     in the presence of numerical errors, the result is sufficient to indicate that
     the factorization worked fine.
+  id: totrans-131
   prefs: []
   type: TYPE_NORMAL
+  zh: 这里，我计算了原始矩阵与其重建之间的 Frobenius 范数的差。Frobenius 范数分别求和所有矩阵项，并返回平方根。理论上，我们希望在这里看到零；但在数值误差的存在下，结果足以表明分解工作得很好。
 - en: Now that we have \(\mathbf{L}\mathbf{L}^T\) instead of \(\mathbf{A}^T\mathbf{A}\),
     how does that help us? It’s here that the magic happens, and you’ll find the same
     type of magic at work in the remaining three methods. The idea is that due to
     some decomposition, a more performant way arises of solving the system of equations
     that constitute a given task.
+  id: totrans-132
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在我们有了 \(\mathbf{L}\mathbf{L}^T\) 而不是 \(\mathbf{A}^T\mathbf{A}\)，这如何帮助我们呢？正是在这里发生了魔法，你还会在剩下的三种方法中找到同样的魔法。其思路是，由于某种分解，出现了一种更高效的方式来解决构成给定任务的一组方程。
 - en: 'With \(\mathbf{L}\mathbf{L}^T\), the point is that \(\mathbf{L}\) is triangular,
     and when that’s the case the linear system can be solved by simple substitution.
     That is best visible with a tiny example:'
+  id: totrans-133
   prefs: []
   type: TYPE_NORMAL
+  zh: 在 \(\mathbf{L}\mathbf{L}^T\) 的情况下，关键是 \(\mathbf{L}\) 是三角形的，当这种情况发生时，线性系统可以通过简单的替换来解决。这最好用一个小的例子来说明：
 - en: \[ \begin{bmatrix} 1 & 0 & 0\\ 2 & 3 & 0\\ 3 & 4 & 1 \end{bmatrix} \begin{bmatrix}
     x1\\ x2\\ x3 \end{bmatrix} = \begin{bmatrix} 1\\ 11\\ 15 \end{bmatrix} \]
+  id: totrans-134
   prefs: []
   type: TYPE_NORMAL
+  zh: \[ \begin{bmatrix} 1 & 0 & 0\\ 2 & 3 & 0\\ 3 & 4 & 1 \end{bmatrix} \begin{bmatrix}
+    x1\\ x2\\ x3 \end{bmatrix} = \begin{bmatrix} 1\\ 11\\ 15 \end{bmatrix} \]
 - en: Starting in the top row, we immediately see that \(x1\) equals \(1\); and once
     we know *that* it is straightforward to calculate, from row two, that \(x2\) must
     be \(3\). The last row then tells us that \(x3\) must be \(0\).
+  id: totrans-135
   prefs: []
   type: TYPE_NORMAL
+  zh: 从最上面一行开始，我们立即看到 \(x1\) 等于 \(1\)；一旦我们知道 *这一点*，从第二行就可以直接计算出 \(x2\) 必须是 \(3\)。最后一行告诉我们
+    \(x3\) 必须是 \(0\)。
 - en: In code, `torch_triangular_solve()` is used to efficiently compute the solution
     to a linear system of equations where the matrix of predictors is lower- or upper-triangular.
     An additional requirement is for the matrix to be symmetric – but that condition
     we already had to satisfy in order to be able to use Cholesky factorization.
+  id: totrans-136
   prefs: []
   type: TYPE_NORMAL
+  zh: 在代码中，`torch_triangular_solve()` 用于高效地计算一个线性方程组的解，其中预测矩阵是下三角或上三角。一个额外的要求是矩阵必须是对称的——但这个条件我们已经在能够使用
+    Cholesky 分解的情况下满足了。
 - en: 'By default, `torch_triangular_solve()` expects the matrix to be upper- (not
     lower-)triangular; but there is a function parameter, `upper`, that lets us correct
     that expectation. The return value is a list, and its first item contains the
     desired solution. To illustrate, here is `torch_triangular_solve()`, applied to
     the toy example we manually solved above:'
+  id: totrans-137
   prefs: []
   type: TYPE_NORMAL
+  zh: 默认情况下，`torch_triangular_solve()` 预期矩阵是上三角（而不是下三角）；但有一个函数参数，`upper`，允许我们纠正这个预期。返回值是一个列表，其第一个元素包含所需的解。为了说明，这里展示了
+    `torch_triangular_solve()`，它应用于我们手动解决的玩具示例：
 - en: '[PRE35]'
+  id: totrans-138
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE35]'
 - en: '*[PRE36]'
+  id: totrans-139
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE36]'
 - en: 'Returning to our running example, the normal equations now look like this:'
+  id: totrans-140
   prefs: []
   type: TYPE_NORMAL
+  zh: 回到我们的运行示例，正则方程现在看起来是这样的：
 - en: \[ \mathbf{L}\mathbf{L}^T \mathbf{x} = \mathbf{A}^T \mathbf{b} \]
+  id: totrans-141
   prefs: []
   type: TYPE_NORMAL
+  zh: \[ \mathbf{L}\mathbf{L}^T \mathbf{x} = \mathbf{A}^T \mathbf{b} \]
 - en: We introduce a new variable, \(\mathbf{y}\), to stand for \(\mathbf{L}^T \mathbf{x}\),
+  id: totrans-142
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们引入一个新的变量 \(\mathbf{y}\)，用来表示 \(\mathbf{L}^T \mathbf{x}\)。
 - en: \[ \mathbf{L}\mathbf{y} = \mathbf{A}^T \mathbf{b} \]
+  id: totrans-143
   prefs: []
   type: TYPE_NORMAL
+  zh: \[ \mathbf{L}\mathbf{y} = \mathbf{A}^T \mathbf{b} \]
 - en: 'and compute the solution to *this* system:'
+  id: totrans-144
   prefs: []
   type: TYPE_NORMAL
+  zh: 并计算这个系统的解：
 - en: '[PRE37]'
+  id: totrans-145
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE37]'
 - en: '*Now that we have \(y\), we look back at how it was defined:'
+  id: totrans-146
   prefs: []
   type: TYPE_NORMAL
+  zh: '*现在我们有了 \(y\)，我们回顾一下它是如何定义的：'
 - en: \[ \mathbf{y} = \mathbf{L}^T \mathbf{x} \]
+  id: totrans-147
   prefs: []
   type: TYPE_NORMAL
+  zh: \[ \mathbf{y} = \mathbf{L}^T \mathbf{x} \]
 - en: 'To determine \(\mathbf{x}\), we can thus again use `torch_triangular_solve()`:'
+  id: totrans-148
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了确定 \(\mathbf{x}\)，我们再次可以使用 `torch_triangular_solve()`：
 - en: '[PRE38]'
+  id: totrans-149
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE38]'
 - en: '*And there we are.'
+  id: totrans-150
   prefs: []
   type: TYPE_NORMAL
+  zh: '*就这样了。'
 - en: 'As usual, we compute the prediction error:'
+  id: totrans-151
   prefs: []
   type: TYPE_NORMAL
+  zh: 如同往常，我们计算预测误差：
 - en: '[PRE39]'
+  id: totrans-152
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE39]'
 - en: '*[PRE40]'
+  id: totrans-153
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE40]'
 - en: Now that you’ve seen the rationale behind Cholesky factorization – and, as already
     suggested, the idea carries over to all other decompositions – you might like
     to save yourself some work making use of a dedicated convenience function, `torch_cholesky_solve()`.
     This will render obsolete the two calls to `torch_triangular_solve()`.
+  id: totrans-154
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在你已经看到了 Cholesky 分解背后的原理——正如已经提到的，这个想法也适用于所有其他分解——你可能想利用一个专门的便利函数，`torch_cholesky_solve()`，来节省一些工作。这将使对
+    `torch_triangular_solve()` 的两次调用变得过时。
 - en: The following lines yield the same output as the code above – but, of course,
     they *do* hide the underlying magic.
+  id: totrans-155
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下代码行产生的输出与上面的代码相同——但当然，它们确实隐藏了背后的魔法。
 - en: '[PRE41]'
+  id: totrans-156
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE41]'
 - en: '*[PRE42]'
+  id: totrans-157
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE42]'
 - en: 'Let’s move on to the next method – equivalently, to the next factorization.*******  ***###
     24.2.6 Least squares (V): LU factorization'
+  id: totrans-158
   prefs: []
   type: TYPE_NORMAL
+  zh: 让我们继续下一个方法——相当于下一个分解方法。********  ***### 24.2.6 最小二乘法（V）：LU分解
 - en: 'LU factorization is named after the two factors it introduces: a lower-triangular
     matrix, \(\mathbf{L}\), as well as an upper-triangular one, \(\mathbf{U}\). In
     theory, there are no restrictions on LU decomposition: Provided we allow for row
     exchanges, effectively turning \(\mathbf{A} = \mathbf{L}\mathbf{U}\) into \(\mathbf{A}
     = \mathbf{P}\mathbf{L}\mathbf{U}\) (where \(\mathbf{P}\) is a permutation matrix),
     we can factorize any matrix.'
+  id: totrans-159
   prefs: []
   type: TYPE_NORMAL
+  zh: LU分解以它引入的两个因子命名：一个下三角矩阵\(\mathbf{L}\)，以及一个上三角矩阵\(\mathbf{U}\)。在理论上，LU分解没有限制：如果我们允许行交换，实际上将\(\mathbf{A}
+    = \mathbf{L}\mathbf{U}\)转换为\(\mathbf{A} = \mathbf{P}\mathbf{L}\mathbf{U}\)（其中\(\mathbf{P}\)是一个置换矩阵），我们就可以分解任何矩阵。
 - en: In practice, though, if we want to make use of `torch_triangular_solve()` ,
     the input matrix has to be symmetric. Therefore, here too we have to work with
     \(\mathbf{A}^T\mathbf{A}\), not \(\mathbf{A}\) directly. (And that’s why I’m showing
     LU decomposition right after Cholesky – they’re similar in what they make us do,
     though not at all similar in spirit.)
+  id: totrans-160
   prefs: []
   type: TYPE_NORMAL
+  zh: 在实践中，尽管如此，如果我们想使用`torch_triangular_solve()`，输入矩阵必须是对称的。因此，在这里我们也必须处理\(\mathbf{A}^T\mathbf{A}\)，而不是直接处理\(\mathbf{A}\)。（这就是为什么我在展示Cholesky分解之后紧接着展示LU分解的原因——它们在让我们做什么方面相似，但在精神上却完全不同。）
 - en: 'Working with \(\mathbf{A}^T\mathbf{A}\) means we’re again starting from the
     normal equations. We factorize \(\mathbf{A}^T\mathbf{A}\), then solve two triangular
     systems to arrive at the final solution. Here are the steps, including the not-always-needed
     permutation matrix \(\mathbf{P}\):'
+  id: totrans-161
   prefs: []
   type: TYPE_NORMAL
+  zh: 使用\(\mathbf{A}^T\mathbf{A}\)意味着我们再次从正则方程开始。我们分解\(\mathbf{A}^T\mathbf{A}\)，然后解两个三角系统以得到最终解。以下是步骤，包括有时不需要的置换矩阵\(\mathbf{P}\)：
 - en: \[ \begin{aligned} \mathbf{A}^T \mathbf{A} \mathbf{x} &= \mathbf{A}^T \mathbf{b}
     \\ \mathbf{P} \mathbf{L}\mathbf{U} \mathbf{x} &= \mathbf{A}^T \mathbf{b} \\ \mathbf{L}
     \mathbf{y} &= \mathbf{P}^T \mathbf{A}^T \mathbf{b} \\ \mathbf{y} &= \mathbf{U}
     \mathbf{x} \end{aligned} \]
+  id: totrans-162
   prefs: []
   type: TYPE_NORMAL
+  zh: \[ \begin{aligned} \mathbf{A}^T \mathbf{A} \mathbf{x} &= \mathbf{A}^T \mathbf{b}
+    \\ \mathbf{P} \mathbf{L}\mathbf{U} \mathbf{x} &= \mathbf{A}^T \mathbf{b} \\ \mathbf{L}
+    \mathbf{y} &= \mathbf{P}^T \mathbf{A}^T \mathbf{b} \\ \mathbf{y} &= \mathbf{U}
+    \mathbf{x} \end{aligned} \]
 - en: 'We see that when \(\mathbf{P}\) *is* needed, there is an additional computation:
     Following the same strategy as we did with Cholesky, we want to move \(\mathbf{P}\)
     from the left to the right. Luckily, what may look expensive – computing the inverse
     – is not: For a permutation matrix, its transpose reverses the operation.'
+  id: totrans-163
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们看到，当\(\mathbf{P}\) *需要*时，会有额外的计算：遵循与Cholesky分解相同的策略，我们希望将\(\mathbf{P}\)从左边移到右边。幸运的是，可能看起来很昂贵——计算逆——实际上并不昂贵：对于置换矩阵，其转置会反转操作。
 - en: 'Code-wise, we’re already familiar with most of what we need to do. The only
     missing piece is `torch_lu()`. `torch_lu()` returns a list of two tensors, the
     first a compressed representation of the three matrices \(\mathbf{P}\), \(\mathbf{L}\),
     and \(\mathbf{U}\). We can uncompress it using `torch_lu_unpack()` :'
+  id: totrans-164
   prefs: []
   type: TYPE_NORMAL
+  zh: 在代码方面，我们已经熟悉了我们需要做的绝大多数内容。唯一缺少的部分是`torch_lu()`。`torch_lu()`返回一个包含两个张量的列表，第一个是三个矩阵\(\mathbf{P}\)、\(\mathbf{L}\)和\(\mathbf{U}\)的压缩表示。我们可以使用`torch_lu_unpack()`来解压缩它：
 - en: '[PRE43]'
+  id: totrans-165
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE43]'
 - en: '*We move \(\mathbf{P}\) to the other side:'
+  id: totrans-166
   prefs: []
   type: TYPE_NORMAL
+  zh: '*我们将\(\mathbf{P}\)移到另一边：'
 - en: '[PRE44]'
+  id: totrans-167
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE44]'
 - en: '*All that remains to be done is solve two triangular systems, and we are done:'
+  id: totrans-168
   prefs: []
   type: TYPE_NORMAL
+  zh: '*剩下要做的就是解两个三角系统，我们就完成了：'
 - en: '[PRE45]'
+  id: totrans-169
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE45]'
 - en: '*[PRE46]'
+  id: totrans-170
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE46]'
 - en: 'As with Cholesky decomposition, we can save ourselves the trouble of calling
     `torch_triangular_solve()` twice. `torch_lu_solve()` takes the decomposition,
     and directly returns the final solution:'
+  id: totrans-171
   prefs: []
   type: TYPE_NORMAL
+  zh: 与Cholesky分解一样，我们可以避免调用两次`torch_triangular_solve()`。`torch_lu_solve()`接受分解，并直接返回最终解：
 - en: '[PRE47]'
+  id: totrans-172
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE47]'
 - en: '*[PRE48]'
+  id: totrans-173
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE48]'
 - en: 'Now, we look at the two methods that don’t require computation of \(\mathbf{A}^T\mathbf{A}\).****  ***###
     24.2.7 Least squares (VI): QR factorization'
+  id: totrans-174
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在，我们来看两种不需要计算\(\mathbf{A}^T\mathbf{A}\)的方法。****  ***### 24.2.7 最小二乘法（VI）：QR分解
 - en: Any matrix can be decomposed into an orthogonal matrix, \(\mathbf{Q}\), and
     an upper-triangular matrix, \(\mathbf{R}\). QR factorization is probably the most
     popular approach to solving least-squares problems; it is, in fact, the method
     used by R’s `lm()`. In what ways, then, does it simplify the task?
+  id: totrans-175
   prefs: []
   type: TYPE_NORMAL
+  zh: 任何矩阵都可以分解成一个正交矩阵 \(\mathbf{Q}\) 和一个上三角矩阵 \(\mathbf{R}\)。QR分解可能是解决最小二乘问题最流行的方法；实际上，它是R的`lm()`函数使用的方法。那么，它以什么方式简化了任务？
 - en: 'As to \(\mathbf{R}\), we already know how it is useful: By virtue of being
     triangular, it defines a system of equations that can be solved step-by-step,
     by means of mere substitution. \(\mathbf{Q}\) is even better. An orthogonal matrix
@@ -801,243 +1168,378 @@
     however, is easy. Seeing how computation of an inverse – solving \(\mathbf{x}=\mathbf{A}^{-1}\mathbf{b}\)
     – is just the central task in least squares, it’s immediately clear how significant
     this is.'
+  id: totrans-176
   prefs: []
   type: TYPE_NORMAL
+  zh: 至于 \(\mathbf{R}\)，我们已经知道它的用途：由于是三角矩阵，它定义了一个可以通过逐步替换求解的方程组。而 \(\mathbf{Q}\) 更好。一个正交矩阵的列是正交的——这意味着，它们的点积都是零——并且具有单位范数；这样的矩阵的好处是它的逆等于它的转置。一般来说，逆矩阵难以计算；然而，转置矩阵是容易计算的。鉴于逆矩阵的计算——求解
+    \(\mathbf{x}=\mathbf{A}^{-1}\mathbf{b}\)——是最小二乘法中的核心任务，这立即表明了其重要性。
 - en: 'Compared to our usual scheme, this leads to a slightly shortened recipe. There
     is no “dummy” variable \(\mathbf{y}\) anymore. Instead, we directly move \(\mathbf{Q}\)
     to the other side, computing the transpose (which *is* the inverse). All that
     remains, then, is back-substitution. Also, since every matrix has a QR decomposition,
     we now directly start from \(\mathbf{A}\) instead of \(\mathbf{A}^T\mathbf{A}\):'
+  id: totrans-177
   prefs: []
   type: TYPE_NORMAL
+  zh: 与我们通常的方案相比，这导致了一个略微简化的步骤。不再有“虚拟”变量 \(\mathbf{y}\)。相反，我们直接将 \(\mathbf{Q}\) 移到另一边，计算转置（这实际上是逆）。然后剩下的就是回代。此外，由于每个矩阵都有一个QR分解，我们现在直接从
+    \(\mathbf{A}\) 开始，而不是从 \(\mathbf{A}^T\mathbf{A}\) 开始：
 - en: \[ \begin{aligned} \mathbf{A}\mathbf{x} &= \mathbf{b}\\ \mathbf{Q}\mathbf{R}\mathbf{x}
     &= \mathbf{b}\\ \mathbf{R}\mathbf{x} &= \mathbf{Q}^T\mathbf{b}\\ \end{aligned}
     \]
+  id: totrans-178
   prefs: []
   type: TYPE_NORMAL
+  zh: \[ \begin{aligned} \mathbf{A}\mathbf{x} &= \mathbf{b}\\ \mathbf{Q}\mathbf{R}\mathbf{x}
+    &= \mathbf{b}\\ \mathbf{R}\mathbf{x} &= \mathbf{Q}^T\mathbf{b}\\ \end{aligned}
+    \]
 - en: In `torch`, `linalg_qr()` gives us the matrices \(\mathbf{Q}\) and \(\mathbf{R}\).
+  id: totrans-179
   prefs: []
   type: TYPE_NORMAL
+  zh: 在`torch`中，`linalg_qr()`函数为我们提供了矩阵 \(\mathbf{Q}\) 和 \(\mathbf{R}\)。
 - en: '[PRE49]'
+  id: totrans-180
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE49]'
 - en: '*On the right side, we used to have a “convenience variable” holding \(\mathbf{A}^T\mathbf{b}\)
     ; here, we skip that step, and instead, do something “immediately useful”: move
     \(\mathbf{Q}\) to the other side.'
+  id: totrans-181
   prefs: []
   type: TYPE_NORMAL
+  zh: '*在右侧，我们曾经有一个“便利变量”来保存 \(\mathbf{A}^T\mathbf{b}\)；在这里，我们跳过这一步，而是做些“立即有用”的事情：将
+    \(\mathbf{Q}\) 移到另一边。'
 - en: '[PRE50]'
+  id: totrans-182
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE50]'
 - en: '*The only remaining step now is to solve the remaining triangular system.'
+  id: totrans-183
   prefs: []
   type: TYPE_NORMAL
+  zh: '*现在唯一剩下的步骤就是解决剩余的三角系统。'
 - en: '[PRE51]'
+  id: totrans-184
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE51]'
 - en: '*[PRE52]'
+  id: totrans-185
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE52]'
 - en: 'By now, you’ll be expecting for me to end this section saying “there is also
     a dedicated solver in `torch`/`torch_linalg`, namely …”). Well, not literally,
     no; but effectively, yes. If you call `linalg_lstsq()` passing `driver = "gels"`,
     it is QR factorization that will be used.***  ***### 24.2.8 Least squares (VII):
     Singular Value Decomposition (SVD)'
+  id: totrans-186
   prefs: []
   type: TYPE_NORMAL
+  zh: 到现在为止，你可能期望我结束这一节时说“在`torch`/`torch_linalg`中也有一个专门的求解器，即……”）。好吧，不是字面上的；但实质上，是的。如果你调用`linalg_lstsq()`并传递`driver
+    = "gels"`，将会使用QR分解。***  ***### 24.2.8 最小二乘法（VII）：奇异值分解（SVD）
 - en: 'In true climactic order, the last factorization method we discuss is the most
     versatile, most diversely applicable, most semantically meaningful one: *Singular
     Value Decomposition (SVD)*. The third aspect, fascinating though it is, does not
     relate to our current task, so I won’t go into it here. Here, it is universal
     applicability that matters: Every matrix can be composed into components SVD-style.'
+  id: totrans-187
   prefs: []
   type: TYPE_NORMAL
+  zh: 按照真正的气候顺序，我们最后讨论的分解方法是最高效的、最多样化的、最具有语义意义的：*奇异值分解（SVD）*。第三个方面，虽然很迷人，但与我们当前的任务无关，所以在这里我不会深入探讨。在这里，重要的是其普遍适用性：每个矩阵都可以按照SVD风格分解成组件。
 - en: Singular Value Decomposition factors an input \(\mathbf{A}\) into two orthogonal
     matrices, called \(\mathbf{U}\) and \(\mathbf{V}^T\), and a diagonal one, named
     \(\symbf{\Sigma}\), such that \(\mathbf{A} = \mathbf{U} \symbf{\Sigma} \mathbf{V}^T\).
     Here \(\mathbf{U}\) and \(\mathbf{V}^T\) are the *left* and *right singular vectors*,
     and \(\symbf{\Sigma}\) holds the *singular values*.
+  id: totrans-188
   prefs: []
   type: TYPE_NORMAL
+  zh: 奇异值分解将输入 \(\mathbf{A}\) 分解为两个正交矩阵，称为 \(\mathbf{U}\) 和 \(\mathbf{V}^T\)，以及一个对角矩阵，称为
+    \(\symbf{\Sigma}\)，使得 \(\mathbf{A} = \mathbf{U} \symbf{\Sigma} \mathbf{V}^T\)。在这里，\(\mathbf{U}\)
+    和 \(\mathbf{V}^T\) 是*左*和*右*奇异向量，而 \(\symbf{\Sigma}\) 包含*奇异值*。
 - en: \[ \begin{aligned} \mathbf{A}\mathbf{x} &= \mathbf{b}\\ \mathbf{U}\symbf{\Sigma}\mathbf{V}^T\mathbf{x}
     &= \mathbf{b}\\ \symbf{\Sigma}\mathbf{V}^T\mathbf{x} &= \mathbf{U}^T\mathbf{b}\\
     \mathbf{V}^T\mathbf{x} &= \mathbf{y}\\ \end{aligned} \]
+  id: totrans-189
   prefs: []
   type: TYPE_NORMAL
+  zh: \[ \begin{aligned} \mathbf{A}\mathbf{x} &= \mathbf{b}\\ \mathbf{U}\symbf{\Sigma}\mathbf{V}^T\mathbf{x}
+    &= \mathbf{b}\\ \symbf{\Sigma}\mathbf{V}^T\mathbf{x} &= \mathbf{U}^T\mathbf{b}\\
+    \mathbf{V}^T\mathbf{x} &= \mathbf{y}\\ \end{aligned} \]
 - en: We start by obtaining the factorization, using `linalg_svd()` . The argument
     `full_matrices = FALSE` tells `torch` that we want a \(\mathbf{U}\) of dimensionality
     same as \(\mathbf{A}\), not expanded to 7588 x 7588.
+  id: totrans-190
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们首先使用 `linalg_svd()` 获取分解。参数 `full_matrices = FALSE` 告诉 `torch` 我们想要一个与 \(\mathbf{A}\)
+    维度相同的 \(\mathbf{U}\)，而不是扩展到 7588 x 7588。
 - en: '[PRE53]'
+  id: totrans-191
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE53]'
 - en: '*[PRE54]'
+  id: totrans-192
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE54]'
 - en: We move \(\mathbf{U}\) to the other side – a cheap operation, thanks to \(\mathbf{U}\)
     being orthogonal.
+  id: totrans-193
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们将 \(\mathbf{U}\) 移到另一边——由于 \(\mathbf{U}\) 是正交的，这是一个便宜的操作。
 - en: '[PRE55]'
+  id: totrans-194
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE55]'
 - en: '*With both \(\mathbf{U}^T\mathbf{b}\) and \(\symbf{\Sigma}\) being same-length
     vectors, we can use element-wise multiplication to do the same for \(\symbf{\Sigma}\).
     We introduce a temporary variable, `y`, to hold the result.'
+  id: totrans-195
   prefs: []
   type: TYPE_NORMAL
+  zh: '*由于 \(\mathbf{U}^T\mathbf{b}\) 和 \(\symbf{\Sigma}\) 都是相同长度的向量，我们可以使用逐元素乘法对
+    \(\symbf{\Sigma}\) 做同样的事情。我们引入一个临时变量 `y` 来保存结果。'
 - en: '[PRE56]'
+  id: totrans-196
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE56]'
 - en: '*Now left with the final system to solve, \(\mathbf{\mathbf{V}^T\mathbf{x}
     = \mathbf{y}}\), we again profit from orthogonality – this time, of the matrix
     \(\mathbf{V}^T\).'
+  id: totrans-197
   prefs: []
   type: TYPE_NORMAL
+  zh: '*现在剩下最后一个系统需要解决，\(\mathbf{\mathbf{V}^T\mathbf{x} = \mathbf{y}}\)，我们再次得益于正交性——这次是矩阵
+    \(\mathbf{V}^T\) 的正交性。'
 - en: '[PRE57]'
+  id: totrans-198
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE57]'
 - en: '*Wrapping up, let’s calculate predictions and prediction error:'
+  id: totrans-199
   prefs: []
   type: TYPE_NORMAL
+  zh: '*总结一下，让我们计算预测和预测误差：'
 - en: '[PRE58]'
+  id: totrans-200
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE58]'
 - en: '*[PRE59]'
+  id: totrans-201
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE59]'
 - en: That concludes our tour of important least-squares algorithms. Wrapping up the
     example, we take a quick look at performance.*****  ***### 24.2.9 Checking execution
     times
+  id: totrans-202
   prefs: []
   type: TYPE_NORMAL
+  zh: 这就结束了我们对重要最小二乘算法的巡礼。总结这个例子，我们快速看一下性能。*****  ***### 24.2.9 检查执行时间
 - en: Like I said, the focus in this chapter is on concepts, not performance. But
     once you work with bigger datasets, you inevitably will care about speed. Also,
     it’s just interesting to see how fast those methods are! So, let’s do a quick
     performance benchmark. Just, please, don’t extrapolate from these results – instead,
     run analogous code on the data you care about.
+  id: totrans-203
   prefs: []
   type: TYPE_NORMAL
+  zh: 正如我所说的，本章的重点是概念，而不是性能。但一旦你开始处理更大的数据集，你不可避免地会关心速度。而且，看看这些方法有多快也是很有趣的！所以，让我们快速进行一次性能基准测试。只是，请不要从这些结果外推——相反，请在你关心的数据上运行类似的代码。
 - en: 'To time them, we need all algorithms encapsulated in their respective functions.
     Here they are:'
+  id: totrans-204
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了计时，我们需要将所有算法封装在其各自的功能中。这里它们是：
 - en: '[PRE60]'
+  id: totrans-205
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE60]'
 - en: '*We use the `bench` package to profile those methods. The `mark()` function
     does a lot more than just track time; however, here we just take a glance at the
     distributions of execution times ([fig. 24.1](#fig-least-squares-benchmark)):'
+  id: totrans-206
   prefs: []
   type: TYPE_NORMAL
+  zh: '*我们使用`bench`包来分析这些方法。`mark()`函数的功能远不止跟踪时间；然而，在这里我们只是简单看一下执行时间的分布（[图24.1](#fig-least-squares-benchmark)）：'
 - en: '[PRE61]'
+  id: totrans-207
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE61]'
 - en: '*![Density plots of execution times, one row per method. Not going into detail
     because I just want to show how benchmarking can be done.](../Images/f4e746f40f968adcda1540fa0621b449.png)'
+  id: totrans-208
   prefs: []
   type: TYPE_NORMAL
+  zh: '*![每种方法的执行时间密度图，每行一个。这里不深入细节，因为我只是想展示基准测试是如何进行的。](../Images/f4e746f40f968adcda1540fa0621b449.png)'
 - en: 'Figure 24.1: Timing least-squares algorithms, by example.'
+  id: totrans-209
   prefs: []
   type: TYPE_NORMAL
+  zh: 图24.1：通过示例计时最小二乘算法。
 - en: In conclusion, we saw how different ways of factorizing a matrix can help in
     solving least squares problems. We also quickly showed a way to time those strategies;
     however, speed is not all that counts. We want the solution to be reliable, as
     well. The technical term here is *stability*.*************************  ***##
     24.3 A quick look at stability
+  id: totrans-210
   prefs: []
   type: TYPE_NORMAL
+  zh: 总之，我们看到了不同的矩阵分解方式如何有助于解决最小二乘问题。我们还快速展示了一种计时这些策略的方法；然而，速度并不是唯一重要的。我们还想确保解决方案的可靠性。这里的术语是*稳定性*。*************************  ***##
+    24.3 快速了解稳定性
 - en: We’ve already talked about condition numbers. The concept of stability is similar
     in spirit, but refers to an *algorithm* instead of a *matrix*. In both cases,
     the idea is that small changes in the input to a calculation should lead to small
     changes in the output. Whole books have been dedicated to this topic, so I’ll
     refrain from going into details[²](#fn2).
+  id: totrans-211
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们已经讨论过条件数了。稳定性概念在精神上相似，但指的是一个 *算法* 而不是 *矩阵*。在两种情况下，想法是计算输入的微小变化应导致输出的微小变化。已经有许多书籍专门讨论这个主题，所以我就不深入细节了[²](#fn2)。
 - en: Instead, I’ll use an example of an ill-conditioned least-squares problem – meaning,
     the matrix is ill-conditioned – for us to form an idea about the stability of
     the algorithms we’ve discussed[³](#fn3).
+  id: totrans-212
   prefs: []
   type: TYPE_NORMAL
+  zh: 相反，我将使用一个病态的最小二乘问题示例——这意味着矩阵是病态的——以便我们形成对我们所讨论的算法稳定性的概念[³](#fn3)。
 - en: 'The matrix of predictors is a 100 x 15 Vandermonde matrix, created like so:'
+  id: totrans-213
   prefs: []
   type: TYPE_NORMAL
+  zh: 预测矩阵是一个 100 x 15 的 Vandermonde 矩阵，创建方式如下：
 - en: '[PRE62]'
+  id: totrans-214
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE62]'
 - en: '*Condition number is very high:'
+  id: totrans-215
   prefs: []
   type: TYPE_NORMAL
+  zh: '*条件数非常高：'
 - en: '[PRE63]'
+  id: totrans-216
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE63]'
 - en: '*[PRE64]'
+  id: totrans-217
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE64]'
 - en: 'Even higher is the condition number obtained when we multiply it with its transpose
     – remember that some algorithms actually need to work with *this* matrix:'
+  id: totrans-218
   prefs: []
   type: TYPE_NORMAL
+  zh: 当我们将它与其转置相乘时，条件数更高——记住，一些算法实际上需要与 *这个* 矩阵一起工作：
 - en: '[PRE65]'
+  id: totrans-219
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE65]'
 - en: '*[PRE66]'
+  id: totrans-220
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE66]'
 - en: 'Next, we have the prediction target:'
+  id: totrans-221
   prefs: []
   type: TYPE_NORMAL
+  zh: 接下来，我们有预测目标：
 - en: '[PRE67]'
+  id: totrans-222
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE67]'
 - en: '*In our example above, we ended up with the same RMSE for all methods. It will
     be interesting to see what happens here. I’ll restrict myself to the “DIY” ones
     among the methods shown before. Here they are, listed again for convenience:'
+  id: totrans-223
   prefs: []
   type: TYPE_NORMAL
+  zh: '*在上面的例子中，我们所有方法都得到了相同的 RMSE。这里会发生什么将很有趣。我将限制自己查看之前展示的方法中的“DIY”方法。这里它们再次列出，以方便起见：'
 - en: '[PRE68]'
+  id: totrans-224
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE68]'
 - en: '*Let’s see, then!'
+  id: totrans-225
   prefs: []
   type: TYPE_NORMAL
+  zh: '*让我们看看吧！'
 - en: '[PRE69]'
+  id: totrans-226
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE69]'
 - en: '*[PRE70]'
+  id: totrans-227
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE70]'
 - en: This is pretty impressive! We clearly see how the normal equations, straightforward
     though they are, may not be the best option once problems cease to be well-conditioned.
     Cholesky as well as LU decomposition fare better; however, the clear “winners”
     are QR factorization and the SVD. No wonder those two (with two variants each)
     are the ones made use of by `linalg_lstsq()`.
+  id: totrans-228
   prefs: []
   type: TYPE_NORMAL
+  zh: 这相当令人印象深刻！我们清楚地看到，尽管正常方程很简单，但当问题不再是有良好条件的时，可能并不是最佳选择。Cholesky 分解以及 LU 分解表现更好；然而，明显的“赢家”是
+    QR 分解和 SVD。难怪这两个（各有两个变体）被 `linalg_lstsq()` 所使用。
 - en: 'Cho, Dongjin, Cheolhee Yoo, Jungho Im, and Dong-Hyun Cha. 2020\. “Comparative
     Assessment of Various Machine Learning-Based Bias Correction Methods for Numerical
     Weather Prediction Model Forecasts of Extreme Air Temperatures in Urban Areas.”
     *Earth and Space Science* 7 (4): e2019EA000740\. https://doi.org/[https://doi.org/10.1029/2019EA000740](https://doi.org/10.1029/2019EA000740).Trefethen,
     Lloyd N., and David Bau. 1997\. *Numerical Linear Algebra*. SIAM.****** **** *
     *'
+  id: totrans-229
   prefs: []
   type: TYPE_NORMAL
+  zh: 'Cho, Dongjin, Cheolhee Yoo, Jungho Im, and Dong-Hyun Cha. 2020\. “Comparative
+    Assessment of Various Machine Learning-Based Bias Correction Methods for Numerical
+    Weather Prediction Model Forecasts of Extreme Air Temperatures in Urban Areas.”
+    *Earth and Space Science* 7 (4): e2019EA000740\. https://doi.org/[https://doi.org/10.1029/2019EA000740](https://doi.org/10.1029/2019EA000740).Trefethen,
+    Lloyd N., and David Bau. 1997\. *Numerical Linear Algebra*. SIAM.****** **** *
+    *'
 - en: The documentation for `driver` cited above is basically an excerpt from the
     corresponding documentation in [LAPACK](https://www.netlib.org/lapack/lug/node27.html),
     as we can easily verify, since the page in question has conveniently been linked
     in the documentation for `linalg_lstsq()`.[↩︎](#fnref1)
+  id: totrans-230
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 上文中引用的 `driver` 的文档基本上是 [LAPACK](https://www.netlib.org/lapack/lug/node27.html)
+    中相应文档的摘录，我们可以很容易地验证这一点，因为相关的页面已经被方便地链接到了 `linalg_lstsq()` 的文档中。[↩︎](#fnref1)
 - en: To learn more, consider consulting one of those books, for example, the widely-used
     (and concise) treatment by Trefethen and Bau ([1997](references.html#ref-Trefethen)).[↩︎](#fnref2)
+  id: totrans-231
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 要了解更多信息，可以考虑查阅这些书籍之一，例如，广泛使用的（且简洁的）Trefethen 和 Bau 的处理方法（[1997](references.html#ref-Trefethen)）。[↩︎](#fnref2)
 - en: The example is taken from the book by Trefethen and Bau referred to in the footnote
     above. Credits to Rachel Thomas, who brought this to my attention by virtue of
     using it in her [numerical linear algebra course](https://github.com/fastai/numerical-linear-algebra).[↩︎](#fnref3)******
+  id: totrans-232
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 这个例子取自上面脚注中提到的 Trefethen 和 Bau 的书籍。感谢 Rachel Thomas，她通过在她的 [数值线性代数课程](https://github.com/fastai/numerical-linear-algebra)中使用它，让我注意到了这一点。[↩︎](#fnref3)******

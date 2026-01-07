@@ -1,74 +1,112 @@
 - en: 9  Loss functions
+  id: totrans-0
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
+  zh: 9  损失函数
 - en: 原文：[https://skeydan.github.io/Deep-Learning-and-Scientific-Computing-with-R-torch/loss_functions.html](https://skeydan.github.io/Deep-Learning-and-Scientific-Computing-with-R-torch/loss_functions.html)
+  id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 原文：[https://skeydan.github.io/Deep-Learning-and-Scientific-Computing-with-R-torch/loss_functions.html](https://skeydan.github.io/Deep-Learning-and-Scientific-Computing-with-R-torch/loss_functions.html)
 - en: The concept of a loss function is essential to machine learning. At any iteration,
     the current loss value indicates how far the estimate is from the target. It is
     then used to update the parameters in a direction that will decrease the loss.
+  id: totrans-2
   prefs: []
   type: TYPE_NORMAL
+  zh: 损失函数的概念对于机器学习至关重要。在任何迭代中，当前的损失值表示估计值与目标之间的距离。然后，它被用来更新参数，以减少损失的方向。
 - en: 'In our applied example, we already have made use of a loss function: mean squared
     error, computed manually as'
+  id: totrans-3
   prefs: []
   type: TYPE_NORMAL
+  zh: 在我们的应用示例中，我们已经使用了一个损失函数：均方误差，手动计算如下
 - en: '[PRE0]'
+  id: totrans-4
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE0]'
 - en: '*As you might expect, here is another area where this kind of manual effort
     is not needed.'
+  id: totrans-5
   prefs: []
   type: TYPE_NORMAL
+  zh: '*正如你所期望的，这又是一个不需要这种手动努力的地方。'
 - en: 'In this final conceptual chapter before we re-factor our running examples,
     we want to talk about two things: First, how to make use of `torch`’s built-in
     loss functions. And second, what function to choose.'
+  id: totrans-6
   prefs: []
   type: TYPE_NORMAL
+  zh: 在我们重新构建运行示例之前的最后一章概念中，我们想要讨论两件事：首先，如何使用`torch`的内置损失函数。其次，选择哪个函数。
 - en: 9.1 `torch` loss functions
+  id: totrans-7
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 9.1 `torch`损失函数
 - en: In `torch`, loss functions start with `nn_` or `nnf_`.
+  id: totrans-8
   prefs: []
   type: TYPE_NORMAL
+  zh: 在`torch`中，损失函数以`nn_`或`nnf_`开头。
 - en: 'Using `nnf_`, you directly *call a function*. Correspondingly, its arguments
     (estimate and target) both are tensors. For example, here is `nnf_mse_loss()`,
     the built-in analog to what we coded manually:'
+  id: totrans-9
   prefs: []
   type: TYPE_NORMAL
+  zh: 使用`nnf_`，你直接*调用一个函数*。相应地，它的参数（估计值和目标）都是张量。例如，这里有一个`nnf_mse_loss()`，它是我们手动编写的内置函数的类似物：
 - en: '[PRE1]'
+  id: totrans-10
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE1]'
 - en: '*[PRE2]'
+  id: totrans-11
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE2]'
 - en: 'With `nn_`, in contrast, you create an object:'
+  id: totrans-12
   prefs: []
   type: TYPE_NORMAL
+  zh: 与`nn_`相反，你创建一个对象：
 - en: '[PRE3]'
+  id: totrans-13
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE3]'
 - en: '*This object can then be called on tensors to yield the desired loss:'
+  id: totrans-14
   prefs: []
   type: TYPE_NORMAL
+  zh: '*这个对象可以对张量进行调用，以产生所需的损失：'
 - en: '[PRE4]'
+  id: totrans-15
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE4]'
 - en: '*[PRE5]'
+  id: totrans-16
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE5]'
 - en: Whether to choose object or function is mainly a matter of preference and context.
     In larger models, you may end up combining several loss functions, and then, creating
     loss objects can result in more modular, and more maintainable code. In this book,
     I’ll mainly use the first way, unless there are compelling reasons to do otherwise.
+  id: totrans-17
   prefs: []
   type: TYPE_NORMAL
+  zh: 选择对象还是函数主要是一个偏好和上下文的问题。在较大的模型中，你可能会结合几个损失函数，然后，创建损失对象可以导致更模块化和更易于维护的代码。在这本书中，除非有充分的理由这样做，否则我主要会使用第一种方法。
 - en: On to the second question.***  ***## 9.2 What loss function should I choose?
+  id: totrans-18
   prefs: []
   type: TYPE_NORMAL
+  zh: 接下来是第二个问题。***  ***## 9.2 应该选择哪种损失函数？
 - en: 'In deep learning, or machine learning overall, most applications aim to do
     one (or both) of two things: predict a numerical value, or estimate a probability.
     The regression task of our running example does the former; real-world applications
@@ -77,301 +115,455 @@
     according to its most salient content, we really compute the respective probabilities.
     Then, when the probability for “dog” is 0.7, while that for “cat” is 0.3, we say
     it’s a dog.'
+  id: totrans-19
   prefs: []
   type: TYPE_NORMAL
+  zh: 在深度学习或机器学习整体中，大多数应用的目标是做一件（或两件）事情：预测一个数值，或估计一个概率。我们运行示例中的回归任务做前者；现实世界的应用可能预测温度、推断员工流失或预测销售。在第二组中，原型任务是*分类*。为了根据其最显著的内容对图像进行分类，我们实际上计算了相应的概率。然后，当“狗”的概率为0.7，而“猫”的概率为0.3时，我们说它是一只狗。
 - en: 9.2.1 Maximum likelihood
+  id: totrans-20
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 9.2.1 最大似然
 - en: 'In both classification and regression, the mostly used loss functions are built
     on the *maximum likelihood* principle. Maximum likelihood means: We want to choose
     model parameters in a way that the *data*, the things we have observed or could
     have observed, are maximally likely. This principle is not “just” fundamental,
     it is also intuitively appealing. Imagine a simple example.'
+  id: totrans-21
   prefs: []
   type: TYPE_NORMAL
+  zh: 在分类和回归中，最常用的损失函数都是基于*最大似然*原理构建的。最大似然意味着：我们希望以这种方式选择模型参数，即我们观察到的或可能观察到的*数据*是最有可能的。这个原理不仅“只是”基本的，而且直观上也很吸引人。想象一个简单的例子。
 - en: Say we have the values 7.1, 22.14, and 11.3, and we know that the underlying
     process follows a normal distribution. Then it is much more likely that these
     data have been generated by a distribution with mean 14 and standard deviation
     7 than by one with mean 20 and standard deviation 1.
+  id: totrans-22
   prefs: []
   type: TYPE_NORMAL
+  zh: 假设我们有值7.1、22.14和11.3，并且我们知道基础过程遵循正态分布。那么，这些数据更有可能是通过均值14和标准差7的分布生成的，而不是均值20和标准差1的分布生成的。
 - en: 9.2.2 Regression
+  id: totrans-23
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 9.2.2 回归
 - en: In regression (that implicitly assumes the target distribution to be normal[¹](#fn1)),
     to maximize likelihood, we just keep using mean squared error – the loss we’ve
     been computing all along. Maximum likelihood estimators have all kinds of desirable
     statistical properties. However, in concrete applications, there may be reasons
     to use different ones.
+  id: totrans-24
   prefs: []
   type: TYPE_NORMAL
+  zh: 在回归（隐含地假设目标分布为正态[¹](#fn1)）中，为了最大化似然性，我们只需继续使用均方误差——我们一直在计算的那个损失。最大似然估计器具有各种理想的统计特性。然而，在具体应用中，可能有理由使用不同的估计器。
 - en: For example, say a dataset has outliers where, for some reason, prediction and
     target are found to be deviating substantially. Mean squared error will allocate
     high importance to these outliers. In such cases, possible alternatives are mean
     absolute error (`nnf_l1_loss()`) and smooth L1 loss (`nn_smooth_l1_loss()`). The
     latter is a mixture type that, by default, computes the absolute (L1) error, but
     switches to squared (L2) error whenever the absolute errors get very small.
+  id: totrans-25
   prefs: []
   type: TYPE_NORMAL
+  zh: 例如，假设一个数据集有异常值，由于某种原因，预测值和目标值被发现有显著偏差。均方误差将赋予这些异常值很高的权重。在这种情况下，可能的替代方案是平均绝对误差（`nnf_l1_loss()`）和光滑
+    L1 损失（`nn_smooth_l1_loss()`）。后者是一种混合类型，默认情况下计算绝对（L1）误差，但当绝对误差非常小的时候，会切换到平方（L2）误差。
 - en: 9.2.3 Classification
+  id: totrans-26
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 9.2.3 分类
 - en: In classification, we are comparing two *distributions*. The estimate is a probability
     by design, and the target can be viewed as one, too. In that light, maximum likelihood
     estimation is equivalent to minimizing the Kullback-Leibler divergence (KL divergence).
+  id: totrans-27
   prefs: []
   type: TYPE_NORMAL
+  zh: 在分类中，我们是在比较两个 *分布*。估计值是一个概率，目标也可以被视为一个。从这个角度来看，最大似然估计等同于最小化 Kullback-Leibler
+    散度（KL 散度）。
 - en: 'KL divergence is a measure of how two distributions differ. It depends on two
     things: the likelihood of the data, as determined by some data-generating process,
     and the likelihood of the data under the model. In the machine learning scenario,
     however, we are concerned only with the latter. In that case, the criterion to
     be minimized reduces to the *cross-entropy* between the two distributions. And
     cross-entropy loss is exactly what is commonly used in classification tasks.'
+  id: totrans-28
   prefs: []
   type: TYPE_NORMAL
+  zh: KL 散度是衡量两个分布差异的度量。它取决于两个因素：数据的似然性，由某些数据生成过程确定，以及模型下数据的似然性。然而，在机器学习场景中，我们只关心后者。在这种情况下，要最小化的标准简化为两个分布之间的
+    *交叉熵*。交叉熵损失正是分类任务中常用的一种。
 - en: 'In `torch`, there are several variants of loss functions that calculate cross-entropy.
     With this topic, it’s nice to have a quick reference around; so here is a quick
     lookup table ([tbl. 9.1](#tbl-loss-funcs-features) abbreviates the – rather long-ish
     – function names; see [tbl. 9.2](#tbl-loss-abbrevs) for the mapping):'
+  id: totrans-29
   prefs: []
   type: TYPE_NORMAL
+  zh: 在 `torch` 中，有几种损失函数的变体可以计算交叉熵。关于这个主题，有一个快速参考表会很方便；所以这里有一个快速查找表（[表 9.1](#tbl-loss-funcs-features)
+    简化了相当长的函数名；见 [表 9.2](#tbl-loss-abbrevs) 以获取映射）：
 - en: 'Table 9.1: Loss functions, by type of data they work on (binary vs. multi-class)
     and expected input (raw scores, probabilities, or log probabilities).'
+  id: totrans-30
   prefs: []
   type: TYPE_NORMAL
+  zh: 表 9.1：根据它们处理的数据类型（二元 vs. 多类）和预期输入（原始分数、概率或对数概率）的损失函数。
 - en: '|  | **Data** |  | **Input** |  |  |'
+  id: totrans-31
   prefs: []
   type: TYPE_TB
+  zh: '|  | **数据** |  | **输入** |  |  |'
 - en: '|  | binary | multi-class | raw scores | probabilities | log probs |'
+  id: totrans-32
   prefs: []
   type: TYPE_TB
+  zh: '|  | 二元 | 多类 | 原始分数 | 概率 | 对数概率 |'
 - en: '| *BCeL* | Y |  | Y |  |  |'
+  id: totrans-33
   prefs: []
   type: TYPE_TB
+  zh: '| *BCeL* | 是 |  | 是 |  |  |'
 - en: '| *Ce* |  | Y | Y |  |  |'
+  id: totrans-34
   prefs: []
   type: TYPE_TB
+  zh: '| *Ce* |  | 是 | 是 |  |  |'
 - en: '| *BCe* | Y |  |  | Y |  |'
+  id: totrans-35
   prefs: []
   type: TYPE_TB
+  zh: '| *BCe* | 是 |  |  | 是 |  |'
 - en: '| *Nll* |  | Y |  |  | Y |'
+  id: totrans-36
   prefs: []
   type: TYPE_TB
+  zh: '| *Nll* |  | 是 |  |  | 是 |'
 - en: 'Table 9.2: Abbreviations used to refer to `torch` loss functions.'
+  id: totrans-37
   prefs: []
   type: TYPE_NORMAL
+  zh: 表 9.2：用于引用 `torch` 损失函数的缩写。
 - en: '| *BCeL* | `nnf_binary_cross_entropy_with_logits()` |'
+  id: totrans-38
   prefs: []
   type: TYPE_TB
+  zh: '| *BCeL* | `nnf_binary_cross_entropy_with_logits()` |'
 - en: '| *Ce* | `nnf_cross_entropy()` |'
+  id: totrans-39
   prefs: []
   type: TYPE_TB
+  zh: '| *Ce* | `nnf_cross_entropy()` |'
 - en: '| *BCe* | `nnf_binary_cross_entropy()` |'
+  id: totrans-40
   prefs: []
   type: TYPE_TB
+  zh: '| *BCe* | `nnf_binary_cross_entropy()` |'
 - en: '| *Nll* | `nnf_nll_loss()` |'
+  id: totrans-41
   prefs: []
   type: TYPE_TB
+  zh: '| *Nll* | `nnf_nll_loss()` |'
 - en: To pick the function applicable to your use case, there are two things to consider.
+  id: totrans-42
   prefs: []
   type: TYPE_NORMAL
+  zh: 要选择适用于您的用例的函数，有两个因素需要考虑。
 - en: First, are there just two possible classes (“dog vs. cat”, “person present /
     person absent”, etc.), or are there several?
+  id: totrans-43
   prefs: []
   type: TYPE_NORMAL
+  zh: 首先，是否只有两种可能的类别（“狗 vs. 猫”，“有人在场 / 没有人在场”，等等），还是有几个？
 - en: And second, what is the type of the estimated values? Are they raw scores (in
     theory, any value between plus and minus infinity)? Are they probabilities (values
     between 0 and 1)? Or (finally) are they log probabilities, that is, probabilities
     to which a logarithm has been applied? (In the final case, all values should be
     either negative or equal to zero.)
+  id: totrans-44
   prefs: []
   type: TYPE_NORMAL
+  zh: 其次，估计值的类型是什么？它们是原始分数（理论上，任何介于正负无穷之间的值）吗？是概率（介于0和1之间的值）？或者（最后）是log概率，即应用了对数的概率？（在最后一种情况下，所有值都应该是负数或等于零。）
 - en: 9.2.3.1 Binary data
+  id: totrans-45
   prefs:
   - PREF_H4
   type: TYPE_NORMAL
+  zh: 9.2.3.1 二元数据
 - en: Starting with binary data, our example classification vector is a sequence of
     zeros and ones. When thinking in terms of probabilities, it is most intuitive
     to imagine the ones standing for presence, the zeros for absence of one of the
     classes in question – cat or no cat, say.
+  id: totrans-46
   prefs: []
   type: TYPE_NORMAL
+  zh: 从二元数据开始，我们的示例分类向量是一系列零和一。在考虑概率时，最直观的想法是将一视为存在，零视为所讨论的类别之一（例如猫或非猫）不存在。
 - en: '[PRE6]'
+  id: totrans-47
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE6]'
 - en: '*The raw scores could be anything. For example:'
+  id: totrans-48
   prefs: []
   type: TYPE_NORMAL
+  zh: '*原始分数可以是任何东西。例如：'
 - en: '[PRE7]'
+  id: totrans-49
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE7]'
 - en: '*To turn these into probabilities, all we need to do is pass them to `nnf_sigmoid()`.
     `nnf_sigmoid()` squishes its argument to values between zero and one:'
+  id: totrans-50
   prefs: []
   type: TYPE_NORMAL
+  zh: '*要将这些转换为概率，我们只需要将它们传递给`nnf_sigmoid()`。`nnf_sigmoid()`将其参数压缩到零和一之间的值：'
 - en: '[PRE8]'
+  id: totrans-51
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE8]'
 - en: '*[PRE9]'
+  id: totrans-52
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE9]'
 - en: From the above table, we see that given `unnormalized_estimate` and `probability_estimate`,
     we can use both as inputs to a loss function – but we have to choose the appropriate
     one. Provided we do that, the output has to be the same in both cases.
+  id: totrans-53
   prefs: []
   type: TYPE_NORMAL
+  zh: 从上面的表格中，我们可以看到，给定`unnormalized_estimate`和`probability_estimate`，我们可以将它们两者都作为损失函数的输入——但我们必须选择合适的一个。只要我们做到了这一点，两种情况下的输出都必须是相同的。
 - en: 'Let’s see (raw scores first):'
+  id: totrans-54
   prefs: []
   type: TYPE_NORMAL
+  zh: 让我们看看（首先是原始分数）：
 - en: '[PRE10]'
+  id: totrans-55
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE10]'
 - en: '*[PRE11]'
+  id: totrans-56
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE11]'
 - en: 'And now, probabilities:'
+  id: totrans-57
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在，概率：
 - en: '[PRE12]'
+  id: totrans-58
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE12]'
 - en: '*[PRE13]'
+  id: totrans-59
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE13]'
 - en: That worked as expected. What does this mean in practice? It means that when
     we build a model for binary classification, and the final layer computes an un-normalized
     score, we don’t need to attach a sigmoid layer to obtain probabilities. We can
     just call `nnf_binary_cross_entropy_with_logits()` when training the network.
     In fact, doing so is the preferred way, also due to reasons of numerical stability.*****  ***####
     9.2.3.2 Multi-class data
+  id: totrans-60
   prefs: []
   type: TYPE_NORMAL
+  zh: 这正如预期的那样。这在实践中意味着什么？这意味着当我们为二元分类构建模型，并且最终层计算未归一化的分数时，我们不需要附加sigmoid层来获得概率。我们只需在训练网络时调用`nnf_binary_cross_entropy_with_logits()`即可。实际上，这样做是首选方式，这也得益于数值稳定性。*****  ***####
+    9.2.3.2 多类数据
 - en: 'Moving on to multi-class data, the most intuitive framing now really is in
     terms of (several) *classes*, not presence or absence of a single class. Think
     of classes as class indices (maybe indexing into some look-up table). Being indices,
     technically, classes start at 1:'
+  id: totrans-61
   prefs: []
   type: TYPE_NORMAL
+  zh: 接下来是关于多类数据，现在最直观的框架是在（几个）*类别*的术语下，而不是单个类别的存在或不存在。将类别视为类别索引（可能是索引某个查找表）。从技术上来说，类别从1开始：
 - en: '[PRE14]'
+  id: totrans-62
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE14]'
 - en: '*In the multi-class scenario, raw scores are a two-dimensional tensor. Each
     row contains the scores for one observation, and each column corresponds to one
     of the classes. Here’s how the raw estimates could look:'
+  id: totrans-63
   prefs: []
   type: TYPE_NORMAL
+  zh: '*在多类场景中，原始分数是一个二维张量。每一行包含一个观察值的分数，每一列对应一个类别。以下是原始估计可能的样子：'
 - en: '[PRE15]'
+  id: totrans-64
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE15]'
 - en: '*As per the above table, given this estimate, we should be calling `nnf_cross_entropy()`
     (and we will, when below we compare results).'
+  id: totrans-65
   prefs: []
   type: TYPE_NORMAL
+  zh: '*根据上述表格，给定这个估计，我们应该调用`nnf_cross_entropy()`（我们将在下面的结果比较中这样做）。'
 - en: So that’s the first option, and it works exactly as with binary data. For the
     second, there is an additional step.
+  id: totrans-66
   prefs: []
   type: TYPE_NORMAL
+  zh: 所以这是第一个选项，它的工作方式与二元数据完全一样。对于第二个，有一个额外的步骤。
 - en: First, we again turn raw scores into probabilities, using `nnf_softmax()`. For
     most practical purposes, `nnf_softmax()` can be seen as the multi-class equivalent
     of `nnf_sigmoid()`. Strictly though, their effects are not the same. In a nutshell,
     `nnf_sigmoid()` treats low-score and high-score values equivalently, while `nnf_softmax()`
     exacerbates the distances between the top score and the remaining ones (“winner
     takes all”).
+  id: totrans-67
   prefs: []
   type: TYPE_NORMAL
+  zh: 首先，我们再次使用`nnf_softmax()`将原始分数转换为概率。对于大多数实际用途，`nnf_softmax()`可以被视为`nnf_sigmoid()`的多类等效。严格来说，它们的效果并不相同。简而言之，`nnf_sigmoid()`对低分和高分值同等对待，而`nnf_softmax()`会加剧最高分与其他分数之间的距离（“赢家通吃”）。
 - en: '[PRE16]'
+  id: totrans-68
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE16]'
 - en: '*[PRE17]'
+  id: totrans-69
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE17]'
 - en: 'The second step, the one that was not required in the binary case, consists
     in transforming the probabilities to log probabilities. In our example, this could
     be accomplished by calling `torch_log()` on the `probability_estimate` we just
     computed. Alternatively, both steps together are taken care of by `nnf_log_softmax()`:'
+  id: totrans-70
   prefs: []
   type: TYPE_NORMAL
+  zh: 第二步，在二进制情况下不需要的这一步，是将概率转换为对数概率。在我们的例子中，这可以通过对刚刚计算出的`probability_estimate`调用`torch_log()`来实现。或者，这两个步骤可以一起由`nnf_log_softmax()`处理：
 - en: '[PRE18]'
+  id: totrans-71
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE18]'
 - en: '*[PRE19]'
+  id: totrans-72
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE19]'
 - en: 'Now that we have estimates in both possible forms, we can again compare results
     from applicable loss functions. First, `nnf_cross_entropy()` on the raw scores:'
+  id: totrans-73
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在我们有了两种可能形式的估计，我们可以再次比较适用损失函数的结果。首先，`nnf_cross_entropy()`在原始分数上：
 - en: '[PRE20]'
+  id: totrans-74
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE20]'
 - en: '*[PRE21]'
+  id: totrans-75
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE21]'
 - en: 'And second, `nnf_nll_loss()` on the log probabilities:'
+  id: totrans-76
   prefs: []
   type: TYPE_NORMAL
+  zh: 其次，`nnf_nll_loss()`在对数概率上：
 - en: '[PRE22]'
+  id: totrans-77
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE22]'
 - en: '*[PRE23]'
+  id: totrans-78
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE23]'
 - en: 'Application-wise, what was said for the binary case applies here as well: In
     a multi-class classification network, there is no need to have a softmax layer
     at the end.'
+  id: totrans-79
   prefs: []
   type: TYPE_NORMAL
+  zh: 在应用方面，对于二进制情况所说的也适用于这里：在多类分类网络中，在最后不需要有softmax层。
 - en: 'Before we end this chapter, let’s address a question that might have come to
     mind. Is not binary classification a sub-type of the multi-class setup? Should
     we not, in that case, arrive at the same result, whatever the method chosen?******  ***####
     9.2.3.3 Check: Binary data, multi-class method'
+  id: totrans-80
   prefs: []
   type: TYPE_NORMAL
+  zh: 在结束这一章之前，让我们回答一个可能出现在脑海中的问题。二进制分类不是多类设置的一个子类型吗？在这种情况下，我们不应该，无论选择哪种方法，都会得到相同的结果吗？******  ***####
+    9.2.3.3 检查：二进制数据，多类方法
 - en: 'Let’s see. We re-use the binary-classification scenario employed above. Here
     it is again:'
+  id: totrans-81
   prefs: []
   type: TYPE_NORMAL
+  zh: 让我们看看。我们再次使用上面提到的二进制分类场景。这里它是这样的：
 - en: '[PRE24]'
+  id: totrans-82
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE24]'
 - en: '*[PRE25]'
+  id: totrans-83
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE25]'
 - en: 'We hope to get the same value doing things the multi-class way. We already
     have the probabilities (namely, `probability_estimate`); we just need to put them
     into the “observation by class” format expected by `nnf_nll_loss()`:'
+  id: totrans-84
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们希望以多类方式做事能得到相同的价值。我们已经有概率（即`probability_estimate`）；我们只需要将它们放入`nnf_nll_loss()`期望的“按类别观察”格式：
 - en: '[PRE26]'
+  id: totrans-85
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE26]'
 - en: '*Now, we still want to apply the logarithm. And there is one other thing to
     be taken care of: In the binary setup, classes were coded as probabilities (either
     0 or 1); now, we’re dealing with indices. This means we add 1 to the `target`
     tensor:'
+  id: totrans-86
   prefs: []
   type: TYPE_NORMAL
+  zh: '*现在，我们仍然想要应用对数函数。还有一件事需要注意：在二进制设置中，类别被编码为概率（要么是0要么是1）；现在，我们正在处理索引。这意味着我们需要将`target`张量中的值加1：'
 - en: '[PRE27]'
+  id: totrans-87
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE27]'
 - en: '*Finally, we can call `nnf_nll_loss()`:'
+  id: totrans-88
   prefs: []
   type: TYPE_NORMAL
+  zh: '*最后，我们可以调用`nnf_nll_loss()`：'
 - en: '[PRE28]'
+  id: totrans-89
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE28]'
 - en: '*[PRE29]'
+  id: totrans-90
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE29]'
 - en: There we go. The results are indeed the same.**********  **** * *
+  id: totrans-91
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们做到了。结果确实是一样的。**********  **** * *
 - en: For cases where that assumption seems unlikely, distribution-adequate loss functions
     are provided (e.g., Poisson negative log likelihood, available as `nnf_poisson_nll_loss()`
     .[↩︎](#fnref1)*******
+  id: totrans-92
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 对于那些假设看起来不太可能的情况，提供了分布适当的损失函数（例如，泊松负对数似然，作为`nnf_poisson_nll_loss()`可用。[↩︎](#fnref1)*******

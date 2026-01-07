@@ -1,11 +1,15 @@
 - en: 4  Autograd
+  id: totrans-0
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
+  zh: 4  Autograd
 - en: 原文：[https://skeydan.github.io/Deep-Learning-and-Scientific-Computing-with-R-torch/autograd.html](https://skeydan.github.io/Deep-Learning-and-Scientific-Computing-with-R-torch/autograd.html)
+  id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 原文：[https://skeydan.github.io/Deep-Learning-and-Scientific-Computing-with-R-torch/autograd.html](https://skeydan.github.io/Deep-Learning-and-Scientific-Computing-with-R-torch/autograd.html)
 - en: 'In the last chapter, we have seen how to manipulate tensors, and encountered
     a sample of mathematical operations one can perform on them. If those operations,
     numerous though they may be, were all there was to core `torch`, you would not
@@ -15,20 +19,29 @@
     *loss function*. This, in turn, entails computing function *derivatives*. Now
     imagine that as a user, you had to specify the functional form of each derivative
     yourself. Especially with neural networks, this could get cumbersome pretty fast!'
+  id: totrans-2
   prefs: []
   type: TYPE_NORMAL
+  zh: 在上一章中，我们看到了如何操作张量，并遇到了可以在它们上执行的一些数学运算的示例。如果这些操作，尽管数量众多，都是 `torch` 核心的全部，你就不会读这本书了。像
+    `torch` 这样的框架之所以如此受欢迎，是因为你可以用它们做什么：深度学习、机器学习、优化，以及一般的大规模科学计算。这些应用领域中的大多数都涉及最小化某些
+    *损失函数*。这反过来又涉及到计算函数的 *导数*。现在想象一下，作为用户，你必须自己指定每个导数的函数形式。特别是对于神经网络，这可能会很快变得繁琐！
 - en: In fact, `torch` does not work out, nor store, functional representations of
     derivatives either. Instead, it implements what is called *automatic differentiation*.
     In automatic differentiation, and more specifically, its often-used *reverse-mode*
     variant, derivatives are computed and combined on a *backward pass* through the
     graph of tensor operations. We’ll look at an example for this in a minute. But
     first, let’s quickly backtrack and talk about *why* we would want to compute derivatives.
+  id: totrans-3
   prefs: []
   type: TYPE_NORMAL
+  zh: 事实上，`torch` 也不处理也不存储导数的函数表示。相反，它实现了所谓的 *自动微分*。在自动微分中，更具体地说，其常用的 *反向模式* 变体，导数是在通过张量操作图的
+    *反向传播* 过程中计算和组合的。我们将在下一分钟看看这个例子。但首先，让我们快速回顾一下 *为什么* 我们想要计算导数。
 - en: 4.1 Why compute derivatives?
+  id: totrans-4
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 4.1 为什么计算导数？
 - en: In supervised machine learning, we have at our disposal a *training set*, where
     the variable we’re hoping to predict is known. This is the target, or *ground
     truth*. We now develop and train a prediction algorithm, based on a set of input
@@ -36,60 +49,85 @@
     comparing the algorithm’s predictions with the ground truth, a comparison that
     leads to a number capturing how good or bad the current predictions are. To provide
     this number is the job of the *loss function*.
+  id: totrans-5
   prefs: []
   type: TYPE_NORMAL
+  zh: 在监督机器学习中，我们有一个 *训练集*，其中我们希望预测的变量是已知的。这是目标，或 *真实值*。我们现在基于一组输入变量，即 *预测变量*，开发和训练一个预测算法。这个训练或学习过程是基于将算法的预测与真实值进行比较，这种比较导致一个数字，它捕捉了当前预测的好坏。提供这个数字是
+    *损失函数* 的任务。
 - en: Once it is aware of the current loss, an algorithm can adjust its parameters
     – the *weights*, in a neural network – in order to deliver better predictions.
     It just has to know in which direction to adjust them. This information is made
     available by the *gradient*, the vector of derivatives.
+  id: totrans-6
   prefs: []
   type: TYPE_NORMAL
+  zh: 一旦它知道了当前的损失，算法就可以调整其参数——在神经网络中是 *权重*——以便提供更好的预测。它只需要知道调整它们的方向。这个信息是由 *梯度*，即导数的向量提供的。
 - en: 'As an example, we imagine a loss function that looks like this ([fig. 4.1](#fig-autograd-paraboloid)):'
+  id: totrans-7
   prefs: []
   type: TYPE_NORMAL
+  zh: 例如，我们想象一个看起来像这样的损失函数（[图 4.1](#fig-autograd-paraboloid)）：
 - en: '![A paraboloid in two dimensions that has a minimum at (0,0).](../Images/47bb9e9ec02e8449deecd5cf858a4714.png)'
+  id: totrans-8
   prefs: []
   type: TYPE_IMG
+  zh: '![一个在 (0,0) 处有最小值的二维抛物面。](../Images/47bb9e9ec02e8449deecd5cf858a4714.png)'
 - en: 'Figure 4.1: Hypothetical loss function (a paraboloid).'
+  id: totrans-9
   prefs: []
   type: TYPE_NORMAL
+  zh: 图 4.1：假设的损失函数（一个抛物面）。
 - en: 'This is a quadratic function of two variables: \(f(x_1, x_2) = 0.2 {x_1}^2
     + 0.2 {x_2}^2 - 5\). It has its minimum at `(0,0)`, and this is the point we’d
     like to be at. As humans, standing at the location designated by the white dot,
     and looking at the landscape, we have a pretty clear idea how to go downhill fast
     (assuming we’re not scared by the slope). To find the best direction computationally,
     however, we compute the gradient.'
+  id: totrans-10
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是一个两个变量的二次函数：\(f(x_1, x_2) = 0.2 {x_1}^2 + 0.2 {x_2}^2 - 5\)。它在 `(0,0)` 处有最小值，这是我们希望到达的点。作为人类，站在由白色圆点指定的位置，观察景观，我们有一个相当清晰的想法如何快速下山（假设我们不怕斜坡）。然而，要计算性地找到最佳方向，我们必须计算梯度。
 - en: 'Take the \(x_1\) direction. The derivative of the function with respect to
     \(x_1\) indicates how its value varies as \(x_1\) varies. As we know the function
     in closed form, we can compute that: \(\frac{\partial f}{\partial x_1} = 0.4 x_1\).
     This tells us that as \(x_1\) increases, loss increases, and how fast. But we
     want loss to *decrease*, so we have to go in the opposite direction.'
+  id: totrans-11
   prefs: []
   type: TYPE_NORMAL
+  zh: 考虑 \(x_1\) 方向。函数相对于 \(x_1\) 的导数表明，当 \(x_1\) 变化时，其值如何变化。因为我们知道函数的闭式形式，我们可以计算出：\(\frac{\partial
+    f}{\partial x_1} = 0.4 x_1\)。这告诉我们，当 \(x_1\) 增加时，损失增加，以及增加的速度。但我们的目标是让损失*减少*，所以我们必须朝相反的方向前进。
 - en: The same holds for the \(x_2\)-axis. We compute the derivative (\(\frac{\partial
     f}{\partial x_2} = 0.4 x_2\)). Again, we want to take the direction opposite to
     where the derivative points. Overall, this yields a descent direction of \(\begin{bmatrix}-0.4x_1\\-0.4x_2
     \end{bmatrix}\).
+  id: totrans-12
   prefs: []
   type: TYPE_NORMAL
+  zh: 对于 \(x_2\) 轴也是如此。我们计算导数（\(\frac{\partial f}{\partial x_2} = 0.4 x_2\)）。同样，我们想要取导数指向的相反方向。总体来说，这给出了一个下降方向
+    \(\begin{bmatrix}-0.4x_1\\-0.4x_2 \end{bmatrix}\)。
 - en: 'Descriptively, this strategy is called *steepest descent*. Commonly referred
     to as *gradient descent*, it is the most basic optimization algorithm in deep
     learning. Perhaps unintuitively, it is not always the most efficient way. And
     there’s another question: Can we assume that this direction, computed at the starting
     point, will remain optimal as we continue descending? Maybe we’d better regularly
     recompute directions instead? Questions like this will be addressed in later chapters.'
+  id: totrans-13
   prefs: []
   type: TYPE_NORMAL
+  zh: 描述上，这种策略被称为**最速下降法**。通常被称为**梯度下降法**，它是深度学习中最基本的优化算法。也许不太直观，它并不总是最有效的方法。还有一个问题：我们能否假设在起始点计算出的这个方向，在我们继续下降的过程中仍然是最优的？也许我们最好定期重新计算方向？这类问题将在后续章节中解答。
 - en: 4.2 Automatic differentiation example
+  id: totrans-14
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 4.2 自动微分示例
 - en: Now that we know why we need derivatives, let’s see how automatic differentiation
     (AD) would compute them.
+  id: totrans-15
   prefs: []
   type: TYPE_NORMAL
+  zh: 既然我们知道为什么需要导数，让我们看看自动微分（AD）是如何计算它们的。
 - en: This ([fig. 4.2](#fig-autograd-compgraph)) is how our above function could be
     represented in a computational graph. `x1` and `x2` are input nodes, corresponding
     to function parameters \(x_1\) and \(x_2\). `x7` is the function’s output; all
@@ -97,187 +135,288 @@
     (We could have given the constants, `-5` , `0.2`, and `2`, their own nodes as
     well; but as they’re remaining, well, constant anyway, we’re not too interested
     in them and prefer having a simpler graph.)
+  id: totrans-16
   prefs: []
   type: TYPE_NORMAL
+  zh: 这 ([图4.2](#fig-autograd-compgraph)) 是我们上述函数在计算图中的表示方式。`x1` 和 `x2` 是输入节点，对应于函数参数
+    \(x_1\) 和 \(x_2\)。`x7` 是函数的输出；所有其他节点都是中间节点，对于确保正确的执行顺序是必要的。（我们也可以给常数 `-5`、`0.2`
+    和 `2` 分配它们自己的节点；但既然它们都是常数，我们不太感兴趣，更愿意有一个更简单的图。）
 - en: '![A directed graph where nodes represent data, and arrows, mathematical operations.
     There are two input nodes, four intermediate nodes, and one output node. Operations
     used are exponentiation, multiplication, and addition.](../Images/a587b80614fb71733a2610b278fbd9ec.png)'
+  id: totrans-17
   prefs: []
   type: TYPE_IMG
+  zh: '![一个有向图，其中节点代表数据，箭头代表数学运算。有两个输入节点，四个中间节点和一个输出节点。使用的运算有指数、乘法和加法。](../Images/a587b80614fb71733a2610b278fbd9ec.png)'
 - en: 'Figure 4.2: Example of a computational graph.'
+  id: totrans-18
   prefs: []
   type: TYPE_NORMAL
+  zh: 图4.2：计算图示例。
 - en: 'In reverse-mode AD, the flavor of automatic differentiation implemented by
     `torch`, the first thing that happens is to calculate the function’s output value.
     This corresponds to a forward pass through the graph. Then, a backward pass is
     performed to calculate the gradient of the output with respect to both inputs,
     `x1` and `x2`. In this process, information becomes available, and is built up,
     from the right:'
+  id: totrans-19
   prefs: []
   type: TYPE_NORMAL
+  zh: 在反向模式自动微分中，`torch` 实现的自动微分风味，首先发生的事情是计算函数的输出值。这对应于通过图的前向传递。然后，执行反向传递来计算输出相对于两个输入
+    `x1` 和 `x2` 的梯度。在这个过程中，信息从右向左变得可用，并逐渐积累：
 - en: 'At `x7`, we calculate partial derivatives with respect to `x5` and `x6`. Basically,
     the equation to differentiate looks like this: \(f(x_5, x_6) = x_5 + x_6 - 5\).
     Thus, both partial derivatives are 1.'
+  id: totrans-20
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 在 `x7` 处，我们计算相对于 `x5` 和 `x6` 的偏导数。基本上，要微分方程看起来是这样的：\(f(x_5, x_6) = x_5 + x_6
+    - 5\)。因此，两个偏导数都是1。
 - en: 'From `x5`, we move to the left to see how it depends on `x3`. We find that
     \(\frac{\partial x_5}{\partial x_3} = 0.2\). At this point, applying the chain
     rule of calculus, we already know how the output depends on `x3`: \(\frac{\partial
     f}{\partial x_3} = 0.2 * 1 = 0.2\).'
+  id: totrans-21
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 从 `x5` 开始，我们向左移动以查看它如何依赖于 `x3`。我们发现 \(\frac{\partial x_5}{\partial x_3} = 0.2\)。在这个时候，应用微积分的链式法则，我们已经知道输出如何依赖于
+    `x3`：\(\frac{\partial f}{\partial x_3} = 0.2 * 1 = 0.2\)。
 - en: 'From `x3`, we take the final step to `x`. We learn that \(\frac{\partial x_3}{\partial
     x_1} = 2 x_1\). Now, we again apply the chain rule, and are able to formulate
     how the function depends on its first input: \(\frac{\partial f}{\partial x_1}
     = 2 x_1 * 0.2 * 1 = 0.4 x_1\).'
+  id: totrans-22
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 从 `x3` 开始，我们迈出了最后一步到达 `x`。我们了解到 \(\frac{\partial x_3}{\partial x_1} = 2 x_1\)。现在，我们再次应用链式法则，并能够制定出函数如何依赖于其第一个输入：\(\frac{\partial
+    f}{\partial x_1} = 2 x_1 * 0.2 * 1 = 0.4 x_1\)。
 - en: 'Analogously, we determine the second partial derivative, and thus, already
     have the gradient available: \(\nabla f = \frac{\partial f}{\partial x_1} + \frac{\partial
     f}{\partial x_2} = 0.4 x_1 + 0.4 x_2\).'
+  id: totrans-23
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 类似地，我们确定第二个偏导数，因此，已经可以获取梯度：\(\nabla f = \frac{\partial f}{\partial x_1} + \frac{\partial
+    f}{\partial x_2} = 0.4 x_1 + 0.4 x_2\)。
 - en: That is the principle. In practice, different frameworks implement reverse-mode
     automatic differentiation differently. We’ll catch a glimpse of how `torch` does
     it in the next section.
+  id: totrans-24
   prefs: []
   type: TYPE_NORMAL
+  zh: 这就是原则。在实践中，不同的框架以不同的方式实现反向模式自动微分。我们将在下一节中一窥 `torch` 是如何做到的。
 - en: 4.3 Automatic differentiation with `torch` *autograd*
+  id: totrans-25
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 4.3 使用 `torch` 的 *autograd* 自动微分
 - en: First, a quick note on terminology. In `torch`, the AD engine is usually referred
     to as *autograd*, and that is the way you’ll see it denoted in most of the rest
     of this book. Now, back to the task.
+  id: totrans-26
   prefs: []
   type: TYPE_NORMAL
+  zh: 首先，关于术语的快速说明。在 `torch` 中，AD 引擎通常被称为 *autograd*，这也是你在本书的大部分内容中看到它的表示方式。现在，回到任务本身。
 - en: 'To construct the above computational graph with `torch`, we create “source”
     tensors `x1` and `x2`. These will mimic the parameters whose impact we’re interested
     in. However, if we just proceed “as usual”, creating the tensors the way we’ve
     been doing so far, `torch` will not prepare for AD. Instead, we need to pass in
     `requires_grad = TRUE` when instantiating those tensors:'
+  id: totrans-27
   prefs: []
   type: TYPE_NORMAL
+  zh: 要使用 `torch` 构建上述计算图，我们创建“源”张量 `x1` 和 `x2`。这些将模仿我们感兴趣的参数的影响。然而，如果我们像往常一样继续进行，以我们迄今为止的方式创建张量，`torch`
+    将不会为 AD 准备。相反，我们需要在实例化这些张量时传递 `requires_grad = TRUE`：
 - en: '[PRE0]'
+  id: totrans-28
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE0]'
 - en: '*(By the way, the value `2` for both tensors was chosen completely arbitrarily.)'
+  id: totrans-29
   prefs: []
   type: TYPE_NORMAL
+  zh: '*(顺便说一下，这两个张量的值 `2` 是完全任意选择的。)'
 - en: Now, to create “invisible” nodes `x3` to `x6` , we square and multiply accordingly.
     Then `x7` stores the final result.
+  id: totrans-30
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在，为了创建“不可见”的节点 `x3` 到 `x6`，我们相应地进行平方和乘法。然后 `x7` 存储最终结果。
 - en: '[PRE1]'
+  id: totrans-31
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE1]'
 - en: '*[PRE2]'
+  id: totrans-32
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE2]'
 - en: 'Note that we have to add `requires_grad = TRUE` when creating the “source”
     tensors only. All dependent nodes in the graph inherit this property. For example:'
+  id: totrans-33
   prefs: []
   type: TYPE_NORMAL
+  zh: 注意，我们只有在创建“源”张量时才必须添加 `requires_grad = TRUE`。图中的所有依赖节点都会继承这个属性。例如：
 - en: '[PRE3]'
+  id: totrans-34
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE3]'
 - en: '*[PRE4]'
+  id: totrans-35
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE4]'
 - en: 'Now, all prerequisites are fulfilled to see automatic differentiation at work.
     All we need to do to determine how `x7` depends on `x1` and `x2` is call `backward()`:'
+  id: totrans-36
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在，所有先决条件都已满足，我们可以看到自动微分的工作过程。要确定 `x7` 如何依赖于 `x1` 和 `x2`，我们只需要调用 `backward()`：
 - en: '[PRE5]'
+  id: totrans-37
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE5]'
 - en: '*Due to this call, the `$grad` fields have been populated in `x1` and `x2`:'
+  id: totrans-38
   prefs: []
   type: TYPE_NORMAL
+  zh: '*由于这个调用，`$grad` 字段已经在 `x1` 和 `x2` 中被填充：'
 - en: '[PRE6]'
+  id: totrans-39
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE6]'
 - en: '*[PRE7]'
+  id: totrans-40
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE7]'
 - en: These are the partial derivatives of `x7` with respect to `x1` and `x2`, respectively.
     Conforming to our manual calculations above, both amount to 0.8, that is, 0.4
     times the tensor values 2 and 2.
+  id: totrans-41
   prefs: []
   type: TYPE_NORMAL
+  zh: 这些是 `x7` 对 `x1` 和 `x2` 的偏导数。按照我们上面的手动计算，两者都等于 0.8，即 0.4 倍的张量值 2 和 2。
 - en: How about the accumulation process we said was needed to build up those end-to-end
     derivatives? Can we “follow” the end-to-end derivative as it’s being built up?
     For example, can we see how the final output depends on `x3`?
+  id: totrans-42
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们所说的构建那些端到端导数所需的累积过程呢？我们能否“跟随”端到端导数在构建过程中的变化？例如，我们能否看到最终输出如何依赖于 `x3`？
 - en: '[PRE8]'
+  id: totrans-43
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE8]'
 - en: '*[PRE9]'
+  id: totrans-44
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE9]'
 - en: 'The field does not seem to be populated. In fact, while it *has* to compute
     them, `torch` throws away the intermediate aggregates once they are no longer
     needed, to save memory. We can, however, ask it to keep them, using `retain_grad
     = TRUE`:'
+  id: totrans-45
   prefs: []
   type: TYPE_NORMAL
+  zh: 字段看起来没有被填充。实际上，虽然它 *必须* 计算它们，但 `torch` 会在它们不再需要时丢弃中间聚合，以节省内存。然而，我们可以要求它保留它们，使用
+    `retain_grad = TRUE`：
 - en: '[PRE10]'
+  id: totrans-46
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE10]'
 - en: '*Now, we find that `x3`’s `grad` field *is* populated:'
+  id: totrans-47
   prefs: []
   type: TYPE_NORMAL
+  zh: '*现在，我们发现 `x3` 的 `grad` 字段 *确实* 已被填充：'
 - en: '[PRE11]'
+  id: totrans-48
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE11]'
 - en: '*[PRE12]'
+  id: totrans-49
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE12]'
 - en: 'The same goes for `x4`, `x5`, and `x6`:'
+  id: totrans-50
   prefs: []
   type: TYPE_NORMAL
+  zh: 对于 `x4`、`x5` 和 `x6` 也是如此：
 - en: '[PRE13]'
+  id: totrans-51
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE13]'
 - en: '*[PRE14]'
+  id: totrans-52
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE14]'
 - en: There is one remaining thing we might be curious about. We’ve managed to catch
     a glimpse of the gradient-accumulation process from the “running gradient” point
     of view, in a sense; but how about the individual derivatives that need to be
     taken in order to proceed with accumulation? For example, what `x3$grad` tells
     us is how the output depends on the intermediate state at `x3`; how do we get
     from there to `x1`, the actual input node?
+  id: totrans-53
   prefs: []
   type: TYPE_NORMAL
+  zh: 还有一件事我们可能感兴趣。我们从“运行梯度”的角度，某种程度上成功地捕捉到了梯度累积过程；但是，关于为了进行累积所需的各个导数，我们该怎么办呢？例如，`x3$grad`
+    告诉我们输出如何依赖于 `x3` 的中间状态；我们如何从那里到达 `x1`，实际的输入节点？
 - en: 'It turns out that of that aspect, too, we can get an idea. During the forward
     pass, `torch` already takes a note on what it will have to do, later, to calculate
     the individual derivatives. This “recipe” is stored in a tensor’s `grad_fn` field.
     For `x3`, this adds the “missing link” to `x1`:'
+  id: totrans-54
   prefs: []
   type: TYPE_NORMAL
+  zh: 结果表明，关于这个方面，我们也可以有所了解。在正向传播过程中，`torch` 已经记录下它稍后需要执行的操作来计算各个导数。这个“配方”存储在张量的 `grad_fn`
+    字段中。对于 `x3`，这为 `x1` 添加了“缺失的链接”：
 - en: '[PRE15]'
+  id: totrans-55
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE15]'
 - en: '*[PRE16]'
+  id: totrans-56
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE16]'
 - en: 'The same works for `x4`, `x5`, and `x6`:'
+  id: totrans-57
   prefs: []
   type: TYPE_NORMAL
+  zh: 对于 `x4`、`x5` 和 `x6` 也同样适用：
 - en: '[PRE17]'
+  id: totrans-58
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE17]'
 - en: '*[PRE18]'
+  id: totrans-59
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE18]'
 - en: And there we are! We’ve seen how `torch` computes derivatives for us, and we’ve
     even caught a glimpse of how it does it. Now, we are ready to play around with
     our first two applied tasks.***********
+  id: totrans-60
   prefs: []
   type: TYPE_NORMAL
+  zh: 就这样！我们已经看到了 `torch` 如何为我们计算导数，甚至瞥见了它是如何做到的。现在，我们准备好开始处理我们的前两个应用任务了。***********

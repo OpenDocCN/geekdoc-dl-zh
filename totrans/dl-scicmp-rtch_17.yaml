@@ -1,52 +1,74 @@
 - en: 12  Overview
+  id: totrans-0
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
+  zh: 12  概述
 - en: 原文：[https://skeydan.github.io/Deep-Learning-and-Scientific-Computing-with-R-torch/dl_overview.html](https://skeydan.github.io/Deep-Learning-and-Scientific-Computing-with-R-torch/dl_overview.html)
+  id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: '[https://skeydan.github.io/Deep-Learning-and-Scientific-Computing-with-R-torch/dl_overview.html](https://skeydan.github.io/Deep-Learning-and-Scientific-Computing-with-R-torch/dl_overview.html)'
 - en: 'This part of the book is completely dedicated to applications of deep learning.
     There will be two categories of things to dive into: topics workflow-related,
     and topics related to domain adaptation.'
+  id: totrans-2
   prefs: []
   type: TYPE_NORMAL
+  zh: 本书的这一部分完全致力于深度学习应用。我们将深入探讨两大类内容：与工作流程相关的话题，以及与领域自适应相关的话题。
 - en: 'Regarding workflow, we’ll see how to:'
+  id: totrans-3
   prefs: []
   type: TYPE_NORMAL
+  zh: 关于工作流程，我们将看到如何：
 - en: prepare the input data in a form the model can work with;
+  id: totrans-4
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 准备模型可以处理的数据输入形式；
 - en: effectively and efficiently train a model, monitoring progress and adjusting
     hyper-parameters on the fly;
+  id: totrans-5
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 有效且高效地训练模型，实时监控进度并调整超参数；
 - en: save and load models;
+  id: totrans-6
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 保存和加载模型；
 - en: making models generalize beyond the training data;
+  id: totrans-7
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 使模型能够泛化到训练数据之外；
 - en: speed up training;
+  id: totrans-8
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 加快训练速度；
 - en: and more.
+  id: totrans-9
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 以及更多。
 - en: Secondly – beyond an efficient workflow – the task in question matters. Compositions
     of linear layers, of the type we used to learn `torch` in the first part, will
     not suffice when our goal is to model images or time series. Successful use of
     deep learning means tailoring model architecture to the domain in question. To
     that end, we start from concrete tasks, and present applicable architectures directly
     by example.
+  id: totrans-10
   prefs: []
   type: TYPE_NORMAL
+  zh: 其次——除了高效的工作流程之外——任务本身也很重要。当我们目标是建模图像或时间序列时，线性层的组合，就像我们在第一部分学习`torch`时使用的那样，是不够的。成功使用深度学习意味着根据所涉及的领域定制模型架构。为此，我们从具体任务开始，并通过示例直接展示适用的架构。
 - en: 'Concretely, the plan is the following. The upcoming two chapters will introduce
     you to workflow-related techniques that are indispensable in practice. You’ll
     encounter another package, `luz`, that endows `torch` with an important layer
@@ -56,5 +78,7 @@
     workflow-related topics: how to improve generalization, and how to speed up training.
     Equipped with that knowledge, we first return to images, before extending our
     domain-related skills to tabular data, time series, and audio.'
+  id: totrans-11
   prefs: []
   type: TYPE_NORMAL
+  zh: 具体来说，计划如下。接下来的两章将介绍你在实践中不可或缺的工作流程相关技术。你将遇到另一个包，`luz`，它为`torch`提供了一个重要的抽象层，并显著简化了工作流程。一旦你学会了如何使用它，我们就可以开始查看第一个应用：图像分类。为了改进我们的初始结果，我们随后回顾并探索两个更高级的工作流程相关主题：如何提高泛化能力，以及如何加快训练速度。掌握了这些知识后，我们首先回到图像分类，然后将我们的领域相关技能扩展到表格数据、时间序列和音频。

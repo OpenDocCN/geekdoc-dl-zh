@@ -1,84 +1,124 @@
 - en: 7  Modules
+  id: totrans-0
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
+  zh: 7  模块
 - en: 原文：[https://skeydan.github.io/Deep-Learning-and-Scientific-Computing-with-R-torch/modules.html](https://skeydan.github.io/Deep-Learning-and-Scientific-Computing-with-R-torch/modules.html)
+  id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 原文：[https://skeydan.github.io/Deep-Learning-and-Scientific-Computing-with-R-torch/modules.html](https://skeydan.github.io/Deep-Learning-and-Scientific-Computing-with-R-torch/modules.html)
 - en: 'In the last chapter, we built a neural network for a regression task. There
     were two distinct types of operations: linear and non-linear.'
+  id: totrans-2
   prefs: []
   type: TYPE_NORMAL
+  zh: 在上一章中，我们构建了一个用于回归任务的神经网络。有两种不同的操作类型：线性和非线性。
 - en: 'In the non-linear category, we had ReLU activation, expressed as a straightforward
     function call: `nnf_relu()`. Activation functions are *functions*: Given input
     \(\mathbf{x}\), they return output \(\mathbf{y}\) every time. In other words,
     they are deterministic. It’s different with the linear part, though.'
+  id: totrans-3
   prefs: []
   type: TYPE_NORMAL
+  zh: 在非线性类别中，我们有了ReLU激活函数，它被表示为一个简单的函数调用：`nnf_relu()`。激活函数是*函数*：给定输入 \(\mathbf{x}\)，它们每次都会返回输出
+    \(\mathbf{y}\)。换句话说，它们是确定的。然而，线性部分则不同。
 - en: The linear part in the regression network was implemented as multiplication
     by a matrix – the weight matrix – and addition of a vector (the bias vector).
     With operations like that, results inevitably depend on the actual values stored
     in the respective tensors. Put differently, the operation is *stateful*.
+  id: totrans-4
   prefs: []
   type: TYPE_NORMAL
+  zh: 回归网络中的线性部分是通过矩阵乘法——权重矩阵——和向量加法（偏置向量）实现的。这样的操作，结果不可避免地依赖于存储在相应张量中的实际值。换句话说，操作是*有状态的*。
 - en: Whenever there is state involved, it helps to encapsulate it in an object, freeing
     the user from manual management. This is what `torch`’s *modules* do.
+  id: totrans-5
   prefs: []
   type: TYPE_NORMAL
+  zh: 每当涉及到状态时，将其封装在对象中是有帮助的，这样就可以让用户免于手动管理。这正是`torch`的*模块*所做的事情。
 - en: Note that term, *modules*. In `torch`, a module can be of any complexity, ranging
     from basic *layers* – like the `nn_linear()` we are going to introduce in a minute
     – to complete *models* consisting of many such layers. Code-wise, there is no
     difference between “layers” and “models”. This is why in some texts, you’ll see
     “module” used throughout. In this book, I’ll mostly stay with the common terminology
     of layers and models, as it maps more closely to how things appear conceptually.
+  id: totrans-6
   prefs: []
   type: TYPE_NORMAL
+  zh: 注意术语，*模块*。在`torch`中，一个模块可以是任何复杂度，从基本的*层*——比如我们稍后将要介绍的`nn_linear()`——到由许多此类层组成的完整*模型*。在代码上，“层”和“模型”之间没有区别。这就是为什么在某些文本中，你会看到“模块”一词被广泛使用。在这本书中，我将主要遵循层和模型的通用术语，因为它更接近于概念上的事物表现。
 - en: 'Back to the *why* of modules. In addition to encapsulation, there is another
     reason for providing layer objects: Not all often-used layers are as light-weight
     as `nn_linear()` is. We’ll quickly mention a few others at the end of the next
     section, reserving a complete introduction to later chapters of this book.'
+  id: totrans-7
   prefs: []
   type: TYPE_NORMAL
+  zh: 回到模块的*为什么*。除了封装之外，提供层对象还有另一个原因：并非所有常用的层都像`nn_linear()`那样轻量级。我们将在下一节的末尾简要提及几个其他层，并将完整的介绍留到本书的后续章节。
 - en: 7.1 Built-in `nn_module()`s
+  id: totrans-8
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 7.1 内置的`nn_module()`s
 - en: 'In `torch`, a linear layer is created using `nn_linear()`. `nn_linear()` expects
     (at least) two arguments: `in_features` and `out_features`. Let’s say your input
     data has fifty observations with five features each; that is, it is of size 50
     x 5\. You want to build a hidden layer with sixteen units. Then `in_features`
     is 5, and `out_features` is 16\. (The same 5 and 16 would constitute the number
     of rows/columns in the weight matrix if you built one yourself.)'
+  id: totrans-9
   prefs: []
   type: TYPE_NORMAL
+  zh: 在`torch`中，线性层是通过`nn_linear()`创建的。`nn_linear()`期望（至少）两个参数：`in_features`和`out_features`。假设你的输入数据有五十个观测值，每个观测值有五个特征；也就是说，它的大小是50
+    x 5。你想构建一个包含十六个单元的隐藏层。那么`in_features`是5，`out_features`是16。（如果你自己构建，5和16将构成权重矩阵的行数/列数。）
 - en: '[PRE0]'
+  id: totrans-10
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE0]'
 - en: '*Once created, the module readily informs you about its parameters:'
+  id: totrans-11
   prefs: []
   type: TYPE_NORMAL
+  zh: '*一旦创建，模块就会立即通知你其参数：'
 - en: '[PRE1]'
+  id: totrans-12
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE1]'
 - en: '*[PRE2]'
+  id: totrans-13
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE2]'
 - en: 'Encapsulation doesn’t keep us from inspecting the weight and bias tensors:'
+  id: totrans-14
   prefs: []
   type: TYPE_NORMAL
+  zh: 封装并不会阻止我们检查权重和偏置张量：
 - en: '[PRE3]'
+  id: totrans-15
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE3]'
 - en: '*[PRE4]'
+  id: totrans-16
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE4]'
 - en: '[PRE5]'
+  id: totrans-17
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE5]'
 - en: '*[PRE6]'
+  id: totrans-18
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE6]'
 - en: At this point, I need to ask for your indulgence. You’ve probably noticed that
     `torch` reports the weight matrix as being of size 16 x 5, not 5 x 16, like we
     said you’d create it when coding from scratch. This is due to an implementation
@@ -86,152 +126,229 @@
     reasons, `libtorch`’s linear module stores the weight and bias tensors in *transposed*
     form. On the R side, all we can do is explicitly point you to it and thereby,
     hopefully, alleviate the confusion.
+  id: totrans-19
   prefs: []
   type: TYPE_NORMAL
+  zh: 在这一点上，我需要请求你的宽容。你可能已经注意到 `torch` 报告的权重矩阵大小为 16 x 5，而不是我们所说的 5 x 16。这是由于从底层 C++
+    实现 `libtorch` 继承的实现细节。出于性能原因，`libtorch` 的线性模块以 *转置* 形式存储权重和偏置张量。在 R 上，我们所能做的就是明确地指出它，并希望因此减轻混淆。
 - en: 'Let’s go on. To apply this module to input data, just “call” it like a function:'
+  id: totrans-20
   prefs: []
   type: TYPE_NORMAL
+  zh: 让我们继续。要将这个模块应用于输入数据，只需像函数一样“调用”它：
 - en: '[PRE7]'
+  id: totrans-21
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE7]'
 - en: '*[PRE8]'
+  id: totrans-22
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE8]'
 - en: 'So that’s the forward pass. How about gradient computation? Previously, when
     creating a tensor we wanted to figure as a “source” in gradient computation, we
     had to let `torch` know explicitly, passing `requires_grad = TRUE`. No such thing
     is required for built-in `nn_module()`s. We can immediately check that `output`
     knows what to do on `backward()`:'
+  id: totrans-23
   prefs: []
   type: TYPE_NORMAL
+  zh: 所以这就是前向传播。梯度计算呢？之前，当创建一个用作梯度计算“源”的张量时，我们必须明确地让 `torch` 知道，通过传递 `requires_grad
+    = TRUE`。对于内置的 `nn_module()`，不需要这样做。我们可以立即检查 `output` 在 `backward()` 上知道该怎么做：
 - en: '[PRE9]'
+  id: totrans-24
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE9]'
 - en: '*[PRE10]'
+  id: totrans-25
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE10]'
 - en: 'To be sure though, let’s calculate some “dummy” loss based on `output`, and
     call `backward()`. We see that now, the linear module’s `weight` tensor has its
     `grad` field populated:'
+  id: totrans-26
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了确保，让我们基于 `output` 计算一些“虚拟”损失，并调用 `backward()`。我们看到现在，线性模块的 `weight` 张量已经填充了其
+    `grad` 字段：
 - en: '[PRE11]'
+  id: totrans-27
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE11]'
 - en: '*[PRE12]'
+  id: totrans-28
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE12]'
 - en: Thus, once you work with `nn_module`s, `torch` automatically assumes that you’ll
     want gradients computed.
+  id: totrans-29
   prefs: []
   type: TYPE_NORMAL
+  zh: 因此，一旦你开始使用 `nn_module`s，`torch` 就会自动假设你想要计算梯度。
 - en: '`nn_linear()`, straightforward though it may be, is an essential building block
     encountered in most every model architecture. Others include:'
+  id: totrans-30
   prefs: []
   type: TYPE_NORMAL
+  zh: '`nn_linear()`，尽管它可能很简单，但它是大多数模型架构中遇到的基本构建块。其他还包括：'
 - en: '`nn_conv1d()`, `nn_conv2d(), and nn_conv3d()`, the so-called *convolutional*
     layers that apply filters to input data of varying dimensionality,'
+  id: totrans-31
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '`nn_conv1d()`, `nn_conv2d()`, 和 `nn_conv3d()`，所谓的 *卷积* 层，它们将滤波器应用于不同维度的输入数据，'
 - en: '`nn_lstm()` and `nn_gru()` , the *recurrent* layers that carry through a state,'
+  id: totrans-32
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '`nn_lstm()` 和 `nn_gru()`，携带状态的 *循环* 层，'
 - en: '`nn_embedding()` that is used to embed categorical data in high-dimensional
     space,'
+  id: totrans-33
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '`nn_embedding()`，用于将分类数据嵌入到高维空间中，'
 - en: and more.*******  ***## 7.2 Building up a model
+  id: totrans-34
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: and more.*******  ***## 7.2 构建模型
 - en: The built-in `nn_module()`s give us *layers*, in usual speak. How do we combine
     those into *models*? Using the “factory function” `nn_module()`, we can define
     models of arbitrary complexity. But we may not always need to go that way.
+  id: totrans-35
   prefs: []
   type: TYPE_NORMAL
+  zh: 内置的 `nn_module()` 给我们 *层*，用通常的话说。我们如何将这些组合成 *模型*？使用“工厂函数” `nn_module()`，我们可以定义任意复杂性的模型。但并不总是需要这样做。
 - en: '7.2.1 Models as sequences of layers: `nn_sequential()`index{`nn_sequential()`}'
+  id: totrans-36
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 7.2.1 模型作为层的序列：`nn_sequential()`index{`nn_sequential()`}
 - en: 'If all our model should do is propagate straight through the layers, we can
     use `nn_sequential()` to build it. Models consisting of all linear layers are
     known as *Multi-Layer Perceptrons*index{Multi-Layer Perceptron (MLP)} (MLPs).
     Here is one:'
+  id: totrans-37
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果我们的模型只需要在层之间直接传播，我们可以使用 `nn_sequential()` 来构建它。由所有线性层组成的模型被称为 *多层感知器*index{多层感知器
+    (MLP)} (MLPs)。这里有一个例子：
 - en: '[PRE13]'
+  id: totrans-38
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE13]'
 - en: '*Take a close look at the layers involved. We’ve already seen `nnf_relu()`,
     the *function* that implements ReLU activation. (The `f` in `nnf_` stands for
     functional.) Below, `nn_relu`, like `nn_linear()`, is a module, that is, an object.
     This is because `nn_sequential()` expects all its arguments to be modules.'
+  id: totrans-39
   prefs: []
   type: TYPE_NORMAL
+  zh: '*仔细看看涉及的层。我们已经看到了 `nnf_relu()`，实现 ReLU 激活的 *函数*。（`nnf_` 中的 `f` 代表 functional。）下面，`nn_relu`，就像
+    `nn_linear()` 一样，是一个模块，即一个对象。这是因为 `nn_sequential()` 预期所有其参数都是模块。'
 - en: 'Just like the built-in modules, you can apply this model to data by just *calling*
     it:'
+  id: totrans-40
   prefs: []
   type: TYPE_NORMAL
+  zh: 就像内置模块一样，你可以通过 *调用* 它来应用这个模型到数据上：
 - en: '[PRE14]'
+  id: totrans-41
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE14]'
 - en: '*[PRE15]'
+  id: totrans-42
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE15]'
 - en: The single call triggered a complete forward pass through the network. Analogously,
     calling `backward()` will back-propagate through all the layers.
+  id: totrans-43
   prefs: []
   type: TYPE_NORMAL
+  zh: 单次调用触发了整个网络的前向传播。类似地，调用 `backward()` 将会反向传播通过所有层。
 - en: What if you need the model to chain execution steps in a non-sequential way?**  **###
     7.2.2 Models with custom logic
+  id: totrans-44
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果你需要模型以非顺序方式链式执行步骤呢？**  **### 7.2.2 带有自定义逻辑的模型
 - en: As already hinted at, this is where you use `nn_module()`.
+  id: totrans-45
   prefs: []
   type: TYPE_NORMAL
+  zh: 正如之前所暗示的，这就是你使用`nn_module()`的地方。
 - en: '`nn_module()` creates constructors for custom-made R6 objects. Below, `my_linear()`
     is such a constructor. When called, it will return a linear module similar to
     the built-in `nn_linear()`.'
+  id: totrans-46
   prefs: []
   type: TYPE_NORMAL
+  zh: '`nn_module()`为自定义的R6对象创建构造函数。下面，`my_linear()`就是一个这样的构造函数。当被调用时，它将返回一个类似于内置的`nn_linear()`的线性模块。'
 - en: 'Two methods should be implemented in defining a constructor: `initialize()`
     and `forward()`. `initialize()` creates the module object’s fields, that is, the
     objects or values it “owns” and can access from inside any of its methods. `forward()`
     defines what should happen when the module is called on the input:'
+  id: totrans-47
   prefs: []
   type: TYPE_NORMAL
+  zh: 在定义构造函数时应该实现两种方法：`initialize()`和`forward()`。`initialize()`创建模块对象的字段，即它“拥有”并可以从其任何方法内部访问的对象或值。`forward()`定义当模块被调用在输入上时应该发生什么：
 - en: '[PRE16]'
+  id: totrans-48
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE16]'
 - en: '*Note the use of `nn_parameter()`. `nn_parameter()` makes sure that the passed-in
     tensor is registered as a module *parameter*, and thus, is subject to backpropagation
     by default.'
+  id: totrans-49
   prefs: []
   type: TYPE_NORMAL
+  zh: '*注意`nn_parameter()`的使用。`nn_parameter()`确保传递的tensor被注册为模块*参数*，因此默认情况下将受到反向传播的影响。'
 - en: 'To instantiate the newly-defined module, call its constructor:'
+  id: totrans-50
   prefs: []
   type: TYPE_NORMAL
+  zh: 要实例化新定义的模块，调用其构造函数：
 - en: '[PRE17]'
+  id: totrans-51
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE17]'
 - en: '*[PRE18]'
+  id: totrans-52
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE18]'
 - en: Granted, in this example, there really is no *custom logic* we needed to define
     our own module for. But here, you have a template applicable to any use case.
     Later, we’ll see definitions of `initialize()` and `forward()` that are more complex,
     and we’ll encounter additional methods defined on modules. But the basic mechanism
     will remain the same.
+  id: totrans-53
   prefs: []
   type: TYPE_NORMAL
+  zh: 承认，在这个例子中，我们确实没有需要定义自己的模块的*自定义逻辑*。但在这里，你有一个适用于任何用例的模板。稍后，我们将看到更复杂的`initialize()`和`forward()`定义，并且会遇到在模块上定义的额外方法。但基本机制将保持不变。
 - en: At this point, you may feel like you’d like to rewrite last chapter’s neural
     network using modules. Feel free to do so! Or maybe wait until, in the next chapter,
     we’ll have learned about *optimizer*s, and built-in loss functions. Once we’re
     done, we’ll return to our two examples, function minimization and the regression
     network. Then, we’ll be removing all do-it-yourself pieces rendered superfluous
     by `torch`.*******
+  id: totrans-54
   prefs: []
   type: TYPE_NORMAL
+  zh: 在这个阶段，你可能觉得想要用模块重写上一章中的神经网络。请随意这样做！或者，也许你可以等到下一章，我们学习了*优化器*和内置损失函数之后。完成这些后，我们将回到我们的两个例子，函数最小化和回归网络。然后，我们将移除所有由`torch`生成的冗余的自定义部分。*******

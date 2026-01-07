@@ -1,30 +1,40 @@
 - en: 2  On torch, and how to get it
+  id: totrans-0
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
+  zh: 2  关于torch，以及如何获取它
 - en: 原文：[https://skeydan.github.io/Deep-Learning-and-Scientific-Computing-with-R-torch/what_is_torch.html](https://skeydan.github.io/Deep-Learning-and-Scientific-Computing-with-R-torch/what_is_torch.html)
+  id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 原文：[https://skeydan.github.io/Deep-Learning-and-Scientific-Computing-with-R-torch/what_is_torch.html](https://skeydan.github.io/Deep-Learning-and-Scientific-Computing-with-R-torch/what_is_torch.html)
 - en: 2.1 In `torch` world
+  id: totrans-2
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 2.1 在`torch`世界中
 - en: '`torch` is an R port of PyTorch, one of the two (as of this writing) most-employed
     deep learning frameworks in industry and research. By its design, it is also an
     excellent tool to use in various types of scientific computation tasks (a subset
     of which you’ll encounter in the book’s final part). It is written entirely in
     R and C++ (including a bit of C). No Python installation is required to use it.'
+  id: totrans-3
   prefs: []
   type: TYPE_NORMAL
+  zh: '`torch`是PyTorch的R端口，PyTorch是工业和研究中最常用的两个深度学习框架之一（截至本文撰写时）。按照其设计，它也是一个在各类科学计算任务中使用（其中一些你将在本书的最后一部分遇到）的出色工具。它完全用R和C++（包括一些C）编写。使用它不需要安装Python。'
 - en: On the Python (PyTorch) side, the ecosystem appears as a set of concentric cycles.
     In the middle, there’s PyTorch itself, the core library without which nothing
     could work. Surrounding it, we have the inner circle of what could be called framework
     libraries, dedicated to special types of data (images, sound, text …), or centered
     on workflow tasks, like deployment. Then, there is the broader ecosystem of add-ons,
     specializations, and libraries for whom PyTorch is a building block, or a tool.
+  id: totrans-4
   prefs: []
   type: TYPE_NORMAL
+  zh: 在Python（PyTorch）方面，生态系统呈现为一组同心圆。在中间，是PyTorch本身，这是一个核心库，没有它任何东西都无法工作。围绕它，我们有被称为框架库的内层圈，这些库专注于特定类型的数据（图像、声音、文本等），或者围绕工作流程任务，如部署。然后，是更广泛的生态系统，包括附加组件、专业化和库，对于这些库，PyTorch是构建块或工具。
 - en: On the R side, we have the same “heart” – all depends on core `torch` – and
     we do have the same types of libraries; but the categories, the “circles”, appear
     less clearly set off from each other. There are no strict boundaries. There’s
@@ -33,8 +43,10 @@
     accomplish their various tasks. The ecosystem growing so quickly, I’ll refrain
     from naming individual packages – at any time, visit [the `torch` website](https://torch.mlverse.org/packages/)
     to see a featured subset.
+  id: totrans-5
   prefs: []
   type: TYPE_NORMAL
+  zh: 在R方面，我们有相同的“核心”——一切都取决于核心`torch`——我们确实有相同类型的库；但类别，“圆圈”，彼此之间的界限不太明显。没有严格的界限。只有一个充满活力的开发者社区，他们来自不同的背景，有不同的目标，致力于进一步发展和扩展`torch`，以便帮助越来越多的人完成他们的各种任务。生态系统发展如此迅速，我将避免列出单个包——随时访问[torch网站](https://torch.mlverse.org/packages/)，以查看精选子集。
 - en: 'There are three packages, though, that I *will* name here, since they are used
     in the book: `torchvision` , `torchaudio`, and `luz`. The former two bundle domain-specific
     transformations, deep learning models, datasets, and utilities for images (incl. video)
@@ -42,23 +54,32 @@
     interface to `torch`, allowing to define, train, and evaluate a neural network
     in just a few lines of code. Like `torch` itself, all three packages can be installed
     from CRAN.'
+  id: totrans-6
   prefs: []
   type: TYPE_NORMAL
+  zh: 尽管如此，有三个包我在这里会提到，因为它们在书中被使用：`torchvision`、`torchaudio`和`luz`。前两个打包了特定领域的转换、深度学习模型、数据集以及用于图像（包括视频）和音频数据的实用工具。第三个是一个高级、直观、易于使用的`torch`接口，允许通过几行代码定义、训练和评估神经网络。与`torch`本身一样，所有这三个包都可以从CRAN安装。
 - en: 2.2 Installing and running torch
+  id: totrans-7
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 2.2 安装和运行torch
 - en: '`torch` is available for Windows, MacOS, and Linux. If you have a compatible
     GPU, and the necessary NVidia software installed, you can benefit from significant
     speedup, a speedup that will depend on the type of model trained. All examples
     in this book, though, have been chosen so they can be run on the CPU, without
     posing taxing demands on your patience.'
+  id: totrans-8
   prefs: []
   type: TYPE_NORMAL
+  zh: '`torch`适用于Windows、MacOS和Linux。如果你有一个兼容的GPU，并且安装了必要的NVidia软件，你可以从显著的加速中受益，这种加速将取决于训练的模型类型。然而，本书中的所有示例都经过选择，可以在CPU上运行，而不会对你的耐心提出过高要求。'
 - en: Due to their often-transient character, I won’t elaborate on compatibility issues
     here, in the book; analogously, I’ll refrain from listing concrete installation
     instructions. At any time, you’ll find up-to-date information in the [vignette](https://cran.r-project.org/web/packages/torch/vignettes/installation.html);
     and you’re more than welcome, should you encounter problems or have questions,
     to open an issue in the `torch` GitHub repository.
+  id: totrans-9
   prefs: []
   type: TYPE_NORMAL
+  zh: 由于它们往往具有短暂的特征，我在本书中不会详细阐述兼容性问题；类似地，我也将避免列出具体的安装说明。在任何时候，你都可以在[vignette](https://cran.r-project.org/web/packages/torch/vignettes/installation.html)中找到最新的信息；如果你遇到问题或有疑问，欢迎在`torch`
+    GitHub 仓库中提出问题。

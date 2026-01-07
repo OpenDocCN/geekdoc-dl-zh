@@ -1,17 +1,23 @@
 - en: '18  Image classification, take two: Improving performance'
+  id: totrans-0
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
+  zh: 18  图像分类，再来一次：提高性能
 - en: 原文：[https://skeydan.github.io/Deep-Learning-and-Scientific-Computing-with-R-torch/image_classification_2.html](https://skeydan.github.io/Deep-Learning-and-Scientific-Computing-with-R-torch/image_classification_2.html)
+  id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 原文：[https://skeydan.github.io/Deep-Learning-and-Scientific-Computing-with-R-torch/image_classification_2.html](https://skeydan.github.io/Deep-Learning-and-Scientific-Computing-with-R-torch/image_classification_2.html)
 - en: 'In the last two chapters, we saw how changes to data input, network architecture,
     and training modalities can result in improved results, “improvement” having two
     principal denotations: better generalization to the test set, and faster training
     progress.'
+  id: totrans-2
   prefs: []
   type: TYPE_NORMAL
+  zh: 在最后两章中，我们看到了如何通过改变数据输入、网络架构和训练模式来提高结果，“提高”有两个主要含义：更好地泛化到测试集，以及更快的训练进度。
 - en: 'Now, we’ll apply a few of those techniques to the image classification task
     we started our journey into real-world deep learning with: Tiny Imagenet. In terms
     of counteracting overfitting, we’ll introduce data augmentation, dropout layers,
@@ -21,192 +27,287 @@
     While this is something you might want to do yourself, here we want to avoid the
     impression that there is some fixed ranking – this is best, that is second … –
     , *independently of dataset and task*.'
+  id: totrans-3
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在，我们将应用一些这些技术到我们开始真实世界深度学习之旅时的图像分类任务：Tiny Imagenet。为了对抗过拟合，我们将引入数据增强、dropout层和早期停止。为了加快训练速度，我们使用学习率查找器，添加批归一化层，并集成预训练网络。我们不会逐个添加和删除这些技术，也就是说，我们不会单独评估它们的效果。虽然你可能想自己这样做，但在这里我们想避免给人留下某种固定排名——这是最好的，那是第二……——*独立于数据集和任务*。
 - en: 'Instead, what we do is:'
+  id: totrans-4
   prefs: []
   type: TYPE_NORMAL
+  zh: 'Instead, what we do is:'
 - en: Always use data augmentation. There is hardly ever a case where you’d *not*
     want to use it – unless, of course, you are already using a different data augmentation
     technique.
+  id: totrans-5
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 总是使用数据增强。几乎在所有情况下，你都会想使用它——除非，当然，你已经使用了不同的数据增强技术。
 - en: Always run with early stopping enabled. This will not just prevent overfitting,
     but also, save time.
+  id: totrans-6
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 总是启用早期停止运行。这不仅会防止过拟合，还会节省时间。
 - en: Always make use of the learning rate finder, together with a one-cycle learning
     rate schedule.
+  id: totrans-7
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 总是使用学习率查找器，结合一周期学习率计划。
 - en: For our first setup, we take the convnet from three chapters ago, and add dropout
     layers.
+  id: totrans-8
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 对于我们的第一个设置，我们使用了三章前的卷积网络，并添加了dropout层。
 - en: In scenario number two, we replace dropout by batch normalization. (Everything
     else stays the same.)
+  id: totrans-9
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 在第二个场景中，我们将dropout替换为批量归一化。（其他一切保持不变。）
 - en: Third, we replace the model completely, by one chaining a pre-trained feature
     classifier (ResNet) and a small sequential model.
+  id: totrans-10
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 第三，我们完全替换了模型，通过一个预训练的特征分类器（ResNet）和一个小型顺序模型链。
 - en: 18.1 Data input (common for all)
+  id: totrans-11
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 18.1 数据输入（适用于所有）
 - en: All three runs use the same data input pipeline. Compared with our first go
     at telling apart the two hundred classes in Tiny Imagenet, two things are new.
+  id: totrans-12
   prefs: []
   type: TYPE_NORMAL
+  zh: 所有三次运行都使用相同的数据输入管道。与我们在Tiny Imagenet中区分两百个类别的第一次尝试相比，有两点新内容。
 - en: 'First, we now apply data augmentation to the training set: rotations and translations,
     to be precise.'
+  id: totrans-13
   prefs: []
   type: TYPE_NORMAL
+  zh: 首先，我们现在对训练集应用数据增强：旋转和平移，更确切地说。
 - en: Second, input tensors are normalized, channel-wise, to a set of given means
     and standard deviations. This really is required for the third run (using ResNet)
     only; we just do to our images what was done in training ResNet. (The same goes
     for most of the pre-trained models trained on ImageNet.) There really is no problem,
     though, in doing the same for runs one and two; so normalization is part of the
     common pre-processing pipeline.
+  id: totrans-14
   prefs: []
   type: TYPE_NORMAL
+  zh: 其次，输入张量按通道归一化到一组给定的均值和标准差。这实际上仅对第三次运行（使用ResNet）是必需的；我们只是对我们图像做了在训练ResNet时所做的操作。（对于在ImageNet上训练的大多数预训练模型也是如此。）尽管如此，对第一次和第二次运行做同样的事情实际上并没有问题；因此，归一化是预处理管道的一部分。
 - en: '[PRE0]'
+  id: totrans-15
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE0]'
 - en: '*Next, we compare three different configurations.*  *## 18.2 Run 1: Dropout'
+  id: totrans-16
   prefs: []
   type: TYPE_NORMAL
+  zh: '*接下来，我们比较三种不同的配置。*  *## 18.2 运行 1：Dropout'
 - en: In run one, we take the convnet we were using, and add dropout layers.
+  id: totrans-17
   prefs: []
   type: TYPE_NORMAL
+  zh: 在第一次运行中，我们使用了之前使用的卷积网络，并添加了dropout层。
 - en: '[PRE1]'
+  id: totrans-18
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE1]'
 - en: '*Next, we run the learning rate finder ([fig. 18.1](#fig-images2-lr-finder-dropout)).'
+  id: totrans-19
   prefs: []
   type: TYPE_NORMAL
+  zh: '*接下来，我们运行学习率查找器([图 18.1](#fig-images2-lr-finder-dropout))。'
 - en: '[PRE2]'
+  id: totrans-20
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE2]'
 - en: '*![A curve that, from left to right, stays flat for a long time (until about
     x=0.01), then oscillates between low and higher values, and finally (at about
     x=0.05) starts to rise very sharply.](../Images/4a988e517473fbe4eabb35fec7dac73b.png)'
+  id: totrans-21
   prefs: []
   type: TYPE_NORMAL
+  zh: '*![一条曲线，从左到右，长时间保持平坦（直到大约 x=0.01），然后介于低值和高值之间波动，最后（大约在 x=0.05）开始急剧上升。](../Images/4a988e517473fbe4eabb35fec7dac73b.png)'
 - en: 'Figure 18.1: Learning rate finder, run on Tiny Imagenet. Convnet with dropout
     layers.'
+  id: totrans-22
   prefs: []
   type: TYPE_NORMAL
+  zh: 图18.1：学习率查找器，在Tiny Imagenet上运行。具有dropout层的卷积网络。
 - en: We already know that discerning between two hundred classes is a task that takes
     time; it’s thus not surprising to see a flat-ish loss curve during most of learning
     rate increase. We can conclude, though, that we had better not exceed a learning
     rate of 0.01.
+  id: totrans-23
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们已经知道，区分两百个类别是一项耗时的工作；因此，在学习率增加的大部分时间里看到平坦的损失曲线并不奇怪。然而，我们可以得出结论，我们最好不要超过0.01的学习率。
 - en: As in all further configurations, we now train with the one-cycle learning rate
     scheduler, and early stopping enabled.
+  id: totrans-24
   prefs: []
   type: TYPE_NORMAL
+  zh: 在所有后续配置中，我们现在使用一周期学习率调度器进行训练，并启用早期停止。
 - en: '[PRE3]'
+  id: totrans-25
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE3]'
 - en: '*For me, training stopped after thirty-five epochs, at a validation accuracy
     of 0.4, and a training accuracy that was just slightly higher: 0.44.'
+  id: totrans-26
   prefs: []
   type: TYPE_NORMAL
+  zh: '*对我来说，训练在35个epoch后停止，验证准确率为0.4，训练准确率略高：0.44。'
 - en: '[PRE4]'
+  id: totrans-27
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE4]'
 - en: 'Comparing with the initial approach, where after fifty epochs, we were left
     with accuracies of 0.22 for validation, and 0.92 for training, we see an impressive
     reduction in overfitting. Of course, we cannot really say anything about the respective
     merits of dropout and data augmentation here. If you’re curious, please go ahead
     and find out!***  ***## 18.3 Run 2: Batch normalization'
+  id: totrans-28
   prefs: []
   type: TYPE_NORMAL
+  zh: 与最初的50个epoch后验证准确率为0.22，训练准确率为0.92的方法相比，我们看到过拟合的显著减少。当然，我们在这里不能真正说出dropout和数据增强的相对优点。如果你好奇，请继续查找！***  ***##
+    18.3 运行2：批归一化
 - en: In configuration number two, dropout is replaced by batch normalization.
+  id: totrans-29
   prefs: []
   type: TYPE_NORMAL
+  zh: 在配置编号二，dropout被批归一化所取代。
 - en: '[PRE5]'
+  id: totrans-30
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE5]'
 - en: '*Again, we run the learning rate finder ([fig. 18.2](#fig-images2-lr-finder-batchnorm)):'
+  id: totrans-31
   prefs: []
   type: TYPE_NORMAL
+  zh: 再次，我们运行了学习率查找器([fig. 18.2](#fig-images2-lr-finder-batchnorm))：
 - en: '[PRE6]'
+  id: totrans-32
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE6]'
 - en: '*![A curve that, from left to right, first descends in a smooth, accelerating
     curve (until about x=0.001), stays flat for a while, and then (shortly before
     x=0.001), begins to rise in a sharp, but still smooth, curve.](../Images/421e5f2f3d3777e42ee6e4565b4cf949.png)'
+  id: totrans-33
   prefs: []
   type: TYPE_NORMAL
+  zh: '*![一条曲线，从左到右，最初以平滑、加速的曲线下降（直到大约 x=0.001），然后保持一段时间平坦，然后在 x=0.001 稍前，开始以尖锐但仍然平滑的曲线上升。](../Images/421e5f2f3d3777e42ee6e4565b4cf949.png)'
 - en: 'Figure 18.2: Learning rate finder, run on Tiny Imagenet. Convnet with batchnorm
     layers.'
+  id: totrans-34
   prefs: []
   type: TYPE_NORMAL
+  zh: 图18.2：学习率查找器，在Tiny Imagenet上运行。具有批归一化层的卷积网络。
 - en: This looks surprisingly different! Of course, this is in part due to the scale
     on the loss axis; the loss does not explode as much, and thus, we get better resolution
     in the early and middle stages. The loss not exploding is an interesting finding
     in itself; the conclusion for us to draw from this plot is to be a bit more careful
     with the learning rate. This time, we’ll choose 0.001 for the maximum.
+  id: totrans-35
   prefs: []
   type: TYPE_NORMAL
+  zh: 这看起来非常不同！当然，这部分是由于损失轴上的比例；损失没有爆炸得那么厉害，因此我们在早期和中期得到了更好的分辨率。损失没有爆炸本身就是一个有趣的发现；从这个图中我们可以得出的结论是要对学习率更加小心。这次，我们将最大值选择为0.001。
 - en: '[PRE7]'
+  id: totrans-36
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE7]'
 - en: '*Compared with scenario one, I saw slightly more overfitting with batchnorm.'
+  id: totrans-37
   prefs: []
   type: TYPE_NORMAL
+  zh: '*与第一种情况相比，我观察到使用批归一化时略微更多的过拟合。'
 - en: '[PRE8]***  ***## 18.4 Run 3: Transfer learning'
+  id: totrans-38
   prefs: []
   type: TYPE_NORMAL
+  zh: '[PRE8]***  ***## 18.4 运行3：迁移学习'
 - en: Finally, the setup including transfer learning. A pre-trained ResNet is used
     for feature extraction, and a small sequential model takes care of classification.
     During training, all of ResNets weights are left untouched.
+  id: totrans-39
   prefs: []
   type: TYPE_NORMAL
+  zh: 最后，包括迁移学习的设置。使用预训练的ResNet进行特征提取，一个小型的顺序模型负责分类。在训练过程中，所有ResNet的权重都保持不变。
 - en: '[PRE9]'
+  id: totrans-40
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE9]'
 - en: '*As always, we run the learning rate finder ([fig. 18.3](#fig-images2-lr-finder-resnet)).'
+  id: totrans-41
   prefs: []
   type: TYPE_NORMAL
+  zh: '*一如既往，我们运行了学习率查找器([fig. 18.3](#fig-images2-lr-finder-resnet))。'
 - en: '[PRE10]'
+  id: totrans-42
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE10]'
 - en: '*![A curve that, from left to right, first stays flat (until about x=0.01),
     then begins to rise very sharply, while at the same time showing high variability.](../Images/5302967a65ea3a1846403411ee0307e1.png)'
+  id: totrans-43
   prefs: []
   type: TYPE_NORMAL
+  zh: '*![一条曲线，从左到右，最初保持平坦（直到大约 x=0.01），然后开始急剧上升，同时显示出很高的变异性。](../Images/5302967a65ea3a1846403411ee0307e1.png)'
 - en: 'Figure 18.3: Learning rate finder, run on Tiny Imagenet. Convnet with transfer
     learning (ResNet).'
+  id: totrans-44
   prefs: []
   type: TYPE_NORMAL
+  zh: 图18.3：学习率查找器，在Tiny Imagenet上运行。具有迁移学习的卷积网络(ResNet)。
 - en: A maximal rate of 0.01 looks like it could be on the edge, but I decided to
     give it a try.
+  id: totrans-45
   prefs: []
   type: TYPE_NORMAL
+  zh: 0.01的最大速率看起来可能处于边缘，但我决定试一试。
 - en: '[PRE11]'
+  id: totrans-46
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE11]'
 - en: '*For me, this configuration resulted in early stopping after nine epochs already,
     and yielded the best results by far: Final accuracy on the validation set was
     0.48\. Interestingly, in this setup, accuracy ended up *worse* for training than
     for validation.'
+  id: totrans-47
   prefs: []
   type: TYPE_NORMAL
+  zh: '*对我来说，这种配置在九个epoch后就已经提前停止，并且取得了迄今为止最好的结果：验证集上的最终准确率为0.48。有趣的是，在这个设置中，准确率在训练集上最终比在验证集上还要差。'
 - en: '[PRE12]'
+  id: totrans-48
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE12]'
 - en: 'In the next chapter, we stay with the domain – images – but vary the task:
     We move on from classification to segmentation.**********'
+  id: totrans-49
   prefs: []
   type: TYPE_NORMAL
+  zh: 在下一章中，我们继续探讨领域——图像——但改变任务：我们从分类转向分割。**********

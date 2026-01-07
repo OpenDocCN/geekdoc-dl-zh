@@ -1,39 +1,55 @@
 - en: 10  Function minimization with L-BFGS
+  id: totrans-0
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
+  zh: 10 函数最小化与L-BFGS
 - en: 原文：[https://skeydan.github.io/Deep-Learning-and-Scientific-Computing-with-R-torch/optim_2.html](https://skeydan.github.io/Deep-Learning-and-Scientific-Computing-with-R-torch/optim_2.html)
+  id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 原文：[https://skeydan.github.io/Deep-Learning-and-Scientific-Computing-with-R-torch/optim_2.html](https://skeydan.github.io/Deep-Learning-and-Scientific-Computing-with-R-torch/optim_2.html)
 - en: 'Now that we’ve become acquainted with `torch` modules and optimizers, we can
     go back to the two tasks we already approached without either: function minimization,
     and training a neural network. Again, we start with minimization, and leave the
     network to the next chapter.'
+  id: totrans-2
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在我们已经熟悉了`torch`模块和优化器，我们可以回到我们之前没有使用它们的两个任务：函数最小化和训练神经网络。再次，我们以最小化开始，将网络留到下一章。
 - en: 'Thinking back to what we did when minimizing the Rosenbrock function, in essence
     it was this:'
+  id: totrans-3
   prefs: []
   type: TYPE_NORMAL
+  zh: 回想一下我们在最小化Rosenbrock函数时所做的，本质上就是：
 - en: Define a tensor to hold the parameter to be optimized, namely, the \(\mathbf{x}\)-position
     where the function attains its minimum.
+  id: totrans-4
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 定义一个张量来保存要优化的参数，即函数取得最小值时的\(\mathbf{x}\)-位置。
 - en: Iteratively update the parameter, subtracting a fraction of the current gradient.
+  id: totrans-5
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 逐步更新参数，减去当前梯度的部分。
 - en: 'While as a strategy, this was straightforward, a problem remained: How big
     a fraction of the gradient should we subtract? It’s exactly here that optimizers
     come in useful.'
+  id: totrans-6
   prefs: []
   type: TYPE_NORMAL
+  zh: 虽然作为一个策略，这很简单，但仍然存在一个问题：我们应该减去梯度的一部分有多大？这正是优化器发挥作用的地方。
 - en: 10.1 Meet L-BFGS
+  id: totrans-7
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 10.1 了解L-BFGS
 - en: 'So far, we’ve only talked about the kinds of optimizers often used in deep
     learning – stochastic gradient descent (SGD), SGD with momentum, and a few classics
     from the *adaptive* *learning rate* family: RMSProp, Adadelta, Adagrad, Adam.
@@ -41,20 +57,28 @@
     is, the vector of first derivatives. Accordingly, they are all *first-order* algorithms.
     This means, however, that they are missing out on helpful information provided
     by the *Hessian*, the matrix of second derivatives.'
+  id: totrans-8
   prefs: []
   type: TYPE_NORMAL
+  zh: 到目前为止，我们只讨论了在深度学习中常用的一些优化器——随机梯度下降（SGD）、带有动量的SGD以及来自**自适应****学习率**家族的一些经典算法：RMSProp、Adadelta、Adagrad、Adam。所有这些算法有一个共同点：它们只利用了**梯度**，即一阶导数的向量。因此，它们都是**一阶**算法。然而，这意味着它们错过了由**海森矩阵**，即二阶导数的矩阵提供的有用信息。
 - en: 10.1.1 Changing slopes
+  id: totrans-9
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 10.1.1 斜率变化
 - en: 'First derivatives tell us about the *slope* of the landscape: Does it go up?
     Does it go down? How much so? Going a step further, second derivatives encode
     how much that slope *changes*.'
+  id: totrans-10
   prefs: []
   type: TYPE_NORMAL
+  zh: 一阶导数告诉我们关于景观的**斜率**：它是上升还是下降？上升或下降了多少？进一步来说，二阶导数编码了斜率**变化**的程度。
 - en: Why should that be important?
+  id: totrans-11
   prefs: []
   type: TYPE_NORMAL
+  zh: 为什么这很重要？
 - en: 'Assume we’re at point \(\mathbf{x}_n\), and have just decided on a suitable
     descent direction. We take a step, of length determined by some pre-chosen learning
     rate, all set to arrive at point \(\mathbf{x}_{n+1}\). What we don’t know is how
@@ -62,253 +86,377 @@
     much flatter in the meantime: In this case, we’ll have gone way too far, overshooting
     and winding up in a far-off area where anything could have happened in-between
     (including the slope going *up* again!).'
+  id: totrans-12
   prefs: []
   type: TYPE_NORMAL
+  zh: 假设我们处于点\(\mathbf{x}_n\)，并且刚刚决定了一个合适的下降方向。我们迈出一步，步长由某个预先选择的学习率决定，所有这些都设定为到达点\(\mathbf{x}_{n+1}\)。我们不知道当我们到达那里时斜率会有多大的变化。也许它在中间变得非常平坦：在这种情况下，我们会走得太远，超出了目标区域，最终落在远离目标区域的地方，那里可能发生任何事情（包括斜率再次上升！）。
 - en: We can illustrate this on a function of a single variable. Take a parabola,
     such as
+  id: totrans-13
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以在一个单变量函数上说明这一点。例如，取一个抛物线，如
 - en: \[ y = 10x^2 \]
+  id: totrans-14
   prefs: []
   type: TYPE_NORMAL
+  zh: \[ y = 10x^2 \]
 - en: Its derivative is \(\frac{dy}{dx} = 20x\). If our current \(x\) is, say, \(3\),
     and we work with a learning rate of \(0.1\), we’ll subtract \(20 * 3 * 0.1= 6\),
     winding up at \(-3\).
+  id: totrans-15
   prefs: []
   type: TYPE_NORMAL
+  zh: 其导数是\(\frac{dy}{dx} = 20x\)。如果我们当前的\(x\)是，比如说，\(3\)，并且我们使用一个学习率\(0.1\)，我们将减去\(20
+    * 3 * 0.1= 6\)，最终到达\(-3\)。
 - en: But say we had slowed down at \(2\) and inspected the current slope. We’d have
     seen that there, the slope was less steep; in fact, when at that point, we should
     just have subtracted \(20 * 2 * 0.1= 4\).
+  id: totrans-16
   prefs: []
   type: TYPE_NORMAL
+  zh: 但假设我们在\(2\)处放慢了速度并检查了当前的斜率。我们会看到那里的斜率不那么陡峭；事实上，当在那个点时，我们只需减去\(20 * 2 * 0.1=
+    4\)。
 - en: By sheer luck, this “close-your-eyes-and-jump” strategy can still work out –
     *if* we happen to be using just the right learning rate for the function in question.
     (At the chosen learning rate, this would have been the case for a different parabola,
     \(y = 5x^2\), for example.) But wouldn’t it make sense to include second derivatives
     in the decision from the outset?
+  id: totrans-17
   prefs: []
   type: TYPE_NORMAL
+  zh: 仅凭运气，这种“闭眼跳”策略仍然可以奏效——*前提是我们恰好使用了针对该函数的正确学习率*。（在所选的学习率下，例如对于不同的抛物线 \(y = 5x^2\)，这将是这种情况。）但一开始就包含二阶导数在决策中不是更有意义吗？
 - en: Algorithms that do this form the family of Newton methods. First, we look at
     their “purest” specimen, which best illustrates the principle but seldom is feasible
     in practice.
+  id: totrans-18
   prefs: []
   type: TYPE_NORMAL
+  zh: 执行此操作的算法构成了牛顿方法家族。首先，我们来看它们的“最纯粹”的样本，它最好地说明了原理，但在实践中很少可行。
 - en: 10.1.2 Exact Newton method
+  id: totrans-19
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 10.1.2 精确牛顿法
 - en: 'In higher dimensions, the exact Newton method multiplies the gradient by the
     inverse of the Hessian, thus scaling the descent direction coordinate-by-coordinate.
     Our current example has just a single independent variable; so this means for
     us: take the first derivative, and divide by the second.'
+  id: totrans-20
   prefs: []
   type: TYPE_NORMAL
+  zh: 在高维中，精确牛顿法将梯度乘以Hessian的逆，从而逐个坐标地缩放下降方向。我们当前的例子只有一个独立变量；这意味着对我们来说：取一阶导数，然后除以二阶导数。
 - en: 'We now have a scaled gradient – but what portion of it should we subtract?
     In its original version, the exact Newton method does not make use of a learning
     rate, thus freeing us of the familiar trial-and-error game. Let’s see, then: In
     our example, the second derivative is \(20\), meaning that at \(x=3\) we have
     to subtract \((20 * 3)/20=3\). Voilà, we end up at \(0\), the location of the
     minimum, in a single step.'
+  id: totrans-21
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们现在有一个缩放后的梯度——但我们应该减去它的哪一部分？在原始版本中，精确牛顿法没有使用学习率，因此使我们免于熟悉的试错游戏。让我们看看：在我们的例子中，二阶导数是
+    \(20\)，这意味着在 \(x=3\) 时，我们必须减去 \((20 * 3)/20=3\)。哇，我们一步就到达了 \(0\)，即最小值的位置。
 - en: Seeing how that turned out just great, why don’t we do it all the time? For
     one, it will work perfectly only with quadratic functions, like the one we chose
     for the demonstration. In other cases, it, too, will normally need some “tuning”,
     for example, by using a learning rate here as well.
+  id: totrans-22
   prefs: []
   type: TYPE_NORMAL
+  zh: 看到结果如此之好，我们为什么不总是这样做呢？一方面，它只与二次函数，比如我们选择的演示函数，完美地工作。在其他情况下，它通常也需要一些“调整”，例如，在这里也使用学习率。
 - en: But the main reason is another one. In more realistic applications, and certainly
     in the areas of machine learning and deep learning, computing the inverse of the
     Hessian at every step is way too costly. (It may, in fact, not even be possible.)
     This is where *approximate*, a.k.a. *Quasi-Newton*, methods come in.
+  id: totrans-23
   prefs: []
   type: TYPE_NORMAL
+  zh: 但主要原因还是另一个。在更现实的应用中，以及在机器学习和深度学习领域，每一步都计算Hessian的逆是非常昂贵的。（实际上，可能甚至不可能做到。）这就是近似方法，也称为准牛顿方法，发挥作用的地方。
 - en: '10.1.3 Approximate Newton: BFGS and L-BFGS'
+  id: totrans-24
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 10.1.3 近似牛顿：BFGS 和 L-BFGS
 - en: Among approximate Newton methods, probably the most-used is the *Broyden-Goldfarb-Fletcher-Shanno*
     algorithm, or *BFGS*. Instead of continually computing the exact inverse of the
     Hessian, it keeps an iteratively-updated approximation of that inverse. BFGS is
     often implemented in a more memory-friendly version, referred to as *Limited-Memory
     BFGS* (*L-BFGS*). This is the one provided as part of the core `torch` optimizers.
+  id: totrans-25
   prefs: []
   type: TYPE_NORMAL
+  zh: '在近似牛顿方法中，最常用的可能是 *Broyden-Goldfarb-Fletcher-Shanno* 算法，或称 *BFGS*。它不是持续计算Hessian的精确逆，而是保持该逆的迭代更新近似。BFGS通常以更节省内存的版本实现，称为
+    *Limited-Memory BFGS* (*L-BFGS*)。这是作为核心 `torch` 优化器的一部分提供的。 '
 - en: Before we get there, though, there is one last conceptual thing to discuss.
+  id: totrans-26
   prefs: []
   type: TYPE_NORMAL
+  zh: 然而，在我们到达那里之前，还有一个最后的概念问题需要讨论。
 - en: 10.1.4 Line search
+  id: totrans-27
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 10.1.4 梯度搜索
 - en: 'Like their exact counterpart, approximate Newton methods can work without a
     learning rate. In that case, they compute a descent direction and follow the scaled
     gradient as-is. We already talked about how, depending on the function in question,
     this can work more or less well. When it does not, there are two things one could
     do: Firstly, take small steps, or put differently, introduce a learning rate.
     And secondly, do a *line search*.'
+  id: totrans-28
   prefs: []
   type: TYPE_NORMAL
+  zh: 与它们的精确对应物一样，近似牛顿方法可以在没有学习率的情况下工作。在这种情况下，它们计算一个下降方向，并按照缩放后的梯度直接跟随。我们已经讨论了，根据所涉及函数的不同，这可以工作得更好或更差。当它不起作用时，可以采取两种措施：首先，采取小步，或者换句话说，引入学习率。其次，进行
+    *梯度搜索*。
 - en: With line search, we spend some time evaluating how far to follow the descent
     direction. There are two principal ways of doing this.
+  id: totrans-29
   prefs: []
   type: TYPE_NORMAL
+  zh: 使用线搜索，我们花费一些时间来评估跟随下降方向多远。有两种主要的方法来做这件事。
 - en: 'The first, *exact* line search, involves yet another optimization problem:
     Take the current point, compute the descent direction, and hard-code them as givens
     in a *second* function that depends on the learning rate only. Then, differentiate
     this function to find *its* minimum. The solution will be the learning rate that
     optimizes the step length taken.'
+  id: totrans-30
   prefs: []
   type: TYPE_NORMAL
+  zh: 第一个，*精确*的线搜索涉及另一个优化问题：取当前点，计算下降方向，并将它们作为给定值硬编码在仅依赖于学习率的第二个函数中。然后，对函数进行微分以找到*它的*最小值。这个解将是优化步长的学习率。
 - en: 'The alternative strategy is to do an approximate search. By now, you’re probably
     not surprised: Just as approximate Newton is more realistically-feasible than
     exact Newton, approximate line search is more practicable than exact line search.'
+  id: totrans-31
   prefs: []
   type: TYPE_NORMAL
+  zh: 另一种策略是进行近似搜索。到现在为止，你可能不会感到惊讶：正如近似牛顿法比精确牛顿法更现实可行一样，近似线搜索比精确线搜索更实用。
 - en: For line search, approximating the best solution means following a set of proven
     heuristics. Essentially, we look for something that is *just* *good enough*. Among
     the most established heuristics are the *Strong Wolfe conditions*, and this is
     the strategy implemented in `torch`’s `optim_lbfgs()`. In the next section, we’ll
     see how to use `optim_lbfgs()` to minimize the Rosenbrock function, both with
     and without line search.
+  id: totrans-32
   prefs: []
   type: TYPE_NORMAL
+  zh: 对于线搜索，近似最佳解决方案意味着遵循一系列经过验证的启发式方法。本质上，我们寻找的是*刚好**足够好*的东西。其中最成熟的启发式方法之一是*强沃尔夫条件*，这是
+    `torch` 的 `optim_lbfgs()` 中实现的策略。在下一节中，我们将看到如何使用 `optim_lbfgs()` 来最小化 Rosenbrock
+    函数，无论是带线搜索还是不带线搜索。
 - en: 10.2 Minimizing the Rosenbrock function with `optim_lbfgs()`
+  id: totrans-33
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 10.2 使用 `optim_lbfgs()` 最小化 Rosenbrock 函数
 - en: 'Here is the Rosenbrock function again:'
+  id: totrans-34
   prefs: []
   type: TYPE_NORMAL
+  zh: 再次给出 Rosenbrock 函数：
 - en: '[PRE0]'
+  id: totrans-35
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE0]'
 - en: '*In our manual minimization efforts, the procedure was the following. A one-time
     action, we first defined the parameter tensor destined to hold the current \(\mathbf{x}\):'
+  id: totrans-36
   prefs: []
   type: TYPE_NORMAL
+  zh: '*在我们的手动最小化努力中，程序如下。一次性操作，我们首先定义了参数张量，该张量将用于存储当前的 \(\mathbf{x}\)：'
 - en: '[PRE1]'
+  id: totrans-37
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE1]'
 - en: '*Then, we iteratively executed the following operations:'
+  id: totrans-38
   prefs: []
   type: TYPE_NORMAL
+  zh: 然后，我们迭代执行以下操作：
 - en: Calculate the function value at the current \(\mathbf{x}\).
+  id: totrans-39
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 计算当前 \(\mathbf{x}\) 的函数值。
 - en: Compute the gradient of that value at the position in question.
+  id: totrans-40
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 计算该值在所问位置处的梯度。
 - en: Subtract a fraction of the gradient from the current \(\mathbf{x}\).
+  id: totrans-41
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 从当前 \(\mathbf{x}\) 中减去梯度的一部分。
 - en: How, if so, does that blueprint change?
+  id: totrans-42
   prefs: []
   type: TYPE_NORMAL
+  zh: 那么，这个蓝图是如何改变的？
 - en: The first step remains unchanged. We still have
+  id: totrans-43
   prefs: []
   type: TYPE_NORMAL
+  zh: 第一步保持不变。我们仍然有
 - en: '[PRE2]'
+  id: totrans-44
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE2]'
 - en: '*The second step stays the same, as well. We still call `backward()` directly
     on the output tensor:'
+  id: totrans-45
   prefs: []
   type: TYPE_NORMAL
+  zh: '*第二步也保持不变。我们仍然直接在输出张量上调用 `backward()`：'
 - en: '[PRE3]'
+  id: totrans-46
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE3]'
 - en: '*This is because an optimizer does not *compute* gradients; it *decides what
     to do with the gradient* once it’s been computed.'
+  id: totrans-47
   prefs: []
   type: TYPE_NORMAL
+  zh: '*这是因为优化器并不*计算*梯度；它在梯度计算出来后，*决定如何处理梯度*。'
 - en: 'What changes, thus, is the third step, the one that also was the most cumbersome.
     Now, it is the optimizer that applies the update. To be able to do that, there
     is a prerequisite: Prior to starting the loop, the optimizer will need to be told
     which parameter it is supposed to work on. In fact, this is so important that
     you can’t even create an optimizer without passing it that parameter:'
+  id: totrans-48
   prefs: []
   type: TYPE_NORMAL
+  zh: 因此，改变的是第三步，也是最繁琐的一步。现在，更新操作由优化器执行。为了能够这样做，有一个先决条件：在开始循环之前，需要告诉优化器它应该处理哪个参数。实际上，这一点非常重要，以至于你甚至不能在没有传递该参数的情况下创建优化器：
 - en: '[PRE4]'
+  id: totrans-49
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE4]'
 - en: '*In the loop, we now call the `step()` method on the optimizer object to update
     the parameter. There is just one part from our manual procedure that needs to
     get carried over to the new way: We still need to zero out the gradient on each
     iteration. Just this time, not on the parameter tensor, `x`, but the optimizer
     object itself. *In principle*, this then yields the following actions to be performed
     on each iteration:'
+  id: totrans-50
   prefs: []
   type: TYPE_NORMAL
+  zh: '*在循环中，我们现在调用优化器对象的 `step()` 方法来更新参数。我们手动程序中只有一个部分需要转移到新的方式：我们仍然需要在每次迭代中清零梯度。只是这次，不是在参数张量
+    `x` 上，而是在优化器对象本身上。*原则上*，这将在每次迭代上执行以下操作：'
 - en: '[PRE5]'
+  id: totrans-51
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE5]'
 - en: '*Why “in principle”? In fact, this is what we’d write for every optimizer *but*
     `optim_lbfgs()`.'
+  id: totrans-52
   prefs: []
   type: TYPE_NORMAL
+  zh: '*为什么是“原则上”？事实上，这就是我们为每个优化器*除了* `optim_lbfgs()` *之外会写的代码。'
 - en: 'For `optim_lbfgs()`, `step()` needs to be called passing in an anonymous function,
     a closure. Zeroing of previous gradients, function call, and gradient calculation,
     all these happen inside the closure:'
+  id: totrans-53
   prefs: []
   type: TYPE_NORMAL
+  zh: 对于 `optim_lbfgs()`，需要传递一个匿名函数，一个闭包来调用 `step()`。前向梯度的归零、函数调用和梯度计算，所有这些都在闭包内部发生：
 - en: '[PRE6]'
+  id: totrans-54
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE6]'
 - en: '*Having executed those actions, the closure returns the function value. Here
     is how it is called by `step()`:'
+  id: totrans-55
   prefs: []
   type: TYPE_NORMAL
+  zh: '*执行了这些操作后，闭包返回函数值。以下是 `step()` 如何调用它的：'
 - en: '[PRE7]'
+  id: totrans-56
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE7]'
 - en: '*Now we put it all together, add some logging output, and compare what happens
     with and without line search.'
+  id: totrans-57
   prefs: []
   type: TYPE_NORMAL
+  zh: '*现在我们将所有这些放在一起，添加一些日志输出，并比较使用和不使用线搜索会发生什么。'
 - en: 10.2.1 `optim_lbfgs()` default behavior
+  id: totrans-58
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 10.2.1 `optim_lbfgs()` 默认行为
 - en: As a baseline, we first run without line search. Two iterations are enough.
     In the below output, you can see that in each iteration, the closure is evaluated
     several times. This is the technical reason we had to create it in the first place.
+  id: totrans-59
   prefs: []
   type: TYPE_NORMAL
+  zh: 作为基线，我们首先不使用线搜索运行。两次迭代就足够了。在下面的输出中，你可以看到在每次迭代中，闭包被评估多次。这就是我们最初必须创建它的技术原因。
 - en: '[PRE8]'
+  id: totrans-60
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE8]'
 - en: '*[PRE9]'
+  id: totrans-61
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE9]'
 - en: 'To make sure we really have found the minimum, we check `x`:'
+  id: totrans-62
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了确保我们真的找到了最小值，我们检查 `x`：
 - en: '[PRE10]'
+  id: totrans-63
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE10]'
 - en: '*[PRE11]'
+  id: totrans-64
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE11]'
 - en: Can this still be improved upon?**  **### 10.2.2 `optim_lbfgs()` with line search
+  id: totrans-65
   prefs: []
   type: TYPE_NORMAL
+  zh: 这还能进一步改进吗？**  **### 10.2.2 `optim_lbfgs()` 使用线搜索
 - en: Let’s see. Below, the only line that’s changed is the one where we construct
     the optimizer.
+  id: totrans-66
   prefs: []
   type: TYPE_NORMAL
+  zh: 让我们看看。下面，唯一改变的是我们构建优化器的那一行。
 - en: '[PRE12]'
+  id: totrans-67
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE12]'
 - en: '*[PRE13]'
+  id: totrans-68
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE13]'
 - en: With line search, a single iteration is sufficient to reach the minimum. Inspecting
     the individual losses, we also see that the algorithm reduces the loss nearly
     every time it probes the function, which without line search, had not been the
     case.***********
+  id: totrans-69
   prefs: []
   type: TYPE_NORMAL
+  zh: 使用线搜索，单次迭代就足以达到最小值。检查单个损失，我们还可以看到，算法几乎每次探测函数时都会减少损失，而如果没有线搜索，情况并非如此。***********

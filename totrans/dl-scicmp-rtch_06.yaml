@@ -1,38 +1,54 @@
 - en: 3  Tensors
+  id: totrans-0
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
+  zh: 3  张量
 - en: 原文：[https://skeydan.github.io/Deep-Learning-and-Scientific-Computing-with-R-torch/tensors.html](https://skeydan.github.io/Deep-Learning-and-Scientific-Computing-with-R-torch/tensors.html)
+  id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 原文：[https://skeydan.github.io/Deep-Learning-and-Scientific-Computing-with-R-torch/tensors.html](https://skeydan.github.io/Deep-Learning-and-Scientific-Computing-with-R-torch/tensors.html)
 - en: 3.1 What’s in a tensor?
+  id: totrans-2
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 3.1 张量中有什么？
 - en: To do anything useful with `torch`, you need to know about tensors. Not tensors
     in the math/physics sense. In deep learning frameworks such as TensorFlow and
     (Py-)Torch, *tensors* are “just” multi-dimensional arrays optimized for fast computation
     – not on the CPU only but also, on specialized devices such as GPUs and TPUs.
+  id: totrans-3
   prefs: []
   type: TYPE_NORMAL
+  zh: 要使用`torch`做任何有用的事情，你需要了解张量。不是数学/物理意义上的张量。在TensorFlow和（Py-）Torch这样的深度学习框架中，*张量*只是多维数组，它针对快速计算进行了优化——不仅是在CPU上，还包括在GPU和TPU等专用设备上。（它还具有一个具有巨大实际影响的能力——自动微分——但我们将其留到下一章。）
 - en: In fact, a `torch` `tensor` is like an R `array`, in that it can be of arbitrary
     dimensionality. But unlike `array`, it is designed for fast and scalable execution
     of mathematical calculations, and you can move it to the GPU. (It also has an
     extra capability of enormous practical impact – automatic differentiation – but
     we reserve that for the next chapter.)
+  id: totrans-4
   prefs: []
   type: TYPE_NORMAL
+  zh: 实际上，一个`torch`张量就像一个R数组，因为它可以是任意维度的。但与`array`不同，它旨在快速且可扩展地执行数学计算，并且你可以将其移动到GPU上。（它还具有一个具有巨大实际影响的能力——自动微分——但我们将其留到下一章。）
 - en: 'Technically, a `tensor` feels a lot like an R6 object, in that you can access
     its fields and methods using `$`-syntax. Let’s create one and print it:'
+  id: totrans-5
   prefs: []
   type: TYPE_NORMAL
+  zh: 从技术上讲，一个`tensor`感觉就像一个R6对象，因为你可以使用`$`-语法访问其字段和方法。让我们创建一个并打印它：
 - en: '[PRE0]'
+  id: totrans-6
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE0]'
 - en: '*[PRE1]'
+  id: totrans-7
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE1]'
 - en: 'This is a tensor that holds just a single value, 1\. It “lives” on the CPU,
     and its type is `Float` . Now take a look at the 1 in braces, `{1}`. This is *not*
     yet another indication of the tensor’s value. It indicates the tensor shape, or
@@ -40,390 +56,605 @@
     we have a one-dimensional tensor, that is, a vector. Just as in base R, vectors
     can consist of a single element only. (Remember that base R does not differentiate
     between `1` and `c(1)`).'
+  id: totrans-8
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是一个只包含单个值1的张量。它“居住”在CPU上，其类型是`Float`。现在看看花括号中的1，即`{1}`。这*并不是*另一个表示张量值的指示。它表示张量的形状，或者换句话说：它居住的空间及其维度的范围。在这里，我们有一个一维张量，即向量。就像在基础R中一样，向量可以只包含一个元素。（记住，基础R不区分`1`和`c(1)`。）
 - en: 'We can use the aforementioned `$`-syntax to individually ascertain these properties,
     accessing the respective fields in the object one-by-one:'
+  id: totrans-9
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以使用上述`$`-语法单独确定这些属性，逐个访问对象中的相应字段：
 - en: '[PRE2]'
+  id: totrans-10
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE2]'
 - en: '*[PRE3]'
+  id: totrans-11
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE3]'
 - en: '[PRE4]'
+  id: totrans-12
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE4]'
 - en: '*[PRE5]'
+  id: totrans-13
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE5]'
 - en: '[PRE6]'
+  id: totrans-14
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE6]'
 - en: '*[PRE7]'
+  id: totrans-15
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE7]'
 - en: 'We can also directly change some of these properties, making use of the tensor
     object’s `$to()` method:'
+  id: totrans-16
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们还可以直接更改这些属性中的一些，利用张量对象的`$to()`方法：
 - en: '[PRE8]'
+  id: totrans-17
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE8]'
 - en: '*[PRE9]'
+  id: totrans-18
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE9]'
 - en: '[PRE10]'
+  id: totrans-19
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE10]'
 - en: '*[PRE11]'
+  id: totrans-20
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE11]'
 - en: 'How about changing the shape? This is a topic deserving of treatment of its
     own, but as a first warm-up, let’s play around a bit. Without changing its value,
     we can turn this one-dimensional “vector tensor” into a two-dimensional “matrix
     tensor”:'
+  id: totrans-21
   prefs: []
   type: TYPE_NORMAL
+  zh: 那么改变形状呢？这是一个值得单独讨论的话题，但作为一个初步的热身，让我们稍微玩一下。在不改变其值的情况下，我们可以将这个一维的“向量张量”转换成二维的“矩阵张量”：
 - en: '[PRE12]'
+  id: totrans-22
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE12]'
 - en: '*[PRE13]'
+  id: totrans-23
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE13]'
 - en: 'Conceptually, this is analogous to how in R, we can have a one-element vector
     as well as a one-element matrix:'
+  id: totrans-24
   prefs: []
   type: TYPE_NORMAL
+  zh: 从概念上讲，这类似于在R中，我们可以有一个一元素的向量，也可以有一个一元素的矩阵：
 - en: '[PRE14]'
+  id: totrans-25
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE14]'
 - en: '*[PRE15]'
+  id: totrans-26
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE15]'
 - en: Now that we have an idea what a tensor is, let’s think about ways to create
     some.********  ***## 3.2 Creating tensors
+  id: totrans-27
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在我们已经对张量有了概念，让我们考虑创建张量的方法。********  ***## 3.2 创建张量
 - en: 'We’ve already seen one way to create a tensor: calling `torch_tensor()` and
     passing in an R value. This way generalizes to multi-dimensional objects; we’ll
     see a few examples soon.'
+  id: totrans-28
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们已经看到一种创建张量的方法：调用`torch_tensor()`并传入一个R值。这种方法可以推广到多维对象；我们很快就会看到一些例子。
 - en: However, that procedure can get unwieldy when we have to pass in lots of different
     values. Luckily, there is an alternative approach that applies whenever values
     should be identical throughout, or follow an apparent pattern. We’ll illustrate
     this technique as well in this section.
+  id: totrans-29
   prefs: []
   type: TYPE_NORMAL
+  zh: 然而，当我们需要传入很多不同的值时，这个程序可能会变得难以控制。幸运的是，有一个替代方法，当值在整个范围内应该相同或遵循明显的模式时，都可以应用。我们将在本节中也展示这种技术的示例。
 - en: 3.2.1 Tensors from values
+  id: totrans-30
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 3.2.1 从值创建张量
 - en: 'Above, we passed in a one-element vector to `torch_tensor()`; we can pass in
     longer vectors just the same way:'
+  id: totrans-31
   prefs: []
   type: TYPE_NORMAL
+  zh: 在上面，我们向`torch_tensor()`传入了一个一元素的向量；我们可以以相同的方式传入更长的向量：
 - en: '[PRE16]'
+  id: totrans-32
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE16]'
 - en: '*[PRE17]'
+  id: totrans-33
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE17]'
 - en: When given an R value (or a sequence of values), `torch` determines a suitable
     data type itself. Here, the assumption is that an integer type is desired, and
     `torch` chooses the highest-precision type available (`torch_long()` is synonymous
     to `torch_int64()`).
+  id: totrans-34
   prefs: []
   type: TYPE_NORMAL
+  zh: 当给定一个R值（或一系列值）时，`torch`会自行确定合适的数据类型。这里，假设我们想要整数类型，`torch`会选择可用的最高精度类型（`torch_long()`与`torch_int64()`同义）。
 - en: 'If we want a floating-point tensor instead, we can use `$to()` on the newly
     created instance (as we saw above). Alternatively, we can just let `torch_tensor()`
     know right away:'
+  id: totrans-35
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果我们想要一个浮点张量，我们可以使用新创建实例上的`$to()`（如上所示）。或者，我们也可以立即让`torch_tensor()`知道：
 - en: '[PRE18]'
+  id: totrans-36
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE18]'
 - en: '*[PRE19]'
+  id: totrans-37
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE19]'
 - en: 'Analogously, the default device is the CPU; but we can also create a tensor
     that, right from the outset, is located on the GPU:'
+  id: totrans-38
   prefs: []
   type: TYPE_NORMAL
+  zh: 类似地，默认设备是CPU；但我们可以创建一个从一开始就位于GPU上的张量：
 - en: '[PRE20]'
+  id: totrans-39
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE20]'
 - en: '*[PRE21]'
+  id: totrans-40
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE21]'
 - en: Now, so far all we’ve been creating is vectors; what about matrices, that is,
     two-dimensional tensors?
+  id: totrans-41
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在，到目前为止，我们创建的都是向量；那么矩阵呢，即二维张量呢？
 - en: 'We can pass in an R matrix just the same way:'
+  id: totrans-42
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以以相同的方式传入一个R矩阵：
 - en: '[PRE22]'
+  id: totrans-43
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE22]'
 - en: '*[PRE23]'
+  id: totrans-44
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE23]'
 - en: 'Look at the result. The numbers 1 to 9 appear column after column, just as
     in the R matrix we created it from. This may, or may not, be the intended outcome.
     If it’s not, just pass `byrow = TRUE` to the call to `matrix()`:'
+  id: totrans-45
   prefs: []
   type: TYPE_NORMAL
+  zh: 看看结果。数字1到9按列依次出现，就像我们创建的R矩阵中一样。这可能是，也可能不是预期的结果。如果不是，只需在`matrix()`的调用中传递`byrow
+    = TRUE`：
 - en: '[PRE24]'
+  id: totrans-46
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE24]'
 - en: '*[PRE25]'
+  id: totrans-47
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE25]'
 - en: 'What about higher-dimensional data? Following the same principle, we can pass
     in an array:'
+  id: totrans-48
   prefs: []
   type: TYPE_NORMAL
+  zh: 关于高维数据呢？遵循同样的原则，我们可以传入一个数组：
 - en: '[PRE26]'
+  id: totrans-49
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE26]'
 - en: '*[PRE27]'
+  id: totrans-50
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE27]'
 - en: Again, the result follows R’s array population logic. If that’s not what you
     want, it is probably easier to build up the tensor programmatically.
+  id: totrans-51
   prefs: []
   type: TYPE_NORMAL
+  zh: 再次，结果遵循R的数组填充逻辑。如果你不想要这样的结果，可能更容易通过编程构建张量。
 - en: Before you start to panic, though, think about how rarely you’ll need to do
     this. In practice, you’ll mostly be creating tensors from an R dataset. We’ll
     take a close look at that in the last subsection, “Tensors from datasets”. Before
     though, it is instructive to spend a little time inspecting that last output.
+  id: totrans-52
   prefs: []
   type: TYPE_NORMAL
+  zh: 在你开始恐慌之前，想想你有多少次需要这样做。在实践中，你将主要从R数据集中创建张量。我们将在最后一个子节“从数据集创建张量”中详细探讨这一点。在此之前，花点时间检查一下最后的输出是有益的。
 - en: Here, pictorially, is the object we created ([fig. 3.1](#fig-tensors-dimensions)).
     Let’s call the axis that extends to the right `x`, the one that goes into the
     page, `y`, and the one that points up, `z`. Then the tensor extends 4, 3, and
     2 units, respectively, in the x, y, and z directions.
+  id: totrans-53
   prefs: []
   type: TYPE_NORMAL
+  zh: 这里，直观地看，是我们创建的对象([图3.1](#fig-tensors-dimensions))。让我们称向右延伸的轴为`x`，进入页面的轴为`y`，向上的轴为`z`。然后张量在`x`、`y`和`z`方向上分别延伸4、3和2个单位。
 - en: '![A cube that extends 4, 3, and 2 units, respectively, in the x, y, and z directions.](../Images/ed43848c8ef6217f9dace3c692bb525c.png)'
+  id: totrans-54
   prefs: []
   type: TYPE_IMG
+  zh: '![一个在x、y和z方向上分别延伸4、3和2个单位的立方体。](../Images/ed43848c8ef6217f9dace3c692bb525c.png)'
 - en: 'Figure 3.1: A 4x3x2 tensor.'
+  id: totrans-55
   prefs: []
   type: TYPE_NORMAL
+  zh: 图3.1：一个4x3x2的张量。
 - en: 'The array we passed to `torch_tensor()` prints like this:'
+  id: totrans-56
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们传递给`torch_tensor()`的数组打印如下：
 - en: '[PRE28]'
+  id: totrans-57
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE28]'
 - en: '*[PRE29]'
+  id: totrans-58
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE29]'
 - en: Compare that with how the tensor prints, above. `Array` and `tensor` slice the
     object in different ways. The tensor slices its values into `3x2` rectangles,
     extending up and to the back, one for each of the four `x`-values. The array,
     on the other hand, splits them up by `z`-value, resulting in two big `4x3` slices
     that go up and to the right.
+  id: totrans-59
   prefs: []
   type: TYPE_NORMAL
+  zh: 与上面张量的打印方式相比。`数组`和`张量`以不同的方式切割对象。张量将其值切割成`3x2`的矩形，向上和向后延伸，每个`x`值对应一个。另一方面，数组通过`z`值进行分割，结果形成两个大的`4x3`切片，向上和向右延伸。
 - en: Alternatively, we could say that the tensor starts thinking from the left/the
     “outside”; the array, from the right/the “inside”.*******  ***### 3.2.2 Tensors
     from specifications
+  id: totrans-60
   prefs: []
   type: TYPE_NORMAL
+  zh: 或者，我们可以说张量是从左边/“外部”开始思考的；数组是从右边/“内部”开始。********  ***### 3.2.2 从规格创建张量
 - en: 'There are two broad conditions when `torch`’s bulk creation functions will
     come in handy: For one, when you don’t care about individual tensor values, but
     only about their distribution. Secondly, if they follow some conventional pattern.'
+  id: totrans-61
   prefs: []
   type: TYPE_NORMAL
+  zh: 当`torch`的大规模创建函数派上用场时，有两种广泛的情况：一方面，当你不关心单个张量值，而只关心它们的分布时。另一方面，如果它们遵循某种传统模式。
 - en: 'When we use bulk creation functions, instead of individual *values* we specify
     the *shape* they should have. Here, for example, we instantiate a 3x3 tensor,
     populated with standard-normally distributed values:'
+  id: totrans-62
   prefs: []
   type: TYPE_NORMAL
+  zh: 当我们使用批量创建函数时，我们指定的是它们应该具有的 *形状*，而不是单个 *值*。例如，这里我们实例化一个3x3的张量，填充了标准正态分布的值：
 - en: '[PRE30]'
+  id: totrans-63
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE30]'
 - en: '*[PRE31]'
+  id: totrans-64
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE31]'
 - en: 'And here is the equivalent for values that are uniformly distributed between
     zero and one:'
+  id: totrans-65
   prefs: []
   type: TYPE_NORMAL
+  zh: 这里是均匀分布在零和一之间的值的等效表示：
 - en: '[PRE32]'
+  id: totrans-66
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE32]'
 - en: '*[PRE33]'
+  id: totrans-67
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE33]'
 - en: 'Often, we require tensors of all ones, or all zeroes:'
+  id: totrans-68
   prefs: []
   type: TYPE_NORMAL
+  zh: 经常，我们需要全为1或全为0的张量：
 - en: '[PRE34]'
+  id: totrans-69
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE34]'
 - en: '*[PRE35]'
+  id: totrans-70
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE35]'
 - en: '[PRE36]'
+  id: totrans-71
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE36]'
 - en: '*[PRE37]'
+  id: totrans-72
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE37]'
 - en: 'Many more of these bulk creation functions exist. To wrap up, let’s see how
     to create some matrix types that are common in linear algebra. Here’s an identity
     matrix:'
+  id: totrans-73
   prefs: []
   type: TYPE_NORMAL
+  zh: 存在更多这样的批量创建函数。为了总结，让我们看看如何创建一些在线性代数中常见的矩阵类型。这是一个单位矩阵：
 - en: '[PRE38]'
+  id: totrans-74
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE38]'
 - en: '*[PRE39]'
+  id: totrans-75
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE39]'
 - en: 'And here, a diagonal matrix:'
+  id: totrans-76
   prefs: []
   type: TYPE_NORMAL
+  zh: 这里，一个对角矩阵：
 - en: '[PRE40]'
+  id: totrans-77
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE40]'
 - en: '*[PRE41]******  ***### 3.2.3 Tensors from datasets'
+  id: totrans-78
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE41]******  ***### 3.2.3 从数据集创建张量'
 - en: Now we look at how to create tensors from R datasets. Depending on the dataset
     itself, this process can feel “automatic” or require some thought and action.
+  id: totrans-79
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在我们来看看如何从 R 数据集创建张量。根据数据集本身，这个过程可能感觉“自动”或需要一些思考和行动。
 - en: First, let’s try `JohnsonJohnson` that comes with base R. It is a time series
     of quarterly earnings per Johnson & Johnson share.
+  id: totrans-80
   prefs: []
   type: TYPE_NORMAL
+  zh: 首先，让我们尝试随 base R 一起提供的 `JohnsonJohnson`。这是一份 Johnson & Johnson 股票季度收益的时间序列。
 - en: '[PRE42]'
+  id: totrans-81
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE42]'
 - en: '*[PRE43]'
+  id: totrans-82
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE43]'
 - en: Can we just pass this to `torch_tensor()` and magically get what we want?
+  id: totrans-83
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以直接传递这个给 `torch_tensor()` 并神奇地得到我们想要的结果吗？
 - en: '[PRE44]'
+  id: totrans-84
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE44]'
 - en: '*[PRE45]'
+  id: totrans-85
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE45]'
 - en: Looks like we can! The values are arranged exactly the way we want them; quarter
     after quarter.
+  id: totrans-86
   prefs: []
   type: TYPE_NORMAL
+  zh: 看起来我们可以！值被排列得正好是我们想要的；一个季度接一个季度。
 - en: 'Magic? Not really. `torch` can only work with what it is given; and here, what
     it is given is actually a vector of `double`s arranged in quarterly order. The
     data just print the way they do because they are of class `ts`:'
+  id: totrans-87
   prefs: []
   type: TYPE_NORMAL
+  zh: 魔法？其实不是。`torch` 只能处理它所给出的；在这里，它给出的是一个按季度顺序排列的 `double` 向量。数据之所以以这种方式打印，是因为它们是
+    `ts` 类：
 - en: '[PRE46]'
+  id: totrans-88
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE46]'
 - en: '*[PRE47]'
+  id: totrans-89
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE47]'
 - en: So this went well. Let’s try another one. Who is not kept up at night, pondering
     trunk thickness of orange trees?
+  id: totrans-90
   prefs: []
   type: TYPE_NORMAL
+  zh: 所以这做得很好。让我们再试一个。谁不会在夜晚辗转反侧，思考橙树的树干厚度？
 - en: '[PRE48]'
+  id: totrans-91
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE48]'
 - en: '*[PRE49]'
+  id: totrans-92
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE49]'
 - en: '[PRE50]'
+  id: totrans-93
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE50]'
 - en: '*[PRE51]'
+  id: totrans-94
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE51]'
 - en: 'Which type is *not handled* here? It seems obvious that the “culprit” must
     be `Tree`, an ordered-factor column. Let’s first check if `torch` can handle factors:'
+  id: totrans-95
   prefs: []
   type: TYPE_NORMAL
+  zh: 这里没有处理哪种类型？显然，“罪魁祸首”必须是 `Tree`，一个有序因子列。让我们首先检查 `torch` 是否可以处理因子：
 - en: '[PRE52]'
+  id: totrans-96
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE52]'
 - en: '*[PRE53]'
+  id: totrans-97
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE53]'
 - en: 'So this worked fine. Then what else could it be? The problem here is the containing
     structure, the `data.frame`. We need to call `as.matrix()` on it first. Due to
     the presence of the factor, though, this will result in a matrix of all strings,
     which is not what we want. Therefore, we first extract the underlying levels (integers)
     from the factor, and then convert the `data.frame` to a matrix:'
+  id: totrans-98
   prefs: []
   type: TYPE_NORMAL
+  zh: 所以这做得很好。那么还有什么问题？这里的问题是包含的结构，即 `data.frame`。我们首先需要调用 `as.matrix()`。然而，由于存在因子，这将导致一个全为字符串的矩阵，这不是我们想要的。因此，我们首先从因子中提取底层水平（整数），然后将
+    `data.frame` 转换为矩阵：
 - en: '[PRE54]'
+  id: totrans-99
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE54]'
 - en: '*[PRE55]'
+  id: totrans-100
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE55]'
 - en: 'Let’s try the same thing with another `data.frame`, `okc` from `modeldata`:'
+  id: totrans-101
   prefs: []
   type: TYPE_NORMAL
+  zh: 让我们用另一个 `data.frame`，`modeldata` 中的 `okc`，来做同样的事情：
 - en: '[PRE56]'
+  id: totrans-102
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE56]'
 - en: '*[PRE57]'
+  id: totrans-103
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE57]'
 - en: 'We have two integer columns, which is fine, and one factor column, which we
     know how to handle. But what about the `character` and `date` columns? Trying
     to create a tensor from the `date` column individually, we see:'
+  id: totrans-104
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们有两个整数列，这是可以的，还有一个因子列，我们知道如何处理。但 `character` 和 `date` 列怎么办？尝试单独从 `date` 列创建张量，我们看到：
 - en: '[PRE58]'
+  id: totrans-105
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE58]'
 - en: '*[PRE59]'
+  id: totrans-106
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE59]'
 - en: This didn’t throw an error, but what does it mean? These are the actual values
     stored in an R `Date`, namely, the number of days since January 1, 1970\. Technically,
     thus, we have a working conversion – whether the result makes sense pragmatically
     is a question of how you’re going to use it. Put differently, you’ll probably
     want to further process these data before using them in a computation, and how
     you do this will depend on the context.
+  id: totrans-107
   prefs: []
   type: TYPE_NORMAL
+  zh: 这并没有引发错误，但它意味着什么？这些是 R `Date` 中实际存储的值，即自1970年1月1日以来的天数。技术上讲，因此，我们有一个工作的转换——结果在实用上是否有意义取决于你将如何使用它。换句话说，你可能会想在将数据用于计算之前进一步处理这些数据，而你如何做这取决于上下文。
 - en: Next, let’s see about `location`, one of the columns of type `character`. What
     happens if we just pass it to `torch` as-is?
+  id: totrans-108
   prefs: []
   type: TYPE_NORMAL
+  zh: 接下来，让我们看看 `location`，这是一个 `character` 类型的列。如果我们直接将其传递给 `torch` 会发生什么？
 - en: '[PRE60]'
+  id: totrans-109
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE60]'
 - en: '*[PRE61]'
+  id: totrans-110
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE61]'
 - en: 'In fact, there are no tensors in `torch` that store strings. We have to apply
     some scheme that converts them to a numeric type first. In cases like the present
     one, where every observation contains a single entity (as opposed to, say, a sentence
     or a paragraph), the easiest way of doing this from R is to first convert to `factor`,
     then to `numeric`, and then, to `tensor`:'
+  id: totrans-111
   prefs: []
   type: TYPE_NORMAL
+  zh: 事实上，在`torch`中没有存储字符串的张量。我们必须应用某种方案将它们首先转换为数值类型。在像现在这样的情况下，每个观测值包含一个单一实体（与，比如说，一个句子或一个段落相反），从R中执行此操作的最简单方法是首先将其转换为`factor`，然后转换为`numeric`，最后转换为`tensor`：
 - en: '[PRE62]'
+  id: totrans-112
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE62]'
 - en: '*[PRE63]'
+  id: totrans-113
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE63]'
 - en: True, this works well technically. It *does*, however, reduce information. For
     example, the first and third locations are “south san francisco” and “san francisco”,
     respectively. Once converted to factors, these are just as distant, semantically,
@@ -433,689 +664,1062 @@
     by some criterion, or converting to latitude/longitude. These considerations are
     by no means `torch`-specific; we just mention them here because they affect the
     “data ingestion workflow” to `torch`.
+  id: totrans-114
   prefs: []
   type: TYPE_NORMAL
+  zh: 确实，这在技术上工作得很好。然而，它确实减少了信息。例如，第一个和第三个位置分别是“南旧金山”和“旧金山”。一旦转换为因子，这些在语义上与“旧金山”和任何其他位置的语义距离一样远。再次强调，这是否有意义取决于数据的特定情况以及你的目标。如果你认为这很重要，你有一系列选项，包括例如根据某些标准对观测值进行分组，或将它们转换为经纬度。这些考虑因素绝对不是`torch`特有的；我们只是在这里提到它们，因为它们会影响`torch`的“数据摄入工作流程”。
 - en: 'Finally, no excursion into the world of real-life data science is complete
     without a consideration of `NA`s. Let’s see:'
+  id: totrans-115
   prefs: []
   type: TYPE_NORMAL
+  zh: 最后，任何对现实世界数据科学的探索如果没有考虑`NA`s都是不完整的。让我们看看：
 - en: '[PRE64]'
+  id: totrans-116
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE64]'
 - en: '*[PRE65]'
+  id: totrans-117
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE65]'
 - en: 'R’s `NA` gets converted to `NaN`. Can you work with that? Some `torch` function
     can. For example, `torch_nanquantile()` just ignores the `NaN`s:'
+  id: totrans-118
   prefs: []
   type: TYPE_NORMAL
+  zh: R的`NA`会被转换为`NaN`。你能处理这个吗？一些`torch`函数可以。例如，`torch_nanquantile()`会忽略`NaN`s：
 - en: '[PRE66]'
+  id: totrans-119
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE66]'
 - en: '*[PRE67]'
+  id: totrans-120
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE67]'
 - en: However, if you’re going to train a neural network, for example, you’ll need
     to think about how to meaningfully replace these missing values first. But that’s
     a topic for a later time.*******************  ***## 3.3 Operations on tensors
+  id: totrans-121
   prefs: []
   type: TYPE_NORMAL
+  zh: 然而，如果你打算训练一个神经网络，例如，你首先需要考虑如何有意义地替换这些缺失值。但这将是以后的话题。*******************  ***##
+    3.3 张量操作
 - en: 'We can perform all the usual mathematical operations on tensors.: add, subtract,
     divide … These operations are available as functions (starting with `torch_`)
     as well as as methods on objects (invoked with `$`-syntax). For example, the following
     are equivalent:'
+  id: totrans-122
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以在张量上执行所有常规的数学运算：加、减、除……这些操作作为函数（以`torch_`开头）以及作为对象的方法（使用`$`-语法调用）都是可用的。例如，以下操作是等价的：
 - en: '[PRE68]'
+  id: totrans-123
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE68]'
 - en: '*[PRE69]'
+  id: totrans-124
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE69]'
 - en: 'In both cases, a new object is created; neither `t1` nor `t2` are modified.
     There exists an alternate method that modifies its object in-place:'
+  id: totrans-125
   prefs: []
   type: TYPE_NORMAL
+  zh: 在这两种情况下，都会创建一个新的对象；`t1`和`t2`都没有被修改。存在一种替代方法，它会在原地修改其对象：
 - en: '[PRE70]'
+  id: totrans-126
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE70]'
 - en: '*[PRE71]'
+  id: totrans-127
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE71]'
 - en: '[PRE72]'
+  id: totrans-128
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE72]'
 - en: '*[PRE73]'
+  id: totrans-129
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE73]'
 - en: 'In fact, the same pattern applies for other operations: Whenever you see an
     underscore appended, the object is modified in-place.'
+  id: totrans-130
   prefs: []
   type: TYPE_NORMAL
+  zh: 实际上，相同的模式适用于其他操作：每次你看到附加了下划线，对象都会在原地被修改。
 - en: Naturally, in a scientific-computing setting, matrix operations are of special
     interest. Let’s start with the dot product of two one-dimensional structures,
     i.e., vectors.
+  id: totrans-131
   prefs: []
   type: TYPE_NORMAL
+  zh: 自然地，在科学计算环境中，矩阵操作特别有趣。让我们从两个一维结构（即，向量）的点积开始。
 - en: '[PRE74]'
+  id: totrans-132
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE74]'
 - en: '*[PRE75]'
+  id: totrans-133
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE75]'
 - en: 'Were you thinking this shouldn’t work? Should we have needed to transpose (`torch_t()`)
     one of the tensors? In fact, this also works:'
+  id: totrans-134
   prefs: []
   type: TYPE_NORMAL
+  zh: 你是不是认为这不应该工作？我们是否需要转置（`torch_t()`）其中一个张量？事实上，这也行得通：
 - en: '[PRE76]'
+  id: totrans-135
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE76]'
 - en: '*[PRE77]'
+  id: totrans-136
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE77]'
 - en: 'The reason the first call worked, too, is that `torch` does not distinguish
     between row vectors and column vectors. In consequence, if we multiply a vector
     with a matrix, using `torch_matmul()`, we don’t need to worry about the vector’s
     orientation either:'
+  id: totrans-137
   prefs: []
   type: TYPE_NORMAL
+  zh: 第一个调用也成功的原因是`torch`不区分行向量和列向量。因此，如果我们使用`torch_matmul()`将一个向量与一个矩阵相乘，我们不需要担心向量的方向：
 - en: '[PRE78]'
+  id: totrans-138
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE78]'
 - en: '*[PRE79]'
+  id: totrans-139
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE79]'
 - en: 'The same function, `torch_matmul()`, would be used to multiply two matrices.
     Note how this is different from what `torch_multiply()` does, namely, scalar-multiply
     its arguments:'
+  id: totrans-140
   prefs: []
   type: TYPE_NORMAL
+  zh: 同样的函数，`torch_matmul()`，用于乘以两个矩阵。注意这与`torch_multiply()`所做的是不同的，即，对它的参数进行标量乘法：
 - en: '[PRE80]'
+  id: totrans-141
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE80]'
 - en: '*[PRE81]'
+  id: totrans-142
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE81]'
 - en: Many more tensor operations exist, some of which you’ll meet over the course
     of this journey. But there is one group that deserves special mention.
+  id: totrans-143
   prefs: []
   type: TYPE_NORMAL
+  zh: 存在许多更多的张量操作，其中一些你将在这次旅程中遇到。但有一组值得特别提及。
 - en: 3.3.1 Summary operations
+  id: totrans-144
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 3.3.1 汇总操作
 - en: 'If you have an R matrix and are about to compute a sum, this could, normally,
     mean one of three things: the global sum, row sums, or column sums. Let’s see
     all three of them at work (using `apply()` for a reason):'
+  id: totrans-145
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果你有一个R矩阵并且即将进行求和计算，这通常意味着以下三种情况之一：全局求和、行求和或列求和。让我们看看这三个操作是如何工作的（使用`apply()`的原因）：
 - en: '[PRE82]'
+  id: totrans-146
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE82]'
 - en: '*[PRE83]'
+  id: totrans-147
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE83]'
 - en: And now, the `torch` equivalents. We start with the overall sum.
+  id: totrans-148
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在，是`torch`的等效操作。我们从总体求和开始。
 - en: '[PRE84]'
+  id: totrans-149
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE84]'
 - en: '*[PRE85]'
+  id: totrans-150
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE85]'
 - en: 'It gets more interesting for the row and column sums. The `dim` argument tells
     `torch` which dimension(s) to sum over. Passing in `dim = 1`, we see:'
+  id: totrans-151
   prefs: []
   type: TYPE_NORMAL
+  zh: 对于行和列的求和，事情变得更加有趣。`dim`参数告诉`torch`要对其哪些维度进行求和。传递`dim = 1`，我们看到：
 - en: '[PRE86]'
+  id: totrans-152
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE86]'
 - en: '*[PRE87]'
+  id: totrans-153
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE87]'
 - en: 'Unexpectedly, these are the column sums! Before drawing conclusions, let’s
     check what happens with `dim = 2`:'
+  id: totrans-154
   prefs: []
   type: TYPE_NORMAL
+  zh: 意外地，这些是列求和！在得出结论之前，让我们检查一下`dim = 2`时会发生什么：
 - en: '[PRE88]'
+  id: totrans-155
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE88]'
 - en: '*[PRE89]'
+  id: totrans-156
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE89]'
 - en: Now, we have sums over rows. Did we misunderstand something about how `torch`
     orders dimensions? No, it’s not that. In `torch`, when we’re in two dimensions,
     we think rows first, columns second. (And as you’ll see in a minute, we start
     indexing with 1, just as in R in general.)
+  id: totrans-157
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在，我们是对行进行求和。我们是否误解了`torch`对维度的排序方式？不，不是这样。在`torch`中，当我们处于二维时，我们首先考虑行，然后是列。（而且正如你一会儿会看到的，我们是从1开始索引，就像在R中一样。）
 - en: 'Instead, the conceptual difference is specific to aggregating, or “grouping”,
     operations. In R, *grouping*, in fact, nicely characterizes what we have in mind:
     We group by row (dimension 1) for row summaries, by column (dimension 2) for column
     summaries. In `torch`, the thinking is different: We *collapse* the columns (dimension
     2) to compute row summaries, the rows (dimension 1) for column summaries.'
+  id: totrans-158
   prefs: []
   type: TYPE_NORMAL
+  zh: 相反，概念上的差异是针对聚合或“分组”操作的。在R中，*分组*实际上很好地描述了我们想要的内容：我们按行（维度1）分组进行行汇总，按列（维度2）分组进行列汇总。在`torch`中，思考方式不同：我们*折叠*列（维度2）来计算行汇总，行（维度1）来计算列汇总。
 - en: 'The same thinking applies in higher dimensions. Assume, for example, that we
     been recording time series data for four individuals. There are two features,
     and both of them have been measured at three times. If we were planning to train
     a recurrent neural network (much more on that later), we would arrange the measurements
     like so:'
+  id: totrans-159
   prefs: []
   type: TYPE_NORMAL
+  zh: 在高维中，同样的思考也适用。例如，假设我们记录了四个个体的时间序列数据。有两个特征，它们都测量了三次。如果我们计划训练一个循环神经网络（稍后会更详细地介绍这一点），我们会这样安排测量：
 - en: 'Dimension 1: Runs over individuals.'
+  id: totrans-160
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 维度1：遍历个体。
 - en: 'Dimension 2: Runs over points in time.'
+  id: totrans-161
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 维度2：遍历时间点。
 - en: 'Dimension 3: Runs over features.'
+  id: totrans-162
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 维度3：遍历特征。
 - en: 'The tensor then would look like this:'
+  id: totrans-163
   prefs: []
   type: TYPE_NORMAL
+  zh: 张量看起来会是这样：
 - en: '[PRE90]'
+  id: totrans-164
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE90]'
 - en: '*[PRE91]'
+  id: totrans-165
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE91]'
 - en: 'To obtain feature averages, independently of subject and time, we would collapse
     dimensions 1 and 2:'
+  id: totrans-166
   prefs: []
   type: TYPE_NORMAL
+  zh: 要获得独立于主题和时间的特征平均值，我们会合并维度1和2：
 - en: '[PRE92]'
+  id: totrans-167
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE92]'
 - en: '*[PRE93]'
+  id: totrans-168
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE93]'
 - en: 'If, on the other hand, we wanted feature averages, but individually per person,
     we’d do:'
+  id: totrans-169
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果我们想要特征平均值，但每个人单独计算，我们会这样做：
 - en: '[PRE94]'
+  id: totrans-170
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE94]'
 - en: '*[PRE95]'
+  id: totrans-171
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE95]'
 - en: Here, the single feature “collapsed” is the time step.**************  ***##
     3.4 Accessing parts of a tensor
+  id: totrans-172
   prefs: []
   type: TYPE_NORMAL
+  zh: 这里，单个特征“折叠”是时间步长。**************  ***## 3.4 访问张量的部分
 - en: Often, when working with tensors, some computational step is meant to operate
     on just part of its input tensor. When that part is a single entity (value, row,
     column …), we commonly refer to this as *indexing*; when it’s a range of such
     entities, it is called *slicing*.
+  id: totrans-173
   prefs: []
   type: TYPE_NORMAL
+  zh: 经常在处理张量时，某些计算步骤是针对输入张量的一部分进行的。当这部分是一个单一实体（值、行、列等）时，我们通常将其称为*索引*；当它是一系列此类实体时，我们称之为*切片*。
 - en: 3.4.1 “Think R”
+  id: totrans-174
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 3.4.1 “思考R”
 - en: Both indexing and slicing work essentially as in R. There are a few syntactic
     extensions, and I’ll present these in the subsequent section. But overall you
     should find the behavior intuitive.
+  id: totrans-175
   prefs: []
   type: TYPE_NORMAL
+  zh: 索引和切片的工作方式基本上与R相同。有一些语法扩展，我将在下一节中介绍这些内容。但总体来说，你应该会发现行为直观。
 - en: This is because just as in R, indexing in `torch` is one-based. And just as
     in R, singleton dimensions are dropped.
+  id: totrans-176
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是因为就像在R中一样，`torch`中的索引是基1的。而且就像在R中一样，单例维度会被丢弃。
 - en: 'In the below example, we ask for the first column of a two-dimensional tensor;
     the result is one-dimensional, i.e., a vector:'
+  id: totrans-177
   prefs: []
   type: TYPE_NORMAL
+  zh: 在下面的例子中，我们要求一个二维张量的第一列；结果是单维的，即一个向量：
 - en: '[PRE96]'
+  id: totrans-178
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE96]'
 - en: '*[PRE97]'
+  id: totrans-179
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE97]'
 - en: 'If we specify `drop = FALSE,` though, dimensionality is preserved:'
+  id: totrans-180
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果我们指定 `drop = FALSE,` 那么，维度将被保留：
 - en: '[PRE98]'
+  id: totrans-181
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE98]'
 - en: '*[PRE99]'
+  id: totrans-182
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE99]'
 - en: 'When slicing, there are no singleton dimensions – and thus, no additional considerations
     to be taken into account:'
+  id: totrans-183
   prefs: []
   type: TYPE_NORMAL
+  zh: 在切片时，没有单例维度——因此，无需考虑额外的因素：
 - en: '[PRE100]'
+  id: totrans-184
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE100]'
 - en: '*[PRE101]'
+  id: totrans-185
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE101]'
 - en: In sum, thus, indexing and slicing work very much like in R. Now, let’s look
     at the aforementioned extensions that further enhance usability.
+  id: totrans-186
   prefs: []
   type: TYPE_NORMAL
+  zh: 总之，因此，索引和切片在 R 中工作方式非常相似。现在，让我们看看上述扩展，这些扩展进一步增强了可用性。
 - en: 3.4.1.1 Beyond R
+  id: totrans-187
   prefs:
   - PREF_H4
   type: TYPE_NORMAL
+  zh: 3.4.1.1 超越 R
 - en: 'One of these extensions concerns accessing the last element in a tensor. Conveniently,
     in `torch`, we can use `-1` to accomplish that:'
+  id: totrans-188
   prefs: []
   type: TYPE_NORMAL
+  zh: 这些扩展之一涉及访问张量中的最后一个元素。方便的是，在 `torch` 中，我们可以使用 `-1` 来完成这个任务：
 - en: '[PRE102]'
+  id: totrans-189
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE102]'
 - en: '*[PRE103]'
+  id: totrans-190
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE103]'
 - en: Note how in R, negative indices have a quite different effect, causing elements
     at respective positions to be removed.
+  id: totrans-191
   prefs: []
   type: TYPE_NORMAL
+  zh: 注意在 R 中，负索引有相当不同的效果，会导致相应位置的元素被移除。
 - en: 'Another useful feature extends slicing syntax to allow for a step pattern,
     to be specified after a second colon. Here, we request values from every second
     column between columns one and eight:'
+  id: totrans-192
   prefs: []
   type: TYPE_NORMAL
+  zh: 另一个有用的功能扩展了切片语法，允许指定一个步长模式，在第二个冒号之后指定。在这里，我们请求从列一和列八之间的每第二个列的值：
 - en: '[PRE104]'
+  id: totrans-193
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE104]'
 - en: '*[PRE105]'
+  id: totrans-194
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE105]'
 - en: Finally, sometimes the same code should be able to work with tensors of different
     dimensionalities. In this case, we can use `..` to collectively designate any
     existing dimensions not explicitly referenced.
+  id: totrans-195
   prefs: []
   type: TYPE_NORMAL
+  zh: 最后，有时相同的代码应该能够与不同维度的张量一起工作。在这种情况下，我们可以使用 `..` 来共同指定任何未明确引用的现有维度。
 - en: For example, say we want to index into the first dimension of whatever tensor
     is passed, be it a matrix, an array, or some higher-dimensional structure. The
     following
+  id: totrans-196
   prefs: []
   type: TYPE_NORMAL
+  zh: 例如，假设我们想要索引传递给任何张量的第一维，无论是矩阵、数组还是某些更高维度的结构。以下
 - en: '[PRE106]'
+  id: totrans-197
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE106]'
 - en: '*will work for all:'
+  id: totrans-198
   prefs: []
   type: TYPE_NORMAL
+  zh: '*将对所有：'
 - en: '[PRE107]'
+  id: totrans-199
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE107]'
 - en: '*[PRE108]'
+  id: totrans-200
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE108]'
 - en: 'If we wanted to index into the last dimension instead, we’d write `t[.., 1]`.
     We can even combine both:'
+  id: totrans-201
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果我们想要索引到最后一维，我们将编写 `t[.., 1]`。我们甚至可以结合两者：
 - en: '[PRE109]'
+  id: totrans-202
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE109]'
 - en: '*[PRE110]'
+  id: totrans-203
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE110]'
 - en: Now, a topic just as important as indexing and slicing is reshaping of tensors.********  ***##
     3.5 Reshaping tensors
+  id: totrans-204
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在，与索引和切片一样重要的一个主题是张量的重塑。********  ***## 3.5 重塑张量
 - en: 'Say you have a tensor with twenty-four elements. What is its shape? It could
     be any of the following:'
+  id: totrans-205
   prefs: []
   type: TYPE_NORMAL
+  zh: 假设你有一个包含二十四元素的张量。它的形状是什么？它可以是以下任何一种：
 - en: a vector of length 24
+  id: totrans-206
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 一个长度为 24 的向量
 - en: a matrix of shape 24 x 1, or 12 x 2, or 6 x 4, or …
+  id: totrans-207
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 一个形状为 24 x 1，或 12 x 2，或 6 x 4，或 ... 的矩阵
 - en: a three-dimensional array of size 24 x 1 x 1, or 12 x 2 x 1, or …
+  id: totrans-208
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '一个大小为 24 x 1 x 1 的三维数组，或 12 x 2 x 1，或 ... '
 - en: and so on (in fact, it could even have shape 24 x 1 x 1 x 1 x 1)
+  id: totrans-209
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 以及如此等等（实际上，它甚至可以有形状 24 x 1 x 1 x 1 x 1）
 - en: 'We can modify a tensor’s shape, without juggling around its values, using the
     `view()` method. Here is the initial tensor, a vector of length 24:'
+  id: totrans-210
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们可以使用 `view()` 方法修改张量的形状，而无需对其值进行操作。这里是初始张量，一个长度为 24 的向量：
 - en: '[PRE111]'
+  id: totrans-211
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE111]'
 - en: '*[PRE112]'
+  id: totrans-212
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE112]'
 - en: 'Here is that same vector, reshaped to a wide matrix:'
+  id: totrans-213
   prefs: []
   type: TYPE_NORMAL
+  zh: 这里是相同的向量，重塑为一个宽矩阵：
 - en: '[PRE113]'
+  id: totrans-214
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE113]'
 - en: '*[PRE114]'
+  id: totrans-215
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE114]'
 - en: 'So we have a new tensor, `t2`, but interestingly (and importantly, performance-wise),
     `torch` did not have to allocate any new storage for its values. This we can verify
     for ourselves. Both tensors store their data in the same location:'
+  id: totrans-216
   prefs: []
   type: TYPE_NORMAL
+  zh: 因此，我们有一个新的张量 `t2`，但有趣的是（并且从性能角度来看很重要），`torch` 不必为其值分配任何新的存储空间。这一点我们可以自己验证。这两个张量都在同一位置存储其数据：
 - en: '[PRE115]'
+  id: totrans-217
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE115]'
 - en: '*[PRE116]'
+  id: totrans-218
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE116]'
 - en: Let’s talk a bit about how this is possible.
+  id: totrans-219
   prefs: []
   type: TYPE_NORMAL
+  zh: 让我们谈谈这是如何可能的。
 - en: 3.5.1 Zero-copy reshaping vs. reshaping with copy
+  id: totrans-220
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 3.5.1 零拷贝重塑与带拷贝的重塑
 - en: Whenever we ask `torch` to perform an operation that changes the shape of a
     tensor, it tries to fulfill the request without allocating new storage for the
     tensor’s contents. This is possible because the same data – the same bytes, ultimately
     – can be read in different ways. All that is needed is storage for the *metadata*.
+  id: totrans-221
   prefs: []
   type: TYPE_NORMAL
+  zh: 每当我们要求 `torch` 执行一个改变张量形状的操作时，它都会尝试满足请求，而不为张量的内容分配新的存储空间。这是可能的，因为相同的数据——最终是相同的字节——可以以不同的方式读取。所需的所有东西只是
+    *元数据* 的存储空间。
 - en: How does `torch` do it? Let’s see a concrete example. We start with a 3 x 5
     matrix.
+  id: totrans-222
   prefs: []
   type: TYPE_NORMAL
+  zh: '`torch` 是如何做到这一点的？让我们看一个具体的例子。我们从一个 3 x 5 矩阵开始。'
 - en: '[PRE117]'
+  id: totrans-223
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE117]'
 - en: '*[PRE118]'
+  id: totrans-224
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE118]'
 - en: 'Tensors have a `stride()` method that tracks, *for every dimension*, how many
     elements have to be traversed to arrive at its next element. For the above tensor
     `t`, to go to the next row, we have to skip over five elements, while to go to
     the next column, we need to skip just one:'
+  id: totrans-225
   prefs: []
   type: TYPE_NORMAL
+  zh: 张量有一个 `stride()` 方法，它跟踪 *每个维度*，到达下一个元素需要跳过多少个元素。对于上面的张量 `t`，要到达下一行，我们必须跳过五个元素，而要到达下一列，我们只需要跳过一个：
 - en: '[PRE119]'
+  id: totrans-226
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE119]'
 - en: '*[PRE120]'
+  id: totrans-227
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE120]'
 - en: Now we reshape the tensor so it has five rows and three columns instead. Remember,
     the data themselves do not change.
+  id: totrans-228
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在我们将张量重塑为有五行三列。记住，数据本身并没有改变。
 - en: '[PRE121]'
+  id: totrans-229
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE121]'
 - en: '*[PRE122]'
+  id: totrans-230
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE122]'
 - en: 'This time, to arrive at the next row, we just skip three elements instead of
     five. To get to the next column, we still just “jump over” a single element only:'
+  id: totrans-231
   prefs: []
   type: TYPE_NORMAL
+  zh: 这次，要到达下一行，我们只需跳过三个元素而不是五个。要到达下一列，我们仍然只需要“跳过”一个元素：
 - en: '[PRE123]'
+  id: totrans-232
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE123]'
 - en: '*[PRE124]'
+  id: totrans-233
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE124]'
 - en: Now you may be thinking, what if the order of the elements also has to change?
     For example, in matrix transposition. Is that still doable with the metadata-only
     approach?
+  id: totrans-234
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在，你可能正在想，如果元素的顺序也必须改变怎么办？例如，在矩阵转置中。使用仅元数据的方法是否仍然可行？
 - en: '[PRE125]'
+  id: totrans-235
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE125]'
 - en: '*[PRE126]'
+  id: totrans-236
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE126]'
 - en: 'In fact, it must be, as both the original tensor and its transpose point to
     the same place in memory:'
+  id: totrans-237
   prefs: []
   type: TYPE_NORMAL
+  zh: 事实上，必须如此，因为原始张量和它的转置都指向内存中的同一位置：
 - en: '[PRE127]'
+  id: totrans-238
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE127]'
 - en: '*[PRE128]'
+  id: totrans-239
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE128]'
 - en: 'And it makes sense: This will work if we know that to arrive at the next row,
     we just skip a single element, while to arrive at the next column, that’s five
     to skip over now. Let’s verify:'
+  id: totrans-240
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是有意义的：如果我们知道要到达下一行，我们只需跳过一个元素，而要到达下一列，现在需要跳过五个元素。让我们验证一下：
 - en: '[PRE129]'
+  id: totrans-241
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE129]'
 - en: '*[PRE130]'
+  id: totrans-242
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE130]'
 - en: Exactly.
+  id: totrans-243
   prefs: []
   type: TYPE_NORMAL
+  zh: 正确。
 - en: Whenever possible, `torch` will try to handle shape-changing operations in this
     way.
+  id: totrans-244
   prefs: []
   type: TYPE_NORMAL
+  zh: 每当可能时，`torch` 将尝试以这种方式处理形状变化操作。
 - en: 'Another such *zero-copy* operation (and one we’ll see a lot) is `squeeze()`,
     together with its antagonist, `unsqueeze()`. The latter adds a singleton dimension
     at the requested position, the former removes it. For example:'
+  id: totrans-245
   prefs: []
   type: TYPE_NORMAL
+  zh: 另一种这样的 *零拷贝* 操作（我们将会看到很多）是 `squeeze()`，以及它的对立面 `unsqueeze()`。后者在请求的位置添加一个单例维度，前者移除它。例如：
 - en: '[PRE131]'
+  id: totrans-246
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE131]'
 - en: '*[PRE132]'
+  id: totrans-247
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE132]'
 - en: Here we added a singleton dimension in front. Alternatively, we could have used
     `t$unsqueeze(2)` to add it at the end.
+  id: totrans-248
   prefs: []
   type: TYPE_NORMAL
+  zh: 在这里我们在前面添加了一个单例维度。或者，我们也可以使用 `t$unsqueeze(2)` 在末尾添加它。
 - en: 'Now, will that zero-copy technique ever fail? Here is an example where it does:'
+  id: totrans-249
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在，这种零拷贝技术会失败吗？这里有一个它会失败的情况：
 - en: '[PRE133]'
+  id: totrans-250
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE133]'
 - en: '*[PRE134]'
+  id: totrans-251
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE134]'
 - en: 'When two operations that change the stride are executed in sequence, the second
     is pretty likely to fail. There is a way to exactly determine whether it will
     fail or not; but the easiest way is to just use a different method instead of
     `view()`: `reshape()`. The latter will “automagically” work metadata-only if that
     is possible, but make a copy if not:'
+  id: totrans-252
   prefs: []
   type: TYPE_NORMAL
+  zh: 当两个改变步长的操作连续执行时，第二个操作很可能会失败。有一种方法可以确切地确定它是否会失败；但最简单的方法是使用不同的方法而不是 `view()`：`reshape()`。后者如果可能，将“自动”仅使用元数据工作，否则会进行复制：
 - en: '[PRE135]'
+  id: totrans-253
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE135]'
 - en: '*[PRE136]'
+  id: totrans-254
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE136]'
 - en: As expected, both tensors are now stored in different locations.
+  id: totrans-255
   prefs: []
   type: TYPE_NORMAL
+  zh: 如预期的那样，两个张量现在存储在不同的位置。
 - en: 'Finally, we are going to end this long chapter with a feature that may seem
     overwhelming at first, but is of tremendous importance performance-wise. Like
     with so many things, it takes time to get accustomed to, but rest assured: You’ll
     encounter it again and again, in this book and in many projects using `torch`.
     It is called *broadcasting*.*************  ***## 3.6 Broadcasting'
+  id: totrans-256
   prefs: []
   type: TYPE_NORMAL
+  zh: 最后，我们将用一项可能一开始看起来令人望而生畏的功能来结束这个漫长的章节，但从性能角度来看，它具有极大的重要性。就像许多事情一样，适应它需要时间，但请放心：你将在本书中以及许多使用
+    `torch` 的项目中反复遇到它。这被称为 *广播*。*************  ***## 3.6 广播
 - en: We often have to perform operations on tensors with shapes that don’t match
     exactly.
+  id: totrans-257
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们经常需要在形状不完全匹配的张量上执行操作。
 - en: 'Of course, we wouldn’t probably try to add, say, a length-two vector to a length-five
     vector. But there are things we *may* want to do: for example, multiply every
     element by a scalar. This works:'
+  id: totrans-258
   prefs: []
   type: TYPE_NORMAL
+  zh: 当然，我们可能不会尝试将长度为二的向量加到长度为五的向量上。但有些事情我们 *可能* 想要做：例如，将每个元素乘以一个标量。这是可行的：
 - en: '[PRE137]'
+  id: totrans-259
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE137]'
 - en: '*[PRE138]'
+  id: totrans-260
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE138]'
 - en: 'That was probably a bit underwhelming. We’re used to that; from R. But the
     following does not work in R. The intention here would be to add the same vector
     to every row in a matrix:'
+  id: totrans-261
   prefs: []
   type: TYPE_NORMAL
+  zh: 这可能有点令人失望。我们习惯了这一点；来自 R。但以下在 R 中不可行。这里的意图是将相同的向量添加到矩阵的每一行中：
 - en: '[PRE139]'
+  id: totrans-262
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE139]'
 - en: '*[PRE140]'
+  id: totrans-263
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE140]'
 - en: Neither does it help if we make `m2` a vector.
+  id: totrans-264
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果我们将 `m2` 变成一个向量，这也不会有帮助。
 - en: '[PRE141]'
+  id: totrans-265
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE141]'
 - en: '*[PRE142]'
+  id: totrans-266
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE142]'
 - en: Syntactically this worked, but semantics-wise this is not what we intended.
+  id: totrans-267
   prefs: []
   type: TYPE_NORMAL
+  zh: 语法上这成功了，但从语义上讲，这并不是我们想要的。
 - en: 'Now, we try both of the above with `torch`. First, again, the scenario where
     both tensors are two-dimensional (even though, conceptually, one of them is a
     row vector):'
+  id: totrans-268
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在，我们尝试使用`torch`进行上述两种操作。首先，再次，两个张量都是二维的情况（尽管从概念上讲，其中一个是一个行向量）：
 - en: '[PRE143]'
+  id: totrans-269
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE143]'
 - en: '*[1] 3 5'
+  id: totrans-270
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[1] 3 5'
 - en: '[1] 1 5'
+  id: totrans-271
   prefs: []
   type: TYPE_NORMAL
+  zh: '[1] 1 5'
 - en: '[PRE144]'
+  id: totrans-272
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE144]'
 - en: 'And now, with the thing to be added a one-dimensional tensor:'
+  id: totrans-273
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在，我们将要添加的是一个一维张量：
 - en: '[PRE145]'
+  id: totrans-274
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE145]'
 - en: '*[PRE146]'
+  id: totrans-275
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE146]'
 - en: In `torch`, both ways worked as intended. Let’s see why.
+  id: totrans-276
   prefs: []
   type: TYPE_NORMAL
+  zh: 在`torch`中，两种方式都按预期工作。让我们看看为什么。
 - en: 'Above, I’ve printed the tensor shapes for a reason. To a tensor of shape 3
     x 5, we were able to add both a tensor of shape 3 and a tensor of shape 1 x 5\.
     Together, these illustrate how broadcasting works. In a nutshell, this is what
     happens:'
+  id: totrans-277
   prefs: []
   type: TYPE_NORMAL
+  zh: 上面的打印张量形状是有原因的。对于形状为3 x 5的张量，我们能够添加一个形状为3的张量和一个形状为1 x 5的张量。一起，这些说明了广播是如何工作的。简而言之，这就是发生的事情：
 - en: The 1 x 5 tensor, when used as an addend, is virtually expanded, that is, treated
     as if it contained the same row three times. This kind of expansion can only be
     performed if the non-matching dimension is a singleton, and if it is located on
     the left.
+  id: totrans-278
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 当1 x 5张量用作加数时，实际上会被展开，即被视为包含相同的行三次。这种展开只能在非匹配维度是单例且位于左侧的情况下进行。
 - en: 'The same thing happens to the shape-3 tensor, but there is one additional step
     that takes place first: A leading dimension of size 1 is – virtually – appended
     on the left. This puts us in exactly the same state we were in in (1), and we
     continue from there.'
+  id: totrans-279
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 同样的事情也发生在形状为3的张量上，但首先发生了一个额外的步骤：在左侧虚拟地添加一个大小为1的前导维度。这使我们处于与(1)中完全相同的状态，然后我们继续从那里开始。
 - en: Importantly, no physical expansions take place.
+  id: totrans-280
   prefs: []
   type: TYPE_NORMAL
+  zh: 重要的是，没有物理展开发生。
 - en: Let’s systematize these rules.
+  id: totrans-281
   prefs: []
   type: TYPE_NORMAL
+  zh: 让我们系统地整理这些规则。
 - en: 3.6.1 Broadcasting rules
+  id: totrans-282
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 3.6.1 广播规则
 - en: The rules are the following. The first, unspectactular though it may look, is
     the basis for everything else.
+  id: totrans-283
   prefs: []
   type: TYPE_NORMAL
+  zh: 规则如下。第一个，虽然看起来可能并不引人注目，但它是其他所有规则的基础。
 - en: We align tensor shapes, *starting from the right*.
+  id: totrans-284
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 我们从右侧开始对齐张量形状。
 - en: 'Say we have two tensors, one of size 3 x 7 x 1, the other of size 1 x 5\. Here
     they are, right-aligned:'
+  id: totrans-285
   prefs: []
   type: TYPE_NORMAL
+  zh: 假设有两个张量，一个大小为3 x 7 x 1，另一个大小为1 x 5。它们是这样的，右对齐：
 - en: '[PRE147]'
+  id: totrans-286
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE147]'
 - en: '*Starting from the right*, the sizes along aligned axes either have to match
     exactly, or one of them has to be equal to 1\. In the latter case, the singleton-dimension
     tensor is *broadcast* to the non-singleton one.'
+  id: totrans-287
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: '*从右侧开始*，对齐轴上的尺寸必须完全匹配，或者其中一个必须等于1。在后一种情况下，单例维度的张量会被*广播*到非单例维度。'
 - en: In the above example, broadcasting happens twice – once for each tensor. This
     (virtually) yields
+  id: totrans-288
   prefs: []
   type: TYPE_NORMAL
+  zh: 在上述示例中，广播发生了两次——一次针对每个张量。这（实际上）产生了
 - en: '[PRE148]'
+  id: totrans-289
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE148]'
 - en: If, on the left, one of the tensors has an additional axis (or more than one),
     the other is virtually expanded to have a dimension of size 1 in that place, in
     which case broadcasting will occur as stated in (2).
+  id: totrans-290
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 如果在左侧，一个张量有一个额外的轴（或多个），则另一个张量在相应位置虚拟地展开为一个大小为1的维度，在这种情况下，广播将按照(2)中所述发生。
 - en: In our example, this happens to the second tensor. First, there is a virtual
     expansion
+  id: totrans-291
   prefs: []
   type: TYPE_NORMAL
+  zh: 在我们的例子中，这是对第二个张量发生的。首先，有一个虚拟的展开
 - en: '[PRE149]'
+  id: totrans-292
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE149]'
 - en: 'and then, broadcasting takes place:'
+  id: totrans-293
   prefs: []
   type: TYPE_NORMAL
+  zh: 然后，发生广播：
 - en: '[PRE150]'
+  id: totrans-294
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE150]'
 - en: 'In this example, we see that broadcasting can act on both tensors at the same
     time. The thing to keep in mind, though, is that we always start looking from
     the right. For example, no broadcasting in the world could make *this* work:'
+  id: totrans-295
   prefs: []
   type: TYPE_NORMAL
+  zh: 在这个例子中，我们看到广播可以同时作用于两个张量。然而，需要注意的是，我们总是从右侧开始查找。例如，没有任何广播可以使*这个*工作：
 - en: '[PRE151]'
+  id: totrans-296
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE151]'
 - en: '** * *'
+  id: totrans-297
   prefs: []
   type: TYPE_NORMAL
+  zh: '** * *'
 - en: Now, that was one of the longest, and least applied-seeming, perhaps, chapters
     in the book. But feeling comfortable with tensors is, I dare say, a precondition
     for being fluent in `torch`. The same goes for the topic covered in the next chapter,
     automatic differentiation. But the difference is, there `torch` does *all* the
     heavy lifting for us. We just need to understand what it’s doing.*********************
+  id: totrans-298
   prefs: []
   type: TYPE_NORMAL
+  zh: 那是书中最长、似乎应用最少的一章。但可以说，熟悉张量是掌握`torch`流畅的先决条件。下一章讨论的主题，自动微分，也是如此。但不同之处在于，在那里`torch`为我们做了所有繁重的工作。我们只需要理解它在做什么。*********************

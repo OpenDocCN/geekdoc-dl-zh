@@ -1,59 +1,87 @@
 - en: 8  Optimizers
+  id: totrans-0
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
+  zh: 8  优化器
 - en: 原文：[https://skeydan.github.io/Deep-Learning-and-Scientific-Computing-with-R-torch/optimizers.html](https://skeydan.github.io/Deep-Learning-and-Scientific-Computing-with-R-torch/optimizers.html)
+  id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 原文：[https://skeydan.github.io/Deep-Learning-and-Scientific-Computing-with-R-torch/optimizers.html](https://skeydan.github.io/Deep-Learning-and-Scientific-Computing-with-R-torch/optimizers.html)
 - en: 'By now, we’ve gone into quite some detail on tensors, automatic differentiation,
     and modules. In this chapter, we look into the final major concept present in
     core `torch`: *optimizers*. Where modules encapsulate layer and model logic, optimizers
     do the same for optimization strategies.'
+  id: totrans-2
   prefs: []
   type: TYPE_NORMAL
+  zh: 到目前为止，我们已经对张量、自动微分和模块进行了相当详细的介绍。在本章中，我们将探讨核心 `torch` 中的最后一个主要概念：*优化器*。模块封装了层和模型逻辑，而优化器则封装了优化策略。
 - en: Let’s start by pondering why having optimizer objects is so useful.
+  id: totrans-3
   prefs: []
   type: TYPE_NORMAL
+  zh: 让我们先思考一下为什么拥有优化器对象如此有用。
 - en: 8.1 Why optimizers?
+  id: totrans-4
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 8.1 为什么需要优化器？
 - en: To this question, there are two main types of answer. First, the technical one.
+  id: totrans-5
   prefs: []
   type: TYPE_NORMAL
+  zh: 对于这个问题，主要有两种类型的答案。首先，是技术性的答案。
 - en: 'If you look back at how we coded our first neural network, you’ll see that
     we proceeded like this:'
+  id: totrans-6
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果你回顾一下我们编写的第一个神经网络，你会看到我们是这样做的：
 - en: compute predictions (forward pass),
+  id: totrans-7
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 计算预测（前向传递），
 - en: calculate the loss,
+  id: totrans-8
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 计算损失，
 - en: have *autograd* compute partial derivatives (calling `loss$backward()`), and
+  id: totrans-9
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 让 *autograd* 计算偏导数（调用 `loss$backward()`），并
 - en: update the parameters, subtracting from each some fraction of the gradient.
+  id: totrans-10
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 更新参数，从每个参数中减去一些梯度的分数。
 - en: 'Here is how that last part looked:'
+  id: totrans-11
   prefs: []
   type: TYPE_NORMAL
+  zh: 最后这部分代码如下所示：
 - en: '[PRE0]'
+  id: totrans-12
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE0]'
 - en: '*Now this was a small network – imagine having to code such logic for architectures
     with tens or hundreds of layers! Surely this can’t be what developers of a deep
     learning framework want their users to do. Accordingly, weight updates are taken
     care of by specialized objects – the optimizers in question.'
+  id: totrans-13
   prefs: []
   type: TYPE_NORMAL
+  zh: '*现在这是一个小型的网络——想象一下，如果要在有数十或数百层的架构上编写这样的逻辑！当然，这不可能是一个深度学习框架的开发者希望用户去做的。因此，权重更新由专门的对象——即优化器来处理。*'
 - en: Thus, the technical type of answer concerns usability and convenience. But more
     is involved. With the above approach, there’s hardly a way to find a good learning
     rate other than by trial and error. And most probably, there is not even an optimal
@@ -61,92 +89,132 @@
     a rich tradition of research has turned up at set of proven update strategies.
     These strategies commonly involve a *state* kept between operations. This is another
     reason why, just like modules, optimizers are objects in `torch`.
+  id: totrans-14
   prefs: []
   type: TYPE_NORMAL
+  zh: 因此，技术性的答案类型涉及可用性和便利性。但还有更多。使用上述方法，几乎无法通过其他方式找到好的学习率，除非是通过试错。而且，在整个训练过程中可能甚至没有最优的学习率。幸运的是，丰富的传统研究已经提出了一系列经过验证的更新策略。这些策略通常涉及在操作之间保持的
+    *状态*。这也是为什么，就像模块一样，优化器也是 `torch` 中的对象。
 - en: Before we look deeper at these strategies, let’s see how we’d replace the above
     manual weight-updating process with a version that uses an optimizer.*  *## 8.2
     Using built-in `torch` optimizers
+  id: totrans-15
   prefs: []
   type: TYPE_NORMAL
+  zh: 在我们深入探讨这些策略之前，让我们看看如何用使用优化器的版本来替换上述手动权重更新过程。*  *## 8.2 使用内置的 `torch` 优化器
 - en: An optimizer needs to know what it’s supposed to optimize. In the context of
     a neural network model, this will be the network’s parameters. With no real difference
     between “model modules” and “layer modules”, however, we can demonstrate how it
     works using a single built-in module such as `nn_linear()`.
+  id: totrans-16
   prefs: []
   type: TYPE_NORMAL
+  zh: 优化器需要知道它应该优化什么。在神经网络模型的上下文中，这将是指网络的参数。然而，由于“模型模块”和“层模块”之间没有真正的区别，我们可以使用单个内置模块，如
+    `nn_linear()`，来演示它是如何工作的。
 - en: 'Here we instantiate a gradient descent optimizer designed to work on some linear
     module’s parameters:'
+  id: totrans-17
   prefs: []
   type: TYPE_NORMAL
+  zh: 在这里，我们实例化了一个梯度下降优化器，它被设计用来处理某些线性模块的参数：
 - en: '[PRE1]'
+  id: totrans-18
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE1]'
 - en: '*In addition to the always-required reference to what tensors should be optimized,
     `optim_sgd()` has just a single non-optional parameter: `lr`, the learning rate.'
+  id: totrans-19
   prefs: []
   type: TYPE_NORMAL
+  zh: '*除了始终需要引用要优化的张量之外，`optim_sgd()` 只有一个非可选参数：`lr`，即学习率。*'
 - en: Once we have an optimizer object, parameter updates are triggered by calling
     its `step()` method. One thing remains unchanged, though. We still need to make
     sure gradients are not accumulated over training iterations. This means we still
     call `zero_grad()` – but this time, on the optimizer object.
+  id: totrans-20
   prefs: []
   type: TYPE_NORMAL
+  zh: 一旦我们有了优化器对象，参数更新将通过调用其 `step()` 方法来触发。尽管如此，有一件事没有改变。我们仍然需要确保梯度在训练迭代中不会累积。这意味着我们仍然调用
+    `zero_grad()` ——但这次是在优化器对象上。
 - en: 'This is the complete code replacing the above manual procedure:'
+  id: totrans-21
   prefs: []
   type: TYPE_NORMAL
+  zh: 这是替换上述手动过程的完整代码：
 - en: '[PRE2]'
+  id: totrans-22
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE2]'
 - en: '*I’m sure you’ll agree that usability-wise, this is an enormous improvement.
     Now, let’s get back to our original question – why optimizers? – and talk more
     about the second, strategic part of the answer.**  **## 8.3 Parameter update strategies'
+  id: totrans-23
   prefs: []
   type: TYPE_NORMAL
+  zh: '*我相信你们会同意，在可用性方面，这是一个巨大的改进。现在，让我们回到我们最初的问题——为什么需要优化器？——并更深入地讨论答案的第二部分，即战略部分。**  **##
+    8.3 参数更新策略'
 - en: Searching for a good learning rate by trial and error is costly. And the learning
     rate isn’t even the only thing we’re uncertain about. All it does is specify how
     big of a step to take. However, that’s not the only unresolved question.
+  id: totrans-24
   prefs: []
   type: TYPE_NORMAL
+  zh: 通过试错来寻找一个好的学习率是代价高昂的。而且，我们不确定的不仅仅是学习率。它只是指定了要迈出多大的一步。然而，这并不是唯一未解决的问题。
 - en: So far, we’ve always assumed that the direction of steepest descent, as given
     by the gradient, is the best way to go. This is not always the case, though. So
     we are left with uncertainties regarding both magnitude and direction of parameter
     updates.
+  id: totrans-25
   prefs: []
   type: TYPE_NORMAL
+  zh: 到目前为止，我们一直假设最速下降的方向，即由梯度给出的方向，是最好的前进方式。但这并不总是如此。因此，我们对参数更新的幅度和方向都存在不确定性。
 - en: Fortunately, over the last decade, there has been significant progress in research
     related to weight updating in neural networks. Here, we take a look at major considerations
     involved, and situate in context some of the most popular optimizers provided
     by `torch`.
+  id: totrans-26
   prefs: []
   type: TYPE_NORMAL
+  zh: 幸运的是，在过去十年中，关于神经网络权重更新方面的研究取得了显著进展。在这里，我们来看看涉及的主要考虑因素，并将一些由`torch`提供的最流行优化器置于适当的环境中。
 - en: The baseline to compare against is *gradient descent*, or *steepest descent*,
     the algorithm we’ve been using in our manual implementations of function minimization
     and neural-network training. Let’s quickly recall the guiding principle behind
     it.
+  id: totrans-27
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们比较的基准是 *梯度下降* 或 *最速下降*，这是我们用于手动实现函数最小化和神经网络训练的算法。让我们快速回顾一下其背后的指导原则。
 - en: 8.3.1 Gradient descent (a.k.a. steepest descent, a.k.a. stochastic gradient
     descent (SGD))
+  id: totrans-28
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 8.3.1 梯度下降（又称最速下降，又称随机梯度下降（SGD））
 - en: The gradient – the vector of partial derivatives, one for each input feature
     – indicates the direction in which a function increases most. Going in the opposite
     direction means we descend the fastest way possible. Or does it?
+  id: totrans-29
   prefs: []
   type: TYPE_NORMAL
+  zh: 梯度——部分导数的向量，每个输入特征一个——指示函数增加最快的方向。朝相反方向前进意味着我们可以以最快的速度下降。或者，是这样吗？
 - en: Unfortunately, it is not that simple. It depends on the landscape that surrounds
     us, or put more technically, the contours of the function we want to minimize.
     To illustrate, compare two situations.
+  id: totrans-30
   prefs: []
   type: TYPE_NORMAL
+  zh: 不幸的是，事情并不那么简单。它取决于我们周围的景观，或者说得更技术一点，是我们想要最小化的函数的轮廓。为了说明这一点，比较两种情况。
 - en: The first is the one we encountered when first learning about automatic differentiation.
     The example there was a quadratic function in two dimensions. We didn’t make a
     great deal out of it at the time, but an important point about this specific function
     was that the slope was the same in both dimensions. Under such conditions, steepest
     descent is optimal.
+  id: totrans-31
   prefs: []
   type: TYPE_NORMAL
+  zh: 第一个是我们在学习自动微分时遇到的。那里的例子是二维空间中的二次函数。当时我们没有对此给予太多关注，但关于这个特定函数的一个重要观点是，它在两个维度上的斜率是相同的。在这种条件下，最速下降是最优的。
 - en: 'Let’s verify that. The function was : \(f(x_1, x_2) = 0.2 {x_1}^2 + 0.2 {x_2}^2
     - 5\), and its gradient, \(\begin{bmatrix}0.4\\0.4 \end{bmatrix}\). Now say we’re
     at point \((x1, x2) = (6,6)\). For each coordinate, we subtract 0.4 times its
@@ -154,34 +222,48 @@
     But we don’t have to. If we pick a learning rate of 2.5, we can arrive at the
     minimum in a single step: \((x_1, x_2) = (6 - 2.5*0.4*6, 6 - 2.5*0.4*6) = (0,0)\).
     See below for an illustration of what happens in each case ([fig. 8.1](#fig-optimizers-steepest-descent-symmetric)).'
+  id: totrans-32
   prefs: []
   type: TYPE_NORMAL
+  zh: 让我们验证一下。函数是：\(f(x_1, x_2) = 0.2 {x_1}^2 + 0.2 {x_2}^2 - 5\)，其梯度为\(\begin{bmatrix}0.4\\0.4
+    \end{bmatrix}\)。现在假设我们处于点\((x1, x2) = (6,6)\)。对于每个坐标，我们减去其当前值的0.4倍。或者更确切地说，如果我们必须使用学习率为1的话，那会是这样。但我们不必这样做。如果我们选择学习率为2.5，我们可以一步到达最小值：\((x_1,
+    x_2) = (6 - 2.5*0.4*6, 6 - 2.5*0.4*6) = (0,0)\)。下面将展示每种情况下发生的情况的插图([图8.1](#fig-optimizers-steepest-descent-symmetric))。
 - en: '![An isotropic paraboloid (one that has the same curvature in all dimensions),
     and two optimization paths. Both use the steepest-descent algorithm, but differ
     in learning rate. One needs many steps to arrive at the function''s minimum, while
     the other gets there in a single step.](../Images/8df3fcf790608246148e809dccd6e1d4.png)'
+  id: totrans-33
   prefs: []
   type: TYPE_IMG
+  zh: '![一个各向同性的抛物面（在所有维度上具有相同的曲率），以及两条优化路径。两者都使用最速下降算法，但学习率不同。一条需要许多步骤才能到达函数的最小值，而另一条则一步到位。](../Images/8df3fcf790608246148e809dccd6e1d4.png)'
 - en: 'Figure 8.1: Steepest descent on an isotropic paraboloid, using different learning
     rates.'
+  id: totrans-34
   prefs: []
   type: TYPE_NORMAL
+  zh: 图8.1：使用不同学习率在各向同性抛物面上进行最速下降。
 - en: In a nutshell, thus, with a isotropic function like this – the variance being
     the same in both directions – it is “just” a matter of getting the learning rate
     right.
+  id: totrans-35
   prefs: []
   type: TYPE_NORMAL
+  zh: 简而言之，因此，对于这种各向同性的函数——方差在两个方向上相同——“仅仅”是正确设置学习率的问题。
 - en: Now compare this to what happens if slopes in both directions are decidedly
     distinct.
+  id: totrans-36
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在比较一下，如果两个方向上的斜率明显不同会发生什么。
 - en: 'This time, the coefficient for \(x_2\) is ten times as big as that for \(x_1\):
     We have \(f(x_1, x_2) = 0.2 {x_1}^2 + 2 {x_2}^2 - 5\). This means that as we progress
     in the \(x_2\) direction, the function value increases sharply, while in the \(x_1\)
     direction, it rises much more slowly. Thus, during gradient descent, we make far
     greater progress in one direction than the other.'
+  id: totrans-37
   prefs: []
   type: TYPE_NORMAL
+  zh: 这次，\(x_2\)的系数是\(x_1\)的十倍：我们有\(f(x_1, x_2) = 0.2 {x_1}^2 + 2 {x_2}^2 - 5\)。这意味着当我们沿\(x_2\)方向前进时，函数值急剧增加，而在\(x_1\)方向上，它上升得要慢得多。因此，在梯度下降过程中，我们在一个方向上的进展远大于另一个方向。
 - en: 'Again, we investigate what happens for different learning rates. Below, we
     contrast three different settings. With the lowest learning rate, the process
     eventually reaches the minimum, but a lot more slowly than in the symmetric case.
@@ -190,67 +272,91 @@
     \(x_2\). Finally, a learning rate that, again, is just minimally higher, has a
     catastrophic effect: The function value explodes, zig-zagging up right to infinity
     ([fig. 8.2](#fig-optimizers-steepest-descent-elliptic)).'
+  id: totrans-38
   prefs: []
   type: TYPE_NORMAL
+  zh: 再次，我们调查了不同学习率下会发生什么。下面，我们对比了三种不同的设置。在最低学习率下，过程最终达到最小值，但比对称情况慢得多。在略高的学习率下，下降过程陷入无休止的曲折，在更有影响力的变量\(x_2\)的正负值之间振荡。最后，一个仅略高于最小值的学习率产生了灾难性的影响：函数值爆炸，曲折上升直至无穷大([图8.2](#fig-optimizers-steepest-descent-elliptic))。
 - en: '![A non-isotropic paraboloid, stretched-out widely along the x-axis, but with
     y-values centered sharply around y = 0\. Displayed are three optimization paths,
     all using steepest descent, but varying in learning rate. One of them reaches
     the minimum after a high number of steps; the second zig-zags along the y-axis,
     making just minimal progress along the x-axis; the third zig-zags off to infinity.](../Images/b4b4555acd330394888aa760b5884719.png)'
+  id: totrans-39
   prefs: []
   type: TYPE_IMG
+  zh: '![一个非各向同性的抛物面，在x轴上广泛拉伸，但y值集中在y = 0附近。显示的是三条优化路径，都使用最速下降法，但学习率不同。其中一条在经过大量步骤后达到最小值；第二条在y轴上曲折前进，在x轴上仅取得微小进展；第三条则曲折至无穷远。](../Images/b4b4555acd330394888aa760b5884719.png)'
 - en: 'Figure 8.2: Steepest descent on a non-isotropic paraboloid, using (minimally!)
     different learning rates.'
+  id: totrans-40
   prefs: []
   type: TYPE_NORMAL
+  zh: 图8.2：使用（最小程度地！）不同的学习率在非各向同性抛物面上进行最速下降。
 - en: 'This should be pretty convincing – even with a pretty conventional function
     of just two variables, steepest descent is far from being a panacea! And in deep
     learning, loss functions will be a *lot* less well-behaved. This is where the
     need for more sophisticated algorithms arises: Enter – again – optimizers.'
+  id: totrans-41
   prefs: []
   type: TYPE_NORMAL
+  zh: 这应该相当有说服力——即使是一个只有两个变量的相当传统的函数，最速下降也远非万能！在深度学习中，损失函数的行为将远不如预期。这就是需要更复杂算法的地方：再次出现——优化器。
 - en: 8.3.2 Things that matter
+  id: totrans-42
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 8.3.2 重要的因素
 - en: Viewed conceptually, major modifications to steepest descent can be categorized
     by the considerations that drive them, or equivalently, by the problems they’re
     trying to solve. Here, we focus on three such considerations.
+  id: totrans-43
   prefs: []
   type: TYPE_NORMAL
+  zh: 从概念上讲，对最速下降的主要修改可以根据推动它们的考虑因素进行分类，或者等价地，根据它们试图解决的问题进行分类。在这里，我们关注三个这样的考虑因素。
 - en: First, instead of starting in a completely new direction every time we re-compute
     the gradient, we might want to keep a bit of the old direction – keep momentum,
     to use the technical term. This should help avoiding the inefficient zig-zagging
     seen in the example above.
+  id: totrans-44
   prefs: []
   type: TYPE_NORMAL
+  zh: 首先，每次重新计算梯度时，我们可能不想完全从一个全新的方向开始——保持动量，用技术术语来说。这应该有助于避免上述例子中看到的低效的之字形运动。
 - en: Second, looking back at just that example of minimizing a non-symmetric function
     … Why, really, should we be constrained to using the same learning rate for all
     variables? When it’s evident that all variables don’t vary to the same degree,
     why don’t we update them in individually appropriate ways?
+  id: totrans-45
   prefs: []
   type: TYPE_NORMAL
+  zh: 第二，回顾一下仅那个最小化非对称函数的例子……为什么，实际上，我们应该被限制在为所有变量使用相同的学习率呢？当很明显所有变量并不以相同的程度变化时，为什么我们不分别以适当的方式更新它们呢？
 - en: Third – and this is a fix for problems that only arise once you’ve taken actions
     to reduce the learning rate for overly-impactful features – you also want to make
     sure that learning still progresses, that parameters still get updated.
+  id: totrans-46
   prefs: []
   type: TYPE_NORMAL
+  zh: 第三——这是针对那些只有在采取了降低过度影响特征的学习率的行动后才会出现的问题的修复——你还要确保学习仍在进行，参数仍在更新。
 - en: These considerations are nicely illustrated by a few classics among the optimization
     algorithms.
+  id: totrans-47
   prefs: []
   type: TYPE_NORMAL
+  zh: 这些考虑在优化算法的一些经典例子中得到了很好的说明。
 - en: '8.3.3 Staying on track: Gradient descent with momentum'
+  id: totrans-48
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 8.3.3 保持轨迹：带有动量的梯度下降
 - en: 'In gradient descent with momentum, we don’t *directly* use the gradient to
     update the weights. Instead, you can picture weight updates as particles moving
     on a trajectory: They want to keep going in whatever direction they’re going –
     keep their *momentum*, in physics speak – but get continually deflected by collisions.
     These “collisions” are friendly nudges to, please, keep into account the gradient
     at the *now current* position. These dynamics result in a two-step update logic.'
+  id: totrans-49
   prefs: []
   type: TYPE_NORMAL
+  zh: 在带有动量的梯度下降中，我们并不*直接*使用梯度来更新权重。相反，你可以想象权重更新就像在轨迹上移动的粒子：它们想要继续沿着它们正在去的方向前进——保持它们的*动量*，用物理学的术语来说——但会不断地被碰撞所偏转。这些“碰撞”是对梯度在*当前*位置的友好推动。这些动力学导致了两步更新逻辑。
 - en: 'In the below formulas, the choice of symbols reflects the physical analogy.
     \(\mathbf{x}\) is the position, “where we’re at” in parameter space – or more
     simply, the current values of the parameters. Time evolution is captured by superscripts,
@@ -261,208 +367,305 @@
     is a combination of old velocity – weighted by *momentum* parameter \(m\) – and
     the freshly-computed gradient (weighted by the learning rate). Step one of the
     two-step logic captures this strategy:'
+  id: totrans-50
   prefs: []
   type: TYPE_NORMAL
+  zh: 在下面的公式中，符号的选择反映了物理类比。\(\mathbf{x}\)是位置，“我们在参数空间中的位置”——或者更简单地说，是参数的当前值。时间演化由上标表示，\(\mathbf{y}^{(k)}\)代表变量\(\mathbf{y}\)在当前时间\(k\)的状态。时间\(k\)的瞬时速度就是梯度\(\mathbf{g}^{(k)}\)所测量的。但在更新位置时，我们不会直接使用它。相反，在每次迭代中，更新速度是旧速度——由*动量*参数\(m\)加权——和新鲜计算的梯度（由学习率加权）的组合。两步逻辑的第一步捕捉了这种策略：
 - en: \[ \mathbf{v}^{(k+1)} = m \ \mathbf{v}^{(k)} + lr \ \mathbf{g}^{(k)} \tag{8.1}\]
+  id: totrans-51
   prefs: []
   type: TYPE_NORMAL
+  zh: \[ \mathbf{v}^{(k+1)} = m \ \mathbf{v}^{(k)} + lr \ \mathbf{g}^{(k)} \tag{8.1}\]
 - en: The second step then is the update of \(\mathbf{x}\) due to this “compromise”
     velocity \(\mathbf{v}\).
+  id: totrans-52
   prefs: []
   type: TYPE_NORMAL
+  zh: 那么第二步就是由于这种“妥协”速度\(\mathbf{v}\)导致的\(\mathbf{x}\)的更新。
 - en: \[ \mathbf{x}^{(k+1)} = \mathbf{x}^{(k)} - \mathbf{v}^{(k+1)} \tag{8.2}\]
+  id: totrans-53
   prefs: []
   type: TYPE_NORMAL
+  zh: \[ \mathbf{x}^{(k+1)} = \mathbf{x}^{(k)} - \mathbf{v}^{(k+1)} \tag{8.2}\]
 - en: Besides the physics analogy, there is another one you may find useful, one that
     makes use of a concept prominent in time series analysis. If we choose \(m\) and
     \(lr\) such that they add up to 1, the result is an *exponentially weighted moving
     average*. (While this conceptualization, I think, helps understanding, in practice
     there is no necessity to have \(m\) and \(lr\) summing to 1, though).
+  id: totrans-54
   prefs: []
   type: TYPE_NORMAL
+  zh: 除了物理类比之外，还有一个你可能觉得有用的类比，它利用了时间序列分析中的一个突出概念。如果我们选择\(m\)和\(lr\)使得它们相加等于1，结果就是一个*指数加权移动平均*。（虽然我认为这种概念化有助于理解，但在实践中没有必要让\(m\)和\(lr\)相加等于1，尽管如此）。
 - en: Now, let’s return to the non-isotropic paraboloid, and compare SGD with and
     without momentum. For the latter (bright curve), I’m using a combination of \(lr
     = 0.5\) and \(mu = 0.1\). For SGD – dark curve – the learning rate is the “good
     one” from the figure above.Definitely, SGD with momentum requires far fewer steps
     to reach the minimum ([fig. 8.3](#fig-optimizers-momentum)).
+  id: totrans-55
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在，让我们回到非各向同性的抛物面，比较带有和没有动量的SGD。对于后者（亮曲线），我使用了\(lr = 0.5\)和\(\mu = 0.1\)的组合。对于SGD——暗曲线——学习率是上图中的“好”学习率。毫无疑问，具有动量的SGD需要更少的步骤才能达到最小值（[fig. 8.3](#fig-optimizers-momentum)）。
 - en: '![A non-isotropic paraboloid, stretched-out widely along the x-axis, but with
     y-values centered sharply around y = 0\. Displayed are two optimization paths,
     one using steepest descent, one using gradient descent with momentum. With steepest
     descent, many steps are needed to arrive at the minimum, while gradient descent
     with momentum needs far fewer steps.](../Images/571c495451db4d462923b73dd9edfe5e.png)'
+  id: totrans-56
   prefs: []
   type: TYPE_IMG
+  zh: '![一个非各向同性的抛物面，在x轴上广泛展开，但y值集中在y = 0附近。显示的是两个优化路径，一个使用最速下降，一个使用具有动量的梯度下降。在最速下降中，需要许多步骤才能到达最小值，而具有动量的梯度下降需要远少的步骤。](../Images/571c495451db4d462923b73dd9edfe5e.png)'
 - en: 'Figure 8.3: SGD with momentum (white), compared with vanilla SGD (gray).'
+  id: totrans-57
   prefs: []
   type: TYPE_NORMAL
+  zh: 图8.3：具有动量的SGD（白色），与普通SGD（灰色）相比。
 - en: 8.3.4 Adagrad
+  id: totrans-58
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 8.3.4 Adagrad
 - en: Can we do better yet? Now, we know that in our running example, it is really
     the fact that one feature changes much faster than the other that slows down optimization.
     Having separate learning rates per parameter thus clearly seems like a thing we
     want. In fact, most of the optimizers popular in deep learning have per-parameter
     learning rates. But how would you actually determine those?
+  id: totrans-59
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们还能做得更好吗？现在，我们知道在我们的运行示例中，真正减慢优化的是其中一个特征比另一个变化得快得多。因此，每个参数有单独的学习率显然是我们想要的。事实上，大多数在深度学习中流行的优化器都有每个参数的学习率。但你是如何实际确定这些学习率的呢？
 - en: 'This is where different algorithms differ. Adagrad, for example, divides each
     parameter update by the cumulative sum of its partial derivatives (squared, to
     be precise), where “cumulative” means we’re keeping track of them since the very
     first iteration. If we call that “accumulator variable” \(s\), refer to the parameter
     in question by \(i\), and count iterations using \(k\), this gives us the following
     formula for keeping \(s\) updated:'
+  id: totrans-60
   prefs: []
   type: TYPE_NORMAL
+  zh: 这就是不同算法的不同之处。例如，Adagrad将每个参数的更新除以其偏导数的累积和（精确地说，是平方），其中“累积”意味着我们从第一次迭代开始就跟踪它们。如果我们称那个“累积变量”为\(s\)，用\(i\)来指代相关的参数，并用\(k\)来计数迭代，这给了我们以下公式来更新\(s\)：
 - en: \[ s_i^{(k)} = \sum_{j=1}^k (g_i^{(j)})^2 \tag{8.3}\]
+  id: totrans-61
   prefs: []
   type: TYPE_NORMAL
+  zh: \[ s_i^{(k)} = \sum_{j=1}^k (g_i^{(j)})^2 \tag{8.3}\]
 - en: (By the way, feel free to skip over the formulas if you don’t like them. I’m
     doing my best to communicate what they do in words, so you shouldn’t miss out
     on essential information.)
+  id: totrans-62
   prefs: []
   type: TYPE_NORMAL
+  zh: （顺便说一句，如果你不喜欢公式，可以随意跳过。我正在尽力用文字解释它们的作用，所以你不应该错过任何关键信息。）
 - en: Now, the update rule for each parameter subtracts a portion of the gradient,
     as did vanilla steepest descent – but this time, that portion is determined not
     just by the (global) learning rate, but also, by the aforementioned cumulative
     sum of squared partials. The bigger that sum – that is, the bigger the gradients
     have been during training – the smaller the adjustment:[¹](#fn1)
+  id: totrans-63
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在，每个参数的更新规则减去了一部分梯度，就像普通的快速下降一样——但这次，这部分不仅由（全局）学习率决定，还由上述平方偏导数的累积和决定。这个和越大——也就是说，在训练期间梯度越大——调整就越小：[¹](#fn1)
 - en: \[ x_i^{(k+1)} = x_i^{(k)} - \frac{lr}{\epsilon + \sqrt{s_i^{(k)}}}\ g_i^{(k)}\\
     \tag{8.4}\]
+  id: totrans-64
   prefs: []
   type: TYPE_NORMAL
+  zh: \[ x_i^{(k+1)} = x_i^{(k)} - \frac{lr}{\epsilon + \sqrt{s_i^{(k)}}}\ g_i^{(k)}\\
+    \tag{8.4}\]
 - en: The net effect of this strategy is that, if a parameter has consistently high
     gradients, its influence is played down. Parameters with, habitually, tiny gradients,
     on the other hand, can be sure to receive a lot of attention once that changes.
+  id: totrans-65
   prefs: []
   type: TYPE_NORMAL
+  zh: 这种策略的净效应是，如果一个参数的梯度始终很高，其影响会被减弱。另一方面，那些习惯上梯度很小的参数，一旦发生变化，可以肯定会受到很多关注。
 - en: 'With this algorithm, the global learning rate, \(lr\), is of lesser importance.
     In our running example, it turns out that for best results, we can (and should)
     use a very high learning rate: 3.7! Here ([fig. 8.4](#fig-optimizers-adagrad))
     is the result, again comparing with vanilla gradient descent (gray curve):'
+  id: totrans-66
   prefs: []
   type: TYPE_NORMAL
+  zh: 使用这个算法，全局学习率\(lr\)的重要性较小。在我们的运行示例中，结果是，为了获得最佳结果，我们可以（并且应该）使用一个非常高的学习率：3.7！这里（图8.4[fig. 8.4](#fig-optimizers-adagrad)）是结果，再次与普通梯度下降（灰色曲线）进行比较：
 - en: '![A non-isotropic paraboloid, stretched-out widely along the x-axis, but with
     y-values centered sharply around y = 0\. Displayed are two optimization paths,
     one using steepest descent, one using the Adagrad algorithm. With steepest descent,
     many steps are needed to arrive at the minimum, while Adagrad needs just four
     steps.](../Images/66256a040d1c5525d5af95e80bd05c08.png)'
+  id: totrans-67
   prefs: []
   type: TYPE_IMG
+  zh: '![一个非各向同性的抛物面，在 x 轴上广泛拉伸，但 y 值集中在 y = 0 附近。显示了两种优化路径，一种使用最速下降，一种使用 Adagrad
+    算法。最速下降需要许多步骤才能到达最小值，而 Adagrad 只需要四步。](../Images/66256a040d1c5525d5af95e80bd05c08.png)'
 - en: 'Figure 8.4: Adagrad (white), compared with vanilla SGD (gray).'
+  id: totrans-68
   prefs: []
   type: TYPE_NORMAL
+  zh: 图 8.4：Adagrad（白色），与标准 SGD（灰色）比较。
 - en: In our example, thus, Adagrad performs excellently. But in training a neural
     network, we tend to run *a lot* of iterations. Then, with the way gradients are
     accumulated, the effective learning rate decreases more and more, and a dead end
     is reached.
+  id: totrans-69
   prefs: []
   type: TYPE_NORMAL
+  zh: 在我们的例子中，因此，Adagrad 表现得非常好。但在训练神经网络时，我们往往需要进行 *很多* 迭代。然后，随着梯度的累积方式，有效学习率会越来越低，最终达到一个死胡同。
 - en: Are there other ways to have individual, per-parameter learning rates?
+  id: totrans-70
   prefs: []
   type: TYPE_NORMAL
+  zh: 是否有其他方法可以实现每个参数的独立学习率？
 - en: 8.3.5 RMSProp
+  id: totrans-71
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 8.3.5 RMSProp
 - en: 'RMSProp replaces the cumulative-gradient strategy found in Adagrad with a weighted-average
     one. At each point, the “bookkeeping”, per-parameter variable \(s_i\) is a weighted
     average of its previous value and the previous (squared) gradient:'
+  id: totrans-72
   prefs: []
   type: TYPE_NORMAL
+  zh: RMSProp 用加权平均策略替换了 Adagrad 中发现的累积梯度策略。在每一个点上，“账本”，每个参数变量 \(s_i\) 是其先前值和先前（平方）梯度的加权平均：
 - en: \[ s_i^{(k+1)} = \gamma \ s_i^{(k)} + (1-\gamma) \ (g_i^{(k)})^2 \tag{8.5}\]
+  id: totrans-73
   prefs: []
   type: TYPE_NORMAL
+  zh: \[ s_i^{(k+1)} = \gamma \ s_i^{(k)} + (1-\gamma) \ (g_i^{(k)})^2 \tag{8.5}\]
 - en: 'The update then looks as with Adagrad:'
+  id: totrans-74
   prefs: []
   type: TYPE_NORMAL
+  zh: 更新看起来与 Adagrad 类似：
 - en: \[ x_i^{(k+1)} = x_i^{(k)} - \frac{lr}{\epsilon + \sqrt{s_i^{(k)}}}\ g_i^{(k)}\\
     \tag{8.6}\]
+  id: totrans-75
   prefs: []
   type: TYPE_NORMAL
+  zh: \[ x_i^{(k+1)} = x_i^{(k)} - \frac{lr}{\epsilon + \sqrt{s_i^{(k)}}}\ g_i^{(k)}\\
+    \tag{8.6}\]
 - en: In this way, each parameter update gets weighted appropriately, without learning
     slowing down overall.
+  id: totrans-76
   prefs: []
   type: TYPE_NORMAL
+  zh: 这样，每个参数更新都得到了适当的加权，而整体学习速度不会减慢。
 - en: 'Here is the result, again compared against the SGD baseline ([fig. 8.5](#fig-optimizers-rmsprop)):'
+  id: totrans-77
   prefs: []
   type: TYPE_NORMAL
+  zh: 这里是结果，再次与 SGD 基线（[fig. 8.5](#fig-optimizers-rmsprop)）进行比较）：
 - en: '![A non-isotropic paraboloid, stretched-out widely along the x-axis, but with
     y-values centered sharply around y = 0\. Displayed are two optimization paths,
     one using steepest descent, one using RMSProp. With steepest descent, many steps
     are needed to arrive at the minimum, while RMSProp needs just four steps.](../Images/697c2ccee44eabdca7e378423bdb9f73.png)'
+  id: totrans-78
   prefs: []
   type: TYPE_IMG
+  zh: '![一个非各向同性的抛物面，在 x 轴上广泛拉伸，但 y 值集中在 y = 0 附近。显示了两种优化路径，一种使用最速下降，一种使用 RMSProp。最速下降需要许多步骤才能到达最小值，而
+    RMSProp 只需要四步。](../Images/697c2ccee44eabdca7e378423bdb9f73.png)'
 - en: 'Figure 8.5: RMSProp (white), compared with vanilla SGD (gray).'
+  id: totrans-79
   prefs: []
   type: TYPE_NORMAL
+  zh: 图 8.5：RMSProp（白色），与标准 SGD（灰色）比较。
 - en: As of today, RMSProp is one of the most-often used optimizers in deep learning,
     with probably just Adam - to be introduced next – being more popular.
+  id: totrans-80
   prefs: []
   type: TYPE_NORMAL
+  zh: 截至 today，RMSProp 是深度学习中应用最广泛的优化器之一，可能只有 Adam（将在下一节介绍）更为流行。
 - en: 8.3.6 Adam
+  id: totrans-81
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 8.3.6 Adam
 - en: 'Adam combines two concepts we’ve already seen: momentum – to keep “on track”
     – and parameter-dependent updates, to avoid excessive dependence on fast-changing
     parameters. The logic is like this.[²](#fn2)'
+  id: totrans-82
   prefs: []
   type: TYPE_NORMAL
+  zh: Adam 结合了我们已经看到的概念：动量 – 以保持“在轨道上” – 和参数依赖的更新，以避免过度依赖快速变化的参数。逻辑是这样的。[²](#fn2)
 - en: For one, just like in SGD with momentum, we keep an exponentially weighted average
     of gradients. Here the weighting coefficient, \(\gamma_v\), is usually set to
     0.9.
+  id: totrans-83
   prefs: []
   type: TYPE_NORMAL
+  zh: 首先，就像在带有动量的 SGD 中一样，我们保持梯度的指数加权平均。这里，加权系数 \(\gamma_v\) 通常设置为 0.9。
 - en: \[ v_i^{(k+1)} = \gamma_v \ v_i^{(k)} + (1-\gamma_v) \ g_i^{(k)} \tag{8.7}\]
+  id: totrans-84
   prefs: []
   type: TYPE_NORMAL
+  zh: \[ v_i^{(k+1)} = \gamma_v \ v_i^{(k)} + (1-\gamma_v) \ g_i^{(k)} \tag{8.7}\]
 - en: Also, like in RMSProp, there is an exponentially weighted average of squared
     gradients, with weighting coefficient \(\gamma_s\) usually set to 0.999.
+  id: totrans-85
   prefs: []
   type: TYPE_NORMAL
+  zh: 此外，就像在 RMSProp 中一样，存在平方梯度的指数加权平均，权重系数 \(\gamma_s\) 通常设置为 0.999。
 - en: \[ s_i^{(k+1)} = \gamma_s \ s_i^{(k)} + (1-\gamma_s) \ (g_i^{(k)})^2 \tag{8.8}\]
+  id: totrans-86
   prefs: []
   type: TYPE_NORMAL
+  zh: \[ s_i^{(k+1)} = \gamma_s \ s_i^{(k)} + (1-\gamma_s) \ (g_i^{(k)})^2 \tag{8.8}\]
 - en: 'The parameter updates now make use of that information in the following way.
     The velocity determines the direction of the update, while both velocity and magnitude
     of gradients (together with the learning rate, \(lr\)) determine its size:'
+  id: totrans-87
   prefs: []
   type: TYPE_NORMAL
+  zh: 参数更新现在以以下方式利用该信息。速度决定了更新的方向，而速度和梯度的幅度（连同学习率 \(lr\)）决定了其大小：
 - en: \[ x_i^{(k+1)} = x_i^{(k)} - \frac{lr \ v_i^{(k+1)}}{\epsilon + \sqrt{s_i^{(k+1)}}}\
     \\ \tag{8.9}\]
+  id: totrans-88
   prefs: []
   type: TYPE_NORMAL
+  zh: \[ x_i^{(k+1)} = x_i^{(k)} - \frac{lr \ v_i^{(k+1)}}{\epsilon + \sqrt{s_i^{(k+1)}}}\
+    \\ \tag{8.9}\]
 - en: Let’s conclude this chapter by testing Adam on our running example ([fig. 8.6](#fig-optimizers-adam)).
+  id: totrans-89
   prefs: []
   type: TYPE_NORMAL
+  zh: 让我们通过在我们的运行示例上测试Adam来结束这一章([图8.6](#fig-optimizers-adam))。
 - en: '![A non-isotropic paraboloid, stretched-out widely along the x-axis, but with
     y-values centered sharply around y = 0\. Displayed are two optimization paths,
     one using steepest descent, one using Adam. With steepest descent, many steps
     are needed to arrive at the minimum, while Adam needs four steps only.](../Images/777fc4ea0dd94694b306fc6a69d3b52e.png)'
+  id: totrans-90
   prefs: []
   type: TYPE_IMG
+  zh: '![一个非各向同性的抛物面，在x轴上广泛拉伸，但y值集中在y = 0附近。展示了两个优化路径，一个使用最速下降法，一个使用Adam。在最速下降法中，需要许多步骤才能到达最小值，而Adam只需四步。](../Images/777fc4ea0dd94694b306fc6a69d3b52e.png)'
 - en: 'Figure 8.6: Adam (white), compared with vanilla SGD (gray).'
+  id: totrans-91
   prefs: []
   type: TYPE_NORMAL
+  zh: 图8.6：Adam（白色），与普通SGD（灰色）的比较。
 - en: Next, we head on to loss functions, the last building block to look at before
     we re-factor the regression network and function minimization examples to benefit
     from `torch` modules and optimizers.
+  id: totrans-92
   prefs: []
   type: TYPE_NORMAL
+  zh: 接下来，我们将转向损失函数，在我们重新构建回归网络和函数最小化示例以利用`torch`模块和优化器之前，这是我们需要考虑的最后一个构建块。
 - en: '* * *'
+  id: totrans-93
   prefs: []
   type: TYPE_NORMAL
+  zh: '* * *'
 - en: Here \(\epsilon\) is just a tiny value added to avoid division by zero.[↩︎](#fnref1)
+  id: totrans-94
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 在这里，\(\epsilon\)仅仅是一个很小的值，用于避免除以零。[↑](#fnref1)
 - en: Actual implementations usually contain an additional step, but there is no need
     to go into details here.[↩︎](#fnref2)***
+  id: totrans-95
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 实际实现通常包含一个额外的步骤，但在这里没有必要深入细节。[↑](#fnref2)***

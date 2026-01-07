@@ -1,48 +1,66 @@
 - en: 17  Speeding up training
+  id: totrans-0
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
+  zh: 17  加快训练速度
 - en: 原文：[https://skeydan.github.io/Deep-Learning-and-Scientific-Computing-with-R-torch/training_efficiency.html](https://skeydan.github.io/Deep-Learning-and-Scientific-Computing-with-R-torch/training_efficiency.html)
+  id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 原文：[https://skeydan.github.io/Deep-Learning-and-Scientific-Computing-with-R-torch/training_efficiency.html](https://skeydan.github.io/Deep-Learning-and-Scientific-Computing-with-R-torch/training_efficiency.html)
 - en: You could say that the topics discussed in this and the preceding chapter relate
     like the non-negotiable and the desirable. Generalization, the ability to abstract
     over individual instances, is a *sine qua non* of a good model; however, we need
     to arrive at such a model in reasonable time (where reasonable means very different
     things in different contexts).
+  id: totrans-2
   prefs: []
   type: TYPE_NORMAL
+  zh: 你可以说，本章和前一章讨论的主题就像不可协商的和可取的。泛化，即抽象单个实例的能力，是一个好模型不可或缺的；然而，我们需要在合理的时间内达到这样的模型（这里的合理在不同的上下文中意味着不同的事情）。
 - en: 'This time, in presenting techniques I’ll follow a different strategy, ordering
     them not by stages in the workflow, but by increasing generality. We’ll be looking
     at three very different, very successful (each in its own way) ideas:'
+  id: totrans-3
   prefs: []
   type: TYPE_NORMAL
+  zh: 这次，在介绍技术时，我将采取不同的策略，不是按照工作流程的阶段来排序，而是按照增加的普遍性来排序。我们将探讨三个非常不同、非常成功（每种方式都有其独特之处）的想法：
 - en: Batch normalization. *Batchnorm* – to introduce a popular abbreviation – layers
     are added to a model to stabilize and, in consequence, speed up training.
+  id: totrans-4
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 批量归一化。*批归一化*——为了引入一个流行的缩写——向模型中添加层以稳定训练，从而加快训练速度。
 - en: Determining a good learning rate upfront, and dynamically varying it during
     training. As you might remember from our experiments with optimization, the learning
     rate has an enormous impact on training speed and stability.
+  id: totrans-5
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 在训练开始时确定一个合适的学习率，并在训练过程中动态调整它。你可能还记得我们关于优化的实验，学习率对训练速度和稳定性有着巨大的影响。
 - en: Transfer learning. Applied to neural networks, the term commonly refers to using
     pre-trained models for feature detection, and making use of those features in
     a downstream task.
+  id: totrans-6
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 迁移学习。应用于神经网络，这个术语通常指的是使用预训练模型进行特征检测，并在下游任务中使用这些特征。
 - en: 17.1 Batch normalization
+  id: totrans-7
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 17.1 批量归一化
 - en: The idea behind batch normalization (Ioffe and Szegedy ([2015](references.html#ref-ioffe2015batch)))
     directly follows from the basic mechanism of backpropagation.
+  id: totrans-8
   prefs: []
   type: TYPE_NORMAL
+  zh: 批量归一化的想法（Ioffe 和 Szegedy ([2015](references.html#ref-ioffe2015batch)）直接源于反向传播的基本机制。
 - en: In backpropagation, each layer’s weights are adapted, from the very last to
     the very first. Now, let’s focus on layer 17\. When the time comes for the next
     forward pass, it will have updated its weights in a way that made sense, given
@@ -51,58 +69,78 @@
     you get the picture. And so, due to *all prior layers now handling their inputs
     differently*, layer 17 will not quite get what it expects. In consequence, the
     strategy that seemed optimal before might not be.
+  id: totrans-9
   prefs: []
   type: TYPE_NORMAL
+  zh: 在反向传播中，每一层的权重都是从最后一层到第一层进行适应的。现在，让我们专注于第17层。当进行下一次前向传递时，它将根据之前的批次更新其权重。然而——它前面的那一层也会更新其权重。同样，它前面的那一层，再前面的那一层……你明白这个道理。因此，由于所有之前的层现在以不同的方式处理它们的输入，第17层将不会得到它预期的结果。因此，之前看似最优的策略可能不再适用。
 - en: While the problem per se is algorithm-inherent, it is more likely to surface
     the deeper the model. Due to the resulting instability, you need to train with
     lower learning rates. And this, in turn, means that training will take more time.
+  id: totrans-10
   prefs: []
   type: TYPE_NORMAL
+  zh: 虽然这个问题本身是算法固有的，但随着模型的深入，它更有可能显现出来。由于由此产生的不稳定性，你需要用较低的学习率进行训练。反过来，这意味着训练将需要更多的时间。
 - en: 'The solution Ioffe and Szegedy proposed was the following. At each pass, and
     for every layer, normalize the activations. If that were all, however, some sort
     of levelling would occur. That’s because each layer now has to adjust its activations
     so they have a mean of zero and a standard deviation of one. In fact, such a requirement
     would not just act as an equalizer *between* layers, but also, *within*: meaning,
     it would make it harder, for each individual layer, to create sharp internal distinctions.'
+  id: totrans-11
   prefs: []
   type: TYPE_NORMAL
+  zh: Ioffe 和 Szegedy 提出的解决方案如下。在每次遍历中，对于每一层，都规范化激活。然而，如果只有这些，就会发生某种平衡。这是因为每一层现在都必须调整其激活，使它们的均值为零，标准差为之一。实际上，这样的要求不仅会在层之间起到均衡器的作用，而且也会在层内起到作用：这意味着它会使每一层创建尖锐内部区分变得更加困难。
 - en: For that reason, mean and standard deviation are not simply computed, but *learned*.
     In other words, they become *model parameters*.
+  id: totrans-12
   prefs: []
   type: TYPE_NORMAL
+  zh: 因此，均值和标准差不仅仅是计算出来的，而是*学习得到的*。换句话说，它们变成了*模型参数*。
 - en: So far, we’ve been talking about this conceptually, suggesting an implementation
     where each layer took care of this itself. This is not how it’s implemented, however.
     Rather, we have dedicated layers, *batchnorm* layers, that normalize and re-scale
     their inputs. It is them who have mean and standard deviation as learnable parameters.
+  id: totrans-13
   prefs: []
   type: TYPE_NORMAL
+  zh: 到目前为止，我们一直在概念上讨论这个概念，暗示了一个实现，其中每个层都负责这个任务。然而，这并不是它的实现方式。相反，我们有专门的层，*批量归一化层*，它们会归一化和重新缩放它们的输入。它们是具有可学习参数的均值和标准差。
 - en: To use batch normalization in our MNIST example, we intersperse batchnorm layers
     throughout the network, one after each convolution block. There are three types
     of them, one for each of one-, two-, and three-dimensional inputs (time series,
     images, and video, say). All of them compute statistics individually per channel,
     and the number of input channels is the only required argument to their constructors.
+  id: totrans-14
   prefs: []
   type: TYPE_NORMAL
+  zh: 在我们的MNIST示例中，为了使用批量归一化，我们在网络中穿插批量归一化层，每个卷积块之后都有一个。它们有三种类型，分别对应一维、二维和三维输入（例如时间序列、图像和视频）。所有这些都会对每个通道单独计算统计数据，输入通道的数量是它们构造函数的唯一必需参数。
 - en: '[PRE0]'
+  id: totrans-15
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE0]'
 - en: '*One thing you may be wondering though: What happens during testing? The whole
     notion of testing would be carried to absurdity, were we to apply the same logic
     there as well. Instead, during evaluation we use the mean and standard deviation
     determined on the training set. So, batch normalization shares with dropout the
     fact that they behave differently across phases.'
+  id: totrans-16
   prefs: []
   type: TYPE_NORMAL
+  zh: '*不过，你可能想知道的是：测试期间会发生什么？如果我们将同样的逻辑应用到那里，整个测试的概念就会变得荒谬。相反，在评估时，我们使用在训练集上确定的均值和标准差。因此，批量归一化与dropout一样，它们在不同阶段的行为不同。'
 - en: Batch normalization can be stunningly successful, especially in image processing.
     It’s a technique you should always consider. What’s more, it has often been found
     to help with generalization, as well.*  *## 17.2 Dynamic learning rates
+  id: totrans-17
   prefs: []
   type: TYPE_NORMAL
+  zh: 批量归一化可以非常成功，尤其是在图像处理中。这是一个你应该始终考虑的技术。更重要的是，它经常被发现有助于泛化，以及*第17.2节 动态学习率*。
 - en: You won’t be surprised to hear that the learning rate is central to training
     performance. In backpropagation, layer weights are modified in a direction given
     by the current loss; the learning rate affects the size of the update.
+  id: totrans-18
   prefs: []
   type: TYPE_NORMAL
+  zh: 你可能不会对学习率是训练性能的核心感到惊讶。在反向传播中，层权重会根据当前损失的方向进行修改；学习率影响更新的大小。
 - en: With very small updates, the network might move in the right direction, to eventually
     arrive at a satisfying local minimum of the loss function. But the journey will
     be long. The bigger the updates, on the other hand, the likelier it gets that
@@ -111,30 +149,41 @@
     loss), but at a “higher” place (loss) even. Then the next update will send us
     back to the other leg, to a yet higher location. It won’t take long until loss
     becomes infinite – the dreaded `NaN`, in R.
+  id: totrans-19
   prefs: []
   type: TYPE_NORMAL
+  zh: 通过非常小的更新，网络可能会朝着正确的方向移动，最终到达损失函数的令人满意的局部最小值。但这个过程会很漫长。另一方面，更新越大，就越有可能“跳过”那个最小值。想象一下沿着抛物线的一侧移动。也许更新太大，我们不仅会落在另一侧（损失等效），甚至可能在一个“更高”的位置（损失）。接下来的更新将再次将我们送回另一侧，到一个更高的位置。不久，损失就会变成无限大——在R中令人恐惧的`NaN`。
 - en: 'The goal is easily stated: We’d like to train with the highest-viable learning
     rate, while avoiding to ever “overshoot”. There are two aspects to this.'
+  id: totrans-20
   prefs: []
   type: TYPE_NORMAL
+  zh: 目标很容易陈述：我们希望以最高可行的学习率进行训练，同时避免“过度”训练。这有两个方面。
 - en: First, we should know what would constitute too high a rate. To that purpose,
     we use something called a *learning rate finder*. This technique owes a lot of
     its popularity to the [fast.ai](https://docs.fast.ai) library, and the deep learning
     classes taught by its creators. The learning rate finder gets called once, before
     training proper.
+  id: totrans-21
   prefs: []
   type: TYPE_NORMAL
+  zh: 首先，我们应该知道什么构成了过高的比率。为此，我们使用一种叫做*学习率查找器*的工具。这种技术得益于[fast.ai](https://docs.fast.ai)库的流行，以及其创造者所教授的深度学习课程。学习率查找器在正式训练之前被调用一次。
 - en: Second, we want to organize training in a way that at each time, the optimal
     learning rate is used. Views differ on what *is* an optimal, stage-dependent rate.
     `torch` offers a set of so-called *learning rate schedulers* implementing various
     widely-established techniques. Schedulers differ not just in strategy, but also,
     in how often the learning rate is adapted.
+  id: totrans-22
   prefs: []
   type: TYPE_NORMAL
+  zh: 第二，我们希望以某种方式组织训练，以便在每次训练时使用最佳学习率。关于“最佳”学习率是什么，观点各不相同，它取决于阶段。`torch` 提供了一套所谓的
+    *学习率调度器*，实现了各种广泛采用的技术。调度器不仅策略不同，而且调整学习率的频率也不同。
 - en: 17.2.1 Learning rate finder
+  id: totrans-23
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 17.2.1 学习率查找器
 - en: The idea of the learning rate finder is the following. You train the network
     for a single epoch, starting with a very low rate. Looping through the batches,
     you keep increasing it, until you arrive at a very high value. During the loop,
@@ -143,47 +192,70 @@
     not very much lower, than the one at which loss was minimal. The recommendation
     usually is to choose a value one order of magnitude smaller than the one at minimum.
     For example, if the minimum occurred at `0.01`, you would go with `0.001`.
+  id: totrans-24
   prefs: []
   type: TYPE_NORMAL
+  zh: 学习率查找器的想法如下。你用一个非常低的率开始训练网络，然后在一个周期内，通过循环批次，不断增大学习率，直到达到一个非常高的值。在循环过程中，你同时跟踪学习率和相应的损失。实验结束后，你将学习率和损失绘制成图表。然后，你选择一个比损失最小值低，但不是非常低的学习率。通常建议选择比最小值小一个数量级的值。例如，如果最小值出现在
+    `0.01`，你将选择 `0.001`。
 - en: 'Nicely, we don’t need to code this ourselves: `luz::lr_finder()` will run the
     experiment for us. All we need to do is inspect the resulting graph – and make
     the decision!'
+  id: totrans-25
   prefs: []
   type: TYPE_NORMAL
+  zh: 很好，我们不需要自己编写代码：`luz::lr_finder()` 会为我们运行实验。我们只需要检查生成的图表——然后做出决定！
 - en: 'To demonstrate, let’s first copy some prerequisites from the last chapter.
     We use MNIST, with data augmentation. Model-wise, we build on the default version
     of the CNN, and add in batch normalization. `lr_finder()` then expects the model
     to have been `setup()` with a loss function and an optimizer:'
+  id: totrans-26
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了演示，让我们首先从上一章复制一些先决条件。我们使用 MNIST，并使用数据增强。在模型方面，我们基于 CNN 的默认版本进行构建，并添加了批量归一化。`lr_finder()`
+    预期模型已经被 `setup()` 配置了损失函数和优化器：
 - en: '[PRE1]'
+  id: totrans-27
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE1]'
 - en: '*When called with default parameters, `lr_finder()` will start with a learning
     rate of `1e-7`, and increase that, over one hundred steps, until it arrives at
     `0.1`. All of these values – minimum learning rate, number of steps, and maximum
     learning rate – can be modified. For MNIST, I knew that higher learning rates
     should be feasible; so I shifted that range a bit to the right:'
+  id: totrans-28
   prefs: []
   type: TYPE_NORMAL
+  zh: '*当使用默认参数调用时，`lr_finder()` 将从学习率 `1e-7` 开始，经过一百步增加，直到达到 `0.1`。所有这些值——最小学习率、步数和最大学习率——都可以修改。对于
+    MNIST，我知道较高的学习率应该是可行的；所以我将这个范围稍微向右移动了一些：'
 - en: '[PRE2]'
+  id: totrans-29
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE2]'
 - en: '*Plotting the recorded losses against their rates, we get both the exact values
     (one for each of the steps), and an exponentially-smoothed version ([fig. 17.1](#fig-efficiency-mnist-lr-finder)).'
+  id: totrans-30
   prefs: []
   type: TYPE_NORMAL
+  zh: '*将记录的损失与它们的率绘制成图表，我们得到确切值（每个步骤一个），以及一个指数平滑版本（[图 17.1](#fig-efficiency-mnist-lr-finder)）。'
 - en: '[PRE3]'
+  id: totrans-31
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE3]'
 - en: '*![A curve that, from left to right, first descends slowly (until about x=0.01),
     then begins to rise a little bit, while also getting more variable, and finally
     (at about x=0.5) starts to rise very sharply.](../Images/58c4f7898ab4047dd0d8a3251eaace40.png)'
+  id: totrans-32
   prefs: []
   type: TYPE_NORMAL
+  zh: '*![从左到右，首先缓慢下降（直到大约 x=0.01），然后开始略微上升，同时变得更多变，最后（在约 x=0.5）开始急剧上升的曲线。](../Images/58c4f7898ab4047dd0d8a3251eaace40.png)'
 - en: 'Figure 17.1: Output of `luz`’s learning rate finder, run on MNIST.'
+  id: totrans-33
   prefs: []
   type: TYPE_NORMAL
+  zh: 图 17.1：在 MNIST 上运行 `luz` 的学习率查找器的输出。
 - en: Here, we see that when rates exceed a value of about 0.01, losses become noisy,
     and increase. The definitive explosion, though, seems to be triggered only when
     the rate surpasses 0.1\. In consequence, you might decide to not exactly follow
@@ -191,23 +263,32 @@
     at least in case you do what I’ll be doing in the next section, namely, use the
     so-determined rate not as a fixed-in-time value, but as a maximal one.***  ***###
     17.2.2 Learning rate schedulers
+  id: totrans-34
   prefs: []
   type: TYPE_NORMAL
+  zh: 在这里，我们看到当学习率超过大约 0.01 的值时，损失变得嘈杂并增加。然而，最终的爆炸似乎只有在学习率超过 0.1 时才会触发。因此，你可能会决定不完全遵循“一个数量级”的建议，并尝试一个学习率为
+    0.01 的值——至少在你接下来要做的，即使用这个确定的学习率作为最大值，而不是固定的时间值时，是这样的。***  ***### 17.2.2 学习率调度器
 - en: 'Once we have an idea where to upper-bound the learning rate, we can make use
     of one of `torch`’s learning rate schedulers to orchestrate rates over training.
     We will decide on a scheduler object, and pass that to a dedicated `luz` callback:
     `callback_lr_scheduler()`.'
+  id: totrans-35
   prefs: []
   type: TYPE_NORMAL
+  zh: 一旦我们确定了学习率的上限，我们就可以利用`torch`的学习率调度器来在训练过程中调整学习率。我们将选择一个调度器对象，并将其传递给一个专门的`luz`回调函数：`callback_lr_scheduler()`。
 - en: Classically, a popular, intuitively appealing scheme used to be the following.
     In early stages of training, try a reasonably high learning rate, in order to
     make quick progress; once that has happened, though, slow down, making sure you
     don’t zig-zag around (and away from) a presumably-found local minimum.
+  id: totrans-36
   prefs: []
   type: TYPE_NORMAL
+  zh: 传统上，一个流行且直观的方案是以下这种。在训练的早期阶段，尝试一个合理高的学习率，以便快速取得进展；然而，一旦这样做了，就要减速，确保不要在（并远离）一个可能找到的局部最小值周围震荡。
 - en: In the meantime, more sophisticated schemes have been developed.
+  id: totrans-37
   prefs: []
   type: TYPE_NORMAL
+  zh: 同时，更复杂的方案已经被开发出来。
 - en: One family of ideas keeps periodically turning up and down the learning rate.
     Members of this family are known as, for example, “cyclical learning rates” (Smith
     ([2015](references.html#ref-Smith15a))), or (some form of) “annealing with restarts”
@@ -216,46 +297,61 @@
     curve, and the frequency of restarts (meaning, how often you turn up the rate
     again, to begin a new period of descent). In `torch`, popular representatives
     of this family are, for example, `lr_cyclic()` and `lr_cosine_annealing_warm_restarts()`.
+  id: totrans-38
   prefs: []
   type: TYPE_NORMAL
+  zh: 一系列的想法不断出现，它们会周期性地调整学习率。这个家族的成员，例如，被称为“周期性学习率”（Smith ([2015](references.html#ref-Smith15a)))，或者（某种形式的）“带重启的退火”（例如，Loshchilov和Hutter
+    ([2016](references.html#ref-LoshchilovH16a)))。这个家族的成员之间的区别在于结果学习率曲线的形状和重启的频率（即你多久再次提高速率，以开始新的下降周期）。在`torch`中，这个家族的流行代表例如`lr_cyclic()`和`lr_cosine_annealing_warm_restarts()`。
 - en: A very different approach is represented by the *one-cycle* learning rate strategy
     (Smith and Topin ([2017](references.html#ref-abs-1708-07120))). In this scheme,
     we start from some initial – low-ish – learning rate, increase that up to some
     user-specified maximum, and from there, decrease again, until we’ve arrived at
     a rate significantly lower than the one we started with. In `torch`, this is available
     as `lr_one_cycle()`, and this is the strategy I was referring to above.
+  id: totrans-39
   prefs: []
   type: TYPE_NORMAL
+  zh: 另一种非常不同的方法是*单周期*学习率策略（Smith和Topin ([2017](references.html#ref-abs-1708-07120)))。在这个方案中，我们从某个初始的（相对较低）学习率开始，将其增加到用户指定的最大值，然后再次降低，直到我们达到一个比开始时显著更低的学习率。在`torch`中，这可以通过`lr_one_cycle()`实现，这正是我上面提到的策略。
 - en: '`lr_one_cycle()` allows for user-side tweaking in a number of ways, and in
     real-life projects, you may want to play around a bit with its many parameters.
     Here, we use the defaults. All we need to do, then, is pass in the maximum rate
     we determined, and decide on how often we want the learning rate to be updated.
     The logical way seems to be to do it once per batch, something that will happen
     if we pass in number of epochs and number of steps per epoch.'
+  id: totrans-40
   prefs: []
   type: TYPE_NORMAL
+  zh: '`lr_one_cycle()`允许用户从多个方面进行调整，在现实生活中的项目中，你可能想要对其众多参数进行一些尝试。在这里，我们使用默认值。然后，我们只需要传递我们确定的最高速率，并决定我们希望学习率多久更新一次。逻辑上似乎是一次每批更新，如果我们传递了epoch数和每个epoch的步数，这就会发生。'
 - en: In the code snippet below, note that the arguments `max_lr` , `epochs`, and
     `steps_per_epoch` really “belong to” `lr_one_cycle()`. We have to pass them to
     the callback, though, because it is the callback that will instantiate the scheduler.
+  id: totrans-41
   prefs: []
   type: TYPE_NORMAL
+  zh: 在下面的代码片段中，请注意，参数`max_lr`、`epochs`和`steps_per_epoch`实际上“属于”`lr_one_cycle()`。尽管如此，我们仍然需要将它们传递给回调函数，因为回调函数将实例化调度器。
 - en: '`call_on`, however, genuinely forms part of the callback logic. This is a harmless-looking
     argument that, nevertheless, we need to pay attention to. Schedulers differ in
     whether their period is defined in epochs, or in batches. `lr_one_cycle()` “wakes
     up” once per batch; but there are others – `lr_step()`, for example - that check
     whether an update is due once per epoch only. The default value of `call_on` is
     `on_epoch_end`; so for `lr_one_cycle()`, we have to override the default.'
+  id: totrans-42
   prefs: []
   type: TYPE_NORMAL
+  zh: 然而，`call_on`实际上构成了回调逻辑的一部分。这是一个看似无害的参数，但我们仍然需要关注它。调度器在周期是按epoch定义还是按batch定义上有所不同。`lr_one_cycle()`每批“醒来”一次；但还有其他一些，例如`lr_step()`，它们只在每个epoch检查一次是否需要更新。`call_on`的默认值是`on_epoch_end`；因此，对于`lr_one_cycle()`，我们必须覆盖默认值。
 - en: '[PRE4]'
+  id: totrans-43
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE4]'
 - en: '*At this point, we wrap up the topic of learning rate optimization. As with
     so many things in deep learning, research progresses at a rapid rate, and most
     likely, new scheduling strategies will continue to be added. Now though, for a
     total change in scope.****  ***## 17.3 Transfer learning'
+  id: totrans-44
   prefs: []
   type: TYPE_NORMAL
+  zh: '*在这个阶段，我们结束了关于学习率优化的主题。正如深度学习中的许多事情一样，研究进展速度很快，很可能会继续添加新的调度策略。但现在，我们要彻底改变范围。***'
 - en: Transfer, as a general concept, is what happens when we have learned to do one
     thing, and benefit from those skills in learning something else. For example,
     we may have learned how to make some move with our left leg; it will then be easier
@@ -263,8 +359,10 @@
     and then, found that it helped us a lot in learning French. These, of course,
     are straightforward examples; analogies between domains and skills can be a lot
     more subtle.
+  id: totrans-45
   prefs: []
   type: TYPE_NORMAL
+  zh: 迁移，作为一个一般概念，是指当我们学会做某件事，并从这些技能中受益于学习其他事情时发生的情况。例如，我们可能已经学会了如何用我们的左腿做一些动作；那么，学会用右腿做同样的动作就会容易得多。或者，我们可能已经学习了拉丁语，然后发现这极大地帮助我们学习了法语。当然，这些都是简单的例子；不同领域和技能之间的类比可能要微妙得多。
 - en: In comparison, the typical usage of “transfer learning” in deep learning seems
     rather narrow, at first glance. Concretely, it refers to making use of huge, highly
     effective models (often provided as part of some library), that have already been
@@ -274,8 +372,10 @@
     this will go from the broad to the narrow – as in the below example, where we
     use a model trained on one thousand categories of images to distinguish between
     ten types of digits.
+  id: totrans-46
   prefs: []
   type: TYPE_NORMAL
+  zh: 相比之下，深度学习中“迁移学习”的典型用法在最初看起来相当狭窄。具体来说，它指的是利用已经在大数据集上长时间训练的巨大、高度有效的模型（通常作为某些库的一部分提供），然后将其用于新的任务。通常，你会加载该模型，移除其输出层，并添加一个较小的序列模块，该模块将模型的最后一层转换为所需的输出类型。在示例任务中，这通常是从广泛到狭窄的转变——就像下面的例子，我们使用在一个千类别图像上训练的模型来区分十种数字类型。
 - en: But it doesn’t have to be like that. In deep learning, too, models trained on
     one task can be built upon in tasks that have *different*, but not necessarily
     more *domain-constrained*, requirements. As of today, popular examples for this
@@ -285,8 +385,10 @@
     tasks like translation, question answering, or text summarization. Transfer learning,
     in that general sense, is something we’ll certainly see more and more of in the
     near future.
+  id: totrans-47
   prefs: []
   type: TYPE_NORMAL
+  zh: 但情况不必如此。在深度学习中，在一个任务上训练的模型也可以用于具有*不同*但并非必然更*领域限制*的任务。截至今天，这种类型的流行例子主要在自然语言处理（NLP）中找到，而这一主题我们在这本书中并未涉及。在那里，你发现的是训练来预测句子如何继续的模型——从而产生关于语言的“一般”知识——用于逻辑上依赖的任务，如翻译、问答或文本摘要。在这种广义上，迁移学习是我们将在不久的将来越来越多地看到的东西。
 - en: There is another, very important aspect to the popularity of transfer learning,
     though. When you build on a pre-trained model, you’ll incorporate all of what
     it has learned - including its biases and preconceptions. How much that matters,
@@ -300,14 +402,19 @@
     The latter are, by definition, subject to availability bias, as well as idiosyncratic
     decisions made by the dataset creators. (Hopefully, these circumstances and decisions
     will have been carefully documented. That is something you’ll need to check out.)
+  id: totrans-48
   prefs: []
   type: TYPE_NORMAL
+  zh: 转移学习的流行还有一个非常重要的方面。当你基于预训练模型构建时，你会吸收它所学习的一切——包括其偏见和先入之见。这在你的环境中有多重要，将取决于你具体在做什么。对我们来说，我们正在对数字进行分类，预训练模型在猫和狗上的表现是否远优于在电动滑板车、智能冰箱或垃圾桶上，这并不重要。但每当模型涉及*人*时，请考虑这一点。通常，这些高性能模型要么是在基准数据集上训练的，要么是从网络上大量抓取的数据。前者在历史上很少关注有关刻板印象和代表性的问题。（希望未来会有所改变。）后者由于定义上的原因，容易受到可用性偏差的影响，以及数据集创建者的独特决策。（希望这些情况和决策已经得到了仔细的记录。这是你需要检查的事情。）
 - en: 'With our running example, we’ll be in the former category: We’ll be downstream
     users of a benchmark dataset. The benchmark dataset in question is [ImageNet](https://image-net.org/index.php),
     the well-known collection of images we already encountered in our first experience
     with Tiny Imagenet, two chapters ago.'
+  id: totrans-49
   prefs: []
   type: TYPE_NORMAL
+  zh: 在我们的运行示例中，我们将属于前者：我们将成为基准数据集的下游用户。所讨论的基准数据集是[ImageNet](https://image-net.org/index.php)，这是我们之前在Tiny
+    Imagenet的第一次体验中遇到的著名图像集合，那是在两章之前。
 - en: In `torchvision`, we find a number of ready-to-use models that have been trained
     on ImageNet. Among them is ResNet-18 (He et al. ([2015](references.html#ref-HeZRS15))).
     The “Res” in ResNet stands for “residual”, or “residual connection”. Here *residual*
@@ -318,36 +425,54 @@
     ResNets can afford to be very deep, without becoming excessively hard to train.
     And that in turn means they’re very performant, and often used as pre-trained
     feature detectors.
+  id: totrans-50
   prefs: []
   type: TYPE_NORMAL
+  zh: 在`torchvision`中，我们可以找到许多在ImageNet上训练好的可使用模型。其中之一是ResNet-18（He等人，[2015](references.html#ref-HeZRS15)）。ResNet中的“Res”代表“残差”，或“残差连接”。在这里，“残差”正如在统计学中常见的那样，用来指代误差项。其想法是让某些层预测，不是全新的东西，而是目标与前一层的预测之间的差异——即误差。如果这听起来很困惑，请不要担心。对我们来说，重要的是由于它们的架构，ResNets可以承受非常深的网络，而不会变得过于难以训练。这反过来又意味着它们非常高效，并且经常被用作预训练的特征检测器。
 - en: The first time you use a pre-trained model, its weights are downloaded, and
     cached in an operating-system-specific location.
+  id: totrans-51
   prefs: []
   type: TYPE_NORMAL
+  zh: 第一次使用预训练模型时，其权重会被下载并缓存到操作系统特定的位置。
 - en: '[PRE5]'
+  id: totrans-52
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE5]'
 - en: '*[PRE6]'
+  id: totrans-53
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE6]'
 - en: 'Have a look at the last module, a linear layer:'
+  id: totrans-54
   prefs: []
   type: TYPE_NORMAL
+  zh: 看一下最后一个模块，一个线性层：
 - en: '[PRE7]'
+  id: totrans-55
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE7]'
 - en: '*From the weights, we can see that this layer maps tensors with 512 features
     to ones with 1000 - the thousand different image categories used in the ImageNet
     challenge. To adapt this model to our purposes, we simply replace the very last
     layer with one that outputs feature vectors of length ten:'
+  id: totrans-56
   prefs: []
   type: TYPE_NORMAL
+  zh: '*从权重中我们可以看到，这个层将具有512个特征的张量映射到具有1000个特征的张量——这是ImageNet挑战中使用的1000种不同的图像类别。为了使这个模型适应我们的目的，我们只需将最后一层替换为一个输出长度为十的特征向量：'
 - en: '[PRE8]'
+  id: totrans-57
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE8]'
 - en: '*[PRE9]'
+  id: totrans-58
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE9]'
 - en: 'What will happen if we now train the modified model on MNIST? Training will
     progress with the speed of a Zenonian tortoise, since gradients need to be propagated
     across a huge network. Not only is that a waste of time; it is useless, as well.
@@ -356,53 +481,75 @@
     digits we will make use of just a tiny subset of learned higher-order features,
     but that is not a problem. In any case, with the resources available to mere mortals,
     we are unlikely to improve on ResNet’s digit-discerning capabilities.'
+  id: totrans-59
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果我们现在在MNIST上训练修改后的模型会发生什么？由于需要在大网络上传播梯度，训练将像禅宗乌龟一样缓慢。这不仅浪费时间；而且毫无用处。如果我们非常有耐心，甚至可能是有害的：我们可能会破坏预训练模型学习到的复杂特征层次结构。当然，在分类数字时，我们将仅使用学习到的更高阶特征的一个非常小的子集，但这不是问题。无论如何，凭借我们这些凡人可用的资源，我们不太可能改进ResNet的数字识别能力。
 - en: What we do, thus, is set all layer weights to non-trainable, apart from just
     that last layer we replaced.
+  id: totrans-60
   prefs: []
   type: TYPE_NORMAL
+  zh: 因此，我们做的是将所有层权重设置为不可训练，除了我们替换的最后一层。
 - en: 'Putting it all together, we arrive at the following, concise definition of
     a model:'
+  id: totrans-61
   prefs: []
   type: TYPE_NORMAL
+  zh: 将所有这些放在一起，我们得到了以下简洁的模型定义：
 - en: '[PRE10]'
+  id: totrans-62
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE10]'
 - en: '*This we can now train with `luz`, like before. There’s just one further step
     required, and that’s just because I’m using MNIST to illustrate. Since ResNet
     has been trained on RGB images, its first layer expects three channels, not one.
     We can work around this by multiplexing the single grayscale channel into three
     identical ones, using `torch_expand()`. For important real-life tasks, this may
     not be an optimal solution; but it will do well enough for MNIST.'
+  id: totrans-63
   prefs: []
   type: TYPE_NORMAL
+  zh: '*我们现在可以用`luz`来训练，就像之前一样。只需要再进行一个额外的步骤，这仅仅是因为我在使用MNIST来举例。由于ResNet是在RGB图像上训练的，它的第一层期望有三个通道，而不是一个。我们可以通过使用`torch_expand()`将单个灰度通道复用到三个相同的通道上，来解决这个问题。对于重要的实际任务，这可能不是一个最优的解决方案；但对于MNIST来说，这已经足够好了。'
 - en: A convenient place to perform the expansion is as part of the data pre-processing
     pipeline, repeated here in modified form.
+  id: totrans-64
   prefs: []
   type: TYPE_NORMAL
+  zh: 扩展的一个方便位置是在数据预处理管道中，这里以修改后的形式重复。
 - en: '[PRE11]'
+  id: totrans-65
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE11]'
 - en: '*The code for training then looks as usual.'
+  id: totrans-66
   prefs: []
   type: TYPE_NORMAL
+  zh: '*训练的代码看起来和往常一样。'
 - en: '[PRE12]'
+  id: totrans-67
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE12]'
 - en: '*Before we wrap up both section and chapter, one additional comment. The way
     we proceeded, above – replacing the very last layer with a single module outputting
     the final scores – is just the easiest, most straightforward thing to do.'
+  id: totrans-68
   prefs: []
   type: TYPE_NORMAL
+  zh: '*在我们结束这两个部分和章节之前，还有一个额外的评论。我们上面采取的方法——用单个模块输出最终分数来替换最后一层——只是最简单、最直接的事情。'
 - en: For MNIST, this is good enough. Maybe, on inspection, we’d find that single
     digits already form part of ResNet’s feature hierarchy; but even if not, a linear
     layer with ~ 5000 parameters should suffice to learn them. However, the more there
     is “still to be learned” – equivalently, the more either dataset or task differ
     from what was used (done, resp.) in model pre-training – the more powerful a sub-module
     we will want to chain on. We’ll see an example of this in the next chapter.
+  id: totrans-69
   prefs: []
   type: TYPE_NORMAL
+  zh: 对于MNIST来说，这已经足够了。也许，在检查时，我们会发现单个数字已经构成了ResNet的特征层次结构的一部分；即使不是，一个具有约5000个参数的线性层也应该足以学习它们。然而，还有更多“需要学习”的内容——相当于数据集或任务与模型预训练中使用的（完成，分别）有所不同——我们就需要更强大的子模块来串联。我们将在下一章中看到这个例子。
 - en: 'He, Kaiming, Xiangyu Zhang, Shaoqing Ren, and Jian Sun. 2015\. “Deep Residual
     Learning for Image Recognition.” *CoRR* abs/1512.03385\. [http://arxiv.org/abs/1512.03385](http://arxiv.org/abs/1512.03385).Ioffe,
     Sergey, and Christian Szegedy. 2015\. “Batch Normalization: Accelerating Deep
@@ -413,5 +560,13 @@
     [http://arxiv.org/abs/1506.01186](http://arxiv.org/abs/1506.01186).Smith, Leslie
     N., and Nicholay Topin. 2017\. “Super-Convergence: Very Fast Training of Residual
     Networks Using Large Learning Rates.” *CoRR* abs/1708.07120\. [http://arxiv.org/abs/1708.07120](http://arxiv.org/abs/1708.07120).**********'
+  id: totrans-70
   prefs: []
   type: TYPE_NORMAL
+  zh: 'He, Kaiming, Xiangyu Zhang, Shaoqing Ren, and Jian Sun. 2015\. “深度残差学习在图像识别中的应用.”
+    *CoRR* abs/1512.03385\. [http://arxiv.org/abs/1512.03385](http://arxiv.org/abs/1512.03385).Ioffe,
+    Sergey, and Christian Szegedy. 2015\. “批量归一化：通过减少内部协变量偏移来加速深度网络训练.” [https://arxiv.org/abs/1502.03167](https://arxiv.org/abs/1502.03167).Loshchilov,
+    Ilya, and Frank Hutter. 2016\. “SGDR: 带有重启的随机梯度下降.” *CoRR* abs/1608.03983\. [http://arxiv.org/abs/1608.03983](http://arxiv.org/abs/1608.03983).Smith,
+    Leslie N. 2015\. “不再需要繁琐的学习率猜测游戏.” *CoRR* abs/1506.01186\. [http://arxiv.org/abs/1506.01186](http://arxiv.org/abs/1506.01186).Smith,
+    Leslie N., and Nicholay Topin. 2017\. “超级收敛：使用大学习率快速训练残差网络.” *CoRR* abs/1708.07120\.
+    [http://arxiv.org/abs/1708.07120](http://arxiv.org/abs/1708.07120).**********'

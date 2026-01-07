@@ -1,11 +1,15 @@
 - en: 6  A neural network from scratch
+  id: totrans-0
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
+  zh: 6  从零开始构建神经网络
 - en: 原文：[https://skeydan.github.io/Deep-Learning-and-Scientific-Computing-with-R-torch/network_1.html](https://skeydan.github.io/Deep-Learning-and-Scientific-Computing-with-R-torch/network_1.html)
+  id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 原文：[https://skeydan.github.io/Deep-Learning-and-Scientific-Computing-with-R-torch/network_1.html](https://skeydan.github.io/Deep-Learning-and-Scientific-Computing-with-R-torch/network_1.html)
 - en: In this chapter, we are going to solve a regression task. But wait – not the
     `lm` way. We’ll be building a real neural network, making use of tensors only
     (`autograd`-enabled ones, it goes without saying). Of course, this is not how
@@ -15,79 +19,121 @@
     will be an efficient antidote against the surprisingly common temptation to think
     of deep learning as some kind of “magic”. It’s all just matrix computations; one
     has to learn how to orchestrate them though.
+  id: totrans-2
   prefs: []
   type: TYPE_NORMAL
+  zh: 在本章中，我们将解决一个回归任务。但是等等——不是 `lm` 方式。我们将构建一个真正的神经网络，仅使用张量（不言而喻，是 `autograd` 启用的）。当然，这并不是你将来使用
+    `torch` 的方式；但这并不意味着这是一个无用的努力。相反。在了解了原始机制之后，你将能够更加欣赏 `torch` 为你节省的辛勤工作。更重要的是，理解基础知识将是对深度学习被意外地视为某种“魔法”的诱惑的有效解毒剂。这只是一些矩阵运算；一个人必须学会如何编排它们。
 - en: Let’s start with what we need for a network that can perform regression.
+  id: totrans-3
   prefs: []
   type: TYPE_NORMAL
+  zh: 让我们从构建一个能够执行回归的网络所需的东西开始。
 - en: 6.1 Idea
+  id: totrans-4
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 6.1 理念
 - en: In a nutshell, a network is a *function* from inputs to outputs. A suitable
     function, thus, is what we’re looking for.
+  id: totrans-5
   prefs: []
   type: TYPE_NORMAL
+  zh: 简而言之，网络是从输入到输出的 *函数*。因此，一个合适的函数就是我们正在寻找的。
 - en: To find it, let’s first think of regression as *linear* regression. What linear
     regression does is multiply and add. For each independent variable, there is a
     *coefficient* that multiplies it. On top of that, there is a so-called *bias*
     term that gets added at the end. (In two dimensions, regression coefficient and
     bias correspond to slope and x-intercept of the regression line.)
+  id: totrans-6
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了找到它，让我们首先将回归视为 *线性* 回归。线性回归所做的就是乘法和加法。对于每个自变量，都有一个 *系数* 乘以它。除此之外，还有一个所谓的 *偏置*
+    项在最后被加上。（在二维中，回归系数和偏置对应于回归线的斜率和x轴截距。）
 - en: 'Thinking about it, multiplication and addition are things we can do with tensors
     – one could even say they are made for exactly that. Let’s take an example where
     the input data consist of a hundred observations, with three features each. For
     example:'
+  id: totrans-7
   prefs: []
   type: TYPE_NORMAL
+  zh: 想想看，乘法和加法是我们可以用张量做的事情——甚至可以说它们就是为了这个目的而设计的。让我们举一个例子，其中输入数据由一百个观测值组成，每个观测值有三个特征。例如：
 - en: '[PRE0]'
+  id: totrans-8
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE0]'
 - en: '*[PRE1]'
+  id: totrans-9
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE1]'
 - en: To store the per-feature coefficients that should multiply `x`, we need a column
     vector of length 3, the number of features. Alternatively, preparing for a modification
     we’re going to make very soon, this can be a matrix whose columns are of length
     three, that is, a matrix with three rows. How many columns should it have? Let’s
     say we want to predict a single output feature. In that case, the matrix should
     be of size 3 x 1.
+  id: totrans-10
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了存储应该乘以 `x` 的每个特征的系数，我们需要一个长度为3的列向量，这是特征的数目。或者，为了准备我们很快将要做的修改，这可以是一个列长为三的矩阵，即一个有三行矩阵。它应该有多少列？让我们假设我们想要预测一个单个输出特征。在这种情况下，矩阵的大小应该是
+    3 x 1。
 - en: Here comes a suitable candidate, initialized randomly. Note how the tensor is
     created with `requires_grad = TRUE`, as it represents a parameter we’ll want the
     network to *learn*.
+  id: totrans-11
   prefs: []
   type: TYPE_NORMAL
+  zh: 这里有一个合适的候选者，随机初始化。注意张量是如何通过 `requires_grad = TRUE` 创建的，因为它代表了一个我们希望网络能够 *学习*
+    的参数。
 - en: '[PRE2]'
+  id: totrans-12
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE2]'
 - en: '*The bias tensor then has to be of size 1 x 1:'
+  id: totrans-13
   prefs: []
   type: TYPE_NORMAL
+  zh: '*偏置张量的大小必须是 1 x 1：'
 - en: '[PRE3]'
+  id: totrans-14
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE3]'
 - en: '*Now, we can get a “prediction” by multiplying the data with the weight matrix
     `w` and adding the bias `b`:'
+  id: totrans-15
   prefs: []
   type: TYPE_NORMAL
+  zh: '*现在，我们可以通过将数据与权重矩阵 `w` 相乘并加上偏置 `b` 来得到一个“预测”：'
 - en: '[PRE4]'
+  id: totrans-16
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE4]'
 - en: '*[PRE5]'
+  id: totrans-17
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE5]'
 - en: 'In math notation, what we’ve done here is implement the function:'
+  id: totrans-18
   prefs: []
   type: TYPE_NORMAL
+  zh: 用数学符号表示，我们在这里实现的是以下函数：
 - en: \[ f(\mathbf{X}) = \mathbf{X}\mathbf{W} + \mathbf{b} \]
+  id: totrans-19
   prefs: []
   type: TYPE_NORMAL
+  zh: \[ f(\mathbf{X}) = \mathbf{X}\mathbf{W} + \mathbf{b} \]
 - en: How does this relate to neural networks?****  ***## 6.2 Layers
+  id: totrans-20
   prefs: []
   type: TYPE_NORMAL
+  zh: 这与神经网络有什么关系？****  ***## 6.2 层
 - en: 'Circling back to neural-network terminology, what we’ve done here is prototype
     the action of a network that has a *single* *layer*: the output layer. However,
     a single-layer network is hardly the type you’d be interested in building – why
@@ -96,45 +142,67 @@
     (in theory) number of layers. Of these, all but the output layer may be referred
     to as “hidden” layers, although from the point of view of someone who uses a deep
     learning framework such as `torch`, they are not that *hidden* after all.'
+  id: totrans-21
   prefs: []
   type: TYPE_NORMAL
+  zh: 回到神经网络术语，我们在这里原型化了具有单个层的网络的行为：输出层。然而，单层网络并不是你感兴趣构建的类型——为什么你要这样做，当你可以简单地做线性回归呢？事实上，神经网络的一个定义特征是它们能够无限（理论上）地链接多个层。在这些层中，除了输出层之外的所有层都可以被称为“隐藏层”，尽管从使用像
+    `torch` 这样的深度学习框架的人的角度来看，它们其实并不那么“隐藏”。
 - en: 'Let’s say we want our network to have one hidden layer. Its size, meaning,
     the number of *units* it has, will be an important factor in determining the network’s
     power. This number is reflected in the weight matrix we create: A layer with eight
     units will need a weight matrix with eight columns.'
+  id: totrans-22
   prefs: []
   type: TYPE_NORMAL
+  zh: 假设我们想让我们的网络有一个隐藏层。它的大小，即它拥有的单元数量，将是确定网络能力的一个重要因素。这个数字反映在我们创建的权重矩阵中：一个有八个单元的层需要一个有八个列的权重矩阵。
 - en: '[PRE6]'
+  id: totrans-23
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE6]'
 - en: '*Each unit has its own value for bias, too.'
+  id: totrans-24
   prefs: []
   type: TYPE_NORMAL
+  zh: '*每个单元也有自己的偏置值。'
 - en: '[PRE7]'
+  id: totrans-25
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE7]'
 - en: '*Just like we saw before, the hidden layer will multiply the input it receives
     by the weights and add the bias. That is, it applies the function \(f\) displayed
     above. Then, another function is applied. This function receives its input from
     the hidden layer and produces the final output. In a nutshell, what is happening
     here is function composition: Calling the second function \(g\), the overall transformation
     is \(g(f(\mathbf{X})\), or \(g \circ f\).'
+  id: totrans-26
   prefs: []
   type: TYPE_NORMAL
+  zh: 就像我们之前看到的，隐藏层会将接收到的输入乘以权重并加上偏置。也就是说，它应用了上面显示的函数 \(f\)。然后，再应用另一个函数。这个函数接收来自隐藏层的输入并产生最终的输出。简而言之，这里发生的是函数组合：调用第二个函数
+    \(g\)，整体变换是 \(g(f(\mathbf{X}))\)，或者 \(g \circ f\)。
 - en: 'For \(g\) to yield an output analogous to the single-layer architecture above,
     its weight matrix has to take the eight-column hidden layer to a single column.
     That is, `w2` looks like this:'
+  id: totrans-27
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了让 \(g\) 产生与上面单层架构类似的单个输出，其权重矩阵必须将八个列的隐藏层映射到单个列。也就是说，`w2` 看起来是这样的：
 - en: '[PRE8]'
+  id: totrans-28
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE8]'
 - en: '*The bias, `b2`, is a single value, like `b1`:'
+  id: totrans-29
   prefs: []
   type: TYPE_NORMAL
+  zh: '*偏置 `b2` 是一个单一值，就像 `b1`：'
 - en: '[PRE9]'
+  id: totrans-30
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE9]'
 - en: '*Of course, there is no reason to stop at *one* hidden layer, and once we’ve
     built up the complete apparatus, please feel invited to experiment with the code.
     But first, we need to add in a few other types of components. For one, with our
@@ -142,14 +210,19 @@
     is good. But all these functions are doing is add and multiply, implying that
     they are linear. The power of neural networks, however, is usually associated
     with *nonlinearity*. Why?****  ***## 6.3 Activation functions'
+  id: totrans-31
   prefs: []
   type: TYPE_NORMAL
+  zh: '*当然，没有必要只停留在单个隐藏层，一旦我们构建了完整的设备，请随时尝试代码。但首先，我们需要添加一些其他类型的组件。首先，在我们的最新架构中，我们正在链式或组合函数——这是好的。但所有这些函数都在做加法和乘法，这意味着它们是线性的。然而，神经网络的强大之处通常与非线性相关。为什么？****  ***##
+    6.3 激活函数'
 - en: Imagine, for a moment, that we had a network with three layers, and all each
     layer did was multiply its input by its weight matrix. (Having a bias term doesn’t
     really change anything. But it makes the example more complex, so we’re “abstracting
     it out”.)
+  id: totrans-32
   prefs: []
   type: TYPE_NORMAL
+  zh: 想象一下，如果我们有一个有三层的网络，并且每一层所做的只是将其输入乘以其权重矩阵。（有偏置项实际上并没有改变什么。但它使例子更复杂，所以我们“抽象化”它。）
 - en: 'This gives us a chain of matrix multiplications: \(f(\mathbf{X}) = ((\mathbf{X}
     \mathbf{W}_1)\mathbf{W}_2)\mathbf{W}_3\). Now, this can be rearranged so that
     all the weight matrices are multiplied together before application to \(\mathbf{X}\):
@@ -157,8 +230,12 @@
     three-layer network can be simplified to a single-layer one, where \(f(\mathbf{X})
     = \mathbf{X} \mathbf{W}_4\). And now, we have lost all advantages associated with
     deep neural networks.'
+  id: totrans-33
   prefs: []
   type: TYPE_NORMAL
+  zh: 这给我们带来了一系列矩阵乘法：\(f(\mathbf{X}) = ((\mathbf{X} \mathbf{W}_1)\mathbf{W}_2)\mathbf{W}_3\)。现在，这可以被重新排列，使得所有权重矩阵在应用到
+    \(\mathbf{X}\) 之前都乘在一起：\(f(\mathbf{X}) = \mathbf{X} (\mathbf{W}_1\mathbf{W}_2\mathbf{W}_3)\)。因此，这个三层网络可以被简化为一个单层网络，其中
+    \(f(\mathbf{X}) = \mathbf{X} \mathbf{W}_4\)。现在，我们已经失去了与深度神经网络相关的所有优势。
 - en: This is where activation functions, sometimes called “nonlinearities”, come
     in. They introduce non-linear operations that cannot be modeled by matrix multiplication.
     Historically, the prototypical activation function has been the *sigmoid*, and
@@ -166,46 +243,68 @@
     input between zero and one, yielding a value that can be interpreted as a probability.
     But in regression, this is not usually what we want, and neither would it be for
     most hidden layers.
+  id: totrans-34
   prefs: []
   type: TYPE_NORMAL
+  zh: 这就是激活函数，有时也称为“非线性”，发挥作用的地方。它们引入了无法通过矩阵乘法建模的非线性操作。从历史上看，典型的激活函数是`sigmoid`，它今天仍然非常重要。它的构成作用是将输入挤压在零和一之间，得到一个可以解释为概率的值。但在回归中，这通常不是我们想要的，对于大多数隐藏层也是如此。
 - en: 'Instead, the most-used activation function inside a network is the so-called
     *ReLU*, or Rectified Linear Unit. This is a long name for something rather straightforward:
     All negative values are set to zero. In `torch`, this can be accomplished using
     the `relu()` function:'
+  id: totrans-35
   prefs: []
   type: TYPE_NORMAL
+  zh: 相反，网络中最常用的激活函数是所谓的*ReLU*，或称为修正线性单元。这是一个相当直接的长名称：所有负值都被设置为零。在`torch`中，可以使用`relu()`函数实现这一点：
 - en: '[PRE10]'
+  id: totrans-36
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE10]'
 - en: '*[PRE11]'
+  id: totrans-37
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE11]'
 - en: 'Why would this be nonlinear? One criterion for a linear function is that when
     you have two inputs, it doesn’t matter if you first add them and then, apply the
     transformation, or if you start by applying the transformation independently to
     both inputs and then, go ahead and add them. But with ReLU, this does not work:'
+  id: totrans-38
   prefs: []
   type: TYPE_NORMAL
+  zh: 为什么这会是非线性呢？线性函数的一个标准是，当你有两个输入时，无论是先加和它们然后应用变换，还是先独立地对两个输入应用变换然后相加，结果都应该是相同的。但是，对于ReLU来说，这并不成立：
 - en: '[PRE12]'
+  id: totrans-39
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE12]'
 - en: '*[PRE13]'
+  id: totrans-40
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE13]'
 - en: '[PRE14]'
+  id: totrans-41
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE14]'
 - en: '*[PRE15]'
+  id: totrans-42
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE15]'
 - en: The results are not the same.
+  id: totrans-43
   prefs: []
   type: TYPE_NORMAL
+  zh: 结果并不相同。
 - en: Wrapping up so far, we’ve talked about how to code layers and activation functions.
     There is just one further concept to discuss before we can build the complete
     network. This is the loss function.***  ***## 6.4 Loss functions
+  id: totrans-44
   prefs: []
   type: TYPE_NORMAL
+  zh: 总结到目前为止，我们讨论了如何编写层和激活函数。在我们能够构建完整的网络之前，还有一个概念需要讨论。这就是损失函数。***  ***## 6.4 损失函数
 - en: Put abstractly, the loss is a measure of how far away we are from our goal.
     When minimizing a function, like we did in the previous chapter, this is the difference
     between the current function value and the smallest value it can take. With neural
@@ -213,108 +312,158 @@
     it matches our task. For regression-type tasks, this often will be mean squared
     error (MSE), although it doesn’t have to be. For example, there could be reasons
     to use mean absolute error instead.
+  id: totrans-45
   prefs: []
   type: TYPE_NORMAL
+  zh: 概括地说，损失是我们离目标有多远的度量。当我们最小化一个函数，就像我们在上一章中所做的那样，这就是当前函数值和它可能取的最小值之间的差异。在神经网络中，我们可以自由选择一个合适的损失函数，只要它符合我们的任务。对于回归类型的任务，这通常会是均方误差（MSE），尽管不一定是这样。例如，可能会有使用平均绝对误差的理由。
 - en: 'In `torch`, computation of mean squared error is a one-liner:'
+  id: totrans-46
   prefs: []
   type: TYPE_NORMAL
+  zh: 在`torch`中，计算均方误差是一行代码：
 - en: '[PRE16]'
+  id: totrans-47
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE16]'
 - en: '*[PRE17]'
+  id: totrans-48
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE17]'
 - en: As soon as we have the loss, we’ll be able to update the weights, subtracting
     a fraction of its gradient. We’ve already seen how to do this in the last chapter,
     and will see it again shortly.
+  id: totrans-49
   prefs: []
   type: TYPE_NORMAL
+  zh: 一旦我们有了损失，我们就能更新权重，减去其梯度的部分。我们已经在上一章中看到了如何做这件事，并且很快还会再次看到。
 - en: We now take the pieces discussed and put them together.*  *## 6.5 Implementation
+  id: totrans-50
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在我们将讨论的各个部分放在一起。*  *## 6.5 实现
 - en: We split this into three parts. This way, when later we refactor individual
     components to make use of higher-level `torch` functionality, it will be easier
     to see the areas where encapsulation and modularization are occurring.
+  id: totrans-51
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们将其分为三个部分。这样，当我们后来重构单个组件以利用更高级的`torch`功能时，将更容易看到封装和模块化正在发生的区域。
 - en: 6.5.1 Generate random data
+  id: totrans-52
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 6.5.1 生成随机数据
 - en: Our example data consist of one hundred observations. The input, `x`, has three
     features; the target, `y`, just one. `y` is generated from `x`, but with some
     noise added.
+  id: totrans-53
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们的示例数据由一百个观测值组成。输入`x`有三个特征；目标`y`只有一个。`y`是由`x`生成的，但添加了一些噪声。
 - en: '[PRE18]'
+  id: totrans-54
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE18]'
 - en: '*Next, the network.*  *### 6.5.2 Build the network'
+  id: totrans-55
   prefs: []
   type: TYPE_NORMAL
+  zh: '*接下来是网络。*  *### 6.5.2 构建网络'
 - en: 'The network has two layers: a hidden layer and the output layer. This means
     that we need two weight matrices and two bias tensors. For no special reason,
     the hidden layer here has thirty-two units:'
+  id: totrans-56
   prefs: []
   type: TYPE_NORMAL
+  zh: 网络有两个层：一个隐藏层和一个输出层。这意味着我们需要两个权重矩阵和两个偏置张量。没有特殊的原因，这里的隐藏层有32个单元：
 - en: '[PRE19]'
+  id: totrans-57
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE19]'
 - en: '*With their current values – results of random initialization – those weights
     and biases won’t be of much use. Time to train the network.*  *### 6.5.3 Train
     the network'
+  id: totrans-58
   prefs: []
   type: TYPE_NORMAL
+  zh: '*使用当前值——随机初始化的结果——这些权重和偏置不会有多大用处。是时候训练网络了。*  *### 6.5.3 训练网络'
 - en: Training the network means passing the input through its layers, calculating
     the loss, and adjusting the parameters (weights and biases) in a way that predictions
     improve. These activities we keep repeating until performance seems sufficient
     (which, in real-life applications, would have to be defined very carefully). Technically,
     each repeated application of these steps is called an *epoch*.
+  id: totrans-59
   prefs: []
   type: TYPE_NORMAL
+  zh: 训练网络意味着将输入通过其层传递，计算损失，并调整参数（权重和偏置）以改善预测。我们不断重复这些活动，直到性能看起来足够好（在现实应用中，这需要非常仔细地定义）。技术上，这些步骤的每次重复应用都称为一个*epoch*。
 - en: Just like with function minimization, deciding on a suitable learning rate (the
     fraction of the gradient to subtract) needs some experimentation.
+  id: totrans-60
   prefs: []
   type: TYPE_NORMAL
+  zh: 就像函数最小化一样，决定合适的学习率（减去梯度的分数）需要一些实验。
 - en: 'Looking at the below training loop, you see that, logically, it consists of
     four parts:'
+  id: totrans-61
   prefs: []
   type: TYPE_NORMAL
+  zh: 观察下面的训练循环，你会看到，从逻辑上讲，它由四个部分组成：
 - en: do a forward pass, yielding the network’s predictions (if you dislike the one-liner,
     feel free to split it up);
+  id: totrans-62
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 进行正向传播，得到网络的预测（如果你不喜欢一行代码，可以自由地将其拆分）；
 - en: compute the loss (this, too, being a one-liner – we merely added some logging);
+  id: totrans-63
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 计算损失（这同样是一条命令行指令——我们只是添加了一些日志记录）；
 - en: have *autograd* calculate the gradient of the loss with respect to the parameters;
     and
+  id: totrans-64
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 让*autograd*计算损失相对于参数的梯度；以及
 - en: update the parameters accordingly (again, taking care to wrap the whole action
     in `with_no_grad()`, and zeroing the `grad` fields on every iteration).
+  id: totrans-65
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 相应地更新参数（再次注意，将整个操作包裹在`with_no_grad()`中，并在每次迭代中将`grad`字段归零）。
 - en: '[PRE20]'
+  id: totrans-66
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE20]'
 - en: '*[PRE21]'
+  id: totrans-67
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE21]'
 - en: The loss decreases quickly at first, and then, not so rapidly anymore. But this
     example was not created to exhibit magnificent performance; the idea was to show
     how few lines of code are needed to build a “real” neural network.
+  id: totrans-68
   prefs: []
   type: TYPE_NORMAL
+  zh: 损失最初下降得很快，然后，不再那么快了。但这个例子并不是为了展示出色的性能；其目的是展示构建一个“真正的”神经网络需要多少行代码。
 - en: 'Now, the layers, the loss, the parameter updates – all that is still pretty
     “raw”: It’s (literally) *just tensors*. For such a small network this works fine,
     but it would get cumbersome pretty fast for more complex designs. The following
     two chapters, thus, will show how to abstract away weights and biases into neural
     network *modules*, swap self-made loss functions with built-in ones, and get rid
     of the verbose parameter update routine.*************'
+  id: totrans-69
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在，层、损失、参数更新——所有这些都还相当“原始”：实际上，它们只是*张量*。对于这样一个小的网络来说，这没问题，但对于更复杂的设计来说，很快就会变得繁琐。因此，接下来的两章将展示如何将权重和偏置抽象成神经网络*模块*，用内置的损失函数替换自制的损失函数，并摆脱冗长的参数更新流程。*************

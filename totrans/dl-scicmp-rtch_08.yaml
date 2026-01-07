@@ -1,147 +1,219 @@
 - en: 5  Function minimization with autograd
+  id: totrans-0
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
+  zh: 5 函数最小化与autograd
 - en: 原文：[https://skeydan.github.io/Deep-Learning-and-Scientific-Computing-with-R-torch/optim_1.html](https://skeydan.github.io/Deep-Learning-and-Scientific-Computing-with-R-torch/optim_1.html)
+  id: totrans-1
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 原文：[https://skeydan.github.io/Deep-Learning-and-Scientific-Computing-with-R-torch/optim_1.html](https://skeydan.github.io/Deep-Learning-and-Scientific-Computing-with-R-torch/optim_1.html)
 - en: 'In the last two chapters, we’ve learned about tensors and automatic differentiation.
     In the upcoming two, we take a break from studying `torch` mechanics and, instead,
     find out what we’re able to do with what we already have. Using nothing but tensors,
     and supported by nothing but *autograd*, we can already do two things:'
+  id: totrans-2
   prefs: []
   type: TYPE_NORMAL
+  zh: 在前两章中，我们学习了张量和自动微分。在接下来的两章中，我们暂时放下对`torch`机制的学习，而是找出我们能用我们已经拥有的东西做什么。仅使用张量，并仅由*autograd*支持，我们
+    already 可以做两件事：
 - en: minimize a function (i.e., perform numerical optimization), and
+  id: totrans-3
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 最小化一个函数（即执行数值优化），并且
 - en: build and train a neural network.
+  id: totrans-4
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 构建和训练一个神经网络。
 - en: In this chapter, we start with minimization, and leave the network to the next
     one.
+  id: totrans-5
   prefs: []
   type: TYPE_NORMAL
+  zh: 在本章中，我们首先从最小化开始，而将网络留到下一章。
 - en: 5.1 An optimization classic
+  id: totrans-6
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 5.1 一个优化经典
 - en: 'In optimization research, the *Rosenbrock function* is a classic. It is a function
     of two variables; its minimum is at `(1,1)`. If you take a look at its contours,
     you see that the minimum lies inside a stretched-out, narrow valley ([fig. 5.1](#fig-optim-1-rosenbrock)):'
+  id: totrans-7
   prefs: []
   type: TYPE_NORMAL
+  zh: 在优化研究中，*Rosenbrock函数*是一个经典函数。它是一个关于两个变量的函数；其最小值在`(1,1)`处。如果你看一下它的等高线，你会看到最小值位于一个拉长的、狭窄的谷地中（[图5.1](#fig-optim-1-rosenbrock)）：
 - en: '![Contour plot of a function in two variables, where the small function values
     lie inside a stretched-out, narrow valley.](../Images/8b421d397f8209f540c9229aea5161dc.png)'
+  id: totrans-8
   prefs: []
   type: TYPE_IMG
+  zh: '![两个变量的函数等高线图，其中小的函数值位于一个拉长的、狭窄的谷地中。](../Images/8b421d397f8209f540c9229aea5161dc.png)'
 - en: 'Figure 5.1: Rosenbrock function.'
+  id: totrans-9
   prefs: []
   type: TYPE_NORMAL
+  zh: 图5.1：Rosenbrock函数。
 - en: Here is the function definition. `a` and `b` are parameters that can be freely
     chosen; the values we use here are a frequent choice.
+  id: totrans-10
   prefs: []
   type: TYPE_NORMAL
+  zh: 这里是函数定义。`a`和`b`是可以自由选择的参数；我们在这里使用的值是常见的选择。
 - en: '[PRE0]'
+  id: totrans-11
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE0]'
 - en: '*## 5.2 Minimization from scratch'
+  id: totrans-12
   prefs: []
   type: TYPE_NORMAL
+  zh: '*## 5.2 从零开始的最小化'
 - en: The scenario is the following. We start at some given point `(x1,x2)`, and set
     out to find the location where the Rosenbrock function has its minimum.
+  id: totrans-13
   prefs: []
   type: TYPE_NORMAL
+  zh: 情景是这样的。我们从某个给定的点`(x1,x2)`开始，并试图找到Rosenbrock函数的最小值所在的位置。
 - en: 'We follow the strategy outlined in the previous chapter: compute the function’s
     gradient at our current position, and use it to go the opposite way. We don’t
     know how far to go; if we take too big a big step we may easily overshoot. (If
     you look back at the contour plot, you see that if you were standing at one of
     the steep cliffs east or west of the minimum, this could happen very fast.)'
+  id: totrans-14
   prefs: []
   type: TYPE_NORMAL
+  zh: 我们遵循上一章中概述的策略：计算当前位置的函数梯度，并使用它向相反方向前进。我们不知道要走多远；如果我们走得太快，我们可能会轻易地超过目标。（如果你回顾一下等高线图，你会看到如果你站在最小值东或西的陡峭悬崖上，这种情况可能会很快发生。）
 - en: Thus, it is best to proceed iteratively, taking moderate steps and re-evaluating
     the gradient every time.
+  id: totrans-15
   prefs: []
   type: TYPE_NORMAL
+  zh: 因此，最好是迭代地进行，采取适度的步骤，并在每次都重新评估梯度。
 - en: 'In a nutshell, the optimization procedure then looks somewhat like this:'
+  id: totrans-16
   prefs: []
   type: TYPE_NORMAL
+  zh: 简而言之，优化过程看起来有点像这样：
 - en: '[PRE1]'
+  id: totrans-17
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE1]'
 - en: '*As written, this code snippet demonstrates our intentions, but it’s not quite
     correct (yet). It is also missing a few prerequisites: Neither the tensor `x`
     nor the variables `lr` and `num_iterations` have been defined. Let’s make sure
     we have those ready first. `lr`, for learning rate, is the fraction of the gradient
     to subtract on every step, and `num_iterations` is the number of steps to take.
     Both are a matter of experimentation.'
+  id: totrans-18
   prefs: []
   type: TYPE_NORMAL
+  zh: '*按照现在的写法，这个代码片段展示了我们的意图，但还不完全正确（尚不正确）。它还缺少一些先决条件：张量`x`、变量`lr`和`num_iterations`都没有被定义。让我们确保我们准备好了。`lr`，对于学习率，是每一步要减去的梯度的一部分，`num_iterations`是要采取的步数。这两者都是实验性的。'
 - en: '[PRE2]'
+  id: totrans-19
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE2]'
 - en: '*`x` is the parameter to optimize, that is, it is the function input that hopefully,
     at the end of the process, will yield the minimum possible function value. This
     makes it the tensor *with respect to which* we want to compute the function value’s
     derivative. And that, in turn, means we need to create it with `requires_grad
     = TRUE`:'
+  id: totrans-20
   prefs: []
   type: TYPE_NORMAL
+  zh: '*`x`是优化参数，即它是函数的输入，希望最终在过程结束时，将产生可能的最小函数值。这使得它成为我们想要计算函数值导数的张量*。这反过来意味着我们需要用`requires_grad
+    = TRUE`来创建它：'
 - en: '[PRE3]'
+  id: totrans-21
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE3]'
 - en: '*The starting point, `(-1,1)`, here has been chosen arbitrarily.'
+  id: totrans-22
   prefs: []
   type: TYPE_NORMAL
+  zh: '*这里的起点`(-1,1)`是任意选择的。'
 - en: Now, all that remains to be done is apply a small fix to the optimization loop.
     With *autograd* enabled on `x`, `torch` will record all operations performed on
     that tensor, meaning that whenever we call `backward()`, it will compute all required
     derivatives. However, when we subtract a fraction of the gradient, this is not
     something we want a derivative to be calculated for! We need to tell `torch` not
     to record this action, and that we can do by wrapping it in `with_no_grad()`.
+  id: totrans-23
   prefs: []
   type: TYPE_NORMAL
+  zh: 现在，剩下的工作就是对优化循环进行一个小小的修复。在`x`上启用`*autograd*`后，`torch`将记录对该张量执行的所有操作，这意味着每次我们调用`backward()`时，它都会计算所有所需的导数。然而，当我们减去梯度的一部分时，这不是我们希望计算导数的情况！我们需要告诉`torch`不要记录这个操作，我们可以通过将其包裹在`with_no_grad()`中来做到这一点。
 - en: There’s one other thing we have to tell it. By default, `torch` accumulates
     the gradients stored in `grad` fields. We need to zero them out for every new
     calculation, using `grad$zero_()`.
+  id: totrans-24
   prefs: []
   type: TYPE_NORMAL
+  zh: 还有另一件事我们需要告诉它。默认情况下，`torch`会累积存储在`grad`字段中的梯度。我们需要在每次新的计算中使用`grad$zero_()`将它们归零。
 - en: 'Taking into account these considerations, the parameter update should look
     like this:'
+  id: totrans-25
   prefs: []
   type: TYPE_NORMAL
+  zh: 考虑到这些考虑因素，参数更新应该看起来像这样：
 - en: '[PRE4]'
+  id: totrans-26
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE4]'
 - en: '*Here is the complete code, enhanced with logging statements that make it easier
     to see what is going on.'
+  id: totrans-27
   prefs: []
   type: TYPE_NORMAL
+  zh: '*以下是完整的代码，增加了日志语句，使其更容易看到正在发生的事情。'
 - en: '[PRE5]'
+  id: totrans-28
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE5]'
 - en: '*[PRE6]'
+  id: totrans-29
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE6]'
 - en: After thousand iterations, we have reached a function value lower than 0.0001\.
     What is the corresponding `(x1,x2)`-position?
+  id: totrans-30
   prefs: []
   type: TYPE_NORMAL
+  zh: 经过一千次迭代后，我们达到了一个小于0.0001的函数值。那么对应的`(x1,x2)`-位置是什么？
 - en: '[PRE7]'
+  id: totrans-31
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE7]'
 - en: '*[PRE8]'
+  id: totrans-32
   prefs: []
   type: TYPE_NORMAL
+  zh: '*[PRE8]'
 - en: This is rather close to the true minimum of `(1,1)`. If you feel like, play
     around a little, and try to find out what kind of difference the learning rate
     makes. For example, try 0.001 and 0.1, respectively.
+  id: totrans-33
   prefs: []
   type: TYPE_NORMAL
+  zh: 这相当接近真正的最小值`(1,1)`。如果你愿意，可以稍微尝试一下，看看学习率会有什么不同。例如，尝试0.001和0.1，分别。
 - en: In the next chapter, we will build a neural network from scratch. There, the
     function we minimize will be a *loss function*, namely, the mean squared error
     arising from a regression problem.*******
+  id: totrans-34
   prefs: []
   type: TYPE_NORMAL
+  zh: 在下一章中，我们将从头开始构建一个神经网络。在那里，我们要最小化的函数将是一个*损失函数*，即回归问题中产生的均方误差。
