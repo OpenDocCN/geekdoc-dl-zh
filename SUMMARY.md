@@ -25,4 +25,5 @@
 +   [人类反馈的强化学习之书](docs/rlhf-bk/README.md)
 +   [TensorFlow 从零到全部](docs/tf-0toall/README.md)
 +   [TensorFlow Rager 教程](docs/tf-eager-tut/README.md)
++   [TowardsArtificialIntelligence 博客中文翻译](docs/towardsai-blog/README.md)
 +   [WinderAI 博客中文翻译](docs/winderai-blog/README.md)
