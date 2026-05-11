@@ -27,4 +27,5 @@
 +   [TensorFlow Rager 教程](docs/tf-eager-tut/README.md)
 +   [TowardsArtificialIntelligence 博客中文翻译](docs/towardsai-blog/README.md)
 +   [WinderAI 博客中文翻译](docs/winderai-blog/README.md)
++   [深度学习小书](docs/深度学习小书/README.md)
 +   [理解深度学习](docs/理解深度学习/README.md)
