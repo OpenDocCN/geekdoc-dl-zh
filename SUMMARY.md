@@ -28,5 +28,6 @@
 +   [TowardsArtificialIntelligence 博客中文翻译](docs/towardsai-blog/README.md)
 +   [WinderAI 博客中文翻译](docs/winderai-blog/README.md)
 +   [多变量金融时间序列的深度学习](docs/多变量金融时间序列的深度学习/README.md)
++   [强化学习导论中文第二版](docs/强化学习导论中文第二版/README.md)
 +   [深度学习小书](docs/深度学习小书/README.md)
 +   [理解深度学习](docs/理解深度学习/README.md)
