@@ -32,3 +32,4 @@
 +   [强化学习算法](docs/强化学习算法/README.md)
 +   [深度学习小书](docs/深度学习小书/README.md)
 +   [理解深度学习](docs/理解深度学习/README.md)
++   [语音与语言处理（SLP）中文第二版](docs/语音与语言处理（SLP）中文第二版/README.md)
